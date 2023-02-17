@@ -9,5 +9,21 @@ package ru.gov.sfr.aos.monitoring;
  * @author 041AlikinOS
  */
 public enum CartridgeType {
-    ORIGINAL, ANALOG;
+    
+    ORIGINAL("Оригинальный"), 
+    ANALOG("Совместимый");
+    
+    private String name;
+
+    private CartridgeType(String name) {
+            this.name = name;
+    }
+
+    public String getName() {
+        return name;
+    }
+    
+    
+    
+    
 }

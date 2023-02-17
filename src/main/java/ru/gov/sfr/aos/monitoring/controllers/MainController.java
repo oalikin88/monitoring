@@ -4,9 +4,13 @@
  */
 package ru.gov.sfr.aos.monitoring.controllers;
 
+import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import ru.gov.sfr.aos.monitoring.entities.Contract;
+import ru.gov.sfr.aos.monitoring.interfaces.ContractServiceInterface;
 
 /**
  *
@@ -15,10 +19,16 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class MainController {
     
+    @Autowired
+    private ContractServiceInterface contractServiceInterface;
+    
+    
     @GetMapping("/main")
     public String getData(Model model) {
+       
+        List<Contract> contracts = contractServiceInterface.getContracts();
         
-       model.addAttribute("members", "Garry");
+       model.addAttribute("contracts", contracts);
         return "main";
         
     }

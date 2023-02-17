@@ -6,6 +6,7 @@ package ru.gov.sfr.aos.monitoring.entities;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -25,7 +26,7 @@ public class Contract {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @NotNull
-    @OneToMany(targetEntity = ObjectBuing.class, mappedBy = "contract", fetch = FetchType.EAGER)
+    @OneToMany(targetEntity = ObjectBuing.class, mappedBy = "contract", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List <ObjectBuing> objectBuing;
     @NotNull
     private Long contractNumber;
@@ -38,6 +39,7 @@ public class Contract {
 
     public Contract() {
     }
+    
     
     public Contract(List <ObjectBuing> objectBuing, Long contractNumber, LocalDateTime dateStartContract, LocalDateTime dateEndContract) {
         this.objectBuing = objectBuing;
@@ -89,10 +91,15 @@ public class Contract {
         this.objectBuing = objectBuing;
     }
 
+    @Override
+    public String toString() {
+        return "ID: " + this.id + "; Contract №: " + this.contractNumber + "; ObjectBuing: " + this.objectBuing +  
+                "; Date start contract: " + this.dateStartContract + "; Date end contract: " + this.dateEndContract + ".";
+    }
+
   
     
     
-    
-    
+
     
 }

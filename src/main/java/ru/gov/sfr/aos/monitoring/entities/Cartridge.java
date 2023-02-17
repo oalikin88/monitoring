@@ -5,7 +5,7 @@
 package ru.gov.sfr.aos.monitoring.entities;
 
 import java.time.LocalDateTime;
-import javax.persistence.Column;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -25,10 +25,12 @@ import ru.gov.sfr.aos.monitoring.CartridgeType;
 @PrimaryKeyJoinColumn(name = "CARTRIDGE_ID")
 public class Cartridge extends ObjectBuing {
     @NotNull
+    protected String model;
+    @NotNull
     @Enumerated(EnumType.STRING)
     protected CartridgeType type;
     @NotNull
-    @Column(name = "LOCATION_ID")
+    @ManyToOne
     protected Location location;
     @NotNull
     protected LocalDateTime dateStartExploitation;
@@ -40,7 +42,7 @@ public class Cartridge extends ObjectBuing {
     protected int count;
     @NotNull
     protected int defaultNumberPrintPage;
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "PRINTER_ID",
 			foreignKey = @ForeignKey(name = "PRINTER_ID_FK"))
     protected Printer printer;
@@ -51,8 +53,9 @@ public class Cartridge extends ObjectBuing {
         
     }
    
-    public Cartridge(CartridgeType type, Location location, LocalDateTime dateStartExploitation, 
+    public Cartridge(String model, CartridgeType type, Location location, LocalDateTime dateStartExploitation, 
             LocalDateTime dateEndExploitation, boolean util, int count, int defaultNumberPrintPage) {
+        this.model = model;
         this.type = type;
         this.location = location;
         this.dateStartExploitation = dateStartExploitation;
@@ -60,9 +63,7 @@ public class Cartridge extends ObjectBuing {
         this.util = util;
         this.count = count;
         this.defaultNumberPrintPage = defaultNumberPrintPage;
-    }
-
-    
+    } 
 
     public Long getId() {
         return id;
@@ -83,8 +84,6 @@ public class Cartridge extends ObjectBuing {
     public void setPrinter(Printer printer) {
         this.printer = printer;
     }
-
-  
 
     public LocalDateTime getDateStartExploitation() {
         return dateStartExploitation;
@@ -138,8 +137,20 @@ public class Cartridge extends ObjectBuing {
     public void setDefaultNumberPrintPage(int defaultNumberPrintPage) {
         this.defaultNumberPrintPage = defaultNumberPrintPage;
     }
+
+    public String getModel() {
+        return model;
+    }
+
+    public void setModel(String model) {
+        this.model = model;
+    }
     
-    
-    
-    
+    @Override
+    public String toString() {
+        return "Model: " + this.model + "; Type: " + this.type.getName() + "; Location: " + this.location +
+                "; Date start exploitation: " + this.dateStartExploitation + "; Date end exploitation: " + this.dateEndExploitation 
+                + "; Count: " + this.count + "; Default number print page: " + this.defaultNumberPrintPage + "; Printer: " + this.printer;
+    }
+
 }

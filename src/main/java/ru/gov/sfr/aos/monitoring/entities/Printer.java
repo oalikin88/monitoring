@@ -5,9 +5,10 @@
 package ru.gov.sfr.aos.monitoring.entities;
 
 import java.util.List;
-import javax.persistence.Column;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.validation.constraints.NotNull;
@@ -21,17 +22,16 @@ import javax.validation.constraints.NotNull;
 public class Printer extends ObjectBuing {
  
     @NotNull
-    @Column(name = "LOCATION_ID")
+    @ManyToOne
     protected Location location;
     @NotNull
     protected String model;
     @NotNull
-    protected String serialNumber;
-    
+    protected String serialNumber; 
     @NotNull
     protected String inventoryNumber;
     @NotNull
-    @OneToMany(targetEntity = Cartridge.class, mappedBy = "printer", fetch = FetchType.EAGER)
+    @OneToMany(targetEntity = Cartridge.class, mappedBy = "printer", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     protected List<Cartridge> cartridge;
    
     
@@ -101,6 +101,12 @@ public class Printer extends ObjectBuing {
 
     public void setInventoryNumber(String inventoryNumber) {
         this.inventoryNumber = inventoryNumber;
+    }
+
+    @Override
+    public String toString() {
+        return "Printer [ID: " + super.id + "; Model: " + this.model + "; Serial: " + this.serialNumber + 
+                "; Invertary number: " + this.inventoryNumber + "; Location: " + this.location +"]";
     }
     
     

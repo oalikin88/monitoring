@@ -4,7 +4,7 @@
  */
 package ru.gov.sfr.aos.monitoring.entities;
 
-import javax.persistence.Column;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
@@ -28,7 +28,7 @@ public abstract class ObjectBuing {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     protected Long id;
     @NotNull
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "CONTRACT_ID",
 			foreignKey = @ForeignKey(name = "CONTRACT_ID_FK"))
     protected Contract contract;
@@ -57,6 +57,6 @@ public abstract class ObjectBuing {
         this.contract = contract;
     }
     
-    
+  
     
 }
