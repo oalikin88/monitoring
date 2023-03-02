@@ -20,7 +20,7 @@ import javax.validation.constraints.NotNull;
 @Entity
 @PrimaryKeyJoinColumn(name = "PRINTER_ID")
 public class Printer extends ObjectBuing {
- 
+
     @NotNull
     @ManyToOne
     protected Location location;
@@ -106,7 +106,7 @@ public class Printer extends ObjectBuing {
     @Override
     public String toString() {
         return "Printer [ID: " + super.id + "; Model: " + this.model + "; Serial: " + this.serialNumber + 
-                "; Invertary number: " + this.inventoryNumber + "; Location: " + this.location +"]";
+                "; Invertary number: " + this.inventoryNumber + "; Location: " + this.location + "; Cartridge: " + this.cartridge + "]";
     }
     
     

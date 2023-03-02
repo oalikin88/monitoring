@@ -1,0 +1,18 @@
+{
+    "elements": {},
+    "attributes": {
+        "th:text": {
+            "context": "li"
+        },
+        "th:action": {
+            "context": "form"
+        },
+        "th:field": {
+            "context": "input"
+        },
+        "th:each": {},
+        "th:value": {
+            "context": "option"
+        }
+    }
+}

@@ -21,11 +21,19 @@ public class ContractServiceImpl implements ContractServiceInterface {
     
     @Autowired
     private ContractRepo contractRepo;
+
     
     @Override
     public List<Contract> getContracts() {
         
         return contractRepo.findAll();
     }
+
+    @Override
+    public void saveContract(Contract contract) {
+        
+        contractRepo.save(contract);
+    }
     
+  
 }

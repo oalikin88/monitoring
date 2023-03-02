@@ -41,7 +41,7 @@ public class Cartridge extends ObjectBuing {
     @NotNull
     protected int count;
     @NotNull
-    protected int defaultNumberPrintPage;
+    protected int defaultNumberPrintPage; // на сколько картридж рассчитан, лучше вшить внутрь бд
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "PRINTER_ID",
 			foreignKey = @ForeignKey(name = "PRINTER_ID_FK"))
@@ -150,7 +150,7 @@ public class Cartridge extends ObjectBuing {
     public String toString() {
         return "Model: " + this.model + "; Type: " + this.type.getName() + "; Location: " + this.location +
                 "; Date start exploitation: " + this.dateStartExploitation + "; Date end exploitation: " + this.dateEndExploitation 
-                + "; Count: " + this.count + "; Default number print page: " + this.defaultNumberPrintPage + "; Printer: " + this.printer;
+                + "; Count: " + this.count + "; Default number print page: " + this.defaultNumberPrintPage;
     }
 
 }

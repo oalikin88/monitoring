@@ -5,6 +5,7 @@
 package ru.gov.sfr.aos.monitoring.entities;
 
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -31,9 +32,9 @@ public class Contract {
     @NotNull
     private Long contractNumber;
     @NotNull
-    private LocalDateTime dateStartContract;
+    private Date dateStartContract;
     @NotNull
-    private LocalDateTime dateEndContract;
+    private Date dateEndContract;
     
     
 
@@ -41,7 +42,7 @@ public class Contract {
     }
     
     
-    public Contract(List <ObjectBuing> objectBuing, Long contractNumber, LocalDateTime dateStartContract, LocalDateTime dateEndContract) {
+    public Contract(List <ObjectBuing> objectBuing, Long contractNumber, Date dateStartContract, Date dateEndContract) {
         this.objectBuing = objectBuing;
         this.contractNumber = contractNumber;
         this.dateStartContract = dateStartContract;
@@ -67,19 +68,19 @@ public class Contract {
         this.contractNumber = contractNumber;
     }
 
-    public LocalDateTime getDateStartContract() {
+    public Date getDateStartContract() {
         return dateStartContract;
     }
 
-    public void setDateStartContract(LocalDateTime dateStartContract) {
+    public void setDateStartContract(Date dateStartContract) {
         this.dateStartContract = dateStartContract;
     }
 
-    public LocalDateTime getDateEndContract() {
+    public Date getDateEndContract() {
         return dateEndContract;
     }
 
-    public void setDateEndContract(LocalDateTime dateEndContract) {
+    public void setDateEndContract(Date dateEndContract) {
         this.dateEndContract = dateEndContract;
     }
 
@@ -90,6 +91,8 @@ public class Contract {
     public void setObjectBuing(List<ObjectBuing> objectBuing) {
         this.objectBuing = objectBuing;
     }
+
+    
 
     @Override
     public String toString() {

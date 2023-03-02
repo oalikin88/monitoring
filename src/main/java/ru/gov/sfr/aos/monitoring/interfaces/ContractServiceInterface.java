@@ -15,4 +15,6 @@ public interface ContractServiceInterface {
     
     List<Contract> getContracts();
     
+   void saveContract(Contract contract);
+    
 }
