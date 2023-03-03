@@ -15,7 +15,7 @@ public class ContractDTO {
    public String contractNumber;
    public Date dateStartContract;
    public Date dateEndContract;
-   public String objectBuing;
+   public String selectObjectBuing;
    public String modelPrinter;
    public String modelCartridge;
    public String serialNumberPrinter;
@@ -33,7 +33,7 @@ public class ContractDTO {
         this.contractNumber = contractNumber;
         this.dateStartContract = dateStartContract;
         this.dateEndContract = dateEndContract;
-        this.objectBuing = objectBuing;
+        this.selectObjectBuing = objectBuing;
         this.modelPrinter = modelPrinter;
         this.modelCartridge = modelCartridge;
         this.serialNumberPrinter = serialNumberPrinter;
@@ -67,12 +67,12 @@ public class ContractDTO {
         this.dateEndContract = dateEndContract;
     }
 
-    public String getObjectBuing() {
-        return objectBuing;
+    public String getSelectObjectBuing() {
+        return selectObjectBuing;
     }
 
-    public void setObjectBuing(String objectBuing) {
-        this.objectBuing = objectBuing;
+    public void setSelectObjectBuing(String selectObjectBuing) {
+        this.selectObjectBuing = selectObjectBuing;
     }
 
     public String getModelPrinter() {

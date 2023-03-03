@@ -39,7 +39,7 @@ public class ContractServiceMapper {
         if(dto.dateEndContract != null) {
             contract.setDateEndContract(dto.dateEndContract);
         }
-        if(dto.objectBuing.equals("printer")) {
+        if(dto.selectObjectBuing.equals("printer")) {
             Printer printer = new Printer();
             List<ObjectBuing> printers = new ArrayList<>();
             contract.setObjectBuing(printers);

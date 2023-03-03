@@ -133,14 +133,14 @@ document.querySelector('#selectObjectBuing').oninput = () => {
         
         document.querySelector("#isSwitched").addEventListener("change", function() {
             if(document.querySelector("#isSwitched").checked === true) {
-                document.querySelector("#isSwitched").value = true;
+                isSwitch = true;
                 let switchBlock = document.createElement("div");
                 switchBlock.id = "switchBlock";   
                 addSelect("Тип:", "typeCartridge", "printer", optionsCartridgeTypeMap, input);
                 addSelect("Модель:", "modelCartridge", "printer", optionsCartridgeMap, input);
                 addInput("Номинальный ресурс:", "nominalResource", "printer", input);
             } else {
-                document.querySelector("#isSwitched").value = false;
+                isSwitch = false;
                 input.removeChild(input.lastChild);
                 input.removeChild(input.lastChild);
                 input.removeChild(input.lastChild);
@@ -156,7 +156,7 @@ document.querySelector('#selectObjectBuing').oninput = () => {
             input.removeChild(input.lastChild);
             input.removeChild(input.lastChild);
             if(isSwitch) {
-                document.querySelector("#isSwitched").value = false;
+                isSwitch = false;
                 input.removeChild(input.lastChild);
                 input.removeChild(input.lastChild);
                 input.removeChild(input.lastChild);
@@ -164,12 +164,12 @@ document.querySelector('#selectObjectBuing').oninput = () => {
             }
         }
         
-        addSelect("Тип:", "typeCartridge", optionsCartridgeTypeMap, input);
+        addSelect("Тип:", "typeCartridge", "cartridge", optionsCartridgeTypeMap, input);
         addSelect("Модель:", "modelCartridge", "cartridge", optionsCartridgeMap, input);
         addInput("Номинальный ресурс:", "nominalResource", "printer", input);
         
         // Если ничего не выбрано
-    } else if(document.querySelector('#selectObjectBuing').value === 'Выбрать из списка') {
+    } else if(document.querySelector('#selectObjectBuing').value === "") {
         if(document.querySelector('.printer') !== null) {
             input.removeChild(input.lastChild);
             input.removeChild(input.lastChild);
