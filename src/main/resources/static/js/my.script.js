@@ -126,6 +126,7 @@ document.querySelector('#selectObjectBuing').oninput = () => {
              input.removeChild(input.lastChild);
              input.removeChild(input.lastChild);
         }
+        
         addSelect("Модель:", "modelPrinter", "printer", optionsPrinterMap, input);
         addInput("Серийный номер:", "serialNumberPrinter", "printer", input);
         addInput("Инвентарный номер:", "inventoryNumberPrinter", "printer", input);
@@ -151,38 +152,39 @@ document.querySelector('#selectObjectBuing').oninput = () => {
         // Если из справочника выбран картридж
     } else if (document.querySelector('#selectObjectBuing').value === 'cartridge') {
         if(document.querySelector('.printer') !== null ) {
-            input.removeChild(input.lastChild);
-            input.removeChild(input.lastChild);
-            input.removeChild(input.lastChild);
-            input.removeChild(input.lastChild);
-            if(isSwitch) {
+               if(isSwitch) {
                 isSwitch = false;
                 input.removeChild(input.lastChild);
                 input.removeChild(input.lastChild);
-                input.removeChild(input.lastChild);
-                
+                input.removeChild(input.lastChild);             
             }
+            input.removeChild(input.lastChild);
+            input.removeChild(input.lastChild);
+            input.removeChild(input.lastChild);
+            input.removeChild(input.lastChild);
+         
         }
         
         addSelect("Тип:", "typeCartridge", "cartridge", optionsCartridgeTypeMap, input);
         addSelect("Модель:", "modelCartridge", "cartridge", optionsCartridgeMap, input);
-        addInput("Номинальный ресурс:", "nominalResource", "printer", input);
+        addInput("Номинальный ресурс:", "nominalResource", "cartridge", input);
         
         // Если ничего не выбрано
     } else if(document.querySelector('#selectObjectBuing').value === "") {
         if(document.querySelector('.printer') !== null) {
-            input.removeChild(input.lastChild);
-            input.removeChild(input.lastChild);
-            input.removeChild(input.lastChild);
-            input.removeChild(input.lastChild);
-            if(isSwitched) {
-                isSwitched = false;
+              if(isSwitched) {
+                isSwitch = false;
                 input.removeChild(input.lastChild);
                 input.removeChild(input.lastChild);
                 input.removeChild(input.lastChild);
-             
             }
+            input.removeChild(input.lastChild);
+            input.removeChild(input.lastChild);
+            input.removeChild(input.lastChild);
+            input.removeChild(input.lastChild);
+          
         } else {
+            input.removeChild(input.lastChild);
             input.removeChild(input.lastChild);
             input.removeChild(input.lastChild);
         }
