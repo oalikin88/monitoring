@@ -16,6 +16,7 @@ public class ContractDTO {
    public Date dateStartContract;
    public Date dateEndContract;
    public String selectObjectBuing;
+   public String manufacturer;
    public String modelPrinter;
    public String modelCartridge;
    public String serialNumberPrinter;
@@ -23,17 +24,20 @@ public class ContractDTO {
    public String typeCartridge;
    public String nominalResource;
    public String isSwitched;
+   public String location;
 
     public ContractDTO() {
     }
 
     public ContractDTO(String contractNumber, Date dateStartContract, Date dateEndContract,
-            String objectBuing, String modelPrinter, String modelCartridge, String serialNumberPrinter,
-            String inventoryNumberPrinter, String typeCartridge, String nominalResource, String isSwitched) {
+            String objectBuing, String manufacturer, String modelPrinter, String modelCartridge, String serialNumberPrinter,
+            String inventoryNumberPrinter, String typeCartridge, String nominalResource, String isSwitched, String location) {
+        
         this.contractNumber = contractNumber;
         this.dateStartContract = dateStartContract;
         this.dateEndContract = dateEndContract;
         this.selectObjectBuing = objectBuing;
+        this.manufacturer = manufacturer;
         this.modelPrinter = modelPrinter;
         this.modelCartridge = modelCartridge;
         this.serialNumberPrinter = serialNumberPrinter;
@@ -41,6 +45,7 @@ public class ContractDTO {
         this.typeCartridge = typeCartridge;
         this.nominalResource = nominalResource;
         this.isSwitched = isSwitched;
+        this.location = location;
     }
 
     public String getContractNumber() {
@@ -130,6 +135,24 @@ public class ContractDTO {
     public void setIsSwitched(String isSwitched) {
         this.isSwitched = isSwitched;
     }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+    }
+
+    public String getManufacturer() {
+        return manufacturer;
+    }
+
+    public void setManufacturer(String manufacturer) {
+        this.manufacturer = manufacturer;
+    }
+    
+    
    
    
     

@@ -22,29 +22,31 @@ import javax.validation.constraints.NotNull;
 public class Printer extends ObjectBuing {
 
     @NotNull
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     protected Location location;
     @NotNull
-    protected String model;
+    @ManyToOne(cascade = CascadeType.ALL)
+    protected Manufacturer manufacturer;
     @NotNull
     protected String serialNumber; 
     @NotNull
     protected String inventoryNumber;
     @NotNull
     @OneToMany(targetEntity = Cartridge.class, mappedBy = "printer", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    protected List<Cartridge> cartridge;
+    protected List<ObjectBuing> cartridge;
    
     
     public Printer() {
     }
 
-    public Printer(Location location, String model, String serialNumber, String inventoryNumber, List<Cartridge> cartridge) {
+    public Printer(Location location, Manufacturer manufacturer, String serialNumber, String inventoryNumber, List<ObjectBuing> cartridge) {
         this.location = location;
 
-        this.model = model;
         this.serialNumber = serialNumber;
         this.inventoryNumber = inventoryNumber;
         this.cartridge = cartridge;
+        this.manufacturer = manufacturer;
+        
     }  
 
     public Long getId() {
@@ -71,21 +73,14 @@ public class Printer extends ObjectBuing {
         this.contract = contract;
     }
 
-    public List<Cartridge> getCartridge() {
+    public List<ObjectBuing> getCartridge() {
         return cartridge;
     }
 
-    public void setCartridge(List<Cartridge> cartridge) {
+    public void setCartridge(List<ObjectBuing> cartridge) {
         this.cartridge = cartridge;
     }
 
-    public String getModel() {
-        return model;
-    }
-
-    public void setModel(String model) {
-        this.model = model;
-    }
 
     public String getSerialNumber() {
         return serialNumber;
@@ -103,9 +98,19 @@ public class Printer extends ObjectBuing {
         this.inventoryNumber = inventoryNumber;
     }
 
+    public Manufacturer getManufacturer() {
+        return manufacturer;
+    }
+
+    public void setManufacturer(Manufacturer manufacturer) {
+        this.manufacturer = manufacturer;
+    }
+    
+    
+
     @Override
     public String toString() {
-        return "Printer [ID: " + super.id + "; Model: " + this.model + "; Serial: " + this.serialNumber + 
+        return "Printer [ID: " + super.id + "; Model: " + this.manufacturer + "; Serial: " + this.serialNumber + 
                 "; Invertary number: " + this.inventoryNumber + "; Location: " + this.location + "; Cartridge: " + this.cartridge + "]";
     }
     

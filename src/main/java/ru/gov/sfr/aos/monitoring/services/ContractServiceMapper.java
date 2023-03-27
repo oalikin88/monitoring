@@ -12,9 +12,12 @@ import ru.gov.sfr.aos.monitoring.CartridgeType;
 import ru.gov.sfr.aos.monitoring.entities.Cartridge;
 import ru.gov.sfr.aos.monitoring.entities.Contract;
 import ru.gov.sfr.aos.monitoring.entities.Location;
+import ru.gov.sfr.aos.monitoring.entities.Manufacturer;
 import ru.gov.sfr.aos.monitoring.entities.ObjectBuing;
 import ru.gov.sfr.aos.monitoring.entities.Printer;
 import ru.gov.sfr.aos.monitoring.models.ContractDTO;
+import ru.gov.sfr.aos.monitoring.repositories.LocationRepo;
+import ru.gov.sfr.aos.monitoring.repositories.ManufacturerRepo;
 
 /**
  *
@@ -22,80 +25,175 @@ import ru.gov.sfr.aos.monitoring.models.ContractDTO;
  */
 @Component
 public class ContractServiceMapper {
-    
+
     @Autowired
     private ContractServiceImpl contractServiceImpl;
-    
+    @Autowired
+    private LocationRepo locationRepo;
+    @Autowired 
+    private ManufacturerRepo manufacturerRepo;
+
     public void createNewContract(ContractDTO dto) {
+        List<ObjectBuing> objectsBuing = new ArrayList<>();
         Long contractNumber;
         Contract contract = new Contract();
-        if(dto.contractNumber != null && !dto.contractNumber.isBlank()) {
+        if (dto.contractNumber != null && !dto.contractNumber.isBlank()) {
             contractNumber = Long.parseLong(dto.contractNumber);
-            contract.setContractNumber(contractNumber); 
+            contract.setContractNumber(contractNumber);
         }
-        if(dto.dateStartContract != null) {
+        if (dto.dateStartContract != null) {
             contract.setDateStartContract(dto.dateStartContract);
         }
-        if(dto.dateEndContract != null) {
+
+        if (dto.dateEndContract != null) {
             contract.setDateEndContract(dto.dateEndContract);
         }
-        if(dto.selectObjectBuing.equals("printer")) {
+
+        if (dto.selectObjectBuing.equals("printer")) {
             Printer printer = new Printer();
-            List<ObjectBuing> printers = new ArrayList<>();
-            contract.setObjectBuing(printers);
-            if(dto.modelPrinter != null) {
-                printer.setModel(dto.modelPrinter);
+            if (dto.manufacturer != null) {
+                Manufacturer manufacturer = new Manufacturer();
+                manufacturer.setName(dto.manufacturer);
+                if (dto.modelPrinter != null) {
+                    
+                    manufacturer.setModel(dto.modelPrinter);
+                } else {
+                    manufacturer.setModel("default");
+                }
+                printer.setManufacturer(manufacturer);
+
+            } else {
+                printer.setManufacturer(new Manufacturer("default", "default"));
             }
-            if(dto.serialNumberPrinter != null) {
+
+            if (dto.serialNumberPrinter != null) {
                 printer.setSerialNumber(dto.serialNumberPrinter);
+            } else {
+                printer.setSerialNumber("default");
             }
-            if(dto.inventoryNumberPrinter != null) {
+            if (dto.inventoryNumberPrinter != null) {
                 printer.setInventoryNumber(dto.inventoryNumberPrinter);
+            } else {
+                printer.setInventoryNumber("default");
             }
-            if(dto.isSwitched.equals("true")) {
+            if (dto.location != null) {
+                printer.setLocation(new Location(dto.location));
+            } else {
+                Location location;
+                List<Location> findLocation = locationRepo.findByName("Склад");
+                if (findLocation.size() != 0) {
+                    location = findLocation.get(0);
+                } else {
+                    location = new Location("Склад");
+                }
+
+                printer.setLocation(location);
+            }
+            if (dto.isSwitched.equals("on")) {
+
                 Cartridge cartridge = new Cartridge();
-                List<Cartridge> cartridges = new ArrayList<>();
-                 printer.setCartridge(cartridges);
-                if(dto.typeCartridge != null) {
-                   switch (dto.typeCartridge) {
-                       case ("ORIGINAL"):
-                           cartridge.setType(CartridgeType.ORIGINAL);
-                           break;
-                           
-                       case ("ANALOG"):
-                           cartridge.setType(CartridgeType.ANALOG);
-                           break;
-                           
-                       case ("START"):
-                           cartridge.setType(CartridgeType.START);
-                           break;
-                   } 
-                   
+                if (dto.typeCartridge != null) {
+                     String[] target = dto.typeCartridge.split(" ");
+                    switch (target[2]) {
+                        case ("ORIGINAL"):
+                            cartridge.setType(CartridgeType.ORIGINAL);
+                            break;
+
+                        case ("ANALOG"):
+                            cartridge.setType(CartridgeType.ANALOG);
+                            break;
+
+                        case ("START"):
+                            cartridge.setType(CartridgeType.START);
+                            break;
+                    }
+
                 } else {
                     cartridge.setType(CartridgeType.START);
                 }
-                
-                if(dto.modelCartridge != null)  {
+
+                if (dto.modelCartridge != null) {
                     cartridge.setModel(dto.modelCartridge);
                 }
-                
-                if(dto.nominalResource != null) {
+
+                if (dto.nominalResource != null) {
+                    cartridge.setDefaultNumberPrintPage(Integer.parseInt(dto.nominalResource)); // Нужен Long!
+                }
+                if (dto.location != null) {
+                    cartridge.setLocation(new Location(dto.location));
+                } else {
+                    Location location;
+                    List<Location> findLocation = locationRepo.findByName("Склад");
+                    if (findLocation.size() != 0) {
+                        location = findLocation.get(0);
+                    } else {
+                        location = new Location("Склад");
+                    }
+                 cartridge.setLocation(location);
+                }
+                    cartridge.setContract(contract);
+                    cartridge.setPrinter(printer);
+                    objectsBuing.add(cartridge);
+
+                }
+
+                printer.setContract(contract);
+                objectsBuing.add(printer);
+
+            } else if (dto.selectObjectBuing.equals("cartridge")) {
+                Cartridge cartridge = new Cartridge();
+
+                if (dto.typeCartridge != null) {
+                    String[] target = dto.typeCartridge.split(" ");
+                    switch (target[2]) {
+                        case ("ORIGINAL"):
+                            cartridge.setType(CartridgeType.ORIGINAL);
+                            break;
+
+                        case ("ANALOG"):
+                            cartridge.setType(CartridgeType.ANALOG);
+                            break;
+
+                        case ("START"):
+                            cartridge.setType(CartridgeType.START);
+                            break;
+                    }
+
+                } else {
+                    cartridge.setType(CartridgeType.START);
+                }
+
+                if (dto.modelCartridge != null) {
+                    cartridge.setModel(dto.modelCartridge);
+                }
+
+                if (dto.nominalResource != null) {
                     cartridge.setDefaultNumberPrintPage(Integer.parseInt(dto.nominalResource));
                 }
-                cartridge.setPrinter(printer);
-                cartridges.add(cartridge);
-               
+                
+                if (dto.location != null) {
+                    cartridge.setLocation(new Location(dto.location));
+                } else {
+                    Location location;
+                    List<Location> findLocation = locationRepo.findByName("Склад");
+                    if (findLocation.size() != 0) {
+                        location = findLocation.get(0);
+                    } else {
+                        location = new Location("Склад");
+                    }
+                    
+                 cartridge.setLocation(location);
+                }
+                
+                cartridge.setContract(contract);
+
+                objectsBuing.add(cartridge);
+
             }
-            printer.setContract(contract);
-            printers.add(printer);
-            
-            
-           
+
+            contract.setObjectBuing(objectsBuing);
+            contractServiceImpl.saveContract(contract);
+
         }
-        
-        contractServiceImpl.saveContract(contract);
-        
+
     }
-    
-    
-}
