@@ -6,6 +6,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
 <html lang="ru" xmlns:th="http://www.thymeleaf.org">
     <head>
         <title>Добавить контракт</title>
+        <link rel="icon" type="image/x-icon" href="/img/favicon.ico">
         <script src="/js/jquery-3.6.4.min.js"></script>
         <script src="/js/selectize.min.js"></script>
         <meta charset="UTF-8">
@@ -15,78 +16,122 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
         <link href="/css/style.css" rel="stylesheet">
     </head>
     <body>
-
-
         <nav th:insert="nav :: navbar"></nav>
-        <div>
-            <form th:action="@{/main}" th:object="${contract}" method="post" id="sendForm">
-                <div>
-                    <h3 class="text-center" id="addContract">Добавить контракт</h3>
-                </div>
-                <br>
-                <br>
-                <div class='container' id='sendData'>
-                    <div class="row mb-2">
-                        <div  class="col mb-6 text-end">
-                            <label for="inputContractNumber" class="form-label">Номер контракта:</label>
-                        </div>
-                        <div  class="col mb-6">
-                            <input type="text"  class="form-control" id="inputContractNumber" th:field="*{contractNumber}" />
-                        </div>
-                    </div>
-                    <div class="row mb-2">
-                        <div class="col mb-6 text-end">
-                            <label for='dateStartContract' class="form-label">Дата начала контракта: </label>
-                        </div>
-                        <div class="col mb-6">
-                            <input type="date" class="form-control" th:field="*{dateStartContract}" placeholder="date" id='dateStartContract' />
-                        </div>
-                    </div>
-                    <div class="row mb-2">
-                        <div class="col mb-6 text-end">
-                            <label for='dateEndContract' class="form-label">Дата окончания контракта: </label>
-                        </div>
-                        <div class="col mb-6">
-                            <input type="date" class="form-control" th:field="*{dateEndContract}" placeholder="date" id='dateEndContract' />
-                        </div>
-                    </div>
-                    <div class="row mb-2">
-                        <div class="col mb-6 text-end">
-                            <label for='selectObjectBuing' class="form-label">Объект закупки:</label>
-                        </div>
-                        <div class="col mb-6">
-                            <select class="form-select" aria-label="Default select example" id="selectObjectBuing" th:field="*{selectObjectBuing}">
-                                <option value="">Выбрать из списка</option>
-                                <option value="printer">Принтер</option>
-                                <option value="cartridge">Картридж</option>
 
-                            </select>
+        <div class="container" id="sendData">
+
+            <div class="tab-status">
+                <span class="tab active">1</span>
+                <span class="tab">2</span>
+                <span class="tab">3</span>
+                <span class="tab">4</span>
+            </div>
+
+            <header><h3 class="fw-bold">Добавление контракта</h3></header>
+            <form th:action="@{/main}" th:object="${contract}" method="post" id="sendForm">
+
+                <div role="tab-list">
+
+                    <div role="tabpanel" id="mainParameters" class="tabpanel">
+
+                        <div class="title"><h4 class="text-left fw-bold">Основные параметры</h4></div>
+                        <div class="row text-center">
+                            <div  class="col-md-4">
+                                <label for="inputContractNumber" class="form-label">Номер контракта:</label>
+                            </div>
+
+                            <div class="col-md-4">
+                                <label for='dateStartContract' class="form-label">Дата начала контракта: </label>
+                            </div>
+                            <div class="col-md-4">
+                                <label for='dateEndContract' class="form-label">Дата окончания контракта: </label>
+                            </div>
+                        </div>
+
+                        <div class="row mb-2 contract">
+                            <div class="col-md-4 mb-2">
+                                <input type="text"  class="form-control" id="inputContractNumber" th:field="*{contractNumber}" />
+                            </div>
+                            <div class="col-md-4 mb-2">
+                                <input type="date" class="form-control" th:field="*{dateStartContract}" placeholder="date" id='dateStartContract' />
+                            </div>
+                            <div class="col-md-4 mb-2">
+                                <input type="date" class="form-control" th:field="*{dateEndContract}" placeholder="date" id='dateEndContract' />
+                            </div>
+                        </div>
+
+                        <div class="row mb-2 mt-4">
+                            <div class="col-md-12 text-center">
+                                <h5 class="fw-bold">Объект закупки</h5>
+                            </div>
+                        </div>
+
+
+                        <div class="row ">
+                            <div class="col-md-4 col-md-offset-4 mb-2 text-center ">
+
+                                <label for='checkboxPrinter' class="form-label">Принтеры:</label>
+                                <div class="input-group mb-3">
+                                    <div class="input-group-text">
+                                        <input class="form-check-input mt-0" type="checkbox" value="" 
+                                               aria-label="Checkbox for following text input" id="checkboxPrinter" name="checkboxPrinter">
+                                    </div>
+                                    <input type="text" class="form-control" aria-label="Text input with checkbox"
+                                           placeholder="Количество" id="amountPrinterInput" disabled>
+                                </div>
+                            </div>
+
+                            <div class="col-md-4 col-md-offset-4 mb-2 text-center">
+                                <label for='checkboxCartridge' class="form-label">Картриджи:</label>
+                                <div class="input-group mb-3"  id="cartridgeCheck" >
+                                    <div class="input-group-text">
+                                        <input class="form-check-input mt-0" type="checkbox" value=""
+                                               aria-label="Checkbox for following text input" id="checkboxCartridge" name="checkboxCartridge">
+                                    </div>
+                                    <input type="text" class="form-control" aria-label="Text input with checkbox" 
+                                           placeholder="Количество" id="amountCartridgeInput" disabled>
+                                </div>
+                            </div>
+
                         </div>
                     </div>
-                </div>
+                    <div role="tabpanel" id="printersInfo" class="tabpanel hidden">
+                        <div class="title"><h4 class="text-left fw-bold">Информация о принтерах</h4></div>
+
+
+                    </div>
+                    <div role="tabpanel" id="cartridgesInfo" class="tabpanel hidden">
+                        <div class="title"><h4 class="text-left fw-bold">Информация о картриджах</h4></div>
+                                          
+                    </div>
                     
-                <br>
-                <br>
-                <div class="text-center">
-                    <input type="submit"  class="btn btn-primary" value="Добавить"/>
+                    
+                
+                    <div role="tabpanel" id="resultInfo" class="tabpanel hidden">
+                        <div class="title"><h4 class="text-left fw-bold">Данные о контракте</h4></div>
+                                          
+                    </div>
+                    
+                    
+                    
+                </div>  
+                <div class="row">
+                    <div class="pagination">
+                        <div  class="col-md-12 text-end">
+                            <a class="btn hidden" id="prev">Назад</a>
+                            <a class="btn" id="next">Далее</a>
+                            <button class="btn btn-submit hidden" id="submit">Добавить</button>
+                        </div>
+                    </div>
                 </div>
             </form>
         </div>
-
-
-        <br>
-        <br>
-        <br>
         <div>
             <ul th:each="contract : ${contracts}">
                 <li th:text="${contract}"></li>
             </ul>
         </div>
-
-
-
         <footer class="py-3 my-4">
-
             <p class="text-center text-light">© 2008 - 
                 <script>
                     function date_time()
@@ -97,12 +142,20 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                     }
                     document.write(date_time());
                 </script>     
-
                 Отдел эксплуатации и сопровождения информационных подсистем. <br> Отделение СФР по Белгородской области</p>
         </footer>
-
         <script src="/js/bootstrap.bundle.min.js" ></script>
         <script src="/js/my.script.js" defer></script>
-
     </body>
 </html>
+
+                            
+                            
+                            
+                                  <!--                    <div class="col-md-3 mb-2">
+                                                <select class="form-select" aria-label="Default select example" id="selectObjectBuing" th:field="*{selectObjectBuing}">
+                                                    <option value="">Выбрать из списка</option>
+                                                    <option value="printer">Принтер</option>
+                                                    <option value="cartridge">Картридж</option>
+                                                </select>
+                                            </div>-->

@@ -5,56 +5,48 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
 -->
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-  <body>   
-     <nav class="navbar  bg-light  navbar-expand-lg bg-body-tertiary " th:fragment="navbar">
-                  <div class="container-fluid">
+    <body>   
+        <nav class="navbar  bg-light  navbar-expand-lg bg-body-tertiary " th:fragment="navbar" id="navbar">
+            <div class="container-fluid">
                 <div class="col col-sm-6 col-md-5 px-0 site-header-logo-wrapper ">
                     <div class="d-inline-block float-left">
                         <div class="logo d-flex align-items-center pl-sm-3 pl-md-4">
                             <a class="navbar-brand" href="/main">
-                            <img id="logo" src="../img/logo.svg" alt="логотип СФР">
-
-                            <span>
-                                Социальный фонд России
-                            </span>
+                                <img id="logo" src="../img/logo.svg" alt="логотип СФР">
+                                <span>
+                                    Социальный фонд России
+                                </span>
                             </a>
                         </div>
                     </div>
-                    
-             
-                    
-                    
                 </div>
-                        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-        <li class="nav-item">
-          <a class="nav-link active" aria-current="page" href="/cartridges">Картриджи</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#">Link</a>
-        </li>
-        <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            Dropdown
-          </a>
-          <ul class="dropdown-menu">
-            <li><a class="dropdown-item" href="#">Action</a></li>
-            <li><a class="dropdown-item" href="#">Another action</a></li>
-            <li><hr class="dropdown-divider"></li>
-            <li><a class="dropdown-item" href="#">Something else here</a></li>
-          </ul>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link disabled">Disabled</a>
-        </li>
-      </ul>
-      <form class="d-flex" role="search">
-        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-        <button class="btn btn-outline-success" type="submit">Search</button>
-      </form>
-    </div>
-
-        </div>
-            </nav>
-  </body>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                        <li class="nav-item">
+                            <a class="nav-link active" aria-current="page" href="/cartridges">Картриджи</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">Добавить контракт</a>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Меню
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="#">Action</a></li>
+                                <li><a class="dropdown-item" href="#">Another action</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" href="#">Something else here</a></li>
+                            </ul>
+                        </li>
+                       
+                    </ul>
+                    <form class="d-flex" role="search">
+                        <input class="form-control me-2" type="search" placeholder="Поиск" aria-label="Поиск" id="search">
+                        <button class="btn btn-outline-success" type="submit">Поиск</button>
+                    </form>
+                </div>
+            </div>
+        </nav>
+    </body>
 </html>
