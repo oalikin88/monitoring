@@ -8,6 +8,14 @@ let manuf;
 let cartridgesMap = new Map();
 let targetSwitch;
 
+//const submit = function(e) {
+//    const formdata = new FormData(document.querySelector('sendForm'));
+//    e.preventDefault();
+//    req = new XMLHttpRequest();
+//   
+//
+//} 
+
 const previousButton = document.querySelector('#prev');
 const nextButton = document.querySelector('#next');
 const submitButton = document.querySelector('#submit');
@@ -75,6 +83,31 @@ cartridgesXhr.onreadystatechange = function () {
     }
 };
 
+document.addEventListener('submit', function (event) {
+    const fRequest = new XMLHttpRequest();
+    const form = document.getElementById('sendForm');
+    const FD = new FormData(form);
+
+    fRequest.addEventListener("load", function (event) {
+        alert(event.target.responseText);
+    });
+
+    fRequest.addEventListener("error", function (event) {
+        alert('Oops! Something went wrong.');
+    });
+
+    fRequest.open("POST", "https://localhost:8080/main");
+    fRequest.send(FD);
+
+    event.preventDefault();
+    let json = JSON.stringify(form);
+
+    alert(json);
+});
+
+
+
+
 document.addEventListener('click', function (e) {
     if (currentStep > 0) {
         if (hasClass(e.target, 'form-check-input')) {
@@ -111,12 +144,12 @@ nextButton.addEventListener("click", (event) => {
     tabTargets[currentStep + 1].classList.add('active');
     currentStep += 1;
 
-    
-        if (currentStep == 1) {
+
+    if (currentStep == 1) {
         getContract();
     } else if (currentStep == 2) {
         getContractPrinterDetails();
-    } else if(currentStep == 3) {
+    } else if (currentStep == 3) {
         getContractCartridgeDetails();
     }
     validateEntry();
@@ -125,6 +158,8 @@ nextButton.addEventListener("click", (event) => {
 
 
 });
+
+
 
 
 function getFinalPage() {
@@ -169,8 +204,8 @@ function getFinalPage() {
     labelCartridgeAmount.className = "col-md-6 text-center";
     labelCartridgeAmount.innerText = "Картриджи: " + input.form.elements.amountCartridgeInput.value;
 
-    
-           //Раздел принтеры
+
+    //Раздел принтеры
 
 
     printerTitle = document.createElement("div");
@@ -335,10 +370,10 @@ function getFinalPage() {
         printerRow.appendChild(includeCartridgePrinter);
 
     }
-        // Раздел картриджи
+    // Раздел картриджи
     independedCartridgeTitleRow = document.createElement("div");
     independedCartridgeTitleRow.className = "row";
-    
+
     independedCartridgeTitle = document.createElement("div");
     independedCartridgeTitle.className = "col-md-12 text-center text-uppercase fw-bold mb-3 mt-5";
     independedCartridgeTitle.innerText = "Картриджи";
@@ -375,36 +410,36 @@ function getFinalPage() {
     labelsIndependedCartridgesRow.appendChild(labelIndependedCartridgeType);
     labelsIndependedCartridgesRow.appendChild(labelIndependedCartridgeModel);
     labelsIndependedCartridgesRow.appendChild(labelIndependedCartridgeResource);
-    
-    
+
+
 
     // Добавление картриджей на страницу
     for (i = 0; i < cartridgesArray.length; i++) {
-        
+
         paneObjectCartridge = document.createElement("div");
         paneObjectCartridge.className = "paneFinal mb-3";
-        
+
         independedCartridgeRow = document.createElement("div");
         independedCartridgeRow.className = "row mb-3 pt-3 pb-3";
         printerRow.id = "printer_row_" + (i + 1);
-        
+
         countEachIndependedCartridge = document.createElement("div");
         countEachIndependedCartridge.className = "col-md-1 d-flex align-items-center justify-content-center";
         countEachIndependedCartridge.innerText = i + 1;
-        
+
         typeEachIndependedCartridge = document.createElement("div");
         typeEachIndependedCartridge.className = "col-md-3 d-flex align-items-center justify-content-center";
         typeEachIndependedCartridge.innerText = cartridgesArray[i].type;
-        
+
         modelEachIndependedCartridge = document.createElement("div");
         modelEachIndependedCartridge.className = "col-md-3 d-flex align-items-center justify-content-center";
         modelEachIndependedCartridge.innerText = cartridgesArray[i].model;
-        
+
         resourceEachIndependedCartridge = document.createElement("div");
         resourceEachIndependedCartridge.className = "col-md-4 d-flex align-items-center justify-content-center";
         resourceEachIndependedCartridge.innerText = cartridgesArray[i].resource;
-        
-        
+
+
         respage.appendChild(paneObjectCartridge);
         paneObjectCartridge.appendChild(independedCartridgeRow);
         independedCartridgeRow.appendChild(countEachIndependedCartridge);
@@ -989,16 +1024,16 @@ function getContractPrinterDetails() {
 function getContractCartridgeDetails() {
 
     for (i = 0; i < document.getElementsByClassName('independentCartridge').length; i++) {
-        
+
         let cartridge = new Object();
 
         cartridge = {
-            
+
             type: document.getElementsByClassName('independentCartridge')[i].children.item(1).firstChild.value.split(" ")[0],
             model: document.getElementsByClassName('independentCartridge')[i].children.item(2).firstChild.value,
             resource: document.getElementsByClassName('independentCartridge')[i].children.item(3).firstChild.value
         };
-        
+
         cartridgesArray.push(cartridge);
     }
 }
