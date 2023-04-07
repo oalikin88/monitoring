@@ -211,3 +211,11 @@ nav span {
 
 }
 
+.paneFinal {
+    border-radius: 10px;
+    background: rgba(0.4, 0.4, 0.4, 0.10);
+}
+
+#cartridgeTitleInner{
+    margin-left: 40px;
+}
