@@ -30,7 +30,7 @@ public class Cartridge extends ObjectBuing {
     @Enumerated(EnumType.STRING)
     protected CartridgeType type;
     @NotNull
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     protected Location location;
     @NotNull
     protected LocalDateTime dateStartExploitation;
@@ -39,9 +39,9 @@ public class Cartridge extends ObjectBuing {
     @NotNull
     protected boolean util;
     @NotNull
-    protected int count;
+    protected Long count;
     @NotNull
-    protected int defaultNumberPrintPage; // на сколько картридж рассчитан, лучше вшить внутрь бд
+    protected Long defaultNumberPrintPage; // на сколько картридж рассчитан, лучше вшить внутрь бд
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "PRINTER_ID",
 			foreignKey = @ForeignKey(name = "PRINTER_ID_FK"))
@@ -54,7 +54,7 @@ public class Cartridge extends ObjectBuing {
     }
    
     public Cartridge(String model, CartridgeType type, Location location, LocalDateTime dateStartExploitation, 
-            LocalDateTime dateEndExploitation, boolean util, int count, int defaultNumberPrintPage) {
+            LocalDateTime dateEndExploitation, boolean util, Long count, Long defaultNumberPrintPage) {
         this.model = model;
         this.type = type;
         this.location = location;
@@ -97,7 +97,7 @@ public class Cartridge extends ObjectBuing {
         return util;
     }
 
-    public int getCount() {
+    public Long getCount() {
         return count;
     }
 
@@ -126,15 +126,15 @@ public class Cartridge extends ObjectBuing {
         this.util = util;
     }
 
-    public void setCount(int count) {
+    public void setCount(Long count) {
         this.count = count;
     }
 
-    public int getDefaultNumberPrintPage() {
+    public Long getDefaultNumberPrintPage() {
         return defaultNumberPrintPage;
     }
 
-    public void setDefaultNumberPrintPage(int defaultNumberPrintPage) {
+    public void setDefaultNumberPrintPage(Long defaultNumberPrintPage) {
         this.defaultNumberPrintPage = defaultNumberPrintPage;
     }
 

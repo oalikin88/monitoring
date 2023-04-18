@@ -8,14 +8,6 @@ let manuf;
 let cartridgesMap = new Map();
 let targetSwitch;
 
-//const submit = function(e) {
-//    const formdata = new FormData(document.querySelector('sendForm'));
-//    e.preventDefault();
-//    req = new XMLHttpRequest();
-//   
-//
-//} 
-
 const previousButton = document.querySelector('#prev');
 const nextButton = document.querySelector('#next');
 const submitButton = document.querySelector('#submit');
@@ -29,6 +21,8 @@ let currentStep = 0;
 
 let printersArray = new Array();
 let cartridgesArray = new Array();
+let printersPlusCartridges = new Array();
+let mainPageArray = new Array();
 
 let contract = new Object();
 let manufact = new URL("http://localhost:8080/manufacturers"); // адрес контроллера с которого загружаем список производителей и моделей принтеров
@@ -41,7 +35,7 @@ let cartridgesXhr = new XMLHttpRequest();
 cartridgesXhr.open("GET", cartridgesUrl, true);
 cartridgesXhr.responseType = "json";
 cartridgesXhr.send();
-
+let formData = new FormData();
 
 let optionsManufacturerMap = new Map();
 optionsManufacturerMap.set("выбрать из списка", "");
@@ -83,28 +77,35 @@ cartridgesXhr.onreadystatechange = function () {
     }
 };
 
+
+
+
+
+
 document.addEventListener('submit', function (event) {
-    const fRequest = new XMLHttpRequest();
-    const form = document.getElementById('sendForm');
-    const FD = new FormData(form);
 
-    fRequest.addEventListener("load", function (event) {
-        alert(event.target.responseText);
-    });
-
-    fRequest.addEventListener("error", function (event) {
-        alert('Oops! Something went wrong.');
-    });
-
-    fRequest.open("POST", "https://localhost:8080/main");
-    fRequest.send(FD);
-
+    let tempArray = new Array();
+    tempArray = mainPageArray.concat(printersArray);
+    printersPlusCartridges = tempArray.concat(cartridgesArray);
     event.preventDefault();
-    let json = JSON.stringify(form);
+    $.ajax({
+        type: "POST",
+        url: "http://localhost:8080/main",
+        data: JSON.stringify(printersPlusCartridges),
+        success: function () {
+            window.location.reload();
+        },
+        error: function (e) {
+            console.log(e);
+        },
+        processData: false,
+        contentType: 'application/json'
 
-    alert(json);
+
+    });
+    console.log(printersPlusCartridges);
+
 });
-
 
 
 
@@ -147,10 +148,28 @@ nextButton.addEventListener("click", (event) => {
 
     if (currentStep == 1) {
         getContract();
+        if (mainPageArray.length > 0) {
+            mainPageArray.forEach(element => {
+                if (!element.amountPrinters) {
+                    currentStep += 1;
+                }
+            });
+        }
     } else if (currentStep == 2) {
         getContractPrinterDetails();
     } else if (currentStep == 3) {
         getContractCartridgeDetails();
+    }
+
+    if (mainPageArray.length > 0) {
+        mainPageArray.forEach(element => {
+            if (!element.amountPrinters) {
+                console.log("Принтеры не выбраны");
+                // Show next tab
+                tabPanels[currentStep].classList.remove('hidden');
+                tabTargets[currentStep].classList.add('active');
+            }
+        });
     }
     validateEntry();
     getContentForTablist();
@@ -457,8 +476,12 @@ function getContract() {
     contract = {
         numberContract: document.getElementsByClassName('contract')[0].children.item(0).firstElementChild.value,
         dateStartContract: document.getElementsByClassName('contract')[0].children.item(1).firstElementChild.value,
-        dateEndContract: document.getElementsByClassName('contract')[0].children.item(2).firstElementChild.value
+        dateEndContract: document.getElementsByClassName('contract')[0].children.item(2).firstElementChild.value,
+        amountPrinters: document.getElementsByClassName('objectBuingRow')[0].children.item(0).childNodes[3].children.item(1).value,
+        amountCartridges: document.getElementsByClassName('objectBuingRow')[0].children.item(1).childNodes[3].children.item(1).value,
     }
+
+    mainPageArray.push(contract);
 
 }
 
@@ -1007,6 +1030,7 @@ function getContractPrinterDetails() {
         let printer = new Object();
 
         printer = {
+            printer: i + 1,
             manufacturer: document.getElementsByClassName('printer')[i].children.item(1).firstChild.value,
             model: document.getElementsByClassName('printer')[i].children.item(2).firstChild.value,
             serialNumber: document.getElementsByClassName('printer')[i].children.item(3).firstChild.value,
@@ -1028,7 +1052,7 @@ function getContractCartridgeDetails() {
         let cartridge = new Object();
 
         cartridge = {
-
+            cartridge: i + 1,
             type: document.getElementsByClassName('independentCartridge')[i].children.item(1).firstChild.value.split(" ")[0],
             model: document.getElementsByClassName('independentCartridge')[i].children.item(2).firstChild.value,
             resource: document.getElementsByClassName('independentCartridge')[i].children.item(3).firstChild.value

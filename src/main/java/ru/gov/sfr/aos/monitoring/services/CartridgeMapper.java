@@ -27,7 +27,7 @@ public class CartridgeMapper {
       List<Cartridge> cartridges = cartridgeRepo.findAll();
       List<CartridgeDTO> dtoList = new ArrayList<>();
       for(Cartridge cart : cartridges) {
-          CartridgeDTO dto = new CartridgeDTO(cart.getType().getName(), cart.getType().toString(), cart.getModel(), Integer.toString(cart.getDefaultNumberPrintPage()));
+          CartridgeDTO dto = new CartridgeDTO(cart.getType().getName(), cart.getType().toString(), cart.getModel(), Long.toString(cart.getDefaultNumberPrintPage()));
           dtoList.add(dto);
       }
       return dtoList;

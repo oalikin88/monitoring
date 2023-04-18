@@ -4,13 +4,16 @@
  */
 package ru.gov.sfr.aos.monitoring.controllers;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import ru.gov.sfr.aos.monitoring.entities.Cartridge;
 import ru.gov.sfr.aos.monitoring.entities.Contract;
 import ru.gov.sfr.aos.monitoring.interfaces.CartridgeServiceInterface;
@@ -34,23 +37,20 @@ public class MainController {
 
     
     @GetMapping("/main")
-    public String getData(Model model) {
-        
-        List<Contract> contracts = contractServiceInterface.getContracts();
-        ContractDTO contract = new ContractDTO();
-        
-       model.addAttribute("contracts", contracts);
+    public String getData(Model model) {        
+       List<Contract> contracts = contractServiceInterface.getContracts();
+       ContractDTO contract = new ContractDTO();
        model.addAttribute("contract", contract);
-       
-        return "main";
-        
+      
+       return "main";        
     }
-    
-    @PostMapping("/main")
+   
+    @PostMapping(value = "/main", consumes = "application/json", produces = "application/json")
     public String sendData(
-            @ModelAttribute ContractDTO contract) {
-       
-        mapper.createNewContract(contract);
+         @RequestBody
+         List<Map<String, String>> printersPlusCartridges) {
+        
+        mapper.createNewContract(printersPlusCartridges);
         
         return "redirect:/main";
         
@@ -72,7 +72,7 @@ public class MainController {
     public String sendCartridges(
             @ModelAttribute ContractDTO contract) {
        
-        mapper.createNewContract(contract);
+   //     mapper.createNewContract(contract);
         
         return "redirect:/cartridges";
         
