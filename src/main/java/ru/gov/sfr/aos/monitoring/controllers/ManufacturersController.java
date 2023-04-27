@@ -5,15 +5,13 @@
 package ru.gov.sfr.aos.monitoring.controllers;
 
 import java.util.List;
-import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-import ru.gov.sfr.aos.monitoring.entities.Manufacturer;
 import ru.gov.sfr.aos.monitoring.models.ManufacturerDTO;
-import ru.gov.sfr.aos.monitoring.services.ManufacturerMapper;
-import ru.gov.sfr.aos.monitoring.services.ManufacturerServiceImpl;
+import ru.gov.sfr.aos.monitoring.services.ManufacturersMapper;
+
 
 /**
  *
@@ -24,15 +22,16 @@ public class ManufacturersController {
     
     
     @Autowired
-    private ManufacturerMapper mapper;
+    private ManufacturersMapper mapper;
         
     @RequestMapping(value = "/manufacturers", method = RequestMethod.GET)
     public List<ManufacturerDTO> showPrinters() {
         
-        List<ManufacturerDTO> manufacturers = mapper.getDto();
+        List<ManufacturerDTO> list = mapper.showManufacturers();
         
+       return list;
         
-        return manufacturers;
+       
         
 }
     

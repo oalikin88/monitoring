@@ -4,20 +4,23 @@
  */
 package ru.gov.sfr.aos.monitoring.models;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  *
  * @author 041AlikinOS
  */
 public class ManufacturerDTO {
     public String manufacturer;
-    public String model;
+    public List<String> models = new ArrayList<>();
 
     public ManufacturerDTO() {
     }
 
-    public ManufacturerDTO(String manufacturer, String model) {
+    public ManufacturerDTO(String manufacturer, List<String> models) {
         this.manufacturer = manufacturer;
-        this.model = model;
+        this.models = models;
     }
 
     public String getManufacturer() {
@@ -28,12 +31,12 @@ public class ManufacturerDTO {
         this.manufacturer = manufacturer;
     }
 
-    public String getModel() {
-        return model;
+    public List <String> getModels() {
+        return models;
     }
 
-    public void setModel(String model) {
-        this.model = model;
+    public void setModels(List <String> models) {
+        this.models = models;
     }
     
     

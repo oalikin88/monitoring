@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ru.gov.sfr.aos.monitoring.CartridgeType;
@@ -18,10 +19,12 @@ import ru.gov.sfr.aos.monitoring.entities.Cartridge;
 import ru.gov.sfr.aos.monitoring.entities.Contract;
 import ru.gov.sfr.aos.monitoring.entities.Location;
 import ru.gov.sfr.aos.monitoring.entities.Manufacturer;
+import ru.gov.sfr.aos.monitoring.entities.Model;
 import ru.gov.sfr.aos.monitoring.entities.ObjectBuing;
 import ru.gov.sfr.aos.monitoring.entities.Printer;
 import ru.gov.sfr.aos.monitoring.repositories.LocationRepo;
 import ru.gov.sfr.aos.monitoring.repositories.ManufacturerRepo;
+import ru.gov.sfr.aos.monitoring.repositories.ModelPrinterRepo;
 
 /**
  *
@@ -36,10 +39,14 @@ public class ContractServiceMapper {
     private LocationRepo locationRepo;
     @Autowired
     private ManufacturerRepo manufacturerRepo;
+    @Autowired
+    private ModelPrinterRepo modelPrinterRepo;
+   
 
     public void createNewContract(List<Map<String, String>> input) {
 
         List<ObjectBuing> objectsBuing = new ArrayList<>();
+        
         Long contractNumber;
         Contract contract = new Contract();
         int amountPrinters = 0;
@@ -100,7 +107,8 @@ public class ContractServiceMapper {
 
                 // Добавление объекта покупки в контракт
                 Printer printer = new Printer();
-                Manufacturer manufacturer = new Manufacturer();
+                Manufacturer manufacturer = null;
+                Model model = null;
                 Cartridge cartridgeInclude = null;
                 Location location = null;
                 List<Location> findLocation = locationRepo.findByName("Склад");
@@ -117,9 +125,19 @@ public class ContractServiceMapper {
 
                     switch (entry.getKey()) {
                         case "manufacturer":
+                            
                             if (!entry.getValue().isEmpty() || !entry.getValue().isBlank()) {
-                                manufacturer.setName(entry.getValue());
+                                List<Manufacturer> manufacturers = manufacturerRepo.findByName(entry.getValue());
+                                if(!manufacturers.isEmpty()) {
+                                    manufacturer = manufacturers.get(0);
+                                    
+                                } else {
+                                    manufacturer = new Manufacturer();
+                                    manufacturer.setName(entry.getValue());
+                                }
+                                
                             } else {
+                                manufacturer = new Manufacturer();
                                 manufacturer.setName("Отсутствует");
                             }
                             break;
@@ -132,11 +150,24 @@ public class ContractServiceMapper {
                             }
                             break;
                         case "model":
+                            
                             if (!entry.getValue().isEmpty() || !entry.getValue().isBlank()) {
-                                manufacturer.setModel(entry.getValue());
+                               
+                                List<Model> models = modelPrinterRepo.findByName(entry.getValue());
+                                if(!models.isEmpty()) {
+                                    model= models.get(0);
+                                    
+                                } else {
+                                    
+                                    model = new Model();
+                                    model.setName(entry.getValue());
+                                }
+                                
+                                
                             } else {
-                                manufacturer.setModel("Отсутствует");
+                                model = new Model("default", new Manufacturer());
                             }
+                            
                             break;
                         case "inventoryNumber":
                             if (!entry.getValue().isEmpty() || !entry.getValue().isBlank()) {
@@ -193,9 +224,12 @@ public class ContractServiceMapper {
                 if (cartridgeIncluded) {
                     cartridgeInclude.setContract(contract);
                     cartridgeInclude.setPrinter(printer);
+                    
                     objectsBuing.add(cartridgeInclude);
 
                 }
+                model.setManufacturer(manufacturer);
+                manufacturer.addModel(model);
                 printer.setManufacturer(manufacturer);
                 printer.setContract(contract);
                 objectsBuing.add(printer);

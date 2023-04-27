@@ -7,15 +7,13 @@ package ru.gov.sfr.aos.monitoring.repositories;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
-import ru.gov.sfr.aos.monitoring.entities.Manufacturer;
+import ru.gov.sfr.aos.monitoring.entities.Model;
 
 /**
  *
- * @author 041AlikinOS
+ * @author user
  */
 @Repository
-public interface ManufacturerRepo extends JpaRepository<Manufacturer, Long> {
-    
-    List<Manufacturer> findByName(String name);
-    
+public interface ModelPrinterRepo extends JpaRepository<Model, Long>{
+    List<Model> findByName(String name);
 }

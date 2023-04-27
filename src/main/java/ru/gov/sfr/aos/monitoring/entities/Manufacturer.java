@@ -4,7 +4,9 @@
  */
 package ru.gov.sfr.aos.monitoring.entities;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import javax.persistence.CascadeType;
@@ -15,6 +17,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.PrimaryKeyJoinColumn;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 
 /**
  *
@@ -28,17 +32,21 @@ public class Manufacturer {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
-    private String model;
-    @OneToMany(targetEntity = Printer.class, mappedBy = "manufacturer", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    private Set <Printer> printer = new HashSet<>();
+    @LazyCollection(LazyCollectionOption.FALSE)
+    @OneToMany(targetEntity = Model.class, mappedBy = "manufacturer", cascade = CascadeType.ALL)
+    private List<Model> modelsList = new ArrayList<>();
+    @LazyCollection(LazyCollectionOption.FALSE)
+    @OneToMany(targetEntity = Printer.class, mappedBy = "manufacturer", cascade = CascadeType.ALL)
+    private List <Printer> printer = new ArrayList<>();
 
     public Manufacturer() {
     }
 
-    public Manufacturer(String name, String model) {
+    public Manufacturer(String name) {
         this.name = name;
-        this.model = model;
     }
+
+   
 
     public String getName() {
         return name;
@@ -48,50 +56,27 @@ public class Manufacturer {
         this.name = name;
     }
 
-    public String getModel() {
-        return model;
+    public List<Model> getModelList() {
+        return modelsList;
     }
 
-    public void setModel(String model) {
-        this.model = model;
+    public void setModelList(List<Model> modelList) {
+        this.modelsList = modelList;
+        
+    }
+    public void addModel(Model model) {
+        modelsList.add(model);
     }
 
-    public Set<Printer> getPrinter() {
+    public List<Printer> getPrinter() {
         return printer;
     }
 
-    public void setPrinter(Set<Printer> printer) {
+    public void setPrinter(List<Printer> printer) {
         this.printer = printer;
     }
 
-    @Override
-    public String toString() {
-        return "Manufacturer{" + "name=" + name + ", model=" + model + '}';
-    }
-
-
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final Manufacturer other = (Manufacturer) obj;
-        if (!Objects.equals(this.name, other.name)) {
-            return false;
-        }
-        if (!Objects.equals(this.model, other.model)) {
-            return false;
-        }
-        return Objects.equals(this.id, other.id);
-    }
-    
+ 
     
     
 }

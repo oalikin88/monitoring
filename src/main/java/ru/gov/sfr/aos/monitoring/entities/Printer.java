@@ -12,6 +12,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.validation.constraints.NotNull;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 
 /**
  *
@@ -32,7 +34,8 @@ public class Printer extends ObjectBuing {
     @NotNull
     protected String inventoryNumber;
     @NotNull
-    @OneToMany(targetEntity = Cartridge.class, mappedBy = "printer", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @LazyCollection(LazyCollectionOption.FALSE)
+    @OneToMany(targetEntity = Cartridge.class, mappedBy = "printer", cascade = CascadeType.ALL)
     protected List<ObjectBuing> cartridge;
    
     
@@ -110,7 +113,7 @@ public class Printer extends ObjectBuing {
 
     @Override
     public String toString() {
-        return "Printer [ID: " + super.id + "; Model: " + this.manufacturer + "; Serial: " + this.serialNumber + 
+        return "Printer [ID: " + super.id + "; Models: " + this.manufacturer.getModelList() + "; Serial: " + this.serialNumber + 
                 "; Invertary number: " + this.inventoryNumber + "; Location: " + this.location + "; Cartridge: " + this.cartridge + "]";
     }
     
