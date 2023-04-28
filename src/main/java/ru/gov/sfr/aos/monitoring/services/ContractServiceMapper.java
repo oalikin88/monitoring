@@ -165,7 +165,9 @@ public class ContractServiceMapper {
                                 
                                 
                             } else {
-                                model = new Model("default", new Manufacturer());
+                                model = new Model();
+                                model.setName("По умолчанию");
+                              
                             }
                             
                             break;
@@ -229,8 +231,10 @@ public class ContractServiceMapper {
 
                 }
                 model.setManufacturer(manufacturer);
+                model.addPrinter(printer);
                 manufacturer.addModel(model);
                 printer.setManufacturer(manufacturer);
+                printer.setModel(model);
                 printer.setContract(contract);
                 objectsBuing.add(printer);
 

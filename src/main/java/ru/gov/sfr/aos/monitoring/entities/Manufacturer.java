@@ -37,13 +37,17 @@ public class Manufacturer {
     private List<Model> modelsList = new ArrayList<>();
     @LazyCollection(LazyCollectionOption.FALSE)
     @OneToMany(targetEntity = Printer.class, mappedBy = "manufacturer", cascade = CascadeType.ALL)
-    private List <Printer> printer = new ArrayList<>();
+    private List <Printer> printers = new ArrayList<>();
 
     public Manufacturer() {
     }
 
     public Manufacturer(String name) {
         this.name = name;
+    }
+
+    public Long getId() {
+        return id;
     }
 
    
@@ -68,15 +72,17 @@ public class Manufacturer {
         modelsList.add(model);
     }
 
-    public List<Printer> getPrinter() {
-        return printer;
+    public List<Printer> getPrintersList() {
+        return printers;
     }
 
-    public void setPrinter(List<Printer> printer) {
-        this.printer = printer;
+    public void setPrintersList(List<Printer> printers) {
+        this.printers = printers;
     }
 
- 
+    public void addPrinter(Printer printer) {
+        printers.add(printer);
+    }
     
     
 }

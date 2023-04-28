@@ -14,10 +14,26 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
     </head>
     <body>
         <nav th:insert="nav :: navbar"></nav>
-        <div>
-                <ul th:each="cartridge : ${cartridges}">
-                    <li th:text="${cartridge}"></li>
-                </ul>
+        
+        <div class="container content">
+            
+            <div class="container content">
+            <div class="row fw-bold">
+                <div class="col-md-1">№</div>
+                <div class="col-md-3">Модель</div>
+                <div class="col-md-3">Тип</div>
+                <div class="col-md-2">Ном. ресурс</div>
+                <div class="col-md-3">Расоложение</div>
+             
+            </div>
+            
+                 <div class="row contentRow pb-2 mb-2 mt-2 pt-2" th:each="cartridge, cartridgesCount : ${cartridges}" >
+                     <div class="col-md-1" th:text="${cartridgesCount.count}"></div>
+                    <div class="col-md-3" th:text="${cartridge.getModel()}"></div>
+                    <div class="col-md-3" th:text="${cartridge.getType()}"></div>
+                    <div class="col-md-2" th:text="${cartridge.getResource()}"></div>
+                    <div class="col-md-3" th:text="${cartridge.getLocation()}"></div>
+                </div>
             </div>
     </body>
 </html>

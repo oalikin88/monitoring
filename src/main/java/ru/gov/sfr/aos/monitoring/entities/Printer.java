@@ -7,7 +7,6 @@ package ru.gov.sfr.aos.monitoring.entities;
 import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.PrimaryKeyJoinColumn;
@@ -37,14 +36,18 @@ public class Printer extends ObjectBuing {
     @LazyCollection(LazyCollectionOption.FALSE)
     @OneToMany(targetEntity = Cartridge.class, mappedBy = "printer", cascade = CascadeType.ALL)
     protected List<ObjectBuing> cartridge;
+    
+    @ManyToOne(cascade = CascadeType.ALL)
+    protected Model model;
    
     
     public Printer() {
     }
 
-    public Printer(Location location, Manufacturer manufacturer, String serialNumber, String inventoryNumber, List<ObjectBuing> cartridge) {
+    public Printer(Location location, Manufacturer manufacturer, String serialNumber, String inventoryNumber, 
+            List<ObjectBuing> cartridge, Model model) {
         this.location = location;
-
+        this.model = model;
         this.serialNumber = serialNumber;
         this.inventoryNumber = inventoryNumber;
         this.cartridge = cartridge;
@@ -107,6 +110,14 @@ public class Printer extends ObjectBuing {
 
     public void setManufacturer(Manufacturer manufacturer) {
         this.manufacturer = manufacturer;
+    }
+
+    public Model getModel() {
+        return model;
+    }
+
+    public void setModel(Model model) {
+        this.model = model;
     }
     
     

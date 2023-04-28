@@ -49,7 +49,7 @@ optionsPrinterMap.set("выбрать из списка", "");
 let optionsCartridgeTypeMap = new Map();
 optionsCartridgeTypeMap.set("выбрать из списка", "");
 optionsCartridgeTypeMap.set("Оригинальный", "ORIGINAL");
-optionsCartridgeTypeMap.set("Аналог", "ANALOG");
+optionsCartridgeTypeMap.set("Совместимый", "ANALOG");
 optionsCartridgeTypeMap.set("Стартовый", "START");
 
 let optionsCartridgeMap = new Map();

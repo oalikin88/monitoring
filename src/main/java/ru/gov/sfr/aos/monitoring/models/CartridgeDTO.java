@@ -12,16 +12,16 @@ public class CartridgeDTO {
     
     public String type;
     public String model;
-    public String modelValue;
+    public String location;
     public String resource;
 
     public CartridgeDTO() {
     }
 
-    public CartridgeDTO(String type, String model, String modelValue, String resource) {
+    public CartridgeDTO(String type, String model, String location, String resource) {
         this.type = type;
         this.model = model;
-        this.modelValue = modelValue;
+        this.location = location;
         this.resource = resource;
     }
 
@@ -49,12 +49,12 @@ public class CartridgeDTO {
         this.resource = resource;
     }
 
-    public String getModelValue() {
-        return modelValue;
+    public String getLocation() {
+        return location;
     }
 
-    public void setModelValue(String modelValue) {
-        this.modelValue = modelValue;
+    public void setLocation(String location) {
+        this.location = location;
     }
     
     

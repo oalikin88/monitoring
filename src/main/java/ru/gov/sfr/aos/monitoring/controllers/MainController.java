@@ -17,13 +17,16 @@ import ru.gov.sfr.aos.monitoring.entities.Cartridge;
 import ru.gov.sfr.aos.monitoring.entities.Contract;
 import ru.gov.sfr.aos.monitoring.interfaces.CartridgeServiceInterface;
 import ru.gov.sfr.aos.monitoring.interfaces.ContractServiceInterface;
+import ru.gov.sfr.aos.monitoring.models.CartridgeDTO;
 import ru.gov.sfr.aos.monitoring.models.ContractDTO;
+import ru.gov.sfr.aos.monitoring.services.CartridgeMapper;
 import ru.gov.sfr.aos.monitoring.services.ContractServiceMapper;
 
 /**
  *
  * @author 041AlikinOS
  */
+
 @Controller
 public class MainController {
     
@@ -33,6 +36,8 @@ public class MainController {
     private CartridgeServiceInterface cartridgeServiceInterface;
     @Autowired
     private ContractServiceMapper mapper;
+    @Autowired
+    private CartridgeMapper cartridgeMapper;
 
     
     @GetMapping("/main")
@@ -56,10 +61,12 @@ public class MainController {
      }
     
     
-        @GetMapping("/cartridges")
+    @GetMapping("/cartridges")
     public String getCartridges(Model model) {
         
-        List<Cartridge> cartridges = cartridgeServiceInterface.getCartridges();
+        List<CartridgeDTO> cartridges = cartridgeMapper.getDTO();
+       
+       
         
        model.addAttribute("cartridges", cartridges);
        
