@@ -4,6 +4,8 @@
  */
 package ru.gov.sfr.aos.monitoring.models;
 
+import java.util.Objects;
+
 /**
  *
  * @author 041AlikinOS
@@ -21,7 +23,7 @@ public class PrinterDTO {
     public PrinterDTO() {};
 
     public PrinterDTO(String manufacturer, String model, String inventaryNumber, String serialNumber, 
-            String cartridge, String Location) {
+            String cartridge, String location) {
         this.manufacturer = manufacturer;
         this.model = model;
         this.inventaryNumber = inventaryNumber;
@@ -76,6 +78,29 @@ public class PrinterDTO {
 
     public void setLocation(String location) {
         this.location = location;
+    }
+
+
+
+    @Override
+    public boolean equals(Object obj) {
+        
+        if (obj == null) {
+            return false;
+        }
+       
+        final PrinterDTO other = (PrinterDTO) obj;
+        
+        return (manufacturer != null && manufacturer.equals(other.manufacturer)) && (model != null && model.equals(other.model));
+        
+    }
+
+
+  
+
+    @Override
+    public String toString() {
+        return "PrinterDTO{" + "manufacturer=" + manufacturer + ", model=" + model + ", inventaryNumber=" + inventaryNumber + ", serialNumber=" + serialNumber + ", cartridge=" + cartridge + ", location=" + location + '}';
     }
     
     

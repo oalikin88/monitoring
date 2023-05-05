@@ -4,37 +4,44 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to c
 Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this template
 -->
 <html lang="ru" xmlns:th="http://www.thymeleaf.org">
-<html>
-    <head>
-       <title>Учёт принтеров</title>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link href="/css/bootstrap.min.css" rel="stylesheet">
-        <link href="/css/style.css" rel="stylesheet">
-    </head>
-    <body>
-        <nav th:insert="nav :: navbar"></nav>
-        
-        <div class="container content">
-            <div class="row fw-bold">
-                <div class="col-md-1">№</div>
-                <div class="col-md-2">Производитель</div>
-                <div class="col-md-2">Модель</div>
-                <div class="col-md-2">Картридж</div>
-                <div class="col-md-2">Серийный номер</div>
-                <div class="col-md-2">Инвентарный номер</div>
-                <div class="col-md-1">Расположение</div>
+    <html>
+        <head>
+            <title>Учёт принтеров</title>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1">
+            <link href="/css/bootstrap.min.css" rel="stylesheet">
+            <link href="/css/style.css" rel="stylesheet">
+        </head>
+        <body>
+            <nav th:insert="nav :: navbar"></nav>
+
+            <div class="container content">
+                <div class="row fw-bold">
+                    <div class="col-md-1">№</div>
+                    <div class="col-md-3">Принтер</div>
+                    <div class="col-md-2">Количество</div>
+                    <div class="col-md-2">Расположение</div>
+
+                </div>
+                <div class="row contentRow pb-2 mb-2 mt-2 pt-2" th:each="dto, stat : ${dtoes}">
+                    <div class="col-md-1" th:text="${stat.count}"></div>
+                    <div class="col-md-3" th:text="${dto.key}"></div>
+                    <div class="col-md-2" th:text="${dto.value.size()}"></div>
+
+                    <div class="col-md-2">
+                        <div class="row"th:each= "val, index : ${dto.value}" >
+                            <div th:text="${val.model}"></div>
+                        </div>
+
+
+
+
+                    </div>
+
+
+
+
+                </div>
             </div>
-                <div class="row contentRow pb-2 mb-2 mt-2 pt-2" th:each="dto, dtoCount : ${dtoes}">
-                    <div class="col-md-1" th:text="${dtoCount.count}"></div>
-                    <div class="col-md-2" th:text="${dto.getManufacturer}"></div>
-                    <div class="col-md-2" th:text="${dto.getModel()}"></div>
-                    <div class="col-md-2" th:text="${dto.getCartridge()}"></div>
-                    <div class="col-md-2" th:text="${dto.getSerialNumber()}"></div>
-                    <div class="col-md-2" th:text="${dto.getInventaryNumber()}"></div>
-                    <div class="col-md-1" th:text="${dto.getLocation()}"></div>
-               
-            </div>
-            </div>
-    </body>
-</html>
+        </body>
+    </html>

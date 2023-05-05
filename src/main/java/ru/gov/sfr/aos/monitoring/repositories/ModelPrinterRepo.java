@@ -11,9 +11,10 @@ import ru.gov.sfr.aos.monitoring.entities.Model;
 
 /**
  *
- * @author user
+ * @author 041AlikinOS
  */
 @Repository
 public interface ModelPrinterRepo extends JpaRepository<Model, Long>{
     List<Model> findByName(String name);
+    
 }
