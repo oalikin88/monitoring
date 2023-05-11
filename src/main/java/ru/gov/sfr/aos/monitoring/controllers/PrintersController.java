@@ -4,8 +4,7 @@
  */
 package ru.gov.sfr.aos.monitoring.controllers;
 
-import java.util.ArrayList;
-import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -14,7 +13,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import ru.gov.sfr.aos.monitoring.models.PrinterDTO;
-import ru.gov.sfr.aos.monitoring.services.DistinctByPrinterDTO;
 import ru.gov.sfr.aos.monitoring.services.PrintersMapper;
 
 /**
@@ -39,45 +37,70 @@ public class PrintersController {
     public String showPrintersModels(Model model) {
     
         Map<String, List<PrinterDTO>> dtoes = mapper.showPrintersByLocation();
-        List<List<String>> buf = new ArrayList<>();
-        List<List<PrinterDTO>> buf2 = new ArrayList<>();
         
         
-        for(List<PrinterDTO> list : dtoes.values()) {            
-            List<String> collect = list.stream().map(e -> e.model).distinct().collect(Collectors.toList());
-            buf.add(collect);
+      
+       
+        
+        // Подсчёт повторяющихся элементов
+        Map<List<PrinterDTO>, Map<String, Integer>> frequency = new HashMap<>();
+        
+        for(List<PrinterDTO> list : dtoes.values()) {                       
+            Map<String, Integer> collect2 = list.stream()
+                .map(e -> e.manufacturer + " " + e.model)
+                .collect(Collectors.toMap(e -> e, e -> 1, Integer::sum));
+            
+            
+            
+            frequency.put(list, collect2);
+            
         }
-        
-        
-          for(List<PrinterDTO> list : dtoes.values()) {            
-            List<PrinterDTO> collect2 = list.stream()
-                    .filter(DistinctByPrinterDTO.distinctByKey(PrinterDTO::getModel))
-                    .collect(Collectors.toList());
-            buf2.add(collect2);
-        }
-     
-        for(int i = 0; i < buf.size(); i++) {
-            System.out.println("bufEl" + i + "\n");
-            for(int j = 0; j < buf.get(i).size(); j++) {
-                System.out.println(buf.get(i).get(j));
+        int count = 0;
+        for(Map.Entry<List<PrinterDTO>, Map<String, Integer>> map : frequency.entrySet()) {
+            ++count;
+            System.out.println("\n" + "map: " + count);
+            System.out.println(map.getKey());
+            for(Map.Entry<String, Integer> entry : map.getValue().entrySet()) {
+                
+                System.out.println(entry.getKey() + " : " + entry.getValue());
             }
         }
         
-        System.out.println("***********");
-        System.out.println("distinct по printerDTO");
+
+   
+
+//        List<List<String>> buf = new ArrayList<>();
+//        List<List<PrinterDTO>> listDtoes = new ArrayList<>();
+//        
+//                for(List<PrinterDTO> list : dtoes.values()) {            
+//            List<String> collect = list.stream().map(e -> e.model).distinct().collect(Collectors.toList());
+//            buf.add(collect);
+//        }
+//        
+//        
+//          for(List<PrinterDTO> list : dtoes.values()) {            
+//            List<PrinterDTO> collect2 = list.stream()
+//                    .filter(DistinctByPrinterDTO.distinctByKey(PrinterDTO::getModel))
+//                    .collect(Collectors.toList());
+//            listDtoes.add(collect2);
+//        }
+  
+//        
+//        System.out.println("***********");
+//        System.out.println("distinct по printerDTO");
+//        
+//        for(int i = 0; i < listDtoes.size(); i++) {
+//            System.out.println("\n" + "bufEl" + i);
+//            for(int j = 0; j < buf.get(i).size(); j++) {
+//                System.out.println(listDtoes.get(i).get(j));
+//            }
+//        }
         
-        for(int i = 0; i < buf2.size(); i++) {
-            System.out.println("bufEl" + i + "\n");
-            for(int j = 0; j < buf.get(i).size(); j++) {
-                System.out.println(buf2.get(i).get(j));
-            }
-        }
         
         
         
         
-        
-        model.addAttribute("dtoes",dtoes);
+        model.addAttribute("dtoes",frequency);
         
         return "printers";
     }

@@ -17,31 +17,63 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
 
             <div class="container content">
                 <div class="row fw-bold">
-                    <div class="col-md-1">№</div>
-                    <div class="col-md-3">Принтер</div>
-                    <div class="col-md-2">Количество</div>
-                    <div class="col-md-2">Расположение</div>
+                    <div class="col-md-1" style="text-align: center">№</div>
+                    <div class="col-md-4">Принтер</div>
+                    <div class="col-md-2" style="text-align: center">Количество</div>
+                    <div class="col-md-3" style="text-align: center">Расположение</div>
+                    <div class="col-md-2" style="text-align: center">Общ. кол-во</div>
 
                 </div>
                 <div class="row contentRow pb-2 mb-2 mt-2 pt-2" th:each="dto, stat : ${dtoes}">
-                    <div class="col-md-1" th:text="${stat.count}"></div>
-                    <div class="col-md-3" th:text="${dto.key}"></div>
-                    <div class="col-md-2" th:text="${dto.value.size()}"></div>
-
-                    <div class="col-md-2">
-                        <div class="row"th:each= "val, index : ${dto.value}" >
-                            <div th:text="${val.model}"></div>
+                    <div class="col-md-1 my-auto" th:text="${stat.count}" style="text-align: center"></div>
+                     <div class="col-md-4">
+                        
+                        <div class="row" th:each="val : ${dto.value}">
+                            <div th:text="${val.key}" ></div>
                         </div>
-
-
-
-
+                    </div>
+                   
+                   
+                    <div class="col-md-2 amount" >
+                        
+                        <div class="row " th:each="val : ${dto.value}">
+                            <div th:text="${val.value}" style="text-align: center"></div>
+                        </div>
+                    </div>
+                    
+                     <div class="col-md-3 my-auto" th:text="${dto.key[0].location}" style="text-align: center" ></div>
+                     <div class="col-md-2 my-auto" style="text-align: center"> 
+                    
+                        <script>
+                      
+                    function getAmount () {   
+                    let list = document.getElementsByClassName('amount');
+                    let x;
+                    for(let i = 0; i < list.length; i++) {
+                        x = 0;
+                        let innerList = list[i].children;
+                        for(let j = 0; j < innerList.length; j++) {
+                          x = x + (Number(innerList[j].innerText));
+                        }
+                        
+                        
+                    }
+                      return x;
+                }
+                          document.write(getAmount());
+                        </script>
+                        
+                    </div>
+                    
+                    
                     </div>
 
 
 
 
                 </div>
-            </div>
+                    <footer class="py-3 my-4">
+<nav th:insert="nav :: footer"></nav>
+        </footer>
         </body>
     </html>
