@@ -22,9 +22,9 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                     <div class="col-md-2" style="text-align: center">Количество</div>
                     <div class="col-md-3" style="text-align: center">Расположение</div>
                     <div class="col-md-2" style="text-align: center">Общ. кол-во</div>
-
                 </div>
                 <div class="row contentRow pb-2 mb-2 mt-2 pt-2" th:each="dto, stat : ${dtoes}">
+                    
                     <div class="col-md-1 my-auto" th:text="${stat.count}" style="text-align: center"></div>
                      <div class="col-md-4">
                         
@@ -72,8 +72,6 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
 
 
                 </div>
-                    <footer class="py-3 my-4">
-<nav th:insert="nav :: footer"></nav>
-        </footer>
+                        <footer th:insert="footer :: footer"></footer>
         </body>
     </html>
