@@ -28,14 +28,6 @@ let printersPlusCartridges = new Array();
 let contract = new Object();
 let manufact = new URL("http://localhost:8080/manufacturers"); // адрес контроллера с которого загружаем список производителей и моделей принтеров
 let cartridgesUrl = new URL("http://localhost:8080/showcartridges"); //  адрес контроллера с которого загружаем список картриджей
-let xhr = new XMLHttpRequest();
-xhr.open("GET", manufact, true);
-xhr.responseType = "json";
-xhr.send();
-let cartridgesXhr = new XMLHttpRequest();
-cartridgesXhr.open("GET", cartridgesUrl, true);
-cartridgesXhr.responseType = "json";
-cartridgesXhr.send();
 let formData = new FormData();
 let optionsManufacturerMap = new Map();
 optionsManufacturerMap.set("выбрать из списка", "");
@@ -54,23 +46,9 @@ optionsCartridgeTypeMap.set("Стартовый", "START");
 
 let optionsCartridgeMap = new Map();
 optionsCartridgeMap.set("выбрать из списка", "");
-xhr.onreadystatechange = function () {
-    if (xhr.readyState === 4) {
-        xhr.response.forEach((element) => {
-            optionsManufacturerMap.set(element.manufacturer, element.manufacturer);
-            printers.set(element.model, element.manufacturer);
-        });
-    }
-};
-cartridgesXhr.onreadystatechange = function () {
-    if (cartridgesXhr.readyState === 4) {
-        cartridgesXhr.response.forEach((element) => {
-            optionsCartridgeTypeMap.set(element.type, element.type + " " + element.modelValue + " " + element.model);
-            optionsCartridgeMap.set(element.modelValue, element.type);
-            cartridgesMap.set(element.modelValue, element.resource);
-        });
-    }
-};
+
+
+
 document.addEventListener('submit', function (event) {
 
     let tempArray1 = new Array();
@@ -124,6 +102,7 @@ document.addEventListener('click', function (e) {
         }
     }
 }, false);
+
 function hasClass(elem, className) {
     return elem.classList.contains(className);
 }
@@ -674,10 +653,7 @@ function addPrintersInfo(amount, location) {
 //   select.setAttribute("th:field", "*{" + id + "}");
                 select.id = "manufacturer_" + id2;
                 select.name = "manufacturer";
-                optionsManufacturerMap.forEach((value, key) => {
-                    let opt = new Option(key, value);
-                    select.append(opt);
-                });
+                
                 divcol1 = document.createElement("div");
                 flex.className = "row printer mb-2 mt-2 px-3 text-end";
                 flex.id = "row_printer_" + (bufPrinterCount + 1) + "_" + id2;
@@ -691,10 +667,7 @@ function addPrintersInfo(amount, location) {
                 select2.className = "form-select text-start";
                 select2.id = "modelPrinter_" + id2;
                 select2.name = "modelPrinter";
-                printers.forEach((value, key) => {
-                    let opt = new Option(key, value);
-                    select2.append(opt);
-                });
+               
                 divcol2 = document.createElement("div");
                 divcol2.className = "col-md-2 mb-2 model";
                 flex.appendChild(divcol2);
@@ -767,17 +740,11 @@ function addPrintersInfo(amount, location) {
 //   selectModelCartridge.setAttribute("th:field", "*{" + id + "}");
                 selectModelCartridge.id = "cartridgeModel_" + id2;
                 selectModelCartridge.name = "cartridgeModel";
-                optionsCartridgeMap.forEach((value, key) => {
-                    let opt = new Option(key, value);
-                    selectModelCartridge.append(opt);
-                });
+               
                 flexCartridge.appendChild(divcolModelLabel);
                 flexCartridge.appendChild(divcolModelSelect);
                 divcolModelSelect.appendChild(selectModelCartridge);
-                optionsCartridgeTypeMap.forEach((value, key) => {
-                    let opt = new Option(key, value);
-                    selectTypeCartridge.append(opt);
-                });
+              
                 // Номинальный ресурс
 
                 divcolCartridgeResourceLabel = document.createElement("div");
@@ -820,10 +787,7 @@ function addPrintersInfo(amount, location) {
 //   select.setAttribute("th:field", "*{" + id + "}");
                 select.id = "manufacturer_" + id2;
                 select.name = "manufacturer";
-                optionsManufacturerMap.forEach((value, key) => {
-                    let opt = new Option(key, value);
-                    select.append(opt);
-                });
+              
                 divcol1 = document.createElement("div");
                 flex.className = "row printer mb-2 mt-2 px-3 text-end";
                 flex.id = "row_printer_" + (bufPrinterCount + 1) + "_" + id2;
@@ -837,10 +801,7 @@ function addPrintersInfo(amount, location) {
                 select2.className = "form-select text-start";
                 select2.id = "modelPrinter_" + id2;
                 select2.name = "modelPrinter";
-                printers.forEach((value, key) => {
-                    let opt = new Option(key, value);
-                    select2.append(opt);
-                });
+               
                 divcol2 = document.createElement("div");
                 divcol2.className = "col-md-2 mb-2 model";
                 flex.appendChild(divcol2);
@@ -913,17 +874,11 @@ function addPrintersInfo(amount, location) {
 //   selectModelCartridge.setAttribute("th:field", "*{" + id + "}");
                 selectModelCartridge.id = "cartridgeModel_" + id2;
                 selectModelCartridge.name = "cartridgeModel";
-                optionsCartridgeMap.forEach((value, key) => {
-                    let opt = new Option(key, value);
-                    selectModelCartridge.append(opt);
-                });
+              
                 flexCartridge.appendChild(divcolModelLabel);
                 flexCartridge.appendChild(divcolModelSelect);
                 divcolModelSelect.appendChild(selectModelCartridge);
-                optionsCartridgeTypeMap.forEach((value, key) => {
-                    let opt = new Option(key, value);
-                    selectTypeCartridge.append(opt);
-                });
+              
                 // Номинальный ресурс
 
                 divcolCartridgeResourceLabel = document.createElement("div");
@@ -955,9 +910,7 @@ function addPrintersInfo(amount, location) {
 
     $(document).ready(function () {
         $(typeCartridgeSelect).selectize({
-            create: true,
-            showAddOptionOnCreate: true,
-            addPrecedence: true,
+            create: false,
             onChange: function (value) {
                 let target = value.split(" ")[0];
                 let currentModel;
@@ -981,9 +934,8 @@ function addPrintersInfo(amount, location) {
     });
     $(document).ready(function () {
         $(modelCartridgeSelect).selectize({
-            create: false,
-            showAddOptionOnCreate: true,
-            addPrecedence: true
+            create: true,
+            showAddOptionOnCreate: true
         });
     });
     // Подключение Selectize
@@ -997,26 +949,42 @@ function addPrintersInfo(amount, location) {
 
         $('.manufacturer').children('select').selectize({
             create: true,
+            preload: true,
             showAddOptionOnCreate: true,
-            addPrecedence: true,
-            onChange: function (value) {
-                var id;
-                let m;
-                for (var el of printers) {
-                    if (value === el[1]) {
-                        id = this.$wrapper.parent().get(0).children[0].id.split("_")[1];
-                        for (m of $('.model').children('select')) {
-                            if (id === m.id.split("_")[1]) {
-                                m.selectize.clearOptions();
-                                m.selectize.addOption({value: el[0], text: el[0]});
-                                m.selectize.addItem(el[0]);
-                                m.selectize.setValue("", false);
-                                m.selectize.refreshOptions('option');
-                            }
-                        }
-                    }
+                    load: function(query, callback) {
+            query = 'manufacturers';
+            $.ajax({
+                url: 'http://localhost:8080/manufacturers',
+                type: 'GET',
+                dataType: 'json',
+                error: function() {
+                    console.log(callback());
+                    callback();
+                },
+                success: function(res) {
+                    //res.forEach(element => console.log(element));
+                    callback(res);
                 }
+            });
             },
+//            onChange: function (value) {
+//                var id;
+//                let m;
+//                for (var el of printers) {
+//                    if (value === el[1]) {
+//                        id = this.$wrapper.parent().get(0).children[0].id.split("_")[1];
+//                        for (m of $('.model').children('select')) {
+//                            if (id === m.id.split("_")[1]) {
+//                                m.selectize.clearOptions();
+//                                m.selectize.addOption({value: el[0], text: el[0]});
+//                                m.selectize.addItem(el[0]);
+//                                m.selectize.setValue("", false);
+//                                m.selectize.refreshOptions('option');
+//                            }
+//                        }
+//                    }
+//                }
+//            },
             onInput: function (e) {
                 console.log(e.target);
             }});
@@ -1024,8 +992,7 @@ function addPrintersInfo(amount, location) {
     $(document).ready(function () {
         $('.model').children('select').selectize({
             create: true,
-            showAddOptionOnCreate: true,
-            addPrecedence: true
+            showAddOptionOnCreate: true
         });
     });
 }
@@ -1194,9 +1161,7 @@ function addCartridgesInfo(amount, location) {
 
     $(document).ready(function () {
         $('.independentCartridgeType').children('select').selectize({
-            create: true,
-            showAddOptionOnCreate: true,
-            addPrecedence: true,
+            create: false,
             onChange: function (value) {
                 let target = value.split(" ")[0];
                 let currentModel;
@@ -1220,8 +1185,7 @@ function addCartridgesInfo(amount, location) {
     $(document).ready(function () {
         $('.independentCartridgeModel').children('select').selectize({
             create: true,
-            showAddOptionOnCreate: true,
-            addPrecedence: true
+            showAddOptionOnCreate: true
         });
     });
 }
@@ -1286,22 +1250,11 @@ cartridgesArray = new Array();
 $(document).ready(function () {
     $('#manufacturer').selectize({
         create: true,
-        showAddOptionOnCreate: true,
-        addPrecedence: true,
-        loadingClass: 'loading',
-        onChange: function (value) {
-            modelPrinterSelect.selectize.clear();
-            modelPrinterSelect.selectize.clearOptions();
-            for (var el of printers) {
-                if (value === el[1])
-                    modelPrinterSelect.selectize.addOption({value: el[0], text: el[0]});
-                modelPrinterSelect.selectize.addItem(el[0]);
-            }
+        preload: true,
+        showAddOptionOnCreate: true
 
-            modelPrinterSelect.selectize.setValue("", false);
-        }
 
-    });
+            });
 });
 $(document).ready(function () {
     if (document.getElementById('checkboxPrinter') !== null) {
