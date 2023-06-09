@@ -16,5 +16,6 @@ import ru.gov.sfr.aos.monitoring.entities.Model;
 @Repository
 public interface ModelPrinterRepo extends JpaRepository<Model, Long>{
     List<Model> findByName(String name);
+    List<Model> findByManufacturerName(String name);
     
 }

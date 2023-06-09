@@ -36,9 +36,6 @@ public class PrintersController {
     
     @GetMapping(value ="/printers/{request}")
     public String showInfoPrinters(@PathVariable String request) {
-        
-        
-        
         return "printersInfo";
     }
     
