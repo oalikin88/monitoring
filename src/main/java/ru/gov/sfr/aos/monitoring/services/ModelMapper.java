@@ -39,15 +39,25 @@ public class ModelMapper {
         return list;
     }
     
-    public List<String> showModelsByManufacturer(String manufacturer) {
-        List<String> list = new ArrayList<>();
-        List<Model> inputList = modelRepo.findByManufacturerName(manufacturer);
+    public List<ModelDTO> showModelsByManufacturer(String manufacturer) {
+        List<ModelDTO> list = new ArrayList<>();
+        List<Model> inputList = modelRepo.findByManufacturerNameContainingIgnoreCase(manufacturer);
         for(int i = 0; i < inputList.size(); i++) {
             if(!inputList.get(i).getName().isEmpty() || !inputList.get(i).getName().isBlank() || inputList.get(i).getName() != null) {
-                list.add(inputList.get(i).getName());
+                ModelDTO dto = new ModelDTO();
+                dto.setManufacturer(inputList.get(i).getManufacturer().getName());
+                dto.setModel(inputList.get(i).getName());
+                list.add(dto);
             }
         }
         return list;
+    }
+    
+    public void saveModelByManufacturer(String manufacturer) {
+        List<Model> inputList = modelRepo.findByManufacturerNameContainingIgnoreCase(manufacturer);
+        if(!inputList.get(i).getName().isEmpty() || !inputList.get(i).getName().isBlank() || inputList.get(i).getName() != null) {
+            
+        }
     }
     
 }

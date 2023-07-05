@@ -784,10 +784,10 @@ function addPrintersInfo(amount, location) {
             count.innerText = i + 1;
             pane.className = "pane mt-3 mb-3";
             select = document.createElement("select");
-            select.className = "form-select text-start";
+            select.className = "form-select text-start manufacturerChoice";
 //   select.setAttribute("th:field", "*{" + id + "}");
-            select.id = "manufacturer_" + id2;
-            select.name = "manufacturer";
+            select.id = "manufacturerChoice_" + id2;
+            select.name = "manufacturerChoice";
             divcol1 = document.createElement("div");
             flex.className = "row printer mb-2 mt-2 px-3 text-end";
             flex.id = "row_printer_" + (bufPrinterCount + 1) + "_" + id2;
@@ -937,31 +937,59 @@ function addPrintersInfo(amount, location) {
         $(document).ready(function () {
 
             $('.model').children('select').selectize({
-                create: true,
-//                valueField: 'model',
-//                labelField: 'model',
+                create: function(input,callback) {
+                    selectizeManufacturerFromChoisesManufacturer = $(this.$control_input[0].closest('.printer')).find('.manufacturerChoice')[0];
+                    $.ajax({
+                        url: 'http://localhost:8080/manufacturers',
+                        type: 'POST',
+                        data: {value:input},
+                        success: function() {             
+                            selectizeManufacturerFromChoisesManufacturer.selectize.addOption({value: input, text: input});
+                            selectizeManufacturerFromChoisesManufacturer.selectize.addItem(input);
+                            selectizeManufacturerFromChoisesManufacturer.selectize.refreshOptions();
+                            callback({manufacturer: input});
+                        }
+                    });
+                },
+                  valueField: 'model',
+                  labelField: 'model',
+                  searchField: "model",
                 showAddOptionOnCreate: true,
                 placeholder: 'Выберите из списка',
                 options: []
 
             });
+            
             $('.manufacturer').children('select').selectize({
-                create: true,
-                preload: true,
+                create: function(input,callback) {
+                    selectizeManufacturerFromChoisesManufacturer = $(this.$control_input[0].closest('.printer')).find('.manufacturerChoice')[0];
+                    $.ajax({
+                        url: 'http://localhost:8080/manufacturers',
+                        type: 'POST',
+                        data: {value:input},
+                        success: function() {             
+                            selectizeManufacturerFromChoisesManufacturer.selectize.addOption({value: input, text: input});
+                            selectizeManufacturerFromChoisesManufacturer.selectize.addItem(input);
+                            selectizeManufacturerFromChoisesManufacturer.selectize.refreshOptions();
+                            callback({manufacturer: input});
+                        }
+                    });
+                },
+                preload: 'focus',
                 placeholder: "Выберите из списка",
                 valueField: 'manufacturer',
                 labelField: 'manufacturer',
+                searchField: "manufacturer",
                 showAddOptionOnCreate: true,
-
                 load: function (query, callback) {
-                    query = 'manufacturers';
                     $.ajax({
-                        url: 'http://localhost:8080/models',
+                        url: 'http://localhost:8080/manufacturers',
                         type: 'GET',
                         dataType: 'json',
+                        data: {manufacturer:query},
                         error: callback,
                         success: callback
-                    });
+                         });
                 },
                 onChange: function (value) {
                     if (value !== '') {
@@ -971,15 +999,19 @@ function addPrintersInfo(amount, location) {
                             url: "http://localhost:8080/models/" + encodeURIComponent(value),
                             type: 'GET',
                             dataType: 'json', // added data type
+                            data: {manufacturer: value},
                             success: function (res) {
-                                console.log(res);
-                                selectizeModelFromChoisesManufacturer.selectize.clear();
+                                let keys = Object.keys(selectizeModelFromChoisesManufacturer.selectize.options);
+                                for(let i = 0; i < keys.length; i++) {
+                                    selectizeModelFromChoisesManufacturer.selectize.removeOption(keys[i]);
+                                }
                                 res.forEach(model => {
-                                    selectizeModelFromChoisesManufacturer.selectize.addOption({value: model, text: model});
+                                    selectizeModelFromChoisesManufacturer.selectize.addOption(model);
                                     selectizeModelFromChoisesManufacturer.selectize.addItem(model);
                                 });
                                 
                                 selectizeModelFromChoisesManufacturer.selectize.refreshOptions();
+                                selectizeModelFromChoisesManufacturer.selectize.clear();
                                 selectizeModelFromChoisesManufacturer.selectize.enable();
 
                             }
@@ -990,9 +1022,6 @@ function addPrintersInfo(amount, location) {
                 onInput: function (e) {
                     console.log(e.target);
                 }});
-
-
-
 
         });
     });

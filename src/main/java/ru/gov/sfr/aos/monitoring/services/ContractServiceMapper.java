@@ -127,7 +127,7 @@ public class ContractServiceMapper {
                         case "manufacturer":
                             
                             if (!entry.getValue().isEmpty() || !entry.getValue().isBlank()) {
-                                List<Manufacturer> manufacturers = manufacturerRepo.findByName(entry.getValue());
+                                List<Manufacturer> manufacturers = manufacturerRepo.findByNameContainingIgnoreCase(entry.getValue());
                                 if(!manufacturers.isEmpty()) {
                                     manufacturer = manufacturers.get(0);
                                     

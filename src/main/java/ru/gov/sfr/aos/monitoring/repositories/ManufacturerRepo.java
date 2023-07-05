@@ -16,6 +16,6 @@ import ru.gov.sfr.aos.monitoring.entities.Manufacturer;
 @Repository
 public interface ManufacturerRepo extends JpaRepository<Manufacturer, Long> {
     
-    List<Manufacturer> findByName(String name);
+    List<Manufacturer> findByNameContainingIgnoreCase(String name);
     
 }

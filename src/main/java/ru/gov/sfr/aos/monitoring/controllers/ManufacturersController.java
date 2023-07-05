@@ -7,10 +7,11 @@ package ru.gov.sfr.aos.monitoring.controllers;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import ru.gov.sfr.aos.monitoring.entities.Model;
 import ru.gov.sfr.aos.monitoring.models.ManufacturerDTO;
 import ru.gov.sfr.aos.monitoring.models.ModelDTO;
 import ru.gov.sfr.aos.monitoring.repositories.ModelPrinterRepo;
@@ -46,11 +47,20 @@ public class ManufacturersController {
     }
 
     @RequestMapping(value = "/models/{manufacturer}", method = RequestMethod.GET)
-    public List<String> showModelsByManufacturer(@PathVariable String manufacturer
-    ) {
+    public List<ModelDTO> showModelsByManufacturer(@PathVariable String manufacturer) {
 
-        List<String> list = modelMapper.showModelsByManufacturer(manufacturer);
+        List<ModelDTO> list = modelMapper.showModelsByManufacturer(manufacturer);
         return list;
+    }
+    
+    @PostMapping("/manufacturers")
+    public void saveManufacturer(@RequestParam String value) {
+        mapper.saveManufacturer(value);
+    }
+    
+    @PostMapping("/models")
+    public void saveModel(@RequestParam String value) {
+        
     }
 
 }

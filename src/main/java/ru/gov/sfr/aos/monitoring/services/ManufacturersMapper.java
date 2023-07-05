@@ -50,4 +50,28 @@ public class ManufacturersMapper {
         
     }
     
+    public void saveManufacturer(String value) {
+        if(manufacturerRepo.findByNameContainingIgnoreCase(value.toLowerCase()).isEmpty()) {
+            Manufacturer manufacturer = new Manufacturer(value);
+            manufacturerRepo.save(manufacturer);
+            System.out.println("Произодитель: " + value + " успешно внесен в базу данных");
+        } else {
+            System.out.println("Такой производитель уже есть");
+        }
+    }
+    
+    
+        public List<String> findManufacturerByRequest(String request) {
+            List<Manufacturer> list;
+            List<String> out = new ArrayList<>();
+            if(!manufacturerRepo.findByNameContainingIgnoreCase(request.toLowerCase()).isEmpty()) {
+                list = manufacturerRepo.findByNameContainingIgnoreCase(request.toLowerCase());
+                for(int i = 0; i < list.size(); i++) {
+                    out.add(list.get(i).getName());
+                }
+            }
+        
+        return out;
+    }
+    
 }
