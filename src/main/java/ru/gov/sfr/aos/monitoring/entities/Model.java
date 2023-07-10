@@ -5,12 +5,15 @@
 package ru.gov.sfr.aos.monitoring.entities;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.PrimaryKeyJoinColumn;
@@ -20,7 +23,7 @@ import org.hibernate.annotations.LazyCollectionOption;
 
 /**
  *
- * @author user
+ * @author 041AlikinOS
  */
 
 @Entity
@@ -39,18 +42,19 @@ public class Model {
     @LazyCollection(LazyCollectionOption.FALSE)
     @OneToMany(targetEntity = Printer.class, mappedBy = "model", cascade = CascadeType.ALL)
     private List <Printer> printers = new ArrayList<>();
-
+    
+    @ManyToMany(mappedBy = "modelsPrinters")
+    private Set<CartridgeModel> modelCartridges = new HashSet<>();
+    
     public Model() {
     }
 
-    public Model(String name, Manufacturer manufacturer, List<Printer> printer) {
+    public Model(String name, Manufacturer manufacturer, List<Printer> printer, Set<CartridgeModel> cartridges) {
+        this.modelCartridges = cartridges;
         this.name = name;
         this.manufacturer = manufacturer;
         this.printers = printer;
     }
-
-    
-    
     
     public String getName() {
         return name;
@@ -80,6 +84,32 @@ public class Model {
     public void addPrinter(Printer printer) {
         printers.add(printer);
     }
+
+    public Set<CartridgeModel> getCartridges() {
+        return modelCartridges;
+    }
+
+    public void setCartridges(Set<CartridgeModel> cartridges) {
+        this.modelCartridges = cartridges;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public List<Printer> getPrinters() {
+        return printers;
+    }
+
+    public void setPrinters(List<Printer> printers) {
+        this.printers = printers;
+    }
+    
+    
     
 }
 

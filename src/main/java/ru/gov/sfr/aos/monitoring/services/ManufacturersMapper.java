@@ -61,6 +61,8 @@ public class ManufacturersMapper {
     }
     
     
+    
+    
         public List<String> findManufacturerByRequest(String request) {
             List<Manufacturer> list;
             List<String> out = new ArrayList<>();

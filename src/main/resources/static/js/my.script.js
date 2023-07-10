@@ -32,24 +32,8 @@ let manufact = new URL("http://localhost:8080/manufacturers"); // адрес к�
 let cartridgesUrl = new URL("http://localhost:8080/showcartridges"); //  адрес контроллера с которого загружаем список картриджей
 let formData = new FormData();
 let optionsManufacturerMap = new Map();
-optionsManufacturerMap.set("выбрать из списка", "");
 let printers = new Map();
-printers.set("выбрать из списка", "");
 // Справочник принтеров
-
-let optionsPrinterMap = new Map();
-optionsPrinterMap.set("выбрать из списка", "");
-
-let optionsCartridgeTypeMap = new Map();
-optionsCartridgeTypeMap.set("выбрать из списка", "");
-optionsCartridgeTypeMap.set("Оригинальный", "ORIGINAL");
-optionsCartridgeTypeMap.set("Совместимый", "ANALOG");
-optionsCartridgeTypeMap.set("Стартовый", "START");
-
-let optionsCartridgeMap = new Map();
-optionsCartridgeMap.set("выбрать из списка", "");
-
-
 
 document.addEventListener('submit', function (event) {
 
@@ -354,9 +338,7 @@ function getFinalPage() {
         labelIndependedCartridgeModel = document.createElement("div");
         labelIndependedCartridgeModel.className = "col-md-3 d-flex align-items-center justify-content-center";
         labelIndependedCartridgeModel.innerText = "Модель";
-        labelIndependedCartridgeResource = document.createElement("div");
-        labelIndependedCartridgeResource.className = "col-md-4 d-flex align-items-center justify-content-center";
-        labelIndependedCartridgeResource.innerText = "Номинальный ресурс";
+        
         contentPaneForCartridges = document.createElement("div");
         contentPaneForCartridges.className = "cartridgesPane";
 
@@ -368,7 +350,6 @@ function getFinalPage() {
         labelsIndependedCartridgesRow.appendChild(labelCountIndependedCartridge);
         labelsIndependedCartridgesRow.appendChild(labelIndependedCartridgeType);
         labelsIndependedCartridgesRow.appendChild(labelIndependedCartridgeModel);
-        labelsIndependedCartridgesRow.appendChild(labelIndependedCartridgeResource);
         containerForCartridges.appendChild(contentPaneForCartridges);
 
     }
@@ -444,12 +425,7 @@ function getFinalPage() {
                     cartridgeIncludeModelValue = document.createElement("div");
                     cartridgeIncludeModelValue.className = "col-md-2 text-start";
                     cartridgeIncludeModelValue.innerText = printersArray[i].cartridgeIncludeModel;
-                    cartridgeIncludeResourceLabel = document.createElement("div");
-                    cartridgeIncludeResourceLabel.className = "col-md-2 text-end";
-                    cartridgeIncludeResourceLabel.innerText = "ном. ресурс: ";
-                    cartridgeIncludeResourceValue = document.createElement("div");
-                    cartridgeIncludeResourceValue.className = "col-md-2 text-start";
-                    cartridgeIncludeResourceValue.innerText = printersArray[i].cartridgeIncludeResource;
+                   
                     //cartridgeIncludeModel
                     paneObject.appendChild(cartridgeTitle);
                     cartridgeTitle.appendChild(cartridgeTitleInner);
@@ -458,8 +434,7 @@ function getFinalPage() {
                     cartridgeIncludeRow.appendChild(cartridgeIncludeTypeValue);
                     cartridgeIncludeRow.appendChild(cartridgeIncludeModelLabel);
                     cartridgeIncludeRow.appendChild(cartridgeIncludeModelValue);
-                    cartridgeIncludeRow.appendChild(cartridgeIncludeResourceLabel);
-                    cartridgeIncludeRow.appendChild(cartridgeIncludeResourceValue);
+   
                 } else {
                     includeCartridgePrinter.innerText = "нет";
                 }
@@ -489,15 +464,13 @@ function getFinalPage() {
             modelEachIndependedCartridge = document.createElement("div");
             modelEachIndependedCartridge.className = "col-md-3 d-flex align-items-center justify-content-center";
             modelEachIndependedCartridge.innerText = cartridgesArray[i].model;
-            resourceEachIndependedCartridge = document.createElement("div");
-            resourceEachIndependedCartridge.className = "col-md-4 d-flex align-items-center justify-content-center";
-            resourceEachIndependedCartridge.innerText = cartridgesArray[i].resource;
+        
             contentPaneForCartridges.appendChild(paneObjectCartridge);
             paneObjectCartridge.appendChild(independedCartridgeRow);
             independedCartridgeRow.appendChild(countEachIndependedCartridge);
             independedCartridgeRow.appendChild(typeEachIndependedCartridge);
             independedCartridgeRow.appendChild(modelEachIndependedCartridge);
-            independedCartridgeRow.appendChild(resourceEachIndependedCartridge);
+         
 
 
         }
@@ -700,6 +673,7 @@ function addPrintersInfo(amount, location) {
                 inp3.type = "checkbox";
                 inp3.id = "switch_" + id2;
                 inp3.setAttribute("role", "switch");
+                inp3.disabled = true;
                 //    inp.setAttribute("th:field", "*{" + id + "}");
                 divcol5 = document.createElement("div");
                 divcol6 = document.createElement("div");
@@ -737,31 +711,18 @@ function addPrintersInfo(amount, location) {
                 divcolModelLabel.innerText = "Модель:";
                 divcolModelSelect = document.createElement("div");
                 divcolModelSelect.className = "col-md-2 mb-2 cartridgeModel";
+                
                 selectModelCartridge = document.createElement("select");
-                selectModelCartridge.className = "form-select text-start";
+                selectModelCartridge.className = "form-select text-start cartridgeModelChoice";
 //   selectModelCartridge.setAttribute("th:field", "*{" + id + "}");
                 selectModelCartridge.id = "cartridgeModel_" + id2;
                 selectModelCartridge.name = "cartridgeModel";
-
+                selectModelCartridge.disabled = true;
                 flexCartridge.appendChild(divcolModelLabel);
                 flexCartridge.appendChild(divcolModelSelect);
                 divcolModelSelect.appendChild(selectModelCartridge);
 
-                // Номинальный ресурс
-
-                divcolCartridgeResourceLabel = document.createElement("div");
-                divcolCartridgeResourceLabel.className = "col-md-2 text-end";
-                divcolCartridgeResourceLabel.innerText = "Ном. ресурс:";
-                inputCartridgeResource = document.createElement("input");
-                inputCartridgeResource.type = "text";
-                inputCartridgeResource.className = "form-control";
-                inputCartridgeResource.name = "inputCartridgeResource";
-                inputCartridgeResource.id = "inputCartridgeResource_" + id2;
-                divcolCartridgeResource = document.createElement("div");
-                divcolCartridgeResource.className = "col-md-2 mb-2";
-                flexCartridge.appendChild(divcolCartridgeResourceLabel);
-                flexCartridge.appendChild(divcolCartridgeResource);
-                divcolCartridgeResource.appendChild(inputCartridgeResource);
+                
 
 
             }
@@ -832,6 +793,7 @@ function addPrintersInfo(amount, location) {
             inp3.type = "checkbox";
             inp3.id = "switch_" + id2;
             inp3.setAttribute("role", "switch");
+            inp3.disabled = true;
             //    inp.setAttribute("th:field", "*{" + id + "}");
             divcol5 = document.createElement("div");
             divcol6 = document.createElement("div");
@@ -857,6 +819,7 @@ function addPrintersInfo(amount, location) {
             selectTypeCartridge.name = "cartridgeType";
             divcolTypeSelect = document.createElement("div");
             divcolTypeSelect.className = "col-md-2 mb-2 cartridgeType";
+            divcolTypeSelect.disabled = true;
             location.appendChild(pane);
             pane.appendChild(flexCartridge);
             flexCartridge.appendChild(divcolTypeLabel);
@@ -870,7 +833,8 @@ function addPrintersInfo(amount, location) {
             divcolModelSelect = document.createElement("div");
             divcolModelSelect.className = "col-md-2 mb-2 cartridgeModel";
             selectModelCartridge = document.createElement("select");
-            selectModelCartridge.className = "form-select text-start";
+            selectModelCartridge.className = "form-select text-start cartridgeModelChoice";
+            selectModelCartridge.disabled = true;
 //   selectModelCartridge.setAttribute("th:field", "*{" + id + "}");
             selectModelCartridge.id = "cartridgeModel_" + id2;
             selectModelCartridge.name = "cartridgeModel";
@@ -879,21 +843,7 @@ function addPrintersInfo(amount, location) {
             flexCartridge.appendChild(divcolModelSelect);
             divcolModelSelect.appendChild(selectModelCartridge);
 
-            // Номинальный ресурс
-
-            divcolCartridgeResourceLabel = document.createElement("div");
-            divcolCartridgeResourceLabel.className = "col-md-2 text-end";
-            divcolCartridgeResourceLabel.innerText = "Ном. ресурс:";
-            inputCartridgeResource = document.createElement("input");
-            inputCartridgeResource.type = "text";
-            inputCartridgeResource.className = "form-control";
-            inputCartridgeResource.name = "inputCartridgeResource";
-            inputCartridgeResource.id = "inputCartridgeResource_" + id2;
-            divcolCartridgeResource = document.createElement("div");
-            divcolCartridgeResource.className = "col-md-2 mb-2";
-            flexCartridge.appendChild(divcolCartridgeResourceLabel);
-            flexCartridge.appendChild(divcolCartridgeResource);
-            divcolCartridgeResource.appendChild(inputCartridgeResource);
+           
 
         }
 
@@ -909,47 +859,116 @@ function addPrintersInfo(amount, location) {
         modelCartridgeSelect = document.getElementsByName('cartridgeModel');
     }
 
-    $(document).ready(function () {
 
-        $(typeCartridgeSelect).selectize({
-            create: false,
-            onChange: function (value) {
-                let target = value.split(" ")[0];
-                let currentModel;
-                let idModel = this.$input.parents()[1].id.split("_")[2];
-                for (let eachModel of modelCartridgeSelect) {
-                    if (idModel === eachModel.id.split("_")[1]) {
-                        currentModel = eachModel;
-                    }
-                }
-                currentModel.selectize.clearOptions();
-                for (let yy of optionsCartridgeMap) {
-                    if (target === yy[1]) {
-                        currentModel.selectize.addOption({value: yy[0], text: yy[0]});
-                        currentModel.selectize.addItem(yy[0]);
-                        currentModel.selectize.setValue("", false);
-                    }
-                }
-            }
 
-        });
+    
 
         $(document).ready(function () {
+         let typeChoice;
+            $(typeCartridgeSelect).selectize({
+            create: false,
+            valueField: 'type',
+            labelField: 'type',
+            searchField: "type",
+            placeholder: "Выберите из списка",
+            options:[   {type: "Оригинальный"},
+                        {type: "Совместимый"},
+                        {type: "Стартовый"}   ],
+            onChange: function (value) {
+              if (value !== '') {
+                  selectizeModelFromChoisesTypeCartridge = $(this.$control_input[0].closest('.cartridgeInclude')).find('.cartridgeModelChoice')[0];
+                  typeChoice = $(this.$control_input[0].closest('.cartridgeInclude')).find('.cartridgeType')[0].children[0].innerText;
+                  selectizeModelFromChoisesTypeCartridge.selectize.enable();
+                  typeValueFromSelectize = value;
+                  $.ajax({
+                      url: "http://localhost:8080/cartridge/" + encodeURIComponent(value),
+                      type: 'GET',
+                      dataType: 'json', // added data type
+                      success: function (res) {
+                          let keys = Object.keys(selectizeModelFromChoisesTypeCartridge.selectize.options);
+                          for(let i = 0; i < keys.length; i++) {
+                              selectizeModelFromChoisesTypeCartridge.selectize.removeOption(keys[i]);
+                          }
+                          res.forEach(model => {
+                              selectizeModelFromChoisesTypeCartridge.selectize.addOption(model);
+                              selectizeModelFromChoisesTypeCartridge.selectize.addItem(model);
+                          });
 
-            $('.model').children('select').selectize({
-                create: function(input,callback) {
-                    selectizeManufacturerFromChoisesManufacturer = $(this.$control_input[0].closest('.printer')).find('.manufacturerChoice')[0];
+                          selectizeModelFromChoisesTypeCartridge.selectize.refreshOptions();
+                          selectizeModelFromChoisesTypeCartridge.selectize.clear();
+                          selectizeModelFromChoisesTypeCartridge.selectize.enable();
+                      }
+                  });
+              }
+          }
+        });
+        
+         $(modelCartridgeSelect).selectize({
+                    create: true,
+//                    showAddOptionOnCreate: true,
+                    placeholder: "Выберите из списка",
+                    valueField: 'model',
+                    labelField: 'model',
+                    searchField: "model",
+                    preload: 'focus',
+                    create: false,
+//                            function(input, callback) {
+//                        
+//                        selectizeModelFromChoisesTypeCartridge = $(this.$control_input[0].closest('.cartridgeInclude')).find('.cartridgeModelChoice')[0];
+//                        $.ajax({
+//                            url: "http://localhost:8080/cartridge/",
+//                            type: 'POST',
+//                            data: {target:input,
+//                                   type:typeChoice},
+//                            success: function() {             
+//                                selectizeModelFromChoisesTypeCartridge.selectize.addOption({value: input, text: input});
+//                                selectizeModelFromChoisesTypeCartridge.selectize.addItem(input);
+//                                selectizeModelFromChoisesTypeCartridge.selectize.refreshOptions();
+//                                callback({model: input});
+//                            }
+//                        });
+//                    }
+                            
+                    load: function (query, callback) {
                     $.ajax({
-                        url: 'http://localhost:8080/manufacturers',
+                        url: 'http://localhost:8080/cartridge/' + encodeURIComponent(typeChoice),
+                        type: 'GET',
+                        dataType: 'json',
+                        data: {model:query},
+                        error: callback,
+                        success: callback
+                         });
+                }
+                });
+        
+        let manufacturerChoice;
+            $('.model').children('select').selectize({
+                preload: 'focus',
+                create: function(input, callback) {
+                    manufacturerChoice = $(this.$control_input[0].closest('.printer')).find('.manufacturerChoice')[0].innerText;
+                    selectizeManufacturerFromChoisesManufacturer = $(this.$control_input[0].closest('.printer')).find('.modelPrinter')[0];
+                    $.ajax({
+                        url: 'http://localhost:8080/models',
                         type: 'POST',
-                        data: {value:input},
+                        data: {target:input,
+                               manufacturer:manufacturerChoice},
                         success: function() {             
                             selectizeManufacturerFromChoisesManufacturer.selectize.addOption({value: input, text: input});
                             selectizeManufacturerFromChoisesManufacturer.selectize.addItem(input);
                             selectizeManufacturerFromChoisesManufacturer.selectize.refreshOptions();
-                            callback({manufacturer: input});
+                            callback({model: input});
                         }
                     });
+                },
+                    load: function (query, callback) {
+                    $.ajax({
+                        url: 'http://localhost:8080/models/' + encodeURIComponent(manufacturerChoice),
+                        type: 'GET',
+                        dataType: 'json',
+                        data: {model:query},
+                        error: callback,
+                        success: callback
+                         });
                 },
                   valueField: 'model',
                   labelField: 'model',
@@ -993,6 +1012,7 @@ function addPrintersInfo(amount, location) {
                 },
                 onChange: function (value) {
                     if (value !== '') {
+                        $(this.$control_input[0].closest('.printer')).find('.printerSwitch')[0].children[0].disabled = false;
                         manufacturerValueFromSelectize = value;
                         selectizeModelFromChoisesManufacturer = $(this.$control_input[0].closest('.printer')).find('.modelPrinter')[0];
                         $.ajax({
@@ -1012,52 +1032,21 @@ function addPrintersInfo(amount, location) {
                                 
                                 selectizeModelFromChoisesManufacturer.selectize.refreshOptions();
                                 selectizeModelFromChoisesManufacturer.selectize.clear();
-                                selectizeModelFromChoisesManufacturer.selectize.enable();
-
+                                selectizeModelFromChoisesManufacturer.selectize.enable();                               
                             }
                         });
-
                     }
-                },
-                onInput: function (e) {
-                    console.log(e.target);
-                }});
-
+                }
+                });        
         });
-    });
-
-    $(document).ready(function () {
-        $(modelCartridgeSelect).selectize({
-            create: true,
-            showAddOptionOnCreate: true
-        });
-
-    });
-
-
-
-    // Подключение Selectize
-    // производитель
-
-
-
-    // Связанные списки производитель и модель принтера
-
-
-
-
-
 }
-
-
-
 
 function addCartridgesInfo(amount, location) {
 
     if (!document.getElementById('printerCartridge')) {
 
         labelCount = document.createElement("div");
-        labelCount.className = "col-md-1 d-flex align-items-center justify-content-center";
+        labelCount.className = "col-md-2 d-flex align-items-center justify-content-center";
         labelCount.innerText = "№";
         label = document.createElement("label");
         label.className = "form-label";
@@ -1068,7 +1057,7 @@ function addCartridgesInfo(amount, location) {
         pane = document.createElement("div");
         pane.className = "pane";
         divcol1 = document.createElement("div");
-        divcol1.className = "col-md-3 d-flex align-items-center justify-content-center";
+        divcol1.className = "col-md-5 d-flex align-items-center justify-content-center";
         divcol1.style = "height:50px";
         location.appendChild(flex);
         flex.appendChild(labelCount);
@@ -1078,18 +1067,11 @@ function addCartridgesInfo(amount, location) {
         label2.className = "form-label";
         label2.innerText = "Модель";
         divcol2 = document.createElement("div");
-        divcol2.className = "col-md-4 d-flex align-items-center justify-content-center";
+        divcol2.className = "col-md-5 d-flex align-items-center justify-content-center";
         divcol2.style = "height:50px";
         flex.appendChild(divcol2);
         divcol2.appendChild(label2);
-        label3 = document.createElement("label");
-        label3.className = "form-label";
-        label3.innerText = "Номинальный ресурс";
-        divcol3 = document.createElement("div");
-        divcol3.className = "col-md-4 d-flex align-items-center justify-content-center";
-        divcol3.style = "height:50px";
-        flex.appendChild(divcol3);
-        divcol3.appendChild(label3);
+        
 
     }
 
@@ -1106,39 +1088,26 @@ function addCartridgesInfo(amount, location) {
                 paneCartridge = document.createElement("div");
                 paneCartridge.className = "pane mt-3 mb-3";
                 countEachCartridge = document.createElement("div");
-                countEachCartridge.className = "col-md-1 mb-2 d-flex align-items-center justify-content-center";
+                countEachCartridge.className = "col-md-2 mb-2 d-flex align-items-center justify-content-center";
                 countEachCartridge.innerText = bufCartridgeCount + (++countCartridge);
                 divTypeIndependentCartridge = document.createElement("div");
-                divTypeIndependentCartridge.className = "col-md-3 mb-2 independentCartridgeType";
+                divTypeIndependentCartridge.className = "col-md-5 mb-2 independentCartridgeType";
                 divTypeIndependentCartridge.id = "independentCartridgeType_" + id2;
                 selectTypeIndependentCartridge = document.createElement("select");
-                selectTypeIndependentCartridge.className = "form-select text-start";
+                selectTypeIndependentCartridge.className = "form-select text-start independentCartridgeTypeSelect";
 //   selectTypeCartridge.setAttribute("th:field", "*{" + id + "}");
                 selectTypeIndependentCartridge.name = "independentCartridgeType";
-                optionsCartridgeTypeMap.forEach((value, key) => {
-                    let opt = new Option(key, value);
-                    selectTypeIndependentCartridge.append(opt);
-                });
+  
                 divModelIndependentCartridge = document.createElement("div");
-                divModelIndependentCartridge.className = "col-md-4 mb-2 independentCartridgeModel";
+                divModelIndependentCartridge.className = "col-md-5 mb-2 independentCartridgeModel";
                 divModelIndependentCartridge.id = "independentCartridgeModel_" + id2;
                 selectModelIndependentCartridge = document.createElement("select");
-                selectModelIndependentCartridge.className = "form-select text-start";
+                selectModelIndependentCartridge.className = "form-select text-start independentCartridgeModelSelect";
 //   selectModelCartridge.setAttribute("th:field", "*{" + id + "}");
                 selectModelIndependentCartridge.id = "independentCartridgeModel_" + id2;
                 selectModelIndependentCartridge.name = "independentCartridgeModel";
-                optionsCartridgeMap.forEach((value, key) => {
-                    let opt = new Option(key, value);
-                    selectModelIndependentCartridge.append(opt);
-                });
-                divIndependentCartridgeResource = document.createElement("div");
-                divIndependentCartridgeResource.className = "col-md-4 mb-2";
-                divIndependentCartridgeResource.id = "IndependentCartridgeResource_" + id2;
-                inputIndependentCartridgeResource = document.createElement("input");
-                inputIndependentCartridgeResource.type = "text";
-                inputIndependentCartridgeResource.className = "form-control";
-                inputIndependentCartridgeResource.name = "inputIndependentCartridgeResource";
-                inputIndependentCartridgeResource.id = "inputIndependentCartridgeResource_" + id2;
+                selectModelIndependentCartridge.disabled = true;
+               
                 location.appendChild(paneCartridge);
                 paneCartridge.appendChild(independentCartridgeRow);
                 independentCartridgeRow.appendChild(countEachCartridge);
@@ -1146,8 +1115,7 @@ function addCartridgesInfo(amount, location) {
                 divTypeIndependentCartridge.appendChild(selectTypeIndependentCartridge);
                 independentCartridgeRow.appendChild(divModelIndependentCartridge);
                 divModelIndependentCartridge.appendChild(selectModelIndependentCartridge);
-                independentCartridgeRow.appendChild(divIndependentCartridgeResource);
-                divIndependentCartridgeResource.appendChild(inputIndependentCartridgeResource);
+             
             }
 
         } else {
@@ -1167,39 +1135,25 @@ function addCartridgesInfo(amount, location) {
             paneCartridge = document.createElement("div");
             paneCartridge.className = "pane mt-3 mb-3";
             countEachCartridge = document.createElement("div");
-            countEachCartridge.className = "col-md-1 mb-2 d-flex align-items-center justify-content-center";
+            countEachCartridge.className = "col-md-2 mb-2 d-flex align-items-center justify-content-center";
             countEachCartridge.innerText = i + 1;
             divTypeIndependentCartridge = document.createElement("div");
-            divTypeIndependentCartridge.className = "col-md-3 mb-2 independentCartridgeType";
+            divTypeIndependentCartridge.className = "col-md-5 mb-2 independentCartridgeType";
             divTypeIndependentCartridge.id = "independentCartridgeType_" + id2;
             selectTypeIndependentCartridge = document.createElement("select");
-            selectTypeIndependentCartridge.className = "form-select text-start";
+            selectTypeIndependentCartridge.className = "form-select text-start independentCartridgeTypeSelect";
 //   selectTypeCartridge.setAttribute("th:field", "*{" + id + "}");
             selectTypeIndependentCartridge.name = "independentCartridgeType";
-            optionsCartridgeTypeMap.forEach((value, key) => {
-                let opt = new Option(key, value);
-                selectTypeIndependentCartridge.append(opt);
-            });
             divModelIndependentCartridge = document.createElement("div");
-            divModelIndependentCartridge.className = "col-md-4 mb-2 independentCartridgeModel";
+            divModelIndependentCartridge.className = "col-md-5 mb-2 independentCartridgeModel";
             divModelIndependentCartridge.id = "independentCartridgeModel_" + id2;
             selectModelIndependentCartridge = document.createElement("select");
-            selectModelIndependentCartridge.className = "form-select text-start";
+            selectModelIndependentCartridge.className = "form-select text-start independentCartridgeModelSelect";
 //   selectModelCartridge.setAttribute("th:field", "*{" + id + "}");
             selectModelIndependentCartridge.id = "independentCartridgeModel_" + id2;
             selectModelIndependentCartridge.name = "independentCartridgeModel";
-            optionsCartridgeMap.forEach((value, key) => {
-                let opt = new Option(key, value);
-                selectModelIndependentCartridge.append(opt);
-            });
-            divIndependentCartridgeResource = document.createElement("div");
-            divIndependentCartridgeResource.className = "col-md-4 mb-2";
-            divIndependentCartridgeResource.id = "IndependentCartridgeResource_" + id2;
-            inputIndependentCartridgeResource = document.createElement("input");
-            inputIndependentCartridgeResource.type = "text";
-            inputIndependentCartridgeResource.className = "form-control";
-            inputIndependentCartridgeResource.name = "inputIndependentCartridgeResource";
-            inputIndependentCartridgeResource.id = "inputIndependentCartridgeResource_" + id2;
+            selectModelIndependentCartridge.disabled = true;
+           
             location.appendChild(paneCartridge);
             paneCartridge.appendChild(independentCartridgeRow);
             independentCartridgeRow.appendChild(countEachCartridge);
@@ -1207,41 +1161,92 @@ function addCartridgesInfo(amount, location) {
             divTypeIndependentCartridge.appendChild(selectTypeIndependentCartridge);
             independentCartridgeRow.appendChild(divModelIndependentCartridge);
             divModelIndependentCartridge.appendChild(selectModelIndependentCartridge);
-            independentCartridgeRow.appendChild(divIndependentCartridgeResource);
-            divIndependentCartridgeResource.appendChild(inputIndependentCartridgeResource);
+            
         }
     }
 
-
     $(document).ready(function () {
+        
+        // Selectize тип картриджа 
+        
+        let typeChoice;
         $('.independentCartridgeType').children('select').selectize({
             create: false,
+            placeholder: "Выберите из списка",
+            valueField: 'type',
+            labelField: 'type',
+            searchField: "type",
+            options:[   {type: "Оригинальный"},
+                        {type: "Совместимый"},
+                        {type: "Стартовый"}   ],
             onChange: function (value) {
-                let target = value.split(" ")[0];
-                let currentModel;
-                let idModel = this.$input.parents()[1].id.split("_")[3];
-                for (let eachModel of $('.independentCartridgeModel').children('select')) {
-                    if (idModel === eachModel.id.split("_")[1]) {
-                        currentModel = eachModel;
-                    }
-                }
-                currentModel.selectize.clearOptions();
-                for (let yy of optionsCartridgeMap) {
-                    if (target === yy[1]) {
-                        currentModel.selectize.addOption({value: yy[0], text: yy[0]});
-                        currentModel.selectize.addItem(yy[0]);
-                        currentModel.selectize.setValue("", false);
-                    }
-                }
-            }
+              if (value !== '') {
+                  selectizeModelFromChoisesTypeCartridge = $(this.$control_input[0].closest('.independentCartridge')).find('.independentCartridgeModelSelect')[0];
+                  typeChoice =  $(this.$control_input[0].closest('.independentCartridge')).find('.independentCartridgeTypeSelect')[0].innerText;
+                  selectizeModelFromChoisesTypeCartridge.selectize.enable();
+                  typeValueFromSelectize = value;
+                  $.ajax({
+                      url: "http://localhost:8080/cartridge/" + encodeURIComponent(value),
+                      type: 'GET',
+                      dataType: 'json', // added data type
+                      success: function (res) {
+                          let keys = Object.keys(selectizeModelFromChoisesTypeCartridge.selectize.options);
+                          for(let i = 0; i < keys.length; i++) {
+                              selectizeModelFromChoisesTypeCartridge.selectize.removeOption(keys[i]);
+                          }
+                          res.forEach(model => {
+                              selectizeModelFromChoisesTypeCartridge.selectize.addOption(model);
+                              selectizeModelFromChoisesTypeCartridge.selectize.addItem(model);
+                          });
+
+                          selectizeModelFromChoisesTypeCartridge.selectize.refreshOptions();
+                          selectizeModelFromChoisesTypeCartridge.selectize.clear();
+                          selectizeModelFromChoisesTypeCartridge.selectize.enable();
+                      }
+                  });
+              }
+          }
         });
+        
+        // Selectize модель картриджа
+        
+         $('.independentCartridgeModel').children('select').selectize({
+            placeholder: "Выберите из списка",
+            valueField: 'model',
+                    labelField: 'model',
+                    searchField: "model",
+                    preload: 'focus',
+                    create: false,
+//                            function(input, callback) {
+//                        
+//                        selectizeModelFromChoisesTypeCartridge = $(this.$control_input[0].closest('.independentCartridge')).find('.independentCartridgeModelSelect')[0];
+//                        $.ajax({
+//                            url: "http://localhost:8080/cartridge/",
+//                            type: 'POST',
+//                            data: {target:input,
+//                                   type:typeChoice},
+//                            success: function() {             
+//                                selectizeModelFromChoisesTypeCartridge.selectize.addOption({value: input, text: input});
+//                                selectizeModelFromChoisesTypeCartridge.selectize.addItem(input);
+//                                selectizeModelFromChoisesTypeCartridge.selectize.refreshOptions();
+//                                callback({model: input});
+//                            }
+//                        });
+//                    },
+                    load: function (query, callback) {
+                    $.ajax({
+                        url: 'http://localhost:8080/cartridge/' + encodeURIComponent(typeChoice),
+                        type: 'GET',
+                        dataType: 'json',
+                        data: {model:query},
+                        error: callback,
+                        success: callback
+                         });
+                }
+         });
+        
     });
-    $(document).ready(function () {
-        $('.independentCartridgeModel').children('select').selectize({
-            create: true,
-            showAddOptionOnCreate: true
-        });
-    });
+
 }
 
 
@@ -1259,8 +1264,8 @@ function getContractPrinterDetails() {
             inventoryNumber: document.getElementsByClassName('printer')[i].children.item(4).firstChild.value,
             cartridgeIncluded: document.getElementsByClassName('printer')[i].children.item(5).firstChild.children.item(0).checked,
             cartridgeIncludedType: document.getElementsByClassName('cartridgeInclude')[i].children.item(1).firstChild.value.split(" ")[0],
-            cartridgeIncludeModel: document.getElementsByClassName('cartridgeInclude')[i].children.item(3).firstChild.value,
-            cartridgeIncludeResource: document.getElementsByClassName('cartridgeInclude')[i].children.item(5).firstChild.value
+            cartridgeIncludeModel: document.getElementsByClassName('cartridgeInclude')[i].children.item(3).firstChild.value
+            
         };
 
         if (printersArray.length == 0) {
@@ -1288,15 +1293,12 @@ function getContractCartridgeDetails() {
     let cartridge;
     cartridgesArray = new Array();
     for (i = 0; i < document.getElementsByClassName('independentCartridge').length; i++) {
-
         let cartridge = new Object();
-        let typeArray = document.getElementsByClassName('independentCartridge')[i].children.item(1).firstChild.value.split(" ");
-        let index = typeArray.findIndex(el => el == 'ORIGINAL' || el == 'ANALOG' || el == 'START');
         cartridge = {
             cartridge: i + 1,
-            type: document.getElementsByClassName('independentCartridge')[i].children.item(1).firstChild.value.split(" ")[index],
+            type: document.getElementsByClassName('independentCartridge')[i].children.item(1).firstChild.value,
             model: document.getElementsByClassName('independentCartridge')[i].children.item(2).firstChild.value,
-            resource: document.getElementsByClassName('independentCartridge')[i].children.item(3).firstChild.value
+       
         };
         cartridgesArray.push(cartridge);
     }

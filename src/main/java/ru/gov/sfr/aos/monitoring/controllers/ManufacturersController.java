@@ -12,9 +12,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import ru.gov.sfr.aos.monitoring.entities.Cartridge;
+import ru.gov.sfr.aos.monitoring.models.CartridgeDTO;
+import ru.gov.sfr.aos.monitoring.models.CartridgeModelDTO;
 import ru.gov.sfr.aos.monitoring.models.ManufacturerDTO;
 import ru.gov.sfr.aos.monitoring.models.ModelDTO;
+import ru.gov.sfr.aos.monitoring.repositories.CartridgeRepo;
 import ru.gov.sfr.aos.monitoring.repositories.ModelPrinterRepo;
+import ru.gov.sfr.aos.monitoring.services.CartridgeMapper;
 import ru.gov.sfr.aos.monitoring.services.ManufacturersMapper;
 import ru.gov.sfr.aos.monitoring.services.ModelMapper;
 
@@ -31,6 +36,10 @@ public class ManufacturersController {
     private ModelPrinterRepo modelRepo;
     @Autowired
     private ModelMapper modelMapper;
+    @Autowired
+    private CartridgeMapper cartridgeMapper;
+    @Autowired
+    private CartridgeRepo repo;
 
     @RequestMapping(value = "/manufacturers", method = RequestMethod.GET)
     public List<ManufacturerDTO> showPrinters() {
@@ -59,8 +68,21 @@ public class ManufacturersController {
     }
     
     @PostMapping("/models")
-    public void saveModel(@RequestParam String value) {
-        
+    public void saveModel(@RequestParam String manufacturer, @RequestParam String target) {
+        modelMapper.saveModelByManufacturer(manufacturer, target);
     }
+    
 
+    
+    @RequestMapping(value = "/cartridge/{type}", method = RequestMethod.GET)
+    public List<CartridgeDTO> getModelCartridgeByType(@PathVariable String type) {
+        List<CartridgeDTO> list = cartridgeMapper.findModelCartridgeByType(type);
+        return list;
+    }    
+        
+    @RequestMapping(value = "/cartridge", method = RequestMethod.GET)
+    public List<CartridgeModelDTO> getCartridges() {
+            List<CartridgeModelDTO> list = cartridgeMapper.getCartridgeModels();
+        return list;
+    }
 }

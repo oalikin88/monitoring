@@ -16,18 +16,21 @@ import ru.gov.sfr.aos.monitoring.services.CartridgeMapper;
  *
  * @author 041AlikinOS
  */
-@RestController
-public class CartridgesController {
-    
-    @Autowired
-    private CartridgeMapper mapper;
-    
-    
-    @RequestMapping(value = "/showcartridges", method = RequestMethod.GET)
-    public List<CartridgeDTO> showCartridges() {
-        
-        List<CartridgeDTO> list = mapper.getDTO();
-        return list;        
-    }
-    
-}
+//@RestController
+//public class CartridgesController {
+//    
+//    @Autowired
+//    private CartridgeMapper mapper;
+//    
+//    
+//    @RequestMapping(value = "/showcartridges", method = RequestMethod.GET)
+//    public List<CartridgeDTO> showCartridges() {
+//        
+//        List<CartridgeDTO> list = mapper.getDTO();
+//        return list;        
+//    }
+//    
+//    
+//
+//    
+//}

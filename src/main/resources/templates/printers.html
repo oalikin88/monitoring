@@ -30,19 +30,12 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                         
                         <div class="row linkedRow" th:each="val : ${dto.value}">
                             <div th:text="${val.key}" > 
+<!--                                <a href="cartridges.html" 
+   th:href="@{http://localhost:8080/cartridges(orderId=${o.id})}">view</a>-->
                             </div>
-                            <script th:inline="javascript">
-                                function getLink() {
-                                    let link = "https://www.w3docs.com/";
-                                    link = link + [[${val.key}]];
-                                    return link;
-                                }
-                                document.write(getLink());
-                            </script>
+                           
                              
-<!--                           <a href="https://www.w3docs.com/">
-                                     <span class="link"></span>
-                                     </a>-->
+                       
                         </div>
                     </div>
                    

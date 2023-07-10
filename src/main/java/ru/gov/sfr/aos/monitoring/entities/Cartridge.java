@@ -7,14 +7,11 @@ package ru.gov.sfr.aos.monitoring.entities;
 import java.time.LocalDateTime;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.persistence.ForeignKey;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.validation.constraints.NotNull;
-import ru.gov.sfr.aos.monitoring.CartridgeType;
 
 /**
  *
@@ -25,10 +22,9 @@ import ru.gov.sfr.aos.monitoring.CartridgeType;
 @PrimaryKeyJoinColumn(name = "CARTRIDGE_ID")
 public class Cartridge extends ObjectBuing {
     @NotNull
-    protected String model;
-    @NotNull
-    @Enumerated(EnumType.STRING)
-    protected CartridgeType type;
+    @ManyToOne(cascade = CascadeType.ALL)
+    protected CartridgeModel model;
+   
     @NotNull
     @ManyToOne(cascade = CascadeType.ALL)
     protected Location location;
@@ -40,8 +36,6 @@ public class Cartridge extends ObjectBuing {
     protected boolean util;
     @NotNull
     protected Long count;
-    @NotNull
-    protected Long defaultNumberPrintPage; // на сколько картридж рассчитан, лучше вшить внутрь бд
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "PRINTER_ID",
 			foreignKey = @ForeignKey(name = "PRINTER_ID_FK"))
@@ -53,25 +47,20 @@ public class Cartridge extends ObjectBuing {
         
     }
    
-    public Cartridge(String model, CartridgeType type, Location location, LocalDateTime dateStartExploitation, 
-            LocalDateTime dateEndExploitation, boolean util, Long count, Long defaultNumberPrintPage) {
+    public Cartridge(CartridgeModel model, Location location, LocalDateTime dateStartExploitation, 
+            LocalDateTime dateEndExploitation, boolean util, Long count) {
         this.model = model;
-        this.type = type;
         this.location = location;
         this.dateStartExploitation = dateStartExploitation;
         this.dateEndExploitation = dateEndExploitation;
         this.util = util;
         this.count = count;
-        this.defaultNumberPrintPage = defaultNumberPrintPage;
     } 
 
     public Long getId() {
         return id;
     }
 
-    public CartridgeType getType() {
-        return type;
-    }
 
     public Location getLocation() {
         return location;
@@ -105,9 +94,6 @@ public class Cartridge extends ObjectBuing {
         this.id = id;
     }
 
-    public void setType(CartridgeType type) {
-        this.type = type;
-    }
 
     public void setLocation(Location location) {
         this.location = location;
@@ -130,27 +116,19 @@ public class Cartridge extends ObjectBuing {
         this.count = count;
     }
 
-    public Long getDefaultNumberPrintPage() {
-        return defaultNumberPrintPage;
-    }
-
-    public void setDefaultNumberPrintPage(Long defaultNumberPrintPage) {
-        this.defaultNumberPrintPage = defaultNumberPrintPage;
-    }
-
-    public String getModel() {
+    public CartridgeModel getModel() {
         return model;
     }
 
-    public void setModel(String model) {
+    public void setModel(CartridgeModel model) {
         this.model = model;
     }
     
     @Override
     public String toString() {
-        return "Model: " + this.model + "; Type: " + this.type.getName() + "; Location: " + this.location +
+        return "Model: " + this.model.getModel() + "; Type: " + this.model.getType().getName() + "; Location: " + this.location +
                 "; Date start exploitation: " + this.dateStartExploitation + "; Date end exploitation: " + this.dateEndExploitation 
-                + "; Count: " + this.count + "; Default number print page: " + this.defaultNumberPrintPage;
+                + "; Count: " + this.count + "; Default number print page: " + this.model.getDefaultNumberPrintPage();
     }
 
 }

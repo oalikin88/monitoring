@@ -16,5 +16,5 @@ import ru.gov.sfr.aos.monitoring.entities.Location;
 
 @Repository
 public interface LocationRepo extends JpaRepository<Location, Long> {
-    List<Location> findByName(String name); 
+    Location findByName(String name); 
 }

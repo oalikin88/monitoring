@@ -12,7 +12,7 @@ import java.util.Objects;
  */
 
 public class PrinterDTO {
-    
+    public Long id;
     public String manufacturer;
     public String model;
     public String inventaryNumber;
@@ -22,14 +22,23 @@ public class PrinterDTO {
     
     public PrinterDTO() {};
 
-    public PrinterDTO(String manufacturer, String model, String inventaryNumber, String serialNumber, 
+    public PrinterDTO(Long id, String manufacturer, String model, String inventaryNumber, String serialNumber, 
             String cartridge, String location) {
+        this.id = id;
         this.manufacturer = manufacturer;
         this.model = model;
         this.inventaryNumber = inventaryNumber;
         this.serialNumber = serialNumber;
         this.cartridge = cartridge;
         this.location = location;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getManufacturer() {

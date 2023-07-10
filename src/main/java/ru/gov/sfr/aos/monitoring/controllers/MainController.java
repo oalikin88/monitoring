@@ -4,20 +4,26 @@
  */
 package ru.gov.sfr.aos.monitoring.controllers;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import ru.gov.sfr.aos.monitoring.entities.Cartridge;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import ru.gov.sfr.aos.monitoring.entities.Contract;
 import ru.gov.sfr.aos.monitoring.interfaces.CartridgeServiceInterface;
 import ru.gov.sfr.aos.monitoring.interfaces.ContractServiceInterface;
 import ru.gov.sfr.aos.monitoring.models.CartridgeDTO;
+import ru.gov.sfr.aos.monitoring.models.CartridgeModelDTO;
 import ru.gov.sfr.aos.monitoring.models.ContractDTO;
 import ru.gov.sfr.aos.monitoring.services.CartridgeMapper;
 import ru.gov.sfr.aos.monitoring.services.ContractServiceMapper;
@@ -61,18 +67,7 @@ public class MainController {
      }
     
     
-    @GetMapping("/cartridges")
-    public String getCartridges(Model model) {
-        
-        List<CartridgeDTO> cartridges = cartridgeMapper.getDTO();
-       
-       
-        
-       model.addAttribute("cartridges", cartridges);
-       
-        return "cartridges";
-        
-    }
+
     
     @PostMapping("/cartridges")
     public String sendCartridges(
@@ -84,5 +79,52 @@ public class MainController {
         
      }
     
+        @GetMapping(value ="/cartridges")
+    public String showCartridgesByLocations(Model model) {
+    
+        
+        Map<String, List<CartridgeDTO>> dtoes = cartridgeMapper.showCatridgesByLocation();
+           
+        // Подсчёт повторяющихся элементов
+        Map<List<CartridgeDTO>, Map<String, Integer>> frequency = new HashMap<>();
+        
+        for(List<CartridgeDTO> list : dtoes.values()) {                       
+            Map<String, Integer> collect2 = list.stream()
+                .map(e -> e.model + " " + e.type)
+                .collect(Collectors.toMap(e -> e, e -> 1, Integer::sum));
+          
+            frequency.put(list, collect2);
+            
+        }
+        int count = 0;
+        for(Map.Entry<List<CartridgeDTO>, Map<String, Integer>> map : frequency.entrySet()) {
+            ++count;
+            System.out.println("\n" + "map: " + count);
+            System.out.println(map.getKey());
+            for(Map.Entry<String, Integer> entry : map.getValue().entrySet()) {
+                
+                System.out.println(entry.getKey() + " : " + entry.getValue());
+            }
+        }   
+        model.addAttribute("dtoes",frequency);
+        
+        return "cartridges";
+    }
+    
+    @GetMapping(value ="/addmodelcart")
+    public String addModelCartridge(Model model) {
+    
+        
+        return "addmodelcartridge";
 
+}
+    @PostMapping("/addmodelcart")
+    public ResponseEntity<CartridgeModelDTO> saveModelCartridge(@ModelAttribute CartridgeModelDTO dto) {
+
+        cartridgeMapper.saveCartridgeModel(dto);
+        return new ResponseEntity<CartridgeModelDTO>(HttpStatus.OK);
+
+}
+    
+    
 }

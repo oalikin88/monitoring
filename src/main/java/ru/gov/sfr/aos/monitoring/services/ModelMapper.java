@@ -8,8 +8,10 @@ import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import ru.gov.sfr.aos.monitoring.entities.Manufacturer;
 import ru.gov.sfr.aos.monitoring.entities.Model;
 import ru.gov.sfr.aos.monitoring.models.ModelDTO;
+import ru.gov.sfr.aos.monitoring.repositories.ManufacturerRepo;
 import ru.gov.sfr.aos.monitoring.repositories.ModelPrinterRepo;
 
 /**
@@ -22,6 +24,8 @@ public class ModelMapper {
     
     @Autowired
     private ModelPrinterRepo modelRepo;
+    @Autowired
+    private ManufacturerRepo manufacturerRepo;
     
     public List<ModelDTO> showModels() {
         List<ModelDTO> list = new ArrayList<>();
@@ -53,11 +57,28 @@ public class ModelMapper {
         return list;
     }
     
-    public void saveModelByManufacturer(String manufacturer) {
-        List<Model> inputList = modelRepo.findByManufacturerNameContainingIgnoreCase(manufacturer);
-        if(!inputList.get(i).getName().isEmpty() || !inputList.get(i).getName().isBlank() || inputList.get(i).getName() != null) {
-            
+    public void saveModelByManufacturer(String manufacturer, String target) {
+        boolean duplicate = false;
+        List<ModelDTO> dtoes = showModelsByManufacturer(manufacturer);
+        for(int i = 0; i < dtoes.size(); i++) {
+            if(dtoes.get(i).getModel().toLowerCase().trim().equals(target.toLowerCase().trim())) {
+               duplicate = true; 
+            }
         }
+        
+        if(!duplicate) {
+            
+            Manufacturer entity = manufacturerRepo.findByNameContainingIgnoreCase(manufacturer.toLowerCase()).get(0);
+            Model model = new Model();
+            model.setManufacturer(entity);
+            model.setName(target);
+            modelRepo.save(model);
+            System.out.println("Модель " + target + " успешно внесена в базу данных");
+        } else {
+            System.out.println("Такая модель уже есть в базе данных");
+        }
+        
+        
     }
     
 }

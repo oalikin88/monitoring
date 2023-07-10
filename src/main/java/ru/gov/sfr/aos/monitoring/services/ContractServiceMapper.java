@@ -11,17 +11,17 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import ru.gov.sfr.aos.monitoring.CartridgeType;
 import ru.gov.sfr.aos.monitoring.entities.Cartridge;
+import ru.gov.sfr.aos.monitoring.entities.CartridgeModel;
 import ru.gov.sfr.aos.monitoring.entities.Contract;
 import ru.gov.sfr.aos.monitoring.entities.Location;
 import ru.gov.sfr.aos.monitoring.entities.Manufacturer;
 import ru.gov.sfr.aos.monitoring.entities.Model;
 import ru.gov.sfr.aos.monitoring.entities.ObjectBuing;
 import ru.gov.sfr.aos.monitoring.entities.Printer;
+import ru.gov.sfr.aos.monitoring.repositories.CartridgeModelRepo;
 import ru.gov.sfr.aos.monitoring.repositories.LocationRepo;
 import ru.gov.sfr.aos.monitoring.repositories.ManufacturerRepo;
 import ru.gov.sfr.aos.monitoring.repositories.ModelPrinterRepo;
@@ -41,12 +41,15 @@ public class ContractServiceMapper {
     private ManufacturerRepo manufacturerRepo;
     @Autowired
     private ModelPrinterRepo modelPrinterRepo;
-   
+    @Autowired
+    private CartridgeModelRepo cartridgeModelRepo;
 
     public void createNewContract(List<Map<String, String>> input) {
-
-        List<ObjectBuing> objectsBuing = new ArrayList<>();
         
+        CartridgeModel cartridgeModel;
+        CartridgeModel cartridgeModelIndepended;
+        List<ObjectBuing> objectsBuing = new ArrayList<>();
+
         Long contractNumber;
         Contract contract = new Contract();
         int amountPrinters = 0;
@@ -103,7 +106,7 @@ public class ContractServiceMapper {
                 }
             }
 
-            if (input.get(i).size() == 9) {
+            if (input.get(i).size() == 8) {
 
                 // Добавление объекта покупки в контракт
                 Printer printer = new Printer();
@@ -111,11 +114,12 @@ public class ContractServiceMapper {
                 Model model = null;
                 Cartridge cartridgeInclude = null;
                 Location location = null;
-                List<Location> findLocation = locationRepo.findByName("Склад");
+                Location findLocation = locationRepo.findByName("Склад");
+                cartridgeModel = null;
                 boolean cartridgeIncluded = false;
 
-                if (findLocation.size() != 0) {
-                    location = findLocation.get(0);
+                if (findLocation != null) {
+                    location = findLocation;
                 } else {
                     location = new Location("Склад");
                 }
@@ -125,22 +129,19 @@ public class ContractServiceMapper {
 
                     switch (entry.getKey()) {
                         case "manufacturer":
-                            
                             if (!entry.getValue().isEmpty() || !entry.getValue().isBlank()) {
                                 List<Manufacturer> manufacturers = manufacturerRepo.findByNameContainingIgnoreCase(entry.getValue());
-                                if(!manufacturers.isEmpty()) {
+                                if (!manufacturers.isEmpty()) {
                                     manufacturer = manufacturers.get(0);
-                                    
                                 } else {
                                     manufacturer = new Manufacturer();
                                     manufacturer.setName(entry.getValue());
                                 }
-                                
-                            } else {
-                                manufacturer = new Manufacturer();
-                                manufacturer.setName("Отсутствует");
-                            }
-                            break;
+                                } else {
+                                    manufacturer = new Manufacturer();
+                                    manufacturer.setName("Отсутствует");
+                                }
+                                break;
                         case "serialNumber":
                             if (!entry.getValue().isEmpty() || !entry.getValue().isBlank()) {
 
@@ -150,26 +151,19 @@ public class ContractServiceMapper {
                             }
                             break;
                         case "model":
-                            
                             if (!entry.getValue().isEmpty() || !entry.getValue().isBlank()) {
-                               
                                 List<Model> models = modelPrinterRepo.findByName(entry.getValue());
-                                if(!models.isEmpty()) {
-                                    model= models.get(0);
-                                    
+                                if (!models.isEmpty()) {
+                                    model = models.get(0);
                                 } else {
-                                    
                                     model = new Model();
                                     model.setName(entry.getValue());
                                 }
-                                
-                                
+
                             } else {
                                 model = new Model();
                                 model.setName("По умолчанию");
-                              
                             }
-                            
                             break;
                         case "inventoryNumber":
                             if (!entry.getValue().isEmpty() || !entry.getValue().isBlank()) {
@@ -181,52 +175,36 @@ public class ContractServiceMapper {
                         case "cartridgeIncluded":
                             if (entry.getValue().contains("true")) {
                                 cartridgeInclude = new Cartridge();
+                                cartridgeModel = new CartridgeModel();
                                 cartridgeIncluded = true;
                                 cartridgeInclude.setLocation(location);
-
                             }
                             break;
-                        case "cartridgeIncludedType":
-                            if (cartridgeIncluded) {
-
-                                switch (entry.getValue()) {
-                                    case "START":
-                                        cartridgeInclude.setType(CartridgeType.START);
-                                        break;
-                                    case "ORIGINAL":
-                                        cartridgeInclude.setType(CartridgeType.ORIGINAL);
-                                        break;
-                                    case "ANALOG":
-                                        cartridgeInclude.setType(CartridgeType.ANALOG);
-                                        break;
-                                    default:
-                                        cartridgeInclude.setType(CartridgeType.START);
-                                        break;
-                                }
-                            }
-                            break;
+                      
                         case "cartridgeIncludeModel":
                             if (cartridgeIncluded) {
-                                cartridgeInclude.setModel(entry.getValue());
-                            }
-                            break;
-                        case "cartridgeIncludeResource":
-                            if (cartridgeIncluded) {
-                                try {
-                                    cartridgeInclude.setDefaultNumberPrintPage(Long.parseLong(entry.getValue()));
-                                } catch (NumberFormatException e) {
-                                    e.printStackTrace();
+                                String targetModel;
+                                if (!entry.getValue().isEmpty() || !entry.getValue().isBlank()) {
+                                    targetModel = entry.getValue();
+                                } else {
+                                    targetModel = "Отсутствует";
+                                }
+                                List<CartridgeModel> cartridgeModelsEntities = cartridgeModelRepo.findByModel(targetModel);
+                                if (cartridgeModelsEntities.size() > 0) {
+                                    cartridgeModel = cartridgeModelsEntities.get(0);
+                                } else {
+
+                                    cartridgeModel.setModel(targetModel);
                                 }
                             }
                             break;
+                        
                     }
-
                 }
-
                 if (cartridgeIncluded) {
                     cartridgeInclude.setContract(contract);
                     cartridgeInclude.setPrinter(printer);
-                    
+                    cartridgeInclude.setModel(cartridgeModel);
                     objectsBuing.add(cartridgeInclude);
 
                 }
@@ -239,13 +217,14 @@ public class ContractServiceMapper {
                 objectsBuing.add(printer);
 
             }
-            if (input.get(i).size() == 4) {
+            if (input.get(i).size() == 3) {
 
                 Cartridge cartridge = new Cartridge();
-                List<Location> findLocation = locationRepo.findByName("Склад");
+                Location findLocation = locationRepo.findByName("Склад");
                 Location location = null;
-                if (findLocation.size() != 0) {
-                    location = findLocation.get(0);
+                cartridgeModelIndepended = null;
+                if (findLocation != null) {
+                    location = findLocation;
                 } else {
                     location = new Location("Склад");
                 }
@@ -255,40 +234,22 @@ public class ContractServiceMapper {
 
                     switch (entry.getKey()) {
                         case "model":
+                            String targetModel;
                             if (!entry.getValue().isEmpty() || !entry.getValue().isBlank()) {
-                                cartridge.setModel(entry.getValue());
+                                targetModel = entry.getValue();
                             } else {
-                                cartridge.setModel("Отсутствует");
+                                targetModel = "Отсутствует";
                             }
-                            break;
-                        case "type":
-                            if (!entry.getValue().isEmpty() || !entry.getValue().isBlank()) {
-                                switch (entry.getValue()) {
-                                    case "START":
-                                        cartridge.setType(CartridgeType.START);
-                                        break;
-                                    case "ORIGINAL":
-                                        cartridge.setType(CartridgeType.ORIGINAL);
-                                        break;
-                                    case "ANALOG":
-                                        cartridge.setType(CartridgeType.ANALOG);
-                                        break;
-                                }
+                            List<CartridgeModel> cartridgeModelsEntities = cartridgeModelRepo.findByModel(targetModel);
+                            if (cartridgeModelsEntities.size() > 0) {
+                                cartridgeModelIndepended = cartridgeModelsEntities.get(0);
                             } else {
-                                cartridge.setType(CartridgeType.START);
+                                cartridgeModelIndepended = new CartridgeModel();
+                                cartridgeModelIndepended.setModel(targetModel);
                             }
-                            break;
-                        case "resource":
-                            if (!entry.getValue().isEmpty() || !entry.getValue().isBlank()) {
-                                try {
-                                    cartridge.setDefaultNumberPrintPage(Long.parseLong(entry.getValue()));
-                                } catch (NumberFormatException e) {
-                                    e.printStackTrace();
-                                }
 
-                            } else {
-                                cartridge.setDefaultNumberPrintPage(0L);
-                            }
+                            cartridge.setModel(cartridgeModelIndepended);
+
                             break;
                     }
 

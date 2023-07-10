@@ -42,6 +42,7 @@ public class PrintersController {
     @GetMapping(value ="/printers")
     public String showPrintersModels(Model model) {
     
+        
         Map<String, List<PrinterDTO>> dtoes = mapper.showPrintersByLocation();
            
         // Подсчёт повторяющихся элементов

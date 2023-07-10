@@ -38,10 +38,12 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                         <div class="row text-center">
                             <div  class="col-md-4">
                                 <label for="inputContractNumber" class="form-label">Номер контракта:</label>
+                                
                             </div>
 
                             <div class="col-md-4">
                                 <label for='dateStartContract' class="form-label">Дата начала контракта: </label>
+                                
                             </div>
                             <div class="col-md-4">
                                 <label for='dateEndContract' class="form-label">Дата окончания контракта: </label>
@@ -131,19 +133,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                 <li th:text="${contract}"></li>
             </ul>
         </div>
-        <footer class="py-3 my-4">
-            <p class="text-center text-light">© 2008 - 
-                <script>
-                    function date_time()
-                    {
-                        var current_datetime = new Date();
-                        var year = current_datetime.getFullYear();
-                        return year;
-                    }
-                    document.write(date_time());
-                </script>     
-                Отдел эксплуатации и сопровождения информационных подсистем. <br> Отделение СФР по Белгородской области</p>
-        </footer>
+     <footer th:insert="footer :: footer"></footer>
         <script src="/js/bootstrap.bundle.min.js" ></script>
         <script src="/js/my.script.js" defer></script>
     </body>
