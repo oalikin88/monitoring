@@ -17,8 +17,8 @@ public class CartridgeDTO {
     public String location;
     public String resource;
     public boolean util;
-    public LocalDateTime dateStartExploitation;
-    public LocalDateTime dateEndExploitation;
+    public String dateStartExploitation;
+    public String dateEndExploitation;
     public Long count;
     public String usePrinter;
     
@@ -34,7 +34,7 @@ public class CartridgeDTO {
         this.resource = resource;
     }
     
-    public CartridgeDTO(Long id, String type, String model, String location, String resource, boolean util, LocalDateTime dateStartExploitation, LocalDateTime dateEndExploitation, Long count, String usePrinter) {
+    public CartridgeDTO(Long id, String type, String model, String location, String resource, boolean util, String dateStartExploitation, String dateEndExploitation, Long count, String usePrinter) {
         this.id = id;
         this.type = type;
         this.model = model;
@@ -95,19 +95,19 @@ public class CartridgeDTO {
         this.util = util;
     }
 
-    public LocalDateTime getDateStartExploitation() {
+    public String getDateStartExploitation() {
         return dateStartExploitation;
     }
 
-    public void setDateStartExploitation(LocalDateTime dateStartExploitation) {
+    public void setDateStartExploitation(String dateStartExploitation) {
         this.dateStartExploitation = dateStartExploitation;
     }
 
-    public LocalDateTime getDateEndExploitation() {
+    public String getDateEndExploitation() {
         return dateEndExploitation;
     }
 
-    public void setDateEndExploitation(LocalDateTime dateEndExploitation) {
+    public void setDateEndExploitation(String dateEndExploitation) {
         this.dateEndExploitation = dateEndExploitation;
     }
 

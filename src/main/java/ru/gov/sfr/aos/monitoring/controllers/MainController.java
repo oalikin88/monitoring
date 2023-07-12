@@ -7,6 +7,7 @@ package ru.gov.sfr.aos.monitoring.controllers;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,14 +18,14 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import ru.gov.sfr.aos.monitoring.entities.Contract;
 import ru.gov.sfr.aos.monitoring.interfaces.CartridgeServiceInterface;
 import ru.gov.sfr.aos.monitoring.interfaces.ContractServiceInterface;
 import ru.gov.sfr.aos.monitoring.models.CartridgeDTO;
 import ru.gov.sfr.aos.monitoring.models.CartridgeModelDTO;
 import ru.gov.sfr.aos.monitoring.models.ContractDTO;
+import ru.gov.sfr.aos.monitoring.models.ModelDTO;
+import ru.gov.sfr.aos.monitoring.models.ModelPrinterByModelCartridgeDTO;
 import ru.gov.sfr.aos.monitoring.services.CartridgeMapper;
 import ru.gov.sfr.aos.monitoring.services.ContractServiceMapper;
 
@@ -67,6 +68,13 @@ public class MainController {
      }
     
     
+    @GetMapping("/inventories")
+    public String getInventories(Model model) {        
+       Map<ModelDTO, List<ModelPrinterByModelCartridgeDTO>> showCartridgesByModelPrinterAndLocation = cartridgeMapper.showCartridgesByModelPrinterAndLocation();
+        model.addAttribute("input", showCartridgesByModelPrinterAndLocation);
+
+       return "inventories";        
+    }
 
     
     @PostMapping("/cartridges")
@@ -80,8 +88,7 @@ public class MainController {
      }
     
         @GetMapping(value ="/cartridges")
-    public String showCartridgesByLocations(Model model) {
-    
+    public String showCartridgesByLocations(Model model) {    
         
         Map<String, List<CartridgeDTO>> dtoes = cartridgeMapper.showCatridgesByLocation();
            
@@ -92,7 +99,6 @@ public class MainController {
             Map<String, Integer> collect2 = list.stream()
                 .map(e -> e.model + " " + e.type)
                 .collect(Collectors.toMap(e -> e, e -> 1, Integer::sum));
-          
             frequency.put(list, collect2);
             
         }
@@ -106,15 +112,12 @@ public class MainController {
                 System.out.println(entry.getKey() + " : " + entry.getValue());
             }
         }   
-        model.addAttribute("dtoes",frequency);
-        
+        model.addAttribute("dtoes",frequency);  
         return "cartridges";
     }
     
     @GetMapping(value ="/addmodelcart")
-    public String addModelCartridge(Model model) {
-    
-        
+    public String addModelCartridge(Model model) { 
         return "addmodelcartridge";
 
 }

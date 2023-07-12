@@ -35,7 +35,7 @@ public class Printer extends ObjectBuing {
     @NotNull
     @LazyCollection(LazyCollectionOption.FALSE)
     @OneToMany(targetEntity = Cartridge.class, mappedBy = "printer", cascade = CascadeType.ALL)
-    protected List<ObjectBuing> cartridge;
+    protected List<Cartridge> cartridge;
     
     @ManyToOne(cascade = CascadeType.ALL)
     protected Model model;
@@ -45,7 +45,7 @@ public class Printer extends ObjectBuing {
     }
 
     public Printer(Location location, Manufacturer manufacturer, String serialNumber, String inventoryNumber, 
-            List<ObjectBuing> cartridge, Model model) {
+            List<Cartridge> cartridge, Model model) {
         this.location = location;
         this.model = model;
         this.serialNumber = serialNumber;
@@ -79,11 +79,11 @@ public class Printer extends ObjectBuing {
         this.contract = contract;
     }
 
-    public List<ObjectBuing> getCartridge() {
+    public List<Cartridge> getCartridge() {
         return cartridge;
     }
 
-    public void setCartridge(List<ObjectBuing> cartridge) {
+    public void setCartridge(List<Cartridge> cartridge) {
         this.cartridge = cartridge;
     }
 

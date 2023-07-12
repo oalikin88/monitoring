@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<!--
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this template
+-->
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+    <html>
+        <head>
+            <title>Добавить модель картриджа</title>
+            <script src="/js/jquery-3.6.4.min.js"></script>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1">
+            <link href="/css/bootstrap.min.css" rel="stylesheet">
+            <link href="/css/style.css" rel="stylesheet">
+        </head>
+        <body>
+            <nav th:insert="nav :: navbar"></nav>
+            <div class="container content inventoriesContent">
+                <header><h3 class="fw-bold">Сводная таблица</h3></header>
+                   <table class="table">
+                      <thead>
+                        <tr>
+                            <th scope="col" rowspan="2">#</th>
+                          <th scope="col" rowspan="2"> Модель принтера <br> Локация \  <th>
+                          <th scope="col" colspan="2">Samsung GT3243F</th>
+                        </tr>
+                        <tr>
+                          <th scope="col" rowspan="2">Количество принтеров</th>
+                          <th scope="col" colspan="2">Количество картриджей</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <th scope="row">1</th>
+                          <td>Mark</td>
+                          <td>Otto</td>
+                          <td>@mdo</td>
+                        </tr>
+                        <tr>
+                          <th scope="row">2</th>
+                          <td>Jacob</td>
+                          <td>Thornton</td>
+                          <td>@fat</td>
+                        </tr>
+                        <tr>
+                          <th scope="row">3</th>
+                          <td colspan="2">Larry the Bird</td>
+                          <td>@twitter</td>
+                        </tr>
+                      </tbody>
+                    </table> 
+                
+
+            </div>
+            <footer th:insert="footer :: footer"></footer>
+            <script src="/js/bootstrap.bundle.min.js"></script>
+        </body>
+    </html>

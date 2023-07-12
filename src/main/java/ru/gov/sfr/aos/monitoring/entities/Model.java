@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -43,14 +44,14 @@ public class Model {
     @OneToMany(targetEntity = Printer.class, mappedBy = "model", cascade = CascadeType.ALL)
     private List <Printer> printers = new ArrayList<>();
     
-    @ManyToMany(mappedBy = "modelsPrinters")
+    @ManyToMany(mappedBy = "modelsPrinters", fetch = FetchType.EAGER)
     private Set<CartridgeModel> modelCartridges = new HashSet<>();
     
     public Model() {
     }
 
-    public Model(String name, Manufacturer manufacturer, List<Printer> printer, Set<CartridgeModel> cartridges) {
-        this.modelCartridges = cartridges;
+    public Model(String name, Manufacturer manufacturer, List<Printer> printer, Set<CartridgeModel> modelCartridges) {
+        this.modelCartridges = modelCartridges;
         this.name = name;
         this.manufacturer = manufacturer;
         this.printers = printer;
@@ -85,12 +86,12 @@ public class Model {
         printers.add(printer);
     }
 
-    public Set<CartridgeModel> getCartridges() {
+    public Set<CartridgeModel> getModelCartridges() {
         return modelCartridges;
     }
 
-    public void setCartridges(Set<CartridgeModel> cartridges) {
-        this.modelCartridges = cartridges;
+    public void setModelCartridges(Set<CartridgeModel> modelCartridges) {
+        this.modelCartridges = modelCartridges;
     }
 
     public Long getId() {

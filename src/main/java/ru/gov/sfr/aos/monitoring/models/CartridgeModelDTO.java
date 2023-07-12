@@ -16,16 +16,15 @@ public class CartridgeModelDTO implements Serializable {
     public String model;
     public String type;
     public String resource;
-    public List<String> modelPrinters;
 
     public CartridgeModelDTO() {
     }
 
-    public CartridgeModelDTO(String model, String type, String resource, List<String> modelPrinters) {
+    public CartridgeModelDTO(String model, String type, String resource) {
         this.model = model;
         this.type = type;
         this.resource = resource;
-        this.modelPrinters = modelPrinters;
+        
     }
     
     public String getModel() {
@@ -50,14 +49,6 @@ public class CartridgeModelDTO implements Serializable {
 
     public void setResource(String resource) {
         this.resource = resource;
-    }
-
-    public List<String> getModelPrinters() {
-        return modelPrinters;
-    }
-
-    public void setModelPrinters(List<String> modelPrinters) {
-        this.modelPrinters = modelPrinters;
     }
   
     
