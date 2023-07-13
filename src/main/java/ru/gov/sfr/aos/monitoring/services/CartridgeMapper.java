@@ -163,17 +163,23 @@ public class CartridgeMapper {
         return map;
     }
 
-    public Map<ModelDTO, List<ModelPrinterByModelCartridgeDTO>> showCartridgesByModelPrinterAndLocation() {
+    public Map<String, Map<ModelDTO, List<ModelPrinterByModelCartridgeDTO>>> showCartridgesByModelPrinterAndLocation() {
 
-        Location storage = locationRepo.findByName("Склад");
+        List<Location> locations = locationRepo.findAll();
+        
+        Map<ModelDTO, List<ModelPrinterByModelCartridgeDTO>> out2 = null;
+        Map<String, Map<ModelDTO, List<ModelPrinterByModelCartridgeDTO>>> out3 = new HashMap<>();
+        for(Location storage : locations) {
+        out2 = new HashMap<>();
         Set<Cartridge> cartridges = storage.getCartridges();
-     
+         
         List<Model> findAllModelsPrinters = modelPrinterRepo.findAll();
         List<ModelPrinterByModelCartridgeDTO> out = null;
-        Map<ModelDTO, List<ModelPrinterByModelCartridgeDTO>> out2 = new HashMap<>();
+        
         for(Model model : findAllModelsPrinters) {
+              
             ModelDTO modelDTO = new ModelDTO(model.getName(), model.getManufacturer().getName());
-            out = new ArrayList<>();
+           out = new ArrayList<>();
             for(CartridgeModel cartridgeModel : model.getModelCartridges()) {
                 for(Cartridge cartridge : cartridges) {
                     if(cartridge.getModel().getId() == cartridgeModel.getId()) {
@@ -195,12 +201,15 @@ public class CartridgeMapper {
                     }
                 }
             }
-            out2.put(modelDTO, out);
+            
+                out2.put(modelDTO, out);
         }
+        out3.put(storage.getName(), out2);
         
+    }
      
 
-        return out2;
+        return out3;
     }
 
 }

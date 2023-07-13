@@ -17,17 +17,20 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
             <nav th:insert="nav :: navbar"></nav>
             <div class="container content inventoriesContent">
                 <header><h3 class="fw-bold">Сводная таблица</h3></header>
-                   <table class="table">
-                      <thead>
-                        <tr>
-                            <th scope="col" rowspan="2">#</th>
-                          <th scope="col" rowspan="2"> Модель принтера <br> Локация \  <th>
-                          <th scope="col" colspan="2">Samsung GT3243F</th>
-                        </tr>
-                        <tr>
-                          <th scope="col" rowspan="2">Количество принтеров</th>
-                          <th scope="col" colspan="2">Количество картриджей</th>
-                        </tr>
+                   <table class="table" >
+                       <thead>
+                        <script th:inline="javascript">
+                           let input = [[${input}]];
+                           
+                           window.onload = function() {
+                               console.log(input);
+                               let foo = Object.entries(input);
+                               console.log(foo);
+//                                  
+                           };
+                           
+                          
+                        </script>
                       </thead>
                       <tbody>
                         <tr>

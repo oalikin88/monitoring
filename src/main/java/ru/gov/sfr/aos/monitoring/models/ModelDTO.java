@@ -4,11 +4,17 @@
  */
 package ru.gov.sfr.aos.monitoring.models;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import java.io.Serializable;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /**
  *
  * @author 041AlikinOS
  */
-public class ModelDTO {
+public class ModelDTO implements Serializable {
     
     public String model;
     public String manufacturer;
@@ -36,6 +42,16 @@ public class ModelDTO {
 
     public void setManufacturer(String manufacturer) {
         this.manufacturer = manufacturer;
+    }
+
+    @Override
+    public String toString() {
+        ObjectMapper om = new ObjectMapper();
+        try {
+            return om.writeValueAsString(this);
+        } catch (JsonProcessingException ex) {
+            return "";
+        }
     }
     
     

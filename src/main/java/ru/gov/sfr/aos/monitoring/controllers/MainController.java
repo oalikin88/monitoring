@@ -70,7 +70,7 @@ public class MainController {
     
     @GetMapping("/inventories")
     public String getInventories(Model model) {        
-       Map<ModelDTO, List<ModelPrinterByModelCartridgeDTO>> showCartridgesByModelPrinterAndLocation = cartridgeMapper.showCartridgesByModelPrinterAndLocation();
+       Map<String, Map<ModelDTO, List<ModelPrinterByModelCartridgeDTO>>> showCartridgesByModelPrinterAndLocation = cartridgeMapper.showCartridgesByModelPrinterAndLocation();
         model.addAttribute("input", showCartridgesByModelPrinterAndLocation);
 
        return "inventories";        
