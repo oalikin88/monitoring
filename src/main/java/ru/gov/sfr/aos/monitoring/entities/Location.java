@@ -79,10 +79,7 @@ public class Location implements Serializable {
         this.cartridge = cartridge;
     }
 
-    @Override
-    public String toString() {
-        return  "Area: " + this.name;
-    }
+
     
     
     

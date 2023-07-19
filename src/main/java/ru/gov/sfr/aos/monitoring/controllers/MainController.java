@@ -19,13 +19,16 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import ru.gov.sfr.aos.monitoring.entities.Contract;
+import ru.gov.sfr.aos.monitoring.entities.Location;
 import ru.gov.sfr.aos.monitoring.interfaces.CartridgeServiceInterface;
 import ru.gov.sfr.aos.monitoring.interfaces.ContractServiceInterface;
 import ru.gov.sfr.aos.monitoring.models.CartridgeDTO;
 import ru.gov.sfr.aos.monitoring.models.CartridgeModelDTO;
 import ru.gov.sfr.aos.monitoring.models.ContractDTO;
+import ru.gov.sfr.aos.monitoring.models.LocationDTO;
 import ru.gov.sfr.aos.monitoring.models.ModelDTO;
 import ru.gov.sfr.aos.monitoring.models.ModelPrinterByModelCartridgeDTO;
+import ru.gov.sfr.aos.monitoring.models.PrinterDTO;
 import ru.gov.sfr.aos.monitoring.services.CartridgeMapper;
 import ru.gov.sfr.aos.monitoring.services.ContractServiceMapper;
 
@@ -70,8 +73,10 @@ public class MainController {
     
     @GetMapping("/inventories")
     public String getInventories(Model model) {        
-       Map<String, Map<ModelDTO, List<ModelPrinterByModelCartridgeDTO>>> showCartridgesByModelPrinterAndLocation = cartridgeMapper.showCartridgesByModelPrinterAndLocation();
-        model.addAttribute("input", showCartridgesByModelPrinterAndLocation);
+       Map<LocationDTO, Map<ModelDTO, List<ModelPrinterByModelCartridgeDTO>>> showCartridgesByModelPrinterAndLocation = cartridgeMapper.showCartridgesByModelPrinterAndLocation();
+       Map<LocationDTO, List<List<PrinterDTO>>> showPrintersByModelAndLocations = cartridgeMapper.showPrintersByModelAndLocations();
+       model.addAttribute("input", showCartridgesByModelPrinterAndLocation);
+       model.addAttribute("input2", showPrintersByModelAndLocations);
 
        return "inventories";        
     }

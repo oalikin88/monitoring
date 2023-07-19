@@ -7,8 +7,7 @@ package ru.gov.sfr.aos.monitoring.models;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.Serializable;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
 
 /**
  *
@@ -16,6 +15,7 @@ import java.util.logging.Logger;
  */
 public class ModelDTO implements Serializable {
     
+    public Long idModel;
     public String model;
     public String manufacturer;
 
@@ -26,7 +26,20 @@ public class ModelDTO implements Serializable {
         this.model = model;
         this.manufacturer = manufacturer;
     }
-    
+
+    public ModelDTO(Long idModel, String model, String manufacturer) {
+        this.idModel = idModel;
+        this.model = model;
+        this.manufacturer = manufacturer;
+    }
+
+    public Long getIdModel() {
+        return idModel;
+    }
+
+    public void setIdModel(Long idModel) {
+        this.idModel = idModel;
+    }
     
     public String getModel() {
         return model;

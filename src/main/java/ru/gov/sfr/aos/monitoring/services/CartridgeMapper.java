@@ -21,8 +21,10 @@ import ru.gov.sfr.aos.monitoring.entities.Model;
 import ru.gov.sfr.aos.monitoring.entities.Printer;
 import ru.gov.sfr.aos.monitoring.models.CartridgeDTO;
 import ru.gov.sfr.aos.monitoring.models.CartridgeModelDTO;
+import ru.gov.sfr.aos.monitoring.models.LocationDTO;
 import ru.gov.sfr.aos.monitoring.models.ModelDTO;
 import ru.gov.sfr.aos.monitoring.models.ModelPrinterByModelCartridgeDTO;
+import ru.gov.sfr.aos.monitoring.models.PrinterDTO;
 import ru.gov.sfr.aos.monitoring.repositories.CartridgeModelRepo;
 import ru.gov.sfr.aos.monitoring.repositories.CartridgeRepo;
 import ru.gov.sfr.aos.monitoring.repositories.LocationRepo;
@@ -163,13 +165,66 @@ public class CartridgeMapper {
         return map;
     }
 
-    public Map<String, Map<ModelDTO, List<ModelPrinterByModelCartridgeDTO>>> showCartridgesByModelPrinterAndLocation() {
+    public Map<LocationDTO, List<List<PrinterDTO>>> showPrintersByModelAndLocations() {
+        
+        Map<Location, List<List<Printer>>> out = new HashMap<>();
+        Map<LocationDTO, List<List<PrinterDTO>>> out2 = new HashMap<>();
+        List<Location> locations = locationRepo.findAll();
+        List<Model> models = modelPrinterRepo.findAll();
+        List<Printer> findByLocationAndModel = null;
+        List<Printer> printers = new ArrayList<>();
+        Location currentLocation = null;
+        for(int i = 0; i < locations.size(); i++) {
+            currentLocation = locations.get(i);
+            List<List<Printer>> temp = new ArrayList<>();
+            List<List<PrinterDTO>> dtoes = new ArrayList<>();
+            for(int j = 0; j < models.size(); j++) {
+                temp.add(printerRepo.findByLocationAndModel(locations.get(i), models.get(j)));
+
+            }
+            
+            
+  
+            out.put(currentLocation, temp);
+        }
+        
+            for(Map.Entry<Location, List<List<Printer>>> entries : out.entrySet()) {
+                LocationDTO locationDTO = new LocationDTO(entries.getKey().getId(), entries.getKey().getName());
+                    
+                    List<List<PrinterDTO>> innerDtoes = new ArrayList<>();
+                    for(int i = 0; i < entries.getValue().size(); i++) { 
+                        List<PrinterDTO> list = new ArrayList<>();
+                        for(int j = 0; j < entries.getValue().get(i).size(); j++) {
+                            PrinterDTO dto = new PrinterDTO();
+                            dto.setId(entries.getValue().get(i).get(j).getId());
+                            dto.setCartridge("отсутствует"); // нужно дорабатывать до получения id установленного картриджа в данный момент
+                            dto.setInventaryNumber(entries.getValue().get(i).get(j).getInventoryNumber());
+                            dto.setSerialNumber(entries.getValue().get(i).get(j).getSerialNumber());
+                            dto.setManufacturer(entries.getValue().get(i).get(j).getManufacturer().getName());
+                            dto.setModel(entries.getValue().get(i).get(j).getModel().getName());
+                            dto.setLocation(entries.getValue().get(i).get(j).getLocation().getName());
+                            list.add(dto);
+                        }
+                    innerDtoes.add(list);
+                }
+                    out2.put(locationDTO, innerDtoes);
+            }
+        
+        
+           
+        return out2;
+    }
+    
+    
+    public Map<LocationDTO, Map<ModelDTO, List<ModelPrinterByModelCartridgeDTO>>> showCartridgesByModelPrinterAndLocation() {
 
         List<Location> locations = locationRepo.findAll();
         
+        
         Map<ModelDTO, List<ModelPrinterByModelCartridgeDTO>> out2 = null;
-        Map<String, Map<ModelDTO, List<ModelPrinterByModelCartridgeDTO>>> out3 = new HashMap<>();
+        Map<LocationDTO, Map<ModelDTO, List<ModelPrinterByModelCartridgeDTO>>> out3 = new HashMap<>();
         for(Location storage : locations) {
+            LocationDTO locationDTO = new LocationDTO(storage.getId(), storage.getName());
         out2 = new HashMap<>();
         Set<Cartridge> cartridges = storage.getCartridges();
          
@@ -178,7 +233,7 @@ public class CartridgeMapper {
         
         for(Model model : findAllModelsPrinters) {
               
-            ModelDTO modelDTO = new ModelDTO(model.getName(), model.getManufacturer().getName());
+            ModelDTO modelDTO = new ModelDTO(model.getId(), model.getName(), model.getManufacturer().getName());
            out = new ArrayList<>();
             for(CartridgeModel cartridgeModel : model.getModelCartridges()) {
                 for(Cartridge cartridge : cartridges) {
@@ -202,9 +257,9 @@ public class CartridgeMapper {
                 }
             }
             
-                out2.put(modelDTO, out);
+           out2.put(modelDTO, out);
         }
-        out3.put(storage.getName(), out2);
+        out3.put(locationDTO, out2);
         
     }
      
