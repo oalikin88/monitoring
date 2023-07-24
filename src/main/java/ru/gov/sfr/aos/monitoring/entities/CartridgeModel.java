@@ -43,7 +43,7 @@ public class CartridgeModel {
     @OneToMany(targetEntity = Cartridge.class, mappedBy = "model", cascade = CascadeType.ALL)
     private List<Cartridge> cartridges;
     @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "cartridge_model_models_printers", joinColumns = @JoinColumn(name = "models_printers_id"), inverseJoinColumns = @JoinColumn(name = "model_cartridges_id"))
+    @JoinTable(name = "cartridge_model_models_printers", joinColumns = @JoinColumn(name = "model_cartridges_id"), inverseJoinColumns = @JoinColumn(name = "models_printers_id"))
     private List<Model> modelsPrinters = new ArrayList<>();
     public CartridgeModel() {
     }

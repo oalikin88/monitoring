@@ -12,7 +12,7 @@ import java.util.List;
  * @author 041AlikinOS
  */
 public class CartridgeModelDTO implements Serializable {
-    
+    public Long id;
     public String model;
     public String type;
     public String resource;
@@ -25,6 +25,14 @@ public class CartridgeModelDTO implements Serializable {
         this.type = type;
         this.resource = resource;
         
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
     
     public String getModel() {

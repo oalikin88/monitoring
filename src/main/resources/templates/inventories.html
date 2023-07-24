@@ -23,121 +23,12 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                         
                         let input = [[${input}]];
                         let input2 = [[${input2}]];
-                        console.log(input); 
-                        console.log(input2); 
-                                
-                        let searchModel = false;
-                        window.onload = function () {
-
-                            let parent = document.getElementsByClassName('inventoriesContent')[0];
-                            let table = document.createElement('table');
-                            table.className = "table table-striped table-bordered";
-                            let thead = document.createElement('thead');
-                            let trThead = document.createElement('tr');
-                            let thThead1 = document.createElement('th');
-                            thThead1.setAttribute('scope', 'col');
-                            thThead1.setAttribute('rowspan', '2');
-                            thThead1.innerText = '#';
-                            let thThead2 = document.createElement('th');
-                            thThead2.setAttribute('scope', 'col');
-                            thThead2.setAttribute('rowspan', '2');
-                            thThead2.innerText = 'Модель принтера \ Локация';
-                            parent.appendChild(table);
-                            table.appendChild(thead);
-                            thead.appendChild(trThead);
-                            trThead.appendChild(thThead1);
-                            trThead.appendChild(thThead2);
-                            let tbody = document.createElement('tbody');
-                            let tr = document.createElement('tr');
-                            table.appendChild(tbody);
-                            tbody.appendChild(tr);
-                            
-                            // Вывод шапки таблицы
-                            
-                            for (let i = Object.entries(input).length - 1; i < Object.entries(input).length; i++) {
-
-                                for (let j = 0; j < Object.values(Object.entries(input)[i][1]).length; j++) {
-                                    let pp = Object.entries(Object.entries(input)[0][1]).sort();
-                                    let th = document.createElement('th');
-                                    th.setAttribute('scope', 'col');
-                                    th.setAttribute('colspan', '2');
-                                    th.className = "model";
-                                    th.id = JSON.parse(pp[j][0]).idModel;
-                                    th.innerText = JSON.parse(pp[j][0]).manufacturer + " " + JSON.parse(pp[j][0]).model;
-                                    trThead.appendChild(th);
-                                    
-                                }
-
-                                for (let k = 0; k < 1; k++) {
-                                    let subtrThead = document.createElement('tr');
-                                    thead.appendChild(subtrThead);
-
-                                    for (let j = 0; j < Object.values(Object.entries(input)[i][1]).length; j++) {
-                                        thTheadCount = document.createElement('th');
-                                        thTheadCount.innerText = "Количество принтеров";
-                                        thTheadCount2 = document.createElement('th');
-                                        thTheadCount2.innerText = "Количество картриджей";
-                                        subtrThead.appendChild(thTheadCount);
-                                        subtrThead.appendChild(thTheadCount2);
-                                    }
-                                }
-                            }
-                            
-                            // Вывод тела таблицы
-                            ws = Object.entries(input).sort();
-                            for (let i = 0; i < ws.length; i++) {
-                                
-                                let tr = document.createElement('tr');
-                                tbody.appendChild(tr);
-                                let tdCount = document.createElement('td');
-                                tdCount.innerText = i + 1;
-                                tr.appendChild(tdCount);
-                                let tdLocation = document.createElement('td');
-                                tdLocation.setAttribute('id', JSON.parse(ws[i][0]).id);
-                                tdLocation.setAttribute('class', 'location');
-                                tdLocation.innerText = JSON.parse(ws[i][0]).name;
-                                tr.appendChild(tdLocation);
-                                cc = Object.entries(ws[i][1]).sort();
-                                dd = Object.keys(ws[i][1]).sort();
-                                for (let j = 0; j < cc.length; j++) {      
-                                    searchModel = false;
-                                    for (let g = 0; g < Object.entries(input2).length; g++) {
-                                        if (JSON.parse(ws[i][0]).name === JSON.parse(Object.keys(input2)[g]).name) {
-                                            for (let innerPrinterArray = 0; innerPrinterArray < Object.entries(input2)[g][1].length; innerPrinterArray++) {
-                                                if (Object.entries(input2)[g][1][innerPrinterArray].length > 0) {
-                                                    if (Object.entries(input2)[g][1][innerPrinterArray][0].model === JSON.parse(cc[j][0]).model) {
-                                                        tdPrintSuccess = document.createElement('td');
-                                                        tdPrintSuccess.innerText = Object.entries(input2)[g][1][innerPrinterArray].length;
-                                                        tdPrintSuccess.setAttribute('id', 'location_' + JSON.parse(ws[i][0]).id + '_' + 'model_' + JSON.parse(cc[j][0]).idModel);
-                                                        tdPrintSuccess.setAttribute('class', 'model');
-                                                        tr.appendChild(tdPrintSuccess);
-                                                        searchModel = true;
-                                                        break;
-                                                        
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                    if (searchModel === false) {
-                                        tdPrint = document.createElement('td');
-                                        tdPrint.innerText = "0";
-                                        tdPrint.setAttribute('id', 'location_' + JSON.parse(ws[i][0]).id + '_' + 'model_' + JSON.parse(cc[j][0]).idModel);
-                                        tdPrint.setAttribute('class', 'model');
-                                        tr.appendChild(tdPrint);
-                                    }
-                                    tdCart = document.createElement('td');
-                                    tdCart.setAttribute('id', 'location_' + JSON.parse(ws[i][0]).id + '_' + 'model_' + JSON.parse(cc[j][0]).idModel + '_cart');
-                                    tdCart.setAttribute('class', 'cart');
-                                    tdCart.innerText = cc[j][1].length;
-                                    tr.appendChild(tdCart);
-                                }
-                            }
-                        };
+ 
                     </script>
                 </div>
             </div>
             <footer th:insert="footer :: footer"></footer>
             <script src="/js/bootstrap.bundle.min.js"></script>
+            <script src="/js/table.js"></script>
         </body>
     </html>
