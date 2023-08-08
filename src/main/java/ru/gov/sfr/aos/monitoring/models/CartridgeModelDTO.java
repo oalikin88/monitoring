@@ -16,6 +16,7 @@ public class CartridgeModelDTO implements Serializable {
     public String model;
     public String type;
     public String resource;
+    public List<Long> idModel;
 
     public CartridgeModelDTO() {
     }
@@ -26,6 +27,23 @@ public class CartridgeModelDTO implements Serializable {
         this.resource = resource;
         
     }
+
+    public CartridgeModelDTO(String model, String type, String resource, List<Long> idModel) {
+        this.model = model;
+        this.type = type;
+        this.resource = resource;
+        this.idModel = idModel;
+    }
+
+    public List<Long> getIdModel() {
+        return idModel;
+    }
+
+    public void setIdModel(List<Long> idModel) {
+        this.idModel = idModel;
+    }
+    
+    
 
     public Long getId() {
         return id;

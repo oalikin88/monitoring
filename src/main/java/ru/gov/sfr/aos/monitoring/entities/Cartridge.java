@@ -36,32 +36,65 @@ public class Cartridge extends ObjectBuing {
     protected boolean util;
     @NotNull
     protected Long count;
+    @NotNull
+    protected String itemCode;
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "PRINTER_ID",
 			foreignKey = @ForeignKey(name = "PRINTER_ID_FK"))
     protected Printer printer;
-
     
+    protected String consumableName;
     
     public Cartridge() {
         
     }
    
     public Cartridge(CartridgeModel model, Location location, LocalDateTime dateStartExploitation, 
-            LocalDateTime dateEndExploitation, boolean util, Long count) {
+            LocalDateTime dateEndExploitation, boolean util, Long count, String itemCode) {
         this.model = model;
         this.location = location;
         this.dateStartExploitation = dateStartExploitation;
         this.dateEndExploitation = dateEndExploitation;
         this.util = util;
         this.count = count;
+        this.itemCode = itemCode;
+    } 
+    
+       public Cartridge(CartridgeModel model, Location location, LocalDateTime dateStartExploitation, 
+            LocalDateTime dateEndExploitation, boolean util, Long count, String itemCode, String consumableName) {
+        this.model = model;
+        this.location = location;
+        this.dateStartExploitation = dateStartExploitation;
+        this.dateEndExploitation = dateEndExploitation;
+        this.util = util;
+        this.count = count;
+        this.itemCode = itemCode;
+        this.consumableName = consumableName;
     } 
 
     public Long getId() {
         return id;
     }
 
+    public String getConsumableName() {
+        return consumableName;
+    }
 
+    public void setConsumableName(String consumableName) {
+        this.consumableName = consumableName;
+    }
+
+    
+    
+    public String getItemCode() {
+        return itemCode;
+    }
+
+    public void setItemCode(String itemCode) {
+        this.itemCode = itemCode;
+    }
+
+    
     public Location getLocation() {
         return location;
     }

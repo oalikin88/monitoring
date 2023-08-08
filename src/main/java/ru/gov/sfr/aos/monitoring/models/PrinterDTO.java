@@ -4,7 +4,8 @@
  */
 package ru.gov.sfr.aos.monitoring.models;
 
-import java.util.Objects;
+import java.util.Date;
+import java.util.Map;
 
 /**
  *
@@ -17,13 +18,16 @@ public class PrinterDTO {
     public String model;
     public String inventaryNumber;
     public String serialNumber;
-    public String cartridge;
+    public Map<Long, String> cartridge;
     public String location;
+    public String contractNumber;
+    public Date startContract;
+    public Date endContract;
     
     public PrinterDTO() {};
 
     public PrinterDTO(Long id, String manufacturer, String model, String inventaryNumber, String serialNumber, 
-            String cartridge, String location) {
+            Map<Long, String> cartridge, String location) {
         this.id = id;
         this.manufacturer = manufacturer;
         this.model = model;
@@ -31,6 +35,20 @@ public class PrinterDTO {
         this.serialNumber = serialNumber;
         this.cartridge = cartridge;
         this.location = location;
+    }
+    
+        public PrinterDTO(Long id, String manufacturer, String model, String inventaryNumber, String serialNumber, 
+            Map<Long, String> cartridge, String location, String contractNumber, Date startContract, Date endContract) {
+        this.id = id;
+        this.manufacturer = manufacturer;
+        this.model = model;
+        this.inventaryNumber = inventaryNumber;
+        this.serialNumber = serialNumber;
+        this.cartridge = cartridge;
+        this.location = location;
+        this.contractNumber = contractNumber;
+        this.startContract = startContract;
+        this.endContract = endContract;
     }
 
     public Long getId() {
@@ -73,11 +91,11 @@ public class PrinterDTO {
         this.serialNumber = serialNumber;
     }
 
-    public String getCartridge() {
+    public Map<Long, String> getCartridge() {
         return cartridge;
     }
 
-    public void setCartridge(String cartridge) {
+    public void setCartridge(Map<Long, String> cartridge) {
         this.cartridge = cartridge;
     }
 
@@ -88,6 +106,32 @@ public class PrinterDTO {
     public void setLocation(String location) {
         this.location = location;
     }
+
+    public String getContractNumber() {
+        return contractNumber;
+    }
+
+    public void setContractNumber(String contractNumber) {
+        this.contractNumber = contractNumber;
+    }
+
+    public Date getStartContract() {
+        return startContract;
+    }
+
+    public void setStartContract(Date startContract) {
+        this.startContract = startContract;
+    }
+
+    public Date getEndContract() {
+        return endContract;
+    }
+
+    public void setEndContract(Date endContract) {
+        this.endContract = endContract;
+    }
+    
+    
 
 
 

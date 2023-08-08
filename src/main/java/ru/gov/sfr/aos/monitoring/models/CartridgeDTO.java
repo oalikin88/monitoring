@@ -5,6 +5,7 @@
 package ru.gov.sfr.aos.monitoring.models;
 
 import java.time.LocalDateTime;
+import java.util.Date;
 
 /**
  *
@@ -21,6 +22,10 @@ public class CartridgeDTO {
     public String dateEndExploitation;
     public Long count;
     public String usePrinter;
+    public Long contract;
+    public String contractNumber;
+    public Date startContract;
+    public Date endContract;
     
     
     public CartridgeDTO() {
@@ -32,9 +37,12 @@ public class CartridgeDTO {
         this.model = model;
         this.location = location;
         this.resource = resource;
+        
     }
     
-    public CartridgeDTO(Long id, String type, String model, String location, String resource, boolean util, String dateStartExploitation, String dateEndExploitation, Long count, String usePrinter) {
+    public CartridgeDTO(Long id, String type, String model, String location, String resource,
+            boolean util, String dateStartExploitation, String dateEndExploitation, Long count,
+            String usePrinter, Long contract, String contractNumber) {
         this.id = id;
         this.type = type;
         this.model = model;
@@ -45,7 +53,46 @@ public class CartridgeDTO {
         this.dateEndExploitation = dateEndExploitation;
         this.count = count;
         this.usePrinter = usePrinter;
+        this.contract = contract;
+        this.contractNumber = contractNumber;
     }
+    
+        public CartridgeDTO(Long id, String type, String model, String location, String resource,
+            boolean util, String dateStartExploitation, String dateEndExploitation, Long count,
+            String usePrinter, Long contract, String contractNumber, Date startContract, Date endContract) {
+        this.id = id;
+        this.type = type;
+        this.model = model;
+        this.location = location;
+        this.resource = resource;
+        this.util = util;
+        this.dateStartExploitation = dateStartExploitation;
+        this.dateEndExploitation = dateEndExploitation;
+        this.count = count;
+        this.usePrinter = usePrinter;
+        this.contract = contract;
+        this.contractNumber = contractNumber;
+        this.startContract = startContract;
+        this.endContract = endContract;
+    }
+
+    public Date getStartContract() {
+        return startContract;
+    }
+
+    public void setStartContract(Date startContract) {
+        this.startContract = startContract;
+    }
+
+    public Date getEndContract() {
+        return endContract;
+    }
+
+    public void setEndContract(Date endContract) {
+        this.endContract = endContract;
+    }
+        
+        
 
     public Long getId() {
         return id;
@@ -126,6 +173,23 @@ public class CartridgeDTO {
     public void setUsePrinter(String usePrinter) {
         this.usePrinter = usePrinter;
     }
+
+    public Long getContract() {
+        return contract;
+    }
+
+    public void setContract(Long contract) {
+        this.contract = contract;
+    }
+
+    public String getContractNumber() {
+        return contractNumber;
+    }
+
+    public void setContractNumber(String contractNumber) {
+        this.contractNumber = contractNumber;
+    }
+    
     
     
     

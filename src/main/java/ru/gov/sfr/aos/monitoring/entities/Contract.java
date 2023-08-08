@@ -29,7 +29,7 @@ public class Contract {
     @OneToMany(targetEntity = ObjectBuing.class, mappedBy = "contract", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List <ObjectBuing> objectBuing;
     @NotNull
-    private Long contractNumber;
+    private String contractNumber; // Переделать в String
     @NotNull
     private Date dateStartContract;
     @NotNull
@@ -41,7 +41,7 @@ public class Contract {
     }
     
     
-    public Contract(List <ObjectBuing> objectBuing, Long contractNumber, Date dateStartContract, Date dateEndContract) {
+    public Contract(List <ObjectBuing> objectBuing, String contractNumber, Date dateStartContract, Date dateEndContract) {
         this.objectBuing = objectBuing;
         this.contractNumber = contractNumber;
         this.dateStartContract = dateStartContract;
@@ -59,11 +59,11 @@ public class Contract {
         this.id = id;
     }
 
-    public Long getContractNumber() {
+    public String getContractNumber() {
         return contractNumber;
     }
 
-    public void setContractNumber(Long contractNumber) {
+    public void setContractNumber(String contractNumber) {
         this.contractNumber = contractNumber;
     }
 

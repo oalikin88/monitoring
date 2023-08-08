@@ -8,12 +8,17 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.gov.sfr.aos.monitoring.entities.Cartridge;
 import ru.gov.sfr.aos.monitoring.entities.Location;
 import ru.gov.sfr.aos.monitoring.entities.Model;
 import ru.gov.sfr.aos.monitoring.entities.Printer;
+import ru.gov.sfr.aos.monitoring.models.ChangePrinterInventaryNumberDTO;
+import ru.gov.sfr.aos.monitoring.models.ChangeDeviceLocationDTO;
+import ru.gov.sfr.aos.monitoring.models.ChangePrinterSerialNumberDTO;
+import ru.gov.sfr.aos.monitoring.models.LocationDTO;
 import ru.gov.sfr.aos.monitoring.models.PrinterDTO;
 import ru.gov.sfr.aos.monitoring.repositories.CartridgeRepo;
 import ru.gov.sfr.aos.monitoring.repositories.LocationRepo;
@@ -40,7 +45,6 @@ public class PrintersMapper {
     public List<PrinterDTO> showPrinters() {
 
         List<PrinterDTO> printers = new ArrayList<>();
-        List<Cartridge> cartridges = cartridgeRepo.findAll();
         List<Printer> printerList = printerRepo.findAll();
         List<Model> models = modelPrinterRepo.findAll();
 
@@ -54,17 +58,12 @@ public class PrintersMapper {
             dto.setInventaryNumber(el.getInventoryNumber());
             dto.setSerialNumber(el.getSerialNumber());
 
-            for (Cartridge o : cartridges) {
-                if (o.getPrinter() != null) {
-                    if (el.getId() == o.getPrinter().getId()) {
-                        dto.setCartridge(o.getModel().getModel());
-                    }
-                }
+            List<Cartridge> cartridges = el.getCartridge();
+            Map<Long, String> cartridgesForPrinterDTO = new HashMap<>();
+            for(Cartridge car : cartridges) {
+                cartridgesForPrinterDTO.put(car.getId(), car.getModel().getModel());
             }
-
-            if (dto.getCartridge() == null) {
-                dto.setCartridge("Отсутствует");
-            }
+            dto.setCartridge(cartridgesForPrinterDTO);
 
             dto.setLocation(el.getLocation().getName());
 
@@ -143,6 +142,95 @@ public class PrintersMapper {
         return map;
     }
     
-
+    
+    public Map<LocationDTO, List<PrinterDTO>> getPrintersByLocation(Long idLocation, List<Long> idModel) {
+    
+        
+        Optional<Location> locationById = locationRepo.findById(idLocation);
+        
+        Map<LocationDTO, List<PrinterDTO>> map = new HashMap<>();
+        LocationDTO locationDTO = new LocationDTO(locationById.get().getId(), locationById.get().getName());
+        List <PrinterDTO> printersDtoes = new ArrayList<>();
+        for(Long el : idModel) {
+            List<Printer> findPrintersByLocationIdAndModelId = printerRepo.findByLocationIdAndModelId(idLocation, el); 
+            
+            
+            for(Printer printer : findPrintersByLocationIdAndModelId) {
+            PrinterDTO dto = new PrinterDTO();
+            dto.setId(printer.getId());
+            dto.setModel(printer.getModel().getName());
+            dto.setManufacturer(printer.getModel().getManufacturer().getName());
+            dto.setSerialNumber(printer.getSerialNumber());
+            dto.setInventaryNumber(printer.getInventoryNumber());
+            dto.setContractNumber(printer.getContract().getContractNumber().toString());
+            printersDtoes.add(dto);
+        }
+            map.put(locationDTO, printersDtoes);
+        }
+        
+        
+        return map;
+    
+    }
+    
+    
+    public PrinterDTO getPrinterById(Long id) {
+    
+        PrinterDTO dto = new PrinterDTO();
+        
+        Optional<Printer> findPrinterById = printerRepo.findById(id);
+        
+        dto.setId(findPrinterById.get().getId());
+        dto.setContractNumber(findPrinterById.get().getContract().getContractNumber().toString());
+        dto.setInventaryNumber(findPrinterById.get().getInventoryNumber());
+        dto.setSerialNumber(findPrinterById.get().getSerialNumber());
+        dto.setLocation(findPrinterById.get().getLocation().getName());
+        dto.setManufacturer(findPrinterById.get().getManufacturer().getName());
+        dto.setModel(findPrinterById.get().getModel().getName());
+        dto.setStartContract(findPrinterById.get().getContract().getDateStartContract());
+        dto.setEndContract(findPrinterById.get().getContract().getDateEndContract());
+        
+        Map<Long, String> cartridgesForPrinter = new HashMap<>();
+        for(Cartridge car : findPrinterById.get().getCartridge()) {
+            cartridgesForPrinter.put(car.getId(), car.getModel().getModel());
+        }
+        
+        dto.setCartridge(cartridgesForPrinter);
+        
+        
+        return dto;
+    }
+    
+    public void editPrinterLocation(ChangeDeviceLocationDTO dto) {
+    
+        
+        
+        Optional<Printer> findPrinterById = printerRepo.findById(dto.getId());
+        Optional<Location> locationTemp = locationRepo.findByNameIgnoreCase(dto.getLocation().toLowerCase());
+        
+        findPrinterById.get().setLocation(locationTemp.get());
+        printerRepo.save(findPrinterById.get());
+    }
+    
+    
+    public void editPrinterSerialNumber(ChangePrinterSerialNumberDTO dto) {
+        
+        Optional<Printer> findPrinterById = printerRepo.findById(dto.getId());
+        
+        findPrinterById.get().setSerialNumber(dto.getSerialNumber());
+        
+        printerRepo.save(findPrinterById.get());
+    }
+    
+    
+    public void editPrinterInventaryNumber(ChangePrinterInventaryNumberDTO dto) {
+    
+        Optional<Printer> findPrinterById = printerRepo.findById(dto.getId());
+        findPrinterById.get().setInventoryNumber(dto.getInventaryNumber());
+        printerRepo.save(findPrinterById.get());
+        
+        
+        
+    }
 
 }

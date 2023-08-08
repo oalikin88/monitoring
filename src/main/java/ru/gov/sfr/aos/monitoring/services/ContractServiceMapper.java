@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ru.gov.sfr.aos.monitoring.entities.Cartridge;
@@ -50,7 +51,7 @@ public class ContractServiceMapper {
         CartridgeModel cartridgeModelIndepended;
         List<ObjectBuing> objectsBuing = new ArrayList<>();
 
-        Long contractNumber;
+        String contractNumber;
         Contract contract = new Contract();
         int amountPrinters = 0;
         int amountCartridges = 0;
@@ -63,10 +64,10 @@ public class ContractServiceMapper {
                     switch (entry.getKey()) {
                         case "numberContract":
                             if (!entry.getValue().isEmpty() || !entry.getValue().isBlank()) {
-                                contractNumber = Long.parseLong(entry.getValue());
+                                contractNumber = entry.getValue();
                                 contract.setContractNumber(contractNumber);
                             } else {
-                                contract.setContractNumber(0L);
+                                contract.setContractNumber("Отсутствует");
                             }
                             break;
                         case "dateStartContract":
@@ -114,12 +115,13 @@ public class ContractServiceMapper {
                 Model model = null;
                 Cartridge cartridgeInclude = null;
                 Location location = null;
-                Location findLocation = locationRepo.findByName("Склад");
+                Optional<Location> findLocation = locationRepo.findByNameIgnoreCase("Склад".toLowerCase());
+                
                 cartridgeModel = null;
                 boolean cartridgeIncluded = false;
 
                 if (findLocation != null) {
-                    location = findLocation;
+                    location = findLocation.get();
                 } else {
                     location = new Location("Склад");
                 }
@@ -130,9 +132,9 @@ public class ContractServiceMapper {
                     switch (entry.getKey()) {
                         case "manufacturer":
                             if (!entry.getValue().isEmpty() || !entry.getValue().isBlank()) {
-                                List<Manufacturer> manufacturers = manufacturerRepo.findByNameContainingIgnoreCase(entry.getValue());
-                                if (!manufacturers.isEmpty()) {
-                                    manufacturer = manufacturers.get(0);
+                                Optional<Manufacturer> optManufacturer = manufacturerRepo.findByNameContainingIgnoreCase(entry.getValue());
+                                if (optManufacturer.isPresent()) {
+                                    manufacturer = optManufacturer.get();
                                 } else {
                                     manufacturer = new Manufacturer();
                                     manufacturer.setName(entry.getValue());
@@ -220,11 +222,11 @@ public class ContractServiceMapper {
             if (input.get(i).size() == 3) {
 
                 Cartridge cartridge = new Cartridge();
-                Location findLocation = locationRepo.findByName("Склад");
+                Optional<Location> findLocation = locationRepo.findByNameIgnoreCase("Склад".toLowerCase());
                 Location location = null;
                 cartridgeModelIndepended = null;
                 if (findLocation != null) {
-                    location = findLocation;
+                    location = findLocation.get();
                 } else {
                     location = new Location("Склад");
                 }

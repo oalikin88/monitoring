@@ -29,10 +29,5 @@ public class ManufacturerServiceImpl implements ManufacturerServiceInterface {
         
     }
 
-    @Override
-    public List<Manufacturer> getManufacturerNames(String name) {
-        List<Manufacturer> findByNameList = manufacturerRepo.findByNameContainingIgnoreCase(name);
-        return findByNameList;
-    }
     
 }

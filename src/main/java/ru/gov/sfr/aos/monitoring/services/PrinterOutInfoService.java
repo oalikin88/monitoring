@@ -6,7 +6,6 @@ package ru.gov.sfr.aos.monitoring.services;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,8 +54,10 @@ public class PrinterOutInfoService {
                     key += "/";
                 }
             }
+            if(list.size() > 0 || !key.isBlank()) {
+                map.put(key, list);
+            }
             
-            map.put(key, list);
             
         }
         

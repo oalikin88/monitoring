@@ -12,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import ru.gov.sfr.aos.monitoring.models.PrinterDTO;
 import ru.gov.sfr.aos.monitoring.services.PrintersMapper;
 
@@ -34,10 +33,6 @@ public class PrintersController {
         return "showprinters";
     }
     
-    @GetMapping(value ="/printers/{request}")
-    public String showInfoPrinters(@PathVariable String request) {
-        return "printersInfo";
-    }
     
     @GetMapping(value ="/printers")
     public String showPrintersModels(Model model) {

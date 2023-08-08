@@ -68,8 +68,8 @@ public class ManufacturersController {
     }
     
     @PostMapping("/models")
-    public void saveModel(@RequestParam String manufacturer, @RequestParam String target) {
-        modelMapper.saveModelByManufacturer(manufacturer, target);
+    public void saveModel(ModelDTO dto) {
+        modelMapper.saveModelByManufacturer(dto);
     }
     
 

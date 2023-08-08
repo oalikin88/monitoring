@@ -10,6 +10,8 @@ import java.util.List;
 import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -21,6 +23,8 @@ import javax.persistence.PrimaryKeyJoinColumn;
 import javax.validation.constraints.NotNull;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
+import ru.gov.sfr.aos.monitoring.PrintColorType;
+import ru.gov.sfr.aos.monitoring.PrintFormatType;
 
 /**
  *
@@ -38,6 +42,14 @@ public class Model {
     @NotNull
     private String name;
     
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    private PrintColorType printColorType;
+    @NotNull
+    @Enumerated
+    private PrintFormatType printFormatType;
+    @NotNull
+    private Long printSpeed;
     @ManyToOne(cascade = CascadeType.ALL)
     private Manufacturer manufacturer;
     @LazyCollection(LazyCollectionOption.FALSE)
@@ -50,12 +62,41 @@ public class Model {
     public Model() {
     }
 
-    public Model(String name, Manufacturer manufacturer, List<Printer> printer, Set<CartridgeModel> modelCartridges) {
-        this.modelCartridges = modelCartridges;
+    public Model(String name, PrintColorType printColorType, PrintFormatType printFormatType, Long printSpeed, Manufacturer manufacturer) {
         this.name = name;
+        this.printColorType = printColorType;
+        this.printFormatType = printFormatType;
+        this.printSpeed = printSpeed;
         this.manufacturer = manufacturer;
-        this.printers = printer;
     }
+
+    public PrintColorType getPrintColorType() {
+        return printColorType;
+    }
+
+    public void setPrintColorType(PrintColorType printColorType) {
+        this.printColorType = printColorType;
+    }
+
+    public PrintFormatType getPrintFormatType() {
+        return printFormatType;
+    }
+
+    public void setPrintFormatType(PrintFormatType printFormatType) {
+        this.printFormatType = printFormatType;
+    }
+
+    public Long getPrintSpeed() {
+        return printSpeed;
+    }
+
+    public void setPrintSpeed(Long printSpeed) {
+        this.printSpeed = printSpeed;
+    }
+
+    
+    
+    
     
     public String getName() {
         return name;

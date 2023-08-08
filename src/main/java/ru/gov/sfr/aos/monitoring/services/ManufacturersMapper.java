@@ -63,17 +63,6 @@ public class ManufacturersMapper {
     
     
     
-        public List<String> findManufacturerByRequest(String request) {
-            List<Manufacturer> list;
-            List<String> out = new ArrayList<>();
-            if(!manufacturerRepo.findByNameContainingIgnoreCase(request.toLowerCase()).isEmpty()) {
-                list = manufacturerRepo.findByNameContainingIgnoreCase(request.toLowerCase());
-                for(int i = 0; i < list.size(); i++) {
-                    out.add(list.get(i).getName());
-                }
-            }
-        
-        return out;
-    }
+
     
 }

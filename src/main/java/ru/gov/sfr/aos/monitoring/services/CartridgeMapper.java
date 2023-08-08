@@ -6,11 +6,10 @@ package ru.gov.sfr.aos.monitoring.services;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
-import static java.util.stream.Collectors.toList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ru.gov.sfr.aos.monitoring.CartridgeType;
@@ -21,6 +20,7 @@ import ru.gov.sfr.aos.monitoring.entities.Model;
 import ru.gov.sfr.aos.monitoring.entities.Printer;
 import ru.gov.sfr.aos.monitoring.models.CartridgeDTO;
 import ru.gov.sfr.aos.monitoring.models.CartridgeModelDTO;
+import ru.gov.sfr.aos.monitoring.models.ChangeDeviceLocationDTO;
 import ru.gov.sfr.aos.monitoring.models.LocationDTO;
 import ru.gov.sfr.aos.monitoring.models.ModelCartridgeByModelPrinters;
 import ru.gov.sfr.aos.monitoring.models.ModelDTO;
@@ -87,6 +87,8 @@ public class CartridgeMapper {
         List<CartridgeModelDTO> dtoes = new ArrayList<>();
         for (int i = 0; i < list.size(); i++) {
             CartridgeModelDTO cartridgeModelDTO = new CartridgeModelDTO();
+            cartridgeModelDTO.setId(list.get(i).getId());
+            cartridgeModelDTO.setResource(list.get(i).getDefaultNumberPrintPage().toString());
             cartridgeModelDTO.setModel(list.get(i).getModel());
             cartridgeModelDTO.setType(list.get(i).getType().getName());
             dtoes.add(cartridgeModelDTO);
@@ -97,7 +99,14 @@ public class CartridgeMapper {
     public void saveCartridgeModel(CartridgeModelDTO dto) {
         CartridgeType currentType = null;
         CartridgeModel model = null;
-        List<Model> modelsPrinters = new ArrayList<>();
+         List<Model> modelsPrinters = new ArrayList<>();
+        for(Long l : dto.getIdModel()) {
+            Optional<Model> findById = modelPrinterRepo.findById(l);
+            if(findById.isPresent()) {
+                modelsPrinters.add(findById.get());
+            }
+        }
+       
         if (dto.type.trim().toLowerCase().equals(CartridgeType.ORIGINAL.getName().trim().toLowerCase())) {
             currentType = CartridgeType.ORIGINAL;
         } else if (dto.type.trim().toLowerCase().equals(CartridgeType.ANALOG.getName().trim().toLowerCase())) {
@@ -196,7 +205,14 @@ public class CartridgeMapper {
                 for (int j = 0; j < entries.getValue().get(i).size(); j++) {
                     PrinterDTO dto = new PrinterDTO();
                     dto.setId(entries.getValue().get(i).get(j).getId());
-                    dto.setCartridge("отсутствует"); // нужно дорабатывать до получения id установленного картриджа в данный момент
+                    
+                    Map<Long, String> cartridgesForPrinter = new HashMap<>();
+                    List<Cartridge> cartridges = entries.getValue().get(i).get(j).getCartridge();
+                    for(Cartridge car : cartridges) {
+                        cartridgesForPrinter.put(car.getId(), car.getModel().getModel());
+                    }
+                    
+                    dto.setCartridge(cartridgesForPrinter); // нужно дорабатывать до получения id установленного картриджа в данный момент
                     dto.setInventaryNumber(entries.getValue().get(i).get(j).getInventoryNumber());
                     dto.setSerialNumber(entries.getValue().get(i).get(j).getSerialNumber());
                     dto.setManufacturer(entries.getValue().get(i).get(j).getManufacturer().getName());
@@ -316,6 +332,63 @@ public class CartridgeMapper {
         }
 
         return out;
+    }
+    
+    
+    public Map<LocationDTO, List<CartridgeDTO>> showCartridgesByLocation(Long idLocation, Long idModel) {
+        Optional<Location> findLocationById = locationRepo.findById(idLocation);
+        LocationDTO locationDTO = new LocationDTO(findLocationById.get().getId(), findLocationById.get().getName());
+        List<CartridgeDTO> list = new ArrayList<>();
+        List<Cartridge> findCartridgesByLocationIdAndModelId = cartridgeRepo.findByLocationIdAndModelId(idLocation, idModel);
+        Map<LocationDTO, List<CartridgeDTO>> map = new HashMap<>();
+        for(Cartridge cartridge : findCartridgesByLocationIdAndModelId) {
+            CartridgeDTO dto = new CartridgeDTO();
+            dto.setId(cartridge.getId());
+            dto.setModel(cartridge.getModel().getModel());
+            dto.setType(cartridge.getModel().getType().getName());
+            dto.setResource(cartridge.getModel().getDefaultNumberPrintPage().toString());
+            dto.setContract(cartridge.getContract().getId());
+            dto.setContractNumber(cartridge.getContract().getContractNumber().toString()); // Переделать в String
+            list.add(dto);
+        }
+        
+        map.put(locationDTO, list);
+        
+        return map;
+    }
+    
+    public CartridgeDTO getCartridge(Long id) {
+        CartridgeDTO dto = new CartridgeDTO();
+        
+        Optional<Cartridge> findCartridgeById = cartridgeRepo.findById(id);
+        
+        dto.setId(findCartridgeById.get().getId());
+        dto.setContract(findCartridgeById.get().getContract().getId());
+        dto.setContractNumber(findCartridgeById.get().getContract().getContractNumber().toString());
+        dto.setLocation(findCartridgeById.get().getLocation().getName());
+        dto.setModel(findCartridgeById.get().getModel().getModel());
+        dto.setType(findCartridgeById.get().getModel().getType().getName());
+        dto.setUtil(findCartridgeById.get().isUtil());
+        dto.setResource(findCartridgeById.get().getModel().getDefaultNumberPrintPage().toString());
+        dto.setStartContract(findCartridgeById.get().getContract().getDateStartContract());
+        dto.setEndContract(findCartridgeById.get().getContract().getDateEndContract());
+        
+        
+        
+        return dto;
+    }
+    
+    public void changeCartridgeLocation(ChangeDeviceLocationDTO dto) {
+        Optional<Cartridge> findCartridgeById = cartridgeRepo.findById(dto.getId());
+        Optional<Location> findLocationByName = locationRepo.findByNameIgnoreCase(dto.location.toLowerCase());
+        findCartridgeById.get().setLocation(findLocationByName.get());
+        cartridgeRepo.save(findCartridgeById.get());
+    }
+    
+    public void utilCartridge(Long id) {
+        Optional<Cartridge> findCartridgeById = cartridgeRepo.findById(id);
+        findCartridgeById.get().setUtil(true);
+        cartridgeRepo.save(findCartridgeById.get());
     }
 
 }

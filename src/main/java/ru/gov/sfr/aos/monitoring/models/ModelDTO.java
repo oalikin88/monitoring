@@ -18,6 +18,9 @@ public class ModelDTO implements Serializable {
     public Long idModel;
     public String model;
     public String manufacturer;
+    public String printColorType;
+    public String printFormatType;
+    public String printSpeed;
 
     public ModelDTO() {
     }
@@ -32,6 +35,43 @@ public class ModelDTO implements Serializable {
         this.model = model;
         this.manufacturer = manufacturer;
     }
+
+    public ModelDTO(Long idModel, String model, String manufacturer, String printColorType, String printFormatType, String printSpeed) {
+        this.idModel = idModel;
+        this.model = model;
+        this.manufacturer = manufacturer;
+        this.printColorType = printColorType;
+        this.printFormatType = printFormatType;
+        this.printSpeed = printSpeed;
+    }
+
+    public String getPrintSpeed() {
+        return printSpeed;
+    }
+
+    public void setPrintSpeed(String printSpeed) {
+        this.printSpeed = printSpeed;
+    }
+
+    
+    
+    public String getPrintColorType() {
+        return printColorType;
+    }
+
+    public void setPrintColorType(String printColorType) {
+        this.printColorType = printColorType;
+    }
+
+    public String getPrintFormatType() {
+        return printFormatType;
+    }
+
+    public void setPrintFormatType(String printFormatType) {
+        this.printFormatType = printFormatType;
+    }
+    
+     
 
     public Long getIdModel() {
         return idModel;

@@ -5,26 +5,35 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
 -->
 <html>
     <head>
-        <title>Работа с картриджем</title>
+        <title>Добавить локацию</title>
         <link rel="icon" type="image/x-icon" href="/img/favicon.ico">
         <script src="/js/jquery-3.6.4.min.js"></script>
+         <script src="/js/selectize.js"></script>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link href="/css/bootstrap.min.css" rel="stylesheet">
+         <link href="/css/selectize.bootstrap5.css" rel="stylesheet">
         <link href="/css/style.css" rel="stylesheet">
     </head>
     <body>
         <nav th:insert="nav :: navbar"></nav>
         
         
+        <div class="container content locationsContent"  >
+           
+          
+            
+            
+            <script th:inline="javascript">
+                        
+                        let input = [[${dto}]];
+                      
+ 
+                    </script>
         
-        
-        <div>TODO write content</div>
-        
-        
-        
-        
+        </div>
          <footer th:insert="footer :: footer"></footer>
         <script src="/js/bootstrap.bundle.min.js" ></script>
+        <script src="/js/locations.js" ></script>
     </body>
 </html>

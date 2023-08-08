@@ -22,5 +22,6 @@ public interface PrinterRepo extends JpaRepository<Printer, Long> {
     List<Printer> findByModel(String model);
     List<Printer> findByLocationAndModel(Location location, Model model);
     List<Printer> findByLocationName(String name);
+    List<Printer> findByLocationIdAndModelId(Long idLocation, Long idModel);
     
 }

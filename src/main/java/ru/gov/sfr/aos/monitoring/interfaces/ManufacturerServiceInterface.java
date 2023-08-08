@@ -15,6 +15,5 @@ public interface ManufacturerServiceInterface {
     
     List<Manufacturer> getManufacturers();
     
-    List<Manufacturer> getManufacturerNames(String name);
     
 }

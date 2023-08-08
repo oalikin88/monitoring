@@ -249,10 +249,43 @@ nav span {
         z-index: 1;
       }
       
-      .rowAddModelCartridge {
-          
-           margin-top: 3rem;
-           margin-bottom: 3rem;
-          
-      }
+.rowAddModelCartridge {
 
+   margin-top: 3rem;
+   margin-bottom: 3rem;
+
+}
+
+.model a {
+    color: #000 !important;
+    text-decoration: none;
+}
+
+.cart a {
+    color: #000 !important;
+    text-decoration: none;
+}     
+
+
+.titleLocation {
+    margin-bottom: 3rem;
+    padding-bottom: 0.5rem;
+     border-bottom: solid;
+    border-color: #d3d4d5;
+    border-bottom-width: 2px;
+}
+
+.contentRow a {
+    color: #000 !important;
+    text-decoration: none;
+}
+
+#attentionLocation {
+    margin-bottom: 5rem;
+    margin-top: 5rem;
+}
+
+#attentionModelPrinter {
+     margin-bottom: 5rem;
+    margin-top: 5rem;
+}
