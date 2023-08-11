@@ -4,12 +4,149 @@
  */
 
 
+function getDateFromInput(dateFromInput, fullDate) {
+    
+     parseDate = Date.parse(dateFromInput);
+     startDate = new Date(parseDate);
+     let dateFormat;
+     if(fullDate == true) {
+         dateFormat = startDate.toLocaleString('ru');
+     } else {
+         dateFormat = startDate.toLocaleDateString('ru');
+     }
+     return dateFormat;
+    
+}
+
+
+function getNumberOfDays(start, end) {
+    const date1 = new Date(start);
+    const date2 = new Date(end);
+
+    const oneDay = 1000 * 60 * 60 * 24;
+
+    const diffInTime = date2.getTime() - date1.getTime();
+
+    const diffInDays = Math.round(diffInTime / oneDay);
+
+    return diffInDays;
+}
+
+
 $(document).ready(function () {
     
     let locationbtn = document.querySelector('#locationbtn');
      let locationSubmit = document.querySelector('#locationSubmit');
      let utilSubmit = document.querySelector('#utilSubmit');
      let inventarySubmit = document.querySelector('#inventarySubmit');
+     let titlePage = document.getElementsByClassName('titleCartridge')[0];
+     let startDateContract = document.getElementsByClassName('startDateContract')[0];
+     let endDateContract = document.getElementsByClassName('endDateContract')[0];
+     let locationBtn = document.getElementById('locationbtn');
+     let parent = document.getElementsByClassName('wrapper')[0];
+     
+     startDateFormat = getDateFromInput(input.startContract, false);
+     endDateFormat = getDateFromInput(input.endContract, false);
+
+     startDateContract.innerHTML = startDateFormat;
+     endDateContract.innerHTML = endDateFormat;
+     
+     
+     parseStartDate = Date.parse(input.startContract);
+     startDate = new Date(parseStartDate);
+     startDateFormat = startDate.toLocaleDateString('ru');
+     startDateContract.innerHTML = startDateFormat;
+     
+     
+     parseEndDate = Date.parse(input.endContract);
+     endDate = new Date(parseEndDate);
+     endDateFormat = endDate.toLocaleDateString('ru');
+     endDateContract.innerHTML = endDateFormat;
+     
+     if(input.util == true) {
+         oldTitle = titlePage.innerText;
+         titlePage.innerText = oldTitle + " СПИСАН";
+         locationBtn.disabled = true;
+         
+            // Отпечатал страниц
+         
+         procentResource = (input.count / input.resource) * 100;
+         
+         countPrintRow = document.createElement('div');
+         countPrintRow.className = 'row mb-3';
+         parent.appendChild(countPrintRow);
+         
+         countPrintDefinitionDiv = document.createElement('div');
+         countPrintDefinitionDiv.className = 'col';
+         countPrintDefinitionDiv.innerHTML = 'Отпечатал страниц';
+         countPrintRow.appendChild(countPrintDefinitionDiv);
+         
+         countPrintValueDiv = document.createElement('div');
+         countPrintValueDiv.className = 'col';
+         countPrintValueDiv.innerHTML = input.count + " (" + procentResource + "% от заявленного ресурса)";
+         countPrintRow.appendChild(countPrintValueDiv);
+         
+         
+         // Дата начала эксплуатации
+         
+         dateStartUseRow = document.createElement('div');
+         dateStartUseRow.className = 'row mb-3';
+         parent.appendChild(dateStartUseRow);
+         
+         dateStartUseDefinitionDiv = document.createElement('div');
+         dateStartUseDefinitionDiv.className = 'col';
+         dateStartUseDefinitionDiv.innerHTML = 'Дата начала эксплуатации';
+         dateStartUseRow.appendChild(dateStartUseDefinitionDiv);
+         
+         dateStartUseCart = getDateFromInput(input.dateStartExploitation, true);
+         
+         dateStartUseValueDiv = document.createElement('div');
+         dateStartUseValueDiv.className = 'col';
+         dateStartUseValueDiv.innerHTML = dateStartUseCart;
+         dateStartUseRow.appendChild(dateStartUseValueDiv);
+         
+         // Дата окончания эксплуатации
+         
+         dateEndUseRow = document.createElement('div');
+         dateEndUseRow.className = 'row mb-3';
+         parent.appendChild(dateEndUseRow);
+         
+         dateEndUseDefinitionDiv = document.createElement('div');
+         dateEndUseDefinitionDiv.className = 'col';
+         dateEndUseDefinitionDiv.innerHTML = 'Дата окончания эксплуатации';
+         dateEndUseRow.appendChild(dateEndUseDefinitionDiv);
+         
+         dateEndUseCart = getDateFromInput(input.dateEndExploitation, true);
+         
+         dateEndUseValueDiv = document.createElement('div');
+         dateEndUseValueDiv.className = 'col';
+         dateEndUseValueDiv.innerHTML = dateEndUseCart;
+         dateEndUseRow.appendChild(dateEndUseValueDiv);
+         
+           // Отработал дней
+         
+         dayOfWorkRow = document.createElement('div');
+         dayOfWorkRow.className = 'row mb-3';
+         parent.appendChild(dayOfWorkRow);
+         
+         dayOfWorkDefinitionDiv = document.createElement('div');
+         dayOfWorkDefinitionDiv.className = 'col';
+         dayOfWorkDefinitionDiv.innerHTML = 'Отработал дней';
+         dayOfWorkRow.appendChild(dayOfWorkDefinitionDiv);
+         
+         dayOfWork = getNumberOfDays(input.dateStartExploitation, input.dateEndExploitation);
+         
+         dayOfWorkValueDiv = document.createElement('div');
+         dayOfWorkValueDiv.className = 'col';
+         dayOfWorkValueDiv.innerHTML = dayOfWork;
+         dayOfWorkRow.appendChild(dayOfWorkValueDiv);
+         
+         
+       
+         
+     }
+     
+     
      
      
          $('#locationSelect').selectize({
@@ -82,5 +219,8 @@ $(document).ready(function () {
     });
     
     
-    
+    backBtn = document.getElementById('back');
+    backBtn.addEventListener('click', function() {
+        window.location.href = document.referrer;
+    });
 });

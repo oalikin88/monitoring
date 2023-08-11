@@ -8,9 +8,12 @@ import java.util.List;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import ru.gov.sfr.aos.monitoring.models.CartridgeDTO;
 import ru.gov.sfr.aos.monitoring.models.LocationDTO;
 import ru.gov.sfr.aos.monitoring.models.PrinterDTO;
+import ru.gov.sfr.aos.monitoring.services.CartridgeMapper;
 import ru.gov.sfr.aos.monitoring.services.LocationService;
 import ru.gov.sfr.aos.monitoring.services.PrintersMapper;
 
@@ -24,6 +27,8 @@ public class GetInfoController {
     
     @Autowired
     private LocationService locationService;
+    @Autowired
+    private CartridgeMapper cartridgeMapper;
     
     
     @Autowired
@@ -44,5 +49,13 @@ public class GetInfoController {
         
         List<LocationDTO> locations = locationService.getAllLocations();
         return locations;
+    }
+    
+    @GetMapping("/getcartridgesbymodel")
+    public List<CartridgeDTO> getCartridgesByModelPrinterAndLocation(@RequestParam("idPrinter") Long idPrinter, @RequestParam("location") String location) {
+        
+        List<CartridgeDTO> showCartridgesByModelPrinterAndLocation = cartridgeMapper.showCartridgesByModelPrinterAndLocation(idPrinter, location);
+        
+        return showCartridgesByModelPrinterAndLocation;
     }
 }

@@ -6,6 +6,9 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/CascadeStyleSheet.css to ed
     Created on : 21 февр. 2023 г., 16:13:32
     Author     : 041AlikinOS
 */
+
+/*rgb(248, 249, 250)*/
+
 :root {
   --color-1: #6366f1;
   --color-1-hover: #4338ca;
@@ -21,6 +24,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/CascadeStyleSheet.css to ed
 body, html {
     height: 100%;
     overflow: auto;
+    
 }
 
 .container {
@@ -82,6 +86,18 @@ h1 {
 }
 
 .title {
+    padding-bottom: 10px;
+    margin-top: 15px;
+    margin-bottom: 25px;
+}
+
+#addBtn {
+    padding-bottom: 10px;
+    margin-top: 15px;
+    margin-bottom: 25px;
+}
+
+#addBtnPrinter {
     padding-bottom: 10px;
     margin-top: 15px;
     margin-bottom: 25px;
@@ -289,3 +305,4 @@ nav span {
      margin-bottom: 5rem;
     margin-top: 5rem;
 }
+

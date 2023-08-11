@@ -15,6 +15,7 @@ import ru.gov.sfr.aos.monitoring.entities.Cartridge;
 import ru.gov.sfr.aos.monitoring.entities.Location;
 import ru.gov.sfr.aos.monitoring.entities.Model;
 import ru.gov.sfr.aos.monitoring.entities.Printer;
+import ru.gov.sfr.aos.monitoring.models.CartridgeDTO;
 import ru.gov.sfr.aos.monitoring.models.ChangePrinterInventaryNumberDTO;
 import ru.gov.sfr.aos.monitoring.models.ChangeDeviceLocationDTO;
 import ru.gov.sfr.aos.monitoring.models.ChangePrinterSerialNumberDTO;
@@ -59,9 +60,19 @@ public class PrintersMapper {
             dto.setSerialNumber(el.getSerialNumber());
 
             List<Cartridge> cartridges = el.getCartridge();
-            Map<Long, String> cartridgesForPrinterDTO = new HashMap<>();
+            List<CartridgeDTO> cartridgesForPrinterDTO = new ArrayList<>();
             for(Cartridge car : cartridges) {
-                cartridgesForPrinterDTO.put(car.getId(), car.getModel().getModel());
+                  CartridgeDTO cartDto = new CartridgeDTO();
+                    cartDto.setContract(car.getContract().getId());
+                    cartDto.setContractNumber(car.getContract().getContractNumber());
+                    cartDto.setId(car.getId());
+                    cartDto.setLocation(car.getLocation().getName());
+                    cartDto.setDateEndExploitation(car.getDateEndExploitation());
+                    cartDto.setDateStartExploitation(car.getDateStartExploitation());
+                    cartDto.setType(car.getModel().getType().getName());
+                    cartDto.setResource(car.getModel().getDefaultNumberPrintPage().toString());
+                    cartDto.setUtil(car.isUtil());
+                    cartDto.setModel(car.getModel().getModel());
             }
             dto.setCartridge(cartridgesForPrinterDTO);
 
@@ -163,6 +174,22 @@ public class PrintersMapper {
             dto.setSerialNumber(printer.getSerialNumber());
             dto.setInventaryNumber(printer.getInventoryNumber());
             dto.setContractNumber(printer.getContract().getContractNumber().toString());
+            List<CartridgeDTO> list = new ArrayList<>();
+            for(Cartridge car : printer.getCartridge()) {
+                CartridgeDTO cartDto = new CartridgeDTO();
+                cartDto.setContract(car.getContract().getId());
+                    cartDto.setContractNumber(car.getContract().getContractNumber());
+                    cartDto.setId(car.getId());
+                    cartDto.setLocation(car.getLocation().getName());
+                    cartDto.setDateEndExploitation(car.getDateEndExploitation());
+                    cartDto.setDateStartExploitation(car.getDateStartExploitation());
+                    cartDto.setType(car.getModel().getType().getName());
+                    cartDto.setResource(car.getModel().getDefaultNumberPrintPage().toString());
+                    cartDto.setUtil(car.isUtil());
+                    cartDto.setModel(car.getModel().getModel());
+                    list.add(cartDto);
+            }
+            dto.setCartridge(list);
             printersDtoes.add(dto);
         }
             map.put(locationDTO, printersDtoes);
@@ -190,9 +217,22 @@ public class PrintersMapper {
         dto.setStartContract(findPrinterById.get().getContract().getDateStartContract());
         dto.setEndContract(findPrinterById.get().getContract().getDateEndContract());
         
-        Map<Long, String> cartridgesForPrinter = new HashMap<>();
+        List<CartridgeDTO> cartridgesForPrinter = new ArrayList<>();
         for(Cartridge car : findPrinterById.get().getCartridge()) {
-            cartridgesForPrinter.put(car.getId(), car.getModel().getModel());
+              CartridgeDTO cartDto = new CartridgeDTO();
+                        cartDto.setContract(car.getContract().getId());
+                    cartDto.setContractNumber(car.getContract().getContractNumber());
+                    cartDto.setId(car.getId());
+                    cartDto.setLocation(car.getLocation().getName());
+                    cartDto.setDateEndExploitation(car.getDateEndExploitation());
+                    cartDto.setDateStartExploitation(car.getDateStartExploitation());
+                    cartDto.setType(car.getModel().getType().getName());
+                    cartDto.setResource(car.getModel().getDefaultNumberPrintPage().toString());
+                    cartDto.setUtil(car.isUtil());
+                    cartDto.setModel(car.getModel().getModel());
+                    cartDto.setUsePrinter(car.isUseInPrinter());
+                    cartDto.setCount(car.getCount());
+                    cartridgesForPrinter.add(cartDto);
         }
         
         dto.setCartridge(cartridgesForPrinter);

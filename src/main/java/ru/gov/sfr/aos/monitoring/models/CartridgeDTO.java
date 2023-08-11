@@ -18,10 +18,10 @@ public class CartridgeDTO {
     public String location;
     public String resource;
     public boolean util;
-    public String dateStartExploitation;
-    public String dateEndExploitation;
+    public LocalDateTime dateStartExploitation;
+    public LocalDateTime dateEndExploitation;
     public Long count;
-    public String usePrinter;
+    public boolean usePrinter;
     public Long contract;
     public String contractNumber;
     public Date startContract;
@@ -41,8 +41,8 @@ public class CartridgeDTO {
     }
     
     public CartridgeDTO(Long id, String type, String model, String location, String resource,
-            boolean util, String dateStartExploitation, String dateEndExploitation, Long count,
-            String usePrinter, Long contract, String contractNumber) {
+            boolean util, LocalDateTime dateStartExploitation, LocalDateTime dateEndExploitation, Long count,
+            boolean usePrinter, Long contract, String contractNumber) {
         this.id = id;
         this.type = type;
         this.model = model;
@@ -58,8 +58,8 @@ public class CartridgeDTO {
     }
     
         public CartridgeDTO(Long id, String type, String model, String location, String resource,
-            boolean util, String dateStartExploitation, String dateEndExploitation, Long count,
-            String usePrinter, Long contract, String contractNumber, Date startContract, Date endContract) {
+            boolean util, LocalDateTime dateStartExploitation, LocalDateTime dateEndExploitation, Long count,
+            boolean usePrinter, Long contract, String contractNumber, Date startContract, Date endContract) {
         this.id = id;
         this.type = type;
         this.model = model;
@@ -142,19 +142,19 @@ public class CartridgeDTO {
         this.util = util;
     }
 
-    public String getDateStartExploitation() {
+    public LocalDateTime getDateStartExploitation() {
         return dateStartExploitation;
     }
 
-    public void setDateStartExploitation(String dateStartExploitation) {
+    public void setDateStartExploitation(LocalDateTime dateStartExploitation) {
         this.dateStartExploitation = dateStartExploitation;
     }
 
-    public String getDateEndExploitation() {
+    public LocalDateTime getDateEndExploitation() {
         return dateEndExploitation;
     }
 
-    public void setDateEndExploitation(String dateEndExploitation) {
+    public void setDateEndExploitation(LocalDateTime dateEndExploitation) {
         this.dateEndExploitation = dateEndExploitation;
     }
 
@@ -166,11 +166,11 @@ public class CartridgeDTO {
         this.count = count;
     }
 
-    public String getUsePrinter() {
+    public boolean getUsePrinter() {
         return usePrinter;
     }
 
-    public void setUsePrinter(String usePrinter) {
+    public void setUsePrinter(boolean usePrinter) {
         this.usePrinter = usePrinter;
     }
 

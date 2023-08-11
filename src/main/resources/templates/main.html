@@ -52,13 +52,13 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
 
                         <div class="row mb-2 contract">
                             <div class="col-md-4 mb-2">
-                                <input type="text"  class="form-control" id="inputContractNumber" th:field="*{contractNumber}" />
+                                <input type="text"  class="form-control" id="inputContractNumber" th:field="*{contractNumber}" required/>
                             </div>
                             <div class="col-md-4 mb-2">
-                                <input type="date" class="form-control" th:text="*{dateStartContract}" placeholder="date" id='dateStartContract' />
+                                <input type="date" class="form-control" th:text="*{dateStartContract}" placeholder="date" id='dateStartContract' required />
                             </div>
                             <div class="col-md-4 mb-2">
-                                <input type="date" class="form-control" th:text="*{dateEndContract}" placeholder="date" id='dateEndContract' />
+                                <input type="date" class="form-control" th:text="*{dateEndContract}" placeholder="date" id='dateEndContract' required />
                             </div>
                         </div>
 
@@ -70,40 +70,50 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
 
 
                         <div class="row objectBuingRow">
-                            <div class="col-md-4 col-md-offset-4 mb-2 text-center ">
-
+                            <div class="col-md-4">
+                                <div class="form-check">
                                 <label for='checkboxPrinter' class="form-label">Принтеры:</label>
-                                <div class="input-group mb-3">
-                                    <div class="input-group-text">
-                                        <input class="form-check-input mt-0" type="checkbox" value="" 
+                                        <input class="form-check-input" type="checkbox" value="" 
                                                aria-label="Checkbox for following text input" id="checkboxPrinter" name="checkboxPrinter">
                                     </div>
-                                    <input type="text" class="form-control" aria-label="Text input with checkbox"
-                                           placeholder="Количество" id="amountPrinterInput" disabled>
-                                </div>
                             </div>
 
-                            <div class="col-md-4 col-md-offset-4 mb-2 text-center">
-                                <label for='checkboxCartridge' class="form-label">Картриджи:</label>
-                                <div class="input-group mb-3"  id="cartridgeCheck" >
-                                    <div class="input-group-text">
-                                        <input class="form-check-input mt-0" type="checkbox" value=""
+                            <div class="col-md-4">
+                                <div class="form-check">
+                                <label for='checkboxCartridge' class="form-label">Картриджи</label>
+                                        <input class="form-check-input" type="checkbox" value=""
                                                aria-label="Checkbox for following text input" id="checkboxCartridge" name="checkboxCartridge">
                                     </div>
-                                    <input type="text" class="form-control" aria-label="Text input with checkbox" 
-                                           placeholder="Количество" id="amountCartridgeInput" disabled>
-                                </div>
+                                    
+                         
                             </div>
 
                         </div>
                     </div>
                     <div role="tabpanel" id="printersInfo" class="tabpanel hidden">
-                        <div class="title"><h4 class="text-left fw-bold">Информация о принтерах</h4></div>
+                        <div class="row">
+                            <div class="col">
+                                <div class="title"><h4 class="text-left fw-bold">Добавление принтеров в контракт</h4></div>
+                            </div>
+                            <div class="col text-end">
+                                <button type="button" class="btn btn-secondary addBtn" id="addBtnPrinter">Добавить</button>
+                            </div>
+                        </div>
 
 
                     </div>
                     <div role="tabpanel" id="cartridgesInfo" class="tabpanel hidden">
-                        <div class="title"><h4 class="text-left fw-bold">Информация о картриджах</h4></div>
+                        <div class="row">
+                            <div class="col">
+                                <div class="title"><h4 class="text-left fw-bold">Добавление картриджей в контракт</h4></div>
+                            </div>
+                            <div class="col text-end">
+                                <button type="button" class="btn btn-secondary addBtn" id="addBtn">Добавить</button>
+                            </div>
+                        </div>
+                        
+                        
+
                                           
                     </div>
                     

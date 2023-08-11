@@ -206,10 +206,20 @@ public class CartridgeMapper {
                     PrinterDTO dto = new PrinterDTO();
                     dto.setId(entries.getValue().get(i).get(j).getId());
                     
-                    Map<Long, String> cartridgesForPrinter = new HashMap<>();
+                    List<CartridgeDTO> cartridgesForPrinter = new ArrayList<>();
                     List<Cartridge> cartridges = entries.getValue().get(i).get(j).getCartridge();
                     for(Cartridge car : cartridges) {
-                        cartridgesForPrinter.put(car.getId(), car.getModel().getModel());
+                        CartridgeDTO cartDto = new CartridgeDTO();
+                        cartDto.setContract(car.getContract().getId());
+                    cartDto.setContractNumber(car.getContract().getContractNumber());
+                    cartDto.setId(car.getId());
+                    cartDto.setLocation(car.getLocation().getName());
+                    cartDto.setDateEndExploitation(car.getDateEndExploitation());
+                    cartDto.setDateStartExploitation(car.getDateStartExploitation());
+                    cartDto.setType(car.getModel().getType().getName());
+                    cartDto.setResource(car.getModel().getDefaultNumberPrintPage().toString());
+                    cartDto.setUtil(car.isUtil());
+                    cartDto.setModel(car.getModel().getModel());
                     }
                     
                     dto.setCartridge(cartridgesForPrinter); // нужно дорабатывать до получения id установленного картриджа в данный момент
@@ -313,7 +323,7 @@ public class CartridgeMapper {
                 
                 for (Cartridge cartridge : cartridges) {
                     
-                    if (cartridgeModel.getId() == cartridge.getModel().getId()) {
+                    if (cartridgeModel.getId() == cartridge.getModel().getId() && !cartridge.isUtil()) {
                         
                         cartridgesID.add(cartridge.getId());
                         
@@ -372,7 +382,9 @@ public class CartridgeMapper {
         dto.setResource(findCartridgeById.get().getModel().getDefaultNumberPrintPage().toString());
         dto.setStartContract(findCartridgeById.get().getContract().getDateStartContract());
         dto.setEndContract(findCartridgeById.get().getContract().getDateEndContract());
-        
+        dto.setDateStartExploitation(findCartridgeById.get().getDateStartExploitation());
+        dto.setDateEndExploitation(findCartridgeById.get().getDateEndExploitation());
+        dto.setCount(findCartridgeById.get().getCount());
         
         
         return dto;
@@ -389,6 +401,35 @@ public class CartridgeMapper {
         Optional<Cartridge> findCartridgeById = cartridgeRepo.findById(id);
         findCartridgeById.get().setUtil(true);
         cartridgeRepo.save(findCartridgeById.get());
+    }
+    
+    public List<CartridgeDTO> showCartridgesByModelPrinterAndLocation(Long idPrinter, String location) {
+        List<Cartridge> cartridges = cartridgeRepo.findByLocationName(location);
+        List<CartridgeDTO> cartridgesByModelPrinter = new ArrayList<>();
+        Optional<Printer> findPrinterById = printerRepo.findById(idPrinter);
+        for(Cartridge cartridge : cartridges) {
+            List<Model> modelsPrinters = cartridge.getModel().getModelsPrinters();
+            boolean duplicate = false;
+            for(Model modelPrinter : modelsPrinters) {
+                if(findPrinterById.get().getModel().getId() == modelPrinter.getId() && !cartridge.isUtil()) {
+                    CartridgeDTO dto = new CartridgeDTO();
+                    dto.setContract(cartridge.getContract().getId());
+                    dto.setContractNumber(cartridge.getContract().getContractNumber());
+                    dto.setId(cartridge.getId());
+                    dto.setLocation(cartridge.getLocation().getName());
+                    dto.setDateEndExploitation(cartridge.getDateEndExploitation());
+                    dto.setDateStartExploitation(cartridge.getDateStartExploitation());
+                    dto.setType(cartridge.getModel().getType().getName());
+                    dto.setResource(cartridge.getModel().getDefaultNumberPrintPage().toString());
+                    dto.setUtil(cartridge.isUtil());
+                    dto.setModel(cartridge.getModel().getModel());
+                    
+                    cartridgesByModelPrinter.add(dto);
+                }
+            }
+        }
+        
+        return cartridgesByModelPrinter;
     }
 
 }

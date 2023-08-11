@@ -5,7 +5,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
 -->
 <html>
     <head>
-        <title>Работа с картриджем</title>
+        <title>Работа с принтером [[${dto.manufacturer + ' ' + dto.model}]]</title>
         <link rel="icon" type="image/x-icon" href="/img/favicon.ico">
         <script src="/js/jquery-3.6.4.min.js"></script>
          <script src="/js/selectize.js"></script>
@@ -71,8 +71,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                     <div class="col col-md-6">
                         Дата начала контракта
                     </div>
-                    <div class="col col-md-6">
-                        [[${dto.startContract}]]
+                    <div class="col col-md-6 startDateContract">
                     </div>
                 </div>
                 
@@ -80,8 +79,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                     <div class="col col-md-6">
                         Дата окончания контракта
                     </div>
-                    <div class="col col-md-6">
-                        [[${dto.endContract}]]
+                    <div class="col col-md-6 endDateContract">
                     </div>
                 </div>
                 
@@ -94,6 +92,20 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                               <div class='col col-md-6' id="locationRefresh">[[${dto.location}]]</div>
                         <div class='col col-md-6'>
                             <button type="button" class="btn" data-bs-toggle="modal" id='locationbtn' data-bs-target="#staticBackdrop">Переместить</button>
+                        </div>
+                        </div>
+                    </div>
+                </div>
+                
+                 <div class="row  mb-3">
+                    <div class="col col-md-6">
+                        Установленный картридж
+                    </div>
+                    <div class="col col-md-6">
+                        <div class='row cartridgeUseRow'>
+                              <div class='col col-md-6 cartridgeUseDiv' id="cartridgeUseRefresh"></div>
+                        <div class='col col-md-6'>
+                            <button type="button" class="btn" data-bs-toggle="modal" id='catridgeUsesbtn' data-bs-target="#modalCartridgeUses">Управление</button>
                         </div>
                         </div>
                     </div>
@@ -187,6 +199,48 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                           <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
                             <button type="submit" id="inventarySubmit" class="btn btn-primary">Применить</button>
+                           
+                          </div>
+                         
+                        </div>
+                            
+                      </div>
+                    </div>
+                       
+                       
+                       <!-- Modal Установленные картриджи -->
+
+                    <div class="modal fade" id="modalCartridgeUses" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1">
+                      <div class="modal-dialog modal-dialog-centered">
+                           
+                        <div class="modal-content">
+                           
+                          <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="modalCartridgeUsesLabel">Установить картридж</h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                          </div>
+                           
+                          <div class="modal-body">
+                              <div class="row contentInnerRow1">
+                                  
+                                  <div class="col contentInnerDiv1">
+                                  
+                                  
+                                    <select class="form-select cartridgeSelect" name="cartridgeSelect" id='cartridgeSelect'>
+                            </select>
+                              </div>
+                              </div>
+                              <div class="row contentInnerRow2">
+                                  <div class="col contentInnerTable">
+                                      
+                                  </div>
+                              </div>
+                              
+                          
+                          </div>
+                          <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+                            <button type="submit" id="printerInnerCartridgeSubmit" class="btn btn-primary">Применить</button>
                            
                           </div>
                          

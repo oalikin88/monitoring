@@ -5,6 +5,7 @@
 package ru.gov.sfr.aos.monitoring.models;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -18,7 +19,7 @@ public class PrinterDTO {
     public String model;
     public String inventaryNumber;
     public String serialNumber;
-    public Map<Long, String> cartridge;
+    public List<CartridgeDTO> cartridge;
     public String location;
     public String contractNumber;
     public Date startContract;
@@ -27,7 +28,7 @@ public class PrinterDTO {
     public PrinterDTO() {};
 
     public PrinterDTO(Long id, String manufacturer, String model, String inventaryNumber, String serialNumber, 
-            Map<Long, String> cartridge, String location) {
+            List<CartridgeDTO> cartridge, String location) {
         this.id = id;
         this.manufacturer = manufacturer;
         this.model = model;
@@ -38,7 +39,7 @@ public class PrinterDTO {
     }
     
         public PrinterDTO(Long id, String manufacturer, String model, String inventaryNumber, String serialNumber, 
-            Map<Long, String> cartridge, String location, String contractNumber, Date startContract, Date endContract) {
+            List<CartridgeDTO> cartridge, String location, String contractNumber, Date startContract, Date endContract) {
         this.id = id;
         this.manufacturer = manufacturer;
         this.model = model;
@@ -91,11 +92,11 @@ public class PrinterDTO {
         this.serialNumber = serialNumber;
     }
 
-    public Map<Long, String> getCartridge() {
+    public List<CartridgeDTO> getCartridge() {
         return cartridge;
     }
 
-    public void setCartridge(Map<Long, String> cartridge) {
+    public void setCartridge(List<CartridgeDTO> cartridge) {
         this.cartridge = cartridge;
     }
 

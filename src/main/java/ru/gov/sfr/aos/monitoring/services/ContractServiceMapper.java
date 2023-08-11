@@ -219,8 +219,10 @@ public class ContractServiceMapper {
                 objectsBuing.add(printer);
 
             }
-            if (input.get(i).size() == 3) {
-
+            if (input.get(i).size() == 6) {
+                String getAmount = input.get(i).get("amount");
+                int amount = Integer.parseInt(getAmount);
+                for(int amountCount = 0; amountCount < amount; amountCount++) {
                 Cartridge cartridge = new Cartridge();
                 Optional<Location> findLocation = locationRepo.findByNameIgnoreCase("Склад".toLowerCase());
                 Location location = null;
@@ -253,11 +255,18 @@ public class ContractServiceMapper {
                             cartridge.setModel(cartridgeModelIndepended);
 
                             break;
+                             case "itemCode":
+                                 cartridge.setItemCode(entry.getValue());
+                                 break;
+                             case "nameMaterial":
+                             cartridge.setNameMaterial(entry.getValue());
+                             break;
                     }
 
                 }
                 cartridge.setContract(contract);
                 objectsBuing.add(cartridge);
+            }
             }
         }
 

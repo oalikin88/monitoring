@@ -25,6 +25,7 @@ import ru.gov.sfr.aos.monitoring.entities.Contract;
 import ru.gov.sfr.aos.monitoring.exceptions.EntityAlreadyExistsException;
 import ru.gov.sfr.aos.monitoring.interfaces.ContractServiceInterface;
 import ru.gov.sfr.aos.monitoring.models.CartridgeDTO;
+import ru.gov.sfr.aos.monitoring.models.CartridgeInstallDTO;
 import ru.gov.sfr.aos.monitoring.models.CartridgeModelDTO;
 import ru.gov.sfr.aos.monitoring.models.ChangePrinterInventaryNumberDTO;
 import ru.gov.sfr.aos.monitoring.models.ChangeDeviceLocationDTO;
@@ -35,6 +36,7 @@ import ru.gov.sfr.aos.monitoring.models.ModelCartridgeByModelPrinters;
 import ru.gov.sfr.aos.monitoring.models.ModelDTO;
 import ru.gov.sfr.aos.monitoring.models.PrinterDTO;
 import ru.gov.sfr.aos.monitoring.services.CartridgeMapper;
+import ru.gov.sfr.aos.monitoring.services.CartridgeService;
 import ru.gov.sfr.aos.monitoring.services.ContractServiceMapper;
 import ru.gov.sfr.aos.monitoring.services.LocationService;
 import ru.gov.sfr.aos.monitoring.services.PrinterOutInfoService;
@@ -60,6 +62,8 @@ public class MainController {
     private PrintersMapper printerMapper;
     @Autowired
     private LocationService locationService;
+    @Autowired
+    private CartridgeService cartridgeService;
 
     
     @GetMapping("/main")
@@ -278,6 +282,14 @@ public class MainController {
             Logger.getLogger(MainController.class.getName()).log(Level.SEVERE, null, ex);
         }
         return new ResponseEntity<>("локация успешно добавлена", HttpStatus.OK);
+    }
+    
+    @PostMapping("/installcart")
+    public ResponseEntity<String> installCartridgeInPrinter(CartridgeInstallDTO dto) {
+    
+        cartridgeService.installCartridge(dto);
+        
+        return new ResponseEntity<>("Ok", HttpStatus.OK);
     }
     
 }

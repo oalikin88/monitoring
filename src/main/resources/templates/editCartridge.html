@@ -5,7 +5,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
 -->
 <html>
     <head>
-        <title>Работа с картриджем</title>
+        <title>Работа с картриджем [[${dto.model}]]</title>
         <link rel="icon" type="image/x-icon" href="/img/favicon.ico">
         <script src="/js/jquery-3.6.4.min.js"></script>
          <script src="/js/selectize.js"></script>
@@ -23,7 +23,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
            
             <div class="wrapper">
                 
-                <h3 class="text-center titleLocation fw-bold">[[${dto.model}]]</h3>
+                <h3 class="text-center titleCartridge fw-bold mb-5">[[${dto.model}]]</h3>
                 
                 
                 
@@ -52,21 +52,13 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                     </div>
                 </div>
                 
-                <div class="row  mb-3">
-                    <div class="col col-md-6">
-                        Номинальный ресурс
-                    </div>
-                    <div class="col col-md-6">
-                        [[${dto.resource}]]
-                    </div>
-                </div>
+               
                 
                 <div class="row  mb-3">
                     <div class="col col-md-6">
                         Дата начала контракта
                     </div>
-                    <div class="col col-md-6">
-                        [[${dto.startContract}]]
+                    <div class="col col-md-6 startDateContract">
                     </div>
                 </div>
                 
@@ -74,8 +66,8 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                     <div class="col col-md-6">
                         Дата окончания контракта
                     </div>
-                    <div class="col col-md-6">
-                        [[${dto.endContract}]]
+                    <div class="col col-md-6 endDateContract">
+                        
                     </div>
                 </div>
                 
@@ -90,6 +82,14 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                             <button type="button" class="btn" data-bs-toggle="modal" id='locationbtn' data-bs-target="#staticBackdrop">Переместить</button>
                         </div>
                         </div>
+                    </div>
+                </div>
+                 <div class="row  mb-3">
+                    <div class="col col-md-6">
+                        Номинальный ресурс
+                    </div>
+                    <div class="col col-md-6">
+                        [[${dto.resource}]]
                     </div>
                 </div>
                 
@@ -231,11 +231,9 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
             
             <div class="row buttons">
                 <div class='col'>
-                    <input type="button" class="btn" value="Назад" onclick="history.back()"/>
+                    <input type="button" id="back" class="btn" value="Назад" />
                 </div>
-                <div class='col text-end'>
-                    <button type="button" class="btn" data-bs-toggle="modal" id='utilBtn' data-bs-target="#utilModal">Списать</button>
-                </div>
+             
             </div>
             
             

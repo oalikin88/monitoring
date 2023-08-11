@@ -34,58 +34,36 @@ public class Cartridge extends ObjectBuing {
     protected LocalDateTime dateEndExploitation;
     @NotNull
     protected boolean util;
+     @NotNull
+    protected boolean useInPrinter;
     @NotNull
     protected Long count;
-    @NotNull
-    protected String itemCode;
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "PRINTER_ID",
 			foreignKey = @ForeignKey(name = "PRINTER_ID_FK"))
     protected Printer printer;
-    
-    protected String consumableName;
+    @NotNull
+    protected String itemCode;
+    @NotNull
+    protected String nameMaterial;
     
     public Cartridge() {
         
     }
    
     public Cartridge(CartridgeModel model, Location location, LocalDateTime dateStartExploitation, 
-            LocalDateTime dateEndExploitation, boolean util, Long count, String itemCode) {
+            LocalDateTime dateEndExploitation, boolean util, boolean useInPrinter, Long count, String itemCode, String nameMaterial) {
         this.model = model;
         this.location = location;
         this.dateStartExploitation = dateStartExploitation;
         this.dateEndExploitation = dateEndExploitation;
         this.util = util;
         this.count = count;
+        this.useInPrinter = useInPrinter;
         this.itemCode = itemCode;
-    } 
-    
-       public Cartridge(CartridgeModel model, Location location, LocalDateTime dateStartExploitation, 
-            LocalDateTime dateEndExploitation, boolean util, Long count, String itemCode, String consumableName) {
-        this.model = model;
-        this.location = location;
-        this.dateStartExploitation = dateStartExploitation;
-        this.dateEndExploitation = dateEndExploitation;
-        this.util = util;
-        this.count = count;
-        this.itemCode = itemCode;
-        this.consumableName = consumableName;
+        this.nameMaterial = nameMaterial;
     } 
 
-    public Long getId() {
-        return id;
-    }
-
-    public String getConsumableName() {
-        return consumableName;
-    }
-
-    public void setConsumableName(String consumableName) {
-        this.consumableName = consumableName;
-    }
-
-    
-    
     public String getItemCode() {
         return itemCode;
     }
@@ -94,7 +72,31 @@ public class Cartridge extends ObjectBuing {
         this.itemCode = itemCode;
     }
 
+    public String getNameMaterial() {
+        return nameMaterial;
+    }
+
+    public void setNameMaterial(String nameMaterial) {
+        this.nameMaterial = nameMaterial;
+    }
+
     
+    
+    public boolean isUseInPrinter() {
+        return useInPrinter;
+    }
+
+    public void setUseInPrinter(boolean useInPrinter) {
+        this.useInPrinter = useInPrinter;
+    }
+
+    
+    
+    public Long getId() {
+        return id;
+    }
+
+
     public Location getLocation() {
         return location;
     }
