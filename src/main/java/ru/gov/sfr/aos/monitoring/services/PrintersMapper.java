@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.gov.sfr.aos.monitoring.entities.Cartridge;
@@ -59,7 +60,7 @@ public class PrintersMapper {
             dto.setInventaryNumber(el.getInventoryNumber());
             dto.setSerialNumber(el.getSerialNumber());
 
-            List<Cartridge> cartridges = el.getCartridge();
+            Set<Cartridge> cartridges = el.getCartridge();
             List<CartridgeDTO> cartridgesForPrinterDTO = new ArrayList<>();
             for(Cartridge car : cartridges) {
                   CartridgeDTO cartDto = new CartridgeDTO();
@@ -220,7 +221,7 @@ public class PrintersMapper {
         List<CartridgeDTO> cartridgesForPrinter = new ArrayList<>();
         for(Cartridge car : findPrinterById.get().getCartridge()) {
               CartridgeDTO cartDto = new CartridgeDTO();
-                        cartDto.setContract(car.getContract().getId());
+                    cartDto.setContract(car.getContract().getId());
                     cartDto.setContractNumber(car.getContract().getContractNumber());
                     cartDto.setId(car.getId());
                     cartDto.setLocation(car.getLocation().getName());
@@ -247,7 +248,12 @@ public class PrintersMapper {
         
         Optional<Printer> findPrinterById = printerRepo.findById(dto.getId());
         Optional<Location> locationTemp = locationRepo.findByNameIgnoreCase(dto.getLocation().toLowerCase());
-        
+        Set<Cartridge> cartridges = findPrinterById.get().getCartridge();
+        for(Cartridge cart : cartridges) {
+            if(cart.isUseInPrinter()) {
+                cart.setLocation(locationTemp.get());
+            }
+        }
         findPrinterById.get().setLocation(locationTemp.get());
         printerRepo.save(findPrinterById.get());
     }

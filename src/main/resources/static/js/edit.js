@@ -141,7 +141,10 @@ function getNumberOfDays(start, end) {
                 var dateStartParse = Date.parse(input.cartridge[i].dateStartExploitation);
                 var dateStartProc = new Date(dateStartParse);
                 var dateStartFormat = dateStartProc.toLocaleString('ru');
-                cartridgeUse.innerHTML = input.cartridge[i].model + " от " +  dateStartFormat;
+                var link = document.createElement('a');
+                link.setAttribute('href', '/editcartridge?idCartridge=' + input.cartridge[i].id);
+                link.innerText = input.cartridge[i].model + " от " +  dateStartFormat;
+                cartridgeUse.appendChild(link);
             }
         }
        
@@ -247,6 +250,11 @@ function getNumberOfDays(start, end) {
     
     let cartridgeUseBtn = document.getElementById("catridgeUsesbtn");
      cartridgeUseBtn.addEventListener('click', function() {
+         
+         
+         
+         
+         
         console.log("click");
          $('#cartridgeSelect').selectize({
                   preload: true,
@@ -257,7 +265,7 @@ function getNumberOfDays(start, end) {
                   
                   load: function (query, callback) {
                     $.ajax({
-                        url: 'http://localhost:8080/getcartridgesbymodel',
+                        url: 'http://localhost:8080/showcartridgesbymodel',
                         type: 'GET',
                         dataType: 'json',
                         data: { idPrinter: input.id,
@@ -272,19 +280,24 @@ function getNumberOfDays(start, end) {
          
          let cartridgeSelectOkBtn = document.getElementById('printerInnerCartridgeSubmit');
          cartridgeSelectOkBtn.addEventListener('click', function() {
+             var countPage = 0;
+             if($('#countPage')[0] != null) {
+                 countPage = $('#countPage')[0].value;
+             }
+             
              $.ajax({
             type: "POST",
             url: "/installcart",
             data: { idPrinter: input.id,
                     idCartridge: $('#cartridgeSelect')[0].selectize.items[0],
-                    count: $('#countPage')[0].value },
+                    count:  countPage},
             dataType: "json",
             success: function (data) {
-                $('#modalCartridgeUses').modal('hide');
-                window.location.reload();
+               
             }
              });
-             
+              $('#modalCartridgeUses').modal('hide');
+                window.location.reload();
              
          });
          

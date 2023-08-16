@@ -7,10 +7,12 @@ package ru.gov.sfr.aos.monitoring.controllers;
 import java.util.List;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import ru.gov.sfr.aos.monitoring.models.CartridgeDTO;
+import ru.gov.sfr.aos.monitoring.models.CartridgeModelDTO;
 import ru.gov.sfr.aos.monitoring.models.LocationDTO;
 import ru.gov.sfr.aos.monitoring.models.PrinterDTO;
 import ru.gov.sfr.aos.monitoring.services.CartridgeMapper;
@@ -51,11 +53,21 @@ public class GetInfoController {
         return locations;
     }
     
-    @GetMapping("/getcartridgesbymodel")
-    public List<CartridgeDTO> getCartridgesByModelPrinterAndLocation(@RequestParam("idPrinter") Long idPrinter, @RequestParam("location") String location) {
+ 
+    
+    
+    @GetMapping("/getmodelcartridge")
+    public List<CartridgeModelDTO> getModelCartridgeByModelPrinter(@RequestParam("idModel") Long idModel) {
+        List<CartridgeModelDTO> showCartridgeModelByPrinterModel = cartridgeMapper.showCartridgeModelByPrinterModel(idModel);
+        return showCartridgeModelByPrinterModel;
+    }
+    
+    
+        @GetMapping("/showcartridgesbymodel")
+    public List<CartridgeDTO> getCartridgesByModelPrinter(@RequestParam("idPrinter") Long idPrinter, @RequestParam("location") String location) {
         
-        List<CartridgeDTO> showCartridgesByModelPrinterAndLocation = cartridgeMapper.showCartridgesByModelPrinterAndLocation(idPrinter, location);
+        List<CartridgeDTO> showCartridgesByModelPrinter = cartridgeMapper.showCartridgesByModelPrinter(idPrinter, location);
         
-        return showCartridgesByModelPrinterAndLocation;
+        return showCartridgesByModelPrinter;
     }
 }

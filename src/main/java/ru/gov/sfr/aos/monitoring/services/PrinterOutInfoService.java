@@ -8,15 +8,21 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ru.gov.sfr.aos.monitoring.entities.CartridgeModel;
+import ru.gov.sfr.aos.monitoring.entities.Location;
 import ru.gov.sfr.aos.monitoring.entities.Model;
+import ru.gov.sfr.aos.monitoring.entities.Printer;
 import ru.gov.sfr.aos.monitoring.models.LocationDTO;
 import ru.gov.sfr.aos.monitoring.models.ModelCartridgeByModelPrinters;
 import ru.gov.sfr.aos.monitoring.models.ModelDTO;
+import ru.gov.sfr.aos.monitoring.models.PrinterDTO;
 import ru.gov.sfr.aos.monitoring.repositories.CartridgeModelRepo;
+import ru.gov.sfr.aos.monitoring.repositories.LocationRepo;
 import ru.gov.sfr.aos.monitoring.repositories.ModelPrinterRepo;
+import ru.gov.sfr.aos.monitoring.repositories.PrinterRepo;
 
 /**
  *
@@ -31,6 +37,10 @@ public class PrinterOutInfoService {
     private ModelPrinterRepo modelPrinterRepo;
     @Autowired
     private CartridgeModelRepo cartridgeModelRepo;
+    @Autowired
+    private LocationRepo locationRepo;
+    @Autowired
+    private PrinterRepo printerRepo;
     
     public Map<String, List<ModelDTO>> outInfo() {
         List<Model> findAllModelPrinters = modelPrinterRepo.findAll();
@@ -93,6 +103,35 @@ public class PrinterOutInfoService {
       
         
         
+        return map;
+    }
+    
+    
+    public Map<LocationDTO, List<PrinterDTO>> showPrintersByModelsAndLocation(List<Long> list, Long location) {
+        
+        Optional<Location> findLocationById = locationRepo.findById(location);
+        LocationDTO locDto = new LocationDTO();
+        locDto.setId(findLocationById.get().getId());
+        locDto.setName(findLocationById.get().getName());
+        List<PrinterDTO> dtoes = new ArrayList<>();
+        Map<LocationDTO, List<PrinterDTO>> map = new HashMap<>();
+        for(Long l : list) {
+            List<Printer> findPrintersByLocationIdAndModelId = printerRepo.findByLocationIdAndModelId(location, l);
+            for(Printer printer : findPrintersByLocationIdAndModelId) {
+                PrinterDTO dto = new PrinterDTO();
+                dto.setId(printer.getId());
+                dto.setModel(printer.getModel().getName());
+                dto.setManufacturer(printer.getManufacturer().getName());
+                dto.setInventaryNumber(printer.getInventoryNumber());
+                dto.setSerialNumber(printer.getInventoryNumber());
+                dto.setContractNumber(printer.getContract().getContractNumber());
+                dto.setLocation(printer.getLocation().getName());
+                dto.setStartContract(printer.getContract().getDateStartContract());
+                dto.setEndContract(printer.getContract().getDateStartContract());
+                dtoes.add(dto);
+            }
+        }
+        map.put(locDto, dtoes);
         return map;
     }
     

@@ -19,4 +19,5 @@ public interface ModelPrinterRepo extends JpaRepository<Model, Long> {
     List<Model> findByName(String name);
     List<Model> findByManufacturerNameContainingIgnoreCase(String name);
     
+    
 }

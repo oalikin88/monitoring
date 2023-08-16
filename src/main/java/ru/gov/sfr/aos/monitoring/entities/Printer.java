@@ -6,6 +6,7 @@ package ru.gov.sfr.aos.monitoring.entities;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -36,7 +37,7 @@ public class Printer extends ObjectBuing {
     protected String inventoryNumber;
     @NotNull
     @OneToMany(mappedBy = "printer", fetch = FetchType.EAGER)
-    protected List<Cartridge> cartridge;
+    protected Set<Cartridge> cartridge;
     
     @ManyToOne(cascade = CascadeType.ALL)
     protected Model model;
@@ -46,7 +47,7 @@ public class Printer extends ObjectBuing {
     }
 
     public Printer(Location location, Manufacturer manufacturer, String serialNumber, String inventoryNumber, 
-            List<Cartridge> cartridge, Model model) {
+            Set<Cartridge> cartridge, Model model) {
         this.location = location;
         this.model = model;
         this.serialNumber = serialNumber;
@@ -80,11 +81,11 @@ public class Printer extends ObjectBuing {
         this.contract = contract;
     }
 
-    public List<Cartridge> getCartridge() {
+    public Set<Cartridge> getCartridge() {
         return cartridge;
     }
 
-    public void setCartridge(List<Cartridge> cartridge) {
+    public void setCartridge(Set<Cartridge> cartridge) {
         this.cartridge = cartridge;
     }
 

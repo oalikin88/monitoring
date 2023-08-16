@@ -20,5 +20,6 @@ public interface CartridgeModelRepo extends JpaRepository<CartridgeModel, Long> 
     
     List<CartridgeModel> findByModel(String model);
     List<CartridgeModel> findByType(CartridgeType type);
+    List<CartridgeModel> findByModelsPrintersId(Long id);
     
 }

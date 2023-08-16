@@ -62,11 +62,37 @@ $(document).ready(function () {
      endDate = new Date(parseEndDate);
      endDateFormat = endDate.toLocaleDateString('ru');
      endDateContract.innerHTML = endDateFormat;
+    
      
-     if(input.util == true) {
-         oldTitle = titlePage.innerText;
-         titlePage.innerText = oldTitle + " СПИСАН";
+     if(input.util == true && input.usePrinter == true) {
+         
+         dateStartUseRow = document.createElement('div');
+         dateStartUseRow.className = 'row mb-3';
+         parent.appendChild(dateStartUseRow);
+         
+         dateStartUseDefinitionDiv = document.createElement('div');
+         dateStartUseDefinitionDiv.className = 'col';
+         dateStartUseDefinitionDiv.innerHTML = 'Дата начала эксплуатации';
+         dateStartUseRow.appendChild(dateStartUseDefinitionDiv);
+         
+         dateStartUseCart = getDateFromInput(input.dateStartExploitation, true);
+         
+         dateStartUseValueDiv = document.createElement('div');
+         dateStartUseValueDiv.className = 'col';
+         dateStartUseValueDiv.innerHTML = dateStartUseCart;
+         dateStartUseRow.appendChild(dateStartUseValueDiv);
+         
+         
+         var status = document.querySelector('.status');
+         var mes = document.createElement('p');
+         var span = document.createElement('span');
+         mes.className = 'message';
+         mes.id = 'mes_use';
+         span.innerHTML = 'Используется';
+         status.appendChild(mes);
+         mes.appendChild(span);
          locationBtn.disabled = true;
+     } else if (input.util == true && input.usePrinter == false) {
          
             // Отпечатал страниц
          
@@ -142,8 +168,24 @@ $(document).ready(function () {
          dayOfWorkRow.appendChild(dayOfWorkValueDiv);
          
          
-       
-         
+         var status = document.querySelector('.status');
+         var mes = document.createElement('p');
+         var span = document.createElement('span');
+         mes.className = 'message';
+         mes.id = 'mes_util';
+         span.innerHTML = 'Списан';
+         status.appendChild(mes);
+         mes.appendChild(span);
+         locationBtn.disabled = true;
+     } else if(input.util == false && input.usePrinter == false) {
+         var status = document.querySelector('.status');
+         var mes = document.createElement('p');
+         var span = document.createElement('span');
+         mes.className = 'message';
+         mes.id = 'mes_ready';
+         span.innerHTML = 'Готов к установке';
+         status.appendChild(mes);
+         mes.appendChild(span);
      }
      
      

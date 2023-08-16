@@ -87,23 +87,46 @@ window.onload = function () {
 
             for (i = 0; i < input2sort.length; i++) {
                 searchModel = false;
-
-
+                 var amountCartridge = new Set();
+                 var amountPrinters = new Set();
+                 
+                 
                 for (innerInInput1Sort = 0; innerInInput1Sort < input1sort[inInput1sort][1].length; innerInInput1Sort++) {
-
+                   
+                    
+                    
                     for (inCartridgeModelCount = 0; inCartridgeModelCount < input1sort[inInput1sort][1][innerInInput1Sort].modelsPrinter.length; inCartridgeModelCount++) {
                         if (input2sort[i][1][0].model === input1sort[inInput1sort][1][innerInInput1Sort].modelsPrinter[inCartridgeModelCount].model) {
-                            tdPrintSuccess = document.createElement('td');
-                            tdPrintSuccess.setAttribute('id', 'location_' + JSON.parse(input1sort[inInput1sort][0]).id + '_' + 'model_' + input2sort[i][1][0].idModel);
+                            for(vbn = 0; vbn < input1sort[inInput1sort][1][innerInInput1Sort].printersID.length; vbn++) {
+                                amountPrinters.add(input1sort[inInput1sort][1][innerInInput1Sort].printersID[vbn]);
+                            }
+                            for(vbc = 0; vbc < input1sort[inInput1sort][1][innerInInput1Sort].cartridgesId.length; vbc++) {
+                                amountCartridge.add(input1sort[inInput1sort][1][innerInInput1Sort].cartridgesId[vbc]);
+                            }
+                           
+                            searchModel = true;
+                            break;
+                        }
+                        
+                    }
+
+
+
+
+                }
+                
+                
+                    tdPrintSuccess = document.createElement('td');
+                          tdPrintSuccess.setAttribute('id', 'location_' + JSON.parse(input1sort[inInput1sort][0]).id + '_' + 'model_' + input2sort[i][1][0].idModel);
                             tdPrintSuccess.setAttribute('class', 'model');
                             linkPrinter = document.createElement('a');
                             var temp = "";
-                            for (count = 0; count < input2sort[i][1].length; count++) {
-                                temp += '&idModel=' + input2sort[i][1][count].idModel;
+                           for (count = 0; count < input2sort[i][1].length; count++) {
+                               temp += '&idModel=' + input2sort[i][1][count].idModel;
                             }
                             linkPrinter.setAttribute('href', '/printersbylocation?idLocation=' + JSON.parse(input1sort[inInput1sort][0]).id
                                     + temp);
-                            linkPrinter.innerText = input1sort[inInput1sort][1][innerInInput1Sort].printersID.length;
+                            linkPrinter.innerText = amountPrinters.size;
 
                             tr.appendChild(tdPrintSuccess);
                             tdPrintSuccess.appendChild(linkPrinter);
@@ -111,49 +134,17 @@ window.onload = function () {
 
 
                             tdCart = document.createElement('td');
-                            tdCart.setAttribute('id', 'location_' + JSON.parse(input1sort[inInput1sort][0]).id + '_' + 'model_' + input1sort[inInput1sort][1][innerInInput1Sort].id + '_cart');
+                    //        tdCart.setAttribute('id', 'location_' + JSON.parse(input1sort[inInput1sort][0]).id + '_' + 'model_' + input1sort[inInput1sort][1][innerInInput1Sort].id + '_cart');
                             tdCart.setAttribute('class', 'cart');
-
                             link = document.createElement('a');
-                            link.setAttribute('href', '/inventoriesbylocation?idLocation=' + JSON.parse(input1sort[inInput1sort][0]).id
-                                    + '&idModel=' + input1sort[inInput1sort][1][innerInInput1Sort].id);
-                            link.innerText = input1sort[inInput1sort][1][innerInInput1Sort].cartridgesId.length;
+                           link.setAttribute('href', '/getcartridgesbymodel?idPrinter=' + input2sort[i][1][0].idModel
+                                    + '&location=' + JSON.parse(input1sort[inInput1sort][0]).name);
+                            link.innerText = amountCartridge.size;
 
                             tr.appendChild(tdCart);
                             tdCart.appendChild(link);
-
-                            searchModel = true;
-                            break;
-                        }
-                    }
-
-
-
-
-                }
-                if (searchModel === false) {
-                    tdPrint = document.createElement('td');
-                    tdPrint.setAttribute('id', 'location_' + JSON.parse(input1sort[inInput1sort][0]).id + '_' + 'model_' + input2sort[i][1][0].idModel);
-                    tdPrint.setAttribute('class', 'model');
-                    linkSearchFalsePrinter = document.createElement('a');
-                    linkSearchFalsePrinter.setAttribute('href', '/inventoriesbylocation?idLocation=' + JSON.parse(input1sort[inInput1sort][0]).id
-                            + '&idModel=' + input2sort[i][1][0].idModel);
-                    linkSearchFalsePrinter.innerText = "0";
-                    tr.appendChild(tdPrint);
-                    tdPrint.appendChild(linkSearchFalsePrinter);
-
-                    tdCart = document.createElement('td');
-                    tdCart.setAttribute('id', 'location_' + JSON.parse(input1sort[inInput1sort][0]).id + '_' + 'model_' + input2sort[i][1][0].idModel + '_cart');
-                    tdCart.setAttribute('class', 'cart');
-
-                    linkSearchFalseCartridge = document.createElement('a');
-                    linkSearchFalseCartridge.setAttribute('href', '/inventoriesbylocation?idLocation=' + JSON.parse(input1sort[inInput1sort][0]).id
-                            + '&idModel=' + input2sort[i][1][0].idModel);
-                    linkSearchFalseCartridge.innerText = "0";
-                    tr.appendChild(tdCart);
-                    tdCart.appendChild(linkSearchFalseCartridge);
-
-                }
+                
+                
             }
 
 
@@ -1202,6 +1193,7 @@ window.onload = function () {
             let typeChoice;
             $('.modalModelTypeInput').selectize({
                 create: false,
+                maxItems: 1,
                 placeholder: "Выберите из списка",
                 valueField: 'type',
                 labelField: 'type',
