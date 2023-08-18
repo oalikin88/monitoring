@@ -85,4 +85,16 @@ public class ManufacturersController {
             List<CartridgeModelDTO> list = cartridgeMapper.getCartridgeModels();
         return list;
     }
+    
+     @RequestMapping(value = "/cartridgebymodelprinter", method = RequestMethod.GET)
+    public List<CartridgeModelDTO> getCartridgesByModelPrinter(@RequestParam("idModel") Long idModel) {
+            List<CartridgeModelDTO> list = cartridgeMapper.showCartridgeModelByPrinterModel(idModel);
+        return list;
+    }
+    
+       @RequestMapping(value = "/cartridgebymodelprinter/{type}", method = RequestMethod.GET)
+    public List<CartridgeModelDTO> getCartridgesByModelPrinterAndType(@RequestParam("model") String model, @PathVariable String type) {
+            List<CartridgeModelDTO> list = cartridgeMapper.showCartridgeModelByPrinterModelAndType(model, type);
+        return list;
+    }
 }

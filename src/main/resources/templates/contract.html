@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<!--
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this template
+-->
+<html>
+    <head>
+        <title>Контракт №[[${input.contractNumber}]]</title>
+        <link rel="icon" type="image/x-icon" href="/img/favicon.ico">
+        <script src="/js/jquery-3.6.4.min.js"></script>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link href="/css/bootstrap.min.css" rel="stylesheet">
+        <link href="/css/style.css" rel="stylesheet">
+    </head>
+    <body>
+        <nav th:insert="nav :: navbar"></nav>
+        
+        
+        <div class="container content inventoriesContent"  id="content" >
+            
+        
+                
+                <h3 class="text-center titleLocation fw-bold mb-5">Контракт №[[${input.contractNumber}]]</h3>
+                
+                
+                 <div class="row  mb-3">
+                    <div class="col col-md-6">
+                        Дата начала контракта
+                    </div>
+                    <div class="col col-md-6" id="contractStartDate">
+                       
+                        
+                    </div>
+                </div>
+                
+                <div class="row  mb-3">
+                    <div class="col col-md-6">
+                        Дата окончания контракта
+                    </div>
+                    <div class="col col-md-6" id="contractEndDate">
+                       
+                        
+                    </div>
+                </div>
+                
+                <div class="row  mb-3">
+                    <div class="col contractItemsInclude" id="contractItemsInclude">
+                        
+                    </div>
+                </div>
+                
+          
+          
+        </div>
+        
+             <script th:inline="javascript">
+                        
+                        let input = [[${input}]];
+                      
+ 
+                    </script>
+        
+         <footer th:insert="footer :: footer"></footer>
+        <script src="/js/bootstrap.bundle.min.js" ></script>
+        <script src="/js/contract.js"></script>
+    </body>
+</html>

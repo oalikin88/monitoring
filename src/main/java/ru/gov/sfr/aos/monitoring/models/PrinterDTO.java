@@ -24,6 +24,7 @@ public class PrinterDTO {
     public String contractNumber;
     public Date startContract;
     public Date endContract;
+    public Long contractId;
     
     public PrinterDTO() {};
 
@@ -51,6 +52,16 @@ public class PrinterDTO {
         this.startContract = startContract;
         this.endContract = endContract;
     }
+
+    public Long getContractId() {
+        return contractId;
+    }
+
+    public void setContractId(Long contractId) {
+        this.contractId = contractId;
+    }
+        
+        
 
     public Long getId() {
         return id;

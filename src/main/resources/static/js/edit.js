@@ -27,6 +27,14 @@ function getNumberOfDays(start, end) {
      let endDateContract = document.getElementsByClassName('endDateContract')[0];
      
      
+     let numberContractDiv = document.getElementById('numberContract');
+     
+     link = document.createElement('a');
+     link.setAttribute('href', '/contract?idContract=' + input.contractId);
+     link.innerText = input.contractNumber;
+     numberContractDiv.appendChild(link);
+     
+     
      parseStartDate = Date.parse(input.startContract);
      startDate = new Date(parseStartDate);
      startDateFormat = startDate.toLocaleDateString('ru');

@@ -17,10 +17,10 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
         </head>
         <body>
             <nav th:insert="nav :: navbar"></nav>
-            <div class="container content inventoriesContent">
+            <div class="container-fluid content inventoriesContent">
                 <header><h3 class="fw-bold">Сводная таблица</h3></header>
 
-                <div class="table-responsive">
+                <div class="table-responsive" id="tableContainer">
                     <script th:inline="javascript">
                         
                         let input = [[${input}]];

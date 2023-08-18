@@ -26,6 +26,8 @@ public class CartridgeDTO {
     public String contractNumber;
     public Date startContract;
     public Date endContract;
+    public String itemCode;
+    public String nameMaterial;
     
     
     public CartridgeDTO() {
@@ -75,6 +77,43 @@ public class CartridgeDTO {
         this.startContract = startContract;
         this.endContract = endContract;
     }
+
+    public CartridgeDTO(Long id, String type, String model, String location, String resource, boolean util, LocalDateTime dateStartExploitation, LocalDateTime dateEndExploitation, Long count, boolean usePrinter, Long contract, String contractNumber, Date startContract, Date endContract, String itemCode, String nameMaterial) {
+        this.id = id;
+        this.type = type;
+        this.model = model;
+        this.location = location;
+        this.resource = resource;
+        this.util = util;
+        this.dateStartExploitation = dateStartExploitation;
+        this.dateEndExploitation = dateEndExploitation;
+        this.count = count;
+        this.usePrinter = usePrinter;
+        this.contract = contract;
+        this.contractNumber = contractNumber;
+        this.startContract = startContract;
+        this.endContract = endContract;
+        this.itemCode = itemCode;
+        this.nameMaterial = nameMaterial;
+    }
+
+    public String getItemCode() {
+        return itemCode;
+    }
+
+    public void setItemCode(String itemCode) {
+        this.itemCode = itemCode;
+    }
+
+    public String getNameMaterial() {
+        return nameMaterial;
+    }
+
+    public void setNameMaterial(String nameMaterial) {
+        this.nameMaterial = nameMaterial;
+    }
+        
+        
 
     public Date getStartContract() {
         return startContract;

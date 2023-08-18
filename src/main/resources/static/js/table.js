@@ -9,12 +9,14 @@ window.onload = function () {
     input2sort = Object.entries(input2).sort();
     input1sort = Object.entries(input).sort();
     let parent = document.getElementsByClassName('inventoriesContent')[0];
+    
+    let tableContainer = document.getElementById('tableContainer');
 
     if (input1sort.length > 0) {
         // Вывод таблицы
         let table = document.createElement('table');
         table.id = "table";
-        table.className = "table table-striped table-bordered";
+        table.className = "table table-hover table-striped table-bordered";
         let thead = document.createElement('thead');
         let trThead = document.createElement('tr');
         let thThead1 = document.createElement('th');
@@ -25,7 +27,7 @@ window.onload = function () {
         thThead2.setAttribute('scope', 'col');
         thThead2.setAttribute('rowspan', '2');
         thThead2.innerText = 'Модель принтера \ Локация';
-        parent.appendChild(table);
+        tableContainer.appendChild(table);
         table.appendChild(thead);
         thead.appendChild(trThead);
         trThead.appendChild(thThead1);
@@ -82,6 +84,7 @@ window.onload = function () {
             tdLocation.setAttribute('id', JSON.parse(input1sort[inInput1sort][0]).id);
             tdLocation.setAttribute('class', 'location');
             tdLocation.innerText = JSON.parse(input1sort[inInput1sort][0]).name;
+            tdLocation.style.wordBreak = "break-all";
             tr.appendChild(tdLocation);
 
 
@@ -119,6 +122,7 @@ window.onload = function () {
                     tdPrintSuccess = document.createElement('td');
                           tdPrintSuccess.setAttribute('id', 'location_' + JSON.parse(input1sort[inInput1sort][0]).id + '_' + 'model_' + input2sort[i][1][0].idModel);
                             tdPrintSuccess.setAttribute('class', 'model');
+                            tdPrintSuccess.style.wordBreak = "break-all";
                             linkPrinter = document.createElement('a');
                             var temp = "";
                            for (count = 0; count < input2sort[i][1].length; count++) {
@@ -136,6 +140,7 @@ window.onload = function () {
                             tdCart = document.createElement('td');
                     //        tdCart.setAttribute('id', 'location_' + JSON.parse(input1sort[inInput1sort][0]).id + '_' + 'model_' + input1sort[inInput1sort][1][innerInInput1Sort].id + '_cart');
                             tdCart.setAttribute('class', 'cart');
+                            tdCart.style.wordBreak = "break-all";
                             link = document.createElement('a');
                            link.setAttribute('href', '/getcartridgesbymodel?idPrinter=' + input2sort[i][1][0].idModel
                                     + '&location=' + JSON.parse(input1sort[inInput1sort][0]).name);
@@ -170,7 +175,7 @@ window.onload = function () {
     // Блок строки с кнопками
 
     buttonsDivRow = document.createElement('div');
-    buttonsDivRow.className = 'row';
+    buttonsDivRow.className = 'row rowButtons';
 
     btnBackDiv = document.createElement('div');
     btnBackDiv.className = 'col';

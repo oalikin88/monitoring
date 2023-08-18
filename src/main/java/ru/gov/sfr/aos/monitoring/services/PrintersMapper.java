@@ -74,6 +74,7 @@ public class PrintersMapper {
                     cartDto.setResource(car.getModel().getDefaultNumberPrintPage().toString());
                     cartDto.setUtil(car.isUtil());
                     cartDto.setModel(car.getModel().getModel());
+                    cartridgesForPrinterDTO.add(cartDto);
             }
             dto.setCartridge(cartridgesForPrinterDTO);
 
@@ -217,6 +218,7 @@ public class PrintersMapper {
         dto.setModel(findPrinterById.get().getModel().getName());
         dto.setStartContract(findPrinterById.get().getContract().getDateStartContract());
         dto.setEndContract(findPrinterById.get().getContract().getDateEndContract());
+        dto.setContractId(findPrinterById.get().getContract().getId());
         
         List<CartridgeDTO> cartridgesForPrinter = new ArrayList<>();
         for(Cartridge car : findPrinterById.get().getCartridge()) {

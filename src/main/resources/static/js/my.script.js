@@ -34,6 +34,7 @@ let formData = new FormData();
 let optionsManufacturerMap = new Map();
 let printers = new Map();
 let amountCartridges = document.querySelector('input[id="amountCartridgeInput"]');
+let modelPrinterChoice;
 // Справочник принтеров
 
 
@@ -803,9 +804,10 @@ function addPrintersInfo(location) {
                 $(this.$control_input[0].closest('.cartridgeInclude')).find('.cartridgeModelChoice')[0].disabled = false;
                 typeValueFromSelectize = value;
                 $.ajax({
-                    url: "http://localhost:8080/cartridge/" + encodeURIComponent(value),
+                    url: "http://localhost:8080/cartridgebymodelprinter/" + encodeURIComponent(value),
                     type: 'GET',
                     dataType: 'json', // added data type
+                    data:{model: modelPrinterChoice},
                     success: function (res) {
                         let keys = Object.keys(selectizeModelFromChoisesTypeCartridge.selectize.options);
                         for (let i = 0; i < keys.length; i++) {
@@ -834,26 +836,10 @@ function addPrintersInfo(location) {
         searchField: "model",
         preload: 'focus',
         create: false,
-//                            function(input, callback) {
-//                        
-//                        selectizeModelFromChoisesTypeCartridge = $(this.$control_input[0].closest('.cartridgeInclude')).find('.cartridgeModelChoice')[0];
-//                        $.ajax({
-//                            url: "http://localhost:8080/cartridge/",
-//                            type: 'POST',
-//                            data: {target:input,
-//                                   type:typeChoice},
-//                            success: function() {             
-//                                selectizeModelFromChoisesTypeCartridge.selectize.addOption({value: input, text: input});
-//                                selectizeModelFromChoisesTypeCartridge.selectize.addItem(input);
-//                                selectizeModelFromChoisesTypeCartridge.selectize.refreshOptions();
-//                                callback({model: input});
-//                            }
-//                        });
-//                    }
-
+       
         load: function (query, callback) {
             $.ajax({
-                url: 'http://localhost:8080/cartridge/' + encodeURIComponent(typeChoice),
+                url: 'http://localhost:8080/cartridgebymodelprinter/' + encodeURIComponent(typeChoice),
                 type: 'GET',
                 dataType: 'json',
                 data: {model: query},
@@ -892,6 +878,9 @@ function addPrintersInfo(location) {
                 error: callback,
                 success: callback
             });
+        },
+         onChange: function(value) {
+            modelPrinterChoice = value;
         },
         valueField: 'model',
         labelField: 'model',
@@ -1309,9 +1298,10 @@ function addPrinter(amount, location) {
                 $(this.$control_input[0].closest('.cartridgeInclude')).find('.cartridgeModelChoice')[0].disabled = false;
                 typeValueFromSelectize = value;
                 $.ajax({
-                    url: "http://localhost:8080/cartridge/" + encodeURIComponent(value),
+                     url: "http://localhost:8080/cartridgebymodelprinter/" + encodeURIComponent(value),
                     type: 'GET',
                     dataType: 'json', // added data type
+                    data:{model: modelPrinterChoice},
                     success: function (res) {
                         let keys = Object.keys(selectizeModelFromChoisesTypeCartridge.selectize.options);
                         for (let i = 0; i < keys.length; i++) {
@@ -1359,7 +1349,7 @@ function addPrinter(amount, location) {
 
         load: function (query, callback) {
             $.ajax({
-                url: 'http://localhost:8080/cartridge/' + encodeURIComponent(typeChoice),
+                url: 'http://localhost:8080/cartridgebymodelprinter/' + encodeURIComponent(typeChoice),
                 type: 'GET',
                 dataType: 'json',
                 data: {model: query},
@@ -1388,6 +1378,9 @@ function addPrinter(amount, location) {
                     callback({model: input});
                 }
             });
+        },
+         onChange: function(value) {
+            modelPrinterChoice = value;
         },
         load: function (query, callback) {
             $.ajax({

@@ -67,7 +67,7 @@ body, html {
 }
 
 p {
-    margin-bottom: 1rem;
+    margin-bottom: 0.5rem;
 }
 
 h1 {
@@ -272,15 +272,9 @@ nav span {
 
 }
 
-.model a {
-    color: #000 !important;
-    text-decoration: none;
-}
 
-.cart a {
-    color: #000 !important;
-    text-decoration: none;
-}     
+
+   
 
 
 .titleLocation {
@@ -291,42 +285,7 @@ nav span {
     border-bottom-width: 2px;
 }
 
-.contentRow a {
-    color: #000 !important;
-    text-decoration: none;
-}
 
-#cartridgeUseRefresh a {
-    color: #000 !important;
-    text-decoration: none;
-}
-
-#cartridgeUseRefresh a:hover {
-    color: #000 !important;
-    text-decoration: none;
-    background: rgba(11, 127, 171, .9);
-    padding: 5px 5px;
-    border-radius: 5px;
-    font-weight: bold;
-}
-
-.model a:hover {
-    color: #000 !important;
-    text-decoration: none;
-    background: rgba(11, 127, 171, .9);
-    padding: 5px 5px;
-    border-radius: 5px;
-    font-weight: bold;
-}
-
-.cart a:hover {
-    color: #000 !important;
-    text-decoration: none;
-    background: rgba(11, 127, 171, .9);
-    padding: 5px 5px;
-    border-radius: 5px;
-    font-weight: bold;
-}
 
 #attentionLocation {
     margin-bottom: 5rem;
@@ -359,4 +318,20 @@ nav span {
 .message {
     color: #000;
     font-weight: bold;
+}
+
+.rowButtons {
+    
+    margin-top: 3rem;
+    
+}
+
+.rowLabels {
+    margin-bottom: 1rem;
+}
+
+.content {
+    margin-left: 3rem;
+    margin-right: 3rem;
+    
 }

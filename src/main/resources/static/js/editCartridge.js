@@ -44,6 +44,13 @@ $(document).ready(function () {
      let endDateContract = document.getElementsByClassName('endDateContract')[0];
      let locationBtn = document.getElementById('locationbtn');
      let parent = document.getElementsByClassName('wrapper')[0];
+     let contractNumberDiv = document.getElementById('contractNumber');
+     
+     link = document.createElement('a');
+     link.setAttribute('href', '/contract?idContract=' + input.contract);
+     link.innerText = input.contractNumber;
+     
+     contractNumberDiv.appendChild(link);
      
      startDateFormat = getDateFromInput(input.startContract, false);
      endDateFormat = getDateFromInput(input.endContract, false);

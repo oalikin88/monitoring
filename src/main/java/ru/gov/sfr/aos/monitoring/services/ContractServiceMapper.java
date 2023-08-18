@@ -7,11 +7,14 @@ package ru.gov.sfr.aos.monitoring.services;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ru.gov.sfr.aos.monitoring.entities.Cartridge;
@@ -22,10 +25,17 @@ import ru.gov.sfr.aos.monitoring.entities.Manufacturer;
 import ru.gov.sfr.aos.monitoring.entities.Model;
 import ru.gov.sfr.aos.monitoring.entities.ObjectBuing;
 import ru.gov.sfr.aos.monitoring.entities.Printer;
+import ru.gov.sfr.aos.monitoring.models.CartridgeDTO;
+import ru.gov.sfr.aos.monitoring.models.ContractForViewDTO;
+import ru.gov.sfr.aos.monitoring.models.EditContractDTO;
+import ru.gov.sfr.aos.monitoring.models.PrinterDTO;
 import ru.gov.sfr.aos.monitoring.repositories.CartridgeModelRepo;
+import ru.gov.sfr.aos.monitoring.repositories.CartridgeRepo;
+import ru.gov.sfr.aos.monitoring.repositories.ContractRepo;
 import ru.gov.sfr.aos.monitoring.repositories.LocationRepo;
 import ru.gov.sfr.aos.monitoring.repositories.ManufacturerRepo;
 import ru.gov.sfr.aos.monitoring.repositories.ModelPrinterRepo;
+import ru.gov.sfr.aos.monitoring.repositories.PrinterRepo;
 
 /**
  *
@@ -44,15 +54,26 @@ public class ContractServiceMapper {
     private ModelPrinterRepo modelPrinterRepo;
     @Autowired
     private CartridgeModelRepo cartridgeModelRepo;
+    @Autowired
+    private ContractRepo contractRepo;
+    @Autowired
+    private PrinterRepo printerRepo;
+    @Autowired
+    private CartridgeRepo cartridgeRepo;
 
     public void createNewContract(List<Map<String, String>> input) {
         
         CartridgeModel cartridgeModel;
         CartridgeModel cartridgeModelIndepended;
-        List<ObjectBuing> objectsBuing = new ArrayList<>();
-
+        Set<ObjectBuing> objectsBuing = new HashSet<>();
+        Set<Cartridge> cartridges = new HashSet<>();
         String contractNumber;
         Contract contract = new Contract();
+         Printer printer = new Printer();
+                Manufacturer manufacturer = null;
+                Model model = null;
+                Cartridge cartridgeInclude = null;
+                Location location = null;
         int amountPrinters = 0;
         int amountCartridges = 0;
 
@@ -110,11 +131,7 @@ public class ContractServiceMapper {
             if (input.get(i).size() == 8) {
 
                 // Добавление объекта покупки в контракт
-                Printer printer = new Printer();
-                Manufacturer manufacturer = null;
-                Model model = null;
-                Cartridge cartridgeInclude = null;
-                Location location = null;
+               
                 Optional<Location> findLocation = locationRepo.findByNameIgnoreCase("Склад".toLowerCase());
                 
                 cartridgeModel = null;
@@ -154,9 +171,9 @@ public class ContractServiceMapper {
                             break;
                         case "model":
                             if (!entry.getValue().isEmpty() || !entry.getValue().isBlank()) {
-                                List<Model> models = modelPrinterRepo.findByName(entry.getValue());
-                                if (!models.isEmpty()) {
-                                    model = models.get(0);
+                                Optional<Model> optModel = modelPrinterRepo.findByName(entry.getValue());
+                                if (optModel.isPresent()) {
+                                    model = optModel.get();
                                 } else {
                                     model = new Model();
                                     model.setName(entry.getValue());
@@ -205,8 +222,12 @@ public class ContractServiceMapper {
                 }
                 if (cartridgeIncluded) {
                     cartridgeInclude.setContract(contract);
+                    cartridgeInclude.setUtil(true);
+                    cartridgeInclude.setUseInPrinter(true);
+                    cartridgeInclude.setDateStartExploitation(LocalDateTime.now());
                     cartridgeInclude.setPrinter(printer);
                     cartridgeInclude.setModel(cartridgeModel);
+                    cartridges.add(cartridgeInclude);
                     objectsBuing.add(cartridgeInclude);
 
                 }
@@ -215,6 +236,7 @@ public class ContractServiceMapper {
                 manufacturer.addModel(model);
                 printer.setManufacturer(manufacturer);
                 printer.setModel(model);
+                printer.setCartridge(cartridges);
                 printer.setContract(contract);
                 objectsBuing.add(printer);
 
@@ -225,7 +247,7 @@ public class ContractServiceMapper {
                 for(int amountCount = 0; amountCount < amount; amountCount++) {
                 Cartridge cartridge = new Cartridge();
                 Optional<Location> findLocation = locationRepo.findByNameIgnoreCase("Склад".toLowerCase());
-                Location location = null;
+                
                 cartridgeModelIndepended = null;
                 if (findLocation != null) {
                     location = findLocation.get();
@@ -290,5 +312,160 @@ public class ContractServiceMapper {
         }
         return targetDate;
     }
-
+    
+    
+    public List<ContractForViewDTO> getAllContracts() {
+        
+        List<Contract> contracts = contractRepo.findAll();
+        List<Printer> findAllPrinters = printerRepo.findAll();
+        List<Cartridge> findAllCartridges = cartridgeRepo.findAll();
+     
+        List<ContractForViewDTO> listDtoes = new ArrayList<>();
+        
+        for(Contract contract : contracts) {
+            ContractForViewDTO dto = new ContractForViewDTO();
+            List<Printer> printersInContract = new ArrayList<>();
+            List<Cartridge> cartridgesInContract = new ArrayList<>();
+            dto.setId(contract.getId());
+            dto.setContractNumber(contract.getContractNumber());
+            dto.setDateStartContract(contract.getDateStartContract());
+            dto.setDateEndContract(contract.getDateEndContract());
+            Set<ObjectBuing> objectBuings = contract.getObjectBuing();
+            
+            // Собираю список устройств закупленных по данному контракту
+            
+            for(ObjectBuing objectBuing : objectBuings) {
+                boolean find = false;
+                Long idSearch = objectBuing.getId();
+                for(Printer printer : findAllPrinters) {
+                    if(idSearch == printer.getId()) {
+                        printersInContract.add(printer);
+                        find = true;
+                        break;
+                    }
+                }
+                
+                if(!find) {
+                    for(Cartridge cartridge : findAllCartridges) {
+                        if(idSearch == cartridge.getId()) {
+                            cartridgesInContract.add(cartridge);
+                            find = true;
+                            break;
+                        }
+                    }
+                }
+                
+            }
+            
+            StringBuilder itemsBuilder = new StringBuilder();
+            if(printersInContract.size() > 0) {
+                itemsBuilder.append("принтеров: " + printersInContract.size());
+            } 
+            
+            if(printersInContract.size() > 0 && cartridgesInContract.size() > 0) {
+                itemsBuilder.append(", ");
+            }
+            
+            if(cartridgesInContract.size() > 0) {
+                itemsBuilder.append("картриджей: " + cartridgesInContract.size());
+            }
+            dto.setItems(itemsBuilder.toString());
+            itemsBuilder.setLength(0);
+            listDtoes.add(dto);
+        }
+        return listDtoes;
+    }
+    
+    public EditContractDTO getContract(Long id) {
+        Optional<Contract> findContractById = contractRepo.findById(id);
+        List<Printer> findAllPrinters = printerRepo.findAll();
+        List<Cartridge> findAllCartridges = cartridgeRepo.findAll();
+        Contract contract = findContractById.get();
+        EditContractDTO dto = new EditContractDTO();
+        dto.setId(contract.getId());
+        dto.setContractNumber(contract.getContractNumber());
+        dto.setDateStartContract(contract.getDateStartContract());
+        dto.setDateEndContract(contract.getDateEndContract());
+        
+        // Собираю список устройств закупленных по данному контракту
+        List<Printer> printersInContract = new ArrayList<>();
+        List<Cartridge> cartridgesInContract = new ArrayList<>();
+        Set<ObjectBuing> objectBuings = contract.getObjectBuing();
+        
+        
+        for(ObjectBuing objectBuing : objectBuings) {
+                boolean find = false;
+                Long idSearch = objectBuing.getId();
+                for(Printer printer : findAllPrinters) {
+                    if(idSearch == printer.getId()) {
+                        printersInContract.add(printer);
+                        find = true;
+                        break;
+                    }
+                }
+                
+                if(!find) {
+                    for(Cartridge cartridge : findAllCartridges) {
+                        if(idSearch == cartridge.getId()) {
+                            cartridgesInContract.add(cartridge);
+                            find = true;
+                            break;
+                        }
+                    }
+                }
+                
+            }
+        
+        Set<PrinterDTO> listPrinterDto = new HashSet<>();
+        for(Printer printer : printersInContract) {
+            
+            PrinterDTO printerDto = new PrinterDTO();
+            printerDto.setId(printer.getId());
+            printerDto.setInventaryNumber(printer.getInventoryNumber());
+            printerDto.setSerialNumber(printer.getSerialNumber());
+            printerDto.setModel(printer.getModel().getName());
+            printerDto.setManufacturer(printer.getManufacturer().getName());
+            printerDto.setLocation(printer.getLocation().getName());
+            Set<Cartridge> cartridges = printer.getCartridge();
+            List<CartridgeDTO> cartridgesForPrinterDTO = new ArrayList<>();
+             for(Cartridge car : cartridges) {
+                  CartridgeDTO cartDto = new CartridgeDTO();
+                    cartDto.setContract(car.getContract().getId());
+                    cartDto.setContractNumber(car.getContract().getContractNumber());
+                    cartDto.setId(car.getId());
+                    cartDto.setLocation(car.getLocation().getName());
+                    cartDto.setDateEndExploitation(car.getDateEndExploitation());
+                    cartDto.setDateStartExploitation(car.getDateStartExploitation());
+                    cartDto.setType(car.getModel().getType().getName());
+                    cartDto.setResource(car.getModel().getDefaultNumberPrintPage().toString());
+                    cartDto.setUtil(car.isUtil());
+                    cartDto.setModel(car.getModel().getModel());
+                    cartridgesForPrinterDTO.add(cartDto);
+            }
+            printerDto.setCartridge(cartridgesForPrinterDTO);
+            listPrinterDto.add(printerDto);
+        }
+        Set<CartridgeDTO> listCartridgesDto = new HashSet<>();
+        for(Cartridge cartridge : cartridgesInContract) {
+            
+            CartridgeDTO cartridgeDto = new CartridgeDTO();
+            cartridgeDto.setId(cartridge.getId());
+            cartridgeDto.setDateStartExploitation(cartridge.getDateStartExploitation());
+            cartridgeDto.setDateEndExploitation(cartridge.getDateEndExploitation());
+            cartridgeDto.setLocation(cartridge.getLocation().getName());
+            cartridgeDto.setType(cartridge.getModel().getType().getName());
+            cartridgeDto.setModel(cartridge.getModel().getModel());
+            cartridgeDto.setResource(cartridge.getModel().getDefaultNumberPrintPage().toString());
+            cartridgeDto.setUsePrinter(cartridge.isUseInPrinter());
+            cartridgeDto.setItemCode(cartridge.getItemCode());
+            cartridgeDto.setUtil(cartridge.isUtil());
+            listCartridgesDto.add(cartridgeDto);
+        }
+        
+        dto.setPrinters(listPrinterDto);
+        dto.setCartridges(listCartridgesDto);
+        
+        return dto;
+    }
+        
 }

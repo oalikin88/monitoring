@@ -13,9 +13,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import ru.gov.sfr.aos.monitoring.models.CartridgeDTO;
 import ru.gov.sfr.aos.monitoring.models.CartridgeModelDTO;
+import ru.gov.sfr.aos.monitoring.models.ContractForViewDTO;
 import ru.gov.sfr.aos.monitoring.models.LocationDTO;
 import ru.gov.sfr.aos.monitoring.models.PrinterDTO;
 import ru.gov.sfr.aos.monitoring.services.CartridgeMapper;
+import ru.gov.sfr.aos.monitoring.services.ContractServiceMapper;
 import ru.gov.sfr.aos.monitoring.services.LocationService;
 import ru.gov.sfr.aos.monitoring.services.PrintersMapper;
 
@@ -31,7 +33,8 @@ public class GetInfoController {
     private LocationService locationService;
     @Autowired
     private CartridgeMapper cartridgeMapper;
-    
+    @Autowired
+    private ContractServiceMapper contractServiceMapper;
     
     @Autowired
     private PrintersMapper mapper;
@@ -70,4 +73,6 @@ public class GetInfoController {
         
         return showCartridgesByModelPrinter;
     }
+    
+
 }
