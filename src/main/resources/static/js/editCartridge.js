@@ -198,7 +198,7 @@ $(document).ready(function () {
      
      
      
-         $('#locationSelect').selectize({
+         $('.locationSelect').selectize({
                   preload: true,
                   valueField: 'name',
                   labelField: 'name',

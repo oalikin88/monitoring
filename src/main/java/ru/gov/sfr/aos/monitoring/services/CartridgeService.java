@@ -4,6 +4,7 @@
  */
 package ru.gov.sfr.aos.monitoring.services;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -11,6 +12,7 @@ import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ru.gov.sfr.aos.monitoring.entities.Cartridge;
+import ru.gov.sfr.aos.monitoring.entities.ListenerOperation;
 import ru.gov.sfr.aos.monitoring.entities.Printer;
 import ru.gov.sfr.aos.monitoring.models.CartridgeInstallDTO;
 import ru.gov.sfr.aos.monitoring.repositories.CartridgeRepo;
@@ -27,11 +29,16 @@ public class CartridgeService {
     private CartridgeRepo cartridgeRepo;
     @Autowired
     private PrinterRepo printerRepo;
+    @Autowired
+    private ListenerOperationService listenerOperationService;
 
     public void installCartridge(CartridgeInstallDTO dto) {
+        ListenerOperation listener = new ListenerOperation();
+        
+        
         Optional<Printer> findPrinterById = printerRepo.findById(dto.getIdPrinter());
         Optional<Cartridge> findCartridgeById = cartridgeRepo.findById(dto.getIdCartridge());
-
+        listener.setCartridge(findCartridgeById.get());
         Set<Cartridge> cartridges = findPrinterById.get().getCartridge();
         if (!cartridges.isEmpty()) {
             for (Cartridge cartr : cartridges) {
@@ -48,9 +55,14 @@ public class CartridgeService {
         findCartridgeById.get().setUtil(true);
         findCartridgeById.get().setPrinter(findPrinterById.get());
         findPrinterById.get().setCartridge(cartridges);
+        listener.setDateOperation(LocalDate.now());
+        listener.setLocation(findCartridgeById.get().getLocation());
+        listener.setCurrentOperation("Установлен в принтер " + findPrinterById.get().getManufacturer().getName() + " " + findPrinterById.get().getModel().getName() + " серийный номер: " + findPrinterById.get().getSerialNumber());
+        listener.setUtil(true);
         findCartridgeById.get().setDateStartExploitation(LocalDateTime.now());
         printerRepo.save(findPrinterById.get());
         cartridgeRepo.save(findCartridgeById.get());
+        listenerOperationService.saveListenerOperation(listener);
 
     }
 

@@ -79,9 +79,6 @@ function getNumberOfDays(start, end) {
             dataType: "text",
             success: function(data) {
                 div.innerText = $('#inventaryNumberInput')[0].value;
-                
-                console.log(data);
-                
                 $('#inventarynumberModal').modal('hide');
               
             }
@@ -103,9 +100,6 @@ function getNumberOfDays(start, end) {
             dataType: "text",
             success: function(data) {
                 div.innerText = $('#serialNumberInput')[0].value;
-                
-                console.log(data);
-                
                 $('#serialnumberModal').modal('hide');
               
             }
@@ -130,9 +124,6 @@ function getNumberOfDays(start, end) {
             dataType: "text",
             success: function(data) {
                 div.innerText = $('#locationSelect')[0].selectize.getValue();
-                
-                console.log(data);
-                
                 $('#staticBackdrop').modal('hide');
               
             }
@@ -299,18 +290,25 @@ function getNumberOfDays(start, end) {
             data: { idPrinter: input.id,
                     idCartridge: $('#cartridgeSelect')[0].selectize.items[0],
                     count:  countPage},
-            dataType: "json",
             success: function (data) {
-               
+                $('#modalCartridgeUses').modal('hide');
+               window.location.reload();
             }
              });
-              $('#modalCartridgeUses').modal('hide');
-                window.location.reload();
+              
+                
              
          });
          
          
      });
+     
+     
+     let backBtn = document.querySelector('#backBtn');
+     backBtn.addEventListener('click', function() {
+        location.href = document.referrer;
+     });
+     
  });
  
  

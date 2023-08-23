@@ -28,6 +28,7 @@ import ru.gov.sfr.aos.monitoring.models.CartridgeInstallDTO;
 import ru.gov.sfr.aos.monitoring.models.CartridgeModelDTO;
 import ru.gov.sfr.aos.monitoring.models.ChangePrinterInventaryNumberDTO;
 import ru.gov.sfr.aos.monitoring.models.ChangeDeviceLocationDTO;
+import ru.gov.sfr.aos.monitoring.models.ChangeLocationForCartridges;
 import ru.gov.sfr.aos.monitoring.models.ChangePrinterSerialNumberDTO;
 import ru.gov.sfr.aos.monitoring.models.ContractDTO;
 import ru.gov.sfr.aos.monitoring.models.ContractForViewDTO;
@@ -227,6 +228,16 @@ public class MainController {
     public ResponseEntity<String> changeCartridgeLocation(ChangeDeviceLocationDTO dto) {
         
         cartridgeMapper.changeCartridgeLocation(dto);
+        
+        
+       return new ResponseEntity<String>("Локация успешно изменена", HttpStatus.OK) ;
+    }
+    
+    
+    @PostMapping("/editcartridgeslocation")
+    public ResponseEntity<String> changeCartridgeLocation(ChangeLocationForCartridges dto) {
+        
+        cartridgeMapper.changeCartridgesLocation(dto);
         
         
        return new ResponseEntity<String>("Локация успешно изменена", HttpStatus.OK) ;

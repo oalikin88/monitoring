@@ -43,8 +43,6 @@ public class PrinterOutInfoService {
     private PrinterRepo printerRepo;
     
     public Map<String, List<ModelDTO>> outInfo() {
-        List<Model> findAllModelPrinters = modelPrinterRepo.findAll();
-        Map<LocationDTO, List<ModelCartridgeByModelPrinters>> showCartridgesAndPrintersByModelAndLocation = cartridgeMapper.showCartridgesAndPrintersByModelAndLocation();
         List<CartridgeModel> findAllCartridgeModels = cartridgeModelRepo.findAll();
         Map<String, List<ModelDTO>> map = new HashMap<>();
        

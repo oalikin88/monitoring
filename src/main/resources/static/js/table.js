@@ -192,6 +192,9 @@ window.onload = function () {
     btnCancel.addEventListener('click', function () {
         history.back();
     });
+    
+    
+    
 
     //Блок  с кнопокой локации
     btnAddLocationDiv = document.createElement('div');
@@ -229,6 +232,17 @@ window.onload = function () {
     btnAddModelCartridge.setAttribute('data-bs-target', '#modalModelsCartridge');
     btnAddModelCartridge.value = 'модели картриджей';
     btnAddModelCartridgeDiv.appendChild(btnAddModelCartridge);
+    
+    btnPlaningDiv = document.createElement('div');
+    btnPlaningDiv.className = 'col text-end';
+    buttonsDivRow.appendChild(btnPlaningDiv);
+    btnPlaning = document.createElement('input');
+    btnPlaning.className = 'btn';
+    btnPlaning.setAttribute('type', 'button');
+    btnPlaning.value = 'планирование закупок';
+    btnPlaning.setAttribute('data-bs-toggle', 'modal');
+    btnPlaning.setAttribute('data-bs-target', '#modalPlaning');
+    btnPlaningDiv.appendChild(btnPlaning);
 
     btnAddLocation.addEventListener('click', function () {
         console.log("click");
@@ -995,10 +1009,6 @@ window.onload = function () {
     modalModelsCartridgeBtnAdd.innerText = 'Добавить модель';
     modalModelsCartridgeButtonsRow.appendChild(modalModelsCartridgeBtnAdd);
 
-
-
-
-
     modalModelsCartridgeFooterDiv = document.createElement('div');
     modalModelsCartridgeFooterDiv.className = 'modal-footer';
     modalContentModelsCartridgeDiv.appendChild(modalModelsCartridgeFooterDiv);
@@ -1012,9 +1022,6 @@ window.onload = function () {
     modalModelsCartridgeFooterDiv.appendChild(modalModelsCartridgeFooterCloseBtn);
 
     btnAddModelCartridge.addEventListener('click', function () {
-
-        console.log('click');
-
         if ($('#modalTableModelsCartridge').length == 0) {
 
             tableModelsCartridge = document.createElement('table');

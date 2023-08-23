@@ -7,6 +7,7 @@ package ru.gov.sfr.aos.monitoring.services;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
@@ -20,6 +21,7 @@ import org.springframework.stereotype.Component;
 import ru.gov.sfr.aos.monitoring.entities.Cartridge;
 import ru.gov.sfr.aos.monitoring.entities.CartridgeModel;
 import ru.gov.sfr.aos.monitoring.entities.Contract;
+import ru.gov.sfr.aos.monitoring.entities.ListenerOperation;
 import ru.gov.sfr.aos.monitoring.entities.Location;
 import ru.gov.sfr.aos.monitoring.entities.Manufacturer;
 import ru.gov.sfr.aos.monitoring.entities.Model;
@@ -60,6 +62,8 @@ public class ContractServiceMapper {
     private PrinterRepo printerRepo;
     @Autowired
     private CartridgeRepo cartridgeRepo;
+    @Autowired
+    private ListenerOperationService listenerOperationService;
 
     public void createNewContract(List<Map<String, String>> input) {
         
@@ -69,10 +73,7 @@ public class ContractServiceMapper {
         Set<Cartridge> cartridges = new HashSet<>();
         String contractNumber;
         Contract contract = new Contract();
-         Printer printer = new Printer();
-                Manufacturer manufacturer = null;
-                Model model = null;
-                Cartridge cartridgeInclude = null;
+         
                 Location location = null;
         int amountPrinters = 0;
         int amountCartridges = 0;
@@ -129,7 +130,10 @@ public class ContractServiceMapper {
             }
 
             if (input.get(i).size() == 8) {
-
+                Printer printer = new Printer();
+                Manufacturer manufacturer = null;
+                Model model = null;
+                Cartridge cartridgeInclude = null;
                 // Добавление объекта покупки в контракт
                
                 Optional<Location> findLocation = locationRepo.findByNameIgnoreCase("Склад".toLowerCase());
@@ -287,6 +291,13 @@ public class ContractServiceMapper {
 
                 }
                 cartridge.setContract(contract);
+                    ListenerOperation listener = new ListenerOperation();
+                    listener.setDateOperation(LocalDate.now());
+                    listener.setLocation(location);
+                    listener.setCartridge(cartridge);
+                    listener.setCurrentOperation("Закуплен по контракту");
+                    listenerOperationService.saveListenerOperation(listener);
+                
                 objectsBuing.add(cartridge);
             }
             }

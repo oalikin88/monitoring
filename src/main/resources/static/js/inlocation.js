@@ -98,14 +98,23 @@ window.onload = function () {
       
   }
   
+    btnRow = document.createElement('div');
+    btnRow.className = 'row rowButtons';
+  
+    btnDiv = document.createElement('div');
+    btnDiv.className = 'col';
+  
     btnCancel = document.createElement('input');
     btnCancel.setAttribute('type', 'button');
     btnCancel.className = 'btn';
     btnCancel.value = "Назад";
-    wrapper.appendChild(btnCancel);
+    
+    wrapper.appendChild(btnRow);
+    btnRow.appendChild(btnDiv);
+    btnDiv.appendChild(btnCancel);
     
     btnCancel.addEventListener('click' , function() {
-        history.back();
+         location.href = document.referrer;
     });
     
     
