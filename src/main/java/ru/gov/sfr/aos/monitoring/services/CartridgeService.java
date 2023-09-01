@@ -4,13 +4,14 @@
  */
 package ru.gov.sfr.aos.monitoring.services;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import ru.gov.sfr.aos.monitoring.OperationType;
 import ru.gov.sfr.aos.monitoring.entities.Cartridge;
 import ru.gov.sfr.aos.monitoring.entities.ListenerOperation;
 import ru.gov.sfr.aos.monitoring.entities.Printer;
@@ -38,7 +39,6 @@ public class CartridgeService {
         
         Optional<Printer> findPrinterById = printerRepo.findById(dto.getIdPrinter());
         Optional<Cartridge> findCartridgeById = cartridgeRepo.findById(dto.getIdCartridge());
-        listener.setCartridge(findCartridgeById.get());
         Set<Cartridge> cartridges = findPrinterById.get().getCartridge();
         if (!cartridges.isEmpty()) {
             for (Cartridge cartr : cartridges) {
@@ -55,10 +55,16 @@ public class CartridgeService {
         findCartridgeById.get().setUtil(true);
         findCartridgeById.get().setPrinter(findPrinterById.get());
         findPrinterById.get().setCartridge(cartridges);
-        listener.setDateOperation(LocalDate.now());
+        listener.setDateOperation(LocalDateTime.now());
         listener.setLocation(findCartridgeById.get().getLocation());
         listener.setCurrentOperation("Установлен в принтер " + findPrinterById.get().getManufacturer().getName() + " " + findPrinterById.get().getModel().getName() + " серийный номер: " + findPrinterById.get().getSerialNumber());
-        listener.setUtil(true);
+        listener.setOperationType(OperationType.UTIL);
+        listener.setAmountDevicesOfLocation(findCartridgeById.get().getLocation().getCartridges().size() - 1);
+        
+        List<Cartridge> findByLocationIdAndModelId = cartridgeRepo.findByLocationIdAndModelId(findCartridgeById.get().getLocation().getId(), findCartridgeById.get().getModel().getId());
+        List<Cartridge> collect = findByLocationIdAndModelId.stream().filter(e -> !e.isUtil()).collect(Collectors.toList());
+        listener.setAmountCurrentModelOfLocation(collect.size());
+        listener.setModel(findCartridgeById.get().getModel());
         findCartridgeById.get().setDateStartExploitation(LocalDateTime.now());
         printerRepo.save(findPrinterById.get());
         cartridgeRepo.save(findCartridgeById.get());

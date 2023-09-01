@@ -6,7 +6,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
 <html lang="ru" xmlns:th="http://www.thymeleaf.org">
     <html>
         <head>
-            <title>Учёт принтеров и картриджей</title>
+            <title>Планирование закупки</title>
             <script src="/js/jquery-3.6.4.min.js"></script>
             <script src="/js/selectize.js"></script>
             <meta charset="UTF-8">
@@ -18,13 +18,14 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
         <body>
             <nav th:insert="nav :: navbar"></nav>
             <div class="container-fluid content inventoriesContent">
-                <header><h3 class="fw-bold mb-3">Таблица учёта принтеров и картриджей</h3></header>
+                <header><h3 class="fw-bold">Сводная таблица</h3></header>
 
                 <div class="table-responsive" id="tableContainer">
                     <script th:inline="javascript">
                         
                         let input = [[${input}]];
                         let input2 = [[${input2}]];
+                        let input3 = [[${input3}]];
  
                     </script>
                 </div>
@@ -32,6 +33,6 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
             </div>
             <footer th:insert="footer :: footer"></footer>
             <script src="/js/bootstrap.bundle.min.js"></script>
-            <script src="/js/table.js"></script>
+            <script src="/js/planing.js"></script>
         </body>
     </html>

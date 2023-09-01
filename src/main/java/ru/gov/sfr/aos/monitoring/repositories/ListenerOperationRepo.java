@@ -4,6 +4,9 @@
  */
 package ru.gov.sfr.aos.monitoring.repositories;
 
+import java.time.LocalDate;
+import java.util.List;
+import java.util.Set;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import ru.gov.sfr.aos.monitoring.entities.ListenerOperation;
@@ -15,5 +18,8 @@ import ru.gov.sfr.aos.monitoring.entities.ListenerOperation;
 
 @Repository
 public interface ListenerOperationRepo extends JpaRepository<ListenerOperation, Long> {
+    
+    Set<ListenerOperation> findAllByDateOperationBetween(LocalDate dateBegin, LocalDate dateEnd);
+    List<ListenerOperation> findByLocationIdAndModelId(Long locationId, Long modelId);
     
 }

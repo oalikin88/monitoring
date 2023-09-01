@@ -9,7 +9,7 @@ window.onload = function () {
     input2sort = Object.entries(input2).sort();
     input1sort = Object.entries(input).sort();
     let parent = document.getElementsByClassName('inventoriesContent')[0];
-    
+
     let tableContainer = document.getElementById('tableContainer');
 
     if (input1sort.length > 0) {
@@ -90,66 +90,66 @@ window.onload = function () {
 
             for (i = 0; i < input2sort.length; i++) {
                 searchModel = false;
-                 var amountCartridge = new Set();
-                 var amountPrinters = new Set();
-                 
-                 
+                var amountCartridge = new Set();
+                var amountPrinters = new Set();
+
+
                 for (innerInInput1Sort = 0; innerInInput1Sort < input1sort[inInput1sort][1].length; innerInInput1Sort++) {
-                   
-                    
-                    
+
+
+
                     for (inCartridgeModelCount = 0; inCartridgeModelCount < input1sort[inInput1sort][1][innerInInput1Sort].modelsPrinter.length; inCartridgeModelCount++) {
                         if (input2sort[i][1][0].model === input1sort[inInput1sort][1][innerInInput1Sort].modelsPrinter[inCartridgeModelCount].model) {
-                            for(vbn = 0; vbn < input1sort[inInput1sort][1][innerInInput1Sort].printersID.length; vbn++) {
+                            for (vbn = 0; vbn < input1sort[inInput1sort][1][innerInInput1Sort].printersID.length; vbn++) {
                                 amountPrinters.add(input1sort[inInput1sort][1][innerInInput1Sort].printersID[vbn]);
                             }
-                            for(vbc = 0; vbc < input1sort[inInput1sort][1][innerInInput1Sort].cartridgesId.length; vbc++) {
+                            for (vbc = 0; vbc < input1sort[inInput1sort][1][innerInInput1Sort].cartridgesId.length; vbc++) {
                                 amountCartridge.add(input1sort[inInput1sort][1][innerInInput1Sort].cartridgesId[vbc]);
                             }
-                           
+
                             searchModel = true;
                             break;
                         }
-                        
+
                     }
 
 
 
 
                 }
-                
-                
-                    tdPrintSuccess = document.createElement('td');
-                          tdPrintSuccess.setAttribute('id', 'location_' + JSON.parse(input1sort[inInput1sort][0]).id + '_' + 'model_' + input2sort[i][1][0].idModel);
-                            tdPrintSuccess.setAttribute('class', 'model');
-                            tdPrintSuccess.style.wordBreak = "break-all";
-                            linkPrinter = document.createElement('a');
-                            var temp = "";
-                           for (count = 0; count < input2sort[i][1].length; count++) {
-                               temp += '&idModel=' + input2sort[i][1][count].idModel;
-                            }
-                            linkPrinter.setAttribute('href', '/printersbylocation?idLocation=' + JSON.parse(input1sort[inInput1sort][0]).id
-                                    + temp);
-                            linkPrinter.innerText = amountPrinters.size;
-
-                            tr.appendChild(tdPrintSuccess);
-                            tdPrintSuccess.appendChild(linkPrinter);
 
 
+                tdPrintSuccess = document.createElement('td');
+                tdPrintSuccess.setAttribute('id', 'location_' + JSON.parse(input1sort[inInput1sort][0]).id + '_' + 'model_' + input2sort[i][1][0].idModel);
+                tdPrintSuccess.setAttribute('class', 'model');
+                tdPrintSuccess.style.wordBreak = "break-all";
+                linkPrinter = document.createElement('a');
+                var temp = "";
+                for (count = 0; count < input2sort[i][1].length; count++) {
+                    temp += '&idModel=' + input2sort[i][1][count].idModel;
+                }
+                linkPrinter.setAttribute('href', '/printersbylocation?idLocation=' + JSON.parse(input1sort[inInput1sort][0]).id
+                        + temp);
+                linkPrinter.innerText = amountPrinters.size;
 
-                            tdCart = document.createElement('td');
-                    //        tdCart.setAttribute('id', 'location_' + JSON.parse(input1sort[inInput1sort][0]).id + '_' + 'model_' + input1sort[inInput1sort][1][innerInInput1Sort].id + '_cart');
-                            tdCart.setAttribute('class', 'cart');
-                            tdCart.style.wordBreak = "break-all";
-                            link = document.createElement('a');
-                           link.setAttribute('href', '/getcartridgesbymodel?idPrinter=' + input2sort[i][1][0].idModel
-                                    + '&location=' + JSON.parse(input1sort[inInput1sort][0]).name);
-                            link.innerText = amountCartridge.size;
+                tr.appendChild(tdPrintSuccess);
+                tdPrintSuccess.appendChild(linkPrinter);
 
-                            tr.appendChild(tdCart);
-                            tdCart.appendChild(link);
-                
-                
+
+
+                tdCart = document.createElement('td');
+                //        tdCart.setAttribute('id', 'location_' + JSON.parse(input1sort[inInput1sort][0]).id + '_' + 'model_' + input1sort[inInput1sort][1][innerInInput1Sort].id + '_cart');
+                tdCart.setAttribute('class', 'cart');
+                tdCart.style.wordBreak = "break-all";
+                link = document.createElement('a');
+                link.setAttribute('href', '/getcartridgesbymodel?idPrinter=' + input2sort[i][1][0].idModel
+                        + '&location=' + JSON.parse(input1sort[inInput1sort][0]).name);
+                link.innerText = amountCartridge.size;
+
+                tr.appendChild(tdCart);
+                tdCart.appendChild(link);
+
+
             }
 
 
@@ -192,9 +192,9 @@ window.onload = function () {
     btnCancel.addEventListener('click', function () {
         history.back();
     });
-    
-    
-    
+
+
+
 
     //Блок  с кнопокой локации
     btnAddLocationDiv = document.createElement('div');
@@ -232,7 +232,7 @@ window.onload = function () {
     btnAddModelCartridge.setAttribute('data-bs-target', '#modalModelsCartridge');
     btnAddModelCartridge.value = 'модели картриджей';
     btnAddModelCartridgeDiv.appendChild(btnAddModelCartridge);
-    
+
     btnPlaningDiv = document.createElement('div');
     btnPlaningDiv.className = 'col text-end';
     buttonsDivRow.appendChild(btnPlaningDiv);
@@ -240,6 +240,7 @@ window.onload = function () {
     btnPlaning.className = 'btn';
     btnPlaning.setAttribute('type', 'button');
     btnPlaning.value = 'планирование закупок';
+    btnPlaning.id = 'activateModalPlaningBuy';
     btnPlaning.setAttribute('data-bs-toggle', 'modal');
     btnPlaning.setAttribute('data-bs-target', '#modalPlaning');
     btnPlaningDiv.appendChild(btnPlaning);
@@ -337,10 +338,6 @@ window.onload = function () {
     modalBodyContentInner.id = 'modalContentInner';
     modalBodyDiv.appendChild(modalBodyContentInner);
 
-
-
-
-
     modalButtonsRow = document.createElement('div');
     modalButtonsRow.className = 'row';
     modalBodyDiv.appendChild(modalButtonsRow);
@@ -353,8 +350,6 @@ window.onload = function () {
     modalBtnAddLocation.innerText = 'Добавить локацию';
     modalButtonsRow.appendChild(modalBtnAddLocation);
 
-
-
     modalFooterDiv = document.createElement('div');
     modalFooterDiv.className = 'modal-footer';
     modalContentDiv.appendChild(modalFooterDiv);
@@ -366,8 +361,6 @@ window.onload = function () {
     modalFooterCloseBtn.innerText = 'Закрыть';
     modalFooterCloseBtn.id = "modalWindow1BtnClose";
     modalFooterDiv.appendChild(modalFooterCloseBtn);
-
-
 
     modalLocationWrapper2 = document.createElement('div');
     modalLocationWrapper2.className = 'modal fade';
@@ -446,12 +439,7 @@ window.onload = function () {
             data: {nameLocation: $('#modalLocationInput')[0].value},
             dataType: "text",
             success: function (data) {
-
-                console.log(data);
-
                 $('#staticBackdrop').modal('hide');
-
-
                 $.ajax({
                     url: 'http://localhost:8080/locations',
                     type: 'GET',
@@ -505,9 +493,6 @@ window.onload = function () {
             }
         });
 
-
-
-
     });
 
     // Модальное окно с моделями принтеров
@@ -553,11 +538,7 @@ window.onload = function () {
     modalModelsPrinterBodyContentInner.id = 'modalModelsPrinterContentInner';
     modalModelsPrinterBodyDiv.appendChild(modalModelsPrinterBodyContentInner);
 
-
     //Content
-
-
-
 
     modalModelsPrinterButtonsRow = document.createElement('div');
     modalModelsPrinterButtonsRow.className = 'row';
@@ -570,10 +551,6 @@ window.onload = function () {
     modalModelsPrinterBtnAdd.setAttribute('data-bs-toggle', 'modal');
     modalModelsPrinterBtnAdd.innerText = 'Добавить модель';
     modalModelsPrinterButtonsRow.appendChild(modalModelsPrinterBtnAdd);
-
-
-
-
 
     modalModelsPrinterFooterDiv = document.createElement('div');
     modalModelsPrinterFooterDiv.className = 'modal-footer';
@@ -637,9 +614,6 @@ window.onload = function () {
             });
 
         }
-
-
-
 
         // Модальное окно с добавлением моделей принтеров
 
@@ -735,8 +709,6 @@ window.onload = function () {
         modalModalsPrinterContentInnerPrintFormatTypeSelect.value = 'Формат печати';
         modalModalsPrinterContentInnerPrintFormatTypeDiv.appendChild(modalModalsPrinterContentInnerPrintFormatTypeSelect);
 
-
-
         modalModalsPrinterContentInnerPrintSpeedDiv = document.createElement('div');
         modalModalsPrinterContentInnerPrintSpeedDiv.className = 'col';
         modalModalsPrinterContentInnerPrintSpeedDiv.id = 'modalPrintSpeedDiv';
@@ -748,10 +720,6 @@ window.onload = function () {
         modalModalsPrinterContentInnerPrintSpeedInput.id = 'modalPrintSpeedSelect';
         modalModalsPrinterContentInnerPrintSpeedInput.placeholder = 'Скорость печати';
         modalModalsPrinterContentInnerPrintSpeedDiv.appendChild(modalModalsPrinterContentInnerPrintSpeedInput);
-
-
-
-
 
         modalModelsPrinterFooterDiv2 = document.createElement('div');
         modalModelsPrinterFooterDiv2.className = 'modal-footer';
@@ -990,12 +958,7 @@ window.onload = function () {
     modalModelsCartridgeBodyContentInner.id = 'modalModelsCartridgeContentInner';
     modalModelsCartridgeBodyDiv.appendChild(modalModelsCartridgeBodyContentInner);
 
-
-
     //Content
-
-
-
 
     modalModelsCartridgeButtonsRow = document.createElement('div');
     modalModelsCartridgeButtonsRow.className = 'row';
@@ -1069,9 +1032,6 @@ window.onload = function () {
 
         }
 
-
-
-
         // Модальное окно с добавлением моделей принтеров
 
         modalModelsCartridgeWrapper2 = document.createElement('div');
@@ -1139,9 +1099,6 @@ window.onload = function () {
         modalModelsCartridgeContentInnerModelSelect.value = 'Модель';
         modalModelsCartridgeContentInnerDiv2.appendChild(modalModelsCartridgeContentInnerModelSelect);
 
-
-
-
         modalModelsPrinterDiv = document.createElement('div');
         modalModelsPrinterDiv.className = 'col modalPrinterDiv';
         modalModelsPrinterDiv.id = 'modalPrinterDiv';
@@ -1152,8 +1109,6 @@ window.onload = function () {
         modalModelsPrinterSelect.id = 'modalModelsPrinterSelect';
         modalModelsPrinterSelect.value = 'Принтер';
         modalModelsPrinterDiv.appendChild(modalModelsPrinterSelect);
-
-
 
         modalNominalResourceDiv = document.createElement('div');
         modalNominalResourceDiv.className = 'col';
@@ -1166,10 +1121,6 @@ window.onload = function () {
         modalNominalResourceInput.id = 'modalNominalResourceInput';
         modalNominalResourceInput.placeholder = 'Номинальный ресурс';
         modalNominalResourceDiv.appendChild(modalNominalResourceInput);
-
-
-
-
 
         modalModelsCartridgeFooterDiv2 = document.createElement('div');
         modalModelsCartridgeFooterDiv2.className = 'modal-footer';
@@ -1191,179 +1142,353 @@ window.onload = function () {
         modalModelsCartridgeFooterOKBtn2.innerText = 'Добавить';
         modalModelsCartridgeFooterDiv2.appendChild(modalModelsCartridgeFooterOKBtn2);
 
-
-
-
         const type = document.getElementById('modalModelTypeInput');
         const model = document.getElementById('modalModelCartridgeSelect');
         const modelPrinters = document.getElementById('modalModelsPrinterSelect');
         const resource = document.getElementById('modalNominalResourceInput');
 
-
-
-
-            let typeChoice;
-            $('.modalModelTypeInput').selectize({
-                create: false,
-                maxItems: 1,
-                placeholder: "Выберите из списка",
-                valueField: 'type',
-                labelField: 'type',
-                searchField: "type",
-                options: [{type: "Оригинальный"},
-                    {type: "Совместимый"},
-                    {type: "Стартовый"}],
-                onChange: function (value) {
-                    if (value !== '') {
-                        selectizeModelFromChoisesTypeCartridge = $(this.$control_input[0].closest('.modalModelCartridgeRow')).find('.modalModelCartridgeSelect')[0];
-                        typeChoice = $(this.$control_input[0].closest('.modalModelCartridgeRow')).find('.modalModelTypeInput')[0].innerText;
-                        selectizeModelFromChoisesTypeCartridge.selectize.enable();
-                        typeValueFromSelectize = value;
-                        $.ajax({
-                            url: "http://localhost:8080/cartridge/" + encodeURIComponent(value),
-                            type: 'GET',
-                            dataType: 'json', // added data type
-                            success: function (res) {
-                                let keys = Object.keys(selectizeModelFromChoisesTypeCartridge.selectize.options);
-                                for (let i = 0; i < keys.length; i++) {
-                                    selectizeModelFromChoisesTypeCartridge.selectize.removeOption(keys[i]);
-                                }
-                                res.forEach(model => {
-                                    selectizeModelFromChoisesTypeCartridge.selectize.addOption(model);
-                                    selectizeModelFromChoisesTypeCartridge.selectize.addItem(model);
-                                });
-
-                                selectizeModelFromChoisesTypeCartridge.selectize.refreshOptions();
-                                selectizeModelFromChoisesTypeCartridge.selectize.clear();
-                                selectizeModelFromChoisesTypeCartridge.selectize.enable();
+        let typeChoice;
+        $('.modalModelTypeInput').selectize({
+            create: false,
+            maxItems: 1,
+            placeholder: "Выберите из списка",
+            valueField: 'type',
+            labelField: 'type',
+            searchField: "type",
+            options: [{type: "Оригинальный"},
+                {type: "Совместимый"},
+                {type: "Стартовый"}],
+            onChange: function (value) {
+                if (value !== '') {
+                    selectizeModelFromChoisesTypeCartridge = $(this.$control_input[0].closest('.modalModelCartridgeRow')).find('.modalModelCartridgeSelect')[0];
+                    typeChoice = $(this.$control_input[0].closest('.modalModelCartridgeRow')).find('.modalModelTypeInput')[0].innerText;
+                    selectizeModelFromChoisesTypeCartridge.selectize.enable();
+                    typeValueFromSelectize = value;
+                    $.ajax({
+                        url: "http://localhost:8080/cartridge/" + encodeURIComponent(value),
+                        type: 'GET',
+                        dataType: 'json', // added data type
+                        success: function (res) {
+                            let keys = Object.keys(selectizeModelFromChoisesTypeCartridge.selectize.options);
+                            for (let i = 0; i < keys.length; i++) {
+                                selectizeModelFromChoisesTypeCartridge.selectize.removeOption(keys[i]);
                             }
-                        });
-                    }
-                }
-            });
+                            res.forEach(model => {
+                                selectizeModelFromChoisesTypeCartridge.selectize.addOption(model);
+                                selectizeModelFromChoisesTypeCartridge.selectize.addItem(model);
+                            });
 
-            // Selectize модель картриджа
-
-            $('.modalModelCartridgeSelect').selectize({
-                create: false,
-                placeholder: "Выберите из списка",
-                valueField: 'model',
-                labelField: 'model',
-                searchField: "model",
-                preload: 'focus',
-                create: true,
-                load: function (query, callback) {
-                    $.ajax({
-                        url: 'http://localhost:8080/cartridge/' + encodeURIComponent(typeChoice),
-                        type: 'GET',
-                        dataType: 'json',
-                        data: {model: query},
-                        error: callback,
-                        success: callback
+                            selectizeModelFromChoisesTypeCartridge.selectize.refreshOptions();
+                            selectizeModelFromChoisesTypeCartridge.selectize.clear();
+                            selectizeModelFromChoisesTypeCartridge.selectize.enable();
+                        }
                     });
                 }
-            });
+            }
+        });
 
-            $(".modalModelsPrinterSelect").selectize({
-                plugins: ["remove_button"],
-                delimiter: ",",
-                valueField: 'idModel',
-                labelField: 'model',
-                searchField: 'model',
-                persist: false,
-                maxItems: null,
-                placeholder: "Выберите из списка",
-                preload: 'focus',
-                load: function (query, callback) {
-                    $.ajax({
-                        url: 'http://localhost:8080/models/',
-                        type: 'GET',
-                        dataType: 'json',
-                        error: callback,
-                        success: callback
-                    });
-                },
-                create: function (input) {
-                    return {
-                        value: input,
-                        text: input,
-                    };
-                }
-            });
-    
+        // Selectize модель картриджа
 
-            modalModelsCartridgeFooterOKBtn2.addEventListener('click', function() {
-                
-                 $.ajax({
+        $('.modalModelCartridgeSelect').selectize({
+            create: false,
+            placeholder: "Выберите из списка",
+            valueField: 'model',
+            labelField: 'model',
+            searchField: "model",
+            preload: 'focus',
+            create: true,
+            load: function (query, callback) {
+                $.ajax({
+                    url: 'http://localhost:8080/cartridge/' + encodeURIComponent(typeChoice),
+                    type: 'GET',
+                    dataType: 'json',
+                    data: {model: query},
+                    error: callback,
+                    success: callback
+                });
+            }
+        });
+
+        $(".modalModelsPrinterSelect").selectize({
+            plugins: ["remove_button"],
+            delimiter: ",",
+            valueField: 'idModel',
+            labelField: 'model',
+            searchField: 'model',
+            persist: false,
+            maxItems: null,
+            placeholder: "Выберите из списка",
+            preload: 'focus',
+            load: function (query, callback) {
+                $.ajax({
+                    url: 'http://localhost:8080/models/',
+                    type: 'GET',
+                    dataType: 'json',
+                    error: callback,
+                    success: callback
+                });
+            },
+            create: function (input) {
+                return {
+                    value: input,
+                    text: input,
+                };
+            }
+        });
+
+        modalModelsCartridgeFooterOKBtn2.addEventListener('click', function () {
+
+            $.ajax({
                 url: "http://localhost:8080/addmodelcart/",
                 type: 'POST',
                 data: {model: $('.modalModelCartridgeSelect ')[0].innerText,
                     type: $(".modalModelTypeInput ")[0].innerText,
                     resource: $('#modalNominalResourceInput')[0].value,
-                    idModel:  $(".modalModelsPrinterSelect")[0].selectize.items
+                    idModel: $(".modalModelsPrinterSelect")[0].selectize.items
                 },
                 success: function (result) {
                     console.log(result);
                     parent = document.getElementById('modalModelsCartridgeContentInner');
                     child = document.getElementById('modalTableModelsCartridge');
                     parent.removeChild(child);
-                    
-                    
+
+
                     tableModelsCartridge = document.createElement('table');
-            tableModelsCartridge.id = "modalTableModelsCartridge";
-            tableModelsCartridge.className = "table table-striped table-bordered";
-            modalModelsCartridgeBodyContentInner.appendChild(tableModelsCartridge);
+                    tableModelsCartridge.id = "modalTableModelsCartridge";
+                    tableModelsCartridge.className = "table table-striped table-bordered";
+                    modalModelsCartridgeBodyContentInner.appendChild(tableModelsCartridge);
 
-            theadModelsCartridge = document.createElement('thead');
-            tableModelsCartridge.appendChild(theadModelsCartridge);
-            trTheadModelsCartridge = document.createElement('tr');
-            thTheadModelsCartridge1 = document.createElement('th');
+                    theadModelsCartridge = document.createElement('thead');
+                    tableModelsCartridge.appendChild(theadModelsCartridge);
+                    trTheadModelsCartridge = document.createElement('tr');
+                    thTheadModelsCartridge1 = document.createElement('th');
 
-            thTheadModelsCartridge1.setAttribute('scope', 'col');
-            thTheadModelsCartridge1.innerText = '#';
-            thTheadModelsCartridge2 = document.createElement('th');
-            thTheadModelsCartridge2.setAttribute('scope', 'col');
-            thTheadModelsCartridge2.innerText = 'Модель картриджа';
-            theadModelsCartridge.appendChild(trTheadModelsCartridge);
-            trTheadModelsCartridge.appendChild(thTheadModelsCartridge1);
-            trTheadModelsCartridge.appendChild(thTheadModelsCartridge2);
-            tbodyModelCartridge = document.createElement('tbody');
-            tableModelsCartridge.appendChild(tbodyModelCartridge);
+                    thTheadModelsCartridge1.setAttribute('scope', 'col');
+                    thTheadModelsCartridge1.innerText = '#';
+                    thTheadModelsCartridge2 = document.createElement('th');
+                    thTheadModelsCartridge2.setAttribute('scope', 'col');
+                    thTheadModelsCartridge2.innerText = 'Модель картриджа';
+                    theadModelsCartridge.appendChild(trTheadModelsCartridge);
+                    trTheadModelsCartridge.appendChild(thTheadModelsCartridge1);
+                    trTheadModelsCartridge.appendChild(thTheadModelsCartridge2);
+                    tbodyModelCartridge = document.createElement('tbody');
+                    tableModelsCartridge.appendChild(tbodyModelCartridge);
 
-            $.ajax({
-                url: 'http://localhost:8080/cartridge',
-                type: 'GET',
-                dataType: 'json',
-                success: function (data) {
-                    console.log(data);
-                    arr = data.sort();
-                    for (i = 0; i < arr.length; i++) {
-                        trModelsCartridge = document.createElement('tr');
-                        tbodyModelCartridge.appendChild(trModelsCartridge);
-                        tdCountModelsCartridge = document.createElement('td');
-                        tdCountModelsCartridge.innerText = i + 1;
-                        trModelsCartridge.appendChild(tdCountModelsCartridge);
-                        tdModelCartridge = document.createElement('td');
-                        tdModelCartridge.setAttribute('id', arr[i].id);
-                        tdModelCartridge.setAttribute('class', 'model');
-                        tdModelCartridge.innerText = arr[i].model;
-                        trModelsCartridge.appendChild(tdModelCartridge);
-                    }
+                    $.ajax({
+                        url: 'http://localhost:8080/cartridge',
+                        type: 'GET',
+                        dataType: 'json',
+                        success: function (data) {
+                            console.log(data);
+                            arr = data.sort();
+                            for (i = 0; i < arr.length; i++) {
+                                trModelsCartridge = document.createElement('tr');
+                                tbodyModelCartridge.appendChild(trModelsCartridge);
+                                tdCountModelsCartridge = document.createElement('td');
+                                tdCountModelsCartridge.innerText = i + 1;
+                                trModelsCartridge.appendChild(tdCountModelsCartridge);
+                                tdModelCartridge = document.createElement('td');
+                                tdModelCartridge.setAttribute('id', arr[i].id);
+                                tdModelCartridge.setAttribute('class', 'model');
+                                tdModelCartridge.innerText = arr[i].model;
+                                trModelsCartridge.appendChild(tdModelCartridge);
+                            }
+                        }
+                    });
+
                 }
             });
-                    
-                    
-                }
-            });
-                
-            });
 
-            modalModelsCartridgeFooterCloseBtn.addEventListener('click', function() {
-                window.location.reload();
-            });
+        });
+
+        modalModelsCartridgeFooterCloseBtn.addEventListener('click', function () {
+            window.location.reload();
+        });
 
 
     });
 
+
+
+    //Модальное окно с планированием закупок
+
+    divModalPaningBuy = document.createElement('div');
+    divModalPaningBuy.className = 'modal fade';
+    divModalPaningBuy.id = 'modalPlaning';
+    divModalPaningBuy.setAttribute('tabindex', '-1');
+    parent.appendChild(divModalPaningBuy);
+    
+    divModalDialogPlaningBuy = document.createElement('div');
+    divModalDialogPlaningBuy.className = 'modal-dialog modal-xl';
+    divModalPaningBuy.appendChild(divModalDialogPlaningBuy);
+    
+    divModalContentPlaningBuy = document.createElement('div');
+    divModalContentPlaningBuy.className = 'modal-content';
+    divModalDialogPlaningBuy.appendChild(divModalContentPlaningBuy);
+    
+    divModalHeaderPlaningBuy = document.createElement('div');
+    divModalHeaderPlaningBuy.className = 'modal-header';
+    divModalContentPlaningBuy.appendChild(divModalHeaderPlaningBuy);
+    
+    titleModalPlaningBuy = document.createElement('h1');
+    titleModalPlaningBuy.className = 'modal-title fs-5';
+    titleModalPlaningBuy.id = 'titleModalPlaningBuy';
+    titleModalPlaningBuy.innerText = 'Расчёт планируемой закупки';
+    
+    btnCloseModalPlaningBuy = document.createElement('button');
+    btnCloseModalPlaningBuy.className = 'btn-close';
+    btnCloseModalPlaningBuy.setAttribute('data-bs-dismiss', 'modal');
+    btnCloseModalPlaningBuy.setAttribute('aria-label', 'Close');
+    divModalHeaderPlaningBuy.appendChild(titleModalPlaningBuy);
+    divModalHeaderPlaningBuy.appendChild(btnCloseModalPlaningBuy);
+    
+    divModalBodyPlaningBuy = document.createElement('div');
+    divModalBodyPlaningBuy.className = 'modal-body';
+    divModalContentPlaningBuy.appendChild(divModalBodyPlaningBuy);
+   
+    divModalContainerInnerPlaningBuy = document.createElement('div');
+    divModalContainerInnerPlaningBuy.className = 'container-fluid';
+    divModalBodyPlaningBuy.appendChild(divModalContainerInnerPlaningBuy);
+    
+    divContentRowCalendars = document.createElement('div');
+    divContentRowCalendars.className = 'row rowModalContent';
+    divModalContainerInnerPlaningBuy.appendChild(divContentRowCalendars);
+    
+    divBeginDate = document.createElement('div');
+    divBeginDate.className = 'col';
+    
+    divEndDate = document.createElement('div');
+    divEndDate.className = 'col';
+    
+    divContentRowCalendars.appendChild(divBeginDate);
+    divContentRowCalendars.appendChild(divEndDate);
+    
+    divFormGroupDateBegin = document.createElement('div');
+    divFormGroupDateBegin.className = 'form-group';
+    divBeginDate.appendChild(divFormGroupDateBegin);
+    divInputGroupDateBegin = document.createElement('div');
+    divInputGroupDateBegin.className = 'input-group date';
+    divInputGroupDateBegin.id = 'dataBegin';
+    divFormGroupDateBegin.appendChild(divInputGroupDateBegin);
+    
+    labelForDateBegin = document.createElement('label');
+    labelForDateBegin.setAttribute('for', 'dateBegin');
+    labelForDateBegin.innerText = 'Выберите дату';
+    inputDateBegin = document.createElement('input');
+    inputDateBegin.type = 'date';
+    inputDateBegin.className = 'form-control';
+    inputDateBegin.id = 'dateBeginInput';
+    
+    divInputGroupDateBegin.appendChild(labelForDateBegin);
+    divInputGroupDateBegin.appendChild(inputDateBegin);
+    
+    
+    
+    divFormGroupDateEnd = document.createElement('div');
+    divFormGroupDateEnd.className = 'form-group';
+    divEndDate.appendChild(divFormGroupDateEnd);
+    divInputGroupDateEnd = document.createElement('div');
+    divInputGroupDateEnd.className = 'input-group date';
+    divInputGroupDateEnd.id = 'dataEnd';
+    divFormGroupDateEnd.appendChild(divInputGroupDateEnd);
+    
+    labelForDateEnd = document.createElement('label');
+    labelForDateEnd.setAttribute('for', 'dateEnd');
+    labelForDateEnd.innerText = 'Выберите дату';
+    
+    inputDateEnd = document.createElement('input');
+    inputDateEnd.type = 'date';
+    inputDateEnd.className = 'form-control';
+    inputDateEnd.id = 'dateEndInput';
+    
+    divInputGroupDateEnd.appendChild(labelForDateEnd);
+    divInputGroupDateEnd.appendChild(inputDateEnd);
+    
+    divLocationSelect = document.createElement('div');
+    divLocationSelect.className = 'col';
+    
+    selectLocationForPlaning = document.createElement('select');
+    selectLocationForPlaning.className = 'form-select';
+    selectLocationForPlaning.id = 'selectLocationForPlaning';
+    divContentRowCalendars.appendChild(divLocationSelect);
+    divLocationSelect.appendChild(selectLocationForPlaning);
+    
+    rowContentBtns = document.createElement('div');
+    rowContentBtns.className = 'row rowModalContent text-center';
+    divModalContainerInnerPlaningBuy.appendChild(rowContentBtns);
+    
+    divBtnApply = document.createElement('div');
+    divBtnApply.className = 'col';
+    rowContentBtns.appendChild(divBtnApply);
+    
+    let btnApplyPlaning = document.createElement('button');
+    btnApplyPlaning.className = 'btn btn-secondary';
+    btnApplyPlaning.type = 'button';
+    btnApplyPlaning.id = 'btnApplyPlaning';
+    btnApplyPlaning.innerText = 'Применить';
+    divBtnApply.appendChild(btnApplyPlaning);
+    
+     //Контент ...
+     
+     
+     
+     divModalFooterPlaningBuy = document.createElement('div');
+     divModalFooterPlaningBuy.className = 'modal-footer';
+     divModalContentPlaningBuy.appendChild(divModalFooterPlaningBuy);
+     
+     btnFooterClosePlaningBuy = document.createElement('button');
+     btnFooterClosePlaningBuy.className = 'btn btn-secondary';
+     btnFooterClosePlaningBuy.type = 'button';
+     btnFooterClosePlaningBuy.setAttribute('data-bs-dismiss', 'modal');
+     btnFooterClosePlaningBuy.innerText = 'Закрыть';
+     divModalFooterPlaningBuy.appendChild(btnFooterClosePlaningBuy);
+     
+ 
+     
+     $('#selectLocationForPlaning').selectize({
+         preload: 'focus',
+         placeholder: "Выберите локацию",
+         valueField: 'id',
+                  labelField: 'name',
+                  searchField: "name",
+                  load: function (query, callback) {
+                    $.ajax({
+                        url: 'http://localhost:8080/locations',
+                        type: 'GET',
+                        dataType: 'json',
+                        data: {model:query},
+                        error: callback,
+                        success: callback
+                         });
+                     }
+     });
+     
+     
+     btnApplyPlaning.addEventListener('click', function() {
+        
+         console.log('apply');
+         
+         dateBegin = $('#dateBeginInput')[0].value;
+         dateEnd = $('#dateEndInput')[0].value;
+         loc = $('#selectLocationForPlaning')[0].selectize.$input[0].selectedOptions[0].value;
+         var dateEndParse = Date.parse(dateEnd);
+         var dateEndParseB = new Date(dateEndParse);
+         var dateEndFormat = dateEndParseB.toLocaleDateString('ru');
+         
+         var nowDate = new Date();
+         var nowDateFormat = nowDate.toLocaleDateString('ru');
+         
+         if(dateEndFormat <= nowDateFormat) {
+             window.location.href = "/planing?dateBegin=" + dateBegin + "&dateEnd=" + dateEnd;
+         } else {
+             alert("Вы ввели неправильную дату");
+         }
+         
+         
+         
+         
+         
+     });
+    
 
 };

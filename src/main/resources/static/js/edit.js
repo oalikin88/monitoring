@@ -290,19 +290,13 @@ function getNumberOfDays(start, end) {
             data: { idPrinter: input.id,
                     idCartridge: $('#cartridgeSelect')[0].selectize.items[0],
                     count:  countPage},
-            success: function (data) {
+            success: function () {
                 $('#modalCartridgeUses').modal('hide');
                window.location.reload();
             }
-             });
-              
-                
-             
+             });     
          });
-         
-         
      });
-     
      
      let backBtn = document.querySelector('#backBtn');
      backBtn.addEventListener('click', function() {

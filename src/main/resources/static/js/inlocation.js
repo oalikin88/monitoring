@@ -7,10 +7,7 @@
 const content = document.querySelector('#content');
 
 window.onload = function () {
-    
-  console.log(input);
   
-  // Object.values(input)[0].length // проверка  не пуст ли список с принтерами
   
   let wrapper = document.createElement('div');
   wrapper.className = 'wrapper';
@@ -116,6 +113,7 @@ window.onload = function () {
     btnCancel.addEventListener('click' , function() {
          location.href = document.referrer;
     });
+    
     
     
 };

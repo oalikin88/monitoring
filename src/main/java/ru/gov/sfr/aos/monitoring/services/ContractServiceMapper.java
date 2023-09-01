@@ -7,10 +7,10 @@ package ru.gov.sfr.aos.monitoring.services;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -73,6 +73,7 @@ public class ContractServiceMapper {
         Set<Cartridge> cartridges = new HashSet<>();
         String contractNumber;
         Contract contract = new Contract();
+        Map<Long, Integer> modelsCartridges = new HashMap<>();
          
                 Location location = null;
         int amountPrinters = 0;
@@ -119,6 +120,7 @@ public class ContractServiceMapper {
                             if (!entry.getValue().isEmpty() || !entry.getValue().isBlank()) {
                                 try {
                                     amountCartridges = Integer.parseInt(entry.getValue());
+                             
                                 } catch (NumberFormatException e) {
                                     e.printStackTrace();
                                 }
@@ -212,9 +214,9 @@ public class ContractServiceMapper {
                                 } else {
                                     targetModel = "Отсутствует";
                                 }
-                                List<CartridgeModel> cartridgeModelsEntities = cartridgeModelRepo.findByModel(targetModel);
-                                if (cartridgeModelsEntities.size() > 0) {
-                                    cartridgeModel = cartridgeModelsEntities.get(0);
+                                Optional<CartridgeModel> cartridgeModelsEntities = cartridgeModelRepo.findByModel(targetModel);
+                                if (cartridgeModelsEntities.isPresent()) {
+                                    cartridgeModel = cartridgeModelsEntities.get();
                                 } else {
 
                                     cartridgeModel.setModel(targetModel);
@@ -267,12 +269,14 @@ public class ContractServiceMapper {
                             String targetModel;
                             if (!entry.getValue().isEmpty() || !entry.getValue().isBlank()) {
                                 targetModel = entry.getValue();
+                                
                             } else {
                                 targetModel = "Отсутствует";
                             }
-                            List<CartridgeModel> cartridgeModelsEntities = cartridgeModelRepo.findByModel(targetModel);
-                            if (cartridgeModelsEntities.size() > 0) {
-                                cartridgeModelIndepended = cartridgeModelsEntities.get(0);
+                            Optional<CartridgeModel> cartridgeModelsEntities = cartridgeModelRepo.findByModel(targetModel);
+                            modelsCartridges.put(cartridgeModelsEntities.get().getId(), amount);
+                            if (cartridgeModelsEntities.isPresent()) {
+                                cartridgeModelIndepended = cartridgeModelsEntities.get();
                             } else {
                                 cartridgeModelIndepended = new CartridgeModel();
                                 cartridgeModelIndepended.setModel(targetModel);
@@ -291,20 +295,37 @@ public class ContractServiceMapper {
 
                 }
                 cartridge.setContract(contract);
-                    ListenerOperation listener = new ListenerOperation();
-                    listener.setDateOperation(LocalDate.now());
-                    listener.setLocation(location);
-                    listener.setCartridge(cartridge);
-                    listener.setCurrentOperation("Закуплен по контракту");
-                    listenerOperationService.saveListenerOperation(listener);
+                   
                 
                 objectsBuing.add(cartridge);
             }
+                  
+                        
             }
         }
-
+        Optional<Location> findLocationById = locationRepo.findById(location.getId());
+        Location currLoc = findLocationById.get();
+        int cartridgesOnSklad = currLoc.getCartridges().size();
+        
+          for(Map.Entry<Long, Integer> entry : modelsCartridges.entrySet()) {
+                    
+                    ListenerOperation listener = new ListenerOperation();
+                    Optional<CartridgeModel> findModelCartridgeByName = cartridgeModelRepo.findById(entry.getKey());
+                    List<Cartridge> findByLocationIdAndModelId = cartridgeRepo.findByLocationIdAndModelId(currLoc.getId(), findModelCartridgeByName.get().getId());
+                    listener.setModel(findModelCartridgeByName.get());
+                    listener.setDateOperation(LocalDateTime.now());
+                    listener.setLocation(currLoc);
+                    cartridgesOnSklad = cartridgesOnSklad + entry.getValue();
+                    listener.setAmountDevicesOfLocation(cartridgesOnSklad);
+                    listener.setAmountCurrentModelOfLocation(findByLocationIdAndModelId.size() + entry.getValue());
+                    listener.setCurrentOperation("Закуплен по контракту");
+                    listener.setModel(findModelCartridgeByName.get());
+                    listenerOperationService.saveListenerOperation(listener);      
+                    
+                    }
+        
         contract.setObjectBuing(objectsBuing);
-
+        
         contractServiceImpl.saveContract(contract);
 
         System.out.println(

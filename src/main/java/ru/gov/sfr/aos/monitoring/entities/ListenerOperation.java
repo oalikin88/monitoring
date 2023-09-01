@@ -5,13 +5,16 @@
 package ru.gov.sfr.aos.monitoring.entities;
 
 import java.io.Serializable;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import ru.gov.sfr.aos.monitoring.OperationType;
 
 /**
  *
@@ -24,23 +27,29 @@ public class ListenerOperation implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private LocalDate dateOperation;
+    private LocalDateTime dateOperation;
     private String currentOperation;
     @ManyToOne(cascade = CascadeType.ALL)
-    private Cartridge cartridge;
+    private CartridgeModel model;
     @ManyToOne(cascade = CascadeType.ALL)
     private Location location;
-    private boolean util;
-
+    private int amountDevicesOfLocation;
+    private int amountCurrentModelOfLocation;
+    @Enumerated(EnumType.STRING)
+    private OperationType operationType;
+    
     public ListenerOperation() {
     }
 
-    public ListenerOperation(LocalDate dateOperation, String operation, Cartridge cartridge, Location location, boolean util) {
+    public ListenerOperation(LocalDateTime dateOperation, String currentOperation, CartridgeModel model, Location location, 
+            int amountDevicesOfLocation, int amountCurrentModelOfLocation, OperationType operationType) {
         this.dateOperation = dateOperation;
-        this.currentOperation = operation;
-        this.cartridge = cartridge;
+        this.currentOperation = currentOperation;
+        this.model = model;
         this.location = location;
-        this.util = util;
+        this.amountDevicesOfLocation = amountDevicesOfLocation;
+        this.amountCurrentModelOfLocation = amountCurrentModelOfLocation;
+        this.operationType = operationType;
     }
 
     public Long getId() {
@@ -51,11 +60,11 @@ public class ListenerOperation implements Serializable {
         this.id = id;
     }
 
-    public LocalDate getDateOperation() {
+    public LocalDateTime getDateOperation() {
         return dateOperation;
     }
 
-    public void setDateOperation(LocalDate dateOperation) {
+    public void setDateOperation(LocalDateTime dateOperation) {
         this.dateOperation = dateOperation;
     }
 
@@ -69,13 +78,6 @@ public class ListenerOperation implements Serializable {
         this.currentOperation = operation;
     }
 
-    public Cartridge getCartridge() {
-        return cartridge;
-    }
-
-    public void setCartridge(Cartridge cartridge) {
-        this.cartridge = cartridge;
-    }
 
     public Location getLocation() {
         return location;
@@ -85,14 +87,41 @@ public class ListenerOperation implements Serializable {
         this.location = location;
     }
 
-
-    public boolean isUtil() {
-        return util;
+    public int getAmountDevicesOfLocation() {
+        return amountDevicesOfLocation;
     }
 
-    public void setUtil(boolean util) {
-        this.util = util;
+    public void setAmountDevicesOfLocation(int amountDevicesOfLocation) {
+        this.amountDevicesOfLocation = amountDevicesOfLocation;
     }
+
+    public CartridgeModel getModel() {
+        return model;
+    }
+
+    public void setModel(CartridgeModel model) {
+        this.model = model;
+    }
+
+    public int getAmountCurrentModelOfLocation() {
+        return amountCurrentModelOfLocation;
+    }
+
+    public void setAmountCurrentModelOfLocation(int amountCurrentModelOfLocation) {
+        this.amountCurrentModelOfLocation = amountCurrentModelOfLocation;
+    }
+
+    public OperationType getOperationType() {
+        return operationType;
+    }
+
+    public void setOperationType(OperationType operationType) {
+        this.operationType = operationType;
+    }
+    
+    
+
+    
     
     
 

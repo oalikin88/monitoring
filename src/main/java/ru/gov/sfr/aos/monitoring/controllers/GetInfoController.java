@@ -7,18 +7,20 @@ package ru.gov.sfr.aos.monitoring.controllers;
 import java.util.List;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import ru.gov.sfr.aos.monitoring.models.CartridgeDTO;
 import ru.gov.sfr.aos.monitoring.models.CartridgeModelDTO;
-import ru.gov.sfr.aos.monitoring.models.ContractForViewDTO;
+import ru.gov.sfr.aos.monitoring.models.ConsumptionDTO;
 import ru.gov.sfr.aos.monitoring.models.LocationDTO;
+import ru.gov.sfr.aos.monitoring.models.PlaningBuyDto;
 import ru.gov.sfr.aos.monitoring.models.PrinterDTO;
 import ru.gov.sfr.aos.monitoring.services.CartridgeMapper;
 import ru.gov.sfr.aos.monitoring.services.ContractServiceMapper;
 import ru.gov.sfr.aos.monitoring.services.LocationService;
+import ru.gov.sfr.aos.monitoring.services.PlaningService;
 import ru.gov.sfr.aos.monitoring.services.PrintersMapper;
 
 /**
@@ -38,6 +40,9 @@ public class GetInfoController {
     
     @Autowired
     private PrintersMapper mapper;
+
+    @Autowired
+    private PlaningService planingService;
     
     @GetMapping("/getinfo")
     public Map<String, List<PrinterDTO>>  getInfo() {
@@ -74,5 +79,10 @@ public class GetInfoController {
         return showCartridgesByModelPrinter;
     }
     
+    @PostMapping("/amountcartridgesofday")
+    public List<ConsumptionDTO> getAmountCartridgesOfDay(PlaningBuyDto dto) {
+        List<ConsumptionDTO> calculatePlaningBuy = planingService.calculatePlaningBuy(dto);
+        return calculatePlaningBuy;
+    }
 
 }

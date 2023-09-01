@@ -4,16 +4,19 @@
  */
 package ru.gov.sfr.aos.monitoring.services;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ru.gov.sfr.aos.monitoring.CartridgeType;
+import ru.gov.sfr.aos.monitoring.OperationType;
 import ru.gov.sfr.aos.monitoring.entities.Cartridge;
 import ru.gov.sfr.aos.monitoring.entities.CartridgeModel;
 import ru.gov.sfr.aos.monitoring.entities.ListenerOperation;
@@ -125,8 +128,8 @@ public class CartridgeMapper {
             currentType = CartridgeType.START;
         }
 
-        List<CartridgeModel> list = cartridgeModelRepo.findByModel(dto.getModel());
-        if (list.size() == 0) {
+        Optional<CartridgeModel> findCartridgeModelByName = cartridgeModelRepo.findByModel(dto.getModel());
+        if (findCartridgeModelByName.isEmpty()) {
             model = new CartridgeModel();
 
             model.setModel(dto.getModel());
@@ -401,20 +404,29 @@ public class CartridgeMapper {
     public void changeCartridgeLocation(ChangeDeviceLocationDTO dto) {
         String location1;
         String location2;
-        
+
         Optional<Cartridge> findCartridgeById = cartridgeRepo.findById(dto.getId());
         location1 = findCartridgeById.get().getLocation().getName();
         Optional<Location> findLocationByName = locationRepo.findByNameIgnoreCase(dto.location.toLowerCase());
         findCartridgeById.get().setLocation(findLocationByName.get());
         location2 = findCartridgeById.get().getLocation().getName();
         ListenerOperation listener = new ListenerOperation();
-        listener.setCartridge(findCartridgeById.get());
-        listener.setDateOperation(LocalDate.now());
+        Set<Cartridge> cartridges = findCartridgeById.get().getLocation().getCartridges();
+        Set<Cartridge> actualCartSet = new HashSet<>();
+        for (Cartridge cart : cartridges) {
+            if (!cart.isUtil()) {
+                actualCartSet.add(cart);
+            }
+        }
+        listener.setAmountDevicesOfLocation(actualCartSet.size() + 1);
+
+        List<Cartridge> findByLocationIdAndModelId = cartridgeRepo.findByLocationIdAndModelId(findCartridgeById.get().getLocation().getId(), findCartridgeById.get().getModel().getId());
+        listener.setAmountCurrentModelOfLocation(findByLocationIdAndModelId.size() + 1);
+        listener.setOperationType(OperationType.TRANSFER);
+        listener.setDateOperation(LocalDateTime.now());
         listener.setLocation(findLocationByName.get());
-       
-        
+        listener.setModel(findCartridgeById.get().getModel());
         listener.setCurrentOperation("Перемещение из " + location1 + " в " + location2);
-        
         cartridgeRepo.save(findCartridgeById.get());
         listenerOperatoionService.saveListenerOperation(listener);
     }
@@ -423,13 +435,23 @@ public class CartridgeMapper {
         ListenerOperation listener = new ListenerOperation();
         Optional<Cartridge> findCartridgeById = cartridgeRepo.findById(id);
         findCartridgeById.get().setUtil(true);
-        listener.setDateOperation(LocalDate.now());
+        Set<Cartridge> cartridges = findCartridgeById.get().getLocation().getCartridges();
+        Set<Cartridge> actualCartSet = new HashSet<>();
+        for (Cartridge cart : cartridges) {
+            if (!cart.isUtil()) {
+                actualCartSet.add(cart);
+            }
+        }
+        List<Cartridge> findByLocationIdAndModelId = cartridgeRepo.findByLocationIdAndModelId(findCartridgeById.get().getLocation().getId(), findCartridgeById.get().getId());
+        listener.setAmountCurrentModelOfLocation(findByLocationIdAndModelId.size() - 1);
+        listener.setModel(findCartridgeById.get().getModel());
+        listener.setAmountDevicesOfLocation(actualCartSet.size() - 1);
+        listener.setOperationType(OperationType.UTIL);
+        listener.setDateOperation(LocalDateTime.now());
         listener.setLocation(findCartridgeById.get().getLocation());
-        listener.setCartridge(findCartridgeById.get());
         listener.setCurrentOperation("Списан");
-        listener.setUtil(true);
         cartridgeRepo.save(findCartridgeById.get());
-        
+
     }
 
     public Map<LocationDTO, List<CartridgeDTO>> showCartridgesByModelPrinterAndLocation(Long idPrinter, String location) {
@@ -464,7 +486,7 @@ public class CartridgeMapper {
             }
             map.put(locDto, cartridgesByModelPrinter);
         }
-        if(map.size() == 0) {
+        if (map.size() == 0) {
             map.put(locDto, cartridgesByModelPrinter);
         }
 
@@ -502,8 +524,8 @@ public class CartridgeMapper {
         Optional<Model> findModelPrinterByName = modelPrinterRepo.findByName(model);
         List<CartridgeModelDTO> dtoes = new ArrayList<>();
         Set<CartridgeModel> modelCartridges = findModelPrinterByName.get().getModelCartridges();
-        for(CartridgeModel cartModel : modelCartridges) {
-            if(cartModel.getType().equals(cartridgeType)) {
+        for (CartridgeModel cartModel : modelCartridges) {
+            if (cartModel.getType().equals(cartridgeType)) {
                 CartridgeModelDTO dto = new CartridgeModelDTO();
                 dto.setId(cartModel.getId());
                 dto.setModel(cartModel.getModel());
@@ -512,7 +534,7 @@ public class CartridgeMapper {
                 dtoes.add(dto);
             }
         }
-        
+
         return dtoes;
     }
 
@@ -549,30 +571,57 @@ public class CartridgeMapper {
 
         return cartridgesByModelPrinter;
     }
-    
-    
+
     public void changeCartridgesLocation(ChangeLocationForCartridges dto) {
-    
-        
+
         Optional<Location> findLocationById = locationRepo.findById(dto.getLocation());
         Location currentLocation = findLocationById.get();
         
         List<Cartridge> findAllCartridges = cartridgeRepo.findAll();
-        for(int i = 0; i < dto.getIdCartridge().size(); i++) {
-            for(int j = 0; j < findAllCartridges.size(); j++) {
-                if(dto.getIdCartridge().get(i) == findAllCartridges.get(j).getId()) {
-                    ListenerOperation listenerOperation = new ListenerOperation();
-                    listenerOperation.setCartridge(findAllCartridges.get(j));
-                    listenerOperation.setCurrentOperation("Перемещение из " + findAllCartridges.get(i).getLocation().getName() + " в " + currentLocation.getName());
-                    listenerOperation.setLocation(currentLocation);
-                    listenerOperation.setDateOperation(LocalDate.now());
-                    
+        List<Cartridge> cartridgesChangeLocation = new ArrayList<>();
+        Map<Long, Integer> mapForListener = new HashMap<>();
+        for (int i = 0; i < dto.getIdCartridge().size(); i++) {
+            for (int j = 0; j < findAllCartridges.size(); j++) {
+                if (dto.getIdCartridge().get(i) == findAllCartridges.get(j).getId()) {
                     findAllCartridges.get(j).setLocation(currentLocation);
                     cartridgeRepo.save(findAllCartridges.get(j));
-                    listenerOperatoionService.saveListenerOperation(listenerOperation);
+                    cartridgesChangeLocation.add(findAllCartridges.get(j));
                 }
             }
         }
+
+        Optional<Location> findLocById = locationRepo.findById(dto.getLocation());
+            Set<Cartridge> cartridges = findLocById.get().getCartridges();
+            Set<Cartridge> actualCartSet = new HashSet<>();
+            for (Cartridge cart : cartridges) {
+                if (!cart.isUtil()) {
+                    actualCartSet.add(cart);
+                }
+            }
+            
+        int actualAmountSizeLocation = actualCartSet.size();
+        
+        Map<CartridgeModel, List<Cartridge>> collectByCartridgeModel = cartridgesChangeLocation.stream().collect(Collectors.groupingBy(Cartridge::getModel));
+        for (Map.Entry<CartridgeModel, List<Cartridge>> entry : collectByCartridgeModel.entrySet()) {
+            Set<Long> cartridgesId = new HashSet<>();
+            for (Cartridge cart : entry.getValue()) {
+                cartridgesId.add(cart.getId());
+            }
+            mapForListener.put(entry.getKey().getId(), cartridgesId.size());
+            ListenerOperation listenerOperation = new ListenerOperation();
+            List<Cartridge> findByLocationIdAndModelId = cartridgeRepo.findByLocationIdAndModelId(findLocById.get().getId(), entry.getKey().getId());
+            listenerOperation.setCurrentOperation("Перемещение на " + currentLocation.getName());
+            listenerOperation.setLocation(currentLocation);
+            listenerOperation.setOperationType(OperationType.TRANSFER);
+            listenerOperation.setDateOperation(LocalDateTime.now());
+            actualAmountSizeLocation = actualAmountSizeLocation + cartridgesId.size();
+            listenerOperation.setAmountDevicesOfLocation(actualAmountSizeLocation);
+            listenerOperation.setAmountCurrentModelOfLocation(findByLocationIdAndModelId.size());
+            listenerOperation.setModel(entry.getKey());
+            listenerOperatoionService.saveListenerOperation(listenerOperation);
+
+        }
+
     }
 
 }

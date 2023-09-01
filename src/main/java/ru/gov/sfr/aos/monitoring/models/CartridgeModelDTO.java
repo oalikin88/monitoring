@@ -16,6 +16,7 @@ public class CartridgeModelDTO implements Serializable {
     public String model;
     public String type;
     public String resource;
+    //Printers
     public List<Long> idModel;
 
     public CartridgeModelDTO() {

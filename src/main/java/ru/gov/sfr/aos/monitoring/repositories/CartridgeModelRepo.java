@@ -5,6 +5,7 @@
 package ru.gov.sfr.aos.monitoring.repositories;
 
 import java.util.List;
+import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import ru.gov.sfr.aos.monitoring.CartridgeType;
@@ -18,7 +19,7 @@ import ru.gov.sfr.aos.monitoring.entities.CartridgeModel;
 @Repository
 public interface CartridgeModelRepo extends JpaRepository<CartridgeModel, Long>  {
     
-    List<CartridgeModel> findByModel(String model);
+    Optional<CartridgeModel> findByModel(String model);
     List<CartridgeModel> findByType(CartridgeType type);
     List<CartridgeModel> findByModelsPrintersId(Long id);
     
