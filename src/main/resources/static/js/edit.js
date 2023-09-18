@@ -18,7 +18,7 @@ function getNumberOfDays(start, end) {
 }
 
  $(document).ready(function () {
-     
+     let cartridgeSelectInput = document.querySelector('#cartridgeSelect');
      let locationbtn = document.querySelector('#locationbtn');
      let locationSubmit = document.querySelector('#locationSubmit');
      let serialSubmit = document.querySelector('#serialSubmit');
@@ -149,13 +149,34 @@ function getNumberOfDays(start, end) {
        
         
         let inputDiv = document.getElementsByClassName('contentInnerDiv1')[0];
-        let inputValue = document.createElement('input');
+        inputValue = document.createElement('input');
         inputValue.className = 'form-control mt-3';
         inputValue.type = 'text';
         inputValue.placeholder = 'Счётчик напечатанных страниц';
         inputValue.id = 'countPage';
         inputDiv.appendChild(inputValue);
         
+        
+        inputEmployeeToDoWork = document.createElement('input');
+        inputEmployeeToDoWork.className = 'form-control mt-3';
+        inputEmployeeToDoWork.type = 'text';
+        inputEmployeeToDoWork.placeholder = 'Выполнил работу';
+        inputEmployeeToDoWork.id = 'inputEmployeeToDoWork';
+        inputDiv.appendChild(inputEmployeeToDoWork);
+        
+        inputEmployeeToSetDevice = document.createElement('input');
+        inputEmployeeToSetDevice.className = 'form-control mt-3';
+        inputEmployeeToSetDevice.type = 'text';
+        inputEmployeeToSetDevice.placeholder = 'Сотрудник, за кем закреплено оборудование';
+        inputEmployeeToSetDevice.id = 'inputEmployeeToSetDevice';
+        inputDiv.appendChild(inputEmployeeToSetDevice);
+        
+        inputEmployeeMOL = document.createElement('input');
+        inputEmployeeMOL.className = 'form-control mt-3';
+        inputEmployeeMOL.type = 'text';
+        inputEmployeeMOL.placeholder = 'Согласовал';
+        inputEmployeeMOL.id = 'inputEmployeeMOL';
+        inputDiv.appendChild(inputEmployeeMOL);
         
         if(input.cartridge.length > 1) {
             let contentHistoryCartridgeUse = document.getElementsByClassName('contentInnerTable')[0];
@@ -194,11 +215,27 @@ function getNumberOfDays(start, end) {
             thTheadCartridgeDayWork.setAttribute('scope', 'col');
             thTheadCartridgeDayWork.innerText = 'Отработал дней';
             
+            
+            thTheadCartridgeEmployeeToDoWork = document.createElement('th');
+            thTheadCartridgeEmployeeToDoWork.setAttribute('scope', 'col');
+            thTheadCartridgeEmployeeToDoWork.innerText = 'Выполнил работу';
+            
+            thTheadCartridgeEmployeeToSetDevice = document.createElement('th');
+            thTheadCartridgeEmployeeToSetDevice.setAttribute('scope', 'col');
+            thTheadCartridgeEmployeeToSetDevice.innerText = 'Сотрудник, за кем закреплено оборудование';
+            
+            thTheadCartridgeEmployeeMOL = document.createElement('th');
+            thTheadCartridgeEmployeeMOL.setAttribute('scope', 'col');
+            thTheadCartridgeEmployeeMOL.innerText = 'Согласовал';
+            
             theadCartridges.appendChild(trTheadCartridges);
             trTheadCartridges.appendChild(thTheadCartridgesCount);
             trTheadCartridges.appendChild(thTheadCartridgeModel);
             trTheadCartridges.appendChild(thTheadCartridgeCountPage);
             trTheadCartridges.appendChild(thTheadCartridgeDayWork);
+            trTheadCartridges.appendChild(thTheadCartridgeEmployeeToDoWork);
+            trTheadCartridges.appendChild(thTheadCartridgeEmployeeToSetDevice);
+            trTheadCartridges.appendChild(thTheadCartridgeEmployeeMOL);
             
             tbodyCartridge = document.createElement('tbody');
             tableCartridges.appendChild(tbodyCartridge);
@@ -237,6 +274,21 @@ function getNumberOfDays(start, end) {
                         tdCartridgeDayWork.setAttribute('class', 'tdCountPage');
                         tdCartridgeDayWork.innerText = dayOfWork;
                         trCartridge.appendChild(tdCartridgeDayWork);
+                        
+                        tdCartridgeEmployeeToDoWork = document.createElement('td');
+                        tdCartridgeEmployeeToDoWork.setAttribute('class', 'employeeToDoWork');
+                        tdCartridgeEmployeeToDoWork.innerText = input.cartridge[i].employeeToDoWork;
+                        trCartridge.appendChild(tdCartridgeEmployeeToDoWork);
+                        
+                        tdCartridgeEmployeeToSetDevice = document.createElement('td');
+                        tdCartridgeEmployeeToSetDevice.setAttribute('class', 'employeeToSetDevice');
+                        tdCartridgeEmployeeToSetDevice.innerText = input.cartridge[i].employeeToSetDevice;
+                        trCartridge.appendChild(tdCartridgeEmployeeToSetDevice);
+                        
+                        tdCartridgeEmployeeMOL = document.createElement('td');
+                        tdCartridgeEmployeeMOL.setAttribute('class', 'employeeMOL');
+                        tdCartridgeEmployeeMOL.innerText = input.cartridge[i].employeeMOL;
+                        trCartridge.appendChild(tdCartridgeEmployeeMOL);
                     }
                 }
             
@@ -249,12 +301,8 @@ function getNumberOfDays(start, end) {
     
     let cartridgeUseBtn = document.getElementById("catridgeUsesbtn");
      cartridgeUseBtn.addEventListener('click', function() {
+
          
-         
-         
-         
-         
-        console.log("click");
          $('#cartridgeSelect').selectize({
                   preload: true,
                   placeholder: 'Выберите картридж',
@@ -289,7 +337,10 @@ function getNumberOfDays(start, end) {
             url: "/installcart",
             data: { idPrinter: input.id,
                     idCartridge: $('#cartridgeSelect')[0].selectize.items[0],
-                    count:  countPage},
+                    count:  countPage,
+                    employeeToDoWork: $('#inputEmployeeToDoWork')[0].value,
+                    employeeToSetDevice: $('#inputEmployeeToSetDevice')[0].value,
+                    employeeMOL: $('#inputEmployeeMOL')[0].value},
             success: function () {
                 $('#modalCartridgeUses').modal('hide');
                window.location.reload();
@@ -302,6 +353,8 @@ function getNumberOfDays(start, end) {
      backBtn.addEventListener('click', function() {
         location.href = document.referrer;
      });
+     
+
      
  });
  

@@ -12,7 +12,9 @@ import java.util.Optional;
 import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import ru.gov.sfr.aos.monitoring.OperationType;
 import ru.gov.sfr.aos.monitoring.entities.Cartridge;
+import ru.gov.sfr.aos.monitoring.entities.ListenerOperation;
 import ru.gov.sfr.aos.monitoring.entities.Location;
 import ru.gov.sfr.aos.monitoring.entities.Model;
 import ru.gov.sfr.aos.monitoring.entities.Printer;
@@ -23,6 +25,7 @@ import ru.gov.sfr.aos.monitoring.models.ChangePrinterSerialNumberDTO;
 import ru.gov.sfr.aos.monitoring.models.LocationDTO;
 import ru.gov.sfr.aos.monitoring.models.PrinterDTO;
 import ru.gov.sfr.aos.monitoring.repositories.CartridgeRepo;
+import ru.gov.sfr.aos.monitoring.repositories.ListenerOperationRepo;
 import ru.gov.sfr.aos.monitoring.repositories.LocationRepo;
 import ru.gov.sfr.aos.monitoring.repositories.ModelPrinterRepo;
 import ru.gov.sfr.aos.monitoring.repositories.PrinterRepo;
@@ -42,7 +45,8 @@ public class PrintersMapper {
     private CartridgeRepo cartridgeRepo;
     @Autowired
     private LocationRepo locationRepo;
-
+    @Autowired
+    private ListenerOperationRepo listenerOperationRepo;
 
     public List<PrinterDTO> showPrinters() {
 
@@ -223,6 +227,15 @@ public class PrintersMapper {
         List<CartridgeDTO> cartridgesForPrinter = new ArrayList<>();
         for(Cartridge car : findPrinterById.get().getCartridge()) {
               CartridgeDTO cartDto = new CartridgeDTO();
+                    List<ListenerOperation> listListenerOperationsByCartridgeID = listenerOperationRepo.findByCartridgeID(car.getId());
+                    for(ListenerOperation listener : listListenerOperationsByCartridgeID) {
+                        if(listener.getOperationType().equals(OperationType.UTIL)) {
+                            cartDto.setEmployeeToDoWork(listener.getEmployeeToDoWork());
+                            cartDto.setEmployeeToSetDevice(listener.getEmployeeToSetDevice());
+                            cartDto.setEmployeeMOL(listener.getEmployeeMOL());
+                            break;
+                        }
+                    }
                     cartDto.setContract(car.getContract().getId());
                     cartDto.setContractNumber(car.getContract().getContractNumber());
                     cartDto.setId(car.getId());
@@ -235,6 +248,7 @@ public class PrintersMapper {
                     cartDto.setModel(car.getModel().getModel());
                     cartDto.setUsePrinter(car.isUseInPrinter());
                     cartDto.setCount(car.getCount());
+                    
                     cartridgesForPrinter.add(cartDto);
         }
         

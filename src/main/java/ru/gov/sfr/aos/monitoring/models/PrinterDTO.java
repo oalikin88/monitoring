@@ -6,7 +6,6 @@ package ru.gov.sfr.aos.monitoring.models;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 /**
  *

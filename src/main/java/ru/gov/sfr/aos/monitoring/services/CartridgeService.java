@@ -65,6 +65,11 @@ public class CartridgeService {
         List<Cartridge> collect = findByLocationIdAndModelId.stream().filter(e -> !e.isUtil()).collect(Collectors.toList());
         listener.setAmountCurrentModelOfLocation(collect.size());
         listener.setModel(findCartridgeById.get().getModel());
+        listener.setPrinterID(dto.getIdPrinter());
+        listener.setEmployeeToDoWork(dto.getEmployeeToDoWork());
+        listener.setEmployeeToSetDevice(dto.getEmployeeToSetDevice());
+        listener.setEmployeeMOL(dto.getEmployeeMOL());
+        listener.setCartridgeID(dto.getIdCartridge());
         findCartridgeById.get().setDateStartExploitation(LocalDateTime.now());
         printerRepo.save(findPrinterById.get());
         cartridgeRepo.save(findCartridgeById.get());

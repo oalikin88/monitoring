@@ -13,12 +13,20 @@ public class CartridgeInstallDTO {
     public Long idPrinter;
     public Long idCartridge;
     public Long count;
+    public String employeeToDoWork;
+    public String employeeToSetDevice;
+    public String employeeMOL;
 
-    public CartridgeInstallDTO(Long idPrinter, Long idCartridge, Long count) {
+    public CartridgeInstallDTO(Long idPrinter, Long idCartridge, Long count, String employeeToDoWork, String employeeToSetDevice, String employeeMOL) {
         this.idPrinter = idPrinter;
         this.idCartridge = idCartridge;
         this.count = count;
+        this.employeeToDoWork = employeeToDoWork;
+        this.employeeToSetDevice = employeeToSetDevice;
+        this.employeeMOL = employeeMOL;
     }
+
+    
 
     public Long getIdPrinter() {
         return idPrinter;
@@ -42,6 +50,30 @@ public class CartridgeInstallDTO {
 
     public void setCount(Long count) {
         this.count = count;
+    }
+
+    public String getEmployeeToDoWork() {
+        return employeeToDoWork;
+    }
+
+    public void setEmployeeToDoWork(String employeeToDoWork) {
+        this.employeeToDoWork = employeeToDoWork;
+    }
+
+    public String getEmployeeToSetDevice() {
+        return employeeToSetDevice;
+    }
+
+    public void setEmployeeToSetDevice(String employeeToSetDevice) {
+        this.employeeToSetDevice = employeeToSetDevice;
+    }
+
+    public String getEmployeeMOL() {
+        return employeeMOL;
+    }
+
+    public void setEmployeeMOL(String employeeMOL) {
+        this.employeeMOL = employeeMOL;
     }
     
     

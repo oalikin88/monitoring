@@ -37,12 +37,17 @@ public class ListenerOperation implements Serializable {
     private int amountCurrentModelOfLocation;
     @Enumerated(EnumType.STRING)
     private OperationType operationType;
+    private Long printerID;
+    private Long cartridgeID;
+    private String employeeToDoWork;
+    private String employeeToSetDevice;
+    private String employeeMOL;
+    
     
     public ListenerOperation() {
     }
 
-    public ListenerOperation(LocalDateTime dateOperation, String currentOperation, CartridgeModel model, Location location, 
-            int amountDevicesOfLocation, int amountCurrentModelOfLocation, OperationType operationType) {
+    public ListenerOperation(LocalDateTime dateOperation, String currentOperation, CartridgeModel model, Location location, int amountDevicesOfLocation, int amountCurrentModelOfLocation, OperationType operationType, Long printerID, Long cartridgeID, String employeeToDoWork, String employeeToSetDevice, String employeeMOL) {
         this.dateOperation = dateOperation;
         this.currentOperation = currentOperation;
         this.model = model;
@@ -50,7 +55,14 @@ public class ListenerOperation implements Serializable {
         this.amountDevicesOfLocation = amountDevicesOfLocation;
         this.amountCurrentModelOfLocation = amountCurrentModelOfLocation;
         this.operationType = operationType;
+        this.printerID = printerID;
+        this.cartridgeID = cartridgeID;
+        this.employeeToDoWork = employeeToDoWork;
+        this.employeeToSetDevice = employeeToSetDevice;
+        this.employeeMOL = employeeMOL;
     }
+
+ 
 
     public Long getId() {
         return id;
@@ -118,6 +130,47 @@ public class ListenerOperation implements Serializable {
     public void setOperationType(OperationType operationType) {
         this.operationType = operationType;
     }
+
+    public String getEmployeeToDoWork() {
+        return employeeToDoWork;
+    }
+
+    public void setEmployeeToDoWork(String employeeToDoWork) {
+        this.employeeToDoWork = employeeToDoWork;
+    }
+
+    public String getEmployeeToSetDevice() {
+        return employeeToSetDevice;
+    }
+
+    public void setEmployeeToSetDevice(String employeeToSetDevice) {
+        this.employeeToSetDevice = employeeToSetDevice;
+    }
+
+    public String getEmployeeMOL() {
+        return employeeMOL;
+    }
+
+    public void setEmployeeMOL(String employeeMOL) {
+        this.employeeMOL = employeeMOL;
+    }
+
+    public Long getPrinterID() {
+        return printerID;
+    }
+
+    public void setPrinterID(Long printerID) {
+        this.printerID = printerID;
+    }
+
+    public Long getCartridgeID() {
+        return cartridgeID;
+    }
+
+    public void setCartridgeID(Long cartridgeID) {
+        this.cartridgeID = cartridgeID;
+    }
+    
     
     
 
