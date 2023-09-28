@@ -205,7 +205,7 @@ $(document).ready(function () {
                   searchField: "name",
                   load: function (query, callback) {
                     $.ajax({
-                        url: 'http://localhost:8080/locations',
+                        url: '/locations',
                         type: 'GET',
                         dataType: 'json',
                         data: {model:query},

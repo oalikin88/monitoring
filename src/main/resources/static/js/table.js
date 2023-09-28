@@ -271,7 +271,7 @@ window.onload = function () {
             table.appendChild(tbody);
 
             $.ajax({
-                url: 'http://localhost:8080/locations',
+                url: '/locations',
                 type: 'GET',
                 dataType: 'json',
                 success: function (data) {
@@ -441,7 +441,7 @@ window.onload = function () {
             success: function (data) {
                 $('#staticBackdrop').modal('hide');
                 $.ajax({
-                    url: 'http://localhost:8080/locations',
+                    url: '/locations',
                     type: 'GET',
                     dataType: 'json',
                     success: function (result) {
@@ -592,7 +592,7 @@ window.onload = function () {
             tableModelsPrinter.appendChild(tbodyModelPrinter);
 
             $.ajax({
-                url: 'http://localhost:8080/models',
+                url: '/models',
                 type: 'GET',
                 dataType: 'json',
                 success: function (data) {
@@ -755,7 +755,7 @@ window.onload = function () {
             showAddOptionOnCreate: true,
             load: function (query, callback) {
                 $.ajax({
-                    url: 'http://localhost:8080/manufacturers',
+                    url: '/manufacturers',
                     type: 'GET',
                     dataType: 'json',
                     data: {manufacturer: query},
@@ -769,7 +769,7 @@ window.onload = function () {
                     manufacturerValueFromSelectize = value;
                     selectizeModelFromChoisesManufacturer = $(this.$control_input[0].closest('.modalManufacturerModelRow')).find('.modalModelInput')[0];
                     $.ajax({
-                        url: "http://localhost:8080/models/" + encodeURIComponent(value),
+                        url: "/models/" + encodeURIComponent(value),
                         type: 'GET',
                         dataType: 'json',
                         data: {manufacturer: manufacturerChoice},
@@ -804,7 +804,7 @@ window.onload = function () {
             load: function (query, callback) {
                 manufacturerChoice = $(this.$control_input[0].closest('.modalManufacturerModelRow')).find('.modalManufacturerSelect')[0].innerText;
                 $.ajax({
-                    url: 'http://localhost:8080/models/' + manufacturerChoice,
+                    url: '/models/' + manufacturerChoice,
                     type: 'GET',
                     dataType: 'json',
                     error: callback,
@@ -842,7 +842,7 @@ window.onload = function () {
         modalModelsPrinterFooterOKBtn2.addEventListener("click", function () {
 
             $.ajax({
-                url: 'http://localhost:8080/models',
+                url: '/models',
                 type: 'POST',
                 data: {model: $('#modalModelInput')[0].innerText,
                     manufacturer: $('#modalManufacturerSelect')[0].innerText,
@@ -877,7 +877,7 @@ window.onload = function () {
                     tableModelsPrinter.appendChild(tbodyModelPrinter);
 
                     $.ajax({
-                        url: 'http://localhost:8080/models',
+                        url: '/models',
                         type: 'GET',
                         dataType: 'json',
                         success: function (data) {
@@ -1009,7 +1009,7 @@ window.onload = function () {
             tableModelsCartridge.appendChild(tbodyModelCartridge);
 
             $.ajax({
-                url: 'http://localhost:8080/cartridge',
+                url: '/cartridge',
                 type: 'GET',
                 dataType: 'json',
                 success: function (data) {
@@ -1165,7 +1165,7 @@ window.onload = function () {
                     selectizeModelFromChoisesTypeCartridge.selectize.enable();
                     typeValueFromSelectize = value;
                     $.ajax({
-                        url: "http://localhost:8080/cartridge/" + encodeURIComponent(value),
+                        url: "/cartridge/" + encodeURIComponent(value),
                         type: 'GET',
                         dataType: 'json', // added data type
                         success: function (res) {
@@ -1199,7 +1199,7 @@ window.onload = function () {
             create: true,
             load: function (query, callback) {
                 $.ajax({
-                    url: 'http://localhost:8080/cartridge/' + encodeURIComponent(typeChoice),
+                    url: '/cartridge/' + encodeURIComponent(typeChoice),
                     type: 'GET',
                     dataType: 'json',
                     data: {model: query},
@@ -1221,7 +1221,7 @@ window.onload = function () {
             preload: 'focus',
             load: function (query, callback) {
                 $.ajax({
-                    url: 'http://localhost:8080/models/',
+                    url: '/models/',
                     type: 'GET',
                     dataType: 'json',
                     error: callback,
@@ -1239,7 +1239,7 @@ window.onload = function () {
         modalModelsCartridgeFooterOKBtn2.addEventListener('click', function () {
 
             $.ajax({
-                url: "http://localhost:8080/addmodelcart/",
+                url: "/addmodelcart/",
                 type: 'POST',
                 data: {model: $('.modalModelCartridgeSelect ')[0].innerText,
                     type: $(".modalModelTypeInput ")[0].innerText,
@@ -1275,7 +1275,7 @@ window.onload = function () {
                     tableModelsCartridge.appendChild(tbodyModelCartridge);
 
                     $.ajax({
-                        url: 'http://localhost:8080/cartridge',
+                        url: '/cartridge',
                         type: 'GET',
                         dataType: 'json',
                         success: function (data) {
@@ -1453,7 +1453,7 @@ window.onload = function () {
                   searchField: "name",
                   load: function (query, callback) {
                     $.ajax({
-                        url: 'http://localhost:8080/locations',
+                        url: '/locations',
                         type: 'GET',
                         dataType: 'json',
                         data: {model:query},

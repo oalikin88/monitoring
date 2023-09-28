@@ -5,6 +5,7 @@
 package ru.gov.sfr.aos.monitoring.services;
 
 import java.util.List;
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.gov.sfr.aos.monitoring.entities.Contract;
@@ -30,9 +31,14 @@ public class ContractServiceImpl implements ContractServiceInterface {
     }
 
     @Override
-    public void saveContract(Contract contract) {
+    public void saveContract(Contract contract) throws NumberFormatException {
+        Optional<Contract> findByContractNumber = contractRepo.findByContractNumber(contract.getContractNumber());
+        if(findByContractNumber.isEmpty()) {
+            contractRepo.save(contract);
+        } else {
+            throw new NumberFormatException();
+        }
         
-        contractRepo.save(contract);
     }
     
   

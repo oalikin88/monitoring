@@ -7,13 +7,9 @@ package ru.gov.sfr.aos.monitoring.services;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import org.apache.catalina.connector.Response;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import ru.gov.sfr.aos.monitoring.entities.Location;
-import ru.gov.sfr.aos.monitoring.exceptions.EntityAlreadyExistsException;
 import ru.gov.sfr.aos.monitoring.models.LocationDTO;
 import ru.gov.sfr.aos.monitoring.repositories.LocationRepo;
 
@@ -39,16 +35,14 @@ public class LocationService {
     }
 
     
-    public void addLocation(String nameLocation) throws EntityAlreadyExistsException {
+    public void addLocation(String nameLocation)  {
     
         Optional<Location> findLocationByName = locationRepo.findByNameIgnoreCase(nameLocation.toLowerCase());
         if(findLocationByName.isEmpty()) {
             Location location = new Location();
             location.setName(nameLocation);
             locationRepo.save(location);
-        } else {
-            throw new EntityAlreadyExistsException("Локация " + nameLocation + " уже есть в базе данных.");
-        }
+        } 
         
     }
     

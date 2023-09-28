@@ -52,7 +52,25 @@
             <version>2.0.1.Final</version>
             <type>jar</type>
         </dependency>
-               
+        <dependency>
+            <groupId>org.opfr</groupId>
+            <artifactId>spring-boot-starter-dictionary</artifactId>
+            <version>0.6.2</version>
+            <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>org.opfr.starter</groupId>
+            <artifactId>org-spring-boot-report-starter</artifactId>
+            <version>0.0.2</version>
+            <type>jar</type>
+        </dependency>
+        <dependency>
+    <groupId>org.springframework</groupId>
+    <artifactId>spring-context</artifactId>
+    <version>5.3.3</version>
+</dependency>
+
+
     </dependencies>
 
     <build>

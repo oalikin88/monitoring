@@ -4,8 +4,13 @@
  */
 package ru.gov.sfr.aos.monitoring.controllers;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+import org.opfr.springBootStarterDictionary.clientImpl.EmployeeClient;
+import org.opfr.springBootStarterDictionary.fallback.FallbackEmployeeClient;
+import org.opfr.springBootStarterDictionary.models.DictionaryEmployee;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -14,11 +19,13 @@ import org.springframework.web.bind.annotation.RestController;
 import ru.gov.sfr.aos.monitoring.models.CartridgeDTO;
 import ru.gov.sfr.aos.monitoring.models.CartridgeModelDTO;
 import ru.gov.sfr.aos.monitoring.models.ConsumptionDTO;
+import ru.gov.sfr.aos.monitoring.models.EmployeeDTO;
 import ru.gov.sfr.aos.monitoring.models.LocationDTO;
 import ru.gov.sfr.aos.monitoring.models.PlaningBuyDto;
 import ru.gov.sfr.aos.monitoring.models.PrinterDTO;
 import ru.gov.sfr.aos.monitoring.services.CartridgeMapper;
 import ru.gov.sfr.aos.monitoring.services.ContractServiceMapper;
+import ru.gov.sfr.aos.monitoring.services.DictionaryEmployeeHolder;
 import ru.gov.sfr.aos.monitoring.services.LocationService;
 import ru.gov.sfr.aos.monitoring.services.PlaningService;
 import ru.gov.sfr.aos.monitoring.services.PrintersMapper;
@@ -27,58 +34,61 @@ import ru.gov.sfr.aos.monitoring.services.PrintersMapper;
  *
  * @author 041AlikinOS
  */
-
 @RestController
 public class GetInfoController {
-    
+
+   
     @Autowired
     private LocationService locationService;
     @Autowired
     private CartridgeMapper cartridgeMapper;
     @Autowired
     private ContractServiceMapper contractServiceMapper;
-    
+
     @Autowired
     private PrintersMapper mapper;
 
     @Autowired
     private PlaningService planingService;
+
+    @Autowired
+    private DictionaryEmployeeHolder dictionaryEmployeeHolder;
+
     
-    @GetMapping("/getinfo")
-    public Map<String, List<PrinterDTO>>  getInfo() {
-       
-   //     Map<String, List<PrinterDTO>> map = mapper.showPrintersByLocation();
-            
-            return null;
-        
+    @GetMapping("/getinfooo")
+    public  List<EmployeeDTO> getEmpl() {
+        List<DictionaryEmployee> employees = dictionaryEmployeeHolder.getEmployees();
+        List<EmployeeDTO> list = new ArrayList<>();
+        for(DictionaryEmployee dEmployee : employees) {
+            EmployeeDTO dto = new EmployeeDTO(dEmployee.getCode(), dEmployee.getSurname() + " " + dEmployee.getName() + " " + dEmployee.getMiddlename());
+            list.add(dto);
+        }
+        return list;
+
+
     }
-    
-    
+
     @GetMapping("/locations")
     public List<LocationDTO> getLocations() {
-        
+
         List<LocationDTO> locations = locationService.getAllLocations();
         return locations;
     }
-    
- 
-    
-    
+
     @GetMapping("/getmodelcartridge")
     public List<CartridgeModelDTO> getModelCartridgeByModelPrinter(@RequestParam("idModel") Long idModel) {
         List<CartridgeModelDTO> showCartridgeModelByPrinterModel = cartridgeMapper.showCartridgeModelByPrinterModel(idModel);
         return showCartridgeModelByPrinterModel;
     }
-    
-    
-        @GetMapping("/showcartridgesbymodel")
+
+    @GetMapping("/showcartridgesbymodel")
     public List<CartridgeDTO> getCartridgesByModelPrinter(@RequestParam("idPrinter") Long idPrinter, @RequestParam("location") String location) {
-        
+
         List<CartridgeDTO> showCartridgesByModelPrinter = cartridgeMapper.showCartridgesByModelPrinter(idPrinter, location);
-        
+
         return showCartridgesByModelPrinter;
     }
-    
+
     @PostMapping("/amountcartridgesofday")
     public List<ConsumptionDTO> getAmountCartridgesOfDay(PlaningBuyDto dto) {
         List<ConsumptionDTO> calculatePlaningBuy = planingService.calculatePlaningBuy(dto);

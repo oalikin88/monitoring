@@ -54,7 +54,7 @@ function getNumberOfDays(start, end) {
                   searchField: "name",
                   load: function (query, callback) {
                     $.ajax({
-                        url: 'http://localhost:8080/locations',
+                        url: '/locations',
                         type: 'GET',
                         dataType: 'json',
                         data: {model:query},
@@ -157,22 +157,22 @@ function getNumberOfDays(start, end) {
         inputDiv.appendChild(inputValue);
         
         
-        inputEmployeeToDoWork = document.createElement('input');
-        inputEmployeeToDoWork.className = 'form-control mt-3';
+        inputEmployeeToDoWork = document.createElement('select');
+        inputEmployeeToDoWork.className = 'form-select mt-3';
         inputEmployeeToDoWork.type = 'text';
         inputEmployeeToDoWork.placeholder = 'Выполнил работу';
         inputEmployeeToDoWork.id = 'inputEmployeeToDoWork';
         inputDiv.appendChild(inputEmployeeToDoWork);
         
-        inputEmployeeToSetDevice = document.createElement('input');
-        inputEmployeeToSetDevice.className = 'form-control mt-3';
+        inputEmployeeToSetDevice = document.createElement('select');
+        inputEmployeeToSetDevice.className = 'form-select mt-3';
         inputEmployeeToSetDevice.type = 'text';
         inputEmployeeToSetDevice.placeholder = 'Сотрудник, за кем закреплено оборудование';
         inputEmployeeToSetDevice.id = 'inputEmployeeToSetDevice';
         inputDiv.appendChild(inputEmployeeToSetDevice);
         
-        inputEmployeeMOL = document.createElement('input');
-        inputEmployeeMOL.className = 'form-control mt-3';
+        inputEmployeeMOL = document.createElement('select');
+        inputEmployeeMOL.className = 'form-select mt-3';
         inputEmployeeMOL.type = 'text';
         inputEmployeeMOL.placeholder = 'Согласовал';
         inputEmployeeMOL.id = 'inputEmployeeMOL';
@@ -239,6 +239,9 @@ function getNumberOfDays(start, end) {
             
             tbodyCartridge = document.createElement('tbody');
             tableCartridges.appendChild(tbodyCartridge);
+            
+       
+            
             
              for (i = 0; i < input.cartridge.length; i++) {
                  if(input.cartridge[i].usePrinter == false) {
@@ -312,7 +315,7 @@ function getNumberOfDays(start, end) {
                   
                   load: function (query, callback) {
                     $.ajax({
-                        url: 'http://localhost:8080/showcartridgesbymodel',
+                        url: '/showcartridgesbymodel',
                         type: 'GET',
                         dataType: 'json',
                         data: { idPrinter: input.id,
@@ -323,6 +326,63 @@ function getNumberOfDays(start, end) {
                 }
          
      });
+         
+         
+         
+              $('#inputEmployeeToDoWork').selectize({
+                preload: true,
+                placeholder: 'Выполнил работу',
+                valueField: 'code',
+                labelField: 'name',
+                searchField: "name",
+                
+                load: function (query, callback) {
+                     $.ajax({
+                        url: '/getinfooo',
+                        type: 'GET',
+                        error: callback,
+                        success: callback
+                         });
+                }
+                
+            });
+            
+            
+               $('#inputEmployeeToSetDevice').selectize({
+                preload: true,
+                placeholder: 'Сотрудник, за которым закреплено оборудование',
+                valueField: 'code',
+                labelField: 'name',
+                searchField: "name",
+                
+                load: function (query, callback) {
+                     $.ajax({
+                        url: '/getinfooo',
+                        type: 'GET',
+                        error: callback,
+                        success: callback
+                         });
+                }
+                
+            });
+            
+            $('#inputEmployeeMOL').selectize({
+                preload: true,
+                placeholder: 'Согласовал',
+                valueField: 'code',
+                labelField: 'name',
+                searchField: "name",
+                
+                load: function (query, callback) {
+                     $.ajax({
+                        url: '/getinfooo',
+                        type: 'GET',
+                        error: callback,
+                        success: callback
+                         });
+                }
+                
+            });
          
          
          let cartridgeSelectOkBtn = document.getElementById('printerInnerCartridgeSubmit');

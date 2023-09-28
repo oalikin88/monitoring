@@ -10,6 +10,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
+import org.opfr.springBootStarterDictionary.models.DictionaryEmployee;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.gov.sfr.aos.monitoring.OperationType;
@@ -47,6 +49,8 @@ public class PrintersMapper {
     private LocationRepo locationRepo;
     @Autowired
     private ListenerOperationRepo listenerOperationRepo;
+    @Autowired
+    private DictionaryEmployeeHolder dictionaryEmployeeHolder;
 
     public List<PrinterDTO> showPrinters() {
 
@@ -230,9 +234,12 @@ public class PrintersMapper {
                     List<ListenerOperation> listListenerOperationsByCartridgeID = listenerOperationRepo.findByCartridgeID(car.getId());
                     for(ListenerOperation listener : listListenerOperationsByCartridgeID) {
                         if(listener.getOperationType().equals(OperationType.UTIL)) {
-                            cartDto.setEmployeeToDoWork(listener.getEmployeeToDoWork());
-                            cartDto.setEmployeeToSetDevice(listener.getEmployeeToSetDevice());
-                            cartDto.setEmployeeMOL(listener.getEmployeeMOL());
+                            List<DictionaryEmployee> employees = dictionaryEmployeeHolder.getEmployees();
+                            Map<String, String> employeesMap = employees.stream().collect(Collectors.toMap(DictionaryEmployee::getCode, (e) -> e.getSurname() + " " + e.getName() + " " + e.getMiddlename()));
+                            
+                            cartDto.setEmployeeToDoWork(employeesMap.get(listener.getEmployeeToDoWork()));
+                            cartDto.setEmployeeToSetDevice(employeesMap.get(listener.getEmployeeToSetDevice()));
+                            cartDto.setEmployeeMOL(employeesMap.get(listener.getEmployeeMOL()));
                             break;
                         }
                     }

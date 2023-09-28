@@ -4,6 +4,7 @@
  */
 package ru.gov.sfr.aos.monitoring.repositories;
 
+import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import ru.gov.sfr.aos.monitoring.entities.Contract;
@@ -15,5 +16,5 @@ import ru.gov.sfr.aos.monitoring.entities.Contract;
 
 @Repository
 public interface ContractRepo extends JpaRepository<Contract, Long> {
-    
+    Optional<Contract> findByContractNumber(String contractNumber);
 }

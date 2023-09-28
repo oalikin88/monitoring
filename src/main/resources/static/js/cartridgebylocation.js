@@ -255,7 +255,7 @@ $(document).ready(function () {
                   placeholder: 'локация',
                   load: function (query, callback) {
                     $.ajax({
-                        url: 'http://localhost:8080/locations',
+                        url: '/locations',
                         type: 'GET',
                         dataType: 'json',
                         data: {model:query},
@@ -278,7 +278,7 @@ $(document).ready(function () {
          }
          
           $.ajax({
-                url: 'http://localhost:8080/editcartridgeslocation',
+                url: '/editcartridgeslocation',
                 type: 'POST',
                 data: {idCartridge: arr, location:selectLocation.value},
                 success: function () {

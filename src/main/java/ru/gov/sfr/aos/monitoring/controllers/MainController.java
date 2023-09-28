@@ -7,8 +7,6 @@ package ru.gov.sfr.aos.monitoring.controllers;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -21,7 +19,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import ru.gov.sfr.aos.monitoring.entities.Contract;
-import ru.gov.sfr.aos.monitoring.exceptions.EntityAlreadyExistsException;
 import ru.gov.sfr.aos.monitoring.interfaces.ContractServiceInterface;
 import ru.gov.sfr.aos.monitoring.models.CartridgeDTO;
 import ru.gov.sfr.aos.monitoring.models.CartridgeInstallDTO;
@@ -86,7 +83,7 @@ public class MainController {
     @PostMapping(value = "/main", consumes = "application/json", produces = "application/json")
     public String sendData(
          @RequestBody
-         List<Map<String, String>> printersPlusCartridges) {
+         List<Map<String, String>> printersPlusCartridges) throws NumberFormatException {
         
         mapper.createNewContract(printersPlusCartridges);
         
@@ -128,29 +125,6 @@ public class MainController {
         return "contract";
     }
     
-//    @GetMapping("/inventoriesbylocation")
-//    public String getInventoriesByLocation(Model model, @RequestParam String idLocation, @RequestParam String idModel)  {
-//        Long location = null;
-//        Long modelCartridge = null;
-//        if(idLocation != null) {
-//             location = Long.parseLong(idLocation);
-//        } else {
-//            location = 1L;
-//        }
-//        
-//        if(idModel != null) {
-//            modelCartridge = Long.parseLong(idModel);
-//        } else {
-//            modelCartridge = 1L;
-//        }
-//        
-//        Map<LocationDTO, List<CartridgeDTO>> showCartridgesByLocation = cartridgeMapper.showCartridgesByLocation(location, modelCartridge);
-//        
-//        model.addAttribute("input", showCartridgesByLocation);
-//        
-//        
-//        return "cartridgesbylocation";
-//    }
     
     @GetMapping("/printersbylocation")
     public String getPrintersByLocation(Model model, @RequestParam Long idLocation, @RequestParam List<Long> idModel)  {
@@ -302,12 +276,10 @@ public class MainController {
     
     @PostMapping("/locations")
     public ResponseEntity<String> addLocation(String nameLocation) {
-        try {
+        
             locationService.addLocation(nameLocation);
             
-        } catch (EntityAlreadyExistsException ex) {
-            Logger.getLogger(MainController.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        
         return new ResponseEntity<>("локация успешно добавлена", HttpStatus.OK);
     }
     
@@ -339,4 +311,6 @@ public class MainController {
         return "contracts";
     }
     
+        
+ 
 }

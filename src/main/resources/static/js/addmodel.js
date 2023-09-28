@@ -18,7 +18,7 @@ $('#sendForm').submit(function(e) {
     formData.append('modelPrinters', modelPrinters.selectize.getValue());
     formData.append('resource', resource.value);
     $.ajax({
-        url: "http://localhost:8080/addmodelcart/",
+        url: "/addmodelcart/",
         data: formData,
         type: 'POST',
         contentType: false,
@@ -56,7 +56,7 @@ $(document).ready(function () {
                 selectizeModelFromChoisesTypeCartridge.selectize.enable();
                 typeValueFromSelectize = value;
                 $.ajax({
-                    url: "http://localhost:8080/cartridge/" + encodeURIComponent(value),
+                    url: "/cartridge/" + encodeURIComponent(value),
                     type: 'GET',
                     dataType: 'json', // added data type
                     success: function (res) {
@@ -90,7 +90,7 @@ $(document).ready(function () {
         create: true,
         load: function (query, callback) {
             $.ajax({
-                url: 'http://localhost:8080/cartridge/' + encodeURIComponent(typeChoice),
+                url: '/cartridge/' + encodeURIComponent(typeChoice),
                 type: 'GET',
                 dataType: 'json',
                 data: {model: query},
@@ -112,7 +112,7 @@ $(document).ready(function () {
         preload: 'focus',
          load: function (query, callback) {
             $.ajax({
-                url: 'http://localhost:8080/models/',
+                url: '/models/',
                 type: 'GET',
                 dataType: 'json',
                 error: callback,

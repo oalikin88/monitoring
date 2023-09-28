@@ -65,7 +65,7 @@ public class ContractServiceMapper {
     @Autowired
     private ListenerOperationService listenerOperationService;
 
-    public void createNewContract(List<Map<String, String>> input) {
+    public void createNewContract(List<Map<String, String>> input) throws NumberFormatException {
         
         CartridgeModel cartridgeModel;
         CartridgeModel cartridgeModelIndepended;

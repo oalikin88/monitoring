@@ -12,9 +12,9 @@ import ru.gov.sfr.aos.monitoring.entities.Contract;
  * @author 041AlikinOS
  */
 public interface ContractServiceInterface {
-    
+
     List<Contract> getContracts();
-    
-   void saveContract(Contract contract);
-    
+
+    void saveContract(Contract contract) throws NumberFormatException;
+
 }

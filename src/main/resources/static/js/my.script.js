@@ -28,8 +28,7 @@ let printersArray;
 let cartridgesArray;
 let printersPlusCartridges = new Array();
 let contract = new Object();
-let manufact = new URL("http://localhost:8080/manufacturers"); // адрес контроллера с которого загружаем список производителей и моделей принтеров
-let cartridgesUrl = new URL("http://localhost:8080/showcartridges"); //  адрес контроллера с которого загружаем список картриджей
+
 let formData = new FormData();
 let optionsManufacturerMap = new Map();
 let printers = new Map();
@@ -67,7 +66,7 @@ document.addEventListener('submit', function (event) {
     event.preventDefault();
     $.ajax({
         type: "POST",
-        url: "http://localhost:8080/main",
+        url: "/main",
         data: JSON.stringify(printersPlusCartridges),
         success: function () {
             alert("Контракт №" + contract.numberContract + " успешно добавлен в базу данных.")
@@ -804,7 +803,7 @@ function addPrintersInfo(location) {
                 $(this.$control_input[0].closest('.cartridgeInclude')).find('.cartridgeModelChoice')[0].disabled = false;
                 typeValueFromSelectize = value;
                 $.ajax({
-                    url: "http://localhost:8080/cartridgebymodelprinter/" + encodeURIComponent(value),
+                    url: "/cartridgebymodelprinter/" + encodeURIComponent(value),
                     type: 'GET',
                     dataType: 'json', // added data type
                     data:{model: modelPrinterChoice},
@@ -839,7 +838,7 @@ function addPrintersInfo(location) {
        
         load: function (query, callback) {
             $.ajax({
-                url: 'http://localhost:8080/cartridgebymodelprinter/' + encodeURIComponent(typeChoice),
+                url: '/cartridgebymodelprinter/' + encodeURIComponent(typeChoice),
                 type: 'GET',
                 dataType: 'json',
                 data: {model: query},
@@ -857,7 +856,7 @@ function addPrintersInfo(location) {
             manufacturerChoice = $(this.$control_input[0].closest('.printer')).find('.manufacturerChoice')[0].innerText;
             selectizeManufacturerFromChoisesManufacturer = $(this.$control_input[0].closest('.printer')).find('.modelPrinter')[0];
             $.ajax({
-                url: 'http://localhost:8080/models',
+                url: '/models',
                 type: 'POST',
                 data: {target: input,
                     manufacturer: manufacturerChoice},
@@ -871,7 +870,7 @@ function addPrintersInfo(location) {
         },
         load: function (query, callback) {
             $.ajax({
-                url: 'http://localhost:8080/models/' + encodeURIComponent(manufacturerChoice),
+                url: '/models/' + encodeURIComponent(manufacturerChoice),
                 type: 'GET',
                 dataType: 'json',
                 data: {model: query},
@@ -898,7 +897,7 @@ function addPrintersInfo(location) {
         create: function (input, callback) {
             selectizeManufacturerFromChoisesManufacturer = $(this.$control_input[0].closest('.printer')).find('.manufacturerChoice')[0];
             $.ajax({
-                url: 'http://localhost:8080/manufacturers',
+                url: '/manufacturers',
                 type: 'POST',
                 data: {value: input},
                 success: function () {
@@ -917,7 +916,7 @@ function addPrintersInfo(location) {
         showAddOptionOnCreate: true,
         load: function (query, callback) {
             $.ajax({
-                url: 'http://localhost:8080/manufacturers',
+                url: '/manufacturers',
                 type: 'GET',
                 dataType: 'json',
                 data: {manufacturer: query},
@@ -931,7 +930,7 @@ function addPrintersInfo(location) {
                 manufacturerValueFromSelectize = value;
                 selectizeModelFromChoisesManufacturer = $(this.$control_input[0].closest('.printer')).find('.modelPrinter')[0];
                 $.ajax({
-                    url: "http://localhost:8080/models/" + encodeURIComponent(value),
+                    url: "/models/" + encodeURIComponent(value),
                     type: 'GET',
                     dataType: 'json', // added data type
                     data: {manufacturer: value},
@@ -1000,7 +999,7 @@ $(document).ready(function () {
                 $(this.$control_input[0].closest('.independentCartridge')).find('.independentCartridgeModelInput')[0].disabled = false;
                 typeValueFromSelectize = value;
                 $.ajax({
-                    url: "http://localhost:8080/cartridge/" + encodeURIComponent(value),
+                    url: "/cartridge/" + encodeURIComponent(value),
                     type: 'GET',
                     dataType: 'json', // added data type
                     success: function (res) {
@@ -1031,26 +1030,9 @@ $(document).ready(function () {
         searchField: "model",
         preload: 'focus',
         create: false,
-//                            function(input, callback) {
-//                        
-//                        selectizeModelFromChoisesTypeCartridge = $(this.$control_input[0].closest('.cartridgeInclude')).find('.cartridgeModelChoice')[0];
-//                        $.ajax({
-//                            url: "http://localhost:8080/cartridge/",
-//                            type: 'POST',
-//                            data: {target:input,
-//                                   type:typeChoice},
-//                            success: function() {             
-//                                selectizeModelFromChoisesTypeCartridge.selectize.addOption({value: input, text: input});
-//                                selectizeModelFromChoisesTypeCartridge.selectize.addItem(input);
-//                                selectizeModelFromChoisesTypeCartridge.selectize.refreshOptions();
-//                                callback({model: input});
-//                            }
-//                        });
-//                    }
-
         load: function (query, callback) {
             $.ajax({
-                url: 'http://localhost:8080/cartridge/' + encodeURIComponent(typeChoice),
+                url: '/cartridge/' + encodeURIComponent(typeChoice),
                 type: 'GET',
                 dataType: 'json',
                 data: {model: query},
@@ -1067,7 +1049,7 @@ $(document).ready(function () {
             manufacturerChoice = $(this.$control_input[0].closest('.printer')).find('.manufacturerChoice')[0].innerText;
             selectizeManufacturerFromChoisesManufacturer = $(this.$control_input[0].closest('.printer')).find('.modelPrinter')[0];
             $.ajax({
-                url: 'http://localhost:8080/models',
+                url: '/models',
                 type: 'POST',
                 data: {target: input,
                     manufacturer: manufacturerChoice},
@@ -1081,7 +1063,7 @@ $(document).ready(function () {
         },
         load: function (query, callback) {
             $.ajax({
-                url: 'http://localhost:8080/models/' + encodeURIComponent(manufacturerChoice),
+                url: '/models/' + encodeURIComponent(manufacturerChoice),
                 type: 'GET',
                 dataType: 'json',
                 data: {model: query},
@@ -1102,7 +1084,7 @@ $(document).ready(function () {
         create: function (input, callback) {
             selectizeManufacturerFromChoisesManufacturer = $(this.$control_input[0].closest('.printer')).find('.manufacturerChoice')[0];
             $.ajax({
-                url: 'http://localhost:8080/manufacturers',
+                url: '/manufacturers',
                 type: 'POST',
                 data: {value: input},
                 success: function () {
@@ -1121,7 +1103,7 @@ $(document).ready(function () {
         showAddOptionOnCreate: true,
         load: function (query, callback) {
             $.ajax({
-                url: 'http://localhost:8080/manufacturers',
+                url: '/manufacturers',
                 type: 'GET',
                 dataType: 'json',
                 data: {manufacturer: query},
@@ -1135,7 +1117,7 @@ $(document).ready(function () {
                 manufacturerValueFromSelectize = value;
                 selectizeModelFromChoisesManufacturer = $(this.$control_input[0].closest('.printer')).find('.modelPrinter')[0];
                 $.ajax({
-                    url: "http://localhost:8080/models/" + encodeURIComponent(value),
+                    url: "/models/" + encodeURIComponent(value),
                     type: 'GET',
                     dataType: 'json', // added data type
                     data: {manufacturer: value},
@@ -1298,7 +1280,7 @@ function addPrinter(amount, location) {
                 $(this.$control_input[0].closest('.cartridgeInclude')).find('.cartridgeModelChoice')[0].disabled = false;
                 typeValueFromSelectize = value;
                 $.ajax({
-                     url: "http://localhost:8080/cartridgebymodelprinter/" + encodeURIComponent(value),
+                     url: "/cartridgebymodelprinter/" + encodeURIComponent(value),
                     type: 'GET',
                     dataType: 'json', // added data type
                     data:{model: modelPrinterChoice},
@@ -1330,26 +1312,9 @@ function addPrinter(amount, location) {
         searchField: "model",
         preload: 'focus',
         create: false,
-//                            function(input, callback) {
-//                        
-//                        selectizeModelFromChoisesTypeCartridge = $(this.$control_input[0].closest('.cartridgeInclude')).find('.cartridgeModelChoice')[0];
-//                        $.ajax({
-//                            url: "http://localhost:8080/cartridge/",
-//                            type: 'POST',
-//                            data: {target:input,
-//                                   type:typeChoice},
-//                            success: function() {             
-//                                selectizeModelFromChoisesTypeCartridge.selectize.addOption({value: input, text: input});
-//                                selectizeModelFromChoisesTypeCartridge.selectize.addItem(input);
-//                                selectizeModelFromChoisesTypeCartridge.selectize.refreshOptions();
-//                                callback({model: input});
-//                            }
-//                        });
-//                    }
-
         load: function (query, callback) {
             $.ajax({
-                url: 'http://localhost:8080/cartridgebymodelprinter/' + encodeURIComponent(typeChoice),
+                url: '/cartridgebymodelprinter/' + encodeURIComponent(typeChoice),
                 type: 'GET',
                 dataType: 'json',
                 data: {model: query},
@@ -1367,7 +1332,7 @@ function addPrinter(amount, location) {
             manufacturerChoice = $(this.$control_input[0].closest('.printer')).find('.manufacturerChoice')[0].innerText;
             selectizeManufacturerFromChoisesManufacturer = $(this.$control_input[0].closest('.printer')).find('.modelPrinter')[0];
             $.ajax({
-                url: 'http://localhost:8080/models',
+                url: '/models',
                 type: 'POST',
                 data: {target: input,
                     manufacturer: manufacturerChoice},
@@ -1384,7 +1349,7 @@ function addPrinter(amount, location) {
         },
         load: function (query, callback) {
             $.ajax({
-                url: 'http://localhost:8080/models/' + encodeURIComponent(manufacturerChoice),
+                url: '/models/' + encodeURIComponent(manufacturerChoice),
                 type: 'GET',
                 dataType: 'json',
                 data: {model: query},
@@ -1405,7 +1370,7 @@ function addPrinter(amount, location) {
         create: function (input, callback) {
             selectizeManufacturerFromChoisesManufacturer = $(this.$control_input[0].closest('.printer')).find('.manufacturerChoice')[0];
             $.ajax({
-                url: 'http://localhost:8080/manufacturers',
+                url: '/manufacturers',
                 type: 'POST',
                 data: {value: input},
                 success: function () {
@@ -1424,7 +1389,7 @@ function addPrinter(amount, location) {
         showAddOptionOnCreate: true,
         load: function (query, callback) {
             $.ajax({
-                url: 'http://localhost:8080/manufacturers',
+                url: '/manufacturers',
                 type: 'GET',
                 dataType: 'json',
                 data: {manufacturer: query},
@@ -1438,7 +1403,7 @@ function addPrinter(amount, location) {
                 manufacturerValueFromSelectize = value;
                 selectizeModelFromChoisesManufacturer = $(this.$control_input[0].closest('.printer')).find('.modelPrinter')[0];
                 $.ajax({
-                    url: "http://localhost:8080/models/" + encodeURIComponent(value),
+                    url: "/models/" + encodeURIComponent(value),
                     type: 'GET',
                     dataType: 'json', // added data type
                     data: {manufacturer: value},
@@ -1593,7 +1558,7 @@ function addCartridges(count, location) {
                 selectizeModelFromChoisesTypeCartridge.selectize.enable();
                 typeValueFromSelectize = value;
                 $.ajax({
-                    url: "http://localhost:8080/cartridge/" + encodeURIComponent(value),
+                    url: "/cartridge/" + encodeURIComponent(value),
                     type: 'GET',
                     dataType: 'json', // added data type
                     success: function (res) {
@@ -1627,7 +1592,7 @@ function addCartridges(count, location) {
 
         load: function (query, callback) {
             $.ajax({
-                url: 'http://localhost:8080/cartridge/' + encodeURIComponent(typeChoice),
+                url: '/cartridge/' + encodeURIComponent(typeChoice),
                 type: 'GET',
                 dataType: 'json',
                 data: {model: query},
@@ -1831,7 +1796,7 @@ function addCartridgesInfo(location) {
                 selectizeModelFromChoisesTypeCartridge.selectize.enable();
                 typeValueFromSelectize = value;
                 $.ajax({
-                    url: "http://localhost:8080/cartridge/" + encodeURIComponent(value),
+                    url: "/cartridge/" + encodeURIComponent(value),
                     type: 'GET',
                     dataType: 'json', // added data type
                     success: function (res) {
@@ -1865,7 +1830,7 @@ function addCartridgesInfo(location) {
 
         load: function (query, callback) {
             $.ajax({
-                url: 'http://localhost:8080/cartridge/' + encodeURIComponent(typeChoice),
+                url: '/cartridge/' + encodeURIComponent(typeChoice),
                 type: 'GET',
                 dataType: 'json',
                 data: {model: query},
@@ -1910,7 +1875,7 @@ $(document).ready(function () {
                 selectizeModelFromChoisesTypeCartridge.selectize.enable();
                 typeValueFromSelectize = value;
                 $.ajax({
-                    url: "http://localhost:8080/cartridge/" + encodeURIComponent(value),
+                    url: "/cartridge/" + encodeURIComponent(value),
                     type: 'GET',
                     dataType: 'json', // added data type
                     success: function (res) {
@@ -1944,7 +1909,7 @@ $(document).ready(function () {
 
         load: function (query, callback) {
             $.ajax({
-                url: 'http://localhost:8080/cartridge/' + encodeURIComponent(typeChoice),
+                url: '/cartridge/' + encodeURIComponent(typeChoice),
                 type: 'GET',
                 dataType: 'json',
                 data: {model: query},
