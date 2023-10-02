@@ -31,6 +31,7 @@ public class CartridgeDTO {
     public String employeeToDoWork;
     public String employeeToSetDevice;
     public String employeeMOL;
+    public Long listenerId;
     
     public CartridgeDTO() {
     }
@@ -119,6 +120,31 @@ public class CartridgeDTO {
         this.employeeToSetDevice = employeeToSetDevice;
         this.employeeMOL = employeeMOL;
     }
+
+    public CartridgeDTO(Long id, String type, String model, String location, String resource, boolean util, LocalDateTime dateStartExploitation, LocalDateTime dateEndExploitation, Long count, boolean usePrinter, Long contract, String contractNumber, Date startContract, Date endContract, String itemCode, String nameMaterial, String employeeToDoWork, String employeeToSetDevice, String employeeMOL, Long listenerId) {
+        this.id = id;
+        this.type = type;
+        this.model = model;
+        this.location = location;
+        this.resource = resource;
+        this.util = util;
+        this.dateStartExploitation = dateStartExploitation;
+        this.dateEndExploitation = dateEndExploitation;
+        this.count = count;
+        this.usePrinter = usePrinter;
+        this.contract = contract;
+        this.contractNumber = contractNumber;
+        this.startContract = startContract;
+        this.endContract = endContract;
+        this.itemCode = itemCode;
+        this.nameMaterial = nameMaterial;
+        this.employeeToDoWork = employeeToDoWork;
+        this.employeeToSetDevice = employeeToSetDevice;
+        this.employeeMOL = employeeMOL;
+        this.listenerId = listenerId;
+    }
+    
+    
     
     
 
@@ -276,6 +302,14 @@ public class CartridgeDTO {
 
     public void setEmployeeMOL(String employeeMOL) {
         this.employeeMOL = employeeMOL;
+    }
+
+    public Long getListenerId() {
+        return listenerId;
+    }
+
+    public void setListenerId(Long listenerId) {
+        this.listenerId = listenerId;
     }
     
     

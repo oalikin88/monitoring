@@ -66,10 +66,10 @@ document.addEventListener('submit', function (event) {
     event.preventDefault();
     $.ajax({
         type: "POST",
-        url: "/main",
+        url: "/main/",
         data: JSON.stringify(printersPlusCartridges),
         success: function () {
-            alert("Контракт №" + contract.numberContract + " успешно добавлен в базу данных.")
+            alert("Контракт №" + contract.numberContract + " успешно добавлен в базу данных.");
             event.target.reset();
             window.location.reload();
         },
@@ -81,7 +81,6 @@ document.addEventListener('submit', function (event) {
 
 
     });
-    console.log(printersPlusCartridges);
 });
 
 document.addEventListener('click', function (e) {

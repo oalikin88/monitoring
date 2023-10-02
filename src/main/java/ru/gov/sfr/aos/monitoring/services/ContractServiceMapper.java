@@ -18,6 +18,8 @@ import java.util.Optional;
 import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import ru.gov.sfr.aos.monitoring.OperationType;
+import ru.gov.sfr.aos.monitoring.PrinterStatus;
 import ru.gov.sfr.aos.monitoring.entities.Cartridge;
 import ru.gov.sfr.aos.monitoring.entities.CartridgeModel;
 import ru.gov.sfr.aos.monitoring.entities.Contract;
@@ -149,7 +151,7 @@ public class ContractServiceMapper {
                     location = new Location("Склад");
                 }
                 printer.setLocation(location);
-
+                printer.setPrinterStatus(PrinterStatus.OK);
                 for (Map.Entry<String, String> entry : input.get(i).entrySet()) {
 
                     switch (entry.getKey()) {
@@ -197,6 +199,7 @@ public class ContractServiceMapper {
                                 printer.setInventoryNumber("Отсутствует");
                             }
                             break;
+                        
                         case "cartridgeIncluded":
                             if (entry.getValue().contains("true")) {
                                 cartridgeInclude = new Cartridge();
@@ -320,6 +323,7 @@ public class ContractServiceMapper {
                     listener.setAmountCurrentModelOfLocation(findByLocationIdAndModelId.size() + entry.getValue());
                     listener.setCurrentOperation("Закуплен по контракту");
                     listener.setModel(findModelCartridgeByName.get());
+                    listener.setOperationType(OperationType.BUY);
                     
                     listenerOperationService.saveListenerOperation(listener);      
                     

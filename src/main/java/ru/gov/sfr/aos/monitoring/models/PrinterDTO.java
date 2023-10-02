@@ -24,6 +24,7 @@ public class PrinterDTO {
     public Date startContract;
     public Date endContract;
     public Long contractId;
+    public String printerStatus;
     
     public PrinterDTO() {};
 
@@ -51,6 +52,24 @@ public class PrinterDTO {
         this.startContract = startContract;
         this.endContract = endContract;
     }
+
+    public PrinterDTO(Long id, String manufacturer, String model, String inventaryNumber, String serialNumber, List<CartridgeDTO> cartridge, String location, String contractNumber, Date startContract, Date endContract, Long contractId, String printerStatus) {
+        this.id = id;
+        this.manufacturer = manufacturer;
+        this.model = model;
+        this.inventaryNumber = inventaryNumber;
+        this.serialNumber = serialNumber;
+        this.cartridge = cartridge;
+        this.location = location;
+        this.contractNumber = contractNumber;
+        this.startContract = startContract;
+        this.endContract = endContract;
+        this.contractId = contractId;
+        this.printerStatus = printerStatus;
+    }
+        
+        
+     
 
     public Long getContractId() {
         return contractId;
@@ -140,6 +159,14 @@ public class PrinterDTO {
 
     public void setEndContract(Date endContract) {
         this.endContract = endContract;
+    }
+
+    public String getPrinterStatus() {
+        return printerStatus;
+    }
+
+    public void setPrinterStatus(String printerStatus) {
+        this.printerStatus = printerStatus;
     }
     
     

@@ -15,6 +15,7 @@
                 <exec.appArgs></exec.appArgs>
                 <exec.mainClass>ru.gov.sfr.aos.monitoring.MonitoringApplication</exec.mainClass>
                 <exec.executable>java</exec.executable>
+                <Env.SPRING_PROFILES_ACTIVE>run-prod</Env.SPRING_PROFILES_ACTIVE>
             </properties>
         </action>
         <action>
@@ -33,6 +34,7 @@
                 <exec.mainClass>ru.gov.sfr.aos.monitoring.MonitoringApplication</exec.mainClass>
                 <exec.executable>java</exec.executable>
                 <jpda.listen>true</jpda.listen>
+                <Env.SPRING_PROFILES_ACTIVE>run-dev</Env.SPRING_PROFILES_ACTIVE>
             </properties>
         </action>
         <action>

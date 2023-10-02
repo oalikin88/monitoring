@@ -4,6 +4,7 @@
  */
 package ru.gov.sfr.aos.monitoring.services;
 
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -17,12 +18,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ru.gov.sfr.aos.monitoring.CartridgeType;
 import ru.gov.sfr.aos.monitoring.OperationType;
+import ru.gov.sfr.aos.monitoring.PrinterStatus;
 import ru.gov.sfr.aos.monitoring.entities.Cartridge;
 import ru.gov.sfr.aos.monitoring.entities.CartridgeModel;
 import ru.gov.sfr.aos.monitoring.entities.ListenerOperation;
 import ru.gov.sfr.aos.monitoring.entities.Location;
 import ru.gov.sfr.aos.monitoring.entities.Model;
 import ru.gov.sfr.aos.monitoring.entities.Printer;
+import ru.gov.sfr.aos.monitoring.models.CartridgeChoiceDto;
 import ru.gov.sfr.aos.monitoring.models.CartridgeDTO;
 import ru.gov.sfr.aos.monitoring.models.CartridgeModelDTO;
 import ru.gov.sfr.aos.monitoring.models.ChangeDeviceLocationDTO;
@@ -325,7 +328,8 @@ public class CartridgeMapper {
 
                 for (ModelDTO modelDTO : modelPrinterDTOes) {
                     for (Printer printer : storage.getPrinters()) {
-                        if (modelDTO.getIdModel() == printer.getModel().getId()) {
+                        if ((modelDTO.getIdModel() == printer.getModel().getId()) && !printer.getPrinterStatus().equals(PrinterStatus.DELETE)
+                                && !printer.getPrinterStatus().equals(PrinterStatus.MONITORING) && !printer.getPrinterStatus().equals(PrinterStatus.UTILIZATION)) {
                             printersID.add(printer.getId());
                         }
                     }
@@ -333,7 +337,7 @@ public class CartridgeMapper {
 
                 for (Cartridge cartridge : cartridges) {
 
-                    if (cartridgeModel.getId() == cartridge.getModel().getId() && !cartridge.isUtil()) {
+                    if ((cartridgeModel.getId() == cartridge.getModel().getId()) && (!cartridge.isUtil() && !cartridge.isUseInPrinter())) {
 
                         cartridgesID.add(cartridge.getId());
 
@@ -468,7 +472,7 @@ public class CartridgeMapper {
             List<Model> modelsPrinters = cartridge.getModel().getModelsPrinters();
             boolean duplicate = false;
             for (Model modelPrinter : modelsPrinters) {
-                if (idModelPrinter == modelPrinter.getId() && !cartridge.isUtil()) {
+                if (idModelPrinter == modelPrinter.getId() && (!cartridge.isUtil() && !cartridge.isUseInPrinter())) {
                     CartridgeDTO dto = new CartridgeDTO();
                     dto.setContract(cartridge.getContract().getId());
                     dto.setContractNumber(cartridge.getContract().getContractNumber());
@@ -551,7 +555,7 @@ public class CartridgeMapper {
             List<Model> modelsPrinters = cartridge.getModel().getModelsPrinters();
             boolean duplicate = false;
             for (Model modelPrinter : modelsPrinters) {
-                if (idModelPrinter == modelPrinter.getId() && !cartridge.isUtil()) {
+                if ((idModelPrinter == modelPrinter.getId()) && (!cartridge.isUtil() && !cartridge.isUseInPrinter())) {
                     CartridgeDTO dto = new CartridgeDTO();
                     dto.setContract(cartridge.getContract().getId());
                     dto.setContractNumber(cartridge.getContract().getContractNumber());
@@ -563,6 +567,36 @@ public class CartridgeMapper {
                     dto.setResource(cartridge.getModel().getDefaultNumberPrintPage().toString());
                     dto.setUtil(cartridge.isUtil());
                     dto.setModel(cartridge.getModel().getModel());
+                    dto.setStartContract(cartridge.getContract().getDateStartContract());
+
+                    cartridgesByModelPrinter.add(dto);
+                }
+            }
+        }
+
+        return cartridgesByModelPrinter;
+    }
+    
+    
+       public List<CartridgeChoiceDto> showCartridgesForChoice(Long idPrinter, String location) {
+        SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
+        List<Cartridge> cartridges = cartridgeRepo.findByLocationName(location);
+        Optional<Location> findByNameIgnoreCase = locationRepo.findByNameIgnoreCase(location);
+        LocationDTO locDto = new LocationDTO();
+        locDto.setId(findByNameIgnoreCase.get().getId());
+        locDto.setName(findByNameIgnoreCase.get().getName());
+        List<CartridgeChoiceDto> cartridgesByModelPrinter = new ArrayList<>();
+        Optional<Printer> findPrinterById = printerRepo.findById(idPrinter);
+        Long idModelPrinter = findPrinterById.get().getModel().getId();
+        for (Cartridge cartridge : cartridges) {
+            List<Model> modelsPrinters = cartridge.getModel().getModelsPrinters();
+            boolean duplicate = false;
+            for (Model modelPrinter : modelsPrinters) {
+                if ((idModelPrinter == modelPrinter.getId()) && (!cartridge.isUtil() && !cartridge.isUseInPrinter())) {
+                    CartridgeChoiceDto dto = new CartridgeChoiceDto();
+                    dto.setId(cartridge.getId());
+                    
+                    dto.setName("Модель: " + cartridge.getModel().getModel() + ", контракт № " +  cartridge.getContract().getContractNumber() + " от " + sdf.format(cartridge.getContract().getDateStartContract()));
 
                     cartridgesByModelPrinter.add(dto);
                 }

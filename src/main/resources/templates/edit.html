@@ -27,6 +27,21 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                 
                 
                 
+                
+                <div class="row  mb-3">
+                    <div class="col col-md-6">
+                        Статус
+                    </div>
+                    <div class="col col-md-6">
+                         <div class='row'>
+                            <div class='col' id="printerStatus">[[${dto.printerStatus}]]</div>                 
+                             <div class='col'>
+                                <button type="button" class="btn" data-bs-toggle="modal" id='printerStatusBtn' data-bs-target="#printerStatusModal">Изменить</button>
+                            </div>
+                    </div>
+                </div>
+                </div>
+                
                 <div class="row  mb-3">
                     <div class="col col-md-6">
                         Инвентарный номер
@@ -112,6 +127,38 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                 </div>
                 
              
+                
+                  <!-- Modal статус принтера -->
+
+                    <div class="modal fade" id="printerStatusModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="printerStatusModalLabel">
+                      <div class="modal-dialog modal-dialog-centered">
+                           
+                        <div class="modal-content">
+                           
+                          <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="staticBackdropLabel">Выберите статус</h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                          </div>
+                           
+                          <div class="modal-body">
+                              
+                              
+                            <select class="form-select printerStatusSelect" name="printerStatusSelect" id='printerStatusSelect'>
+                            </select>
+                          </div>
+                          <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+                            <button type="submit" id="printerStatusSubmit" class="btn btn-primary">Применить</button>
+                           
+                          </div>
+                         
+                        </div>
+                            
+                      </div>
+                    </div>
+                
+                
+                
 
                     <!-- Modal Локация -->
 
@@ -211,7 +258,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                        <!-- Modal Установленные картриджи -->
 
                     <div class="modal fade" id="modalCartridgeUses" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1">
-                      <div class="modal-dialog modal-xl">
+                      <div class="modal-dialog modal-fullscreen">
                            
                         <div class="modal-content">
                            

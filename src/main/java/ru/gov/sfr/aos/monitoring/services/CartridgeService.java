@@ -44,15 +44,14 @@ public class CartridgeService {
             for (Cartridge cartr : cartridges) {
                 if (cartr.isUseInPrinter()) {
                     cartr.setDateEndExploitation(LocalDateTime.now());
-                    if(null != dto.getCount()) {
-                        cartr.setCount(dto.getCount());
-                    }
+                   
                     cartr.setUseInPrinter(false);
+                    cartr.setUtil(true);
+                    cartr.setCount(dto.getCount());
                 }
             }
         }
         findCartridgeById.get().setUseInPrinter(true);
-        findCartridgeById.get().setUtil(true);
         findCartridgeById.get().setPrinter(findPrinterById.get());
         findPrinterById.get().setCartridge(cartridges);
         listener.setDateOperation(LocalDateTime.now());

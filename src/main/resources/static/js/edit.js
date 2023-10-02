@@ -17,405 +17,528 @@ function getNumberOfDays(start, end) {
     return diffInDays;
 }
 
- $(document).ready(function () {
-     let cartridgeSelectInput = document.querySelector('#cartridgeSelect');
-     let locationbtn = document.querySelector('#locationbtn');
-     let locationSubmit = document.querySelector('#locationSubmit');
-     let serialSubmit = document.querySelector('#serialSubmit');
-     let inventarySubmit = document.querySelector('#inventarySubmit');
-     let startDateContract = document.getElementsByClassName('startDateContract')[0];
-     let endDateContract = document.getElementsByClassName('endDateContract')[0];
-     
-     
-     let numberContractDiv = document.getElementById('numberContract');
-     
-     link = document.createElement('a');
-     link.setAttribute('href', '/contract?idContract=' + input.contractId);
-     link.innerText = input.contractNumber;
-     numberContractDiv.appendChild(link);
-     
-     
-     parseStartDate = Date.parse(input.startContract);
-     startDate = new Date(parseStartDate);
-     startDateFormat = startDate.toLocaleDateString('ru');
-     startDateContract.innerHTML = startDateFormat;
-     
-     
-     parseEndDate = Date.parse(input.endContract);
-     endDate = new Date(parseEndDate);
-     endDateFormat = endDate.toLocaleDateString('ru');
-     endDateContract.innerHTML = endDateFormat;
-     
-     
-     $('#locationSelect').selectize({
-                  preload: true,
-                  valueField: 'name',
-                  labelField: 'name',
-                  searchField: "name",
-                  load: function (query, callback) {
-                    $.ajax({
-                        url: '/locations',
-                        type: 'GET',
-                        dataType: 'json',
-                        data: {model:query},
-                        error: callback,
-                        success: callback
-                         });
-                }
-         
-     });
-     
+$(document).ready(function () {
+    let cartridgeSelectInput = document.querySelector('#cartridgeSelect');
+    let locationbtn = document.querySelector('#locationbtn');
+    let locationSubmit = document.querySelector('#locationSubmit');
+    let serialSubmit = document.querySelector('#serialSubmit');
+    let inventarySubmit = document.querySelector('#inventarySubmit');
+    let startDateContract = document.getElementsByClassName('startDateContract')[0];
+    let endDateContract = document.getElementsByClassName('endDateContract')[0];
 
-     
-          inventarySubmit.addEventListener('click', function() {
-         
-         div = $('#inventaryRefresh')[0];
-         
-         console.log("click");
-          $.ajax({
+
+    let numberContractDiv = document.getElementById('numberContract');
+
+    link = document.createElement('a');
+    link.setAttribute('href', '/contract?idContract=' + input.contractId);
+    link.innerText = input.contractNumber;
+    numberContractDiv.appendChild(link);
+
+
+    parseStartDate = Date.parse(input.startContract);
+    startDate = new Date(parseStartDate);
+    startDateFormat = startDate.toLocaleDateString('ru');
+    startDateContract.innerHTML = startDateFormat;
+
+
+    parseEndDate = Date.parse(input.endContract);
+    endDate = new Date(parseEndDate);
+    endDateFormat = endDate.toLocaleDateString('ru');
+    endDateContract.innerHTML = endDateFormat;
+
+
+    $('#locationSelect').selectize({
+        preload: true,
+        valueField: 'name',
+        labelField: 'name',
+        searchField: "name",
+        load: function (query, callback) {
+            $.ajax({
+                url: '/locations',
+                type: 'GET',
+                dataType: 'json',
+                data: {model: query},
+                error: callback,
+                success: callback
+            });
+        }
+
+    });
+    
+    
+    $('#printerStatusSelect').selectize({
+        placeholder: 'Выберите статус',
+        valueField: 'value',
+        labelField: 'label',
+        searchField: "label",
+         options: [{value: "OK", label: "Исправный"},
+            {value: "DEFECTIVE", label: "Неисправный"},
+            {value: "REPAIR", label: "Ремонт"},
+            {value: "MONITORING", label: "Списание"},
+            {value: "UTILIZATION", label: "Утилизация"},
+            {value: "DELETE", label: "Снят с учёта"}]
+    });
+
+
+    printerStatusBtn = document.querySelector('#printerStatusSubmit');
+    
+    printerStatusBtn.addEventListener('click', function() {
+        $.ajax({
+            type: "POST",
+            async:false,
+            url: "/changestatus",
+            data: {id: input.id, status: $('#printerStatusSelect')[0].value},
+            dataType: "text",
+            success: function (data) {
+                
+                $('#inventarynumberModal').modal('hide');
+                
+            }
+        });
+         window.location.reload();
+    });
+
+
+    inventarySubmit.addEventListener('click', function () {
+
+        div = $('#inventaryRefresh')[0];
+
+        $.ajax({
             type: "POST",
             url: "/editprinterinventary",
             data: {id: input.id, inventaryNumber: $('#inventaryNumberInput')[0].value},
             dataType: "text",
-            success: function(data) {
-                div.innerText = $('#inventaryNumberInput')[0].value;
-                $('#inventarynumberModal').modal('hide');
-              
+            success: function (data) {
+                $('#printerStatusModal').modal('hide');
+
             }
         });
-     });
-     
-     
-     
-     
-     serialSubmit.addEventListener('click', function() {
-         
-         div = $('#serialRefresh')[0];
-         
-         
-          $.ajax({
+    });
+
+    serialSubmit.addEventListener('click', function () {
+
+        div = $('#serialRefresh')[0];
+
+
+        $.ajax({
             type: "POST",
             url: "/editprinterserial",
             data: {id: input.id, serialNumber: $('#serialNumberInput')[0].value},
             dataType: "text",
-            success: function(data) {
+            success: function (data) {
                 div.innerText = $('#serialNumberInput')[0].value;
                 $('#serialnumberModal').modal('hide');
-              
+
             }
         });
-     });
-     
-     
-     
-     locationbtn.addEventListener('click', function() {
-        $('#locationSelect')[0].selectize.setValue(Object.entries($('#locationSelect')[0].selectize.options)[0][1].name); 
-     });
-     
-    locationSubmit.addEventListener('click', function() {
-         var div = $('#locationRefresh')[0];
-           
-            
-            
+    });
+
+    locationbtn.addEventListener('click', function () {
+        $('#locationSelect')[0].selectize.setValue(Object.entries($('#locationSelect')[0].selectize.options)[0][1].name);
+    });
+
+    locationSubmit.addEventListener('click', function () {
+        var div = $('#locationRefresh')[0];
         $.ajax({
             type: "POST",
             url: "/editprinterlocation",
             data: {id: input.id, location: $('#locationSelect')[0].selectize.getValue()},
             dataType: "text",
-            success: function(data) {
+            success: function (data) {
                 div.innerText = $('#locationSelect')[0].selectize.getValue();
                 $('#staticBackdrop').modal('hide');
-              
+
             }
         });
-        
-        
     });
-    
+
     let cartridgeUse = document.getElementById("cartridgeUseRefresh");
-    
-    if(Object.keys(input.cartridge).length > 0) {
-        for(i = 0; i < input.cartridge.length; i++) {
-            if(input.cartridge[i].usePrinter == true) {
+
+    if (Object.keys(input.cartridge).length >= 0) {
+        for (i = 0; i < input.cartridge.length; i++) {
+            if (input.cartridge[i].usePrinter == true) {
                 var dateStartParse = Date.parse(input.cartridge[i].dateStartExploitation);
                 var dateStartProc = new Date(dateStartParse);
                 var dateStartFormat = dateStartProc.toLocaleString('ru');
                 var link = document.createElement('a');
                 link.setAttribute('href', '/editcartridge?idCartridge=' + input.cartridge[i].id);
-                link.innerText = input.cartridge[i].model + " от " +  dateStartFormat;
+                link.innerText = input.cartridge[i].model + " от " + dateStartFormat;
                 cartridgeUse.appendChild(link);
             }
         }
-       
-        
+
+
+
         let inputDiv = document.getElementsByClassName('contentInnerDiv1')[0];
-        inputValue = document.createElement('input');
-        inputValue.className = 'form-control mt-3';
-        inputValue.type = 'text';
-        inputValue.placeholder = 'Счётчик напечатанных страниц';
-        inputValue.id = 'countPage';
-        inputDiv.appendChild(inputValue);
-        
-        
+
         inputEmployeeToDoWork = document.createElement('select');
         inputEmployeeToDoWork.className = 'form-select mt-3';
         inputEmployeeToDoWork.type = 'text';
         inputEmployeeToDoWork.placeholder = 'Выполнил работу';
         inputEmployeeToDoWork.id = 'inputEmployeeToDoWork';
         inputDiv.appendChild(inputEmployeeToDoWork);
-        
+
         inputEmployeeToSetDevice = document.createElement('select');
         inputEmployeeToSetDevice.className = 'form-select mt-3';
         inputEmployeeToSetDevice.type = 'text';
         inputEmployeeToSetDevice.placeholder = 'Сотрудник, за кем закреплено оборудование';
         inputEmployeeToSetDevice.id = 'inputEmployeeToSetDevice';
         inputDiv.appendChild(inputEmployeeToSetDevice);
-        
+
         inputEmployeeMOL = document.createElement('select');
         inputEmployeeMOL.className = 'form-select mt-3';
         inputEmployeeMOL.type = 'text';
         inputEmployeeMOL.placeholder = 'Согласовал';
         inputEmployeeMOL.id = 'inputEmployeeMOL';
         inputDiv.appendChild(inputEmployeeMOL);
-        
-        if(input.cartridge.length > 1) {
-            let contentHistoryCartridgeUse = document.getElementsByClassName('contentInnerTable')[0];
-            
-            // Заголовок
-            let titleHistory = document.createElement('h5');
-            titleHistory.className = 'fw-bold text-center mt-3';
-            titleHistory.innerHTML = 'История установленных картриджей';
-            contentHistoryCartridgeUse.appendChild(titleHistory);
-            
-            // Таблица с историей использования картриджей
-            
-             tableCartridges = document.createElement('table');
-            tableCartridges.id = "modalTableModelsCartridge";
-            tableCartridges.className = "table table-striped table-bordered";
-            contentHistoryCartridgeUse.appendChild(tableCartridges);
 
-            theadCartridges = document.createElement('thead');
-            tableCartridges.appendChild(theadCartridges);
+
+        if (input.cartridge.length >= 1) {
+            inputValue = document.createElement('input');
+            inputValue.className = 'form-control mt-3';
+            inputValue.type = 'text';
+            inputValue.placeholder = 'Счётчик напечатанных страниц';
+            inputValue.id = 'countPage';
+            inputDiv.appendChild(inputValue);
+        }
+
+
+        let contentHistoryCartridgeUse = document.getElementsByClassName('contentInnerTable')[0];
+
+        // Заголовок
+        let titleHistory = document.createElement('h5');
+        titleHistory.className = 'fw-bold text-center mt-3';
+        titleHistory.innerHTML = 'История установленных картриджей';
+        contentHistoryCartridgeUse.appendChild(titleHistory);
+
+        // Таблица с историей использования картриджей
+
+        tableCartridges = document.createElement('table');
+        tableCartridges.id = "modalTableModelsCartridge";
+        tableCartridges.className = "table table-striped table-bordered";
+        contentHistoryCartridgeUse.appendChild(tableCartridges);
+
+        theadCartridges = document.createElement('thead');
+        tableCartridges.appendChild(theadCartridges);
+
+        trTheadCartridges = document.createElement('tr');
+
+        thTheadCartridgesCount = document.createElement('th');
+        thTheadCartridgesCount.setAttribute('scope', 'col');
+        thTheadCartridgesCount.innerText = '#';
+
+        thTheadCartridgeModel = document.createElement('th');
+        thTheadCartridgeModel.setAttribute('scope', 'col');
+        thTheadCartridgeModel.innerText = 'Модель';
+
+        thTheadDateInstall = document.createElement('th');
+        thTheadDateInstall.setAttribute('scope', 'col');
+        thTheadDateInstall.innerText = 'Дата установки';
+
+
+        thTheadCartridgeCountPage = document.createElement('th');
+        thTheadCartridgeCountPage.setAttribute('scope', 'col');
+        thTheadCartridgeCountPage.innerText = 'Отпечатал страниц';
+        
+        
+        thTheadCartridgeNominal = document.createElement('th');
+        thTheadCartridgeNominal.setAttribute('scope', 'col');
+        thTheadCartridgeNominal.innerText = 'Номинальный ресурс';
+
+        thTheadCartridgeDayWork = document.createElement('th');
+        thTheadCartridgeDayWork.setAttribute('scope', 'col');
+        thTheadCartridgeDayWork.innerText = 'Отработал дней';
+
+
+        thTheadCartridgeEmployeeToDoWork = document.createElement('th');
+        thTheadCartridgeEmployeeToDoWork.setAttribute('scope', 'col');
+        thTheadCartridgeEmployeeToDoWork.innerText = 'Выполнил работу';
+
+        thTheadCartridgeEmployeeToSetDevice = document.createElement('th');
+        thTheadCartridgeEmployeeToSetDevice.setAttribute('scope', 'col');
+        thTheadCartridgeEmployeeToSetDevice.innerText = 'Сотрудник, за кем закреплено оборудование';
+
+        thTheadCartridgeEmployeeMOL = document.createElement('th');
+        thTheadCartridgeEmployeeMOL.setAttribute('scope', 'col');
+        thTheadCartridgeEmployeeMOL.innerText = 'Согласовал';
+
+
+        thTheadActInstall = document.createElement('th');
+        thTheadActInstall.setAttribute('scope', 'col');
+        thTheadActInstall.innerText = 'Акт установки';
+
+        theadCartridges.appendChild(trTheadCartridges);
+        trTheadCartridges.appendChild(thTheadCartridgesCount);
+        trTheadCartridges.appendChild(thTheadCartridgeModel);
+        trTheadCartridges.appendChild(thTheadDateInstall);
+        trTheadCartridges.appendChild(thTheadCartridgeCountPage);
+        trTheadCartridges.appendChild(thTheadCartridgeNominal);
+        trTheadCartridges.appendChild(thTheadCartridgeDayWork);
+        trTheadCartridges.appendChild(thTheadCartridgeEmployeeToDoWork);
+        trTheadCartridges.appendChild(thTheadCartridgeEmployeeToSetDevice);
+        trTheadCartridges.appendChild(thTheadCartridgeEmployeeMOL);
+        trTheadCartridges.appendChild(thTheadActInstall);
+
+        tbodyCartridge = document.createElement('tbody');
+        tableCartridges.appendChild(tbodyCartridge);
+
+
+        for (i = 0; i < input.cartridge.length; i++) {
+           
+                trCartridge = document.createElement('tr');
+                tbodyCartridge.appendChild(trCartridge);
+                tdCountCartridge = document.createElement('td');
+                tdCountCartridge.innerText = i + 1;
+                trCartridge.appendChild(tdCountCartridge);
+
+                tdCartridgeModel = document.createElement('td');
+                tdCartridgeModel.setAttribute('class', 'model');
+                trCartridge.appendChild(tdCartridgeModel);
+
+                link = document.createElement('a');
+                link.setAttribute('href', '/editcartridge?idCartridge=' + input.cartridge[i].id);
+                dateStartContractParse = Date.parse(input.cartridge[i].startContract);
+                dateStartContractProc = new Date(dateStartContractParse);
+                dateStartContractFormat = dateStartContractProc.toLocaleDateString();
+                link.innerText = input.cartridge[i].model + ", контракт № " + input.cartridge[i].contractNumber + " от " +  dateStartContractFormat;
+                tdCartridgeModel.appendChild(link);
+
+
+                tdDateInstall = document.createElement('td');
+                tdDateInstall.setAttribute('class', 'dateInstallCart');
+                startDateCart = new Date(Date.parse(input.cartridge[i].dateStartExploitation));
+                startDateCartFormat = startDateCart.toLocaleDateString('ru');
+                tdDateInstall.innerText = startDateCartFormat;
+                trCartridge.appendChild(tdDateInstall);
+                
+                
+                
+                
+                
+                if(input.cartridge[i].usePrinter == false) {
+                tdCartridgeCountPage = document.createElement('td');
+                tdCartridgeCountPage.setAttribute('class', 'tdCountPage');
+                tdCartridgeCountPage.innerText = input.cartridge[i].count;
+               
+
+
+                dateEndParse = Date.parse(input.cartridge[i].dateEndExploitation);
+                dateStartParse = Date.parse(input.cartridge[i].dateStartExploitation);
+
+                dayOfWork = getNumberOfDays(dateStartParse, dateEndParse);
+
+                tdCartridgeDayWork = document.createElement('td');
+                tdCartridgeDayWork.setAttribute('class', 'tdDayWork');
+                tdCartridgeDayWork.innerText = dayOfWork;
+                
+                
+            } else {
+                
+                tdCartridgeCountPage = document.createElement('td');
+                tdCartridgeCountPage.setAttribute('class', 'tdCountPage');
+                tdCartridgeCountPage.innerText = "Используется";
+
+
+                dateEndParse = new Date();
+                dateStartParse = Date.parse(input.cartridge[i].dateStartExploitation);
+
+                dayOfWork = getNumberOfDays(dateStartParse, dateEndParse);
+
+                tdCartridgeDayWork = document.createElement('td');
+                tdCartridgeDayWork.setAttribute('class', 'tdDayWork');
+                tdCartridgeDayWork.innerText = dayOfWork;
+                
+            }
             
-            trTheadCartridges = document.createElement('tr');
+                tdCartridgeNominal = document.createElement('td');
+                tdCartridgeNominal.setAttribute('class', 'cartridgeNominal');
+                tdCartridgeNominal.innerText = input.cartridge[i].resource;
             
-            thTheadCartridgesCount = document.createElement('th');
-            thTheadCartridgesCount.setAttribute('scope', 'col');
-            thTheadCartridgesCount.innerText = '#';
+                trCartridge.appendChild(tdCartridgeCountPage);
+                trCartridge.appendChild(tdCartridgeNominal);
+                trCartridge.appendChild(tdCartridgeDayWork);
             
-            thTheadCartridgeModel = document.createElement('th');
-            thTheadCartridgeModel.setAttribute('scope', 'col');
-            thTheadCartridgeModel.innerText = 'Модель';
-            
-            thTheadCartridgeCountPage = document.createElement('th');
-            thTheadCartridgeCountPage.setAttribute('scope', 'col');
-            thTheadCartridgeCountPage.innerText = 'Отпечатал страниц';
-            
-            thTheadCartridgeDayWork = document.createElement('th');
-            thTheadCartridgeDayWork.setAttribute('scope', 'col');
-            thTheadCartridgeDayWork.innerText = 'Отработал дней';
-            
-            
-            thTheadCartridgeEmployeeToDoWork = document.createElement('th');
-            thTheadCartridgeEmployeeToDoWork.setAttribute('scope', 'col');
-            thTheadCartridgeEmployeeToDoWork.innerText = 'Выполнил работу';
-            
-            thTheadCartridgeEmployeeToSetDevice = document.createElement('th');
-            thTheadCartridgeEmployeeToSetDevice.setAttribute('scope', 'col');
-            thTheadCartridgeEmployeeToSetDevice.innerText = 'Сотрудник, за кем закреплено оборудование';
-            
-            thTheadCartridgeEmployeeMOL = document.createElement('th');
-            thTheadCartridgeEmployeeMOL.setAttribute('scope', 'col');
-            thTheadCartridgeEmployeeMOL.innerText = 'Согласовал';
-            
-            theadCartridges.appendChild(trTheadCartridges);
-            trTheadCartridges.appendChild(thTheadCartridgesCount);
-            trTheadCartridges.appendChild(thTheadCartridgeModel);
-            trTheadCartridges.appendChild(thTheadCartridgeCountPage);
-            trTheadCartridges.appendChild(thTheadCartridgeDayWork);
-            trTheadCartridges.appendChild(thTheadCartridgeEmployeeToDoWork);
-            trTheadCartridges.appendChild(thTheadCartridgeEmployeeToSetDevice);
-            trTheadCartridges.appendChild(thTheadCartridgeEmployeeMOL);
-            
-            tbodyCartridge = document.createElement('tbody');
-            tableCartridges.appendChild(tbodyCartridge);
-            
-       
-            
-            
-             for (i = 0; i < input.cartridge.length; i++) {
-                 if(input.cartridge[i].usePrinter == false) {
-                        trCartridge = document.createElement('tr');
-                        tbodyCartridge.appendChild(trCartridge);
-                        tdCountCartridge = document.createElement('td');
-                        tdCountCartridge.innerText = i + 1;
-                        trCartridge.appendChild(tdCountCartridge);
-                        
-                        tdCartridgeModel = document.createElement('td');
-                        tdCartridgeModel.setAttribute('class', 'model');
-                        trCartridge.appendChild(tdCartridgeModel);
-                        
-                        link = document.createElement('a');
-                        link.setAttribute('href', '/editcartridge?idCartridge=' + input.cartridge[i].id);
-                        link.innerText = input.cartridge[i].model;
-                        tdCartridgeModel.appendChild(link);
-                        
-                        
-                        
-                        tdCartridgeCountPage = document.createElement('td');
-                        tdCartridgeCountPage.setAttribute('class', 'tdCountPage');
-                        tdCartridgeCountPage.innerText = input.cartridge[i].count;
-                        trCartridge.appendChild(tdCartridgeCountPage);
-                        
-                        
-                        dateEndParse = Date.parse(input.cartridge[i].dateEndExploitation);
-                        dateStartParse = Date.parse(input.cartridge[i].dateStartExploitation);
-                        
-                        dayOfWork = getNumberOfDays(dateStartParse, dateEndParse);
-                        
-                        tdCartridgeDayWork = document.createElement('td');
-                        tdCartridgeDayWork.setAttribute('class', 'tdCountPage');
-                        tdCartridgeDayWork.innerText = dayOfWork;
-                        trCartridge.appendChild(tdCartridgeDayWork);
-                        
-                        tdCartridgeEmployeeToDoWork = document.createElement('td');
-                        tdCartridgeEmployeeToDoWork.setAttribute('class', 'employeeToDoWork');
-                        tdCartridgeEmployeeToDoWork.innerText = input.cartridge[i].employeeToDoWork;
-                        trCartridge.appendChild(tdCartridgeEmployeeToDoWork);
-                        
-                        tdCartridgeEmployeeToSetDevice = document.createElement('td');
-                        tdCartridgeEmployeeToSetDevice.setAttribute('class', 'employeeToSetDevice');
-                        tdCartridgeEmployeeToSetDevice.innerText = input.cartridge[i].employeeToSetDevice;
-                        trCartridge.appendChild(tdCartridgeEmployeeToSetDevice);
-                        
-                        tdCartridgeEmployeeMOL = document.createElement('td');
-                        tdCartridgeEmployeeMOL.setAttribute('class', 'employeeMOL');
-                        tdCartridgeEmployeeMOL.innerText = input.cartridge[i].employeeMOL;
-                        trCartridge.appendChild(tdCartridgeEmployeeMOL);
-                    }
-                }
+               
+
+                tdCartridgeEmployeeToDoWork = document.createElement('td');
+                tdCartridgeEmployeeToDoWork.setAttribute('class', 'employeeToDoWork');
+                tdCartridgeEmployeeToDoWork.innerText = input.cartridge[i].employeeToDoWork;
+                trCartridge.appendChild(tdCartridgeEmployeeToDoWork);
+
+                tdCartridgeEmployeeToSetDevice = document.createElement('td');
+                tdCartridgeEmployeeToSetDevice.setAttribute('class', 'employeeToSetDevice');
+                tdCartridgeEmployeeToSetDevice.innerText = input.cartridge[i].employeeToSetDevice;
+                trCartridge.appendChild(tdCartridgeEmployeeToSetDevice);
+
+                tdCartridgeEmployeeMOL = document.createElement('td');
+                tdCartridgeEmployeeMOL.setAttribute('class', 'employeeMOL');
+                tdCartridgeEmployeeMOL.innerText = input.cartridge[i].employeeMOL;
+                trCartridge.appendChild(tdCartridgeEmployeeMOL);
+
+                tdCartridgeActInstall = document.createElement('td');
+                tdCartridgeActInstall.setAttribute('class', 'actInstall');
+                tdCartridgeActInstall.setAttribute('actId', input.cartridge[i].listenerId);
+
+                linkActInstall = document.createElement('a');
+                linkActInstall.setAttribute('href', '#!');
+
+                linkActInstall.innerText = "скачать";
+
+
+                linkActInstall.onclick = function () {
+                    var id = this.parentElement.attributes[1].value;
+                    actInstallReport(id);
+
+                };
+
+                tdCartridgeActInstall.appendChild(linkActInstall);
+                trCartridge.appendChild(tdCartridgeActInstall);
             
         }
-        
-        
+
+
+
+
     } else {
         cartridgeUse.innerHTML = "Пусто";
     }
-    
+
     let cartridgeUseBtn = document.getElementById("catridgeUsesbtn");
-     cartridgeUseBtn.addEventListener('click', function() {
+    cartridgeUseBtn.addEventListener('click', function () {
 
-         
-         $('#cartridgeSelect').selectize({
-                  preload: true,
-                  placeholder: 'Выберите картридж',
-                  valueField: 'id',
-                  labelField: 'model',
-                  searchField: "model",
-                  
-                  load: function (query, callback) {
-                    $.ajax({
-                        url: '/showcartridgesbymodel',
-                        type: 'GET',
-                        dataType: 'json',
-                        data: { idPrinter: input.id,
-                          location: input.location },
-                        error: callback,
-                        success: callback
-                         });
-                }
-         
-     });
-         
-         
-         
-              $('#inputEmployeeToDoWork').selectize({
-                preload: true,
-                placeholder: 'Выполнил работу',
-                valueField: 'code',
-                labelField: 'name',
-                searchField: "name",
-                
-                load: function (query, callback) {
-                     $.ajax({
-                        url: '/getinfooo',
-                        type: 'GET',
-                        error: callback,
-                        success: callback
-                         });
-                }
-                
-            });
-            
-            
-               $('#inputEmployeeToSetDevice').selectize({
-                preload: true,
-                placeholder: 'Сотрудник, за которым закреплено оборудование',
-                valueField: 'code',
-                labelField: 'name',
-                searchField: "name",
-                
-                load: function (query, callback) {
-                     $.ajax({
-                        url: '/getinfooo',
-                        type: 'GET',
-                        error: callback,
-                        success: callback
-                         });
-                }
-                
-            });
-            
-            $('#inputEmployeeMOL').selectize({
-                preload: true,
-                placeholder: 'Согласовал',
-                valueField: 'code',
-                labelField: 'name',
-                searchField: "name",
-                
-                load: function (query, callback) {
-                     $.ajax({
-                        url: '/getinfooo',
-                        type: 'GET',
-                        error: callback,
-                        success: callback
-                         });
-                }
-                
-            });
-         
-         
-         let cartridgeSelectOkBtn = document.getElementById('printerInnerCartridgeSubmit');
-         cartridgeSelectOkBtn.addEventListener('click', function() {
-             var countPage = 0;
-             if($('#countPage')[0] != null) {
-                 countPage = $('#countPage')[0].value;
-             }
-             
-             $.ajax({
-            type: "POST",
-            url: "/installcart",
-            data: { idPrinter: input.id,
-                    idCartridge: $('#cartridgeSelect')[0].selectize.items[0],
-                    count:  countPage,
-                    employeeToDoWork: $('#inputEmployeeToDoWork')[0].value,
-                    employeeToSetDevice: $('#inputEmployeeToSetDevice')[0].value,
-                    employeeMOL: $('#inputEmployeeMOL')[0].value},
-            success: function () {
-                $('#modalCartridgeUses').modal('hide');
-               window.location.reload();
+        $('#cartridgeSelect').selectize({
+            preload: true,
+            placeholder: 'Выберите картридж',
+            valueField: 'id',
+            labelField: "name",
+            searchField: "name",
+
+            load: function (query, callback) {
+                $.ajax({
+                    url: '/showcartridgesforchoice',
+                    type: 'GET',
+                    dataType: 'json',
+                    data: {idPrinter: input.id,
+                        location: input.location},
+                    error: callback,
+                    success: callback
+                });
             }
-             });     
-         });
-     });
-     
-     let backBtn = document.querySelector('#backBtn');
-     backBtn.addEventListener('click', function() {
-        location.href = document.referrer;
-     });
-     
 
-     
- });
- 
- 
+        });
+
+
+
+        $('#inputEmployeeToDoWork').selectize({
+            preload: true,
+            placeholder: 'Выполнил работу',
+            valueField: 'code',
+            labelField: 'name',
+            searchField: "name",
+
+            load: function (query, callback) {
+                $.ajax({
+                    url: '/getinfooo',
+                    type: 'GET',
+                    error: callback,
+                    success: callback
+                });
+            }
+
+        });
+
+
+        $('#inputEmployeeToSetDevice').selectize({
+            preload: true,
+            placeholder: 'Сотрудник, за которым закреплено оборудование',
+            valueField: 'code',
+            labelField: 'name',
+            searchField: "name",
+
+            load: function (query, callback) {
+                $.ajax({
+                    url: '/getinfooo',
+                    type: 'GET',
+                    error: callback,
+                    success: callback
+                });
+            }
+
+        });
+
+        $('#inputEmployeeMOL').selectize({
+            preload: true,
+            placeholder: 'Согласовал',
+            valueField: 'code',
+            labelField: 'name',
+            searchField: "name",
+
+            load: function (query, callback) {
+                $.ajax({
+                    url: '/getinfooo',
+                    type: 'GET',
+                    error: callback,
+                    success: callback
+                });
+            }
+
+        });
+
+
+        let cartridgeSelectOkBtn = document.getElementById('printerInnerCartridgeSubmit');
+        cartridgeSelectOkBtn.addEventListener('click', function () {
+            var countPage = 0;
+            if ($('#countPage')[0] != null) {
+                countPage = $('#countPage')[0].value;
+            }
+            var emplToDoWork = '';
+            var emplToSetDevice = '';
+            var emplMOL = '';
+
+            if ($('#inputEmployeeToDoWork')[0].value) {
+                emplToDoWork = $('#inputEmployeeToDoWork')[0].value;
+            }
+            if ($('#inputEmployeeToSetDevice')[0].value) {
+                emplToSetDevice = $('#inputEmployeeToSetDevice')[0].value;
+            }
+            if ($('#inputEmployeeMOL')[0].value) {
+                emplMOL = $('#inputEmployeeMOL')[0].value;
+            }
+
+
+            $.ajax({
+                type: "POST",
+                url: "/installcart",
+                data: {idPrinter: input.id,
+                    idCartridge: $('#cartridgeSelect')[0].selectize.items[0],
+                    count: countPage,
+                    employeeToDoWork: emplToDoWork,
+                    employeeToSetDevice: emplToSetDevice,
+                    employeeMOL: emplMOL},
+                success: function () {
+                    $('#modalCartridgeUses').modal('hide');
+                    window.location.reload();
+                }
+            });
+        });
+    });
+
+    let backBtn = document.querySelector('#backBtn');
+    backBtn.addEventListener('click', function () {
+        location.href = document.referrer;
+    });
+
+
+
+});
+
+
+function actInstallReport(input) {
+    var fileDownloadManager = new FileDownloadManager({autoOpen: true});
+
+    $.get('/report/act?id=' + input, function (data) {
+        fileDownloadManager.createFileBlock(data, 'Акт' + data + '.xlsx');
+    });
+
+}
+         

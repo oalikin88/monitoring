@@ -66,10 +66,10 @@ class FileDownloadManager {
     }
 
     _activateDownload(duid, filename) {
-        var downloadHyperLink = $('.file-to-download[data-id="' + duid + '"]');
-        downloadHyperLink.removeClass('grey-text');
-        downloadHyperLink.attr('href', eval(`\`${this._fileDownloadService}\``));
-        downloadHyperLink.attr('target', '_blank');
+//        window.open('http://sa04100uitwa243.0041.pfr.ru:8012/file-chest-service/getFile/' + filename + '?duid=' + duid);
+        var downloadHyperLink = document.createElement('a');
+        downloadHyperLink.setAttribute('href', 'http://sa04100uitwa243.0041.pfr.ru:8012/file-chest-service/getFile/' + filename + '?duid=' + duid);
+        downloadHyperLink.click();
     }
 
     _removeFile(uid) {
@@ -91,7 +91,7 @@ class FileDownloadManager {
             updateStatusValue(UID, 'Обработано ' + data.contents.current + ' записей из ' + data.contents.total + '. Готовность ' + data.contents.percent + '%');
         }
         if (data.notificationStatus === "RECEIVED" && data.type === "DOCUMENT") {
-            updateStatusValue(UID, 'Документ готов к скачиванию', 'green');
+         this._activateDownload(UID, "filename");
         }
         if (data.notificationStatus === "ERROR") {
             updateStatusValue(UID, 'Ошибка: ' + data.contents.message, 'red');

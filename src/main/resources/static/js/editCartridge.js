@@ -71,7 +71,7 @@ $(document).ready(function () {
      endDateContract.innerHTML = endDateFormat;
     
      
-     if(input.util == true && input.usePrinter == true) {
+     if(input.usePrinter == true) {
          
          dateStartUseRow = document.createElement('div');
          dateStartUseRow.className = 'row mb-3';
@@ -99,7 +99,7 @@ $(document).ready(function () {
          status.appendChild(mes);
          mes.appendChild(span);
          locationBtn.disabled = true;
-     } else if (input.util == true && input.usePrinter == false) {
+     } else if (input.util == true) {
          
             // Отпечатал страниц
          

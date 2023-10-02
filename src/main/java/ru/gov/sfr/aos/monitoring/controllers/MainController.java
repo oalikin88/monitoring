@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
+import ru.gov.sfr.aos.monitoring.PrinterStatus;
 import ru.gov.sfr.aos.monitoring.entities.Contract;
 import ru.gov.sfr.aos.monitoring.interfaces.ContractServiceInterface;
 import ru.gov.sfr.aos.monitoring.models.CartridgeDTO;
@@ -36,6 +37,7 @@ import ru.gov.sfr.aos.monitoring.models.ModelCartridgeByModelPrinters;
 import ru.gov.sfr.aos.monitoring.models.ModelDTO;
 import ru.gov.sfr.aos.monitoring.models.PlaningBuyDto;
 import ru.gov.sfr.aos.monitoring.models.PrinterDTO;
+import ru.gov.sfr.aos.monitoring.models.PrinterStatusDto;
 import ru.gov.sfr.aos.monitoring.services.CartridgeMapper;
 import ru.gov.sfr.aos.monitoring.services.CartridgeService;
 import ru.gov.sfr.aos.monitoring.services.ContractServiceMapper;
@@ -310,6 +312,12 @@ public class MainController {
         model.addAttribute("input", getAllContracts);
         return "contracts";
     }
+        
+        @PostMapping("/changestatus")
+        public void changePrinterStatus(PrinterStatusDto dto) {
+            printerMapper.editPrinterStatus(dto);
+            
+        }
     
         
  

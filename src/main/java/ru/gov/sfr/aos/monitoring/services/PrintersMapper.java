@@ -15,6 +15,7 @@ import org.opfr.springBootStarterDictionary.models.DictionaryEmployee;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.gov.sfr.aos.monitoring.OperationType;
+import ru.gov.sfr.aos.monitoring.PrinterStatus;
 import ru.gov.sfr.aos.monitoring.entities.Cartridge;
 import ru.gov.sfr.aos.monitoring.entities.ListenerOperation;
 import ru.gov.sfr.aos.monitoring.entities.Location;
@@ -26,6 +27,7 @@ import ru.gov.sfr.aos.monitoring.models.ChangeDeviceLocationDTO;
 import ru.gov.sfr.aos.monitoring.models.ChangePrinterSerialNumberDTO;
 import ru.gov.sfr.aos.monitoring.models.LocationDTO;
 import ru.gov.sfr.aos.monitoring.models.PrinterDTO;
+import ru.gov.sfr.aos.monitoring.models.PrinterStatusDto;
 import ru.gov.sfr.aos.monitoring.repositories.CartridgeRepo;
 import ru.gov.sfr.aos.monitoring.repositories.ListenerOperationRepo;
 import ru.gov.sfr.aos.monitoring.repositories.LocationRepo;
@@ -227,6 +229,7 @@ public class PrintersMapper {
         dto.setStartContract(findPrinterById.get().getContract().getDateStartContract());
         dto.setEndContract(findPrinterById.get().getContract().getDateEndContract());
         dto.setContractId(findPrinterById.get().getContract().getId());
+        dto.setPrinterStatus(findPrinterById.get().getPrinterStatus().getStatus());
         
         List<CartridgeDTO> cartridgesForPrinter = new ArrayList<>();
         for(Cartridge car : findPrinterById.get().getCartridge()) {
@@ -240,11 +243,13 @@ public class PrintersMapper {
                             cartDto.setEmployeeToDoWork(employeesMap.get(listener.getEmployeeToDoWork()));
                             cartDto.setEmployeeToSetDevice(employeesMap.get(listener.getEmployeeToSetDevice()));
                             cartDto.setEmployeeMOL(employeesMap.get(listener.getEmployeeMOL()));
+                            cartDto.setListenerId(listener.getId());
                             break;
                         }
                     }
                     cartDto.setContract(car.getContract().getId());
                     cartDto.setContractNumber(car.getContract().getContractNumber());
+                    cartDto.setStartContract(car.getContract().getDateStartContract());
                     cartDto.setId(car.getId());
                     cartDto.setLocation(car.getLocation().getName());
                     cartDto.setDateEndExploitation(car.getDateEndExploitation());
@@ -256,6 +261,7 @@ public class PrintersMapper {
                     cartDto.setUsePrinter(car.isUseInPrinter());
                     cartDto.setCount(car.getCount());
                     
+                    
                     cartridgesForPrinter.add(cartDto);
         }
         
@@ -263,6 +269,39 @@ public class PrintersMapper {
         
         
         return dto;
+    }
+    
+    
+    public void editPrinterStatus(PrinterStatusDto dto) {
+        Optional<Printer> findById = printerRepo.findById(dto.getId());
+        if(findById.isPresent()) {
+            Printer printer = findById.get();
+            switch (dto.getStatus()) {
+                case "OK":
+                    printer.setPrinterStatus(PrinterStatus.OK);
+                    break;
+                case "REPAIR":
+                    printer.setPrinterStatus(PrinterStatus.REPAIR);
+                    break;
+                case "MONITORING":
+                    printer.setPrinterStatus(PrinterStatus.MONITORING);
+                    break;
+                case "UTILIZATION":
+                    printer.setPrinterStatus(PrinterStatus.UTILIZATION);
+                    break;
+                case "DEFECTIVE":
+                    printer.setPrinterStatus(PrinterStatus.DEFECTIVE);
+                    break;
+                case "DELETE":
+                    printer.setPrinterStatus(PrinterStatus.DELETE);
+                    break;
+                default:
+                    throw new AssertionError();
+            }
+            
+            printerRepo.save(printer);
+            
+        }
     }
     
     public void editPrinterLocation(ChangeDeviceLocationDTO dto) {

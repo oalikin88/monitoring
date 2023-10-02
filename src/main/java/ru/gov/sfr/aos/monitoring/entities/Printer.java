@@ -9,6 +9,8 @@ import java.util.List;
 import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
@@ -16,6 +18,7 @@ import javax.persistence.PrimaryKeyJoinColumn;
 import javax.validation.constraints.NotNull;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
+import ru.gov.sfr.aos.monitoring.PrinterStatus;
 
 /**
  *
@@ -41,19 +44,23 @@ public class Printer extends ObjectBuing {
     
     @ManyToOne(cascade = CascadeType.ALL)
     protected Model model;
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    protected PrinterStatus printerStatus;
    
     
     public Printer() {
     }
 
     public Printer(Location location, Manufacturer manufacturer, String serialNumber, String inventoryNumber, 
-            Set<Cartridge> cartridge, Model model) {
+            Set<Cartridge> cartridge, Model model, PrinterStatus printerStatus) {
         this.location = location;
         this.model = model;
         this.serialNumber = serialNumber;
         this.inventoryNumber = inventoryNumber;
         this.cartridge = cartridge;
         this.manufacturer = manufacturer;
+        this.printerStatus = printerStatus;
         
     }  
 
@@ -120,6 +127,14 @@ public class Printer extends ObjectBuing {
 
     public void setModel(Model model) {
         this.model = model;
+    }
+
+    public PrinterStatus getPrinterStatus() {
+        return printerStatus;
+    }
+
+    public void setPrinterStatus(PrinterStatus printerStatus) {
+        this.printerStatus = printerStatus;
     }
     
     

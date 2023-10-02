@@ -16,8 +16,9 @@ window.onload = function () {
         // Вывод таблицы
         let table = document.createElement('table');
         table.id = "table";
-        table.className = "table table-hover table-striped table-bordered";
+        table.className = "table align-middle table-hover table-striped table-bordered";
         let thead = document.createElement('thead');
+        thead.className = "text-center";
         let trThead = document.createElement('tr');
         let thThead1 = document.createElement('th');
         thThead1.setAttribute('scope', 'col');
@@ -96,8 +97,6 @@ window.onload = function () {
 
                 for (innerInInput1Sort = 0; innerInInput1Sort < input1sort[inInput1sort][1].length; innerInInput1Sort++) {
 
-
-
                     for (inCartridgeModelCount = 0; inCartridgeModelCount < input1sort[inInput1sort][1][innerInInput1Sort].modelsPrinter.length; inCartridgeModelCount++) {
                         if (input2sort[i][1][0].model === input1sort[inInput1sort][1][innerInInput1Sort].modelsPrinter[inCartridgeModelCount].model) {
                             for (vbn = 0; vbn < input1sort[inInput1sort][1][innerInInput1Sort].printersID.length; vbn++) {
@@ -110,15 +109,8 @@ window.onload = function () {
                             searchModel = true;
                             break;
                         }
-
                     }
-
-
-
-
                 }
-
-
                 tdPrintSuccess = document.createElement('td');
                 tdPrintSuccess.setAttribute('id', 'location_' + JSON.parse(input1sort[inInput1sort][0]).id + '_' + 'model_' + input2sort[i][1][0].idModel);
                 tdPrintSuccess.setAttribute('class', 'model');
@@ -131,11 +123,8 @@ window.onload = function () {
                 linkPrinter.setAttribute('href', '/printersbylocation?idLocation=' + JSON.parse(input1sort[inInput1sort][0]).id
                         + temp);
                 linkPrinter.innerText = amountPrinters.size;
-
                 tr.appendChild(tdPrintSuccess);
                 tdPrintSuccess.appendChild(linkPrinter);
-
-
 
                 tdCart = document.createElement('td');
                 //        tdCart.setAttribute('id', 'location_' + JSON.parse(input1sort[inInput1sort][0]).id + '_' + 'model_' + input1sort[inInput1sort][1][innerInInput1Sort].id + '_cart');
@@ -145,14 +134,10 @@ window.onload = function () {
                 link.setAttribute('href', '/getcartridgesbymodel?idPrinter=' + input2sort[i][1][0].idModel
                         + '&location=' + JSON.parse(input1sort[inInput1sort][0]).name);
                 link.innerText = amountCartridge.size;
-
                 tr.appendChild(tdCart);
                 tdCart.appendChild(link);
 
-
             }
-
-
 
         }
     } else {
