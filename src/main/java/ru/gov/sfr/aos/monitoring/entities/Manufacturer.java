@@ -4,6 +4,7 @@
  */
 package ru.gov.sfr.aos.monitoring.entities;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.CascadeType;
@@ -22,7 +23,7 @@ import org.hibernate.annotations.LazyCollectionOption;
  */
 @Entity
 @PrimaryKeyJoinColumn(name = "MANUFACTURER_ID")
-public class Manufacturer {
+public class Manufacturer implements Serializable {
     
       @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

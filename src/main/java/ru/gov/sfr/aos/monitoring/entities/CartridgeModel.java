@@ -4,6 +4,7 @@
  */
 package ru.gov.sfr.aos.monitoring.entities;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.CascadeType;
@@ -27,7 +28,7 @@ import ru.gov.sfr.aos.monitoring.CartridgeType;
  */
 
 @Entity
-public class CartridgeModel {
+public class CartridgeModel implements Serializable {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

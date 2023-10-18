@@ -104,7 +104,9 @@ $(document).ready(function () {
 
             contentRowContractNumber = document.createElement('div');
             contentRowContractNumber.className = 'col';
-            contentRowContractNumber.innerText = Object.values(input)[0][i].contractNumber;
+            startContractDate = new Date(Object.values(input)[0][i].startContract);
+            startContractDateFormat = startContractDate.toLocaleDateString('ru');
+            contentRowContractNumber.innerText = Object.values(input)[0][i].contractNumber + " от " + startContractDateFormat;
             contentRow.appendChild(contentRowContractNumber);
         }
 

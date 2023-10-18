@@ -33,8 +33,12 @@ public class ListenerOperation implements Serializable {
     private CartridgeModel model;
     @ManyToOne(cascade = CascadeType.ALL)
     private Location location;
+    @ManyToOne(cascade = CascadeType.ALL)
+    private Location locationBeforeTransfer;
     private int amountDevicesOfLocation;
     private int amountCurrentModelOfLocation;
+    private int amountDevicesOfTransferedLocation;
+    private int amountCurrentModelOfTransferedLocation;
     @Enumerated(EnumType.STRING)
     private OperationType operationType;
     private Long printerID;
@@ -47,13 +51,16 @@ public class ListenerOperation implements Serializable {
     public ListenerOperation() {
     }
 
-    public ListenerOperation(LocalDateTime dateOperation, String currentOperation, CartridgeModel model, Location location, int amountDevicesOfLocation, int amountCurrentModelOfLocation, OperationType operationType, Long printerID, Long cartridgeID, String employeeToDoWork, String employeeToSetDevice, String employeeMOL) {
+    public ListenerOperation(LocalDateTime dateOperation, String currentOperation, CartridgeModel model, Location location, Location locationBeforeTransfer, int amountDevicesOfLocation, int amountCurrentModelOfLocation, int amountDevicesOfTransferedLocation, int amountCurrentModelOfTransferedLocation, OperationType operationType, Long printerID, Long cartridgeID, String employeeToDoWork, String employeeToSetDevice, String employeeMOL) {
         this.dateOperation = dateOperation;
         this.currentOperation = currentOperation;
         this.model = model;
         this.location = location;
+        this.locationBeforeTransfer = locationBeforeTransfer;
         this.amountDevicesOfLocation = amountDevicesOfLocation;
         this.amountCurrentModelOfLocation = amountCurrentModelOfLocation;
+        this.amountDevicesOfTransferedLocation = amountDevicesOfTransferedLocation;
+        this.amountCurrentModelOfTransferedLocation = amountCurrentModelOfTransferedLocation;
         this.operationType = operationType;
         this.printerID = printerID;
         this.cartridgeID = cartridgeID;
@@ -170,14 +177,31 @@ public class ListenerOperation implements Serializable {
     public void setCartridgeID(Long cartridgeID) {
         this.cartridgeID = cartridgeID;
     }
-    
-    
+
+    public int getAmountDevicesOfTransferedLocation() {
+        return amountDevicesOfTransferedLocation;
+    }
+
+    public void setAmountDevicesOfTransferedLocation(int amountDevicesOfTransferedLocation) {
+        this.amountDevicesOfTransferedLocation = amountDevicesOfTransferedLocation;
+    }
+
+    public int getAmountCurrentModelOfTransferedLocation() {
+        return amountCurrentModelOfTransferedLocation;
+    }
+
+    public void setAmountCurrentModelOfTransferedLocation(int amountCurrentModelOfTransferedLocation) {
+        this.amountCurrentModelOfTransferedLocation = amountCurrentModelOfTransferedLocation;
+    }
+
+    public Location getLocationBeforeTransfer() {
+        return locationBeforeTransfer;
+    }
+
+    public void setLocationBeforeTransfer(Location locationBeforeTransfer) {
+        this.locationBeforeTransfer = locationBeforeTransfer;
+    }
     
 
-    
-    
-    
-
-    
     
 }

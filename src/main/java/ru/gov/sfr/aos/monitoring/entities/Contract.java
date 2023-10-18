@@ -4,6 +4,7 @@
  */
 package ru.gov.sfr.aos.monitoring.entities;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -22,7 +23,7 @@ import javax.validation.constraints.NotNull;
  */
 
 @Entity
-public class Contract {
+public class Contract implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

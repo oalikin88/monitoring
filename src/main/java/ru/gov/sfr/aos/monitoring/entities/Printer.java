@@ -4,6 +4,7 @@
  */
 package ru.gov.sfr.aos.monitoring.entities;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -26,7 +27,7 @@ import ru.gov.sfr.aos.monitoring.PrinterStatus;
  */
 @Entity
 @PrimaryKeyJoinColumn(name = "PRINTER_ID")
-public class Printer extends ObjectBuing {
+public class Printer extends ObjectBuing implements Serializable {
 
     @NotNull
     @ManyToOne(cascade = CascadeType.ALL)

@@ -4,6 +4,7 @@
  */
 package ru.gov.sfr.aos.monitoring.entities;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -20,7 +21,7 @@ import javax.validation.constraints.NotNull;
 
 @Entity
 @PrimaryKeyJoinColumn(name = "CARTRIDGE_ID")
-public class Cartridge extends ObjectBuing {
+public class Cartridge extends ObjectBuing implements Serializable {
     @NotNull
     @ManyToOne(cascade = CascadeType.ALL)
     protected CartridgeModel model;

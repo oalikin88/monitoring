@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ru.gov.sfr.aos.monitoring.OperationType;
@@ -306,12 +307,17 @@ public class ContractServiceMapper {
                         
             }
         }
+        
+        contract.setObjectBuing(objectsBuing);
+        
+        contractServiceImpl.saveContract(contract);
+        
         Optional<Location> findLocationById = locationRepo.findById(location.getId());
         Location currLoc = findLocationById.get();
         int cartridgesOnSklad = currLoc.getCartridges().size();
-        
+        int addedCartridges = modelsCartridges.values().stream().mapToInt(e -> e.intValue()).sum();
           for(Map.Entry<Long, Integer> entry : modelsCartridges.entrySet()) {
-                    
+                   
                     ListenerOperation listener = new ListenerOperation();
                     Optional<CartridgeModel> findModelCartridgeByName = cartridgeModelRepo.findById(entry.getKey());
                     List<Cartridge> findByLocationIdAndModelId = cartridgeRepo.findByLocationIdAndModelId(currLoc.getId(), findModelCartridgeByName.get().getId());
@@ -320,7 +326,8 @@ public class ContractServiceMapper {
                     listener.setLocation(currLoc);
                     cartridgesOnSklad = cartridgesOnSklad + entry.getValue();
                     listener.setAmountDevicesOfLocation(cartridgesOnSklad);
-                    listener.setAmountCurrentModelOfLocation(findByLocationIdAndModelId.size() + entry.getValue());
+                   
+                    listener.setAmountCurrentModelOfLocation(findByLocationIdAndModelId.size());
                     listener.setCurrentOperation("Закуплен по контракту");
                     listener.setModel(findModelCartridgeByName.get());
                     listener.setOperationType(OperationType.BUY);
@@ -329,10 +336,7 @@ public class ContractServiceMapper {
                     
                     }
         
-        contract.setObjectBuing(objectsBuing);
         
-        contractServiceImpl.saveContract(contract);
-
         System.out.println(
                 "Контракт сохранён успешно");
     }

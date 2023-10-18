@@ -4,6 +4,7 @@
  */
 package ru.gov.sfr.aos.monitoring.entities;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -33,7 +34,7 @@ import ru.gov.sfr.aos.monitoring.PrintFormatType;
 
 @Entity
 @PrimaryKeyJoinColumn(name = "MODEL_ID")
-public class Model {
+public class Model implements Serializable {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
