@@ -89,10 +89,10 @@ public class GetInfoController {
     
     
 
-    @PostMapping("/amountcartridgesofday")
-    public List<ConsumptionDTO> getAmountCartridgesOfDay(PlaningBuyDto dto) {
-        List<ConsumptionDTO> calculatePlaningBuy = planingService.calculatePlaningBuy(dto);
-        return calculatePlaningBuy;
-    }
+//    @PostMapping("/amountcartridgesofday")
+//    public List<ConsumptionDTO> getAmountCartridgesOfDay(PlaningBuyDto dto) {
+//        List<ConsumptionDTO> calculatePlaningBuy = planingService.showPurchased(dto);
+//        return calculatePlaningBuy;
+//    }
 
 }

@@ -70,6 +70,7 @@ public class ContractServiceMapper {
 
     public void createNewContract(List<Map<String, String>> input) throws NumberFormatException {
         
+        
         CartridgeModel cartridgeModel;
         CartridgeModel cartridgeModelIndepended;
         Set<ObjectBuing> objectsBuing = new HashSet<>();
@@ -299,7 +300,7 @@ public class ContractServiceMapper {
 
                 }
                 cartridge.setContract(contract);
-                   
+                
                 
                 objectsBuing.add(cartridge);
             }
@@ -320,18 +321,24 @@ public class ContractServiceMapper {
                    
                     ListenerOperation listener = new ListenerOperation();
                     Optional<CartridgeModel> findModelCartridgeByName = cartridgeModelRepo.findById(entry.getKey());
+                    List<Cartridge> findAllCartridgesByModelId = cartridgeRepo.findByModelId(entry.getKey());
+                    List<Cartridge> collectCartridgesByModelExceptUtil = findAllCartridgesByModelId.stream()
+                    .filter(e -> !e.isUtil())
+                    .filter(el -> !el.isUseInPrinter())
+                    .collect(Collectors.toList());
+                            
                     List<Cartridge> findByLocationIdAndModelId = cartridgeRepo.findByLocationIdAndModelId(currLoc.getId(), findModelCartridgeByName.get().getId());
                     listener.setModel(findModelCartridgeByName.get());
                     listener.setDateOperation(LocalDateTime.now());
                     listener.setLocation(currLoc);
                     cartridgesOnSklad = cartridgesOnSklad + entry.getValue();
                     listener.setAmountDevicesOfLocation(cartridgesOnSklad);
-                   
                     listener.setAmountCurrentModelOfLocation(findByLocationIdAndModelId.size());
                     listener.setCurrentOperation("Закуплен по контракту");
                     listener.setModel(findModelCartridgeByName.get());
                     listener.setOperationType(OperationType.BUY);
-                    
+                    listener.setAmount(entry.getValue());
+                    listener.setAmountAllCartridgesByModel(collectCartridgesByModelExceptUtil.size());
                     listenerOperationService.saveListenerOperation(listener);      
                     
                     }
@@ -508,5 +515,9 @@ public class ContractServiceMapper {
         
         return dto;
     }
+    
+    
+
+    
         
 }

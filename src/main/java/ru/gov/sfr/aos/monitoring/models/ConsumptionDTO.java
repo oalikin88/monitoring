@@ -14,15 +14,19 @@ public class ConsumptionDTO {
     public LocationDTO location;
     public int consumption;
     public long period;
+    public int incoming;
+    public int balance;
 
     public ConsumptionDTO() {
     }
 
-    public ConsumptionDTO(CartridgeModelDTO model, LocationDTO location, int consumption, long period) {
+    public ConsumptionDTO(CartridgeModelDTO model, LocationDTO location, int consumption, long period, int incoming, int balance) {
         this.model = model;
         this.location = location;
         this.consumption = consumption;
         this.period = period;
+        this.incoming = incoming;
+        this.balance = balance;
     }
 
     public CartridgeModelDTO getModel() {
@@ -55,6 +59,22 @@ public class ConsumptionDTO {
 
     public void setPeriod(long period) {
         this.period = period;
+    }
+
+    public int getIncoming() {
+        return incoming;
+    }
+
+    public void setIncoming(int incoming) {
+        this.incoming = incoming;
+    }
+
+    public int getBalance() {
+        return balance;
+    }
+
+    public void setBalance(int balance) {
+        this.balance = balance;
     }
     
     

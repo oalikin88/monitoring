@@ -5,6 +5,7 @@
 package ru.gov.sfr.aos.monitoring.repositories;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -23,4 +24,5 @@ public interface ListenerOperationRepo extends JpaRepository<ListenerOperation, 
     Set<ListenerOperation> findAllByDateOperationBetween(LocalDate dateBegin, LocalDate dateEnd);
     List<ListenerOperation> findByLocationIdAndModelId(Long locationId, Long modelId);
     List<ListenerOperation> findByCartridgeID(Long cartridgeID);
+    List<ListenerOperation> findByDateOperationAfterAndDateOperationBefore(LocalDateTime startPeriod, LocalDateTime endPeriod);
 }

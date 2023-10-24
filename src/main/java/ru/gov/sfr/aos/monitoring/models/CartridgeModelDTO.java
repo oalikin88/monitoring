@@ -6,6 +6,7 @@ package ru.gov.sfr.aos.monitoring.models;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Set;
 
 /**
  *
@@ -18,6 +19,7 @@ public class CartridgeModelDTO implements Serializable {
     public String resource;
     //Printers
     public List<Long> idModel;
+    public Set<String> printers;
 
     public CartridgeModelDTO() {
     }
@@ -35,6 +37,26 @@ public class CartridgeModelDTO implements Serializable {
         this.resource = resource;
         this.idModel = idModel;
     }
+
+    public CartridgeModelDTO(String model, String type, String resource, List<Long> idModel, Set<String> printers) {
+        this.model = model;
+        this.type = type;
+        this.resource = resource;
+        this.idModel = idModel;
+        this.printers = printers;
+    }
+    
+    
+
+    public Set<String> getPrinters() {
+        return printers;
+    }
+
+    public void setPrinters(Set<String> printers) {
+        this.printers = printers;
+    }
+    
+    
 
     public List<Long> getIdModel() {
         return idModel;

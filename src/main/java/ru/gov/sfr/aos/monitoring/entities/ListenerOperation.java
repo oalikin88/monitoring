@@ -35,6 +35,8 @@ public class ListenerOperation implements Serializable {
     private Location location;
     @ManyToOne(cascade = CascadeType.ALL)
     private Location locationBeforeTransfer;
+    private int amount;
+    private int amountAllCartridgesByModel;
     private int amountDevicesOfLocation;
     private int amountCurrentModelOfLocation;
     private int amountDevicesOfTransferedLocation;
@@ -51,12 +53,14 @@ public class ListenerOperation implements Serializable {
     public ListenerOperation() {
     }
 
-    public ListenerOperation(LocalDateTime dateOperation, String currentOperation, CartridgeModel model, Location location, Location locationBeforeTransfer, int amountDevicesOfLocation, int amountCurrentModelOfLocation, int amountDevicesOfTransferedLocation, int amountCurrentModelOfTransferedLocation, OperationType operationType, Long printerID, Long cartridgeID, String employeeToDoWork, String employeeToSetDevice, String employeeMOL) {
+    public ListenerOperation(LocalDateTime dateOperation, String currentOperation, CartridgeModel model, Location location, Location locationBeforeTransfer, int amount, int amountAllCartridgesByModel, int amountDevicesOfLocation, int amountCurrentModelOfLocation, int amountDevicesOfTransferedLocation, int amountCurrentModelOfTransferedLocation, OperationType operationType, Long printerID, Long cartridgeID, String employeeToDoWork, String employeeToSetDevice, String employeeMOL) {
         this.dateOperation = dateOperation;
         this.currentOperation = currentOperation;
         this.model = model;
         this.location = location;
         this.locationBeforeTransfer = locationBeforeTransfer;
+        this.amount = amount;
+        this.amountAllCartridgesByModel = amountAllCartridgesByModel;
         this.amountDevicesOfLocation = amountDevicesOfLocation;
         this.amountCurrentModelOfLocation = amountCurrentModelOfLocation;
         this.amountDevicesOfTransferedLocation = amountDevicesOfTransferedLocation;
@@ -201,6 +205,23 @@ public class ListenerOperation implements Serializable {
     public void setLocationBeforeTransfer(Location locationBeforeTransfer) {
         this.locationBeforeTransfer = locationBeforeTransfer;
     }
+
+    public int getAmount() {
+        return amount;
+    }
+
+    public void setAmount(int amount) {
+        this.amount = amount;
+    }
+
+    public int getAmountAllCartridgesByModel() {
+        return amountAllCartridgesByModel;
+    }
+
+    public void setAmountAllCartridgesByModel(int amountAllCartridgesByModel) {
+        this.amountAllCartridgesByModel = amountAllCartridgesByModel;
+    }
+    
     
 
     

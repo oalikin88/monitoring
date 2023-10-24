@@ -58,10 +58,18 @@ public class CartridgeService {
         listener.setLocation(findCartridgeById.get().getLocation());
         listener.setCurrentOperation("Установлен в принтер " + findPrinterById.get().getManufacturer().getName() + " " + findPrinterById.get().getModel().getName() + " серийный номер: " + findPrinterById.get().getSerialNumber());
         listener.setOperationType(OperationType.UTIL);
-        listener.setAmountDevicesOfLocation(findCartridgeById.get().getLocation().getCartridges().size() - 1);
+        Set<Cartridge> collectCartridgesOfLocation = findCartridgeById.get().getLocation().getCartridges().stream()
+                .filter(e -> !e.isUtil())
+                .filter(e -> !e.isUseInPrinter())
+                .collect(Collectors.toSet());
+        listener.setAmountDevicesOfLocation(collectCartridgesOfLocation.size());
         
         List<Cartridge> findByLocationIdAndModelId = cartridgeRepo.findByLocationIdAndModelId(findCartridgeById.get().getLocation().getId(), findCartridgeById.get().getModel().getId());
-        List<Cartridge> collect = findByLocationIdAndModelId.stream().filter(e -> !e.isUtil()).collect(Collectors.toList());
+        List<Cartridge> collect = findByLocationIdAndModelId.stream()
+                .filter(e -> !e.isUtil())
+                .filter(e -> !e.isUseInPrinter())
+                .collect(Collectors.toList());
+        
         listener.setAmountCurrentModelOfLocation(collect.size());
         listener.setModel(findCartridgeById.get().getModel());
         listener.setPrinterID(dto.getIdPrinter());
@@ -70,6 +78,13 @@ public class CartridgeService {
         listener.setEmployeeMOL(dto.getEmployeeMOL());
         listener.setCartridgeID(dto.getIdCartridge());
         findCartridgeById.get().setDateStartExploitation(LocalDateTime.now());
+        List<Cartridge> findAllCartridgesByModelId = cartridgeRepo.findByModelId(findCartridgeById.get().getModel().getId());
+        List<Cartridge> findAllCartridgesExceptUtil = findAllCartridgesByModelId.stream()
+                .filter(e -> !e.isUtil())
+                .filter(el -> !el.isUseInPrinter())
+                .collect(Collectors.toList());
+        listener.setAmount(1);
+        listener.setAmountAllCartridgesByModel(findAllCartridgesExceptUtil.size());
         printerRepo.save(findPrinterById.get());
         cartridgeRepo.save(findCartridgeById.get());
         listenerOperationService.saveListenerOperation(listener);

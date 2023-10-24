@@ -17,4 +17,5 @@ import ru.gov.sfr.aos.monitoring.entities.Cartridge;
 public interface CartridgeRepo extends JpaRepository<Cartridge, Long> {
    List<Cartridge> findByLocationName(String location);
    List<Cartridge> findByLocationIdAndModelId(Long idLocation, Long idModel);
+   List<Cartridge> findByModelId(Long idModel);
 }

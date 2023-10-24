@@ -8,27 +8,26 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
         <head>
             <title>Планирование закупки</title>
             <script src="/js/jquery-3.6.4.min.js"></script>
-            <script src="/js/selectize.js"></script>
             <meta charset="UTF-8">
             <meta name="viewport" content="width=device-width, initial-scale=1">
             <link href="/css/bootstrap.min.css" rel="stylesheet">
-            <link href="/css/selectize.bootstrap5.css" rel="stylesheet">
             <link href="/css/style.css" rel="stylesheet">
         </head>
         <body>
             <nav th:insert="nav :: navbar"></nav>
-            <div class="container-fluid content inventoriesContent">
-                <header><h3 class="fw-bold">Сводная таблица</h3></header>
-
-                <div class="table-responsive" id="tableContainer">
+            <div class="container content inventoriesContent">
+                
+                
                     <script th:inline="javascript">
                         
-                        let input = [[${input}]];
-                        let input2 = [[${input2}]];
-                        let input3 = [[${input3}]];
- 
+                        let utilled = [[${utilled}]];
+                        let purchased = [[${purchased}]];
+                        let amountModels = [[${amountModels}]];
+                        let startDate = [[${dateStart}]];
+                        let endDate = [[${dateEnd}]];
+                        let balance = [[${balance}]];
+                        let printers = [[${printers}]];
                     </script>
-                </div>
                  
             </div>
             <footer th:insert="footer :: footer"></footer>

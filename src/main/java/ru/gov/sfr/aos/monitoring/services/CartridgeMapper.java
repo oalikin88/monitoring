@@ -661,7 +661,7 @@ public class CartridgeMapper {
             mapForListener.put(entry.getKey().getId(), cartridgesId.size());
             ListenerOperation listenerOperation = new ListenerOperation();
             List<Cartridge> findByLocationIdAndModelId = cartridgeRepo.findByLocationIdAndModelId(findLocById.get().getId(), entry.getKey().getId());
-            listenerOperation.setCurrentOperation("Перемещение в " + currentLocation.getName());
+            listenerOperation.setCurrentOperation("Перемещение из " + beforeTransferLocation.get().getName() + " в " + currentLocation.getName());
             listenerOperation.setLocation(currentLocation);
             listenerOperation.setOperationType(OperationType.TRANSFER);
             listenerOperation.setDateOperation(LocalDateTime.now());
@@ -672,7 +672,7 @@ public class CartridgeMapper {
             listenerOperation.setLocationBeforeTransfer(beforeTransferLocation.get());
             List<Cartridge> findByBeforeTransferLocationIdAndModelId = cartridgeRepo.findByLocationIdAndModelId(beforeTransferLocation.get().getId(), entry.getKey().getId());
             listenerOperation.setAmountCurrentModelOfTransferedLocation(findByBeforeTransferLocationIdAndModelId.size());
-            listenerOperation.setAmountDevicesOfTransferedLocation(actualAmountSizeLocationBeforeTransfer);
+            listenerOperation.setAmountDevicesOfTransferedLocation(actualAmountSizeLocationBeforeTransfer - cartridgesId.size());
             
             listenerOperatoionService.saveListenerOperation(listenerOperation);
 

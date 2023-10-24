@@ -7,21 +7,35 @@ package ru.gov.sfr.aos.monitoring.services;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.AbstractList;
+import java.util.AbstractMap;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.gov.sfr.aos.monitoring.OperationType;
+import ru.gov.sfr.aos.monitoring.PrinterStatus;
+import ru.gov.sfr.aos.monitoring.entities.Cartridge;
 import ru.gov.sfr.aos.monitoring.entities.CartridgeModel;
 import ru.gov.sfr.aos.monitoring.entities.ListenerOperation;
 import ru.gov.sfr.aos.monitoring.entities.Location;
+import ru.gov.sfr.aos.monitoring.entities.Model;
+import ru.gov.sfr.aos.monitoring.entities.Printer;
 import ru.gov.sfr.aos.monitoring.models.CartridgeModelDTO;
 import ru.gov.sfr.aos.monitoring.models.ConsumptionDTO;
 import ru.gov.sfr.aos.monitoring.models.LocationDTO;
+import ru.gov.sfr.aos.monitoring.models.ModelCartridgeByModelPrinters;
+import ru.gov.sfr.aos.monitoring.models.ModelDTO;
 import ru.gov.sfr.aos.monitoring.models.PlaningBuyDto;
 import ru.gov.sfr.aos.monitoring.repositories.CartridgeModelRepo;
 import ru.gov.sfr.aos.monitoring.repositories.CartridgeRepo;
@@ -44,59 +58,188 @@ public class PlaningService {
     @Autowired
     private CartridgeModelRepo cartridgeModelRepo;
 
-    public List<ConsumptionDTO> calculatePlaningBuy(PlaningBuyDto dto) {
+    public Map<String, List<ConsumptionDTO>> showUtilled(PlaningBuyDto dto) {
         long amountDaysFromDto = ChronoUnit.DAYS.between(dto.dateBegin, dto.dateEnd);
-        List<CartridgeModel> models = cartridgeModelRepo.findAll();
-        List<Location> locations = locationRepo.findByNameNot("Склад");
         List<ConsumptionDTO> result = new ArrayList<>();
-        for (int i = 0; i < models.size(); i++) {
-            for (int j = 0; j < locations.size(); j++) {
-                ConsumptionDTO comDto = new ConsumptionDTO();
-                CartridgeModelDTO modelDto = new CartridgeModelDTO();
-                modelDto.setId(models.get(i).getId());
-                modelDto.setResource(models.get(i).getDefaultNumberPrintPage().toString());
-                modelDto.setType(models.get(i).getType().getName());
-                modelDto.setModel(models.get(i).getModel());
-                LocationDTO locationDto = new LocationDTO();
-                locationDto.setId(locations.get(j).getId());
-                locationDto.setName(locations.get(j).getName());
+        
+        
+        List<ListenerOperation> listenersByDateOperationAfterAndDateOperationBefore = listenerOperationRepo.findByDateOperationAfterAndDateOperationBefore(dto.dateBegin.atStartOfDay(), dto.dateEnd.atTime(23, 59, 59));
+        List<ListenerOperation> utilled = listenersByDateOperationAfterAndDateOperationBefore.stream()
+                .filter(e -> e.getOperationType().equals(OperationType.UTIL))
+                .collect(Collectors.toList());
+        
+        for(ListenerOperation listener : utilled) {
+            LocationDTO locDto = new LocationDTO();
+            locDto.setId(listener.getLocation().getId());
+            locDto.setName(listener.getLocation().getName());
+            
+            CartridgeModelDTO cartrDto = new CartridgeModelDTO();
+            cartrDto.setId(listener.getModel().getId());
+            cartrDto.setModel(listener.getModel().getModel());
+            cartrDto.setType(listener.getModel().getType().getName());
+            
+            ConsumptionDTO consDto = new ConsumptionDTO();
+            consDto.setModel(cartrDto);
+            consDto.setLocation(locDto);
+            consDto.setPeriod(amountDaysFromDto);
+            result.add(consDto);
+        }
+        
+        Map<String, List<ConsumptionDTO>> collect = result.stream().collect(Collectors.groupingBy(e -> e.getModel().getModel(), Collectors.toList()));
 
-                List<ListenerOperation> listenersByLocationsAndModel = listenerOperationRepo.findByLocationIdAndModelId(locations.get(j).getId(), models.get(i).getId());
-                if (listenersByLocationsAndModel.size() > 0) {
-                    List<ListenerOperation> utilled = new ArrayList<>();
-                    if (listenersByLocationsAndModel.size() > 0) {
-                        List<ListenerOperation> listenersBetweenDay = getListenersBetweenDay(listenersByLocationsAndModel, dto.dateBegin, dto.dateEnd);
-                        Collections.sort(listenersBetweenDay, new ListenerOperationComparator());
-                        long amountDay = ChronoUnit.DAYS.between(listenersBetweenDay.get(0).getDateOperation(), listenersBetweenDay.get(listenersBetweenDay.size() - 1).getDateOperation());
-                        if (amountDay == 0 && listenersBetweenDay.size() > 0) {
-                            amountDay = 1;
-                        }
 
-                        for (long l = 0L; l < amountDay; l++) {
-                            for (ListenerOperation listener : listenersBetweenDay) {
-                                if (listener.getOperationType().equals(OperationType.UTIL)) {
-                                    utilled.add(listener);
-                                }
-                            }
-                        }
 
-                    }
-
-                    comDto.setConsumption(utilled.size());
-                } else {
-                    comDto.setConsumption(0);
-                }
-                comDto.setLocation(locationDto);
-                comDto.setModel(modelDto);
-                comDto.setPeriod(amountDaysFromDto);
-                result.add(comDto);
-
+        return collect;
+    }
+    
+    public Map<String, List<ConsumptionDTO>> showPurchased(PlaningBuyDto dto) {
+        long amountDaysFromDto = ChronoUnit.DAYS.between(dto.dateBegin, dto.dateEnd);
+        Map<Long, List<Integer>> amountCartridgesByModel = new HashMap<>();
+        List<ListenerOperation> listenersByDateOperationAfterAndDateOperationBefore = listenerOperationRepo.findByDateOperationAfterAndDateOperationBefore(dto.dateBegin.atStartOfDay(), dto.dateEnd.atTime(23, 59, 59));
+        List<ListenerOperation> purchased = listenersByDateOperationAfterAndDateOperationBefore.stream()
+                .filter(e -> e.getOperationType().equals(OperationType.BUY))
+                .collect(Collectors.toList());
+        
+        List<ConsumptionDTO> result = new ArrayList<>();
+        for(ListenerOperation listener : purchased) {
+            if(amountCartridgesByModel.get(listener.getModel().getId()) == null || amountCartridgesByModel.get(listener.getModel().getId()).isEmpty()) {
+               amountCartridgesByModel.put(listener.getModel().getId(), new ArrayList<>(Arrays.asList(listener.getAmount())));
+            } else {
+                List<Integer> getList = amountCartridgesByModel.get(listener.getModel().getId());
+                getList.add(listener.getAmount());
             }
         }
-
-        return result;
+        
+        for(Map.Entry<Long, List<Integer>> entry : amountCartridgesByModel.entrySet()) {
+            LocationDTO locDto = new LocationDTO();
+            locDto.setId(purchased.get(0).getLocation().getId());
+            locDto.setName(purchased.get(0).getLocation().getName());
+            
+            Optional<CartridgeModel> findModelById = cartridgeModelRepo.findById(entry.getKey());
+            CartridgeModelDTO cartrDto = new CartridgeModelDTO();
+            cartrDto.setId(entry.getKey());
+            cartrDto.setModel(findModelById.get().getModel());
+            cartrDto.setType(findModelById.get().getType().getName());
+            
+            ConsumptionDTO consDto = new ConsumptionDTO();
+            consDto.setModel(cartrDto);
+            consDto.setLocation(locDto);
+            consDto.setPeriod(amountDaysFromDto);
+            Integer getAmountCart = entry.getValue().stream().collect(Collectors.summingInt(e -> e.intValue()));
+            consDto.setIncoming(getAmountCart);
+            result.add(consDto);     
+        }     
+        Map<String, List<ConsumptionDTO>> collect = result.stream().collect(Collectors.groupingBy(e -> e.getModel().getModel(), Collectors.toList()));
+        return collect;
+    }
+    
+    public Map<String, ConsumptionDTO> getAmountAllCartridgesByModelAndPeriod(PlaningBuyDto dto) {
+         List<ListenerOperation> listenersByDateOperationAfterAndDateOperationBefore = listenerOperationRepo.findByDateOperationAfterAndDateOperationBefore(dto.dateBegin.atStartOfDay(), dto.dateEnd.atTime(23, 59, 59));
+         Comparator<ListenerOperation> ListenerOperarionDateComparator = Comparator.comparing(ListenerOperation::getDateOperation);
+         Map<String, List<ListenerOperation>> collectListenersByModel = listenersByDateOperationAfterAndDateOperationBefore.stream().collect(Collectors.groupingBy(e -> e.getModel().getModel(), Collectors.toList()));
+         Map<String, ConsumptionDTO> out = new HashMap<>();
+         for(Map.Entry<String, List<ListenerOperation>> entry : collectListenersByModel.entrySet()) {
+             ListenerOperation getMax = entry.getValue().stream().max(ListenerOperarionDateComparator).get();
+             LocationDTO locDto = new LocationDTO(getMax.getLocation().getId(), getMax.getLocation().getName());
+             CartridgeModelDTO modelDto = new CartridgeModelDTO();
+             modelDto.setId(getMax.getModel().getId());
+             modelDto.setModel(getMax.getModel().getModel());
+             modelDto.setResource(getMax.getModel().getDefaultNumberPrintPage().toString());
+             modelDto.setType(getMax.getModel().getType().getName());
+             ConsumptionDTO outDto = new ConsumptionDTO();
+             outDto.setLocation(locDto);
+             outDto.setBalance(getMax.getAmountAllCartridgesByModel());
+             out.put(entry.getKey(), outDto);
+             
+         }
+         
+         return out;
+         
+    }
+    
+    public Set<CartridgeModelDTO> getAmountCartridgeModel() {
+        
+        List<CartridgeModel> findAll = cartridgeModelRepo.findAll();
+        Set<CartridgeModelDTO> models = new HashSet<>();
+        
+        for(CartridgeModel model : findAll) {
+            Set<String> pr = new HashSet<>();
+            List<Model> modelsPrinters = model.getModelsPrinters();
+            for(Model m : modelsPrinters) {
+                String name = m.getManufacturer().getName() + " " + m.getName();
+                pr.add(name);
+            }
+        CartridgeModelDTO dto = new CartridgeModelDTO();
+        dto.setId(model.getId());
+        dto.setModel(model.getModel());
+        dto.setType(model.getType().getName());
+        dto.setResource(model.getDefaultNumberPrintPage().toString());
+        dto.setPrinters(pr);
+            List<Long> printersIdCollect = model.getModelsPrinters().stream().flatMap(e -> e.getPrinters().stream())
+                    .map(el -> el.getId())
+                    .collect(Collectors.toList());
+        dto.setIdModel(printersIdCollect);
+        models.add(dto);
+        }
+        return models;
     }
 
+    
+    public Map<String, List<ModelCartridgeByModelPrinters>> getPrintersByCartridgesModel() {
+            List<Cartridge> cartridges = cartridgeRepo.findAll();
+        List<Location> locations = locationRepo.findAll();
+        Set<Cartridge> collectCartridges = cartridges.stream() // Все актуальные картриджи
+                .filter(e -> !e.isUseInPrinter())
+                .filter(e -> !e.isUtil())
+                .collect(Collectors.toSet());
+                
+            List<ModelCartridgeByModelPrinters> out = new ArrayList<>();
+            ModelCartridgeByModelPrinters dto = null;
+            List<CartridgeModel> findAllModelsCartrtridge = cartridgeModelRepo.findAll(); // Все модели картрмджей
+            List<ModelCartridgeByModelPrinters> list = new ArrayList<>();
+            for (CartridgeModel cartridgeModel : findAllModelsCartrtridge) {
+                List<Long> cartridgesID = new ArrayList<>();
+                List<Long> printersID = new ArrayList<>();
+                List<Model> models = cartridgeModel.getModelsPrinters();
+                dto = new ModelCartridgeByModelPrinters();
+                List<ModelDTO> modelPrinterDTOes = new ArrayList<>();
+                for (Model modelPrinter : models) {
+                    ModelDTO modelDTO = new ModelDTO(modelPrinter.getId(), modelPrinter.getName(), modelPrinter.getManufacturer().getName());
+                    modelPrinterDTOes.add(modelDTO);
+                }
+                for(Location storage : locations) {
+                    
+                for (ModelDTO modelDTO : modelPrinterDTOes) {
+                    for (Printer printer : storage.getPrinters()) {
+                        if ((modelDTO.getIdModel() == printer.getModel().getId()) && !printer.getPrinterStatus().equals(PrinterStatus.DELETE)
+                                && !printer.getPrinterStatus().equals(PrinterStatus.MONITORING) && !printer.getPrinterStatus().equals(PrinterStatus.UTILIZATION)) {
+                            printersID.add(printer.getId());
+                        }
+                    }
+                }
+            }
+
+                for (Cartridge cartridge : cartridges) {
+
+                    if ((cartridgeModel.getId() == cartridge.getModel().getId()) && (!cartridge.isUtil() && !cartridge.isUseInPrinter())) {
+
+                        cartridgesID.add(cartridge.getId());
+
+                    }
+                }
+                dto.setId(cartridgeModel.getId());
+                dto.setModel(cartridgeModel.getModel());
+                dto.setModelsPrinter(modelPrinterDTOes);
+                dto.setCartridgesId(cartridgesID);
+                dto.setPrintersID(printersID);
+                list.add(dto);
+            }
+            
+            Map<String, List<ModelCartridgeByModelPrinters>> output = list.stream().collect(Collectors.groupingBy(e -> e.getModel(), Collectors.toList()));
+            return output;
+    }
+    
+    
     public static List<ListenerOperation> getListenersBetweenDay(List<ListenerOperation> input, LocalDate start, LocalDate end) {
 
         List<ListenerOperation> result = new ArrayList<>();

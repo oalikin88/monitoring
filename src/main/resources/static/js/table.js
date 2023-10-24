@@ -1358,7 +1358,7 @@ window.onload = function () {
     
     labelForDateBegin = document.createElement('label');
     labelForDateBegin.setAttribute('for', 'dateBegin');
-    labelForDateBegin.innerText = 'Выберите дату';
+    labelForDateBegin.innerText = 'Дата начала периода';
     inputDateBegin = document.createElement('input');
     inputDateBegin.type = 'date';
     inputDateBegin.className = 'form-control';
@@ -1379,7 +1379,7 @@ window.onload = function () {
     
     labelForDateEnd = document.createElement('label');
     labelForDateEnd.setAttribute('for', 'dateEnd');
-    labelForDateEnd.innerText = 'Выберите дату';
+    labelForDateEnd.innerText = 'Дата окончания периода';
     
     inputDateEnd = document.createElement('input');
     inputDateEnd.type = 'date';
@@ -1389,14 +1389,14 @@ window.onload = function () {
     divInputGroupDateEnd.appendChild(labelForDateEnd);
     divInputGroupDateEnd.appendChild(inputDateEnd);
     
-    divLocationSelect = document.createElement('div');
-    divLocationSelect.className = 'col';
-    
-    selectLocationForPlaning = document.createElement('select');
-    selectLocationForPlaning.className = 'form-select';
-    selectLocationForPlaning.id = 'selectLocationForPlaning';
-    divContentRowCalendars.appendChild(divLocationSelect);
-    divLocationSelect.appendChild(selectLocationForPlaning);
+//    divLocationSelect = document.createElement('div');
+//    divLocationSelect.className = 'col';
+//    
+//    selectLocationForPlaning = document.createElement('select');
+//    selectLocationForPlaning.className = 'form-select';
+//    selectLocationForPlaning.id = 'selectLocationForPlaning';
+//    divContentRowCalendars.appendChild(divLocationSelect);
+//    divLocationSelect.appendChild(selectLocationForPlaning);
     
     rowContentBtns = document.createElement('div');
     rowContentBtns.className = 'row rowModalContent text-center';
@@ -1430,23 +1430,23 @@ window.onload = function () {
      
  
      
-     $('#selectLocationForPlaning').selectize({
-         preload: 'focus',
-         placeholder: "Выберите локацию",
-         valueField: 'id',
-                  labelField: 'name',
-                  searchField: "name",
-                  load: function (query, callback) {
-                    $.ajax({
-                        url: '/locations',
-                        type: 'GET',
-                        dataType: 'json',
-                        data: {model:query},
-                        error: callback,
-                        success: callback
-                         });
-                     }
-     });
+//     $('#selectLocationForPlaning').selectize({
+//         preload: 'focus',
+//         placeholder: "Выберите локацию",
+//         valueField: 'id',
+//                  labelField: 'name',
+//                  searchField: "name",
+//                  load: function (query, callback) {
+//                    $.ajax({
+//                        url: '/locations',
+//                        type: 'GET',
+//                        dataType: 'json',
+//                        data: {model:query},
+//                        error: callback,
+//                        success: callback
+//                         });
+//                     }
+//     });
      
      
      btnApplyPlaning.addEventListener('click', function() {
@@ -1455,7 +1455,8 @@ window.onload = function () {
          
          dateBegin = $('#dateBeginInput')[0].value;
          dateEnd = $('#dateEndInput')[0].value;
-         loc = $('#selectLocationForPlaning')[0].selectize.$input[0].selectedOptions[0].value;
+        
+         //loc = $('#selectLocationForPlaning')[0].selectize.$input[0].selectedOptions[0].value;
          var dateEndParse = Date.parse(dateEnd);
          var dateEndParseB = new Date(dateEndParse);
          var dateEndFormat = dateEndParseB.toLocaleDateString('ru');
