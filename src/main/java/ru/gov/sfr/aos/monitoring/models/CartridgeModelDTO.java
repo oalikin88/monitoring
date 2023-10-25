@@ -6,6 +6,7 @@ package ru.gov.sfr.aos.monitoring.models;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 /**
@@ -98,6 +99,42 @@ public class CartridgeModelDTO implements Serializable {
 
     public void setResource(String resource) {
         this.resource = resource;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final CartridgeModelDTO other = (CartridgeModelDTO) obj;
+        if (!Objects.equals(this.model, other.model)) {
+            return false;
+        }
+        if (!Objects.equals(this.type, other.type)) {
+            return false;
+        }
+        if (!Objects.equals(this.resource, other.resource)) {
+            return false;
+        }
+        if (!Objects.equals(this.id, other.id)) {
+            return false;
+        }
+        if (!Objects.equals(this.idModel, other.idModel)) {
+            return false;
+        }
+        return Objects.equals(this.printers, other.printers);
     }
   
     

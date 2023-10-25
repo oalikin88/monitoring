@@ -15,6 +15,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -41,6 +42,7 @@ import ru.gov.sfr.aos.monitoring.repositories.CartridgeModelRepo;
 import ru.gov.sfr.aos.monitoring.repositories.CartridgeRepo;
 import ru.gov.sfr.aos.monitoring.repositories.ListenerOperationRepo;
 import ru.gov.sfr.aos.monitoring.repositories.LocationRepo;
+import ru.gov.sfr.aos.monitoring.repositories.ModelPrinterRepo;
 
 /**
  *
@@ -57,6 +59,8 @@ public class PlaningService {
     private CartridgeRepo cartridgeRepo;
     @Autowired
     private CartridgeModelRepo cartridgeModelRepo;
+    @Autowired
+    private ModelPrinterRepo modelPrinterRepo;
 
     public Map<String, List<ConsumptionDTO>> showUtilled(PlaningBuyDto dto) {
         long amountDaysFromDto = ChronoUnit.DAYS.between(dto.dateBegin, dto.dateEnd);
@@ -157,31 +161,53 @@ public class PlaningService {
          
     }
     
-    public Set<CartridgeModelDTO> getAmountCartridgeModel() {
+    public Map<String, Set<CartridgeModelDTO>> getAmountCartridgeModel() {
         
         List<CartridgeModel> findAll = cartridgeModelRepo.findAll();
-        Set<CartridgeModelDTO> models = new HashSet<>();
         
-        for(CartridgeModel model : findAll) {
-            Set<String> pr = new HashSet<>();
-            List<Model> modelsPrinters = model.getModelsPrinters();
-            for(Model m : modelsPrinters) {
-                String name = m.getManufacturer().getName() + " " + m.getName();
-                pr.add(name);
+        Map<String, Set<CartridgeModelDTO>> ooout = new HashMap<>();
+        List<Model> modelsPrinter = modelPrinterRepo.findAll();
+        
+        for(Model m : modelsPrinter) {
+            Set<CartridgeModelDTO> modelsCart = new HashSet<>();
+            Set<CartridgeModel> modelCartridges = m.getModelCartridges();
+            for(CartridgeModel carmod : modelCartridges) {
+                CartridgeModelDTO dto = new CartridgeModelDTO();
+                StringBuilder sb = new StringBuilder();
+                dto.setId(carmod.getId());
+                dto.setModel(carmod.getModel());
+                dto.setResource(carmod.getDefaultNumberPrintPage().toString());
+                dto.setType(carmod.getType().getName());
+                Iterator<Model> iterator = carmod.getModelsPrinters().iterator();
+                
+                List<Long> collectPrintersID = carmod.getModelsPrinters().stream().flatMap(e -> e.getPrinters().stream())
+                        .map(el -> el.getId())
+                        .collect(Collectors.toList());
+                dto.setIdModel(collectPrintersID);
+                while (iterator.hasNext()) {
+                    Model element = iterator.next();
+                    sb.append(element.getManufacturer().getName());
+                    sb.append(" ");
+                    sb.append(element.getName());
+                    if(iterator.hasNext()) {
+                    sb.append("/");
+                    }
+                modelsCart.add(dto);
+                
+                    
+                }
+                if(ooout.get(sb.toString()) == null || ooout.get(sb.toString()).isEmpty()) {
+                    ooout.put(sb.toString(), modelsCart);
+                } else {
+                    ooout.get(sb.toString()).add(dto);
+                }
+                }
             }
-        CartridgeModelDTO dto = new CartridgeModelDTO();
-        dto.setId(model.getId());
-        dto.setModel(model.getModel());
-        dto.setType(model.getType().getName());
-        dto.setResource(model.getDefaultNumberPrintPage().toString());
-        dto.setPrinters(pr);
-            List<Long> printersIdCollect = model.getModelsPrinters().stream().flatMap(e -> e.getPrinters().stream())
-                    .map(el -> el.getId())
-                    .collect(Collectors.toList());
-        dto.setIdModel(printersIdCollect);
-        models.add(dto);
-        }
-        return models;
+        
+        
+        
+        
+        return ooout;
     }
 
     

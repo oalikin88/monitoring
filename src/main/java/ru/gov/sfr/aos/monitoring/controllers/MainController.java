@@ -111,14 +111,19 @@ public class MainController {
         Map<String, List<ConsumptionDTO>> calculatePlaningBuy = planingService.showUtilled(dto);
         Map<String, List<ConsumptionDTO>> showPurchased = planingService.showPurchased(dto);
         Map<String, ConsumptionDTO> amountAllCartridgesByModelAndPeriod = planingService.getAmountAllCartridgesByModelAndPeriod(dto);
-        Set<CartridgeModelDTO> amountModels = planingService.getAmountCartridgeModel();
+        Map<String, Set<CartridgeModelDTO>> amountModelsByCartridgeModel = planingService.getAmountCartridgeModel();
+        
+                
+                
+                
+        
         Map<String, List<ModelCartridgeByModelPrinters>> printersByCartridgesModel = planingService.getPrintersByCartridgesModel();
         
         model.addAttribute("dateStart", dto.dateBegin);
         model.addAttribute("dateEnd", dto.dateEnd);
         model.addAttribute("utilled", calculatePlaningBuy);
         model.addAttribute("purchased", showPurchased);
-        model.addAttribute("amountModels", amountModels);
+        model.addAttribute("amountModels", amountModelsByCartridgeModel);
         model.addAttribute("balance", amountAllCartridgesByModelAndPeriod);
         model.addAttribute("printers", printersByCartridgesModel);
         

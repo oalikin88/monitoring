@@ -1,6 +1,6 @@
 let utilledInput = Object.entries(utilled).sort();
 let purchasedInput = Object.entries(purchased).sort();
-let models = amountModels.sort(compare);
+let models = Object.entries(amountModels).sort();
 let balanceInput = Object.entries(balance).sort();
 
 window.onload = function () {
@@ -28,14 +28,42 @@ window.onload = function () {
 
         var modelTitleDiv = document.createElement('div');
         modelTitleDiv.className = 'col fw-bold';
-        modelTitleDiv.innerHTML = "Модель " + models[i].model;
+        modelTitleDiv.innerHTML = models[i][0];
         parent.appendChild(modelTitleRow);
-        
-        var printersDiv = document.createElement('div');
-        printersDiv.className = 'col fw-bold';
-        printersDiv.innerHTML = models[i].printers;
         modelTitleRow.appendChild(modelTitleDiv);
-        modelTitleRow.appendChild(printersDiv);
+        
+        
+        var printersAmountRow = document.createElement('div');
+        printersAmountRow.className = 'row';
+        var printerAmountDiv = document.createElement('div');
+        printerAmountDiv.className = 'div';
+        printerAmountDiv.innerHTML = 'Количество: ' + models[i][1][0].idModel.length;
+        
+        parent.appendChild(printersAmountRow);
+        printersAmountRow.appendChild(printerAmountDiv);
+        
+        for(inner = 0; inner < models[i][1].length; inner++) {
+            
+        
+        var modelCartridgeRow = document.createElement('div');
+        modelCartridgeRow.className = 'row fw-bold';
+        var modelCartridgeDiv = document.createElement('div');
+        modelCartridgeDiv.className = 'col';
+        modelCartridgeDiv.innerHTML = models[i][1][inner].model;
+        
+        parent.appendChild(modelCartridgeRow);
+        modelCartridgeRow.appendChild(modelCartridgeDiv);
+        
+        var typeCartridgeRow = document.createElement('div');
+        typeCartridgeRow.className = 'row';
+        var typeCartridgeDiv = document.createElement('div');
+        typeCartridgeDiv.className = 'col';
+        typeCartridgeDiv.innerHTML = 'Тип: ' + models[i][1][inner].type;
+        
+        parent.appendChild(typeCartridgeRow);
+        typeCartridgeRow.appendChild(typeCartridgeDiv);
+        
+        
         
         var modelSearchUtilled = false;
         var modelSearchPurchased = false;
@@ -44,8 +72,9 @@ window.onload = function () {
        
        
         for (t = 0; t < purchasedInput.length; t++) {
+            
 
-            if (purchasedInput[t].indexOf(models[i].model) === 0) {
+            if (purchasedInput[t][0].indexOf(models[i][1][inner].model) === 0) {
 
                 var purchasedRow = document.createElement('div');
                 purchasedRow.className = 'row';
@@ -64,6 +93,7 @@ window.onload = function () {
                 purchasedDiv.innerHTML = 'Закуплено: ' + 0;
 
             }
+        
 
         }
 
@@ -71,10 +101,7 @@ window.onload = function () {
         purchasedRow.appendChild(purchasedDiv);
        
 
-                var amountPrinters = document.createElement('div');
-                amountPrinters.className = 'col';
-                amountPrinters.innerHTML = 'Количество: ' + models[i].idModel.length;
-                purchasedRow.appendChild(amountPrinters);
+              
                 
                 
        
@@ -82,7 +109,7 @@ window.onload = function () {
 
         for (j = 0; j < utilledInput.length; j++) {
 
-            if (utilledInput[j].indexOf(models[i].model) === 0) {
+            if (utilledInput[j].indexOf(models[i][1][inner].model) === 0) {
 
                 var utilsRow = document.createElement('div');
                 utilsRow.className = 'row';
@@ -111,7 +138,7 @@ window.onload = function () {
 
 
         for (y = 0; y < balanceInput.length; y++) {
-            if (balanceInput[y].indexOf(models[i].model) === 0) {
+            if (balanceInput[y].indexOf(models[i][1][inner].model) === 0) {
                 var balanceRow = document.createElement('div');
                 balanceRow.className = 'row';
                 var balanceDiv = document.createElement('div');
@@ -133,7 +160,7 @@ window.onload = function () {
 
         parent.appendChild(balanceRow);
         balanceRow.appendChild(balanceDiv);
-
+        }
     }
 
     let allStatisticTitleRow = document.createElement('div');
@@ -141,7 +168,7 @@ window.onload = function () {
 
     let allStatisticTitleDiv = document.createElement('div');
     allStatisticTitleDiv.className = 'col';
-    allStatisticTitleDiv.innerHTML = 'Всего за период';
+    allStatisticTitleDiv.innerHTML = 'Итого за период';
 
     parent.appendChild(allStatisticTitleRow);
     allStatisticTitleRow.appendChild(allStatisticTitleDiv);

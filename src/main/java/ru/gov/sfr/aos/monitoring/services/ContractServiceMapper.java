@@ -335,7 +335,6 @@ public class ContractServiceMapper {
                     listener.setAmountDevicesOfLocation(cartridgesOnSklad);
                     listener.setAmountCurrentModelOfLocation(findByLocationIdAndModelId.size());
                     listener.setCurrentOperation("Закуплен по контракту");
-                    listener.setModel(findModelCartridgeByName.get());
                     listener.setOperationType(OperationType.BUY);
                     listener.setAmount(entry.getValue());
                     listener.setAmountAllCartridgesByModel(collectCartridgesByModelExceptUtil.size());
