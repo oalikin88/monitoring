@@ -20,187 +20,281 @@ window.onload = function () {
     var allUtil = 0;
     var allPurchased = 0;
     var allBalance = 0;
-
-    for (i = 0; i < models.length; i++) {
-
-        var modelTitleRow = document.createElement('div');
-        modelTitleRow.className = 'row mt-3';
-
-        var modelTitleDiv = document.createElement('div');
-        modelTitleDiv.className = 'col fw-bold';
-        modelTitleDiv.innerHTML = models[i][0];
-        parent.appendChild(modelTitleRow);
-        modelTitleRow.appendChild(modelTitleDiv);
+    
+    // Вывод таблицы
+    
+    let tableContainer = document.createElement('div');
+    tableContainer.className = 'table-responsive';
+    tableContainer.id = "tableContainer";
+    
+    parent.appendChild(tableContainer);
+    
+    if(models.length > 0) {
         
+        let table = document.createElement('table');
+        table.id = "table";
+        table.className = "table align-middle table-hover table-striped table-bordered";
+        let thead = document.createElement('thead');
+        thead.className = "text-center";
+        let trThead = document.createElement('tr');
+        let thThead1 = document.createElement('th');
+        thThead1.setAttribute('scope', 'col');
+        thThead1.innerText = 'Модель принтера';
+      
+        tableContainer.appendChild(table);
+        table.appendChild(thead);
+        thead.appendChild(trThead);
+        trThead.appendChild(thThead1);
+    
+        let tbody = document.createElement('tbody');
+        let tr1 = document.createElement('tr');
+        table.appendChild(tbody);
+        tbody.appendChild(tr1);
+        amountColums = 0;
+        for(i = 0; i < models.length; i++) {
+            amountColums = amountColums + models[i][1].length;
+        }
+        console.log(amountColums);
         
-        var printersAmountRow = document.createElement('div');
-        printersAmountRow.className = 'row';
-        var printerAmountDiv = document.createElement('div');
-        printerAmountDiv.className = 'div';
-        printerAmountDiv.innerHTML = 'Количество: ' + models[i][1][0].idModel.length;
-        
-        parent.appendChild(printersAmountRow);
-        printersAmountRow.appendChild(printerAmountDiv);
-        
-        for(inner = 0; inner < models[i][1].length; inner++) {
+        for(i = 0; i < models.length; i++) {
             
-        
-        var modelCartridgeRow = document.createElement('div');
-        modelCartridgeRow.className = 'row fw-bold';
-        var modelCartridgeDiv = document.createElement('div');
-        modelCartridgeDiv.className = 'col';
-        modelCartridgeDiv.innerHTML = models[i][1][inner].model;
-        
-        parent.appendChild(modelCartridgeRow);
-        modelCartridgeRow.appendChild(modelCartridgeDiv);
-        
-        var typeCartridgeRow = document.createElement('div');
-        typeCartridgeRow.className = 'row';
-        var typeCartridgeDiv = document.createElement('div');
-        typeCartridgeDiv.className = 'col';
-        typeCartridgeDiv.innerHTML = 'Тип: ' + models[i][1][inner].type;
-        
-        parent.appendChild(typeCartridgeRow);
-        typeCartridgeRow.appendChild(typeCartridgeDiv);
-        
-        
-        
-        var modelSearchUtilled = false;
-        var modelSearchPurchased = false;
-        var modelSearchBalance = false;
-
-       
-       
-        for (t = 0; t < purchasedInput.length; t++) {
-            
-
-            if (purchasedInput[t][0].indexOf(models[i][1][inner].model) === 0) {
-
-                var purchasedRow = document.createElement('div');
-                purchasedRow.className = 'row';
-                var purchasedDiv = document.createElement('div');
-                purchasedDiv.className = 'col';
-                purchasedDiv.innerHTML = 'Закуплено: ' + purchasedInput[t][1][0].incoming;
-                allPurchased = allPurchased + purchasedInput[t][1][0].incoming;
-                modelSearchPurchased = true;
+            thTheadEl = document.createElement('th');
+            thTheadEl.setAttribute('scope', 'col');
+            if(models[i][1].length > 1) {
+                thTheadEl.setAttribute('colspan', models[i][1].length);
             }
-
-            if (purchasedInput.length - 1 && modelSearchPurchased == false) {
-                var purchasedRow = document.createElement('div');
-                purchasedRow.className = 'row';
-                var purchasedDiv = document.createElement('div');
-                purchasedDiv.className = 'col';
-                purchasedDiv.innerHTML = 'Закуплено: ' + 0;
-
-            }
-        
-
+            thTheadEl.innerText = models[i][0];
+            trThead.appendChild(thTheadEl);
         }
-
-        parent.appendChild(purchasedRow);
-        purchasedRow.appendChild(purchasedDiv);
-       
-
-              
-                
-                
-       
-       
-
-        for (j = 0; j < utilledInput.length; j++) {
-
-            if (utilledInput[j].indexOf(models[i][1][inner].model) === 0) {
-
-                var utilsRow = document.createElement('div');
-                utilsRow.className = 'row';
-                var utilsDiv = document.createElement('div');
-                utilsDiv.className = 'col';
-                utilsDiv.innerHTML = 'Израсходовано: ' + utilledInput[j][1].length;
-                allUtil = allUtil + utilledInput[j][1].length;
-                modelSearchUtilled = true;
+        
+        tdAmountPrinters = document.createElement('td');
+        tdAmountPrinters.innerText = 'Количество';
+        tr1.appendChild(tdAmountPrinters);
+        
+        for(i = 0; i < models.length; i++) {
+            tdAmountPrintersValue = document.createElement('td');
+            tdAmountPrintersValue.setAttribute('scope', 'col');
+            tdAmountPrintersValue.className = 'amountPrinters text-center';
+            if(models[i][1].length > 1) {
+                tdAmountPrintersValue.setAttribute('colspan', models[i][1].length);
             }
-
-            if (utilledInput.length - 1 && modelSearchUtilled == false) {
-                var utilsRow = document.createElement('div');
-                utilsRow.className = 'row';
-
-                var utilsDiv = document.createElement('div');
-                utilsDiv.className = 'col';
-                utilsDiv.innerHTML = 'Израсходовано: ' + 0;
-
-            }
-
+            tdAmountPrintersValue.innerText = models[i][1][0].idModel.length;
+            tr1.appendChild(tdAmountPrintersValue);
         }
-        parent.appendChild(utilsRow);
-        utilsRow.appendChild(utilsDiv);
-
-       
-
-
-        for (y = 0; y < balanceInput.length; y++) {
-            if (balanceInput[y].indexOf(models[i][1][inner].model) === 0) {
-                var balanceRow = document.createElement('div');
-                balanceRow.className = 'row';
-                var balanceDiv = document.createElement('div');
-                balanceDiv.className = 'col';
-                balanceDiv.innerHTML = 'Остаток: ' + balanceInput[y][1].balance;
-                allBalance = allBalance + balanceInput[y][1].balance;
-                modelSearchBalance = true;
-            }
-            if (balanceInput.length - 1 && modelSearchBalance == false) {
-                var balanceRow = document.createElement('div');
-                balanceRow.className = 'row';
-                var balanceDiv = document.createElement('div');
-                balanceDiv.className = 'col';
-                balanceDiv.innerHTML = 'Остаток: ' + 0;
-
-            }
-        }
-
-
-        parent.appendChild(balanceRow);
-        balanceRow.appendChild(balanceDiv);
+        
+        tr2 = document.createElement('tr');
+        tbody.appendChild(tr2);
+        
+        tdModelCartridgeName = document.createElement('td');
+        tdModelCartridgeName.innerText = 'Модель картриджа';
+        tr2.appendChild(tdModelCartridgeName);
+        
+        for(i = 0; i < models.length; i++) {
+            for(inner = 0; inner < models[i][1].length; inner++) {
+            tdModelCartridgeCol = document.createElement('td');
+            tdModelCartridgeCol.className = 'modelCartridgeValue text-center';
+            tdModelCartridgeCol.setAttribute('scope', 'col');
+            tdModelCartridgeCol.innerText = models[i][1][inner].model;
+            tr2.appendChild(tdModelCartridgeCol);
         }
     }
+    
+        tr3 = document.createElement('tr');
+        tbody.appendChild(tr3);
+        
+        tdTypeCartridgeName = document.createElement('td');
+        tdTypeCartridgeName.innerText = 'Тип';
+        tr3.appendChild(tdTypeCartridgeName);
+        
+        for(i = 0; i < models.length; i++) {
+            for(inner = 0; inner < models[i][1].length; inner++) {
+            tdTypeCartridgeCol = document.createElement('td');
+            tdTypeCartridgeCol.className = 'typeCartridgeValue text-center';
+            tdTypeCartridgeCol.setAttribute('scope', 'col');
+            tdTypeCartridgeCol.innerText = models[i][1][inner].type;
+            tr3.appendChild(tdTypeCartridgeCol);
+        }
+    }
+        
+        tr4 = document.createElement('tr');
+        tbody.appendChild(tr4);
+        
+        tdPurchaseCartName = document.createElement('td');
+        tdPurchaseCartName.innerText = 'Закуплено';
+        tr4.appendChild(tdPurchaseCartName);
+        
+        for(i = 0; i < models.length; i++) {
+            for(inner = 0; inner < models[i][1].length; inner++) {
+            var modelSearchPurchased = false;
+            for (t = 0; t < purchasedInput.length; t++) {
+                if (purchasedInput[t][0].indexOf(models[i][1][inner].model) === 0) {
+                    tdPurchaseCartValue = document.createElement('td');
+                    tdPurchaseCartValue.setAttribute('scope', 'col');
+                    tdPurchaseCartValue.innerText = purchasedInput[t][1][0].incoming;
+                    tr4.appendChild(tdPurchaseCartValue);
+                    allPurchased = allPurchased + purchasedInput[t][1][0].incoming;
+                    modelSearchPurchased = true;
+                    
+                    
+                }
+                
+                if (t == purchasedInput.length - 1 && modelSearchPurchased == false) {
+                    tdPurchaseCartValue = document.createElement('td');
+                    tdPurchaseCartValue.setAttribute('scope', 'col');
+                    tdPurchaseCartValue.innerText = 0;
+                    tr4.appendChild(tdPurchaseCartValue);
+                }
+            }
+        }
+        }
+        
+        tr5 = document.createElement('tr');
+        tbody.appendChild(tr5);
+        
+        tdUtilledName = document.createElement('td');
+        tdUtilledName.innerText = "Израсходовано";
+        tr5.appendChild(tdUtilledName);
+        
+         for(i = 0; i < models.length; i++) {
+            for(inner = 0; inner < models[i][1].length; inner++) {
+            var modelSearchUtilled = false;
+            for (j = 0; j < utilledInput.length; j++) {
+                if (utilledInput[j].indexOf(models[i][1][inner].model) === 0) {
+                    tdUtilledCartValue = document.createElement('td');
+                    tdUtilledCartValue.setAttribute('scope', 'col');
+                    tdUtilledCartValue.innerText = utilledInput[j][1].length;
+                    tr5.appendChild(tdUtilledCartValue);
+                    allUtil = allUtil + utilledInput[j][1].length;
+                    modelSearchUtilled = true;
+                    
+                    
+                }
+                
+                if (j == utilledInput.length - 1 && modelSearchUtilled == false) {
+                    tdUtilledCartValue = document.createElement('td');
+                    tdUtilledCartValue.setAttribute('scope', 'col');
+                    tdUtilledCartValue.innerText = 0;
+                    tr5.appendChild(tdUtilledCartValue);
+                }
+            }
+        }
+        }
+        
+        tr6 = document.createElement('tr');
+        tbody.appendChild(tr6);
+        
+        tdBalanceCartridgeName = document.createElement('td');
+        tdBalanceCartridgeName.innerText = 'Остаток';
+        tr6.appendChild(tdBalanceCartridgeName);
+        
+        for(i = 0; i < models.length; i++) {
+            for(inner = 0; inner < models[i][1].length; inner++) {
+            var modelSearchBalance = false;
+            for (y = 0; y < balanceInput.length; y++) {
+                if (balanceInput[y].indexOf(models[i][1][inner].model) === 0) {
+                    tdBalanceCartValue = document.createElement('td');
+                    tdBalanceCartValue.setAttribute('scope', 'col');
+                    tdBalanceCartValue.innerText = balanceInput[y][1].balance;
+                    tr6.appendChild(tdBalanceCartValue);
+                    allBalance = allBalance + balanceInput[y][1].balance;
+                    modelSearchBalance = true;
+                    
+                    
+                }
+                
+                if (y == balanceInput.length - 1 && modelSearchBalance == false) {
+                    tdBalanceCartValue = document.createElement('td');
+                    tdBalanceCartValue.setAttribute('scope', 'col');
+                    tdBalanceCartValue.innerText = 0;
+                    tr6.appendChild(tdBalanceCartValue);
+                }
+            }
+        }
+        }
+        
+        tr7 = document.createElement('tr');
+        tbody.appendChild(tr7);
+        
+        tdFinal = document.createElement('td');
+        tdFinal.className = 'tdFinal fw-bold';
+        tdFinal.setAttribute('colspan', amountColums + 1);
+        tdFinal.innerText = 'Итого';
+        tr7.appendChild(tdFinal);
+        
+        tr8 = document.createElement('tr');
+        tbody.appendChild(tr8);
+        
+        tdPurchasedFinalName = document.createElement('td');
+        tdPurchasedFinalName.innerText = 'Закуплено';
+        tr8.appendChild(tdPurchasedFinalName);
+        
+        tdPurchasedFinalValue = document.createElement('td');
+        tdPurchasedFinalValue.setAttribute('colspan', amountColums);
+        tdPurchasedFinalValue.innerText = allPurchased;
+        tr8.appendChild(tdPurchasedFinalValue);
+        
+        tr9 = document.createElement('tr');
+        tbody.appendChild(tr9);
+        
+        tdUtilledFinalName = document.createElement('td');
+        tdUtilledFinalName.innerText = "Израсходовано";
+        tr9.appendChild(tdUtilledFinalName);
+        
+        tdUtilledFinalValue = document.createElement('td');
+        tdUtilledFinalValue.setAttribute('colspan', amountColums);
+        tdUtilledFinalValue.innerText = allUtil;
+        tr9.appendChild(tdUtilledFinalValue);
+        
+        tr10 = document.createElement('tr');
+        tbody.appendChild(tr10);
+        
+        tdBalanceFinal = document.createElement('td');
+        tdBalanceFinal.innerText = 'Остаток';
+        tr10.appendChild(tdBalanceFinal);
+        
+        tdBalanceFinalValue = document.createElement('td');
+        tdBalanceFinalValue.setAttribute('colspan', amountColums);
+        tdBalanceFinalValue.innerText = allBalance;
+        tr10.appendChild(tdBalanceFinalValue);
+        
+        
+        
+    } else {
+        
+        noContent = document.createElement('div');
+        noContent.className = 'row';
+        noContentCol = document.createElement('div');
+        noContentCol.className = 'col text-center';
+        
+        mes = document.createElement('h3');
+        mes.innerText = "Отсутствуют данные для отчёта";
+        
+        parent.appendChild(noContent);
+        noContent.appendChild(noContentCol);
+        noContentCol.appendChild(mes);
+    }
+    
+    
+        // Блок строки с кнопками
 
-    let allStatisticTitleRow = document.createElement('div');
-    allStatisticTitleRow.className = 'row fw-bold text-center';
+    buttonsDivRow = document.createElement('div');
+    buttonsDivRow.className = 'row rowButtons';
 
-    let allStatisticTitleDiv = document.createElement('div');
-    allStatisticTitleDiv.className = 'col';
-    allStatisticTitleDiv.innerHTML = 'Итого за период';
+    btnBackDiv = document.createElement('div');
+    btnBackDiv.className = 'col';
 
-    parent.appendChild(allStatisticTitleRow);
-    allStatisticTitleRow.appendChild(allStatisticTitleDiv);
-    
- 
-    
-    let allPurchasedRow = document.createElement('div');
-    allPurchasedRow.className = 'row';
-    let allPurchasedDiv = document.createElement('div');
-    allPurchasedDiv.className = 'col';
-    allPurchasedDiv.innerHTML = "Закуплено: " + allPurchased;
-    
-    parent.appendChild(allPurchasedRow);
-    allPurchasedRow.appendChild(allPurchasedDiv);
-    
-    let allUtilledRow = document.createElement('div');
-    allUtilledRow.className = 'row';
-    let allUtilledDiv = document.createElement('div');
-    allUtilledDiv.className = 'div';
-    allUtilledDiv.innerHTML = "Израсходовано: " + allUtil;
-    
-    parent.appendChild(allUtilledRow);
-    allUtilledRow.appendChild(allUtilledDiv);
-    
-    let allBalanceRow = document.createElement('div');
-    allBalanceRow.className = 'row';
-    let allBalanceDiv = document.createElement('div');
-    allBalanceDiv.className = 'col';
-    allBalanceDiv.innerHTML = 'Остаток: ' + allBalance;
-    
-    parent.appendChild(allBalanceRow);
-    allBalanceRow.appendChild(allBalanceDiv);
+    btnCancel = document.createElement('input');
+    btnCancel.setAttribute('type', 'button');
+    btnCancel.className = 'btn';
+    btnCancel.value = "Назад";
+    parent.appendChild(buttonsDivRow);
+    buttonsDivRow.appendChild(btnBackDiv);
+
+    btnBackDiv.appendChild(btnCancel);
+
+    btnCancel.addEventListener('click', function () {
+        history.back();
+    });
     
 
 };
