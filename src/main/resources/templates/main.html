@@ -34,7 +34,11 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
 
                     <div role="tabpanel" id="mainParameters" class="tabpanel">
 
-                        <div class="title"><h4 class="text-left fw-bold">Основные параметры</h4></div>
+                        <div class="title"><h4 class="text-left fw-bold">Основные параметры</h4>
+                        
+                                                                      
+                        
+                        </div>
                         <div class="row text-center">
                             <div  class="col-md-4">
                                 <label for="inputContractNumber" class="form-label">Номер контракта:</label>
@@ -52,13 +56,13 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
 
                         <div class="row mb-2 contract">
                             <div class="col-md-4 mb-2">
-                                <input type="text"  class="form-control" id="inputContractNumber" th:field="*{contractNumber}" required/>
+                                <input type="text"  class="form-control contractDetails" id="inputContractNumber" th:field="*{contractNumber}" required/>
                             </div>
                             <div class="col-md-4 mb-2">
-                                <input type="date" class="form-control" th:text="*{dateStartContract}" placeholder="date" id='dateStartContract' required />
+                                <input type="date" class="form-control contractDetails" th:text="*{dateStartContract}" placeholder="date" id='dateStartContract' required />
                             </div>
                             <div class="col-md-4 mb-2">
-                                <input type="date" class="form-control" th:text="*{dateEndContract}" placeholder="date" id='dateEndContract' required />
+                                <input type="date" class="form-control contractDetails" th:text="*{dateEndContract}" placeholder="date" id='dateEndContract' required />
                             </div>
                         </div>
 
@@ -72,8 +76,8 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                         <div class="row objectBuingRow">
                             <div class="col-md-4">
                                 <div class="form-check">
-                                <label for='checkboxPrinter' class="form-label">Принтеры:</label>
-                                        <input class="form-check-input" type="checkbox" value="" 
+                                <label for='checkboxPrinter' class="form-label">Принтеры</label>
+                                        <input class="form-check-input contractDetails" type="checkbox" value="" 
                                                aria-label="Checkbox for following text input" id="checkboxPrinter" name="checkboxPrinter">
                                     </div>
                             </div>
@@ -81,7 +85,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                             <div class="col-md-4">
                                 <div class="form-check">
                                 <label for='checkboxCartridge' class="form-label">Картриджи</label>
-                                        <input class="form-check-input" type="checkbox" value=""
+                                        <input class="form-check-input contractDetails" type="checkbox" value=""
                                                aria-label="Checkbox for following text input" id="checkboxCartridge" name="checkboxCartridge">
                                     </div>
                                     
@@ -95,11 +99,11 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                             <div class="col">
                                 <div class="title"><h4 class="text-left fw-bold">Добавление принтеров в контракт</h4></div>
                             </div>
-                            <div class="col text-end">
-                                <button type="button" class="btn btn-secondary addBtn" id="addBtnPrinter">Добавить</button>
-                            </div>
+                            
                         </div>
-
+                        <div class="cont" id="cont">
+                            
+                        </div>
 
                     </div>
                     <div role="tabpanel" id="cartridgesInfo" class="tabpanel hidden">
@@ -108,7 +112,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                                 <div class="title"><h4 class="text-left fw-bold">Добавление картриджей в контракт</h4></div>
                             </div>
                             <div class="col text-end">
-                                <button type="button" class="btn btn-secondary addBtn" id="addBtn">Добавить</button>
+                                <button type="button" class="btn btn-secondary addBtn"  id="addBtn">Добавить</button>
                             </div>
                         </div>
                         
@@ -121,7 +125,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                 
                     <div role="tabpanel" id="resultInfo" class="tabpanel hidden">
                         <div class="title"><h4 class="text-left fw-bold">Данные о контракте</h4></div>
-                                          
+ 
                     </div>
                     
                     
@@ -129,10 +133,17 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                 </div>  
                 <div class="row">
                     <div class="pagination">
-                        <div  class="col-md-12 text-end">
+                        
+                        <div  class="col-md-12 text-end" id="buttons">
+                           
                             <a class="btn hidden" id="prev">Назад</a>
-                            <a class="btn" id="next">Далее</a>
-                            <button class="btn btn-submit hidden" id="submit">Добавить</button>
+                            <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" title="Чтобы перейти к следующему шагу заполнения контракта необходимо: &#10;1) заполнить поле &quot;Номер контракта&quot;&#10;2) выбрать &quot;Дата начала контракта&quot; и &quot;Дата окончания контракта&quot;&#10;3) выбрать хотя бы один параметр &quot;Принтер&quot; или &quot;Картриджи&quot;">
+                            <a class="btn" id="next" disabled>Далее</a>
+                            </span>
+
+                            
+                         
+                            <button class="btn btn-submit hidden" id="submit" >Добавить</button>
                         </div>
                     </div>
                 </div>

@@ -15,12 +15,13 @@ let selectizeManufacturerIdChoiseArray;
 let selectizeModelFromChoisesManufacturer;
 let manufacturerValueFromSelectize;
 const previousButton = document.querySelector('#prev');
-const nextButton = document.querySelector('#next');
+const nextButton = document.getElementById('next');
 const submitButton = document.querySelector('#submit');
 const tabTargets = document.querySelectorAll('.tab');
 const tabPanels = document.querySelectorAll('.tabpanel');
 const isEmpty = (str) => !str.trim().length;
 const tt = document.querySelector('#printersInfo');
+const cont = document.querySelector('#cont');
 const respage = document.querySelector('#resultInfo');
 const cartrLoc = document.querySelector('#cartridgesInfo');
 let currentStep = 0;
@@ -52,6 +53,10 @@ function removeRow() {
 
 
 document.addEventListener('submit', function (event) {
+    
+    
+    
+    
     let tempArray1 = new Array();
     tempArray1.push(contract);
     if (printersArray && cartridgesArray) {
@@ -107,6 +112,8 @@ function hasClass(elem, className) {
 
 // Next: Change UI relative to the current step and account for button permissions
 nextButton.addEventListener("click", (event) => {
+    
+    
 
 // Prevent default on links
     event.preventDefault();
@@ -115,7 +122,13 @@ nextButton.addEventListener("click", (event) => {
     tabTargets[currentStep].classList.remove('active');
     switch (currentStep) {
         case 0:
-
+//            for(i = 0; i < $(".contractDetails").find('input').end().length; i++) {
+//                if($(".contractDetails").find('input').end()[i].value.length === 0) {
+//                    alert("Вы не заполнили поле!");
+//                    location.reload();
+//                    break;
+//                }
+//            }
             if (!$('#checkboxPrinter')[0].checked) {
                 tabPanels[currentStep + 2].classList.remove('hidden');
                 tabTargets[currentStep + 2].classList.add('active');
@@ -125,6 +138,7 @@ nextButton.addEventListener("click", (event) => {
                 tabTargets[currentStep + 1].classList.add('active');
                 currentStep += 1;
             }
+
             break;
         case 1:
             getContractPrinterDetails();
@@ -139,6 +153,7 @@ nextButton.addEventListener("click", (event) => {
                 currentStep += 1;
             }
             getContract();
+
             break;
         case 2:
             getContractCartridgeDetails();
@@ -154,7 +169,7 @@ nextButton.addEventListener("click", (event) => {
     getContentForTablist();
     updateStatusDisplay();
 
-});
+}); // Конец nextButtonEventListener
 
 
 previousButton.addEventListener('click', (event) => {
@@ -244,8 +259,8 @@ function getFinalPage() {
         objectBuing = document.createElement("div");
         objectBuing.className = "col-md-12 text-center text-uppercase fw-bold";
         objectBuing.innerText = "Объект закупки";
-       
-      
+
+
         respage.appendChild(contractInfo);
         respage.appendChild(objectBuingRowTitle);
         respage.appendChild(objectBuingRow);
@@ -254,7 +269,7 @@ function getFinalPage() {
         contractInfo.appendChild(labelDateEndContract);
         objectBuingRowTitle.appendChild(objectBuing);
 
-        
+
 
     }
 
@@ -316,6 +331,7 @@ function getFinalPage() {
         labelsPrinterRow.appendChild(labelInventoryNumberPrinter);
         labelsPrinterRow.appendChild(labelCartridgeIncludePrinter);
         containerForPrinters.appendChild(content);
+
 
 
     }
@@ -426,6 +442,7 @@ function getFinalPage() {
                 printerRow.appendChild(modelEachPrinter);
                 printerRow.appendChild(serialNumberEachPrinter);
                 printerRow.appendChild(inventoryNumberEachPrinter);
+
                 if (printersArray[i].cartridgeIncluded === true) {
                     includeCartridgePrinter.innerText = "есть";
                     cartridgeTitle = document.createElement("div");
@@ -466,6 +483,7 @@ function getFinalPage() {
 
                 printerRow.appendChild(includeCartridgePrinter);
             }
+
         }
 
     }
@@ -534,26 +552,16 @@ function getContract() {
 
 }
 
-let addRow = document.querySelector('#addBtn');
-addRow.addEventListener('click', function () {
-    count = $('.independentCartridge').length;
-    addCartridges(++count, cartrLoc);
-});
 
-let addRowPrinter = document.querySelector('#addBtnPrinter');
-
-addRowPrinter.addEventListener('click', function() {
-    count = $('.pane').length;
-    addPrinter(++count, tt);
-})
 
 
 function getContentForTablist() {
     let input = tabPanels[0].querySelector('.form-control');
     if (currentStep == 1) {
-        if($('.printer')[0] == null) {
-        addPrintersInfo(tt);
-    }
+        if ($('.printer')[0] == null) {
+            addPrintersInfo(cont);
+            addPrinterButton(tt);
+        }
     } else if (currentStep == 2) {
         if ($('.independentCartridge')[0] == null) {
             addCartridgesInfo(cartrLoc);
@@ -618,7 +626,6 @@ function setButtonPermissions(input) {
 function addPrintersInfo(location) {
 
     if (!document.getElementById('printerLabel')) {
-
         labelCount = document.createElement("div");
         labelCount.className = "col-md-1 d-flex align-items-center justify-content-center";
         labelCount.innerText = "№";
@@ -731,7 +738,7 @@ function addPrintersInfo(location) {
     flex.appendChild(divcol4);
     divcol4.appendChild(inp2);
     inp3 = document.createElement("input");
-    inp3.className = "form-check-input";
+    inp3.className = "form-check-input switchCart align-middle";
     inp3.name = "switch";
     inp3.type = "checkbox";
     inp3.id = "switch_" + id2;
@@ -744,6 +751,7 @@ function addPrintersInfo(location) {
     flex.appendChild(divcol5);
     divcol5.appendChild(divcol6);
     divcol6.appendChild(inp3);
+
 
     //Добавляю картриджи
     //Тип картриджа
@@ -805,7 +813,7 @@ function addPrintersInfo(location) {
                     url: "/cartridgebymodelprinter/" + encodeURIComponent(value),
                     type: 'GET',
                     dataType: 'json', // added data type
-                    data:{model: modelPrinterChoice},
+                    data: {model: modelPrinterChoice},
                     success: function (res) {
                         let keys = Object.keys(selectizeModelFromChoisesTypeCartridge.selectize.options);
                         for (let i = 0; i < keys.length; i++) {
@@ -834,7 +842,7 @@ function addPrintersInfo(location) {
         searchField: "model",
         preload: 'focus',
         create: false,
-       
+
         load: function (query, callback) {
             $.ajax({
                 url: '/cartridgebymodelprinter/' + encodeURIComponent(typeChoice),
@@ -877,7 +885,7 @@ function addPrintersInfo(location) {
                 success: callback
             });
         },
-         onChange: function(value) {
+        onChange: function (value) {
             modelPrinterChoice = value;
         },
         valueField: 'model',
@@ -888,8 +896,8 @@ function addPrintersInfo(location) {
         options: []
 
     });
-    
-    
+
+
 
 
     $('.manufacturer').children('select').selectize({
@@ -1196,7 +1204,7 @@ function addPrinter(amount, location) {
     flex.appendChild(divcol4);
     divcol4.appendChild(inp2);
     inp3 = document.createElement("input");
-    inp3.className = "form-check-input";
+    inp3.className = "form-check-input align-middle";
     inp3.name = "switch";
     inp3.type = "checkbox";
     inp3.id = "switch_" + id2;
@@ -1209,18 +1217,19 @@ function addPrinter(amount, location) {
     flex.appendChild(divcol5);
     divcol5.appendChild(divcol6);
     divcol6.appendChild(inp3);
-    
+
     btnRem = document.createElement("button");
-    btnRem.className = "btn btn-secondary";
+    btnRem.className = "btn deleteBtn";
+    btnRem.id = "btnDel";
     btnRem.type = "button";
-    btnRem.innerText = "Удалить";
+    btnRem.innerText = "\u2796";
     divcol7 = document.createElement("div");
     divcol7.className = "col-md-1 mb-2";
     flex.appendChild(divcol7);
     divcol7.appendChild(btnRem);
-    
+
     btnRem.addEventListener('click', removeRow);
-    
+
 
     //Добавляю картриджи
     //Тип картриджа
@@ -1279,10 +1288,10 @@ function addPrinter(amount, location) {
                 $(this.$control_input[0].closest('.cartridgeInclude')).find('.cartridgeModelChoice')[0].disabled = false;
                 typeValueFromSelectize = value;
                 $.ajax({
-                     url: "/cartridgebymodelprinter/" + encodeURIComponent(value),
+                    url: "/cartridgebymodelprinter/" + encodeURIComponent(value),
                     type: 'GET',
                     dataType: 'json', // added data type
-                    data:{model: modelPrinterChoice},
+                    data: {model: modelPrinterChoice},
                     success: function (res) {
                         let keys = Object.keys(selectizeModelFromChoisesTypeCartridge.selectize.options);
                         for (let i = 0; i < keys.length; i++) {
@@ -1343,7 +1352,7 @@ function addPrinter(amount, location) {
                 }
             });
         },
-         onChange: function(value) {
+        onChange: function (value) {
             modelPrinterChoice = value;
         },
         load: function (query, callback) {
@@ -1705,12 +1714,12 @@ function addCartridgesInfo(location) {
     selectModelIndependentCartridge.id = "independentCartridgeModel_" + id2;
     selectModelIndependentCartridge.name = "independentCartridgeModel";
     selectModelIndependentCartridge.disabled = true;
-    
+
     iconLink = document.createElement('a');
     iconLink.setAttribute('href', '#');
     iconSvg = document.createElement('img');
     iconSvg.setAttribute('src', '/img/info-circle-fill.svg');
-    
+
 
     divItemCodeIndependentCartridge = document.createElement("div");
     divItemCodeIndependentCartridge.className = "col-md-2 mb-2 independentCartridgeItemCode";
@@ -1757,8 +1766,8 @@ function addCartridgesInfo(location) {
 //    divInnerModel1.appendChild(selectModelIndependentCartridge);
 //    divInnerModel2.appendChild(iconLink);
 //    iconLink.appendChild(iconSvg);
-    
-    
+
+
     independentCartridgeRow.appendChild(divItemCodeIndependentCartridge);
     divItemCodeIndependentCartridge.appendChild(codeItemIndependentCartridgeInput);
     independentCartridgeRow.appendChild(divNameMaterialIndependentCartridge);
@@ -1819,7 +1828,7 @@ function addCartridgesInfo(location) {
 
     // Selectize модель картриджа
 
-   $('.independentCartridgeModel').find('select').selectize({
+    $('.independentCartridgeModel').find('select').selectize({
         placeholder: "Выберите из списка",
         valueField: 'model',
         labelField: 'model',
@@ -1837,9 +1846,9 @@ function addCartridgesInfo(location) {
                 success: callback
             });
         },
-     
+
     });
-    
+
 
 
 
@@ -1850,6 +1859,98 @@ function addCartridgesInfo(location) {
 
 
 $(document).ready(function () {
+    
+    
+//    $("#buttonNext").hover(function() {
+//        alert("wefewf");
+//    });
+    
+    contractFlag = false;
+    dateStartFlag = false;
+    dateEndFlag = false;
+    checkCartridgeFlag = false;
+    checkPrinterFlag = false;
+    
+
+    contractNum = document.querySelector("#inputContractNumber");
+    contractNum.addEventListener('input', function() {
+        if(contractNum.value.length > 0) {
+            contractFlag = true;
+            if(dateStartFlag && dateEndFlag && contractFlag && (checkCartridgeFlag || checkPrinterFlag)) {
+            $("#next").removeAttr('disabled');
+        }
+        } else {
+            $("#next").attr('disabled', 'disabled');
+            contractFlag = false;
+        }
+    });
+    
+       
+    startContr = document.querySelector("#dateStartContract");
+    startContr.addEventListener('input', function() {
+        if(startContr.value.length > 0) {
+            dateStartFlag = true;
+            if(dateStartFlag && dateEndFlag && contractFlag && (checkCartridgeFlag || checkPrinterFlag)) {
+            $("#next").removeAttr('disabled');
+        }
+            
+        } else {
+            $("#next").attr('disabled', 'disabled');
+            dateStartFlag = false;
+        }
+    });
+        
+        
+    endContr = document.querySelector("#dateEndContract");
+    endContr.addEventListener('input', function() {
+        if(endContr.value.length > 0) {
+            dateEndFlag = true;
+            if(dateStartFlag && dateEndFlag && contractFlag && (checkCartridgeFlag || checkPrinterFlag)) {
+            $("#next").removeAttr('disabled');
+        }
+            
+        } else {
+            $("#next").attr('disabled', 'disabled');
+            dateEndFlag = false;
+        }
+    });
+
+
+    checkCartridge = document.querySelector("#checkboxCartridge");
+    checkCartridge.addEventListener('change', function() {
+        if(checkCartridge.checked) {
+            checkCartridgeFlag = true;
+            if(dateStartFlag && dateEndFlag && contractFlag && (checkCartridgeFlag || checkPrinterFlag)) {
+            $("#next").removeAttr('disabled');
+        }
+            
+        } else {
+            checkCartridgeFlag = false;
+            if(!checkPrinterFlag) {
+            $("#next").attr('disabled', 'disabled');
+        }
+            
+        }
+    });
+    
+    checkPrinter = document.querySelector("#checkboxPrinter");
+    checkPrinter.addEventListener('change', function() {
+        if(checkPrinter.checked) {
+            checkPrinterFlag = true;
+            if(dateStartFlag && dateEndFlag && contractFlag && (checkCartridgeFlag || checkPrinterFlag)) {
+            $("#next").removeAttr('disabled');
+        }
+            
+        } else {
+            checkPrinterFlag = false;
+            if(!checkCartridgeFlag) {
+            $("#next").attr('disabled', 'disabled');
+        }
+        }
+    });
+    
+    
+    
 
     // Selectize тип картриджа 
 
@@ -2005,14 +2106,51 @@ function getAmount() {
 }
 
 
+function addPrinterButton(location) {
+    btnRow = document.createElement('div');
+    btnRow.className = 'row';
+    btnDiv = document.createElement('div');
+    btnDiv.className = 'col';
+    btnAddDiv = document.createElement('div');
+    btnAddDiv.className = 'col-md-1 mb-2';
+    btnAddPrinter = document.createElement('button');
+    btnAddPrinter.className = 'btn addBtn';
+    btnAddPrinter.id = "addBtnPrinter";
+    btnAddPrinter.innerText = "\u2795";
+    location.appendChild(btnRow);
+    btnRow.appendChild(btnDiv);
+    btnDiv.appendChild(btnAddPrinter);
 
+    let addRow = document.querySelector('#addBtn');
+    addRow.addEventListener('click', function () {
+        count = $('.independentCartridge').length;
+        addCartridges(++count, cartrLoc);
+    });
+
+    var addRowPrinter = document.querySelector('#addBtnPrinter');
+
+    addRowPrinter.addEventListener('click', function () {
+        count = $('.pane').length;
+        addPrinter(++count, cont);
+    });
+
+}
 
 
 function getAmountPrinters() {
     let amount = 0;
-    if($('#checkboxPrinter')[0].checked) {
+    if ($('#checkboxPrinter')[0].checked) {
         amount = $('.printer').length;
     }
 
     return amount;
+}
+
+function stateHandle() {
+    if (document.querySelector(".contractDetails").value === "") {
+        nextButton.disabled = true; //button remains disabled
+        console.log(this);
+    } else {
+        nextButton.disabled = false; //button is enabled
+    }
 }
