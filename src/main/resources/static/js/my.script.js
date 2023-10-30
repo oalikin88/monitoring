@@ -64,10 +64,7 @@ function removeRow() {
 
 
 document.addEventListener('submit', function (event) {
-    
-    
-    
-    
+
     let tempArray1 = new Array();
     tempArray1.push(contract);
     if (printersArray && cartridgesArray) {
@@ -94,9 +91,10 @@ document.addEventListener('submit', function (event) {
         },
         processData: false,
         contentType: 'application/json'
-
+    
 
     });
+
 });
 
 document.addEventListener('click', function (e) {
@@ -123,11 +121,6 @@ document.addEventListener('click', function (e) {
     checkPrinter.removeEventListener('input', stateHandle); 
     tooltipNext.removeAttribute('title', 'Чтобы перейти к следующему шагу заполнения контракта необходимо: \n1) заполнить поле \"Номер контракта\"\n2) выбрать \"Дата начала контракта\" и \"Дата окончания контракта\"\n3) выбрать хотя бы один параметр \"Принтер\" или \"Картриджи\"');
     tooltipNext.setAttribute('title', 'это новая подсказка');
- 
-    
-
-   
-    
     
     
     } else if(currentStep === 0) {
@@ -136,8 +129,6 @@ document.addEventListener('click', function (e) {
     endContr.addEventListener('input', stateHandle);
     checkCartridge.addEventListener('input', stateHandle);
     checkPrinter.addEventListener('input', stateHandle);
-    
-    
     tooltipNext.setAttribute('title', 'Чтобы перейти к следующему шагу заполнения контракта необходимо: \n1) заполнить поле \"Номер контракта\"\n2) выбрать \"Дата начала контракта\" и \"Дата окончания контракта\"\n3) выбрать хотя бы один параметр \"Принтер\" или \"Картриджи\"');
     }
 }, false);
@@ -171,10 +162,7 @@ nextButton.addEventListener("click", (event) => {
 
             break;
         case 1:
-            
 
-            
-            
             getContractPrinterDetails();
 
             if (!$('#checkboxCartridge')[0].checked) {
@@ -362,9 +350,6 @@ function getFinalPage() {
         labelsPrinterRow.appendChild(labelInventoryNumberPrinter);
         labelsPrinterRow.appendChild(labelCartridgeIncludePrinter);
         containerForPrinters.appendChild(content);
-
-
-
     }
 
     if ($('#checkboxCartridge')[0].checked && $('.contentCartridges')[0] == null) {
@@ -423,20 +408,8 @@ function getFinalPage() {
         labelsIndependedCartridgesRow.appendChild(labelIndependedCartridgeNameMaterial);
         labelsIndependedCartridgesRow.appendChild(labelIndependedCartridgeAmount);
         containerForCartridges.appendChild(contentPaneForCartridges);
-
     }
-
-
-
-
-
-
-
-
     //Раздел принтеры
-
-
-
     // Добавление принтеров на страницу
     if (document.getElementsByClassName('printersPane')[0]) {
 
@@ -560,14 +533,9 @@ function getFinalPage() {
             independedCartridgeRow.appendChild(nameMaterialEachIndependedCartridge);
             independedCartridgeRow.appendChild(amountEachIndependedCartridge);
 
-
-
         }
-
-
     }
 }
-
 
 function getContract() {
 
@@ -578,13 +546,7 @@ function getContract() {
         amountPrinters: getAmountPrinters(),
         amountCartridges: getAmount()
     }
-
-
-
 }
-
-
-
 
 function getContentForTablist() {
     let input = tabPanels[0].querySelector('.form-control');
@@ -597,11 +559,6 @@ function getContentForTablist() {
         if ($('.independentCartridge')[0] == null) {
             addCartridgesInfo(cartrLoc);
         }
-
-
-
-
-
     } else if (currentStep == 3) {
         getFinalPage();
     }
@@ -872,8 +829,6 @@ function addPrintersInfo(location) {
     });
 
     $(modelCartridgeSelect).selectize({
-        create: true,
-//                    showAddOptionOnCreate: true,
         placeholder: "Выберите из списка",
         valueField: 'model',
         labelField: 'model',
@@ -897,22 +852,7 @@ function addPrintersInfo(location) {
     let manufacturerChoice;
     $('.model').children('select').selectize({
         preload: 'focus',
-        create: function (input, callback) {
-            manufacturerChoice = $(this.$control_input[0].closest('.printer')).find('.manufacturerChoice')[0].innerText;
-            selectizeManufacturerFromChoisesManufacturer = $(this.$control_input[0].closest('.printer')).find('.modelPrinter')[0];
-            $.ajax({
-                url: '/models',
-                type: 'POST',
-                data: {target: input,
-                    manufacturer: manufacturerChoice},
-                success: function () {
-                    selectizeManufacturerFromChoisesManufacturer.selectize.addOption({value: input, text: input});
-                    selectizeManufacturerFromChoisesManufacturer.selectize.addItem(input);
-                    selectizeManufacturerFromChoisesManufacturer.selectize.refreshOptions();
-                    callback({model: input});
-                }
-            });
-        },
+        create: false,
         load: function (query, callback) {
             $.ajax({
                 url: '/models/' + encodeURIComponent(manufacturerChoice),
@@ -929,7 +869,6 @@ function addPrintersInfo(location) {
         valueField: 'model',
         labelField: 'model',
         searchField: "model",
-        showAddOptionOnCreate: true,
         placeholder: 'Выберите из списка',
         options: []
 
@@ -939,26 +878,12 @@ function addPrintersInfo(location) {
 
 
     $('.manufacturer').children('select').selectize({
-        create: function (input, callback) {
-            selectizeManufacturerFromChoisesManufacturer = $(this.$control_input[0].closest('.printer')).find('.manufacturerChoice')[0];
-            $.ajax({
-                url: '/manufacturers',
-                type: 'POST',
-                data: {value: input},
-                success: function () {
-                    selectizeManufacturerFromChoisesManufacturer.selectize.addOption({value: input, text: input});
-                    selectizeManufacturerFromChoisesManufacturer.selectize.addItem(input);
-                    selectizeManufacturerFromChoisesManufacturer.selectize.refreshOptions();
-                    callback({manufacturer: input});
-                }
-            });
-        },
+        create: false,
         preload: 'focus',
         placeholder: "Выберите из списка",
         valueField: 'manufacturer',
         labelField: 'manufacturer',
         searchField: "manufacturer",
-        showAddOptionOnCreate: true,
         load: function (query, callback) {
             $.ajax({
                 url: '/manufacturers',
@@ -998,13 +923,7 @@ function addPrintersInfo(location) {
         }
     });
 
-
-
-
-
 }
-
-
 
 if (document.getElementsByName('cartridgeType') !== null) {
     typeCartridgeSelect = document.getElementsByName('cartridgeType');
@@ -1014,16 +933,9 @@ if (document.getElementsByName('cartridgeModel') !== null) {
     modelCartridgeSelect = document.getElementsByName('cartridgeModel');
 }
 
-
-
 $(document).ready(function () {
 
-
-
-
 tooltipNext.setAttribute('title', 'Чтобы перейти к следующему шагу заполнения контракта необходимо: \n1) заполнить поле \"Номер контракта\"\n2) выбрать \"Дата начала контракта\" и \"Дата окончания контракта\"\n3) выбрать хотя бы один параметр \"Принтер\" или \"Картриджи\"');
-
-
 
 
     let typeChoice;
@@ -1090,22 +1002,7 @@ tooltipNext.setAttribute('title', 'Чтобы перейти к следующе
     let manufacturerChoice;
     $('.model').children('select').selectize({
         preload: 'focus',
-        create: function (input, callback) {
-            manufacturerChoice = $(this.$control_input[0].closest('.printer')).find('.manufacturerChoice')[0].innerText;
-            selectizeManufacturerFromChoisesManufacturer = $(this.$control_input[0].closest('.printer')).find('.modelPrinter')[0];
-            $.ajax({
-                url: '/models',
-                type: 'POST',
-                data: {target: input,
-                    manufacturer: manufacturerChoice},
-                success: function () {
-                    selectizeManufacturerFromChoisesManufacturer.selectize.addOption({value: input, text: input});
-                    selectizeManufacturerFromChoisesManufacturer.selectize.addItem(input);
-                    selectizeManufacturerFromChoisesManufacturer.selectize.refreshOptions();
-                    callback({model: input});
-                }
-            });
-        },
+        create: false,
         load: function (query, callback) {
             $.ajax({
                 url: '/models/' + encodeURIComponent(manufacturerChoice),
@@ -1119,33 +1016,18 @@ tooltipNext.setAttribute('title', 'Чтобы перейти к следующе
         valueField: 'model',
         labelField: 'model',
         searchField: "model",
-        showAddOptionOnCreate: true,
         placeholder: 'Выберите из списка',
         options: []
 
     });
 
     $('.manufacturer').children('select').selectize({
-        create: function (input, callback) {
-            selectizeManufacturerFromChoisesManufacturer = $(this.$control_input[0].closest('.printer')).find('.manufacturerChoice')[0];
-            $.ajax({
-                url: '/manufacturers',
-                type: 'POST',
-                data: {value: input},
-                success: function () {
-                    selectizeManufacturerFromChoisesManufacturer.selectize.addOption({value: input, text: input});
-                    selectizeManufacturerFromChoisesManufacturer.selectize.addItem(input);
-                    selectizeManufacturerFromChoisesManufacturer.selectize.refreshOptions();
-                    callback({manufacturer: input});
-                }
-            });
-        },
+        create: false,
         preload: 'focus',
         placeholder: "Выберите из списка",
         valueField: 'manufacturer',
         labelField: 'manufacturer',
         searchField: "manufacturer",
-        showAddOptionOnCreate: true,
         load: function (query, callback) {
             $.ajax({
                 url: '/manufacturers',
@@ -1188,11 +1070,6 @@ tooltipNext.setAttribute('title', 'Чтобы перейти к следующе
 
 
 function addPrinter(amount, location) {
-
-
-
-
-
     id2 = Math.floor(Math.random() * 10000 * 25654);
     flex = document.createElement("div");
     pane = document.createElement("div");
@@ -1353,8 +1230,7 @@ function addPrinter(amount, location) {
     });
 
     $(modelCartridgeSelect).selectize({
-        create: true,
-//                    showAddOptionOnCreate: true,
+        create: false,
         placeholder: "Выберите из списка",
         valueField: 'model',
         labelField: 'model',
@@ -1377,22 +1253,7 @@ function addPrinter(amount, location) {
     let manufacturerChoice;
     $('.model').children('select').selectize({
         preload: 'focus',
-        create: function (input, callback) {
-            manufacturerChoice = $(this.$control_input[0].closest('.printer')).find('.manufacturerChoice')[0].innerText;
-            selectizeManufacturerFromChoisesManufacturer = $(this.$control_input[0].closest('.printer')).find('.modelPrinter')[0];
-            $.ajax({
-                url: '/models',
-                type: 'POST',
-                data: {target: input,
-                    manufacturer: manufacturerChoice},
-                success: function () {
-                    selectizeManufacturerFromChoisesManufacturer.selectize.addOption({value: input, text: input});
-                    selectizeManufacturerFromChoisesManufacturer.selectize.addItem(input);
-                    selectizeManufacturerFromChoisesManufacturer.selectize.refreshOptions();
-                    callback({model: input});
-                }
-            });
-        },
+        create: false,
         onChange: function (value) {
             modelPrinterChoice = value;
         },
@@ -1409,33 +1270,18 @@ function addPrinter(amount, location) {
         valueField: 'model',
         labelField: 'model',
         searchField: "model",
-        showAddOptionOnCreate: true,
         placeholder: 'Выберите из списка',
         options: []
 
     });
 
     $('.manufacturer').children('select').selectize({
-        create: function (input, callback) {
-            selectizeManufacturerFromChoisesManufacturer = $(this.$control_input[0].closest('.printer')).find('.manufacturerChoice')[0];
-            $.ajax({
-                url: '/manufacturers',
-                type: 'POST',
-                data: {value: input},
-                success: function () {
-                    selectizeManufacturerFromChoisesManufacturer.selectize.addOption({value: input, text: input});
-                    selectizeManufacturerFromChoisesManufacturer.selectize.addItem(input);
-                    selectizeManufacturerFromChoisesManufacturer.selectize.refreshOptions();
-                    callback({manufacturer: input});
-                }
-            });
-        },
+        create: false,
         preload: 'focus',
         placeholder: "Выберите из списка",
         valueField: 'manufacturer',
         labelField: 'manufacturer',
         searchField: "manufacturer",
-        showAddOptionOnCreate: true,
         load: function (query, callback) {
             $.ajax({
                 url: '/manufacturers',
@@ -1475,19 +1321,9 @@ function addPrinter(amount, location) {
         }
     });
 
-
-
-
-
 }
 
-
-
-
 function addCartridges(count, location) {
-
-
-
     id2 = Math.floor(Math.random() * 10000 * 25654);
     independentCartridgeRow = document.createElement("div"); // Строка
     independentCartridgeRow.className = "row independentCartridge mb-2 mt-2";
@@ -1802,12 +1638,6 @@ function addCartridgesInfo(location) {
     divTypeIndependentCartridge.appendChild(selectTypeIndependentCartridge);
     independentCartridgeRow.appendChild(divModelIndependentCartridge);
     divModelIndependentCartridge.appendChild(selectModelIndependentCartridge);
-//    divInnerModelRow.appendChild(divInnerModel1);
-//    divInnerModelRow.appendChild(divInnerModel2);
-//    divInnerModel1.appendChild(selectModelIndependentCartridge);
-//    divInnerModel2.appendChild(iconLink);
-//    iconLink.appendChild(iconSvg);
-
 
     independentCartridgeRow.appendChild(divItemCodeIndependentCartridge);
     divItemCodeIndependentCartridge.appendChild(codeItemIndependentCartridgeInput);
@@ -1889,22 +1719,17 @@ function addCartridgesInfo(location) {
         },
 
     });
-
-
-
-
-
-
 }
 
 
 
 $(document).ready(function () {
-//    contractNum.addEventListener('input', stateHandle);
-//    startContr.addEventListener('input', stateHandle);
-//    endContr.addEventListener('input', stateHandle);
-//    checkCartridge.addEventListener('input', stateHandle);
-//    checkPrinter.addEventListener('input', stateHandle);
+    
+    contractNum.addEventListener('input', stateHandle);
+    startContr.addEventListener('input', stateHandle);
+    endContr.addEventListener('input', stateHandle);
+    checkCartridge.addEventListener('input', stateHandle);
+    checkPrinter.addEventListener('input', stateHandle);
 
     // Selectize тип картриджа 
 
@@ -1973,15 +1798,7 @@ $(document).ready(function () {
         }
     });
 
-
-
-
-
 });
-
-
-
-
 
 function getContractPrinterDetails() {
     let printer;
@@ -2011,13 +1828,6 @@ function getContractPrinterDetails() {
     }
 
 
-
-
-
-
-
-
-
 }
 
 
@@ -2038,15 +1848,13 @@ function getContractCartridgeDetails() {
         cartridgesArray.push(cartridge);
     }
 }
-$(document).ready(function () {
-    $('#manufacturer').selectize({
-        create: true,
-        preload: true,
-        showAddOptionOnCreate: true
-
-
-    });
-});
+//$(document).ready(function () {
+//    $('#manufacturer').selectize({
+//        preload: true,
+//
+//
+//    });
+//});
 
 
 
@@ -2073,6 +1881,7 @@ function addPrinterButton(location) {
     btnAddDiv.className = 'col-md-1 mb-2';
     btnAddPrinter = document.createElement('button');
     btnAddPrinter.className = 'btn addBtn';
+    btnAddPrinter.type='button';
     btnAddPrinter.setAttribute('data-bs-toggle', 'tooltip');
     btnAddPrinter.setAttribute('data-bs-placement', 'top');
     btnAddPrinter.setAttribute('title', 'Добавить принтер в контракт');
@@ -2082,11 +1891,11 @@ function addPrinterButton(location) {
     btnRow.appendChild(btnDiv);
     btnDiv.appendChild(btnAddPrinter);
 
-    let addRow = document.querySelector('#addBtn');
-    addRow.addEventListener('click', function () {
-        count = $('.independentCartridge').length;
-        addCartridges(++count, cartrLoc);
-    });
+//    let addRow = document.querySelector('#addBtn');
+//    addRow.addEventListener('click', function () {
+//        count = $('.independentCartridge').length;
+//        addCartridges(++count, cartrLoc);
+//    });
 
     var addRowPrinter = document.querySelector('#addBtnPrinter');
 
