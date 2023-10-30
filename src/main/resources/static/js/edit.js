@@ -147,9 +147,11 @@ $(document).ready(function () {
             success: function (data) {
                 div.innerText = $('#locationSelect')[0].selectize.getValue();
                 $('#staticBackdrop').modal('hide');
+                window.location.reload();
 
             }
         });
+        $('#locationSelect')[0].selectize.clear();
     });
 
     let cartridgeUse = document.getElementById("cartridgeUseRefresh");
