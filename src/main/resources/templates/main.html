@@ -14,6 +14,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
         <link href="/css/bootstrap.min.css" rel="stylesheet">
         <link href="/css/selectize.bootstrap5.css" rel="stylesheet">
         <link href="/css/style.css" rel="stylesheet">
+   
     </head>
     <body>
         <nav th:insert="nav :: navbar"></nav>
@@ -59,10 +60,10 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                                 <input type="text"  class="form-control contractDetails" id="inputContractNumber" th:field="*{contractNumber}" required/>
                             </div>
                             <div class="col-md-4 mb-2">
-                                <input type="date" class="form-control contractDetails" th:text="*{dateStartContract}" placeholder="date" id='dateStartContract' required />
+                                <input type="date" class="form-control contractDetails" th:text="*{dateStartContract}" name="startContr" placeholder="date" id='dateStartContract' required />
                             </div>
                             <div class="col-md-4 mb-2">
-                                <input type="date" class="form-control contractDetails" th:text="*{dateEndContract}" placeholder="date" id='dateEndContract' required />
+                                <input type="date" class="form-control contractDetails" th:text="*{dateEndContract}" name="endContr" placeholder="date" id='dateEndContract' required />
                             </div>
                         </div>
 
@@ -137,7 +138,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                         <div  class="col-md-12 text-end" id="buttons">
                            
                             <a class="btn hidden" id="prev">Назад</a>
-                            <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" title="Чтобы перейти к следующему шагу заполнения контракта необходимо: &#10;1) заполнить поле &quot;Номер контракта&quot;&#10;2) выбрать &quot;Дата начала контракта&quot; и &quot;Дата окончания контракта&quot;&#10;3) выбрать хотя бы один параметр &quot;Принтер&quot; или &quot;Картриджи&quot;">
+                            <span class="d-inline-block" tabindex="0" id="tooltipNext" data-bs-toggle="tooltip" >
                             <a class="btn" id="next" disabled>Далее</a>
                             </span>
 
@@ -156,7 +157,8 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
         </div>
      <footer th:insert="footer :: footer"></footer>
         <script src="/js/bootstrap.bundle.min.js" ></script>
-        <script src="/js/my.script.js" defer></script>
+        
+        <script src="/js/my.script.js"></script>
     </body>
 </html>
 

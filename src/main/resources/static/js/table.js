@@ -456,7 +456,7 @@ window.onload = function () {
                         trThead.appendChild(thThead2);
                         tbody = document.createElement('tbody');
                         table.appendChild(tbody);
-
+                       
 
                         for (i = 0; i < result.sort().length; i++) {
                             tr = document.createElement('tr');
@@ -473,11 +473,13 @@ window.onload = function () {
 
                         }
                     }
+                         
                 });
 
             }
+             
         });
-
+        document.getElementById("modalLocationInput").value = "";
     });
 
     // Модальное окно с моделями принтеров
@@ -882,11 +884,16 @@ window.onload = function () {
                             }
                         }
                     });
-
+                    
                     $('#modalModelsPrinter2').modal('hide');
+                    
                 }
             });
-
+                    $('#modalManufacturerSelect')[0].selectize.clear();
+                    $('#modalModelInput')[0].selectize.clear();
+                    $('#modalPrintColorTypeSelect')[0].value = "";
+                    $('#modalPrintFormatTypeSelect')[0].value = "";
+                    $('#modalPrintSpeedSelect')[0].value = "";
         });
 
         modalModelsPrinterFooterCloseBtn.addEventListener("click", function () {
@@ -1258,7 +1265,12 @@ window.onload = function () {
                     trTheadModelsCartridge.appendChild(thTheadModelsCartridge2);
                     tbodyModelCartridge = document.createElement('tbody');
                     tableModelsCartridge.appendChild(tbodyModelCartridge);
-
+                    
+                    $("#modalModelTypeInput")[0].reset();
+                    $('#modalModelCartridgeSelect')[0].reset();
+                    $('#modalNominalResourceInput')[0].reset();
+                    $(".modalModelsPrinterSelect")[0].reset();
+                    
                     $.ajax({
                         url: '/cartridge',
                         type: 'GET',
@@ -1278,6 +1290,8 @@ window.onload = function () {
                                 tdModelCartridge.innerText = arr[i].model;
                                 trModelsCartridge.appendChild(tdModelCartridge);
                             }
+                            
+                            
                         }
                     });
 

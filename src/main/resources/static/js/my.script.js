@@ -29,12 +29,23 @@ let printersArray;
 let cartridgesArray;
 let printersPlusCartridges = new Array();
 let contract = new Object();
-
+ 
 let formData = new FormData();
 let optionsManufacturerMap = new Map();
 let printers = new Map();
 let amountCartridges = document.querySelector('input[id="amountCartridgeInput"]');
 let modelPrinterChoice;
+let contractFlag = false;
+let dateStartFlag = false;
+let dateEndFlag = false;
+let checkCartridgeFlag = false;
+let checkPrinterFlag = false;
+let contractNum = document.querySelector("#inputContractNumber");
+let startContr = document.querySelector("#dateStartContract");
+let endContr = document.querySelector("#dateEndContract");
+let checkCartridge = document.querySelector("#checkboxCartridge");
+let checkPrinter = document.querySelector("#checkboxPrinter");
+let tooltipNext = document.querySelector("#tooltipNext");
 // Справочник принтеров
 
 
@@ -104,6 +115,31 @@ document.addEventListener('click', function (e) {
 
         }
     }
+    if(currentStep === 1) {
+    contractNum.removeEventListener('input', stateHandle);
+    startContr.removeEventListener('input', stateHandle);
+    endContr.removeEventListener('input', stateHandle);
+    checkCartridge.removeEventListener('input', stateHandle);
+    checkPrinter.removeEventListener('input', stateHandle); 
+    tooltipNext.removeAttribute('title', 'Чтобы перейти к следующему шагу заполнения контракта необходимо: \n1) заполнить поле \"Номер контракта\"\n2) выбрать \"Дата начала контракта\" и \"Дата окончания контракта\"\n3) выбрать хотя бы один параметр \"Принтер\" или \"Картриджи\"');
+    tooltipNext.setAttribute('title', 'это новая подсказка');
+ 
+    
+
+   
+    
+    
+    
+    } else if(currentStep === 0) {
+    contractNum.addEventListener('input', stateHandle);
+    startContr.addEventListener('input', stateHandle);
+    endContr.addEventListener('input', stateHandle);
+    checkCartridge.addEventListener('input', stateHandle);
+    checkPrinter.addEventListener('input', stateHandle);
+    
+    
+    tooltipNext.setAttribute('title', 'Чтобы перейти к следующему шагу заполнения контракта необходимо: \n1) заполнить поле \"Номер контракта\"\n2) выбрать \"Дата начала контракта\" и \"Дата окончания контракта\"\n3) выбрать хотя бы один параметр \"Принтер\" или \"Картриджи\"');
+    }
 }, false);
 
 function hasClass(elem, className) {
@@ -116,19 +152,13 @@ nextButton.addEventListener("click", (event) => {
     
 
 // Prevent default on links
-    event.preventDefault();
+   // event.preventDefault();
     // Hide current tab
     tabPanels[currentStep].classList.add('hidden');
     tabTargets[currentStep].classList.remove('active');
     switch (currentStep) {
         case 0:
-//            for(i = 0; i < $(".contractDetails").find('input').end().length; i++) {
-//                if($(".contractDetails").find('input').end()[i].value.length === 0) {
-//                    alert("Вы не заполнили поле!");
-//                    location.reload();
-//                    break;
-//                }
-//            }
+    
             if (!$('#checkboxPrinter')[0].checked) {
                 tabPanels[currentStep + 2].classList.remove('hidden');
                 tabTargets[currentStep + 2].classList.add('active');
@@ -141,6 +171,10 @@ nextButton.addEventListener("click", (event) => {
 
             break;
         case 1:
+            
+
+            
+            
             getContractPrinterDetails();
 
             if (!$('#checkboxCartridge')[0].checked) {
@@ -179,7 +213,6 @@ previousButton.addEventListener('click', (event) => {
     tabTargets[currentStep].classList.remove('active');
     switch (currentStep) {
         case 3:
-
             if (!contract.amountCartridges) {
                 finalPrintersList = document.getElementsByClassName('printersPane')[0].children.length;
                 printersArray = [];
@@ -195,11 +228,9 @@ previousButton.addEventListener('click', (event) => {
                 for (i = 0; i < finalCartridgesList; i++) {
                     document.getElementsByClassName('cartridgesPane')[0].removeChild(document.getElementsByClassName('cartridgesPane')[0].lastChild);
                 }
-
                 tabPanels[currentStep - 1].classList.remove('hidden');
                 tabTargets[currentStep - 1].classList.add('active');
                 currentStep -= 1;
-
             }
             break;
         case 2:
@@ -618,6 +649,7 @@ function setButtonPermissions(input) {
         nextButton.setAttribute('disabled', true);
         submitButton.setAttribute('disabled', true);
     } else {
+        
         nextButton.removeAttribute('disabled');
         submitButton.removeAttribute('disabled');
     }
@@ -626,6 +658,7 @@ function setButtonPermissions(input) {
 function addPrintersInfo(location) {
 
     if (!document.getElementById('printerLabel')) {
+        
         labelCount = document.createElement("div");
         labelCount.className = "col-md-1 d-flex align-items-center justify-content-center";
         labelCount.innerText = "№";
@@ -697,19 +730,24 @@ function addPrintersInfo(location) {
     count.innerText = 1;
     pane.className = "pane mt-3 mb-3";
     select = document.createElement("select");
-    select.className = "form-select text-start";
+    select.className = "form-select text-start manufacturerSelect";
     select.id = "manufacturer_" + id2;
     select.name = "manufacturer";
 
     divcol1 = document.createElement("div");
-    flex.className = "row printer mb-2 mt-2 px-3 text-end";
+    flex.className = "row printer mb-2 mt-2 px-3 text-end needs-validation";
+    
     flex.id = "row_printer_" + 1 + "_" + id2;
+    valid_feedback = document.createElement('div');
+    valid_feedback.className = "valid-feedback";
+    
     divcol1.className = "col-md-2 mb-2 manufacturer";
     location.appendChild(pane);
     pane.appendChild(flex);
     flex.appendChild(count);
     flex.appendChild(divcol1);
     divcol1.appendChild(select);
+    divcol1.appendChild(valid_feedback);
     select2 = document.createElement("select");
     select2.className = "form-select text-start modelPrinter";
     select2.id = "modelPrinter_" + id2;
@@ -746,7 +784,7 @@ function addPrintersInfo(location) {
     inp3.disabled = true;
     divcol5 = document.createElement("div");
     divcol6 = document.createElement("div");
-    divcol5.className = "col-md-1 mb-2";
+    divcol5.className = "col-md-1 mb-2 printerSwitchDiv";
     divcol6.className = "form-check form-switch printerSwitch text-center";
     flex.appendChild(divcol5);
     divcol5.appendChild(divcol6);
@@ -983,7 +1021,7 @@ $(document).ready(function () {
 
 
 
-
+tooltipNext.setAttribute('title', 'Чтобы перейти к следующему шагу заполнения контракта необходимо: \n1) заполнить поле \"Номер контракта\"\n2) выбрать \"Дата начала контракта\" и \"Дата окончания контракта\"\n3) выбрать хотя бы один параметр \"Принтер\" или \"Картриджи\"');
 
 
 
@@ -1163,7 +1201,7 @@ function addPrinter(amount, location) {
     count.innerText = amount;
     pane.className = "pane mt-3 mb-3";
     select = document.createElement("select");
-    select.className = "form-select text-start";
+    select.className = "form-select text-start manufacturerSelect";
     select.id = "manufacturer_" + id2;
     select.name = "manufacturer";
 
@@ -1223,6 +1261,9 @@ function addPrinter(amount, location) {
     btnRem.id = "btnDel";
     btnRem.type = "button";
     btnRem.innerText = "\u2796";
+    btnRem.setAttribute('data-bs-toggle', 'tooltip');
+    btnRem.setAttribute('data-bs-placement', 'top');
+    btnRem.setAttribute('title', 'Удалить принтер из контракта');
     divcol7 = document.createElement("div");
     divcol7.className = "col-md-1 mb-2";
     flex.appendChild(divcol7);
@@ -1859,98 +1900,11 @@ function addCartridgesInfo(location) {
 
 
 $(document).ready(function () {
-    
-    
-//    $("#buttonNext").hover(function() {
-//        alert("wefewf");
-//    });
-    
-    contractFlag = false;
-    dateStartFlag = false;
-    dateEndFlag = false;
-    checkCartridgeFlag = false;
-    checkPrinterFlag = false;
-    
-
-    contractNum = document.querySelector("#inputContractNumber");
-    contractNum.addEventListener('input', function() {
-        if(contractNum.value.length > 0) {
-            contractFlag = true;
-            if(dateStartFlag && dateEndFlag && contractFlag && (checkCartridgeFlag || checkPrinterFlag)) {
-            $("#next").removeAttr('disabled');
-        }
-        } else {
-            $("#next").attr('disabled', 'disabled');
-            contractFlag = false;
-        }
-    });
-    
-       
-    startContr = document.querySelector("#dateStartContract");
-    startContr.addEventListener('input', function() {
-        if(startContr.value.length > 0) {
-            dateStartFlag = true;
-            if(dateStartFlag && dateEndFlag && contractFlag && (checkCartridgeFlag || checkPrinterFlag)) {
-            $("#next").removeAttr('disabled');
-        }
-            
-        } else {
-            $("#next").attr('disabled', 'disabled');
-            dateStartFlag = false;
-        }
-    });
-        
-        
-    endContr = document.querySelector("#dateEndContract");
-    endContr.addEventListener('input', function() {
-        if(endContr.value.length > 0) {
-            dateEndFlag = true;
-            if(dateStartFlag && dateEndFlag && contractFlag && (checkCartridgeFlag || checkPrinterFlag)) {
-            $("#next").removeAttr('disabled');
-        }
-            
-        } else {
-            $("#next").attr('disabled', 'disabled');
-            dateEndFlag = false;
-        }
-    });
-
-
-    checkCartridge = document.querySelector("#checkboxCartridge");
-    checkCartridge.addEventListener('change', function() {
-        if(checkCartridge.checked) {
-            checkCartridgeFlag = true;
-            if(dateStartFlag && dateEndFlag && contractFlag && (checkCartridgeFlag || checkPrinterFlag)) {
-            $("#next").removeAttr('disabled');
-        }
-            
-        } else {
-            checkCartridgeFlag = false;
-            if(!checkPrinterFlag) {
-            $("#next").attr('disabled', 'disabled');
-        }
-            
-        }
-    });
-    
-    checkPrinter = document.querySelector("#checkboxPrinter");
-    checkPrinter.addEventListener('change', function() {
-        if(checkPrinter.checked) {
-            checkPrinterFlag = true;
-            if(dateStartFlag && dateEndFlag && contractFlag && (checkCartridgeFlag || checkPrinterFlag)) {
-            $("#next").removeAttr('disabled');
-        }
-            
-        } else {
-            checkPrinterFlag = false;
-            if(!checkCartridgeFlag) {
-            $("#next").attr('disabled', 'disabled');
-        }
-        }
-    });
-    
-    
-    
+//    contractNum.addEventListener('input', stateHandle);
+//    startContr.addEventListener('input', stateHandle);
+//    endContr.addEventListener('input', stateHandle);
+//    checkCartridge.addEventListener('input', stateHandle);
+//    checkPrinter.addEventListener('input', stateHandle);
 
     // Selectize тип картриджа 
 
@@ -2018,6 +1972,10 @@ $(document).ready(function () {
             });
         }
     });
+
+
+
+
 
 });
 
@@ -2115,6 +2073,9 @@ function addPrinterButton(location) {
     btnAddDiv.className = 'col-md-1 mb-2';
     btnAddPrinter = document.createElement('button');
     btnAddPrinter.className = 'btn addBtn';
+    btnAddPrinter.setAttribute('data-bs-toggle', 'tooltip');
+    btnAddPrinter.setAttribute('data-bs-placement', 'top');
+    btnAddPrinter.setAttribute('title', 'Добавить принтер в контракт');
     btnAddPrinter.id = "addBtnPrinter";
     btnAddPrinter.innerText = "\u2795";
     location.appendChild(btnRow);
@@ -2146,11 +2107,49 @@ function getAmountPrinters() {
     return amount;
 }
 
+
 function stateHandle() {
-    if (document.querySelector(".contractDetails").value === "") {
-        nextButton.disabled = true; //button remains disabled
-        console.log(this);
-    } else {
-        nextButton.disabled = false; //button is enabled
-    }
-}
+    if(event.target.value.length > 0 || event.target.checked) {
+        switch (event.target.name) {
+            case 'contractNumber':
+                contractFlag = true;
+                break;
+            case 'startContr':
+                dateStartFlag = true;
+                break;
+            case 'endContr':
+                dateEndFlag = true;
+                break;
+            case 'checkboxPrinter':
+                checkPrinterFlag = true;
+                break;
+            case 'checkboxCartridge':
+                checkCartridgeFlag = true;
+                break;
+        }
+         if(dateStartFlag && dateEndFlag && contractFlag && (checkCartridgeFlag || checkPrinterFlag)) {
+            $("#next").removeAttr('disabled');
+        }
+  
+        } else {
+            $("#next").attr('disabled', 'disabled');
+            switch (event.target.name) {
+            case 'contractNumber':
+                contractFlag = false;
+                break;
+            case 'startContr':
+                dateStartFlag = false;
+                break;
+            case 'endContr':
+                dateEndFlag = false;
+                break;
+            case 'checkboxPrinter':
+                checkPrinterFlag = false;
+                break;
+            case 'checkboxCartridge':
+                checkCartridgeFlag = false;
+                break;
+        }
+        }
+    };
+    
