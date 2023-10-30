@@ -1143,7 +1143,7 @@ window.onload = function () {
         $('.modalModelTypeInput').selectize({
             create: false,
             maxItems: 1,
-            placeholder: "Выберите из списка",
+            placeholder: "тип картриджа",
             valueField: 'type',
             labelField: 'type',
             searchField: "type",
@@ -1183,7 +1183,7 @@ window.onload = function () {
 
         $('.modalModelCartridgeSelect').selectize({
             create: false,
-            placeholder: "Выберите из списка",
+            placeholder: "модель картриджа",
             valueField: 'model',
             labelField: 'model',
             searchField: "model",
@@ -1209,7 +1209,7 @@ window.onload = function () {
             searchField: 'model',
             persist: false,
             maxItems: null,
-            placeholder: "Выберите из списка",
+            placeholder: "модель принтера",
             preload: 'focus',
             load: function (query, callback) {
                 $.ajax({
@@ -1233,8 +1233,8 @@ window.onload = function () {
             $.ajax({
                 url: "/addmodelcart/",
                 type: 'POST',
-                data: {model: $('.modalModelCartridgeSelect ')[0].innerText,
-                    type: $(".modalModelTypeInput ")[0].innerText,
+                data: {model: $('.modalModelCartridgeSelect')[0].innerText,
+                    type: $(".modalModelTypeInput")[0].innerText,
                     resource: $('#modalNominalResourceInput')[0].value,
                     idModel: $(".modalModelsPrinterSelect")[0].selectize.items
                 },
@@ -1266,11 +1266,6 @@ window.onload = function () {
                     tbodyModelCartridge = document.createElement('tbody');
                     tableModelsCartridge.appendChild(tbodyModelCartridge);
                     
-                    $("#modalModelTypeInput")[0].reset();
-                    $('#modalModelCartridgeSelect')[0].reset();
-                    $('#modalNominalResourceInput')[0].reset();
-                    $(".modalModelsPrinterSelect")[0].reset();
-                    
                     $.ajax({
                         url: '/cartridge',
                         type: 'GET',
@@ -1296,8 +1291,12 @@ window.onload = function () {
                     });
 
                 }
+                
             });
-
+                    $("#modalModelTypeInput")[0].selectize.clear();
+                    $('#modalModelCartridgeSelect')[0].selectize.clear();
+                    $('#modalNominalResourceInput')[0].value = "";
+                    $("#modalModelsPrinterSelect")[0].selectize.clear();
         });
 
         modalModelsCartridgeFooterCloseBtn.addEventListener('click', function () {
@@ -1332,7 +1331,7 @@ window.onload = function () {
     titleModalPlaningBuy = document.createElement('h1');
     titleModalPlaningBuy.className = 'modal-title fs-5';
     titleModalPlaningBuy.id = 'titleModalPlaningBuy';
-    titleModalPlaningBuy.innerText = 'Расчёт планируемой закупки';
+    titleModalPlaningBuy.innerText = 'Показать статистику за период';
     
     btnCloseModalPlaningBuy = document.createElement('button');
     btnCloseModalPlaningBuy.className = 'btn-close';
