@@ -78,11 +78,9 @@ public class ContractServiceMapper {
         String contractNumber;
         Contract contract = new Contract();
         Map<Long, Integer> modelsCartridges = new HashMap<>();
-         
-                Location location = null;
+        Location location = null;
         int amountPrinters = 0;
         int amountCartridges = 0;
-
         for (int i = 0; i < input.size(); i++) {
 
             // Основные параметры контракта
@@ -130,7 +128,6 @@ public class ContractServiceMapper {
                                 }
                             }
                             break;
-
                     }
                 }
             }
@@ -227,8 +224,7 @@ public class ContractServiceMapper {
                                     cartridgeModel.setModel(targetModel);
                                 }
                             }
-                            break;
-                        
+                            break;    
                     }
                 }
                 if (cartridgeIncluded) {
@@ -286,9 +282,7 @@ public class ContractServiceMapper {
                                 cartridgeModelIndepended = new CartridgeModel();
                                 cartridgeModelIndepended.setModel(targetModel);
                             }
-
                             cartridge.setModel(cartridgeModelIndepended);
-
                             break;
                              case "itemCode":
                                  cartridge.setItemCode(entry.getValue());
@@ -297,22 +291,15 @@ public class ContractServiceMapper {
                              cartridge.setNameMaterial(entry.getValue());
                              break;
                     }
-
                 }
-                cartridge.setContract(contract);
-                
-                
+                cartridge.setContract(contract);    
                 objectsBuing.add(cartridge);
             }
-                  
-                        
+                               
             }
-        }
-        
-        contract.setObjectBuing(objectsBuing);
-        
-        contractServiceImpl.saveContract(contract);
-        
+        }        
+        contract.setObjectBuing(objectsBuing);        
+        contractServiceImpl.saveContract(contract);       
         Optional<Location> findLocationById = locationRepo.findById(location.getId());
         Location currLoc = findLocationById.get();
         int cartridgesOnSklad = currLoc.getCartridges().size();
@@ -342,7 +329,6 @@ public class ContractServiceMapper {
                     
                     }
         
-        
         System.out.println(
                 "Контракт сохранён успешно");
     }
@@ -359,7 +345,6 @@ public class ContractServiceMapper {
         }
         return targetDate;
     }
-    
     
     public List<ContractForViewDTO> getAllContracts() {
         
@@ -459,8 +444,7 @@ public class ContractServiceMapper {
                             break;
                         }
                     }
-                }
-                
+                }   
             }
         
         Set<PrinterDTO> listPrinterDto = new HashSet<>();
@@ -508,7 +492,6 @@ public class ContractServiceMapper {
             cartridgeDto.setUtil(cartridge.isUtil());
             listCartridgesDto.add(cartridgeDto);
         }
-        
         dto.setPrinters(listPrinterDto);
         dto.setCartridges(listCartridgesDto);
         

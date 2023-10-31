@@ -229,10 +229,10 @@ previousButton.addEventListener('click', (event) => {
                 currentStep -= 2;
             } else {
                 printersArray = [];
-                finalPrintersList = document.getElementsByClassName('printersPane')[0].children.length;
-                for (i = 0; i < finalPrintersList; i++) {
-                    document.getElementsByClassName('printersPane')[0].removeChild(document.getElementsByClassName('printersPane')[0].lastChild);
-                }
+//                finalPrintersList = document.getElementsByClassName('printersPane')[0].children.length;
+//                for (i = 0; i < finalPrintersList; i++) {
+//                    document.getElementsByClassName('printersPane')[0].removeChild(document.getElementsByClassName('printersPane')[0].lastChild);
+//                }
                 tabPanels[currentStep - 1].classList.remove('hidden');
                 tabTargets[currentStep - 1].classList.add('active');
                 currentStep -= 1;
