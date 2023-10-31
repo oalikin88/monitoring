@@ -16,5 +16,5 @@ import ru.gov.sfr.aos.monitoring.entities.Contract;
 
 @Repository
 public interface ContractRepo extends JpaRepository<Contract, Long> {
-    Optional<Contract> findByContractNumber(String contractNumber);
+    Optional<Contract> findByContractNumberIgnoreCase(String contractNumber);
 }

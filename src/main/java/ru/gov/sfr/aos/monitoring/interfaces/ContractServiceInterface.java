@@ -6,6 +6,7 @@ package ru.gov.sfr.aos.monitoring.interfaces;
 
 import java.util.List;
 import ru.gov.sfr.aos.monitoring.entities.Contract;
+import ru.gov.sfr.aos.monitoring.exceptions.ObjectAlreadyExists;
 
 /**
  *
@@ -15,6 +16,6 @@ public interface ContractServiceInterface {
 
     List<Contract> getContracts();
 
-    void saveContract(Contract contract) throws NumberFormatException;
+    void saveContract(Contract contract) throws ObjectAlreadyExists;
 
 }

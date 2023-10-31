@@ -30,6 +30,7 @@ import ru.gov.sfr.aos.monitoring.entities.Manufacturer;
 import ru.gov.sfr.aos.monitoring.entities.Model;
 import ru.gov.sfr.aos.monitoring.entities.ObjectBuing;
 import ru.gov.sfr.aos.monitoring.entities.Printer;
+import ru.gov.sfr.aos.monitoring.exceptions.ObjectAlreadyExists;
 import ru.gov.sfr.aos.monitoring.models.CartridgeDTO;
 import ru.gov.sfr.aos.monitoring.models.ContractForViewDTO;
 import ru.gov.sfr.aos.monitoring.models.EditContractDTO;
@@ -68,7 +69,7 @@ public class ContractServiceMapper {
     @Autowired
     private ListenerOperationService listenerOperationService;
 
-    public void createNewContract(List<Map<String, String>> input) throws NumberFormatException {
+    public void createNewContract(List<Map<String, String>> input) throws ObjectAlreadyExists {
         
         
         CartridgeModel cartridgeModel;

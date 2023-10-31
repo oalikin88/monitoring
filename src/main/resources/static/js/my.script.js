@@ -81,14 +81,21 @@ document.addEventListener('submit', function (event) {
         type: "POST",
         url: "/main/",
         data: JSON.stringify(printersPlusCartridges),
+        dataType: "json",
+        async: false,
         success: function () {
             alert("Контракт №" + contract.numberContract + " успешно добавлен в базу данных.");
             event.target.reset();
             window.location.reload();
         },
-        error: function (e) {
-            console.log(e);
-        },
+        error: function(callback) {
+            if($('#exceptionContainer').length == 0) {
+             $('#modalBody').append(callback.responseText);
+         }
+
+            new bootstrap.Modal(document.getElementById('modalError')).show();
+           // $('#resultInfo').append(callback.responseText);
+  }, 
         processData: false,
         contentType: 'application/json'
     
@@ -1724,6 +1731,56 @@ function addCartridgesInfo(location) {
 
 
 $(document).ready(function () {
+    
+    
+    modalError = document.createElement('div');
+            modalError.className = 'modal fade';
+            modalError.id = 'modalError';
+            modalError.setAttribute("tabindex", -1);
+            modalError.setAttribute("aria-labelledby", "modalError");
+            modalError.setAttribute("aria-hidden", true);
+            modalDialog = document.createElement('div');
+            modalDialog.className = 'modal-dialog modal-lg';
+            modalContent = document.createElement('div');
+            modalContent.className = 'modal-content';
+            modalHeader = document.createElement('div');
+            modalHeader.className = 'modal-header';
+            titleModal = document.createElement('h1');
+            titleModal.className = 'modal-title fs-5';
+            titleModal.id = 'titleModal';
+            titleModal.innerText = 'Ошибка!';
+            closeHeaderButton = document.createElement('button');
+            closeHeaderButton.className = 'btn-close';
+            closeHeaderButton.setAttribute("data-bs-dismiss", "modal");
+            closeHeaderButton.setAttribute('aria-label', 'Закрыть');
+            $('body').append(modalError);
+            modalError.appendChild(modalDialog);
+            modalDialog.appendChild(modalContent);
+            modalContent.appendChild(modalHeader);
+            modalHeader.appendChild(titleModal);
+            modalHeader.appendChild(closeHeaderButton);
+            
+            modalBody = document.createElement('div');
+            modalBody.className = 'modal-body';
+            modalBody.id = 'modalBody';
+//            modalContainer = document.createElement('div');
+//            modalContainer.className = 'container';
+//            modalContainer.id = 'modalContainer';
+           
+           
+            modalContent.append(modalBody);
+            modalBody.appendChild(modalContainer);
+            modalFooter = document.createElement('div');
+            modalFooter.className = 'modal-footer';
+            footerBtnClose = document.createElement('button');
+            footerBtnClose.className = 'btn btn-secondary';
+            footerBtnClose.setAttribute('data-bs-dismiss', 'modal');
+            footerBtnClose.innerText = 'Ok';
+            
+            modalContent.appendChild(modalFooter);
+            modalFooter.appendChild(footerBtnClose);
+    
+    
     
     contractNum.addEventListener('input', stateHandle);
     startContr.addEventListener('input', stateHandle);

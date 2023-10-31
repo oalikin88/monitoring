@@ -9,6 +9,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +22,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import ru.gov.sfr.aos.monitoring.entities.Contract;
+import ru.gov.sfr.aos.monitoring.exceptions.ObjectAlreadyExists;
 import ru.gov.sfr.aos.monitoring.interfaces.ContractServiceInterface;
 import ru.gov.sfr.aos.monitoring.models.CartridgeDTO;
 import ru.gov.sfr.aos.monitoring.models.CartridgeInstallDTO;
@@ -73,6 +76,8 @@ public class MainController {
     @Autowired
     private PlaningService planingService;
     
+    private final Logger log = LoggerFactory.getLogger(this.getClass());
+    
     @GetMapping("/main")
     public String getData(Model model) {        
        List<Contract> contracts = contractServiceInterface.getContracts();
@@ -85,7 +90,7 @@ public class MainController {
     @PostMapping(value = "/main", consumes = "application/json", produces = "application/json")
     public String sendData(
          @RequestBody
-         List<Map<String, String>> printersPlusCartridges) throws NumberFormatException {
+         List<Map<String, String>> printersPlusCartridges) throws ObjectAlreadyExists {
         
         mapper.createNewContract(printersPlusCartridges);
         
