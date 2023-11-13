@@ -19,7 +19,7 @@ import ru.gov.sfr.aos.monitoring.entities.CartridgeModel;
 @Repository
 public interface CartridgeModelRepo extends JpaRepository<CartridgeModel, Long>  {
     
-    Optional<CartridgeModel> findByModel(String model);
+    Optional<CartridgeModel> findByModelIgnoreCase(String model);
     List<CartridgeModel> findByType(CartridgeType type);
     List<CartridgeModel> findByModelsPrintersId(Long id);
     

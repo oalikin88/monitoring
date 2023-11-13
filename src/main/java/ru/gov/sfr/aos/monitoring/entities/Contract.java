@@ -5,8 +5,8 @@
 package ru.gov.sfr.aos.monitoring.entities;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.Date;
-import java.util.List;
 import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -15,7 +15,9 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Past;
 
 /**
  *
@@ -30,14 +32,14 @@ public class Contract implements Serializable {
     @NotNull
     @OneToMany(targetEntity = ObjectBuing.class, mappedBy = "contract", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Set <ObjectBuing> objectBuing;
-    @NotNull
-    private String contractNumber; // Переделать в String
-    @NotNull
+    @NotEmpty(message = "Поле \"Номер контракта\" не должно быть пустым")
+    private String contractNumber; 
+    @NotNull(message = "Дата начала контракта не может быть пустой")
+    @Past(message = "Дата начала контракта не может быть позже сегодняшнего дня")
     private Date dateStartContract;
-    @NotNull
+    @NotNull(message = "Дата окончания контракта не может быть пустой")
     private Date dateEndContract;
-    
-    
+   
 
     public Contract() {
     }

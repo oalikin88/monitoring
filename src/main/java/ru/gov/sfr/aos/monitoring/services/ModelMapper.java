@@ -13,6 +13,7 @@ import ru.gov.sfr.aos.monitoring.PrintColorType;
 import ru.gov.sfr.aos.monitoring.PrintFormatType;
 import ru.gov.sfr.aos.monitoring.entities.Manufacturer;
 import ru.gov.sfr.aos.monitoring.entities.Model;
+import ru.gov.sfr.aos.monitoring.exceptions.ObjectAlreadyExists;
 import ru.gov.sfr.aos.monitoring.models.ModelDTO;
 import ru.gov.sfr.aos.monitoring.repositories.ManufacturerRepo;
 import ru.gov.sfr.aos.monitoring.repositories.ModelPrinterRepo;
@@ -48,7 +49,7 @@ public class ModelMapper {
     
     public List<ModelDTO> showModelsByManufacturer(String manufacturer) {
         List<ModelDTO> list = new ArrayList<>();
-        List<Model> inputList = modelRepo.findByManufacturerNameContainingIgnoreCase(manufacturer);
+        List<Model> inputList = modelRepo.findByManufacturerNameContainingIgnoreCase(manufacturer.trim());
         for(int i = 0; i < inputList.size(); i++) {
             if(!inputList.get(i).getName().isEmpty() || !inputList.get(i).getName().isBlank() || inputList.get(i).getName() != null) {
                 ModelDTO dto = new ModelDTO();
@@ -64,22 +65,31 @@ public class ModelMapper {
         return list;
     }
     
-    public void saveModelByManufacturer(ModelDTO dto) {
+    public void saveModelByManufacturer(ModelDTO dto) throws ObjectAlreadyExists {
         boolean duplicate = false;
-        List<ModelDTO> dtoes = showModelsByManufacturer(dto.getManufacturer());
+        List<ModelDTO> dtoes = showModelsByManufacturer(dto.getManufacturer().trim());
+            String firstFromInput = dto.getModel().toLowerCase().trim();
+            String replaceAllBrakesFromInput = firstFromInput.replaceAll(" ", "");
+            String replaceAllFromInput = replaceAllBrakesFromInput.replaceAll("-", "");
         for(int i = 0; i < dtoes.size(); i++) {
-            if(dtoes.get(i).getModel().toLowerCase().trim().equals(dto.getModel().toLowerCase().trim())) {
+            String firstFromList = dtoes.get(i).getModel().toLowerCase().trim();
+            String replaceAllBrakesFromList = firstFromList.replaceAll(" ", "");
+            String replaceAllFromList = replaceAllBrakesFromList.replaceAll("-", "");
+            
+            
+            if(replaceAllFromList.equals(replaceAllFromInput)) {
                duplicate = true; 
+               throw new ObjectAlreadyExists("Модель " + dto.getModel() + " производителя " + dto.getManufacturer() + " уже есть в базе данных!");
             }
         }
         
         if(!duplicate) {
             Manufacturer manufacturer = null;
-            Optional<Manufacturer> findManufacturerByNameContainingIgnoreCase = manufacturerRepo.findByNameContainingIgnoreCase(dto.getManufacturer().toLowerCase());
+            Optional<Manufacturer> findManufacturerByNameContainingIgnoreCase = manufacturerRepo.findByNameContainingIgnoreCase(dto.getManufacturer().toLowerCase().trim());
             if(findManufacturerByNameContainingIgnoreCase.isPresent()) {
                 manufacturer = findManufacturerByNameContainingIgnoreCase.get();
             } else {
-                manufacturer = new Manufacturer(dto.getManufacturer());
+                manufacturer = new Manufacturer(dto.getManufacturer().trim());
             }
             Model model = new Model();
             model.setManufacturer(manufacturer);
@@ -101,7 +111,7 @@ public class ModelMapper {
                     model.setPrintFormatType(PrintFormatType.A3);
                     break;
             }
-            Long speed = Long.parseLong(dto.getPrintSpeed());
+            Long speed = Long.parseLong(dto.getPrintSpeed().trim());
             model.setPrintSpeed(speed);
             modelRepo.save(model);
             System.out.println("Модель " + dto.getModel() + " успешно внесена в базу данных");

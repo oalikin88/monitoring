@@ -29,6 +29,7 @@ body, html {
 
 .container {
     width: 100%;
+    min-height: 500px;
     margin-top: 60px;
     margin-bottom: 600px;
     padding-left: 25px;
@@ -369,3 +370,41 @@ nav span {
     min-width: 50px;
 }
 
+.background {
+  width: 170px;
+  min-width: 170px;
+  max-width: 170px;
+  height: 50px;
+  padding: 0;
+  margin: 0;
+  font-size: 14px;
+}
+
+.line {
+  width: 184px;
+  height: 73px;
+  border-bottom: 2px solid #EBECED;
+  transform: translateY(-20px) translateX(5px) rotate(32deg);
+  position: absolute;
+
+}
+
+.background>div {
+  position: relative;
+  height: 100%;
+  width: 100%;
+  top: 0;
+  left: 0;
+}
+
+.bottom {
+  position: absolute;
+  bottom: 1px;
+  left: 1px;
+}
+
+.top {
+  position: absolute;
+  top: 1px;
+  right: 1px;
+}

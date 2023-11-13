@@ -19,6 +19,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.validation.annotation.Validated;
 import ru.gov.sfr.aos.monitoring.OperationType;
 import ru.gov.sfr.aos.monitoring.PrinterStatus;
 import ru.gov.sfr.aos.monitoring.entities.Cartridge;
@@ -32,9 +33,13 @@ import ru.gov.sfr.aos.monitoring.entities.ObjectBuing;
 import ru.gov.sfr.aos.monitoring.entities.Printer;
 import ru.gov.sfr.aos.monitoring.exceptions.ObjectAlreadyExists;
 import ru.gov.sfr.aos.monitoring.models.CartridgeDTO;
+import ru.gov.sfr.aos.monitoring.models.CartridgeFromInputDto;
+import ru.gov.sfr.aos.monitoring.models.CartridgeIncludeFromInputDto;
 import ru.gov.sfr.aos.monitoring.models.ContractForViewDTO;
+import ru.gov.sfr.aos.monitoring.models.ContractFromInputDto;
 import ru.gov.sfr.aos.monitoring.models.EditContractDTO;
 import ru.gov.sfr.aos.monitoring.models.PrinterDTO;
+import ru.gov.sfr.aos.monitoring.models.PrinterFromInputDto;
 import ru.gov.sfr.aos.monitoring.repositories.CartridgeModelRepo;
 import ru.gov.sfr.aos.monitoring.repositories.CartridgeRepo;
 import ru.gov.sfr.aos.monitoring.repositories.ContractRepo;
@@ -47,6 +52,7 @@ import ru.gov.sfr.aos.monitoring.repositories.PrinterRepo;
  *
  * @author 041AlikinOS
  */
+@Validated
 @Component
 public class ContractServiceMapper {
 
@@ -69,6 +75,249 @@ public class ContractServiceMapper {
     @Autowired
     private ListenerOperationService listenerOperationService;
 
+
+    
+    public ContractFromInputDto transformInputToDto(List<Map<String, String>> input) {
+        ContractFromInputDto dto = new ContractFromInputDto();
+         List<PrinterFromInputDto> printers = new ArrayList<>();
+         List<CartridgeFromInputDto> cartridges = new ArrayList<>();
+        int amountPrinters = 0;
+        int amountCartridges = 0;
+        // Цикл по всему листу
+        for (int i = 0; i < input.size(); i++) {
+             // Основные параметры контракта
+            if (i == 0) {
+                for (Map.Entry<String, String> entry : input.get(i).entrySet()) {
+                    switch (entry.getKey()) {
+                        case "numberContract":
+                            dto.setContractNumber(entry.getValue());
+                            break;
+                        case "dateStartContract":
+                            dto.setDateStartContract(convertDate(entry.getValue()));
+                            break;
+                        case "dateEndContract":
+                            dto.setDateEndContract(convertDate(entry.getValue()));
+                            break;
+                        case "amountPrinters":
+                            if (!entry.getValue().isEmpty() || !entry.getValue().isBlank()) {
+                                try {
+                                    amountPrinters = Integer.parseInt(entry.getValue());
+                                } catch (NumberFormatException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                            break;
+                        case "amountCartridges":
+                            if (!entry.getValue().isEmpty() || !entry.getValue().isBlank()) {
+                                try {
+                                    amountCartridges = Integer.parseInt(entry.getValue());
+
+                                } catch (NumberFormatException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                            break;
+                    }
+                }
+            }
+            
+            // Добавление принтера в контракт
+            if (input.get(i).size() == 8) {
+              PrinterFromInputDto printerDto = new PrinterFromInputDto();
+              CartridgeIncludeFromInputDto cartridgeIncudeDto = null;
+               boolean cartridgeIncluded = false;
+                for (Map.Entry<String, String> entry : input.get(i).entrySet()) {
+                     
+                     
+                    
+                    switch (entry.getKey()) {
+                        case "manufacturer":
+                            printerDto.setManufacturer(entry.getValue());
+                            break;
+                        case "serialNumber":
+                            printerDto.setSerialNumber(entry.getValue());
+                            break;
+                        case "model":
+                            printerDto.setModel(entry.getValue());
+                            break;
+                        case "inventoryNumber":
+                            printerDto.setInventoryNumber(entry.getValue());
+                            break;
+                        case "cartridgeIncluded":
+                            if (entry.getValue().contains("true")) {
+                                cartridgeIncluded = true;
+                                cartridgeIncudeDto = new CartridgeIncludeFromInputDto();
+                                
+                                
+                            }
+                            break;
+                      
+                        case "cartridgeIncludeModel":
+                            if (cartridgeIncluded) {
+                                cartridgeIncudeDto.setModel(entry.getValue());
+                            }
+                            break; 
+                            case "cartridgeIncludedType":
+                            if (cartridgeIncluded) {
+                                cartridgeIncudeDto.setType(entry.getValue());
+                            }
+                            break;
+                    }
+                    
+                    
+                }
+                if(cartridgeIncluded) {
+                        printerDto.setCartridgeInclude(cartridgeIncudeDto);
+                    }
+                    
+                printers.add(printerDto);
+            }
+            
+            //Добавление картриджей в контракт
+            if (input.get(i).size() == 6) {
+                String getAmount = input.get(i).get("amount");
+                int amount = Integer.parseInt(getAmount);
+                
+                for(int amountCount = 0; amountCount < amount; amountCount++) {
+                     CartridgeFromInputDto cartridge = new CartridgeFromInputDto();
+                    for (Map.Entry<String, String> entry : input.get(i).entrySet()) {
+                       
+                        switch (entry.getKey()) {
+                            case "type":
+                                cartridge.setType(entry.getValue());
+                                break;
+                            case "model":
+                                cartridge.setModel(entry.getValue());
+                                break;
+                            case "itemCode":
+                                 cartridge.setItemCode(entry.getValue());
+                                 break;
+                            case "nameMaterial":
+                                cartridge.setNameMaterial(entry.getValue());
+                                break;
+                        }
+                       
+                    }
+                cartridges.add(cartridge);
+            }
+                               
+            }
+            
+        }
+        dto.setCartridges(cartridges);
+        dto.setPrinters(printers);
+        return dto;
+    }
+    
+    public void createContract(ContractFromInputDto dto) throws ObjectAlreadyExists {
+        CartridgeModel cartridgeModel;
+        CartridgeModel cartridgeModelIndepended;
+        Set<ObjectBuing> objectsBuing = new HashSet<>();
+        Set<Cartridge> cartridges = new HashSet<>();
+        String contractNumber;
+        Contract contract = new Contract();
+        Map<Long, Integer> modelsCartridges = new HashMap<>();
+        Location location = null;
+        Optional<Location> findLocation = locationRepo.findByNameIgnoreCase("Склад".toLowerCase());
+        if(findLocation.isPresent()) {
+            location = findLocation.get();
+        } else {
+            location = new Location("Склад");
+        }
+        contract.setContractNumber(dto.getContractNumber());
+        contract.setDateStartContract(dto.getDateStartContract());
+        contract.setDateEndContract(dto.getDateEndContract());
+        List<PrinterFromInputDto> printersDtoList = dto.getPrinters();
+        for(PrinterFromInputDto printerDto : printersDtoList) {
+            Printer printer = new Printer();
+            Optional<Manufacturer> findByNameManufacturer = Optional.empty();
+            if(!printerDto.getManufacturer().isBlank() || !printerDto.getManufacturer().isEmpty()) {
+           findByNameManufacturer = manufacturerRepo.findByNameContainingIgnoreCase(printerDto.getManufacturer());
+            }
+            if(findByNameManufacturer.isPresent()) {
+                printer.setManufacturer(findByNameManufacturer.get());
+            }
+            Optional<Model> findByNameModelPrinter = modelPrinterRepo.findByNameIgnoreCase(printerDto.getModel());
+            if(findByNameModelPrinter.isPresent()) {
+                printer.setModel(findByNameModelPrinter.get());
+            }
+            printer.setSerialNumber(printerDto.getSerialNumber());
+            printer.setInventoryNumber(printerDto.getInventoryNumber());
+            printer.setLocation(location);
+            Set<Cartridge> cartridgesInclude = new HashSet<>();
+            if(null != printerDto.getCartridgeInclude()){
+                CartridgeModel cartModelInclude = null;
+                Optional<CartridgeModel> findCartridgeModel = cartridgeModelRepo.findByModelIgnoreCase(printerDto.getCartridgeInclude().getModel());
+                if(findCartridgeModel.isPresent()) {
+                    cartModelInclude = findCartridgeModel.get();
+                }
+                Cartridge cartridge = new Cartridge();
+                cartridge.setModel(cartModelInclude);
+                cartridge.setLocation(location);
+                cartridge.setDateStartExploitation(LocalDateTime.now());
+                cartridge.setModel(cartModelInclude);
+                cartridge.setUseInPrinter(true);
+                cartridge.setUtil(true);
+                cartridge.setItemCode("0000000");
+                cartridge.setNameMaterial("Картридж стартовый");
+                cartridge.setContract(contract);
+                cartridge.setPrinter(printer);
+                cartridgesInclude.add(cartridge);
+                objectsBuing.add(cartridge);
+            }
+            printer.setCartridge(cartridgesInclude);
+            printer.setPrinterStatus(PrinterStatus.OK);
+            printer.setContract(contract);
+            objectsBuing.add(printer);
+        }
+        List<CartridgeFromInputDto> cartridgesDtoList = dto.getCartridges();
+        for(CartridgeFromInputDto cartridgeDto : cartridgesDtoList) {
+            Cartridge cartridge = new Cartridge();
+            Optional<CartridgeModel> findCartridgeModel = cartridgeModelRepo.findByModelIgnoreCase(cartridgeDto.getModel());
+            if(findCartridgeModel.isPresent()) {
+                cartridge.setModel(findCartridgeModel.get());
+            }
+            cartridge.setLocation(location);
+            cartridge.setContract(contract);
+            cartridge.setItemCode(cartridgeDto.getItemCode());
+            cartridge.setNameMaterial(cartridgeDto.getNameMaterial());
+            objectsBuing.add(cartridge);
+        }
+        contract.setObjectBuing(objectsBuing);
+        contractServiceImpl.saveContract(contract);
+        int cartridgesOnSklad = location.getCartridges().size();
+        int addedCartridges = modelsCartridges.values().stream().mapToInt(e -> e.intValue()).sum();
+          for(Map.Entry<Long, Integer> entry : modelsCartridges.entrySet()) {
+                   
+                    ListenerOperation listener = new ListenerOperation();
+                    Optional<CartridgeModel> findModelCartridgeByName = cartridgeModelRepo.findById(entry.getKey());
+                    List<Cartridge> findAllCartridgesByModelId = cartridgeRepo.findByModelId(entry.getKey());
+                    List<Cartridge> collectCartridgesByModelExceptUtil = findAllCartridgesByModelId.stream()
+                    .filter(e -> !e.isUtil())
+                    .filter(el -> !el.isUseInPrinter())
+                    .collect(Collectors.toList());
+                            
+                    List<Cartridge> findByLocationIdAndModelId = cartridgeRepo.findByLocationIdAndModelId(location.getId(), findModelCartridgeByName.get().getId());
+                    listener.setModel(findModelCartridgeByName.get());
+                    listener.setDateOperation(LocalDateTime.now());
+                    listener.setLocation(location);
+                    cartridgesOnSklad = cartridgesOnSklad + entry.getValue();
+                    listener.setAmountDevicesOfLocation(cartridgesOnSklad);
+                    listener.setAmountCurrentModelOfLocation(findByLocationIdAndModelId.size());
+                    listener.setCurrentOperation("Закуплен по контракту");
+                    listener.setOperationType(OperationType.BUY);
+                    listener.setAmount(entry.getValue());
+                    listener.setAmountAllCartridgesByModel(collectCartridgesByModelExceptUtil.size());
+                    listenerOperationService.saveListenerOperation(listener);      
+                    
+                    }
+        
+        System.out.println(
+                "Контракт сохранён успешно");
+    
+    }
+    
+    
     public void createNewContract(List<Map<String, String>> input) throws ObjectAlreadyExists {
         
         
@@ -179,7 +428,7 @@ public class ContractServiceMapper {
                             break;
                         case "model":
                             if (!entry.getValue().isEmpty() || !entry.getValue().isBlank()) {
-                                Optional<Model> optModel = modelPrinterRepo.findByName(entry.getValue());
+                                Optional<Model> optModel = modelPrinterRepo.findByNameIgnoreCase(entry.getValue());
                                 if (optModel.isPresent()) {
                                     model = optModel.get();
                                 } else {
@@ -217,7 +466,7 @@ public class ContractServiceMapper {
                                 } else {
                                     targetModel = "Отсутствует";
                                 }
-                                Optional<CartridgeModel> cartridgeModelsEntities = cartridgeModelRepo.findByModel(targetModel);
+                                Optional<CartridgeModel> cartridgeModelsEntities = cartridgeModelRepo.findByModelIgnoreCase(targetModel);
                                 if (cartridgeModelsEntities.isPresent()) {
                                     cartridgeModel = cartridgeModelsEntities.get();
                                 } else {
@@ -275,7 +524,7 @@ public class ContractServiceMapper {
                             } else {
                                 targetModel = "Отсутствует";
                             }
-                            Optional<CartridgeModel> cartridgeModelsEntities = cartridgeModelRepo.findByModel(targetModel);
+                            Optional<CartridgeModel> cartridgeModelsEntities = cartridgeModelRepo.findByModelIgnoreCase(targetModel);
                             modelsCartridges.put(cartridgeModelsEntities.get().getId(), amount);
                             if (cartridgeModelsEntities.isPresent()) {
                                 cartridgeModelIndepended = cartridgeModelsEntities.get();

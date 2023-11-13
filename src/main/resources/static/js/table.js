@@ -18,7 +18,7 @@ window.onload = function () {
         table.id = "table";
         table.className = "table align-middle table-hover table-striped table-bordered";
         let thead = document.createElement('thead');
-        thead.className = "text-center";
+        thead.className = "text-center ";
         let trThead = document.createElement('tr');
         let thThead1 = document.createElement('th');
         thThead1.setAttribute('scope', 'col');
@@ -27,12 +27,29 @@ window.onload = function () {
         let thThead2 = document.createElement('th');
         thThead2.setAttribute('scope', 'col');
         thThead2.setAttribute('rowspan', '2');
-        thThead2.innerText = 'Модель принтера \ Локация';
+        thThead2.className = 'background';
+       // thThead2.innerText = 'Модель принтера \ Локация';
+        
+        let thThead2Div = document.createElement('div'); 
+        let thThead2SpanFirst = document.createElement('span');
+        thThead2SpanFirst.className = 'bottom';
+        thThead2SpanFirst.innerText = 'Локация';
+        let thThead2SpanSecond = document.createElement('span');
+        thThead2SpanSecond.className = 'top';
+        thThead2SpanSecond.innerText = 'Модель \n принтера';
+        let thThead2Line = document.createElement('div');
+        thThead2Line.className = 'line';
+        
+        
         tableContainer.appendChild(table);
         table.appendChild(thead);
         thead.appendChild(trThead);
         trThead.appendChild(thThead1);
         trThead.appendChild(thThead2);
+        thThead2.appendChild(thThead2Div);
+        thThead2Div.appendChild(thThead2SpanFirst);
+        thThead2Div.appendChild(thThead2SpanSecond);
+        thThead2Div.appendChild(thThead2Line);
         let tbody = document.createElement('tbody');
         let tr = document.createElement('tr');
         table.appendChild(tbody);
@@ -61,9 +78,9 @@ window.onload = function () {
 
                 for (let j = 0; j < input2sort.length; j++) {
                     thTheadCount = document.createElement('th');
-                    thTheadCount.innerText = "Количество принтеров";
+                    thTheadCount.innerText = "Количество \n принтеров";
                     thTheadCount2 = document.createElement('th');
-                    thTheadCount2.innerText = "Количество картриджей";
+                    thTheadCount2.innerText = "Количество \n картриджей";
                     subtrThead.appendChild(thTheadCount);
                     subtrThead.appendChild(thTheadCount2);
                 }
@@ -83,9 +100,8 @@ window.onload = function () {
             tr.appendChild(tdCount);
             tdLocation = document.createElement('td');
             tdLocation.setAttribute('id', JSON.parse(input1sort[inInput1sort][0]).id);
-            tdLocation.setAttribute('class', 'location');
+            tdLocation.className = 'location text-wrap';
             tdLocation.innerText = JSON.parse(input1sort[inInput1sort][0]).name;
-            tdLocation.style.wordBreak = "break-all";
             tr.appendChild(tdLocation);
 
 
@@ -231,7 +247,6 @@ window.onload = function () {
     btnPlaningDiv.appendChild(btnPlaning);
 
     btnAddLocation.addEventListener('click', function () {
-        console.log("click");
 
         if ($('#tableModal').length == 0) {
             table = document.createElement('table');
@@ -260,7 +275,6 @@ window.onload = function () {
                 type: 'GET',
                 dataType: 'json',
                 success: function (data) {
-                    console.log(data);
                     arr = data.sort();
                     for (i = 0; i < arr.length; i++) {
                         tr = document.createElement('tr');
@@ -430,7 +444,6 @@ window.onload = function () {
                     type: 'GET',
                     dataType: 'json',
                     success: function (result) {
-                        console.log(result);
                         child = document.getElementById('tableModal');
                         parent = document.getElementById('modalContentInner');
                         parent.removeChild(child);
@@ -473,10 +486,23 @@ window.onload = function () {
 
                         }
                     }
+                            
                          
                 });
 
-            }
+            },
+            error: function(callback) {
+                                if($('#exceptionContainer').length == 0) {
+                                 $('#modalBody').append(callback.responseText);
+                             } else {
+
+                                 $('#exceptionContainer').replaceWith(callback.responseText);
+
+                             }
+
+                                new bootstrap.Modal(document.getElementById('modalError')).show();
+                               // $('#resultInfo').append(callback.responseText);
+                      }
              
         });
         document.getElementById("modalLocationInput").value = "";
@@ -553,7 +579,6 @@ window.onload = function () {
 
     btnAddModelPrinter.addEventListener('click', function () {
 
-        console.log('click');
 
         if ($('#modalTableModelsPrinter').length == 0) {
 
@@ -583,7 +608,6 @@ window.onload = function () {
                 type: 'GET',
                 dataType: 'json',
                 success: function (data) {
-                    console.log(data);
                     arr = data.sort();
                     for (i = 0; i < arr.length; i++) {
                         trModelsPrinter = document.createElement('tr');
@@ -837,7 +861,6 @@ window.onload = function () {
                     printFormatType: $('#modalPrintFormatTypeSelect')[0].innerText,
                     printSpeed: $('#modalPrintSpeedSelect')[0].value},
                 success: function (result) {
-                    console.log(result);
                     parent = document.getElementById('modalModelsPrinterContentInner');
                     child = document.getElementById('modalTableModelsPrinter');
                     parent.removeChild(child);
@@ -868,7 +891,6 @@ window.onload = function () {
                         type: 'GET',
                         dataType: 'json',
                         success: function (data) {
-                            console.log(data);
                             arr = data.sort();
                             for (i = 0; i < arr.length; i++) {
                                 trModelsPrinter = document.createElement('tr');
@@ -887,7 +909,19 @@ window.onload = function () {
                     
                     $('#modalModelsPrinter2').modal('hide');
                     
-                }
+                },
+                error: function(callback) {
+                                if($('#exceptionContainer').length == 0) {
+                                 $('#modalBody').append(callback.responseText);
+                             } else {
+
+                                 $('#exceptionContainer').replaceWith(callback.responseText);
+
+                             }
+
+                                new bootstrap.Modal(document.getElementById('modalError')).show();
+                               // $('#resultInfo').append(callback.responseText);
+                      }
             });
                     $('#modalManufacturerSelect')[0].selectize.clear();
                     $('#modalModelInput')[0].selectize.clear();
@@ -1005,7 +1039,6 @@ window.onload = function () {
                 type: 'GET',
                 dataType: 'json',
                 success: function (data) {
-                    console.log(data);
                     arr = data.sort();
                     for (i = 0; i < arr.length; i++) {
                         trModelsCartridge = document.createElement('tr');
@@ -1239,7 +1272,6 @@ window.onload = function () {
                     idModel: $(".modalModelsPrinterSelect")[0].selectize.items
                 },
                 success: function (result) {
-                    console.log(result);
                     parent = document.getElementById('modalModelsCartridgeContentInner');
                     child = document.getElementById('modalTableModelsCartridge');
                     parent.removeChild(child);
@@ -1271,7 +1303,6 @@ window.onload = function () {
                         type: 'GET',
                         dataType: 'json',
                         success: function (data) {
-                            console.log(data);
                             arr = data.sort();
                             for (i = 0; i < arr.length; i++) {
                                 trModelsCartridge = document.createElement('tr');
@@ -1290,7 +1321,19 @@ window.onload = function () {
                         }
                     });
 
-                }
+                },
+                error: function(callback) {
+            if($('#exceptionContainer').length == 0) {
+             $('#modalBody').append(callback.responseText);
+         } else {
+             
+             $('#exceptionContainer').replaceWith(callback.responseText);
+            
+         }
+
+            new bootstrap.Modal(document.getElementById('modalError')).show();
+           // $('#resultInfo').append(callback.responseText);
+  }
                 
             });
                     $("#modalModelTypeInput")[0].selectize.clear();
@@ -1345,7 +1388,7 @@ window.onload = function () {
     divModalContentPlaningBuy.appendChild(divModalBodyPlaningBuy);
    
     divModalContainerInnerPlaningBuy = document.createElement('div');
-    divModalContainerInnerPlaningBuy.className = 'container-fluid';
+    divModalContainerInnerPlaningBuy.className = 'container-fluid mt-4';
     divModalBodyPlaningBuy.appendChild(divModalContainerInnerPlaningBuy);
     
     divContentRowCalendars = document.createElement('div');
@@ -1362,61 +1405,47 @@ window.onload = function () {
     divContentRowCalendars.appendChild(divEndDate);
     
     divFormGroupDateBegin = document.createElement('div');
-    divFormGroupDateBegin.className = 'form-group';
+    divFormGroupDateBegin.className = 'input-group';
     divBeginDate.appendChild(divFormGroupDateBegin);
-    divInputGroupDateBegin = document.createElement('div');
-    divInputGroupDateBegin.className = 'input-group date';
-    divInputGroupDateBegin.id = 'dataBegin';
-    divFormGroupDateBegin.appendChild(divInputGroupDateBegin);
+
     
-    labelForDateBegin = document.createElement('label');
-    labelForDateBegin.setAttribute('for', 'dateBegin');
+    labelForDateBegin = document.createElement('span');
     labelForDateBegin.innerText = 'Дата начала периода';
+    labelForDateBegin.className = 'input-group-text';
     inputDateBegin = document.createElement('input');
     inputDateBegin.type = 'date';
     inputDateBegin.className = 'form-control';
     inputDateBegin.id = 'dateBeginInput';
     
-    divInputGroupDateBegin.appendChild(labelForDateBegin);
-    divInputGroupDateBegin.appendChild(inputDateBegin);
-    
+    divFormGroupDateBegin.appendChild(labelForDateBegin);
+    divFormGroupDateBegin.appendChild(inputDateBegin);
     
     
     divFormGroupDateEnd = document.createElement('div');
-    divFormGroupDateEnd.className = 'form-group';
+    divFormGroupDateEnd.className = 'input-group';
     divEndDate.appendChild(divFormGroupDateEnd);
-    divInputGroupDateEnd = document.createElement('div');
-    divInputGroupDateEnd.className = 'input-group date';
-    divInputGroupDateEnd.id = 'dataEnd';
-    divFormGroupDateEnd.appendChild(divInputGroupDateEnd);
     
-    labelForDateEnd = document.createElement('label');
-    labelForDateEnd.setAttribute('for', 'dateEnd');
+
+    
+    labelForDateEnd = document.createElement('span');
     labelForDateEnd.innerText = 'Дата окончания периода';
+    labelForDateEnd.className = 'input-group-text';
     
     inputDateEnd = document.createElement('input');
     inputDateEnd.type = 'date';
     inputDateEnd.className = 'form-control';
     inputDateEnd.id = 'dateEndInput';
     
-    divInputGroupDateEnd.appendChild(labelForDateEnd);
-    divInputGroupDateEnd.appendChild(inputDateEnd);
+    divFormGroupDateEnd.appendChild(labelForDateEnd);
+    divFormGroupDateEnd.appendChild(inputDateEnd);
     
-//    divLocationSelect = document.createElement('div');
-//    divLocationSelect.className = 'col';
-//    
-//    selectLocationForPlaning = document.createElement('select');
-//    selectLocationForPlaning.className = 'form-select';
-//    selectLocationForPlaning.id = 'selectLocationForPlaning';
-//    divContentRowCalendars.appendChild(divLocationSelect);
-//    divLocationSelect.appendChild(selectLocationForPlaning);
     
     rowContentBtns = document.createElement('div');
     rowContentBtns.className = 'row rowModalContent text-center';
     divModalContainerInnerPlaningBuy.appendChild(rowContentBtns);
     
     divBtnApply = document.createElement('div');
-    divBtnApply.className = 'col';
+    divBtnApply.className = 'col mt-5';
     rowContentBtns.appendChild(divBtnApply);
     
     let btnApplyPlaning = document.createElement('button');
@@ -1464,7 +1493,6 @@ window.onload = function () {
      
      btnApplyPlaning.addEventListener('click', function() {
         
-         console.log('apply');
          
          dateBegin = $('#dateBeginInput')[0].value;
          dateEnd = $('#dateEndInput')[0].value;
@@ -1488,6 +1516,52 @@ window.onload = function () {
          
          
      });
+    
+    
+     modalError = document.createElement('div');
+            modalError.className = 'modal fade';
+            modalError.id = 'modalError';
+            modalError.setAttribute("tabindex", -1);
+            modalError.setAttribute("aria-labelledby", "modalError");
+            modalError.setAttribute("aria-hidden", true);
+            modalDialog = document.createElement('div');
+            modalDialog.className = 'modal-dialog modal-lg';
+            modalContent = document.createElement('div');
+            modalContent.className = 'modal-content';
+            modalHeader = document.createElement('div');
+            modalHeader.className = 'modal-header';
+            titleModal = document.createElement('h1');
+            titleModal.className = 'modal-title fs-5';
+            titleModal.id = 'titleModal';
+            titleModal.innerText = 'Ошибка!';
+            closeHeaderButton = document.createElement('button');
+            closeHeaderButton.className = 'btn-close';
+            closeHeaderButton.setAttribute("data-bs-dismiss", "modal");
+            closeHeaderButton.setAttribute('aria-label', 'Закрыть');
+            $('body').append(modalError);
+            modalError.appendChild(modalDialog);
+            modalDialog.appendChild(modalContent);
+            modalContent.appendChild(modalHeader);
+            modalHeader.appendChild(titleModal);
+            modalHeader.appendChild(closeHeaderButton);
+            
+            modalBody = document.createElement('div');
+            modalBody.className = 'modal-body';
+            modalBody.id = 'modalBody';
+
+           
+           
+            modalContent.append(modalBody);
+          //  modalBody.appendChild(modalContainer);
+            modalFooter = document.createElement('div');
+            modalFooter.className = 'modal-footer';
+            footerBtnClose = document.createElement('button');
+            footerBtnClose.className = 'btn btn-secondary';
+            footerBtnClose.setAttribute('data-bs-dismiss', 'modal');
+            footerBtnClose.innerText = 'Ok';
+            
+            modalContent.appendChild(modalFooter);
+            modalFooter.appendChild(footerBtnClose);
     
 
 };

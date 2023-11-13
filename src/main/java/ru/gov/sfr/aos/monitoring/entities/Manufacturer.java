@@ -14,6 +14,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.PrimaryKeyJoinColumn;
+import javax.validation.constraints.NotEmpty;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 
@@ -28,6 +29,7 @@ public class Manufacturer implements Serializable {
       @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @NotEmpty(message = "Поле \"Производитель\" не может быть пустым")
     private String name;
     @LazyCollection(LazyCollectionOption.FALSE)
     @OneToMany(targetEntity = Model.class, mappedBy = "manufacturer", cascade = CascadeType.ALL)

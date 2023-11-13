@@ -19,6 +19,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import ru.gov.sfr.aos.monitoring.CartridgeType;
 
@@ -33,19 +34,22 @@ public class CartridgeModel implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @NotNull
+    @NotEmpty(message = "Поле \"модель картриджа\" не может быть пустым")
     private String model;
     
-    @NotNull
+    @NotNull(message = "Поле \"тип картриджа\" не может быть пустым")
     @Enumerated(EnumType.STRING)
     private CartridgeType type;
-    @NotNull
+    @NotNull(message = "Поле \"Номинальный ресурс\" не должно быть пустым")
     private Long defaultNumberPrintPage;
     @OneToMany(targetEntity = Cartridge.class, mappedBy = "model", cascade = CascadeType.ALL)
     private List<Cartridge> cartridges;
+   // @NotNull(message = "Поле \"модель принтера\" не должно быть пустым")
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "cartridge_model_models_printers", joinColumns = @JoinColumn(name = "model_cartridges_id"), inverseJoinColumns = @JoinColumn(name = "models_printers_id"))
     private List<Model> modelsPrinters = new ArrayList<>();
+    
+    
     public CartridgeModel() {
     }
 
@@ -113,9 +117,5 @@ public class CartridgeModel implements Serializable {
     public void setModelsPrinters(List<Model> modelsPrinters) {
         this.modelsPrinters = modelsPrinters;
     }
-    
-    
-    
-    
     
 }

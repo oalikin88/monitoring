@@ -10,6 +10,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ru.gov.sfr.aos.monitoring.entities.Location;
+import ru.gov.sfr.aos.monitoring.exceptions.ObjectAlreadyExists;
 import ru.gov.sfr.aos.monitoring.models.LocationDTO;
 import ru.gov.sfr.aos.monitoring.repositories.LocationRepo;
 
@@ -35,14 +36,19 @@ public class LocationService {
     }
 
     
-    public void addLocation(String nameLocation)  {
-    
-        Optional<Location> findLocationByName = locationRepo.findByNameIgnoreCase(nameLocation.toLowerCase());
-        if(findLocationByName.isEmpty()) {
+    public void addLocation(String nameLocation) throws ObjectAlreadyExists  {
+        String firstFromInput = nameLocation.trim();
+        String replaceAllBreakesFromInput = firstFromInput.replaceAll(" ", "");
+        String replaceAllDeficesBreakesFromInput = replaceAllBreakesFromInput.replaceAll("-", "");
+        Optional<Location> findLocationByNameFirst = locationRepo.findByNameIgnoreCase(firstFromInput);
+        Optional<Location> findLocationByNameWhithOutBreakesAndDefices = locationRepo.findByNameIgnoreCase(replaceAllDeficesBreakesFromInput);
+        if(findLocationByNameFirst.isEmpty() && findLocationByNameWhithOutBreakesAndDefices.isEmpty()) {
             Location location = new Location();
-            location.setName(nameLocation);
+            location.setName(nameLocation.trim());
             locationRepo.save(location);
-        } 
+        } else {
+            throw new ObjectAlreadyExists("Локация " + nameLocation.trim() + " уже есть в базе данных");
+        }
         
     }
     

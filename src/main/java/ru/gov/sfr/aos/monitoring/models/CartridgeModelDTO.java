@@ -8,6 +8,8 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
 /**
  *
@@ -15,11 +17,16 @@ import java.util.Set;
  */
 public class CartridgeModelDTO implements Serializable {
     public Long id;
+    @NotEmpty (message = "Поле \"модель картриджа\" не может быть пустым")
     public String model;
+    @NotEmpty(message = "Поле \"тип картриджа\" не может быть пустым")
     public String type;
+    @NotEmpty(message = "Поле \"Номинальный ресурс\" не может быть пустым")
     public String resource;
     //Printers
+    @NotNull
     public List<Long> idModel;
+    
     public Set<String> printers;
 
     public CartridgeModelDTO() {

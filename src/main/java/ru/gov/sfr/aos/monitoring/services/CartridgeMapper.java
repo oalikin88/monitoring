@@ -7,8 +7,10 @@ package ru.gov.sfr.aos.monitoring.services;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -25,6 +27,7 @@ import ru.gov.sfr.aos.monitoring.entities.ListenerOperation;
 import ru.gov.sfr.aos.monitoring.entities.Location;
 import ru.gov.sfr.aos.monitoring.entities.Model;
 import ru.gov.sfr.aos.monitoring.entities.Printer;
+import ru.gov.sfr.aos.monitoring.exceptions.ObjectAlreadyExists;
 import ru.gov.sfr.aos.monitoring.models.CartridgeChoiceDto;
 import ru.gov.sfr.aos.monitoring.models.CartridgeDTO;
 import ru.gov.sfr.aos.monitoring.models.CartridgeModelDTO;
@@ -112,7 +115,7 @@ public class CartridgeMapper {
         return dtoes;
     }
 
-    public void saveCartridgeModel(CartridgeModelDTO dto) {
+    public void saveCartridgeModel(CartridgeModelDTO dto) throws ObjectAlreadyExists {
         CartridgeType currentType = null;
         CartridgeModel model = null;
         List<Model> modelsPrinters = new ArrayList<>();
@@ -130,20 +133,24 @@ public class CartridgeMapper {
         } else {
             currentType = CartridgeType.START;
         }
-
-        Optional<CartridgeModel> findCartridgeModelByName = cartridgeModelRepo.findByModel(dto.getModel());
-        if (findCartridgeModelByName.isEmpty()) {
+        String firstFromInput = dto.getModel().trim();
+        String replaceAllBreakesFromInput = firstFromInput.replaceAll(" ", "");
+        String replaceAllDeficesAndBreakesFromInput = replaceAllBreakesFromInput.replaceAll("-", "");
+        
+        Optional<CartridgeModel> findCartridgeModelByName = cartridgeModelRepo.findByModelIgnoreCase(firstFromInput);
+        Optional<CartridgeModel> findCartridgeModelByNameReplaceDeficesAndBreakes = cartridgeModelRepo.findByModelIgnoreCase(replaceAllDeficesAndBreakesFromInput);
+        if (findCartridgeModelByName.isEmpty() && findCartridgeModelByNameReplaceDeficesAndBreakes.isEmpty()) {
             model = new CartridgeModel();
 
-            model.setModel(dto.getModel());
+            model.setModel(dto.getModel().trim());
             model.setType(currentType);
-            long resource = Long.parseLong(dto.getResource());
+            long resource = Long.parseLong(dto.getResource().trim());
             model.setDefaultNumberPrintPage(resource);
-
+            
             model.setModelsPrinters(modelsPrinters);
             cartridgeModelRepo.save(model);
         } else {
-            System.out.println("Модель " + dto.model + " уже есть в базе данных");
+            throw new ObjectAlreadyExists("Модель " + dto.model + " уже есть в базе данных");
         }
     }
 
@@ -516,28 +523,37 @@ public class CartridgeMapper {
     public List<CartridgeModelDTO> showCartridgeModelByPrinterModelAndType(String model, String type) {
         CartridgeType cartridgeType = null;
         switch (type) {
-            case "Оригинальный":
+            case "ORIGINAL":
                 cartridgeType = cartridgeType.ORIGINAL;
                 break;
-            case "Совместимый":
+            case "ANALOG":
                 cartridgeType = cartridgeType.ANALOG;
                 break;
-            case "Стартовый":
+            case "START":
                 cartridgeType = CartridgeType.START;
                 break;
 
         }
-        Optional<Model> findModelPrinterByName = modelPrinterRepo.findByName(model);
+        Optional<Model> findModelPrinterByName = modelPrinterRepo.findByNameIgnoreCase(model.toLowerCase());
         List<CartridgeModelDTO> dtoes = new ArrayList<>();
-        Set<CartridgeModel> modelCartridges = findModelPrinterByName.get().getModelCartridges();
-        for (CartridgeModel cartModel : modelCartridges) {
+        Set<CartridgeModel> modelCartridges = null;
+        if(findModelPrinterByName.isPresent()) {
+            modelCartridges = findModelPrinterByName.get().getModelCartridges();
+        }
+        List<Long> idModel = new ArrayList<>(Arrays.asList(0L));
+        Set<String> printr = new HashSet<>(Arrays.asList("отсутствует"));
+        for (Iterator<CartridgeModel> it = modelCartridges.iterator(); it.hasNext();) {
+            CartridgeModel cartModel = it.next();
             if (cartModel.getType().equals(cartridgeType)) {
                 CartridgeModelDTO dto = new CartridgeModelDTO();
                 dto.setId(cartModel.getId());
                 dto.setModel(cartModel.getModel());
                 dto.setResource(cartModel.getDefaultNumberPrintPage().toString());
                 dto.setType(cartModel.getType().getName());
+                dto.setIdModel(idModel);
+                dto.setPrinters(printr);
                 dtoes.add(dto);
+                
             }
         }
 

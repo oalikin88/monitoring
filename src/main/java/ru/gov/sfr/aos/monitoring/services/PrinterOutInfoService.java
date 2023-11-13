@@ -59,7 +59,7 @@ public class PrinterOutInfoService {
                 list.add(modelPrinterDTO);
                 key += modelPrinterDTO.getManufacturer() + " " + modelPrinterDTO.getModel();
                 if(i < modelsPrintersByCurrentCartridgeModel.size() - 1) {
-                    key += "/";
+                    key += " / ";
                 }
             }
             if(list.size() > 0 || !key.isBlank()) {

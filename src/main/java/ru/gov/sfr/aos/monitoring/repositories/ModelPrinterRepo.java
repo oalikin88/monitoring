@@ -17,7 +17,7 @@ import ru.gov.sfr.aos.monitoring.entities.Model;
  */
 @Repository
 public interface ModelPrinterRepo extends JpaRepository<Model, Long> {
-    Optional<Model> findByName(String name);
+    Optional<Model> findByNameIgnoreCase(String name);
     List<Model> findByManufacturerNameContainingIgnoreCase(String name);
     
     

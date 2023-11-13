@@ -223,7 +223,6 @@ $(document).ready(function () {
      
     utilSubmit.addEventListener('click', function() {
          if(utilSelect.value === "true") {
-             console.log("true");
             $.ajax({
             type: "POST",
             url: "/utilCartridge",
@@ -257,7 +256,6 @@ $(document).ready(function () {
             success: function(data) {
                 div.innerText = $('#locationSelect')[0].selectize.getValue();
                 
-                console.log(data);
                 
                 $('#staticBackdrop').modal('hide');
               

@@ -28,7 +28,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                 <span class="tab">4</span>
             </div>
 
-            <header><h3 class="fw-bold">Добавление контракта</h3></header>
+            <header><h3 class="fw-bold text-center">Добавление контракта</h3></header>
             <form th:action="@{/main}" th:object="${contract}" method="post" id="sendForm">
 
                 <div role="tab-list">
@@ -57,24 +57,24 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
 
                         <div class="row mb-2 contract">
                             <div class="col-md-4 mb-2">
-                                <input type="text"  class="form-control contractDetails" id="inputContractNumber" th:field="*{contractNumber}" required/>
+                                <input type="text"  class="form-control contractDetails" id="inputContractNumber" th:field="*{contractNumber}"/>
                             </div>
                             <div class="col-md-4 mb-2">
-                                <input type="date" class="form-control contractDetails" th:text="*{dateStartContract}" name="startContr" placeholder="date" id='dateStartContract' required />
+                                <input type="date" class="form-control contractDetails" th:text="*{dateStartContract}" name="startContr" placeholder="date" id='dateStartContract'  />
                             </div>
                             <div class="col-md-4 mb-2">
-                                <input type="date" class="form-control contractDetails" th:text="*{dateEndContract}" name="endContr" placeholder="date" id='dateEndContract' required />
+                                <input type="date" class="form-control contractDetails" th:text="*{dateEndContract}" name="endContr" placeholder="date" id='dateEndContract'  />
                             </div>
                         </div>
 
                         <div class="row mb-2 mt-4">
-                            <div class="col-md-12 text-center">
-                                <h5 class="fw-bold">Объект закупки</h5>
+                            <div class="col-md-12">
+                                <h4 class="fw-bold">Объект закупки</h4>
                             </div>
                         </div>
 
 
-                        <div class="row objectBuingRow">
+                        <div class="row objectBuingRow mt-4">
                             <div class="col-md-4">
                                 <div class="form-check">
                                 <label for='checkboxPrinter' class="form-label">Принтеры</label>

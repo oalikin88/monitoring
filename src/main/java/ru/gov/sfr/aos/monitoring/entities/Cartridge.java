@@ -12,6 +12,7 @@ import javax.persistence.ForeignKey;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.PrimaryKeyJoinColumn;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
 /**
@@ -22,30 +23,30 @@ import javax.validation.constraints.NotNull;
 @Entity
 @PrimaryKeyJoinColumn(name = "CARTRIDGE_ID")
 public class Cartridge extends ObjectBuing implements Serializable {
-    @NotNull
+    @NotNull(message = "Поле \"Модель\" не должно быть пустым")
     @ManyToOne(cascade = CascadeType.ALL)
     protected CartridgeModel model;
    
-    @NotNull
+    
     @ManyToOne(cascade = CascadeType.ALL)
     protected Location location;
-    @NotNull
+    
     protected LocalDateTime dateStartExploitation;
-    @NotNull
+    
     protected LocalDateTime dateEndExploitation;
-    @NotNull
+    
     protected boolean util;
-     @NotNull
+    
     protected boolean useInPrinter;
-    @NotNull
+    
     protected Long count;
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "PRINTER_ID",
 			foreignKey = @ForeignKey(name = "PRINTER_ID_FK"))
     protected Printer printer;
-    @NotNull
+    @NotEmpty(message = "Поле \"Номенклатурный номер\" не может быть пустым")
     protected String itemCode;
-    @NotNull
+    @NotEmpty(message = "Поле \"Наименование расходного материала\" не может быть пустым")
     protected String nameMaterial;
     
     public Cartridge() {

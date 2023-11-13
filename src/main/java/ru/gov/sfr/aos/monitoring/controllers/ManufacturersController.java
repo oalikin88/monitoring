@@ -5,6 +5,7 @@
 package ru.gov.sfr.aos.monitoring.controllers;
 
 import java.util.List;
+import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -12,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import ru.gov.sfr.aos.monitoring.entities.Cartridge;
+import ru.gov.sfr.aos.monitoring.exceptions.ObjectAlreadyExists;
 import ru.gov.sfr.aos.monitoring.models.CartridgeDTO;
 import ru.gov.sfr.aos.monitoring.models.CartridgeModelDTO;
 import ru.gov.sfr.aos.monitoring.models.ManufacturerDTO;
@@ -68,7 +69,7 @@ public class ManufacturersController {
     }
     
     @PostMapping("/models")
-    public void saveModel(ModelDTO dto) {
+    public void saveModel(@Valid ModelDTO dto) throws ObjectAlreadyExists {
         modelMapper.saveModelByManufacturer(dto);
     }
     
@@ -86,13 +87,13 @@ public class ManufacturersController {
         return list;
     }
     
-     @RequestMapping(value = "/cartridgebymodelprinter", method = RequestMethod.GET)
+     @RequestMapping(value = "/cartridgebymodelprinterid", produces={"application/json; charset=UTF-8"}, method = RequestMethod.GET)
     public List<CartridgeModelDTO> getCartridgesByModelPrinter(@RequestParam("idModel") Long idModel) {
             List<CartridgeModelDTO> list = cartridgeMapper.showCartridgeModelByPrinterModel(idModel);
         return list;
     }
     
-       @RequestMapping(value = "/cartridgebymodelprinter/{type}", method = RequestMethod.GET)
+       @RequestMapping(value = "/cartridgebymodelprinter/{type}", produces={"application/json; charset=UTF-8"}, method = RequestMethod.GET)
     public List<CartridgeModelDTO> getCartridgesByModelPrinterAndType(@RequestParam("model") String model, @PathVariable String type) {
             List<CartridgeModelDTO> list = cartridgeMapper.showCartridgeModelByPrinterModelAndType(model, type);
         return list;

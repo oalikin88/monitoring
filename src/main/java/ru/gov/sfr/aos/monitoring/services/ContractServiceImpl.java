@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.annotation.Validated;
 import ru.gov.sfr.aos.monitoring.entities.Contract;
 import ru.gov.sfr.aos.monitoring.exceptions.ObjectAlreadyExists;
 import ru.gov.sfr.aos.monitoring.interfaces.ContractServiceInterface;
@@ -17,7 +18,7 @@ import ru.gov.sfr.aos.monitoring.repositories.ContractRepo;
  *
  * @author 041AlikinOS
  */
-
+@Validated
 @Service
 public class ContractServiceImpl implements ContractServiceInterface {
     

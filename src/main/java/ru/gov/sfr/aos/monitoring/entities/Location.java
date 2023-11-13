@@ -15,6 +15,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.PrimaryKeyJoinColumn;
+import javax.validation.constraints.NotEmpty;
 
 /**
  *
@@ -26,6 +27,7 @@ public class Location implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @NotEmpty(message = "Поле \"Локация\" не может быть пустым")
     private String name;
     @OneToMany(targetEntity = Printer.class, mappedBy = "location", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Set <Printer> printer = new HashSet<>();

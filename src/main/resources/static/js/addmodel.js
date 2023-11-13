@@ -24,12 +24,10 @@ $('#sendForm').submit(function(e) {
         contentType: false,
         processData: false,
         success: function (data) {
-            console.log(data);
             alert("formData успешно отправлена");
         },
         error: function (err) {
             alert(err.responseText);
-            console.log(err);
         }
         
         

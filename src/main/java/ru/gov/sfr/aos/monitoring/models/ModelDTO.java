@@ -7,6 +7,7 @@ package ru.gov.sfr.aos.monitoring.models;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.Serializable;
+import javax.validation.constraints.NotEmpty;
 
 
 /**
@@ -16,10 +17,15 @@ import java.io.Serializable;
 public class ModelDTO implements Serializable {
     
     public Long idModel;
+    @NotEmpty(message = "Поле \"Модель\" не может быть пустым")
     public String model;
+    @NotEmpty(message = "Поле \"Производитель\" не может быть пустым")
     public String manufacturer;
+    @NotEmpty(message = "Поле \"Цветность печати\" не может быть пустым")
     public String printColorType;
+    @NotEmpty(message = "Поле \"Формат печати\" не может быть пустым")
     public String printFormatType;
+    @NotEmpty(message = "Поле \"Скорость печати\" не может быть пустым")
     public String printSpeed;
 
     public ModelDTO() {

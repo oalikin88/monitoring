@@ -54,7 +54,6 @@ window.onload = function () {
         for(i = 0; i < models.length; i++) {
             amountColums = amountColums + models[i][1].length;
         }
-        console.log(amountColums);
         
         for(i = 0; i < models.length; i++) {
             

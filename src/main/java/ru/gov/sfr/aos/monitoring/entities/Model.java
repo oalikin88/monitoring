@@ -21,6 +21,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.PrimaryKeyJoinColumn;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
@@ -40,17 +41,19 @@ public class Model implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
+    @NotEmpty(message = "Поле \"Модель\" не может быть пустым")
     @NotNull
     private String name;
     
-    @NotNull
+    @NotNull(message = "Поле \"Цветность печати\" не может быть пустым")
     @Enumerated(EnumType.STRING)
     private PrintColorType printColorType;
-    @NotNull
+    @NotNull(message = "Поле \"Формат печати\" не может быть пустым")
     @Enumerated
     private PrintFormatType printFormatType;
-    @NotNull
+    @NotNull(message = "Поле \"Скорость печати\" не может быть пустым")
     private Long printSpeed;
+    @NotNull(message = "Поле \"Производитель\" не может быть пустым")
     @ManyToOne(cascade = CascadeType.ALL)
     private Manufacturer manufacturer;
     @LazyCollection(LazyCollectionOption.FALSE)

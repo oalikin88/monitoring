@@ -4,17 +4,21 @@
  */
 package ru.gov.sfr.aos.monitoring.controllers;
 
-import javax.servlet.RequestDispatcher;
+import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.ConstraintViolationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.web.servlet.error.ErrorController;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.validation.BindException;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.DispatcherServlet;
-import ru.gov.sfr.aos.monitoring.models.ResponseDto;
+import ru.gov.sfr.aos.monitoring.exceptions.MyConstraintViolationException;
+import ru.gov.sfr.aos.monitoring.models.Response;
 
 /**
  *
@@ -31,13 +35,19 @@ public class ExceptionController implements ErrorController {
         Exception exception = (Exception) request.getAttribute("javax.servlet.error.exception");
         log.info("Http status code >> " + statusCode);
         log.info("Exception >> " + exception);
-        String status = request.getAttribute(RequestDispatcher.ERROR_MESSAGE).toString();
         Exception e = (Exception) request.getAttribute(DispatcherServlet.EXCEPTION_ATTRIBUTE);
-        System.out.println(e);
+        // String notValidExceptionMessage = exception.getCause().getConstraintViolations().iterator().next().getMessage();
+        ConstraintViolationException cause = null;
+        String message = null;
+        
+     
+        
+         
         Class<?> exceptionType = (Class<?>) request.getAttribute("javax.servlet.error.exception_type");
         String errorMessage = (String) request.getAttribute("javax.servlet.error.message");
         String requestUri = (String) request.getAttribute("javax.servlet.error.request_uri");
         String servletName = (String) request.getAttribute("javax.servlet.error.servlet_name");
+     
         log.info("exceptionType >> " + exceptionType);
         log.info("errorMessage >> " + errorMessage);
         log.info("requestUri >> " + requestUri);
@@ -56,25 +66,51 @@ public class ExceptionController implements ErrorController {
             return "page409";
         }
         else {
-            map.addAttribute("exception", exception);
+            if(null != exception) {
+               if(exception.getCause() instanceof ConstraintViolationException) {
+            cause = (ConstraintViolationException)exception.getCause();
+            message = cause.getConstraintViolations().iterator().next().getMessage();
+        }} else if(e instanceof BindException) {
+            BindException bException = (BindException) e;
+                String errorsMes = bException
+                        .getBindingResult()
+                        .getFieldErrors().stream()
+                        .map(FieldError::getDefaultMessage)
+                        .collect(Collectors.toSet()).toString().replaceAll("\\[*]*", "");
+                map.addAttribute("exception", errorsMes);
+                return "page500";
+        }
+        
+         else {
+            try {
+                if(null != e.getMessage()) {
+                    message = e.getMessage();
+                }
+            } catch (Exception error) {
+                 error.printStackTrace();
+                 message = "Временные неполадки на сервере";
+            }
+           
+        }
+            
+            map.addAttribute("exception", message);
+            
+            System.out.println(exception.getCause().fillInStackTrace());
+            exception.getClass().getConstructors();
+            exception.getCause().getClass();
+            exception.getLocalizedMessage();
             return "page500";
+            
         }
     }
     
-    @GetMapping("/404")
-    public String objectAlreadyExist(ResponseDto dto, Model model) {
-        model.addAttribute("statusCode", dto.getStatus());
-        model.addAttribute("exception", dto.getMessage());
-        
-        
-        return "page409";
-    }
-
-    
-    
-    
-    
     public String getErrorPath() {
         return "/error";
+    }
+    
+    
+    @ExceptionHandler(MyConstraintViolationException.class)
+    public Response handleException(MyConstraintViolationException e) {
+        return new Response(e.getInterpolatedMessage());
     }
 }

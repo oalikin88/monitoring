@@ -284,11 +284,9 @@ $(document).ready(function () {
                 type: 'POST',
                 data: {idCartridge: arr, location:selectLocation.value},
                 success: function () {
-                    console.log("локация успешно изменена");
                     window.location.reload();
                 },
                 error: function(callback) {
-                    console.log(callback);
                 }
             });
             

@@ -5,10 +5,9 @@
 package ru.gov.sfr.aos.monitoring.entities;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Set;
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -16,9 +15,8 @@ import javax.persistence.FetchType;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.PrimaryKeyJoinColumn;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
-import org.hibernate.annotations.LazyCollection;
-import org.hibernate.annotations.LazyCollectionOption;
 import ru.gov.sfr.aos.monitoring.PrinterStatus;
 
 /**
@@ -29,20 +27,22 @@ import ru.gov.sfr.aos.monitoring.PrinterStatus;
 @PrimaryKeyJoinColumn(name = "PRINTER_ID")
 public class Printer extends ObjectBuing implements Serializable {
 
-    @NotNull
+    
     @ManyToOne(cascade = CascadeType.ALL)
     protected Location location;
-    @NotNull
+    @NotNull(message = "Поле \"Производитель\" не может быть пустым")
     @ManyToOne(cascade = CascadeType.ALL)
     protected Manufacturer manufacturer;
-    @NotNull
+    @NotEmpty(message = "Поле \"Серийный номер\" не может быть пустым")
+    @Column(unique = true)
     protected String serialNumber; 
-    @NotNull
+    @NotEmpty(message = "Поле \"Инвентарный номер\" не может быть пустым")
+    @Column(unique=true)
     protected String inventoryNumber;
-    @NotNull
+    
     @OneToMany(mappedBy = "printer", fetch = FetchType.EAGER)
     protected Set<Cartridge> cartridge;
-    
+    @NotNull(message = "Поле \"Модель\" не должно быть пустым")
     @ManyToOne(cascade = CascadeType.ALL)
     protected Model model;
     @NotNull
