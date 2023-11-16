@@ -64,6 +64,7 @@ public class Cartridge extends ObjectBuing implements Serializable {
         this.useInPrinter = useInPrinter;
         this.itemCode = itemCode;
         this.nameMaterial = nameMaterial;
+        
     } 
 
     public String getItemCode() {

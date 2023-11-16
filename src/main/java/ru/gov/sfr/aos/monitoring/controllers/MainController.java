@@ -6,9 +6,11 @@ package ru.gov.sfr.aos.monitoring.controllers;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import javax.validation.Valid;
@@ -16,10 +18,14 @@ import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -29,12 +35,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import ru.gov.sfr.aos.monitoring.MonitoringApplication;
+import ru.gov.sfr.aos.monitoring.entities.Cartridge;
 import ru.gov.sfr.aos.monitoring.entities.Contract;
+import ru.gov.sfr.aos.monitoring.entities.Location;
 import ru.gov.sfr.aos.monitoring.exceptions.ObjectAlreadyExists;
 import ru.gov.sfr.aos.monitoring.interfaces.ContractServiceInterface;
 import ru.gov.sfr.aos.monitoring.models.CartridgeDTO;
 import ru.gov.sfr.aos.monitoring.models.CartridgeInstallDTO;
 import ru.gov.sfr.aos.monitoring.models.CartridgeModelDTO;
+import ru.gov.sfr.aos.monitoring.models.CartridgesWithFilterByContractNumber;
 import ru.gov.sfr.aos.monitoring.models.ChangePrinterInventaryNumberDTO;
 import ru.gov.sfr.aos.monitoring.models.ChangeDeviceLocationDTO;
 import ru.gov.sfr.aos.monitoring.models.ChangeLocationForCartridges;
@@ -50,6 +59,7 @@ import ru.gov.sfr.aos.monitoring.models.ModelDTO;
 import ru.gov.sfr.aos.monitoring.models.PlaningBuyDto;
 import ru.gov.sfr.aos.monitoring.models.PrinterDTO;
 import ru.gov.sfr.aos.monitoring.models.PrinterStatusDto;
+import ru.gov.sfr.aos.monitoring.repositories.CartridgeRepo;
 import ru.gov.sfr.aos.monitoring.services.CartridgeMapper;
 import ru.gov.sfr.aos.monitoring.services.CartridgeService;
 import ru.gov.sfr.aos.monitoring.services.ContractServiceMapper;
@@ -84,6 +94,8 @@ public class MainController {
     private ContractServiceMapper contractServiceMapper;
     @Autowired
     private PlaningService planingService;
+    @Autowired
+    private CartridgeRepo cartridgeRepo;
     
     private final Logger log = LoggerFactory.getLogger(this.getClass());
     
@@ -325,16 +337,79 @@ public @ResponseBody byte[] getImage() throws IOException {
         return new ResponseEntity<>("Ok", HttpStatus.OK);
     }
     
-    
+        @Transactional
        @GetMapping("/getcartridgesbymodel")
-    public String getCartridgesByModelPrinterAndLocation(Model model, @RequestParam("idPrinter") Long idPrinter, @RequestParam("location") String location) {
+    public String getCartridgesByModelPrinterAndLocation(Model model, 
+                                                        @ModelAttribute(name = "dto") CartridgesWithFilterByContractNumber dto, @RequestParam(required = false, defaultValue = "0") int page) {
+
+        LocationDTO locationByName = locationService.getLocationById(dto.getLocation());
         
-        Map<LocationDTO, List<CartridgeDTO>> showCartridgesByModelPrinterAndLocation = cartridgeMapper.showCartridgesByModelPrinterAndLocation(idPrinter, location);
-        
-        model.addAttribute("input", showCartridgesByModelPrinterAndLocation);
-        
+        if(null != dto.getContractNumber()) {
+            List<CartridgeDTO> cartDtoesList = new ArrayList<>();
+        LocationDTO locationById = locationService.getLocationById(dto.getLocation());
+        Page<Cartridge> getPage = cartridgeRepo.findByContractNumberAndModelPrinterAndLocation(dto.getContractNumber(), dto.getLocation(), dto.getIdPrinter(), PageRequest.of(page, 25));
+         
+        List<Cartridge> findLikeContractContractNumberByLocationIdAndModelId = getPage.getContent();
+        for(Cartridge cart :findLikeContractContractNumberByLocationIdAndModelId) {
+            CartridgeDTO cartDto = new CartridgeDTO();
+            cartDto.setContract(cart.getContract().getId());
+            cartDto.setContractNumber(cart.getContract().getContractNumber());
+            cartDto.setId(cart.getId());
+            cartDto.setLocation(cart.getLocation().getName());
+            cartDto.setDateEndExploitation(cart.getDateEndExploitation());
+            cartDto.setDateStartExploitation(cart.getDateStartExploitation());
+            cartDto.setType(cart.getModel().getType().getName());
+            cartDto.setResource(cart.getModel().getDefaultNumberPrintPage().toString());
+            cartDto.setUtil(cart.isUtil());
+            cartDto.setModel(cart.getModel().getModel());
+            cartDto.setStartContract(cart.getContract().getDateStartContract());
+            cartDtoesList.add(cartDto);
+        }
+            model.addAttribute("input", cartDtoesList);
+            model.addAttribute("location", locationById);
+            model.addAttribute("pages", getPage.getTotalPages());
+        } else {
+            List<CartridgeDTO> showCartridgesByModelPrinterAndLocation = cartridgeMapper.showCartridgesByModelPrinterAndLocation(dto.getIdPrinter(), locationByName.getName());
+            model.addAttribute("location", locationByName);
+            model.addAttribute("input", showCartridgesByModelPrinterAndLocation);
+        }
         return "cartridgesbylocation";
     }
+    
+    
+//    @PostMapping("/getcartridgesbymodel")
+//    public String getCartridgesByFilter(@ModelAttribute(name = "dto")
+//                                        CartridgesWithFilterByContractNumber dto, Model model) {
+//        
+//        List<CartridgeDTO> cartDtoesList = new ArrayList<>();
+//        LocationDTO locationById = locationService.getLocationById(dto.getLocation());
+//        
+//        
+//        Page<Cartridge> page = cartridgeRepo.findByContractNumberAndModelPrinterAndLocation(dto.getContractNumber(), dto.getLocation(), dto.getIdPrinter(), PageRequest.of(0, 0));
+//        List<Cartridge> findLikeContractContractNumberByLocationIdAndModelId = page.getContent();
+//        for(Cartridge cart :findLikeContractContractNumberByLocationIdAndModelId) {
+//            CartridgeDTO cartDto = new CartridgeDTO();
+//            cartDto.setContract(cart.getContract().getId());
+//            cartDto.setContractNumber(cart.getContract().getContractNumber());
+//            cartDto.setId(cart.getId());
+//            cartDto.setLocation(cart.getLocation().getName());
+//            cartDto.setDateEndExploitation(cart.getDateEndExploitation());
+//            cartDto.setDateStartExploitation(cart.getDateStartExploitation());
+//            cartDto.setType(cart.getModel().getType().getName());
+//            cartDto.setResource(cart.getModel().getDefaultNumberPrintPage().toString());
+//            cartDto.setUtil(cart.isUtil());
+//            cartDto.setModel(cart.getModel().getModel());
+//            cartDto.setStartContract(cart.getContract().getDateStartContract());
+//            cartDtoesList.add(cartDto);
+//        }
+//
+//        model.addAttribute("input", cartDtoesList);
+//        model.addAttribute("location", locationById);
+//        model.addAttribute("pages", page.getTotalPages());
+//        return "cartridgesbylocation";
+//    }
+    
+    
     
     
         @GetMapping("/contracts")
@@ -345,7 +420,7 @@ public @ResponseBody byte[] getImage() throws IOException {
         return "contracts";
     }
         
-        @PostMapping("/changestatus")
+        @PostMapping("changestatus")
         public void changePrinterStatus(PrinterStatusDto dto) {
             printerMapper.editPrinterStatus(dto);
             

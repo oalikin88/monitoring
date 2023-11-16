@@ -10,11 +10,14 @@ import org.opfr.springBootStarterDictionary.models.DictionaryEmployee;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import ru.gov.sfr.aos.monitoring.models.CartridgeChoiceDto;
 import ru.gov.sfr.aos.monitoring.models.CartridgeDTO;
 import ru.gov.sfr.aos.monitoring.models.CartridgeModelDTO;
+import ru.gov.sfr.aos.monitoring.models.CartridgesWithFilterByContractNumber;
 import ru.gov.sfr.aos.monitoring.models.ConsumptionDTO;
 import ru.gov.sfr.aos.monitoring.models.EmployeeDTO;
 import ru.gov.sfr.aos.monitoring.models.LocationDTO;
@@ -42,7 +45,7 @@ public class GetInfoController {
 
     @Autowired
     private DictionaryEmployeeHolder dictionaryEmployeeHolder;
-
+    
     
     @GetMapping("/getinfooo")
     public  List<EmployeeDTO> getEmpl() {
@@ -63,6 +66,7 @@ public class GetInfoController {
         List<LocationDTO> locations = locationService.getAllLocations();
         return locations;
     }
+    
 
     @GetMapping("/getmodelcartridge")
     public List<CartridgeModelDTO> getModelCartridgeByModelPrinter(@RequestParam("idModel") Long idModel) {

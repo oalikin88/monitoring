@@ -10,6 +10,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 import ru.gov.sfr.aos.monitoring.OperationType;
 import ru.gov.sfr.aos.monitoring.entities.Cartridge;
@@ -64,7 +65,7 @@ public class CartridgeService {
                 .collect(Collectors.toSet());
         listener.setAmountDevicesOfLocation(collectCartridgesOfLocation.size());
         
-        List<Cartridge> findByLocationIdAndModelId = cartridgeRepo.findByLocationIdAndModelId(findCartridgeById.get().getLocation().getId(), findCartridgeById.get().getModel().getId());
+        List<Cartridge> findByLocationIdAndModelId = cartridgeRepo.findByLocationIdAndModelId(findCartridgeById.get().getLocation().getId(), findCartridgeById.get().getModel().getId(), Pageable.ofSize(25));
         List<Cartridge> collect = findByLocationIdAndModelId.stream()
                 .filter(e -> !e.isUtil())
                 .filter(e -> !e.isUseInPrinter())

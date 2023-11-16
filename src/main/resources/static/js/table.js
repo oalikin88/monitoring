@@ -101,7 +101,7 @@ window.onload = function () {
             tdLocation = document.createElement('td');
             tdLocation.setAttribute('id', JSON.parse(input1sort[inInput1sort][0]).id);
             tdLocation.className = 'location text-wrap';
-            tdLocation.innerText = JSON.parse(input1sort[inInput1sort][0]).name;
+            tdLocation.innerText = JSON.parse(input1sort[inInput1sort][0]).id;
             tr.appendChild(tdLocation);
 
 
@@ -148,7 +148,7 @@ window.onload = function () {
                 tdCart.style.wordBreak = "break-all";
                 link = document.createElement('a');
                 link.setAttribute('href', '/getcartridgesbymodel?idPrinter=' + input2sort[i][1][0].idModel
-                        + '&location=' + JSON.parse(input1sort[inInput1sort][0]).name);
+                        + '&location=' + JSON.parse(input1sort[inInput1sort][0]).id);
                 link.innerText = amountCartridge.size;
                 tr.appendChild(tdCart);
                 tdCart.appendChild(link);

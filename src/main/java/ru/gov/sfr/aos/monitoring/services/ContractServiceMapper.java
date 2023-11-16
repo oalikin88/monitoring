@@ -18,6 +18,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.annotation.Validated;
 import ru.gov.sfr.aos.monitoring.OperationType;
@@ -297,7 +298,7 @@ public class ContractServiceMapper {
                     .filter(el -> !el.isUseInPrinter())
                     .collect(Collectors.toList());
                             
-                    List<Cartridge> findByLocationIdAndModelId = cartridgeRepo.findByLocationIdAndModelId(location.getId(), findModelCartridgeByName.get().getId());
+                    List<Cartridge> findByLocationIdAndModelId = cartridgeRepo.findByLocationIdAndModelId(location.getId(), findModelCartridgeByName.get().getId(), Pageable.ofSize(25));
                     listener.setModel(findModelCartridgeByName.get());
                     listener.setDateOperation(LocalDateTime.now());
                     listener.setLocation(location);
@@ -564,7 +565,7 @@ public class ContractServiceMapper {
                     .filter(el -> !el.isUseInPrinter())
                     .collect(Collectors.toList());
                             
-                    List<Cartridge> findByLocationIdAndModelId = cartridgeRepo.findByLocationIdAndModelId(currLoc.getId(), findModelCartridgeByName.get().getId());
+                    List<Cartridge> findByLocationIdAndModelId = cartridgeRepo.findByLocationIdAndModelId(currLoc.getId(), findModelCartridgeByName.get().getId(), Pageable.ofSize(25));
                     listener.setModel(findModelCartridgeByName.get());
                     listener.setDateOperation(LocalDateTime.now());
                     listener.setLocation(currLoc);

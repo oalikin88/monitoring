@@ -52,4 +52,16 @@ public class LocationService {
         
     }
     
+    public LocationDTO getLocationById(Long id) {
+        Optional<Location> findLocationById = locationRepo.findById(id);
+        LocationDTO dto = new LocationDTO(findLocationById.get().getId(), findLocationById.get().getName());
+        return dto;
+    }
+    
+    public LocationDTO getLocationByName(String location) {
+        Optional<Location> findByLocationNameIgnoreCase = locationRepo.findByNameIgnoreCase(location);
+        LocationDTO dto = new LocationDTO(findByLocationNameIgnoreCase.get().getId(), findByLocationNameIgnoreCase.get().getName());
+        return dto;
+    }
+    
 }
