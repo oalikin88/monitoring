@@ -8,6 +8,7 @@ window.onload = function () {
 
     input2sort = Object.entries(input2).sort();
     input1sort = Object.entries(input).sort();
+    input3sort = Object.entries(input3).sort();
     let parent = document.getElementsByClassName('inventoriesContent')[0];
 
     let tableContainer = document.getElementById('tableContainer');
@@ -101,7 +102,7 @@ window.onload = function () {
             tdLocation = document.createElement('td');
             tdLocation.setAttribute('id', JSON.parse(input1sort[inInput1sort][0]).id);
             tdLocation.className = 'location text-wrap';
-            tdLocation.innerText = JSON.parse(input1sort[inInput1sort][0]).id;
+            tdLocation.innerText = JSON.parse(input1sort[inInput1sort][0]).name;
             tr.appendChild(tdLocation);
 
 
@@ -109,7 +110,35 @@ window.onload = function () {
                 searchModel = false;
                 var amountCartridge = new Set();
                 var amountPrinters = new Set();
+                if(input1sort[inInput1sort][1].length == 0) { //Если к модели принтера нет моделей картриджей
+                    
+                    for (innerInInput3Sort = 0; innerInInput3Sort < input3sort[inInput1sort][1].length; innerInInput3Sort++) {
+                        if(input2sort[i][0].indexOf(input3sort[inInput1sort][1][innerInInput3Sort].modelName) > 0) {
+                            
+                            tdPrintSuccess = document.createElement('td');
+                            tdPrintSuccess.setAttribute('id', 'location_' + JSON.parse(input1sort[inInput1sort][0]).id + '_' + 'model_' + input3sort[inInput1sort][1][innerInInput3Sort].idModel);
+                            tdPrintSuccess.setAttribute('class', 'model');
+                            tdPrintSuccess.style.wordBreak = "break-all";
+                            linkPrinter = document.createElement('a');
+                          
+                            linkPrinter.setAttribute('href', '/printersbylocation?idLocation=' + JSON.parse(input1sort[inInput1sort][0]).id
+                                    + '&idModel=' + input3sort[inInput1sort][1][innerInInput3Sort].idModel);
+                            
+                            linkPrinter.innerText = input3sort[inInput1sort][1][innerInInput3Sort].amountPrinters;
+                            tr.appendChild(tdPrintSuccess);
+                            tdPrintSuccess.appendChild(linkPrinter);
 
+                            tdCart = document.createElement('td');
+                            tdCart.setAttribute('class', 'cart');
+                            tdCart.style.wordBreak = "break-all";
+                            tdCart.innerText = "0";
+                            tr.appendChild(tdCart);
+                            searchModel = true;
+                            break;
+                        }
+                    }
+                    
+                } else {
 
                 for (innerInInput1Sort = 0; innerInInput1Sort < input1sort[inInput1sort][1].length; innerInInput1Sort++) {
 
@@ -121,7 +150,7 @@ window.onload = function () {
                             for (vbc = 0; vbc < input1sort[inInput1sort][1][innerInInput1Sort].cartridgesId.length; vbc++) {
                                 amountCartridge.add(input1sort[inInput1sort][1][innerInInput1Sort].cartridgesId[vbc]);
                             }
-
+                            
                             searchModel = true;
                             break;
                         }
@@ -152,7 +181,7 @@ window.onload = function () {
                 link.innerText = amountCartridge.size;
                 tr.appendChild(tdCart);
                 tdCart.appendChild(link);
-
+                }
             }
 
         }

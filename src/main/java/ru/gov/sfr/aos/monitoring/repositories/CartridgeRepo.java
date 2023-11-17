@@ -53,4 +53,22 @@ public interface CartridgeRepo extends JpaRepository<Cartridge, Long> {
    + "AND cart.util = FALSE "
    + "AND cart.use_in_printer = FALSE" ,nativeQuery = true)
    Page<Cartridge> findByContractNumberAndModelPrinterAndLocation(String contractNumber, Long idLocation, Long idPrinter, Pageable pageable);
+   
+   @Query(value = "SELECT cart.* "
+   + "FROM cartridge cart "
+   + "INNER JOIN cartridge_model_models_printers cart_print "
+   + "ON cart.model_id = cart_print.model_cartridges_id "
+   + "WHERE cart_print.models_printers_id = ?2 "
+   + "AND cart.location_id = ?1 "
+   + "AND cart.util = FALSE "
+   + "AND cart.use_in_printer = FALSE",
+   countQuery = "SELECT count(*) "
+    + "FROM cartridge cart "
+   + "INNER JOIN cartridge_model_models_printers cart_print "
+   + "ON cart.model_id = cart_print.model_cartridges_id "
+   + "WHERE cart_print.models_printers_id = ?2 "
+   + "AND cart.location_id = ?1 "
+   + "AND cart.util = FALSE "
+   + "AND cart.use_in_printer = FALSE" ,nativeQuery = true)
+   Page<Cartridge> findCartridgesByModelPrinterAndLocation(Long idLocation, Long idPrinter, Pageable pageable);
 }

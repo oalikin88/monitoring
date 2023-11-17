@@ -20,6 +20,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
         <nav th:insert="nav :: navbar"></nav>
 
         <div class="container" id="sendData">
+         
 
             <div class="tab-status">
                 <span class="tab active">1</span>
@@ -149,7 +150,8 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                     </div>
                 </div>
             </form>
-        </div>
+            </div>
+     
         <div>
             <ul th:each="contract : ${contracts}">
                 <li th:text="${contract}"></li>

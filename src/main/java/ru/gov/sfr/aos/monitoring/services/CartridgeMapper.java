@@ -42,6 +42,7 @@ import ru.gov.sfr.aos.monitoring.models.ModelCartridgeByModelPrinters;
 import ru.gov.sfr.aos.monitoring.models.ModelDTO;
 import ru.gov.sfr.aos.monitoring.models.ModelPrinterByModelCartridgeDTO;
 import ru.gov.sfr.aos.monitoring.models.PrinterDTO;
+import ru.gov.sfr.aos.monitoring.models.PrintersByLocationandModelDto;
 import ru.gov.sfr.aos.monitoring.repositories.CartridgeModelRepo;
 import ru.gov.sfr.aos.monitoring.repositories.CartridgeRepo;
 import ru.gov.sfr.aos.monitoring.repositories.LocationRepo;
@@ -762,5 +763,28 @@ public class CartridgeMapper {
         }
 
     }
-
+    
+    public Map<LocationDTO, List<PrintersByLocationandModelDto>> getPrintersByLocationAndModel() {
+        
+        List<Location> locations = locationRepo.findAll();
+        List<Model> allModels = modelPrinterRepo.findAll();
+        Map<LocationDTO, List<PrintersByLocationandModelDto>> map = new HashMap<>();
+        for(Location loc : locations) {
+            LocationDTO locDto = new LocationDTO(loc.getId(), loc.getName());
+            List<PrintersByLocationandModelDto> listDtoes = new ArrayList<>();
+            for(Model model : allModels) {
+                List<Printer> printersByLocationAnModel = printerRepo.findByLocationNameAndModelIdAndPrinterStatusEquals(loc.getName(), model.getId(), PrinterStatus.OK);
+                PrintersByLocationandModelDto printersByLocationandModelDto = new PrintersByLocationandModelDto();
+                printersByLocationandModelDto.setIdModel(model.getId());
+                printersByLocationandModelDto.setModelName(model.getName());
+                printersByLocationandModelDto.setAmountPrinters(printersByLocationAnModel.size());
+                printersByLocationandModelDto.setIdLocation(loc.getId());
+                printersByLocationandModelDto.setLocationName(loc.getName());
+                listDtoes.add(printersByLocationandModelDto);
+            }
+            map.put(locDto, listDtoes);
+        }
+        
+        return map;
+    }
 }

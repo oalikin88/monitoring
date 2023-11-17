@@ -165,6 +165,11 @@ $(document).ready(function () {
         headTable.appendChild(headTableContractNumber);
 
 
+        headTableDate = document.createElement('div');
+        headTableDate.className = "col my-auto mx-auto text-start";
+        headTableDate.innerText = "Дата";
+        headTable.appendChild(headTableDate);
+
 
         checkboxAll.addEventListener('click', function () {
             toggle(this);
@@ -207,10 +212,17 @@ $(document).ready(function () {
 
             contentRowContractNumber = document.createElement('div');
             contentRowContractNumber.className = 'col';
+            
+            contentRowContractNumber.innerText = input[i].contractNumber;
+            contentRow.appendChild(contentRowContractNumber);
+            
+            
+            contentRowDateContract = document.createElement('div');
+            contentRowDateContract.className = 'col';
             startContractDate = new Date(input[i].startContract);
             startContractDateFormat = startContractDate.toLocaleDateString('ru');
-            contentRowContractNumber.innerText = input[i].contractNumber + " от " + startContractDateFormat;
-            contentRow.appendChild(contentRowContractNumber);
+            contentRowDateContract.innerText = startContractDateFormat;
+            contentRow.appendChild(contentRowDateContract);
         }
 
 
@@ -263,11 +275,26 @@ $(document).ready(function () {
             paginationNav.appendChild(paginationUl);
            
 
-            if (window.location.search.indexOf('page') != -1) {
+            if (pageable.pageNumber == 0) {
+                paginationPreviousLi = document.createElement('li');
+                paginationPreviousLi.className = 'page-item disabled';
+                previousPageLink = document.createElement('a');
+                previousPageLink.className = 'page-link';
+                previousPageLink.href = "#";
+                previousPageLink.innerText = "Предыдущая";
+                spanPreviuosAria = document.createElement('span');
+                spanPreviuosAria.setAttribute('aria-hidden', true);
+
+                paginationPreviousLi.appendChild(previousPageLink);
+                previousPageLink.appendChild(spanPreviuosAria);
+                paginationUl.appendChild(paginationPreviousLi);
+            } else {
                 paginationPreviousLi = document.createElement('li');
                 paginationPreviousLi.className = 'page-item';
                 previousPageLink = document.createElement('a');
-                previousPageLink.href = "#"
+                previousPageLink.className = 'page-link';
+                previousPageLink.href = window.location.pathname + window.location.search.split('&')[0] + "&" + window.location.search.split('&')[1] + "&" + window.location.search.split('&')[2] + '&page=' + (pageable.pageNumber - 1);
+                previousPageLink.innerText = "Предыдущая";
                 spanPreviuosAria = document.createElement('span');
                 spanPreviuosAria.setAttribute('aria-hidden', true);
 
@@ -276,6 +303,17 @@ $(document).ready(function () {
                 paginationUl.appendChild(paginationPreviousLi);
             }
             for(i = 0; i < pages; i++) {
+                
+                if(pageable.pageNumber == i) {
+                paginationElLi = document.createElement('li');
+                paginationElLi.className = 'page-item active';
+                paginationElLink = document.createElement('a');
+                paginationElLink.className = 'page-link';
+                paginationElLink.href = "#";
+                paginationElLink.innerText = i + 1;
+                paginationElLi.appendChild(paginationElLink);
+                paginationUl.appendChild(paginationElLi);
+                } else {
                 paginationElLi = document.createElement('li');
                 paginationElLi.className = 'page-item';
                 paginationElLink = document.createElement('a');
@@ -284,6 +322,34 @@ $(document).ready(function () {
                 paginationElLink.innerText = i + 1;
                 paginationElLi.appendChild(paginationElLink);
                 paginationUl.appendChild(paginationElLi);
+                }
+            }
+            if (pageable.pageNumber == (pages - 1)) {
+                paginationPreviousLi = document.createElement('li');
+                paginationPreviousLi.className = 'page-item disabled';
+                previousPageLink = document.createElement('a');
+                previousPageLink.className = 'page-link';
+                previousPageLink.href = "#";
+                previousPageLink.innerText = "Следующая";
+                spanPreviuosAria = document.createElement('span');
+                spanPreviuosAria.setAttribute('aria-hidden', true);
+
+                paginationPreviousLi.appendChild(previousPageLink);
+                previousPageLink.appendChild(spanPreviuosAria);
+                paginationUl.appendChild(paginationPreviousLi);
+            } else {
+                paginationPreviousLi = document.createElement('li');
+                paginationPreviousLi.className = 'page-item';
+                previousPageLink = document.createElement('a');
+                previousPageLink.className = 'page-link';
+                previousPageLink.href = window.location.pathname + window.location.search.split('&')[0] + "&" + window.location.search.split('&')[1] + "&" + window.location.search.split('&')[2] + '&page=' + (pageable.pageNumber + 1);
+                previousPageLink.innerText = "Следущая";
+                spanPreviuosAria = document.createElement('span');
+                spanPreviuosAria.setAttribute('aria-hidden', true);
+
+                paginationPreviousLi.appendChild(previousPageLink);
+                previousPageLink.appendChild(spanPreviuosAria);
+                paginationUl.appendChild(paginationPreviousLi);
             }
         }
     

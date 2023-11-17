@@ -30,8 +30,9 @@ body, html {
 .container {
     width: 100%;
     min-height: 500px;
+     margin-bottom: 65px;
     margin-top: 60px;
-    margin-bottom: 65px;
+    margin-bottom: 300px;
     padding-left: 25px;
     padding-right: 25px;
     background: #f8f9fa;
@@ -111,12 +112,13 @@ h1 {
 }
 
 footer {
+    
     background-color: #292929;
 }
 
 nav span {
     font-size: 19px;
-    font-weight: 550    ;
+    font-weight: 550px;
     line-height: 106.34%;
     white-space: nowrap;
     letter-spacing: normal;

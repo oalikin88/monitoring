@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
+import ru.gov.sfr.aos.monitoring.PrinterStatus;
 import ru.gov.sfr.aos.monitoring.entities.Location;
 import ru.gov.sfr.aos.monitoring.entities.Model;
 import ru.gov.sfr.aos.monitoring.entities.Printer;
@@ -23,5 +24,6 @@ public interface PrinterRepo extends JpaRepository<Printer, Long> {
     List<Printer> findByLocationAndModel(Location location, Model model);
     List<Printer> findByLocationName(String name);
     List<Printer> findByLocationIdAndModelId(Long idLocation, Long idModel);
+    List<Printer> findByLocationNameAndModelIdAndPrinterStatusEquals(String location, Long idModel, PrinterStatus status);
     
 }
