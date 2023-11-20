@@ -22,6 +22,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.JpaSort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -325,15 +326,25 @@ public class MainController {
 
     @GetMapping("/getcartridgesbymodel")
     public String getCartridgesByModelPrinterAndLocation(Model model,
-            @ModelAttribute(name = "dto") CartridgesWithFilterByContractNumber dto, @PageableDefault(size = 25, page = 0) Pageable pageable) {
-
+                                                        @ModelAttribute(name = "dto") CartridgesWithFilterByContractNumber dto, 
+                                                        @RequestParam(defaultValue = "0", required = false) Integer page,
+                                                        @RequestParam(defaultValue = "25", required = false) Integer pageSize,
+                                                        @RequestParam(defaultValue = "cartridge_id") String sortBy,
+                                                        @RequestParam(defaultValue = "up") String direction) {
+        Sort.Direction direct = null;
+        if(direction.equals("up")) {
+            direct = Sort.Direction.ASC;
+        } else {
+            direct = Sort.Direction.DESC;
+        }
+        Pageable paging = PageRequest.of(page, pageSize, JpaSort.unsafe(direct, sortBy));
         LocationDTO locationById = locationService.getLocationById(dto.getLocation());
         List<CartridgeDTO> cartDtoesList = new ArrayList<>();
         Page<Cartridge> getPage = null;
         if (null != dto.getContractNumber()) {
-            getPage = cartridgeRepo.findByContractNumberAndModelPrinterAndLocation(dto.getContractNumber(), dto.getLocation(), dto.getIdPrinter(), pageable);
+            getPage = cartridgeRepo.findByContractNumberAndModelPrinterAndLocation(dto.getContractNumber(), dto.getLocation(), dto.getIdPrinter(), paging);
         } else {
-            getPage = cartridgeRepo.findCartridgesByModelPrinterAndLocation(dto.getLocation(), dto.idPrinter, pageable);
+            getPage = cartridgeRepo.findCartridgesByModelPrinterAndLocation(dto.getLocation(), dto.idPrinter, paging);
         }
         List<Cartridge> findLikeContractContractNumberByLocationIdAndModelId = getPage.getContent();
         for (Cartridge cart : findLikeContractContractNumberByLocationIdAndModelId) {
@@ -354,9 +365,10 @@ public class MainController {
 
         model.addAttribute("input", cartDtoesList);
         model.addAttribute("location", locationById);
-        model.addAttribute("pageable", pageable);
+        model.addAttribute("pageable", paging);
         model.addAttribute("pages", getPage.getTotalPages());
         model.addAttribute("url", "/getcartridgesbymodel");
+        model.addAttribute("direction", direction);
         return "cartridgesbylocation";
     }
 

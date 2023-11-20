@@ -26,7 +26,7 @@ public interface CartridgeRepo extends JpaRepository<Cartridge, Long> {
    List<Cartridge> findByContractContractNumberAndLocationId(String contractNumber, Long idLocation);
    List<Cartridge> findByContractContractNumberAndPrinterModelAndLocationId(String contractNumber, Long idLocation, Model modelPrinter);
    
-   @Query(value = "SELECT cart.* "
+   @Query(value = "SELECT cart.*, contr.contract_number, contr.date_start_contract, model.* "
    + "FROM cartridge cart "
    + "JOIN object_buing ob "
    + "ON cart.cartridge_id = ob.id "
@@ -34,6 +34,8 @@ public interface CartridgeRepo extends JpaRepository<Cartridge, Long> {
    + "ON ob.contract_id = contr.id "
    + "INNER JOIN cartridge_model_models_printers cart_print "
    + "ON cart.model_id = cart_print.model_cartridges_id "
+   + "JOIN model model "
+   + "ON cart.model_id = model.id "
    + "WHERE cart_print.models_printers_id = ?3 "
    + "AND contr.contract_number = ?1 "
    + "AND cart.location_id = ?2 "
@@ -47,6 +49,8 @@ public interface CartridgeRepo extends JpaRepository<Cartridge, Long> {
    + "ON ob.contract_id = contr.id "
    + "INNER JOIN cartridge_model_models_printers cart_print "
    + "ON cart.model_id = cart_print.model_cartridges_id "
+   + "JOIN model model "
+   + "ON cart.model_id = model.id "
    + "WHERE cart_print.models_printers_id = ?3 "
    + "AND contr.contract_number = ?1 "
    + "AND cart.location_id = ?2 "
@@ -54,18 +58,30 @@ public interface CartridgeRepo extends JpaRepository<Cartridge, Long> {
    + "AND cart.use_in_printer = FALSE" ,nativeQuery = true)
    Page<Cartridge> findByContractNumberAndModelPrinterAndLocation(String contractNumber, Long idLocation, Long idPrinter, Pageable pageable);
    
-   @Query(value = "SELECT cart.* "
+   @Query(value = "SELECT cart.*, contr.contract_number, contr.date_start_contract, model.* "
    + "FROM cartridge cart "
+   + "JOIN object_buing ob "
+   + "ON cart.cartridge_id = ob.id "
+   + "JOIN contract contr "
+   + "ON ob.contract_id = contr.id "
    + "INNER JOIN cartridge_model_models_printers cart_print "
    + "ON cart.model_id = cart_print.model_cartridges_id "
+   + "JOIN model model "
+   + "ON cart.model_id = model.id "
    + "WHERE cart_print.models_printers_id = ?2 "
    + "AND cart.location_id = ?1 "
    + "AND cart.util = FALSE "
    + "AND cart.use_in_printer = FALSE",
    countQuery = "SELECT count(*) "
     + "FROM cartridge cart "
+   + "JOIN object_buing ob "
+   + "ON cart.cartridge_id = ob.id "
+   + "JOIN contract contr "
+   + "ON ob.contract_id = contr.id "
    + "INNER JOIN cartridge_model_models_printers cart_print "
    + "ON cart.model_id = cart_print.model_cartridges_id "
+   + "JOIN model model "
+   + "ON cart.model_id = model.id "
    + "WHERE cart_print.models_printers_id = ?2 "
    + "AND cart.location_id = ?1 "
    + "AND cart.util = FALSE "

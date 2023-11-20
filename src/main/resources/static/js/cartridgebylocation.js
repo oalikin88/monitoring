@@ -18,11 +18,13 @@ let arrRequest = window.location.search
                 },
                 {}
         );
+
+const pageParam = window.location.search
+        .replace('?', '')
+        .split('&');
+
+
 $(document).ready(function () {
-
-
-
-         
 
     let wrapper = document.createElement('div');
     wrapper.className = 'wrapper';
@@ -32,9 +34,6 @@ $(document).ready(function () {
     title.className = "text-center titleLocation fw-bold";
     title.innerText = loc.name;
     wrapper.append(title);
-
-
-
 
     if (input.length > 0) {
 
@@ -57,7 +56,6 @@ $(document).ready(function () {
         btnAfterTitleRow.appendChild(btnAfterTitleCol1);
         btnAfterTitleRow.appendChild(btnAfterTitleCol2);
 
-
         let formContainer = document.createElement('form');
         formContainer.setAttribute('th:action', '@{getcartridgesbymodel}');
         formContainer.setAttribute('action', 'getcartridgesbymodel');
@@ -65,9 +63,6 @@ $(document).ready(function () {
         formContainer.setAttribute('th:object', '${dto}');
         formContainer.setAttribute('method', 'GET');
         formContainer.id = 'formFilter';
-
-
-
 
         btnAfterTitleCol2.appendChild(formContainer);
 
@@ -95,22 +90,17 @@ $(document).ready(function () {
         filterSubmit.className = 'btn btn-light';
         filterSubmit.innerText = 'Применить';
 
-
-
-
         inputGroupFilterInput = document.createElement('input');
         inputGroupFilterInput.className = 'form-control';
         inputGroupFilterInput.setAttribute('th:field', '*{contractNumber}');
         inputGroupFilterInput.name = 'contractNumber';
         inputGroupFilterInput.placeholder = 'фильтр по номеру контракта';
 
-
         inputGroupFilterHideFieldLocation = document.createElement('input');
         inputGroupFilterHideFieldLocation.className = 'form-control';
         inputGroupFilterHideFieldLocation.setAttribute('th:field', '*{location}');
         inputGroupFilterHideFieldLocation.name = 'location';
         inputGroupFilterHideFieldLocation.type = 'hidden';
-        //   inputGroupFilterHideFieldLocation.id = 'location';
         inputGroupFilterHideFieldLocation.value = loc.id;
 
 
@@ -118,7 +108,6 @@ $(document).ready(function () {
         inputGroupFilterHideFieldPrinterId.className = 'form-control';
         inputGroupFilterHideFieldPrinterId.setAttribute('th:field', '*{idPrinter}');
         inputGroupFilterHideFieldPrinterId.name = 'idPrinter';
-        // inputGroupFilterHideFieldPrinterId.id = 'idPrinter';
         inputGroupFilterHideFieldPrinterId.type = 'hidden';
         inputGroupFilterHideFieldPrinterId.value = arrRequest.idPrinter;
 
@@ -156,26 +145,64 @@ $(document).ready(function () {
 
         headTableModel = document.createElement('div');
         headTableModel.className = "col my-auto mx-auto text-start";
-        headTableModel.innerText = "Модель";
         headTable.appendChild(headTableModel);
+
+        linkSortingModel = document.createElement('a');
+        linkSortingModel.href = '#';
+        linkSortingModel.id = 'modelSortLink';
+        imgInnerModel = document.createElement('img');
+        imgInnerModel.src = './img/sorting.png';
+        imgInnerModel.alt = 'Сортировка';
+        imgInnerModel.className = 'imgSorting';
+        imgInnerModel.id = 'modelSort';
+        linkSortingModel.appendChild(imgInnerModel);
+        headTableModel.appendChild(linkSortingModel);
+        textModel = document.createElement('span');
+        textModel.innerText = "Модель";
+        headTableModel.appendChild(textModel);
 
         headTableContractNumber = document.createElement('div');
         headTableContractNumber.className = "col my-auto mx-auto text-start";
-        headTableContractNumber.innerText = "Контракт";
+
+        linkSortingContractNumber = document.createElement('a');
+        linkSortingContractNumber.href = '#';
+        linkSortingContractNumber.id = 'contractSortLink';
+        imgInnerContractNumber = document.createElement('img');
+        imgInnerContractNumber.src = './img/sorting.png';
+        imgInnerContractNumber.alt = 'Сортировка';
+        imgInnerContractNumber.className = 'imgSorting';
+        imgInnerContractNumber.id = 'contractSort';
+        linkSortingContractNumber.appendChild(imgInnerContractNumber);
+        headTableContractNumber.appendChild(linkSortingContractNumber);
+        textContractNumber = document.createElement('span');
+        textContractNumber.innerText = "Контракт";
+        headTableContractNumber.appendChild(textContractNumber);
+
         headTable.appendChild(headTableContractNumber);
 
 
         headTableDate = document.createElement('div');
         headTableDate.className = "col my-auto mx-auto text-start";
-        headTableDate.innerText = "Дата";
+
+        linkSortingDate = document.createElement('a');
+        linkSortingDate.href = '#';
+        linkSortingDate.id = 'dateSortLink';
+        imgInnerDate = document.createElement('img');
+        imgInnerDate.src = './img/sorting.png';
+        imgInnerDate.alt = 'Сортировка';
+        imgInnerDate.className = 'imgSorting';
+        imgInnerDate.id = 'dateSort';
+        linkSortingDate.appendChild(imgInnerDate);
+        headTableDate.appendChild(linkSortingDate);
+        textDate = document.createElement('span');
+        textDate.innerText = "Дата";
+        headTableDate.appendChild(textDate);
+
+        //headTableDate.innerText = "Дата";
         headTable.appendChild(headTableDate);
-
-
         checkboxAll.addEventListener('click', function () {
             toggle(this);
         });
-
-
 
         for (i = 0; i < input.length; i++) {
 
@@ -212,11 +239,11 @@ $(document).ready(function () {
 
             contentRowContractNumber = document.createElement('div');
             contentRowContractNumber.className = 'col';
-            
+
             contentRowContractNumber.innerText = input[i].contractNumber;
             contentRow.appendChild(contentRowContractNumber);
-            
-            
+
+
             contentRowDateContract = document.createElement('div');
             contentRowDateContract.className = 'col';
             startContractDate = new Date(input[i].startContract);
@@ -224,10 +251,6 @@ $(document).ready(function () {
             contentRowDateContract.innerText = startContractDateFormat;
             contentRow.appendChild(contentRowDateContract);
         }
-
-
-
-
 
         choiceBtn.addEventListener('click', function () {
             if ($('#btnTransfer').length == 0) {
@@ -254,10 +277,7 @@ $(document).ready(function () {
             for (i = 0; i < checkboxes.length; i++) {
                 checkboxes[i].hidden = false;
             }
-
-
         });
-        
 
     } else {
 
@@ -267,96 +287,96 @@ $(document).ready(function () {
 
     }
     if (pages > 0) {
-    
-       let paginationNav = document.createElement('nav');
-            let paginationUl = document.createElement('ul');
-            paginationUl.className = 'pagination';
-            content.appendChild(paginationNav);
-            paginationNav.appendChild(paginationUl);
-           
 
-            if (pageable.pageNumber == 0) {
-                paginationPreviousLi = document.createElement('li');
-                paginationPreviousLi.className = 'page-item disabled';
-                previousPageLink = document.createElement('a');
-                previousPageLink.className = 'page-link';
-                previousPageLink.href = "#";
-                previousPageLink.innerText = "Предыдущая";
-                spanPreviuosAria = document.createElement('span');
-                spanPreviuosAria.setAttribute('aria-hidden', true);
+        var paginationNav = document.createElement('nav');
+        var paginationUl = document.createElement('ul');
+        paginationUl.className = 'pagination';
+        content.appendChild(paginationNav);
+        paginationNav.appendChild(paginationUl);
 
-                paginationPreviousLi.appendChild(previousPageLink);
-                previousPageLink.appendChild(spanPreviuosAria);
-                paginationUl.appendChild(paginationPreviousLi);
-            } else {
-                paginationPreviousLi = document.createElement('li');
-                paginationPreviousLi.className = 'page-item';
-                previousPageLink = document.createElement('a');
-                previousPageLink.className = 'page-link';
-                previousPageLink.href = window.location.pathname + window.location.search.split('&')[0] + "&" + window.location.search.split('&')[1] + "&" + window.location.search.split('&')[2] + '&page=' + (pageable.pageNumber - 1);
-                previousPageLink.innerText = "Предыдущая";
-                spanPreviuosAria = document.createElement('span');
-                spanPreviuosAria.setAttribute('aria-hidden', true);
 
-                paginationPreviousLi.appendChild(previousPageLink);
-                previousPageLink.appendChild(spanPreviuosAria);
-                paginationUl.appendChild(paginationPreviousLi);
-            }
-            for(i = 0; i < pages; i++) {
-                
-                if(pageable.pageNumber == i) {
-                paginationElLi = document.createElement('li');
+        if (pageable.pageNumber == 0) {
+            var paginationPreviousLi = document.createElement('li');
+            paginationPreviousLi.className = 'page-item disabled';
+            previousPageLink = document.createElement('a');
+            previousPageLink.className = 'page-link';
+            previousPageLink.href = "#";
+            previousPageLink.innerText = "Предыдущая";
+            var spanPreviuosAria = document.createElement('span');
+            spanPreviuosAria.setAttribute('aria-hidden', true);
+
+            paginationPreviousLi.appendChild(previousPageLink);
+            previousPageLink.appendChild(spanPreviuosAria);
+            paginationUl.appendChild(paginationPreviousLi);
+        } else {
+            var paginationPreviousLi = document.createElement('li');
+            paginationPreviousLi.className = 'page-item';
+            previousPageLink = document.createElement('a');
+            previousPageLink.className = 'page-link';
+            previousPageLink.href = getLinkForPage(pageParam, pageable.pageNumber - 1);
+            previousPageLink.innerText = "Предыдущая";
+            spanPreviuosAria = document.createElement('span');
+            spanPreviuosAria.setAttribute('aria-hidden', true);
+
+            paginationPreviousLi.appendChild(previousPageLink);
+            previousPageLink.appendChild(spanPreviuosAria);
+            paginationUl.appendChild(paginationPreviousLi);
+        }
+        for (let i = 0; i < pages; i++) {
+
+            if (pageable.pageNumber == i) {
+                var paginationElLi = document.createElement('li');
                 paginationElLi.className = 'page-item active';
-                paginationElLink = document.createElement('a');
+                var paginationElLink = document.createElement('a');
                 paginationElLink.className = 'page-link';
                 paginationElLink.href = "#";
                 paginationElLink.innerText = i + 1;
                 paginationElLi.appendChild(paginationElLink);
                 paginationUl.appendChild(paginationElLi);
-                } else {
-                paginationElLi = document.createElement('li');
+            } else {
+                var paginationElLi = document.createElement('li');
                 paginationElLi.className = 'page-item';
                 paginationElLink = document.createElement('a');
                 paginationElLink.className = 'page-link';
-                paginationElLink.href = window.location.pathname + window.location.search.split('&')[0] + "&" + window.location.search.split('&')[1] + "&" + window.location.search.split('&')[2] + '&page=' + i;
+                paginationElLink.href = getLinkForPage(pageParam, i);
                 paginationElLink.innerText = i + 1;
                 paginationElLi.appendChild(paginationElLink);
                 paginationUl.appendChild(paginationElLi);
-                }
-            }
-            if (pageable.pageNumber == (pages - 1)) {
-                paginationPreviousLi = document.createElement('li');
-                paginationPreviousLi.className = 'page-item disabled';
-                previousPageLink = document.createElement('a');
-                previousPageLink.className = 'page-link';
-                previousPageLink.href = "#";
-                previousPageLink.innerText = "Следующая";
-                spanPreviuosAria = document.createElement('span');
-                spanPreviuosAria.setAttribute('aria-hidden', true);
-
-                paginationPreviousLi.appendChild(previousPageLink);
-                previousPageLink.appendChild(spanPreviuosAria);
-                paginationUl.appendChild(paginationPreviousLi);
-            } else {
-                paginationPreviousLi = document.createElement('li');
-                paginationPreviousLi.className = 'page-item';
-                previousPageLink = document.createElement('a');
-                previousPageLink.className = 'page-link';
-                previousPageLink.href = window.location.pathname + window.location.search.split('&')[0] + "&" + window.location.search.split('&')[1] + "&" + window.location.search.split('&')[2] + '&page=' + (pageable.pageNumber + 1);
-                previousPageLink.innerText = "Следущая";
-                spanPreviuosAria = document.createElement('span');
-                spanPreviuosAria.setAttribute('aria-hidden', true);
-
-                paginationPreviousLi.appendChild(previousPageLink);
-                previousPageLink.appendChild(spanPreviuosAria);
-                paginationUl.appendChild(paginationPreviousLi);
             }
         }
-    
-    
+        if (pageable.pageNumber == (pages - 1)) {
+            var paginationNextLi = document.createElement('li');
+            paginationNextLi.className = 'page-item disabled';
+            var paginationNextLink = document.createElement('a');
+            paginationNextLink.className = 'page-link';
+            paginationNextLink.href = "#";
+            paginationNextLink.innerText = "Следующая";
+            var spanNextAria = document.createElement('span');
+            spanNextAria.setAttribute('aria-hidden', true);
+
+            paginationNextLi.appendChild(paginationNextLink);
+            paginationNextLink.appendChild(spanNextAria);
+            paginationUl.appendChild(paginationNextLi);
+        } else {
+            var paginationNextLi = document.createElement('li');
+            paginationNextLi.className = 'page-item';
+            var paginationNextLink = document.createElement('a');
+            paginationNextLink.className = 'page-link';
+            paginationNextLink.href = getLinkForPage(pageParam, pageable.pageNumber + 1);
+            paginationNextLink.innerText = "Следущая";
+            spanNextAria = document.createElement('span');
+            spanNextAria.setAttribute('aria-hidden', true);
+
+            paginationNextLi.appendChild(paginationNextLink);
+            paginationNextLink.appendChild(spanNextAria);
+            paginationUl.appendChild(paginationNextLi);
+        }
+    }
+
+
     btnCol = document.createElement('div');
     btnCol.className = 'col';
-    
+
     btnCancel = document.createElement('input');
     btnCancel.setAttribute('type', 'button');
     btnCancel.className = 'btn';
@@ -366,10 +386,6 @@ $(document).ready(function () {
     btnCancel.addEventListener('click', function () {
         history.back();
     });
-    
-   
-
-
     modalTransfer = document.createElement('div');
     modalTransfer.className = 'modal fade';
     modalTransfer.id = 'modalTransfer';
@@ -377,68 +393,51 @@ $(document).ready(function () {
     modalTransfer.setAttribute('data-bs-keyboard', 'false');
     modalTransfer.setAttribute('tabindex', '-1');
     wrapper.appendChild(modalTransfer);
-
     modalDialogCenteredDiv = document.createElement('div');
     modalDialogCenteredDiv.className = 'modal-dialog modal-dialog-centered';
     modalTransfer.appendChild(modalDialogCenteredDiv);
-
     modalContentDiv = document.createElement('div');
     modalContentDiv.className = 'modal-content';
     modalDialogCenteredDiv.appendChild(modalContentDiv);
-
     modalHeaderDiv = document.createElement('div');
     modalHeaderDiv.className = 'modal-header';
     modalContentDiv.appendChild(modalHeaderDiv);
-
     modalTitleH1 = document.createElement('h1');
     modalTitleH1.className = 'modal-title fs-5';
     modalTitleH1.id = 'modalLocationsLabel';
     modalTitleH1.innerText = 'Перемещение картриджей';
     modalHeaderDiv.appendChild(modalTitleH1);
-
     modalBtnClose = document.createElement('button');
     modalBtnClose.className = 'btn-close';
     modalBtnClose.type = 'button';
     modalBtnClose.setAttribute('data-bs-dismiss', 'modal');
     modalBtnClose.setAttribute('aria-label', 'close');
     modalHeaderDiv.appendChild(modalBtnClose);
-
     modalBodyDiv = document.createElement('div');
     modalBodyDiv.className = 'modal-body';
     modalContentDiv.appendChild(modalBodyDiv);
-
     modalBodyContentInner = document.createElement('div');
     modalBodyContentInner.className = 'modalContentInner';
     modalBodyContentInner.id = 'modalContentInner';
     modalBodyDiv.appendChild(modalBodyContentInner);
-
     contentInnerRow = document.createElement('div');
     contentInnerRow.className = 'row';
-
     modalBodyContentInner.appendChild(contentInnerRow);
-
     labelContentInnerDiv = document.createElement('div');
     labelContentInnerDiv.className = 'col';
     labelContentInnerDiv.innerHTML = 'Выберите расположение';
-
     selectContentInnerDiv = document.createElement('div');
     selectContentInnerDiv.className = 'col';
-
     contentInnerRow.appendChild(labelContentInnerDiv);
     contentInnerRow.appendChild(selectContentInnerDiv);
-
     selectLocation = document.createElement('select');
     selectLocation.className = 'form-select selectLocation';
     selectLocation.id = 'selectLocation';
     selectLocation.name = "selectLocation";
-
     selectContentInnerDiv.appendChild(selectLocation);
-
-
     modalFooterDiv = document.createElement('div');
     modalFooterDiv.className = 'modal-footer';
     modalContentDiv.appendChild(modalFooterDiv);
-
     modalFooterCloseBtn = document.createElement('button');
     modalFooterCloseBtn.className = 'btn btn-secondary';
     modalFooterCloseBtn.type = 'button';
@@ -446,7 +445,6 @@ $(document).ready(function () {
     modalFooterCloseBtn.innerText = 'Отмена';
     modalFooterCloseBtn.id = "modalWindow1BtnClose";
     modalFooterDiv.appendChild(modalFooterCloseBtn);
-
     let modalFooterSubmitBtn = document.createElement('button');
     modalFooterSubmitBtn.className = 'btn btn-secondary';
     modalFooterSubmitBtn.type = 'button';
@@ -454,8 +452,6 @@ $(document).ready(function () {
     modalFooterCloseBtn.setAttribute('data-bs-dismiss', 'modal');
     modalFooterCloseBtn.id = "modalWindow1BtnOk";
     modalFooterDiv.appendChild(modalFooterSubmitBtn);
-
-
 
     $('.selectLocation').selectize({
         preload: true,
@@ -474,7 +470,6 @@ $(document).ready(function () {
 
             });
         }
-
     });
 
     modalFooterSubmitBtn.addEventListener('click', function () {
@@ -497,11 +492,17 @@ $(document).ready(function () {
             error: function (callback) {
             }
         });
-
-
-
     });
 
+    let contractSort = document.querySelector('#contractSort');
+    contractSort.addEventListener('click', function () {sortBy("contr.contract_number")});
+
+
+    let modelSort = document.querySelector('#modelSortLink');
+    modelSort.addEventListener('click', function(){sortBy("model.name")});
+
+    let dateSort = document.querySelector('#dateSortLink');
+    dateSort.addEventListener('click', function () {sortBy("contr.date_start_contract")});
 });
 
 function toggle(source) {
@@ -511,5 +512,64 @@ function toggle(source) {
             checkboxes[i].checked = source.checked;
         }
     }
+};
+
+function getLinkForPage(inputHref, target) {
+    getLink = '';
+    pageInLinFlag = false;
+    for (j = 0; j < inputHref.length; j++) {
+        if (pageParam[j].indexOf('page') >= 0) {
+            pageParam[j] = "page=" + target;
+            pageInLinFlag = true;
+        }
+        if (j == 0) {
+            getLink += "?" + pageParam[j];
+        } else {
+            getLink += "&" + pageParam[j];
+        }
+    }
+    if (pageInLinFlag == false) {
+        getLink += "&page=" + target;
+    }
+    return getLink;
+
 }
-;
+
+function sortBy (link) {
+        let request = false;
+        let directionFlag = false;
+
+        let pagePar = window.location.search
+                .replace('?', '')
+                .split('&');
+
+        for (let i = 0; i < pagePar.length; i++) {
+            if (pageParam[i].indexOf('sortBy=' + link) >= 0) {
+                request = true;
+            }
+            if ((pagePar[i].indexOf('direction')) >= 0) {
+                directionFlag = true;
+                if (direction == "up") {
+                    pagePar[i] = "direction=down";
+                } else {
+                    pagePar[i] = "direction=up";
+                }
+            }
+        }
+        let adress = '';
+        for (let i = 0; i < pagePar.length; i++) {
+            if (i == 0) {
+                adress += "?" + pagePar[i];
+            } else {
+                adress += "&" + pagePar[i];
+            }
+        }
+        if (request == false) {
+            adress += "&sortBy=" + link;
+        }
+        if (directionFlag == false) {
+            adress += "&direction=up";
+        }
+        this.event.target.parentElement.href = window.location.pathname + adress;
+        this.event.target.parentElement.click();
+    };
