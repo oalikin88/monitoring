@@ -166,7 +166,7 @@ window.onload = function () {
                     temp += '&idModel=' + input2sort[i][1][count].idModel;
                 }
                 linkPrinter.setAttribute('href', '/printersbylocation?idLocation=' + JSON.parse(input1sort[inInput1sort][0]).id
-                        + temp);
+                        + '&idModel=' + input2sort[i][1][0].idModel);
                 linkPrinter.innerText = amountPrinters.size;
                 tr.appendChild(tdPrintSuccess);
                 tdPrintSuccess.appendChild(linkPrinter);

@@ -87,4 +87,7 @@ public interface CartridgeRepo extends JpaRepository<Cartridge, Long> {
    + "AND cart.util = FALSE "
    + "AND cart.use_in_printer = FALSE" ,nativeQuery = true)
    Page<Cartridge> findCartridgesByModelPrinterAndLocation(Long idLocation, Long idPrinter, Pageable pageable);
+   
+
+   
 }

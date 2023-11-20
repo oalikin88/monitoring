@@ -38,14 +38,14 @@ $(document).ready(function () {
     if (input.length > 0) {
 
         let btnAfterTitleRow = document.createElement('div');
-        btnAfterTitleRow.className = 'row buttonsRow';
+        btnAfterTitleRow.className = 'row buttonsRow mb-3';
         wrapper.appendChild(btnAfterTitleRow);
 
         btnAfterTitleCol1 = document.createElement('div');
-        btnAfterTitleCol1.className = 'col';
+        btnAfterTitleCol1.className = 'col col-8';
 
         btnAfterTitleCol2 = document.createElement('div');
-        btnAfterTitleCol2.className = 'col';
+        btnAfterTitleCol2.className = 'col col-4';
 
         let choiceBtn = document.createElement('button');
         choiceBtn.className = 'btn btn-secondary';
@@ -59,21 +59,13 @@ $(document).ready(function () {
         let formContainer = document.createElement('form');
         formContainer.setAttribute('th:action', '@{getcartridgesbymodel}');
         formContainer.setAttribute('action', 'getcartridgesbymodel');
-        // formContainer.setAttribute('enctype',  'multipart/form-data');
         formContainer.setAttribute('th:object', '${dto}');
         formContainer.setAttribute('method', 'GET');
         formContainer.id = 'formFilter';
 
         btnAfterTitleCol2.appendChild(formContainer);
 
-        inputgroupRow = document.createElement('div');
-        inputgroupRow.className = 'row';
-
-        inputgroupColInput = document.createElement('div');
-        inputgroupColInput.className = 'col text-end';
-
-        inputgroupColBtn = document.createElement('div');
-        inputgroupColBtn.className = 'col';
+        
 
 
         inputGroupFilterDiv = document.createElement('div');
@@ -112,15 +104,12 @@ $(document).ready(function () {
         inputGroupFilterHideFieldPrinterId.value = arrRequest.idPrinter;
 
 
-        formContainer.append(inputgroupRow);
+        formContainer.append(inputGroupFilterDiv);
         inputGroupFilterDiv.appendChild(inputGroupFilterHideFieldLocation);
         inputGroupFilterDiv.appendChild(inputGroupFilterHideFieldPrinterId);
-        inputgroupRow.appendChild(inputgroupColInput);
-        inputgroupRow.appendChild(inputgroupColBtn);
-        inputgroupColInput.appendChild(inputGroupFilterDiv);
         inputGroupFilterDiv.appendChild(inputGroupFilterLabel);
         inputGroupFilterDiv.appendChild(inputGroupFilterInput);
-        inputgroupColBtn.appendChild(filterSubmit);
+        inputGroupFilterDiv.appendChild(filterSubmit);
 
 
         headTable = document.createElement('div');

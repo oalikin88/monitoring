@@ -105,14 +105,13 @@ public class PrinterOutInfoService {
     }
     
     
-    public Map<LocationDTO, List<PrinterDTO>> showPrintersByModelsAndLocation(List<Long> list, Long location) {
+    public  List<PrinterDTO> showPrintersByModelsAndLocation(List<Long> list, Long location) {
         
         Optional<Location> findLocationById = locationRepo.findById(location);
         LocationDTO locDto = new LocationDTO();
         locDto.setId(findLocationById.get().getId());
         locDto.setName(findLocationById.get().getName());
         List<PrinterDTO> dtoes = new ArrayList<>();
-        Map<LocationDTO, List<PrinterDTO>> map = new HashMap<>();
         for(Long l : list) {
             List<Printer> findPrintersByLocationIdAndModelId = printerRepo.findByLocationIdAndModelId(location, l);
             for(Printer printer : findPrintersByLocationIdAndModelId) {
@@ -129,8 +128,7 @@ public class PrinterOutInfoService {
                 dtoes.add(dto);
             }
         }
-        map.put(locDto, dtoes);
-        return map;
+        return dtoes;
     }
     
 }

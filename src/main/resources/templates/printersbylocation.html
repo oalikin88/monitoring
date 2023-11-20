@@ -17,21 +17,27 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
         <nav th:insert="nav :: navbar"></nav>
         
         
-        <div class="container content inventoriesContent"  id="content">
+        <div class="container-fluid content inventoriesContent"  id="content">
            
+            <div class="wrap" id="wrap"> </div>
             
             
-            
-            
-                <script th:inline="javascript">
-                        
-                        let input = [[${input}]];
-                      
- 
-                    </script>
+            <div class="row buttonsRow" id="buttonsRow"> </div>
+                
             
         
         </div>
+        
+        <script th:inline="javascript">
+                        
+                        let input = [[${input}]];
+                        let locationInfo = [[${locationInfo}]];
+                        let pages = [[${pages}]];
+                        let pageable = [[${pageable}]];
+                        let url =[[${url}]];
+                        let direction = [[${direction}]];
+                    </script>
+        
          <footer th:insert="footer :: footer"></footer>
         <script src="/js/inlocation.js" ></script>
         <script src="/js/bootstrap.bundle.min.js" ></script>

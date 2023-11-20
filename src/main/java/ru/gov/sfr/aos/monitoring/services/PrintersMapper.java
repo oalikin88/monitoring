@@ -272,6 +272,12 @@ public class PrintersMapper {
     }
     
     
+    public List<Printer> getPrintersByModelId(Long id) {
+        
+       return printerRepo.findByModelId(id);
+        
+    }
+    
     public void editPrinterStatus(PrinterStatusDto dto) {
         Optional<Printer> findById = printerRepo.findById(dto.getId());
         if(findById.isPresent()) {
