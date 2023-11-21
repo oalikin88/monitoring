@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import ru.gov.sfr.aos.monitoring.models.CartridgeChoiceDto;
 import ru.gov.sfr.aos.monitoring.models.CartridgeDTO;
 import ru.gov.sfr.aos.monitoring.models.CartridgeModelDTO;
-import ru.gov.sfr.aos.monitoring.models.CartridgesWithFilterByContractNumber;
+import ru.gov.sfr.aos.monitoring.models.DevicesByModelAndLocationDto;
 import ru.gov.sfr.aos.monitoring.models.ConsumptionDTO;
 import ru.gov.sfr.aos.monitoring.models.EmployeeDTO;
 import ru.gov.sfr.aos.monitoring.models.LocationDTO;

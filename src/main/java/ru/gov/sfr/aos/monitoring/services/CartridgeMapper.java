@@ -34,7 +34,7 @@ import ru.gov.sfr.aos.monitoring.exceptions.ObjectAlreadyExists;
 import ru.gov.sfr.aos.monitoring.models.CartridgeChoiceDto;
 import ru.gov.sfr.aos.monitoring.models.CartridgeDTO;
 import ru.gov.sfr.aos.monitoring.models.CartridgeModelDTO;
-import ru.gov.sfr.aos.monitoring.models.CartridgesWithFilterByContractNumber;
+import ru.gov.sfr.aos.monitoring.models.DevicesByModelAndLocationDto;
 import ru.gov.sfr.aos.monitoring.models.ChangeDeviceLocationDTO;
 import ru.gov.sfr.aos.monitoring.models.ChangeLocationForCartridges;
 import ru.gov.sfr.aos.monitoring.models.LocationDTO;
@@ -510,7 +510,7 @@ public class CartridgeMapper {
     }
     
     
-    public  Map<LocationDTO, List<CartridgeDTO>> getCartridgesByFilterContractNumber(CartridgesWithFilterByContractNumber dto) {
+    public  Map<LocationDTO, List<CartridgeDTO>> getCartridgesByFilterContractNumber(DevicesByModelAndLocationDto dto) {
         Optional<Location> findLocationById = locationRepo.findById(dto.getLocation());
         LocationDTO locDto = new LocationDTO(findLocationById.get().getId(), findLocationById.get().getName());
         List<CartridgeDTO> cartDtoesList = new ArrayList<>();
@@ -546,7 +546,7 @@ public class CartridgeMapper {
         return map;
     }
     
-    public  List<CartridgeDTO> getCartridgesByFilterContractNumber2(CartridgesWithFilterByContractNumber dto, PageRequest pageRequest) {
+    public  List<CartridgeDTO> getCartridgesByFilterContractNumber2(DevicesByModelAndLocationDto dto, PageRequest pageRequest) {
         Optional<Location> findLocationById = locationRepo.findById(dto.getLocation());
         LocationDTO locDto = new LocationDTO(findLocationById.get().getId(), findLocationById.get().getName());
         List<CartridgeDTO> cartDtoesList = new ArrayList<>();

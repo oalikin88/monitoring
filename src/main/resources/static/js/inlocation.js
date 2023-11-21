@@ -12,7 +12,11 @@ const pageParam = window.location.search
         .replace('?', '')
         .split('&');
 
-let arrRequest = window.location.search
+let arrRequest = null; 
+
+
+if(document.readyState == 'loading') {
+    arrRequest = window.location.search
         .replace('?', '')
         .split('&')
         .reduce(
@@ -21,7 +25,9 @@ let arrRequest = window.location.search
                     p[ decodeURIComponent(a[0])] = decodeURIComponent(a[1]);
                     return p;
                 },
+                 {}
         );
+}
 
 window.onload = function () {
   
@@ -52,8 +58,8 @@ window.onload = function () {
         
         
         let formContainer = document.createElement('form');
-        formContainer.setAttribute('th:action', '@{getcartridgesbymodel}');
-        formContainer.setAttribute('action', 'getcartridgesbymodel');
+        formContainer.setAttribute('th:action', '@{printersbylocation}');
+        formContainer.setAttribute('action', 'printersbylocation');
         formContainer.setAttribute('th:object', '${dto}');
         formContainer.setAttribute('method', 'GET');
         formContainer.id = 'formFilter';
@@ -428,8 +434,9 @@ function sortBy (link) { //Разобраться почему подставл�
                 .split('&');
 
         for (let i = 0; i < pagePar.length; i++) {
-            if (pageParam[i].indexOf('sortBy=' + link) >= 0) {
+            if (pagePar[i].indexOf('sortBy=') >= 0) {
                 request = true;
+                pagePar[i] = "sortBy=" + link;
             }
             if ((pagePar[i].indexOf('direction')) >= 0) {
                 directionFlag = true;

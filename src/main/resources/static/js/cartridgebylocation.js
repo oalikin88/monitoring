@@ -533,8 +533,9 @@ function sortBy (link) {
                 .split('&');
 
         for (let i = 0; i < pagePar.length; i++) {
-            if (pageParam[i].indexOf('sortBy=' + link) >= 0) {
+            if (pagePar[i].indexOf('sortBy=') >= 0) {
                 request = true;
+                pagePar[i] = "sortBy=" + link;
             }
             if ((pagePar[i].indexOf('direction')) >= 0) {
                 directionFlag = true;

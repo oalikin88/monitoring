@@ -47,7 +47,7 @@ import ru.gov.sfr.aos.monitoring.interfaces.ContractServiceInterface;
 import ru.gov.sfr.aos.monitoring.models.CartridgeDTO;
 import ru.gov.sfr.aos.monitoring.models.CartridgeInstallDTO;
 import ru.gov.sfr.aos.monitoring.models.CartridgeModelDTO;
-import ru.gov.sfr.aos.monitoring.models.CartridgesWithFilterByContractNumber;
+import ru.gov.sfr.aos.monitoring.models.DevicesByModelAndLocationDto;
 import ru.gov.sfr.aos.monitoring.models.ChangePrinterInventaryNumberDTO;
 import ru.gov.sfr.aos.monitoring.models.ChangeDeviceLocationDTO;
 import ru.gov.sfr.aos.monitoring.models.ChangeLocationForCartridges;
@@ -182,7 +182,7 @@ public class MainController {
 
     @GetMapping("/printersbylocation")
     public String getPrintersByLocation(Model model,
-            Long idLocation, Long idModel,
+            @ModelAttribute(name = "dto") DevicesByModelAndLocationDto dto,
             @RequestParam(defaultValue = "0", required = false) Integer page,
             @RequestParam(defaultValue = "25", required = false) Integer pageSize,
             @RequestParam(defaultValue = "printer_id") String sortBy,
@@ -197,28 +197,33 @@ public class MainController {
 
         Pageable paging = PageRequest.of(page, pageSize, JpaSort.unsafe(direct, sortBy));
 
-        LocationDTO locationById = locationService.getLocationById(idLocation);
-        List<Printer> printersList = printerMapper.getPrintersByModelId(idModel);
-
-        Page<Printer> getPage = printerRepo.findPrintersByModelAndLocation(locationById.getId(), printersList.get(0).getModel().getModelCartridges().iterator().next().getId(), paging);
+        LocationDTO locationById = locationService.getLocationById(dto.location);
+        List<Printer> printersList = printerMapper.getPrintersByModelId(dto.idPrinter);
+        Page<Printer> getPage = null;
+        if(null != dto.getContractNumber()) {
+            getPage = printerRepo.findPrintersByModelAndLocationAndContractNumberFilter(locationById.getId(), printersList.get(0).getModel().getId(), dto.getContractNumber(), paging);
+            
+        } else {
+            getPage = printerRepo.findPrintersByModelAndLocation(locationById.getId(), printersList.get(0).getModel().getModelCartridges().iterator().next().getId(), paging);
+        }
+        
         List<Printer> content = getPage.getContent();
 
         List<PrinterDTO> dtoes = new ArrayList<>();
         for (Printer printer : content) {
-            PrinterDTO dto = new PrinterDTO();
-            dto.setId(printer.getId());
-            dto.setModel(printer.getModel().getName());
-            dto.setManufacturer(printer.getManufacturer().getName());
-            dto.setInventaryNumber(printer.getInventoryNumber());
-            dto.setSerialNumber(printer.getSerialNumber());
-            dto.setContractNumber(printer.getContract().getContractNumber());
-            dto.setLocation(printer.getLocation().getName());
-            dto.setStartContract(printer.getContract().getDateStartContract());
-            dto.setEndContract(printer.getContract().getDateStartContract());
-            dtoes.add(dto);
+            PrinterDTO printerDto = new PrinterDTO();
+            printerDto.setId(printer.getId());
+            printerDto.setModel(printer.getModel().getName());
+            printerDto.setManufacturer(printer.getManufacturer().getName());
+            printerDto.setInventaryNumber(printer.getInventoryNumber());
+            printerDto.setSerialNumber(printer.getSerialNumber());
+            printerDto.setContractNumber(printer.getContract().getContractNumber());
+            printerDto.setLocation(printer.getLocation().getName());
+            printerDto.setStartContract(printer.getContract().getDateStartContract());
+            printerDto.setEndContract(printer.getContract().getDateStartContract());
+            dtoes.add(printerDto);
         }
 
-        // List<PrinterDTO> printersByLocation = printerOutInfoService.showPrintersByModelsAndLocation(idModel, idLocation);
         model.addAttribute("input", dtoes);
         model.addAttribute("locationInfo", locationById);
         model.addAttribute("pageable", paging);
@@ -369,7 +374,7 @@ public class MainController {
 
     @GetMapping("/getcartridgesbymodel")
     public String getCartridgesByModelPrinterAndLocation(Model model,
-            @ModelAttribute(name = "dto") CartridgesWithFilterByContractNumber dto,
+            @ModelAttribute(name = "dto") DevicesByModelAndLocationDto dto,
             @RequestParam(defaultValue = "0", required = false) Integer page,
             @RequestParam(defaultValue = "25", required = false) Integer pageSize,
             @RequestParam(defaultValue = "cartridge_id") String sortBy,

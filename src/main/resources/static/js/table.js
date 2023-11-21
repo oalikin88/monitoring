@@ -121,8 +121,8 @@ window.onload = function () {
                             tdPrintSuccess.style.wordBreak = "break-all";
                             linkPrinter = document.createElement('a');
                           
-                            linkPrinter.setAttribute('href', '/printersbylocation?idLocation=' + JSON.parse(input1sort[inInput1sort][0]).id
-                                    + '&idModel=' + input3sort[inInput1sort][1][innerInInput3Sort].idModel);
+                            linkPrinter.setAttribute('href', '/printersbylocation?location=' + JSON.parse(input1sort[inInput1sort][0]).id
+                                    + '&idPrinter=' + input3sort[inInput1sort][1][innerInInput3Sort].idModel);
                             
                             linkPrinter.innerText = input3sort[inInput1sort][1][innerInInput3Sort].amountPrinters;
                             tr.appendChild(tdPrintSuccess);
@@ -163,10 +163,10 @@ window.onload = function () {
                 linkPrinter = document.createElement('a');
                 var temp = "";
                 for (count = 0; count < input2sort[i][1].length; count++) {
-                    temp += '&idModel=' + input2sort[i][1][count].idModel;
+                    temp += '&idPrinter=' + input2sort[i][1][count].idModel;
                 }
-                linkPrinter.setAttribute('href', '/printersbylocation?idLocation=' + JSON.parse(input1sort[inInput1sort][0]).id
-                        + '&idModel=' + input2sort[i][1][0].idModel);
+                linkPrinter.setAttribute('href', '/printersbylocation?location=' + JSON.parse(input1sort[inInput1sort][0]).id
+                        + '&idPrinter=' + input2sort[i][1][0].idModel);
                 linkPrinter.innerText = amountPrinters.size;
                 tr.appendChild(tdPrintSuccess);
                 tdPrintSuccess.appendChild(linkPrinter);
