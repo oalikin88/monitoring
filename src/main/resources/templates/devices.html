@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<!--
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this template
+-->
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <link rel="icon" type="image/x-icon" href="/img/favicon.ico">
+        <title th:text="'Поиск по локации ' + ${locationInfo.name}"></title>
+        <script src="/js/jquery-3.6.4.min.js"></script>
+         <script src="/js/selectize.js"></script>
+         <link href="/css/selectize.bootstrap5.css" rel="stylesheet">
+        
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link href="/css/bootstrap.min.css" rel="stylesheet">
+        <link href="/css/style.css" rel="stylesheet">
+
+    </head>
+    <body>
+        <nav th:insert="nav :: navbar"></nav>
+
+        <div class="container" id="content">
+
+                <div class="wrap" id="wrap"> </div>
+
+                 <div class="row buttonsRow" id="buttonsRow"> </div>
+                
+        </div>
+
+        
+
+        <script th:inline="javascript">
+            let input = [[${input}]];
+            let locationInfo = [[${locationInfo}]];
+            let pages = [[${pages}]];
+            let pageable = [[${pageable}]];
+            let url =[[${url}]];
+            let direction = [[${direction}]];
+        </script>
+        
+        <div th:if="${#httpServletRequest.servletPath.contains('printer')} ">
+                       <script src="/js/inlocation.js"> </script>
+             </div>
+        
+        <div th:if="${#httpServletRequest.servletPath.contains('cartridge')} ">
+            <script src="/js/cartridgebylocation.js"> </script>
+             </div>
+        
+        <footer th:insert="footer :: footer"></footer>
+        <script src="/js/bootstrap.bundle.min.js" ></script>
+        
+       
+        
+    
+            
+            
+        
+    </body>
+</html>
+
+
+
+

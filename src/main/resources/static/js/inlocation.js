@@ -58,8 +58,8 @@ window.onload = function () {
         
         
         let formContainer = document.createElement('form');
-        formContainer.setAttribute('th:action', '@{printersbylocation}');
-        formContainer.setAttribute('action', 'printersbylocation');
+        formContainer.setAttribute('th:action', '@{' + window.location.pathname + '}');
+        formContainer.setAttribute('action', window.location.pathname);
         formContainer.setAttribute('th:object', '${dto}');
         formContainer.setAttribute('method', 'GET');
         formContainer.id = 'formFilter';
@@ -99,10 +99,10 @@ window.onload = function () {
 
         inputGroupFilterHideFieldPrinterId = document.createElement('input');
         inputGroupFilterHideFieldPrinterId.className = 'form-control';
-        inputGroupFilterHideFieldPrinterId.setAttribute('th:field', '*{idPrinter}');
-        inputGroupFilterHideFieldPrinterId.name = 'idPrinter';
+        inputGroupFilterHideFieldPrinterId.setAttribute('th:field', '*{idModel}');
+        inputGroupFilterHideFieldPrinterId.name = 'idModel';
         inputGroupFilterHideFieldPrinterId.type = 'hidden';
-        inputGroupFilterHideFieldPrinterId.value = arrRequest.idPrinter;
+        inputGroupFilterHideFieldPrinterId.value = arrRequest.idModel;
 
 
         formContainer.append(inputGroupFilterDiv);
@@ -131,7 +131,7 @@ window.onload = function () {
         linkSortingModel.href = '#';
         linkSortingModel.id = 'modelSortLink';
         imgInnerModel = document.createElement('img');
-        imgInnerModel.src = './img/sorting.png';
+        imgInnerModel.src = '/img/sorting.png';
         imgInnerModel.alt = 'Сортировка';
         imgInnerModel.className = 'imgSorting';
         imgInnerModel.id = 'modelSort';
@@ -150,7 +150,7 @@ window.onload = function () {
         linkSortInventaryNumber.href = '#';
         linkSortInventaryNumber.id = 'inventarySortLink';
         imgInnerSortInventaryNumber = document.createElement('img');
-        imgInnerSortInventaryNumber.src = './img/sorting.png';
+        imgInnerSortInventaryNumber.src = '/img/sorting.png';
         imgInnerSortInventaryNumber.alt = 'Сортировка';
         imgInnerSortInventaryNumber.className = 'imgSorting';
         imgInnerSortInventaryNumber.id = 'inventarySort';
@@ -171,7 +171,7 @@ window.onload = function () {
         linkSortSerialNumber.href = '#';
         linkSortSerialNumber.id = 'serialSortLink';
         imgInnerSortSerialNumber = document.createElement('img');
-        imgInnerSortSerialNumber.src = './img/sorting.png';
+        imgInnerSortSerialNumber.src = '/img/sorting.png';
         imgInnerSortSerialNumber.alt = 'Сортировка';
         imgInnerSortSerialNumber.className = 'imgSorting';
         imgInnerSortSerialNumber.id = 'serialSort';
@@ -191,7 +191,7 @@ window.onload = function () {
         linkSortContractNumber.href = '#';
         linkSortContractNumber.id = 'contractNumberSortLink';
         imgInnerSortContractNumber = document.createElement('img');
-        imgInnerSortContractNumber.src = './img/sorting.png';
+        imgInnerSortContractNumber.src = '/img/sorting.png';
         imgInnerSortContractNumber.alt = 'Сортировка';
         imgInnerSortContractNumber.className = 'imgSorting';
         imgInnerSortContractNumber.id = 'contractNumberSort';
@@ -211,7 +211,7 @@ window.onload = function () {
         linkSortDate.href = '#';
         linkSortDate.id = 'dateSortLink';
         imgInnerSortDate = document.createElement('img');
-        imgInnerSortDate.src = './img/sorting.png';
+        imgInnerSortDate.src = '/img/sorting.png';
         imgInnerSortDate.alt = 'Сортировка';
         imgInnerSortDate.className = 'imgSorting';
         imgInnerSortDate.id = 'dateSort';
@@ -387,19 +387,53 @@ window.onload = function () {
     });
     
     let modelSort = document.querySelector('#modelSortLink');
-    modelSort.addEventListener('click', function(){sortBy("model.name")});
+    modelSort.addEventListener('click', function(){
+        
+        if(window.location.pathname.indexOf('inventories') > 0) {
+          sortBy("model");
+      } else {
+          sortBy("model.name");
+      }
+        
+      });
     
     let dateSort = document.querySelector('#dateSortLink');
-    dateSort.addEventListener('click', function () {sortBy("contr.date_start_contract")});
+    dateSort.addEventListener('click', function () {
+        
+         if(window.location.pathname.indexOf('inventories') > 0) {
+          sortBy("contract.dateStartContract");
+      } else {
+          sortBy("contr.date_start_contract");
+      }
+  });
     
     let contractSort = document.querySelector('#contractNumberSortLink');
-    contractSort.addEventListener('click', function () {sortBy("contr.contract_number")});
+    contractSort.addEventListener('click', function () {
+        if(window.location.pathname.indexOf('inventories') > 0) {
+          sortBy("contract.contractNumber");
+      } else {
+          sortBy("contr.contract_number");
+      }
+    });
     
     let inventaryNumberSort = document.querySelector('#inventarySortLink');
-    inventaryNumberSort.addEventListener('click', function() {sortBy("inventory_number")});
+    inventaryNumberSort.addEventListener('click', function() {
+          if(window.location.pathname.indexOf('inventories') > 0) {
+          sortBy("inventoryNumber");
+      } else {
+          sortBy("inventory_number");
+      }
+       
+    });
     
     let serialNumberSort = document.querySelector('#serialSortLink');
-    serialNumberSort.addEventListener('click', function() {sortBy("serial_number")});
+    serialNumberSort.addEventListener('click', function() {
+        if(window.location.pathname.indexOf('inventories') > 0) {
+          sortBy("serialNumber");
+      } else {
+          sortBy("serial_number");
+      }
+    });
 };
 
 

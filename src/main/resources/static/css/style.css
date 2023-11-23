@@ -17,6 +17,8 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/CascadeStyleSheet.css to ed
   --text-color: #312e81;
   --status-btn-bg: #f8fafc;
   --status-btn-bg-hover: #f1f5f9;
+  --primary-background-color: rgb(10,56,215);
+  --primary-background-gradient: linear-gradient(90deg, rgba(10,56,215,0.8) 0%, rgba(233,9,25,0.8) 100%);
 }
 
 
@@ -26,18 +28,50 @@ body, html {
     overflow: auto;
     
 }
+tbody > th:nth-child(2), td:nth-child(2)
+{
+  position:sticky;
+  left:0px;
+  z-index: 1;
+  background-color: lightgrey;
 
-.container {
+}
+thead {
+    position:sticky;
+    top:0;
+    z-index: 2;
+    background-color: lightgrey;
+}
+tbody {
+    overflow-y: scroll;
+    height: 500px;
+}
+
+
+
+#tableContainer {
+    max-height: 750px;
+}
+
+
+#content {
     width: 100%;
-    min-height: 500px;
-     margin-bottom: 65px;
+    min-height: 70%;
+    margin-bottom: 65px;
     margin-top: 60px;
-    margin-bottom: 300px;
     padding-left: 25px;
     padding-right: 25px;
     background: #f8f9fa;
     border-radius: 10px;
     box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
+    padding-top: 30px;
+    padding-bottom: 30px;
+     
+
+}
+
+#buttons {
+    margin-top: 10%;
 }
 
 .imgSorting {
@@ -54,30 +88,17 @@ body, html {
     display:none;
 }
 
-.content{
+#content .form-outer {
     width: 100%;
-    margin-top: 60px;
-    margin-bottom: 65px;
-    padding-left: 25px;
-    padding-right: 25px;
-    padding-bottom: 25px;
-    padding-top: 25px;
-    background: #f8f9fa;
-    border-radius: 10px;
-    box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
+    overflow: hidden;
 }
 
-.container header {
+#content header {
     padding-top: 15px;
     padding-bottom: 10px;
     margin-top: 15px;
     box-shadow: rgba(0, 0, 0, 0.15) 0px 1.95px 0px;
     font-weight: bolder;
-}
-
-.container .form-outer {
-    width: 100%;
-    overflow: hidden;
 }
 
 p {
@@ -118,7 +139,7 @@ h1 {
 }
 
 footer {
-    
+    height:10%;
     background-color: #292929;
 }
 
@@ -167,24 +188,6 @@ nav span {
     border: 1px solid rgb(198,198,198);
 }
 
-/*.btn:hover {
-
-    color: rgb(24,24,24);
-    border: 1px solid rgb(198,198,198);
-    background: #f7f7f7 linear-gradient(#f7f7f7, #f1f1f1);
-    box-shadow: 0 1px 2px rgba(0,0,0,.1);
-
-}*/
-
-/*.btn:active {
-
-    color: rgb(51,51,51);
-    border: 1px solid rgb(204,204,204);
-    background: rgb(238,238,238) linear-gradient(rgb(238,238,238), rgb(224,224,224));
-    box-shadow: 0 1px 2px rgba(0,0,0,.1) inset;
-
-}*/
-
 .btn[disabled] {
     opacity: .5;
     pointer-events: none;
@@ -210,8 +213,6 @@ nav span {
 
 }
 
-
-
 .tab-status {
   display: flex;
   align-items: center;
@@ -234,7 +235,7 @@ nav span {
 }
 
 .tab-status span.active {
-  background-color: var(--color-2);
+  background: var(--primary-background-gradient);
   color: white;
 }
 
@@ -285,11 +286,6 @@ nav span {
    margin-bottom: 3rem;
 
 }
-
-
-
-   
-
 
 .titleLocation {
     margin-bottom: 3rem;

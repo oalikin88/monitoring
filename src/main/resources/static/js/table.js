@@ -9,7 +9,7 @@ window.onload = function () {
     input2sort = Object.entries(input2).sort();
     input1sort = Object.entries(input).sort();
     input3sort = Object.entries(input3).sort();
-    let parent = document.getElementsByClassName('inventoriesContent')[0];
+    let parent = document.querySelector('#tabContent');
 
     let tableContainer = document.getElementById('tableContainer');
 
@@ -17,9 +17,9 @@ window.onload = function () {
         // Вывод таблицы
         let table = document.createElement('table');
         table.id = "table";
-        table.className = "table align-middle table-hover table-striped table-bordered";
+        table.className = "table align-middle table-hover table-scroll table-striped table-bordered";
         let thead = document.createElement('thead');
-        thead.className = "text-center ";
+        thead.className = "text-center fixedThead";
         let trThead = document.createElement('tr');
         let thThead1 = document.createElement('th');
         thThead1.setAttribute('scope', 'col');
@@ -66,6 +66,7 @@ window.onload = function () {
             for (let j = 0; j < input2sort.length; j++) {
                 let th = document.createElement('th');
                 th.setAttribute('scope', 'col');
+                th.className = 'tHeader';
                 th.setAttribute('colspan', '2');
                 th.id = "idModel_" + input2sort[j][1][0].idModel;
                 th.innerText = input2sort[j][0];
@@ -79,8 +80,10 @@ window.onload = function () {
 
                 for (let j = 0; j < input2sort.length; j++) {
                     thTheadCount = document.createElement('th');
+                    thTheadCount.className = 'tHeader';
                     thTheadCount.innerText = "Количество \n принтеров";
                     thTheadCount2 = document.createElement('th');
+                    thTheadCount2.className = 'tHeader';
                     thTheadCount2.innerText = "Количество \n картриджей";
                     subtrThead.appendChild(thTheadCount);
                     subtrThead.appendChild(thTheadCount2);
@@ -102,7 +105,10 @@ window.onload = function () {
             tdLocation = document.createElement('td');
             tdLocation.setAttribute('id', JSON.parse(input1sort[inInput1sort][0]).id);
             tdLocation.className = 'location text-wrap';
-            tdLocation.innerText = JSON.parse(input1sort[inInput1sort][0]).name;
+            let locLink = document.createElement('a');
+            locLink.href = "/inventories/" + JSON.parse(input1sort[inInput1sort][0]).id;
+            locLink.innerText = JSON.parse(input1sort[inInput1sort][0]).name;
+            tdLocation.appendChild(locLink);
             tr.appendChild(tdLocation);
 
 
@@ -122,7 +128,7 @@ window.onload = function () {
                             linkPrinter = document.createElement('a');
                           
                             linkPrinter.setAttribute('href', '/printersbylocation?location=' + JSON.parse(input1sort[inInput1sort][0]).id
-                                    + '&idPrinter=' + input3sort[inInput1sort][1][innerInInput3Sort].idModel);
+                                    + '&idModel=' + input3sort[inInput1sort][1][innerInInput3Sort].idModel);
                             
                             linkPrinter.innerText = input3sort[inInput1sort][1][innerInInput3Sort].amountPrinters;
                             tr.appendChild(tdPrintSuccess);
@@ -163,10 +169,10 @@ window.onload = function () {
                 linkPrinter = document.createElement('a');
                 var temp = "";
                 for (count = 0; count < input2sort[i][1].length; count++) {
-                    temp += '&idPrinter=' + input2sort[i][1][count].idModel;
+                    temp += '&idModel=' + input2sort[i][1][count].idModel;
                 }
                 linkPrinter.setAttribute('href', '/printersbylocation?location=' + JSON.parse(input1sort[inInput1sort][0]).id
-                        + '&idPrinter=' + input2sort[i][1][0].idModel);
+                        + '&idModel=' + input2sort[i][1][0].idModel);
                 linkPrinter.innerText = amountPrinters.size;
                 tr.appendChild(tdPrintSuccess);
                 tdPrintSuccess.appendChild(linkPrinter);
@@ -176,7 +182,7 @@ window.onload = function () {
                 tdCart.setAttribute('class', 'cart');
                 tdCart.style.wordBreak = "break-all";
                 link = document.createElement('a');
-                link.setAttribute('href', '/getcartridgesbymodel?idPrinter=' + input2sort[i][1][0].idModel
+                link.setAttribute('href', '/getcartridgesbymodel?idModel=' + input2sort[i][1][0].idModel
                         + '&location=' + JSON.parse(input1sort[inInput1sort][0]).id);
                 link.innerText = amountCartridge.size;
                 tr.appendChild(tdCart);
@@ -202,125 +208,7 @@ window.onload = function () {
     }
 
 
-    // Блок строки с кнопками
-
-    buttonsDivRow = document.createElement('div');
-    buttonsDivRow.className = 'row rowButtons';
-
-    btnBackDiv = document.createElement('div');
-    btnBackDiv.className = 'col';
-
-    btnCancel = document.createElement('input');
-    btnCancel.setAttribute('type', 'button');
-    btnCancel.className = 'btn';
-    btnCancel.value = "Назад";
-    parent.appendChild(buttonsDivRow);
-    buttonsDivRow.appendChild(btnBackDiv);
-
-    btnBackDiv.appendChild(btnCancel);
-
-    btnCancel.addEventListener('click', function () {
-        history.back();
-    });
-
-
-
-
-    //Блок  с кнопокой локации
-    btnAddLocationDiv = document.createElement('div');
-    btnAddLocationDiv.className = 'col text-end';
-    buttonsDivRow.appendChild(btnAddLocationDiv);
-    btnAddLocation = document.createElement('input');
-    btnAddLocation.className = 'btn';
-    btnAddLocation.setAttribute('type', 'button');
-    btnAddLocation.value = 'локации';
-    btnAddLocation.setAttribute('data-bs-toggle', 'modal');
-    btnAddLocation.setAttribute('data-bs-target', '#modalLocations');
-    btnAddLocationDiv.appendChild(btnAddLocation);
-
-    // Блок с кнопкой модели принтеров
-    btnAddModelPrinterDiv = document.createElement('div');
-    btnAddModelPrinterDiv.className = 'col text-end';
-    buttonsDivRow.appendChild(btnAddModelPrinterDiv);
-    btnAddModelPrinter = document.createElement('input');
-    btnAddModelPrinter.className = 'btn';
-    btnAddModelPrinter.id = 'modelsPrinters';
-    btnAddModelPrinter.setAttribute('type', 'button');
-    btnAddModelPrinter.value = 'модели принтеров';
-    btnAddModelPrinter.setAttribute('data-bs-toggle', 'modal');
-    btnAddModelPrinter.setAttribute('data-bs-target', '#modalModelsPrinter');
-    btnAddModelPrinterDiv.appendChild(btnAddModelPrinter);
-
-    // Блок с кнопкой модели картриджей
-    btnAddModelCartridgeDiv = document.createElement('div');
-    btnAddModelCartridgeDiv.className = 'col text-end';
-    buttonsDivRow.appendChild(btnAddModelCartridgeDiv);
-    btnAddModelCartridge = document.createElement('input');
-    btnAddModelCartridge.className = 'btn';
-    btnAddModelCartridge.setAttribute('type', 'button');
-    btnAddModelCartridge.setAttribute('data-bs-toggle', 'modal');
-    btnAddModelCartridge.setAttribute('data-bs-target', '#modalModelsCartridge');
-    btnAddModelCartridge.value = 'модели картриджей';
-    btnAddModelCartridgeDiv.appendChild(btnAddModelCartridge);
-
-    btnPlaningDiv = document.createElement('div');
-    btnPlaningDiv.className = 'col text-end';
-    buttonsDivRow.appendChild(btnPlaningDiv);
-    btnPlaning = document.createElement('input');
-    btnPlaning.className = 'btn';
-    btnPlaning.setAttribute('type', 'button');
-    btnPlaning.value = 'планирование закупок';
-    btnPlaning.id = 'activateModalPlaningBuy';
-    btnPlaning.setAttribute('data-bs-toggle', 'modal');
-    btnPlaning.setAttribute('data-bs-target', '#modalPlaning');
-    btnPlaningDiv.appendChild(btnPlaning);
-
-    btnAddLocation.addEventListener('click', function () {
-
-        if ($('#tableModal').length == 0) {
-            table = document.createElement('table');
-            table.id = "tableModal";
-            table.className = "table table-striped table-bordered";
-            modalBodyContentInner.appendChild(table);
-
-            thead = document.createElement('thead');
-            table.appendChild(thead);
-            trThead = document.createElement('tr');
-            thThead1 = document.createElement('th');
-
-            thThead1.setAttribute('scope', 'col');
-            thThead1.innerText = '#';
-            thThead2 = document.createElement('th');
-            thThead2.setAttribute('scope', 'col');
-            thThead2.innerText = 'Локация';
-            thead.appendChild(trThead);
-            trThead.appendChild(thThead1);
-            trThead.appendChild(thThead2);
-            tbody = document.createElement('tbody');
-            table.appendChild(tbody);
-
-            $.ajax({
-                url: '/locations',
-                type: 'GET',
-                dataType: 'json',
-                success: function (data) {
-                    arr = data.sort();
-                    for (i = 0; i < arr.length; i++) {
-                        tr = document.createElement('tr');
-                        tbody.appendChild(tr);
-                        tdCount = document.createElement('td');
-                        tdCount.innerText = i + 1;
-                        tr.appendChild(tdCount);
-                        tdLocation = document.createElement('td');
-                        tdLocation.setAttribute('id', arr[i].id);
-                        tdLocation.setAttribute('class', 'location');
-                        tdLocation.innerText = arr[i].name;
-                        tr.appendChild(tdLocation);
-                    }
-                }
-            });
-        }
-    });
+  
 
 
     // Модальное окно с редактированием локаций
@@ -606,54 +494,7 @@ window.onload = function () {
     modalModelsPrinterFooterCloseBtn.id = "modalMOdelsPrinterWindow1BtnClose";
     modalModelsPrinterFooterDiv.appendChild(modalModelsPrinterFooterCloseBtn);
 
-    btnAddModelPrinter.addEventListener('click', function () {
-
-
-        if ($('#modalTableModelsPrinter').length == 0) {
-
-            tableModelsPrinter = document.createElement('table');
-            tableModelsPrinter.id = "modalTableModelsPrinter";
-            tableModelsPrinter.className = "table table-striped table-bordered";
-            modalModelsPrinterBodyContentInner.appendChild(tableModelsPrinter);
-
-            theadModelsPrinter = document.createElement('thead');
-            tableModelsPrinter.appendChild(theadModelsPrinter);
-            trTheadModelsPrinter = document.createElement('tr');
-            thTheadModelsPrinter1 = document.createElement('th');
-
-            thTheadModelsPrinter1.setAttribute('scope', 'col');
-            thTheadModelsPrinter1.innerText = '#';
-            thTheadModelsPrinter2 = document.createElement('th');
-            thTheadModelsPrinter2.setAttribute('scope', 'col');
-            thTheadModelsPrinter2.innerText = 'Модель принтера';
-            theadModelsPrinter.appendChild(trTheadModelsPrinter);
-            trTheadModelsPrinter.appendChild(thTheadModelsPrinter1);
-            trTheadModelsPrinter.appendChild(thTheadModelsPrinter2);
-            tbodyModelPrinter = document.createElement('tbody');
-            tableModelsPrinter.appendChild(tbodyModelPrinter);
-
-            $.ajax({
-                url: '/models',
-                type: 'GET',
-                dataType: 'json',
-                success: function (data) {
-                    arr = data.sort();
-                    for (i = 0; i < arr.length; i++) {
-                        trModelsPrinter = document.createElement('tr');
-                        tbodyModelPrinter.appendChild(trModelsPrinter);
-                        tdCountModelsPrinter = document.createElement('td');
-                        tdCountModelsPrinter.innerText = i + 1;
-                        trModelsPrinter.appendChild(tdCountModelsPrinter);
-                        tdModel = document.createElement('td');
-                        tdModel.setAttribute('id', arr[i].idModel);
-                        tdModel.setAttribute('class', 'model');
-                        tdModel.innerText = arr[i].manufacturer + " " + arr[i].model;
-                        trModelsPrinter.appendChild(tdModel);
-                    }
-                }
-            });
-
-        }
+    
 
         // Модальное окно с добавлением моделей принтеров
 
@@ -781,7 +622,7 @@ window.onload = function () {
         modalModelsPrinterFooterOKBtn2.innerText = 'Добавить';
         modalModelsPrinterFooterDiv2.appendChild(modalModelsPrinterFooterOKBtn2);
 
-    });
+
 
     modalModelsPrinterBtnAdd.addEventListener('click', function () {
         let manufacturerChoice;
@@ -1039,52 +880,7 @@ window.onload = function () {
     modalModelsCartridgeFooterCloseBtn.id = "modalModelsCartridgeWindow1BtnClose";
     modalModelsCartridgeFooterDiv.appendChild(modalModelsCartridgeFooterCloseBtn);
 
-    btnAddModelCartridge.addEventListener('click', function () {
-        if ($('#modalTableModelsCartridge').length == 0) {
-
-            tableModelsCartridge = document.createElement('table');
-            tableModelsCartridge.id = "modalTableModelsCartridge";
-            tableModelsCartridge.className = "table table-striped table-bordered";
-            modalModelsCartridgeBodyContentInner.appendChild(tableModelsCartridge);
-
-            theadModelsCartridge = document.createElement('thead');
-            tableModelsCartridge.appendChild(theadModelsCartridge);
-            trTheadModelsCartridge = document.createElement('tr');
-            thTheadModelsCartridge1 = document.createElement('th');
-
-            thTheadModelsCartridge1.setAttribute('scope', 'col');
-            thTheadModelsCartridge1.innerText = '#';
-            thTheadModelsCartridge2 = document.createElement('th');
-            thTheadModelsCartridge2.setAttribute('scope', 'col');
-            thTheadModelsCartridge2.innerText = 'Модель картриджа';
-            theadModelsCartridge.appendChild(trTheadModelsCartridge);
-            trTheadModelsCartridge.appendChild(thTheadModelsCartridge1);
-            trTheadModelsCartridge.appendChild(thTheadModelsCartridge2);
-            tbodyModelCartridge = document.createElement('tbody');
-            tableModelsCartridge.appendChild(tbodyModelCartridge);
-
-            $.ajax({
-                url: '/cartridge',
-                type: 'GET',
-                dataType: 'json',
-                success: function (data) {
-                    arr = data.sort();
-                    for (i = 0; i < arr.length; i++) {
-                        trModelsCartridge = document.createElement('tr');
-                        tbodyModelCartridge.appendChild(trModelsCartridge);
-                        tdCountModelsCartridge = document.createElement('td');
-                        tdCountModelsCartridge.innerText = i + 1;
-                        trModelsCartridge.appendChild(tdCountModelsCartridge);
-                        tdModelCartridge = document.createElement('td');
-                        tdModelCartridge.setAttribute('id', arr[i].id);
-                        tdModelCartridge.setAttribute('class', 'model');
-                        tdModelCartridge.innerText = arr[i].model;
-                        trModelsCartridge.appendChild(tdModelCartridge);
-                    }
-                }
-            });
-
-        }
+   
 
         // Модальное окно с добавлением моделей принтеров
 
@@ -1376,7 +1172,7 @@ window.onload = function () {
         });
 
 
-    });
+
 
 
 
@@ -1500,24 +1296,7 @@ window.onload = function () {
      divModalFooterPlaningBuy.appendChild(btnFooterClosePlaningBuy);
      
  
-     
-//     $('#selectLocationForPlaning').selectize({
-//         preload: 'focus',
-//         placeholder: "Выберите локацию",
-//         valueField: 'id',
-//                  labelField: 'name',
-//                  searchField: "name",
-//                  load: function (query, callback) {
-//                    $.ajax({
-//                        url: '/locations',
-//                        type: 'GET',
-//                        dataType: 'json',
-//                        data: {model:query},
-//                        error: callback,
-//                        success: callback
-//                         });
-//                     }
-//     });
+    
      
      
      btnApplyPlaning.addEventListener('click', function() {
@@ -1592,5 +1371,147 @@ window.onload = function () {
             modalContent.appendChild(modalFooter);
             modalFooter.appendChild(footerBtnClose);
     
+          let addModelCartridgeMenu = document.querySelector('#addModelCartridgeMenu');
+          addModelCartridgeMenu.addEventListener('click', function() {
+              tableModelsCartridge = document.createElement('table');
+            tableModelsCartridge.id = "modalTableModelsCartridge";
+            tableModelsCartridge.className = "table table-striped table-bordered";
+            modalModelsCartridgeBodyContentInner.appendChild(tableModelsCartridge);
+
+            theadModelsCartridge = document.createElement('thead');
+            tableModelsCartridge.appendChild(theadModelsCartridge);
+            trTheadModelsCartridge = document.createElement('tr');
+            thTheadModelsCartridge1 = document.createElement('th');
+
+            thTheadModelsCartridge1.setAttribute('scope', 'col');
+            thTheadModelsCartridge1.innerText = '#';
+            thTheadModelsCartridge2 = document.createElement('th');
+            thTheadModelsCartridge2.setAttribute('scope', 'col');
+            thTheadModelsCartridge2.innerText = 'Модель картриджа';
+            theadModelsCartridge.appendChild(trTheadModelsCartridge);
+            trTheadModelsCartridge.appendChild(thTheadModelsCartridge1);
+            trTheadModelsCartridge.appendChild(thTheadModelsCartridge2);
+            tbodyModelCartridge = document.createElement('tbody');
+            tableModelsCartridge.appendChild(tbodyModelCartridge);
+
+            $.ajax({
+                url: '/cartridge',
+                type: 'GET',
+                dataType: 'json',
+                success: function (data) {
+                    arr = data.sort();
+                    for (i = 0; i < arr.length; i++) {
+                        trModelsCartridge = document.createElement('tr');
+                        tbodyModelCartridge.appendChild(trModelsCartridge);
+                        tdCountModelsCartridge = document.createElement('td');
+                        tdCountModelsCartridge.innerText = i + 1;
+                        trModelsCartridge.appendChild(tdCountModelsCartridge);
+                        tdModelCartridge = document.createElement('td');
+                        tdModelCartridge.setAttribute('id', arr[i].id);
+                        tdModelCartridge.setAttribute('class', 'model');
+                        tdModelCartridge.innerText = arr[i].model;
+                        trModelsCartridge.appendChild(tdModelCartridge);
+                    }
+                }
+            });
+          });
+    
+          
+          let addModelPrinterMenu = document.querySelector('#addModelPrinterMenu');
+          addModelPrinterMenu.addEventListener('click', function() {
+              tableModelsPrinter = document.createElement('table');
+            tableModelsPrinter.id = "modalTableModelsPrinter";
+            tableModelsPrinter.className = "table table-striped table-bordered";
+            modalModelsPrinterBodyContentInner.appendChild(tableModelsPrinter);
+
+            theadModelsPrinter = document.createElement('thead');
+            tableModelsPrinter.appendChild(theadModelsPrinter);
+            trTheadModelsPrinter = document.createElement('tr');
+            thTheadModelsPrinter1 = document.createElement('th');
+
+            thTheadModelsPrinter1.setAttribute('scope', 'col');
+            thTheadModelsPrinter1.innerText = '#';
+            thTheadModelsPrinter2 = document.createElement('th');
+            thTheadModelsPrinter2.setAttribute('scope', 'col');
+            thTheadModelsPrinter2.innerText = 'Модель принтера';
+            theadModelsPrinter.appendChild(trTheadModelsPrinter);
+            trTheadModelsPrinter.appendChild(thTheadModelsPrinter1);
+            trTheadModelsPrinter.appendChild(thTheadModelsPrinter2);
+            tbodyModelPrinter = document.createElement('tbody');
+            tableModelsPrinter.appendChild(tbodyModelPrinter);
+
+            $.ajax({
+                url: '/models',
+                type: 'GET',
+                dataType: 'json',
+                success: function (data) {
+                    arr = data.sort();
+                    for (i = 0; i < arr.length; i++) {
+                        trModelsPrinter = document.createElement('tr');
+                        tbodyModelPrinter.appendChild(trModelsPrinter);
+                        tdCountModelsPrinter = document.createElement('td');
+                        tdCountModelsPrinter.innerText = i + 1;
+                        trModelsPrinter.appendChild(tdCountModelsPrinter);
+                        tdModel = document.createElement('td');
+                        tdModel.setAttribute('id', arr[i].idModel);
+                        tdModel.setAttribute('class', 'model');
+                        tdModel.innerText = arr[i].manufacturer + " " + arr[i].model;
+                        trModelsPrinter.appendChild(tdModel);
+                    }
+                }
+            });
+          });
+
+
+          let addLocationMenu = document.querySelector('#addLocationMenu');
+          addLocationMenu.addEventListener('click', function() {
+              if ($('#tableModal').length == 0) {
+            table = document.createElement('table');
+            table.id = "tableModal";
+            table.className = "table table-striped table-bordered";
+            modalBodyContentInner.appendChild(table);
+
+            thead = document.createElement('thead');
+            table.appendChild(thead);
+            trThead = document.createElement('tr');
+            thThead1 = document.createElement('th');
+
+            thThead1.setAttribute('scope', 'col');
+            thThead1.innerText = '#';
+            thThead2 = document.createElement('th');
+            thThead2.setAttribute('scope', 'col');
+            thThead2.innerText = 'Локация';
+            thead.appendChild(trThead);
+            trThead.appendChild(thThead1);
+            trThead.appendChild(thThead2);
+            tbody = document.createElement('tbody');
+            table.appendChild(tbody);
+
+            $.ajax({
+                url: '/locations',
+                type: 'GET',
+                dataType: 'json',
+                success: function (data) {
+                    arr = data.sort();
+                    for (i = 0; i < arr.length; i++) {
+                        tr = document.createElement('tr');
+                        tbody.appendChild(tr);
+                        tdCount = document.createElement('td');
+                        tdCount.innerText = i + 1;
+                        tr.appendChild(tdCount);
+                        tdLocation = document.createElement('td');
+                        tdLocation.setAttribute('id', arr[i].id);
+                        tdLocation.setAttribute('class', 'location');
+                        tdLocation.innerText = arr[i].name;
+                        tr.appendChild(tdLocation);
+                    }
+                }
+            });
+        }
+          });
+
+
+
 
 };
+

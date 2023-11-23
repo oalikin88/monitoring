@@ -12,7 +12,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                     <div class="d-inline-block float-left">
                         <div class="logo d-flex align-items-center pl-sm-3 pl-md-4">
                             <a class="navbar-brand" href="/main">
-                                <img id="logo" src="../img/logo.svg" alt="логотип СФР">
+                                <img id="logo" src="/img/logo.svg" alt="логотип СФР">
                                 <span>
                                     Социальный фонд России
                                 </span>
@@ -34,7 +34,17 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                         <li class="nav-item">
                             <a class="nav-link" href="/help">Помощь</a>
                         </li>
-                        
+                        <li th:if="${#httpServletRequest.requestURI} eq '/inventories'" class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Правка
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li id="addLocationMenu" data-bs-toggle='modal' data-bs-target='#modalLocations'><a class="dropdown-item" href="#">Локация</a></li>
+                                <li id="addModelPrinterMenu" data-bs-toggle='modal' data-bs-target='#modalModelsPrinter'><a class="dropdown-item" href="#">Модель принтера</a></li>
+                                <li id="addModelCartridgeMenu" data-bs-toggle='modal' data-bs-target='#modalModelsCartridge'><a class="dropdown-item" href="#">Модель картриджа</a></li>
+                                <li id="getPlaningServiceMenu" data-bs-toggle='modal' data-bs-target='#modalPlaning'><a class="dropdown-item" href="#">Планирование закупок</a></li>
+                            </ul>
+                        </li>
                         
                        
                     </ul>
@@ -42,6 +52,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                         <input class="form-control me-2" type="search" placeholder="Поиск" aria-label="Поиск" id="search">
                         <button class="btn btn-outline-success" type="submit">Поиск</button>
                     </form>-->
+
                 </div>
             </div>
         </nav>

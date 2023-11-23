@@ -5,7 +5,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
 -->
 <html lang="ru" xmlns:th="http://www.thymeleaf.org">
     <head>
-        <title>Помощь</title>
+        <title>Выбор категории</title>
         <link rel="icon" type="image/x-icon" href="/img/favicon.ico">
         <script src="/js/jquery-3.6.4.min.js"></script>
         <meta charset="UTF-8">
@@ -18,21 +18,27 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
         <nav th:insert="nav :: navbar"></nav>
 
         <div class="container" id="content">
-            <div class="row text-center ">
+            
+            <h3 class="text-center titleLocation fw-bold" th:text='${locationInfo.name}'></h3>
+            <h5 class="mb-4">Выберите категорию</h5>
+            
+            <div class="row contentRow pb-2 mb-2 mt-2 pt-2 text-left">
                 <div class="col">
-                    <h3 class="mt-5">Раздел помощь ещё в разработке.</h3>
+                    <a th:href="${#httpServletRequest.requestURI + '/printer'}">Принтер</a>
                 </div>
             </div>
-            <div class="row text-center">
+            
+            <div class="row contentRow pb-2 mb-2 mt-2 pt-2 text-left">
                 <div class="col">
-                    <h3 class="mt-5"><a href="/help/instruction" target="_blank">Скачать инструкцию по работе с приложением</a></h3>
+                    <a th:href="${#httpServletRequest.requestURI + '/cartridge'}">Картридж</a>
                 </div>
             </div>
             
-            
-            
-        </div>
-
+                
+            </div>
+            </div>
+     
+        
      <footer th:insert="footer :: footer"></footer>
         <script src="/js/bootstrap.bundle.min.js" ></script>
         

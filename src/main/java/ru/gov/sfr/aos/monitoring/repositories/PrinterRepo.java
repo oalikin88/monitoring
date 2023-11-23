@@ -74,7 +74,7 @@ public interface PrinterRepo extends JpaRepository<Printer, Long> {
    + "ON ob.contract_id = contr.id "
    + "WHERE cartridge_printer.model_cartridges_id = ?2 "
    + "AND printer.location_id = ?1 "
-    + "AND contr.contract_number = ?3",
+    + "AND contr.contract_number LIKE ?3%",
    countQuery = "SELECT count(*) "
    + "FROM printer printer "
    + "JOIN manufacturer manufacturer "
@@ -89,7 +89,80 @@ public interface PrinterRepo extends JpaRepository<Printer, Long> {
    + "ON ob.contract_id = contr.id "
    + "WHERE cartridge_printer.model_cartridges_id = ?2 "
    + "AND printer.location_id = ?1 "
-   + "AND contr.contract_number = ?3" ,nativeQuery = true)
+   + "AND contr.contract_number LIKE ?3%" ,nativeQuery = true)
     Page<Printer> findPrintersByModelAndLocationAndContractNumberFilter(Long idLocation, Long idModelCartridge, String contractNumber, Pageable pageable);
     
+    
+    @Query(value = "SELECT printer.* "
+   + "FROM printer printer "
+   + "JOIN manufacturer manufacturer "
+   + "ON printer.manufacturer_id = manufacturer.id "
+   + "JOIN model model "
+   + "ON printer.model_id = model.id "
+   + "JOIN cartridge_model_models_printers cartridge_printer "
+   + "ON printer.model_id = cartridge_printer.models_printers_id "
+   + "JOIN object_buing ob "
+   + "ON printer.printer_id = ob.id "
+   + "JOIN contract contr "
+   + "ON ob.contract_id = contr.id "
+   + "WHERE contr.contract_number LIKE ?3% "
+   + "AND printer.location_id = ?1 "
+   + "AND model.id = ?2 ",
+   countQuery = "SELECT count(*) "
+   + "FROM printer printer "
+   + "JOIN manufacturer manufacturer "
+   + "ON printer.manufacturer_id = manufacturer.id "
+   + "JOIN model model "
+   + "ON printer.model_id = model.id "
+   + "JOIN cartridge_model_models_printers cartridge_printer "
+   + "ON printer.model_id = cartridge_printer.models_printers_id "
+   + "JOIN object_buing ob "
+   + "ON printer.printer_id = ob.id "
+   + "JOIN contract contr "
+   + "ON ob.contract_id = contr.id "
+   + "WHERE contr.contract_number LIKE ?3% "
+   + "AND printer.location_id = ?1 "
+   + "AND model.id = ?2 " ,nativeQuery = true)
+    Page<Printer> findPrintersByModelPrinterAndLocationAndContractNumberFilter(Long idLocation, Long idModelPrinter, String contractNumber, Pageable pageable);
+    
+    
+    @Query(value = "SELECT printer.* "
+   + "FROM printer printer "
+   + "JOIN manufacturer manufacturer "
+   + "ON printer.manufacturer_id = manufacturer.id "
+   + "JOIN model model "
+   + "ON printer.model_id = model.id "
+   + "JOIN object_buing ob "
+   + "ON printer.printer_id = ob.id "
+   + "JOIN contract contr "
+   + "ON ob.contract_id = contr.id "
+   + "WHERE model.id = ?2 "
+   + "AND printer.location_id = ?1 ",
+   countQuery = "SELECT count(*) "
+   + "FROM printer printer "
+   + "JOIN manufacturer manufacturer "
+   + "ON printer.manufacturer_id = manufacturer.id "
+   + "JOIN model model "
+   + "ON printer.model_id = model.id "
+   + "JOIN object_buing ob "
+   + "ON printer.printer_id = ob.id "
+   + "JOIN contract contr "
+   + "ON ob.contract_id = contr.id "
+   + "WHERE model.id = ?2 "
+   + "AND printer.location_id = ?1 " ,nativeQuery = true)
+    Page<Printer> findPrintersByModelPrinterAndLocation(Long idLocation, Long idModelPrinter, Pageable pageable);
+    
+    
+   @Query(value = "SELECT printer.* "
+   + "FROM printer printer "
+   + "WHERE printer.location_id = ?1 ",
+   countQuery = "SELECT count(*) "
+   + "FROM printer printer "
+   + "WHERE printer.location_id = ?1 " , nativeQuery = true)
+   Page<Printer> findByCustomLocationId(Long idLocation, Pageable pageable);
+   
+   
+   Page<Printer> findByLocationId(Long idLocation, Pageable pageable);
+
+   Page<Printer> findByLocationIdAndContractContractNumberIgnoreCaseLike(Long parseLong, String contractNumber, Pageable paging);
 }

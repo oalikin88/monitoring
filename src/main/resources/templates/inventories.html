@@ -6,6 +6,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
 <html lang="ru" xmlns:th="http://www.thymeleaf.org">
     <html>
         <head>
+            <link rel="icon" type="image/x-icon" href="/img/favicon.ico">
             <title>Учёт принтеров и картриджей</title>
             <script src="/js/jquery-3.6.4.min.js"></script>
             <script src="/js/selectize.js"></script>
@@ -14,13 +15,14 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
             <link href="/css/bootstrap.min.css" rel="stylesheet">
             <link href="/css/selectize.bootstrap5.css" rel="stylesheet">
             <link href="/css/style.css" rel="stylesheet">
+            <link href="/css/bootstrap-table-fixed-columns.css" rel="stylesheet">
         </head>
         <body>
             <nav th:insert="nav :: navbar"></nav>
-            <div class="container-fluid content inventoriesContent">
+            <div class="container-fluid" id="tabContent">
                 <header><h3 class="fw-bold mb-3">Таблица учёта принтеров и картриджей</h3></header>
 
-                <div class="table-responsive" id="tableContainer">
+                 <div class="table-responsive" id="tableContainer">
                     <script th:inline="javascript">
                         
                         let input = [[${input}]];
@@ -28,11 +30,13 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                         let input3 = [[${input3}]];
  
                     </script>
-                </div>
+                 </div>
                  
             </div>
             <footer th:insert="footer :: footer"></footer>
+            <script src="/js/bootstrap-table.js"></script>
             <script src="/js/bootstrap.bundle.min.js"></script>
+            <script src="/js/bootstrap-table-fixed-columns.js"></script>
             <script src="/js/table.js"></script>
         </body>
     </html>

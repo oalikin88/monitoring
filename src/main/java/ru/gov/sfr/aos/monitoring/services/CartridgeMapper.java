@@ -516,7 +516,7 @@ public class CartridgeMapper {
         List<CartridgeDTO> cartDtoesList = new ArrayList<>();
         Map<LocationDTO, List<CartridgeDTO>> map = new HashMap<>();
         List<Cartridge> findLikeContractContractNumberByLocationIdAndModelId = cartridgeRepo.findByContractContractNumberAndLocationId(dto.getContractNumber(), dto.getLocation());
-        Optional<Model> findPrinterById = modelPrinterRepo.findById(dto.getIdPrinter());
+        Optional<Model> findPrinterById = modelPrinterRepo.findById(dto.getIdModel());
         Long idModelPrinter = findPrinterById.get().getId();
         for(Cartridge cart :findLikeContractContractNumberByLocationIdAndModelId) {
             List<Model> modelsPrinters = cart.getModel().getModelsPrinters();
@@ -550,7 +550,7 @@ public class CartridgeMapper {
         Optional<Location> findLocationById = locationRepo.findById(dto.getLocation());
         LocationDTO locDto = new LocationDTO(findLocationById.get().getId(), findLocationById.get().getName());
         List<CartridgeDTO> cartDtoesList = new ArrayList<>();
-        Page<Cartridge> page = cartridgeRepo.findByContractNumberAndModelPrinterAndLocation(dto.getContractNumber(), dto.getLocation(), dto.getIdPrinter(), pageRequest);
+        Page<Cartridge> page = cartridgeRepo.findByContractNumberAndModelPrinterAndLocation(dto.getContractNumber(), dto.getLocation(), dto.getIdModel(), pageRequest);
         List<Cartridge> findLikeContractContractNumberByLocationIdAndModelId = page.getContent();
         for(Cartridge cart :findLikeContractContractNumberByLocationIdAndModelId) {
             CartridgeDTO cartDto = new CartridgeDTO();

@@ -32,7 +32,7 @@ $(document).ready(function () {
 
     let title = document.createElement('h3');
     title.className = "text-center titleLocation fw-bold";
-    title.innerText = loc.name;
+    title.innerText = locationInfo.name;
     wrapper.append(title);
 
     if (input.length > 0) {
@@ -57,8 +57,8 @@ $(document).ready(function () {
         btnAfterTitleRow.appendChild(btnAfterTitleCol2);
 
         let formContainer = document.createElement('form');
-        formContainer.setAttribute('th:action', '@{getcartridgesbymodel}');
-        formContainer.setAttribute('action', 'getcartridgesbymodel');
+        formContainer.setAttribute('th:action', '@{' + window.location.pathname + '}');
+        formContainer.setAttribute('action', window.location.pathname);
         formContainer.setAttribute('th:object', '${dto}');
         formContainer.setAttribute('method', 'GET');
         formContainer.id = 'formFilter';
@@ -93,15 +93,15 @@ $(document).ready(function () {
         inputGroupFilterHideFieldLocation.setAttribute('th:field', '*{location}');
         inputGroupFilterHideFieldLocation.name = 'location';
         inputGroupFilterHideFieldLocation.type = 'hidden';
-        inputGroupFilterHideFieldLocation.value = loc.id;
+        inputGroupFilterHideFieldLocation.value = locationInfo.id;
 
 
         inputGroupFilterHideFieldPrinterId = document.createElement('input');
         inputGroupFilterHideFieldPrinterId.className = 'form-control';
-        inputGroupFilterHideFieldPrinterId.setAttribute('th:field', '*{idPrinter}');
-        inputGroupFilterHideFieldPrinterId.name = 'idPrinter';
+        inputGroupFilterHideFieldPrinterId.setAttribute('th:field', '*{idModel}');
+        inputGroupFilterHideFieldPrinterId.name = 'idModel';
         inputGroupFilterHideFieldPrinterId.type = 'hidden';
-        inputGroupFilterHideFieldPrinterId.value = arrRequest.idPrinter;
+        inputGroupFilterHideFieldPrinterId.value = arrRequest.idModel;
 
 
         formContainer.append(inputGroupFilterDiv);
@@ -140,7 +140,7 @@ $(document).ready(function () {
         linkSortingModel.href = '#';
         linkSortingModel.id = 'modelSortLink';
         imgInnerModel = document.createElement('img');
-        imgInnerModel.src = './img/sorting.png';
+        imgInnerModel.src = '/img/sorting.png';
         imgInnerModel.alt = 'Сортировка';
         imgInnerModel.className = 'imgSorting';
         imgInnerModel.id = 'modelSort';
@@ -157,7 +157,7 @@ $(document).ready(function () {
         linkSortingContractNumber.href = '#';
         linkSortingContractNumber.id = 'contractSortLink';
         imgInnerContractNumber = document.createElement('img');
-        imgInnerContractNumber.src = './img/sorting.png';
+        imgInnerContractNumber.src = '/img/sorting.png';
         imgInnerContractNumber.alt = 'Сортировка';
         imgInnerContractNumber.className = 'imgSorting';
         imgInnerContractNumber.id = 'contractSort';
@@ -177,7 +177,7 @@ $(document).ready(function () {
         linkSortingDate.href = '#';
         linkSortingDate.id = 'dateSortLink';
         imgInnerDate = document.createElement('img');
-        imgInnerDate.src = './img/sorting.png';
+        imgInnerDate.src = '/img/sorting.png';
         imgInnerDate.alt = 'Сортировка';
         imgInnerDate.className = 'imgSorting';
         imgInnerDate.id = 'dateSort';
@@ -251,6 +251,26 @@ $(document).ready(function () {
                 btnTransfer.setAttribute('data-bs-toggle', 'modal');
                 btnTransfer.setAttribute('data-bs-target', '#modalTransfer');
                 btnAfterTitleCol1.appendChild(btnTransfer);
+
+
+                    $('.selectLocation').selectize({
+        preload: true,
+        valueField: 'id',
+        labelField: 'name',
+        searchField: "name",
+        placeholder: 'локация',
+        load: function (query, callback) {
+            $.ajax({
+                url: '/locations',
+                type: 'GET',
+                dataType: 'json',
+                data: {model: query},
+                error: callback,
+                success: callback
+
+            });
+        }
+    });
 
                 locations = Object.entries($('.selectLocation')[0].selectize.options);
                 for (i = 0; i < locations.length; i++) {
@@ -442,24 +462,7 @@ $(document).ready(function () {
     modalFooterCloseBtn.id = "modalWindow1BtnOk";
     modalFooterDiv.appendChild(modalFooterSubmitBtn);
 
-    $('.selectLocation').selectize({
-        preload: true,
-        valueField: 'id',
-        labelField: 'name',
-        searchField: "name",
-        placeholder: 'локация',
-        load: function (query, callback) {
-            $.ajax({
-                url: '/locations',
-                type: 'GET',
-                dataType: 'json',
-                data: {model: query},
-                error: callback,
-                success: callback
-
-            });
-        }
-    });
+    
 
     modalFooterSubmitBtn.addEventListener('click', function () {
         let arr = new Array();
@@ -484,14 +487,40 @@ $(document).ready(function () {
     });
 
     let contractSort = document.querySelector('#contractSort');
-    contractSort.addEventListener('click', function () {sortBy("contr.contract_number")});
+    contractSort.addEventListener('click', function () {
+      if(window.location.pathname.indexOf('inventories') > 0) {
+          sortBy("contract");
+      } else {
+          sortBy("contr.contract_number");
+      }
+    });
 
 
     let modelSort = document.querySelector('#modelSortLink');
-    modelSort.addEventListener('click', function(){sortBy("model.name")});
+    modelSort.addEventListener('click', function(){
+        
+        
+        if(window.location.pathname.indexOf('inventories') > 0) {
+          sortBy("model");
+      } else {
+          sortBy("model.name");
+      }
+        
+        
+        });
 
     let dateSort = document.querySelector('#dateSortLink');
-    dateSort.addEventListener('click', function () {sortBy("contr.date_start_contract")});
+    dateSort.addEventListener('click', function () {
+          if(window.location.pathname.indexOf('inventories') > 0) {
+          sortBy("contract.dateStartContract");
+      } else {
+          sortBy("contr.date_start_contract");
+      }
+        });
+    
+    
+
+    
 });
 
 function toggle(source) {
