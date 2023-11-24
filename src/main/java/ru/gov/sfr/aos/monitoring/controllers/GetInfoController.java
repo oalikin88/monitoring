@@ -17,6 +17,7 @@ import ru.gov.sfr.aos.monitoring.models.CartridgeModelDTO;
 import ru.gov.sfr.aos.monitoring.models.EmployeeDTO;
 import ru.gov.sfr.aos.monitoring.models.LocationDTO;
 import ru.gov.sfr.aos.monitoring.services.CartridgeMapper;
+import ru.gov.sfr.aos.monitoring.services.CartridgeService;
 import ru.gov.sfr.aos.monitoring.services.DictionaryEmployeeHolder;
 import ru.gov.sfr.aos.monitoring.services.LocationService;
 import ru.gov.sfr.aos.monitoring.services.PlaningService;
@@ -39,6 +40,8 @@ public class GetInfoController {
 
     @Autowired
     private DictionaryEmployeeHolder dictionaryEmployeeHolder;
+    @Autowired
+    private CartridgeService cartridgeService;
     
     
     @GetMapping("/getinfooo")
@@ -64,14 +67,14 @@ public class GetInfoController {
 
     @GetMapping("/getmodelcartridge")
     public List<CartridgeModelDTO> getModelCartridgeByModelPrinter(@RequestParam("idModel") Long idModel) {
-        List<CartridgeModelDTO> showCartridgeModelByPrinterModel = cartridgeMapper.showCartridgeModelByPrinterModel(idModel);
+        List<CartridgeModelDTO> showCartridgeModelByPrinterModel = cartridgeService.showCartridgeModelByPrinterModel(idModel);
         return showCartridgeModelByPrinterModel;
     }
 
     @GetMapping("/showcartridgesbymodel")
     public List<CartridgeDTO> getCartridgesByModelPrinter(@RequestParam("idPrinter") Long idPrinter, @RequestParam("location") String location) {
 
-        List<CartridgeDTO> showCartridgesByModelPrinter = cartridgeMapper.showCartridgesByModelPrinter(idPrinter, location);
+        List<CartridgeDTO> showCartridgesByModelPrinter = cartridgeService.showCartridgesByModelPrinter(idPrinter, location);
 
         return showCartridgesByModelPrinter;
     }
@@ -80,7 +83,7 @@ public class GetInfoController {
         @GetMapping("/showcartridgesforchoice")
     public List<CartridgeChoiceDto> showCartridgesForChoice(@RequestParam("idPrinter") Long idPrinter, @RequestParam("location") String location) {
 
-        List<CartridgeChoiceDto> showCartridgesByModelPrinter = cartridgeMapper.showCartridgesForChoice(idPrinter, location);
+        List<CartridgeChoiceDto> showCartridgesByModelPrinter = cartridgeService.showCartridgesForChoice(idPrinter, location);
 
         return showCartridgesByModelPrinter;
     }

@@ -5,6 +5,9 @@
 package ru.gov.sfr.aos.monitoring.services;
 
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.opfr.doccreatormodels.Block;
 import org.opfr.doccreatormodels.Parameter;
@@ -21,7 +24,11 @@ import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import ru.gov.sfr.aos.monitoring.entities.Cartridge;
 import ru.gov.sfr.aos.monitoring.entities.ListenerOperation;
+import ru.gov.sfr.aos.monitoring.entities.Location;
+import ru.gov.sfr.aos.monitoring.entities.Model;
 import ru.gov.sfr.aos.monitoring.entities.Printer;
+import ru.gov.sfr.aos.monitoring.models.CartridgeDTO;
+import ru.gov.sfr.aos.monitoring.models.LocationDTO;
 import ru.gov.sfr.aos.monitoring.repositories.CartridgeRepo;
 import ru.gov.sfr.aos.monitoring.repositories.ListenerOperationRepo;
 import ru.gov.sfr.aos.monitoring.repositories.PrinterRepo;
@@ -101,5 +108,6 @@ public class ActReport implements Report<ActReportParameters> {
         Record record = Record.builder().block(dataBlock).build();
         return Request.builder().mainBlock(footer.build()).record(record).build();
     }
+
 
 }

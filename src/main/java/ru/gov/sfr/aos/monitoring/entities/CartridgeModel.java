@@ -67,6 +67,15 @@ public class CartridgeModel implements Serializable {
         this.cartridges = cartridges;
         this.modelsPrinters = modelsPrinters;
     }
+
+    public CartridgeModel(String model, Long defaultNumberPrintPage, List<Model> modelsPrinters, CartridgeType type) {
+        this.model = model;
+        this.type = type;
+        this.defaultNumberPrintPage = defaultNumberPrintPage;
+        this.modelsPrinters = modelsPrinters;
+    }
+    
+    
     
     
 

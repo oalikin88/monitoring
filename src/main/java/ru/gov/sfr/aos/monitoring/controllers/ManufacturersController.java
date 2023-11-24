@@ -21,6 +21,7 @@ import ru.gov.sfr.aos.monitoring.models.ModelDTO;
 import ru.gov.sfr.aos.monitoring.repositories.CartridgeRepo;
 import ru.gov.sfr.aos.monitoring.repositories.ModelPrinterRepo;
 import ru.gov.sfr.aos.monitoring.services.CartridgeMapper;
+import ru.gov.sfr.aos.monitoring.services.CartridgeService;
 import ru.gov.sfr.aos.monitoring.services.ManufacturersMapper;
 import ru.gov.sfr.aos.monitoring.services.ModelMapper;
 
@@ -41,6 +42,8 @@ public class ManufacturersController {
     private CartridgeMapper cartridgeMapper;
     @Autowired
     private CartridgeRepo repo;
+    @Autowired
+    private CartridgeService cartridgeService; 
 
     @RequestMapping(value = "/manufacturers", method = RequestMethod.GET)
     public List<ManufacturerDTO> showPrinters() {
@@ -77,7 +80,7 @@ public class ManufacturersController {
     
     @RequestMapping(value = "/cartridge/{type}", method = RequestMethod.GET)
     public List<CartridgeDTO> getModelCartridgeByType(@PathVariable String type) {
-        List<CartridgeDTO> list = cartridgeMapper.findModelCartridgeByType(type);
+        List<CartridgeDTO> list = cartridgeService.findModelCartridgeByType(type);
         return list;
     }    
         
@@ -89,13 +92,13 @@ public class ManufacturersController {
     
      @RequestMapping(value = "/cartridgebymodelprinterid", produces={"application/json; charset=UTF-8"}, method = RequestMethod.GET)
     public List<CartridgeModelDTO> getCartridgesByModelPrinter(@RequestParam("idModel") Long idModel) {
-            List<CartridgeModelDTO> list = cartridgeMapper.showCartridgeModelByPrinterModel(idModel);
+            List<CartridgeModelDTO> list = cartridgeService.showCartridgeModelByPrinterModel(idModel);
         return list;
     }
     
        @RequestMapping(value = "/cartridgebymodelprinter/{type}", produces={"application/json; charset=UTF-8"}, method = RequestMethod.GET)
     public List<CartridgeModelDTO> getCartridgesByModelPrinterAndType(@RequestParam("model") String model, @PathVariable String type) {
-            List<CartridgeModelDTO> list = cartridgeMapper.showCartridgeModelByPrinterModelAndType(model, type);
+            List<CartridgeModelDTO> list = cartridgeService.showCartridgeModelByPrinterModelAndType(model, type);
         return list;
     }
 }

@@ -7,12 +7,10 @@ package ru.gov.sfr.aos.monitoring.controllers;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Set;
-import java.util.stream.Collectors;
 import javax.validation.Valid;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
@@ -38,6 +36,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import ru.gov.sfr.aos.monitoring.MonitoringApplication;
 import ru.gov.sfr.aos.monitoring.entities.Cartridge;
+import ru.gov.sfr.aos.monitoring.entities.CartridgeModel;
 import ru.gov.sfr.aos.monitoring.entities.Contract;
 import ru.gov.sfr.aos.monitoring.entities.Printer;
 import ru.gov.sfr.aos.monitoring.exceptions.ObjectAlreadyExists;
@@ -70,6 +69,7 @@ import ru.gov.sfr.aos.monitoring.services.ContractServiceMapper;
 import ru.gov.sfr.aos.monitoring.services.LocationService;
 import ru.gov.sfr.aos.monitoring.services.PlaningService;
 import ru.gov.sfr.aos.monitoring.services.PrinterOutInfoService;
+import ru.gov.sfr.aos.monitoring.services.PrinterService;
 import ru.gov.sfr.aos.monitoring.services.PrintersMapper;
 
 /**
@@ -101,6 +101,8 @@ public class MainController {
     private CartridgeRepo cartridgeRepo;
     @Autowired
     private PrinterRepo printerRepo;
+    @Autowired
+    private PrinterService printerService;
 
     private final Logger log = LoggerFactory.getLogger(this.getClass());
 
@@ -109,7 +111,6 @@ public class MainController {
         List<Contract> contracts = contractServiceInterface.getContracts();
         ContractDTO contract = new ContractDTO();
         model.addAttribute("contract", contract);
-
         return "main";
     }
 
@@ -117,44 +118,34 @@ public class MainController {
     public String sendData(
             @Valid
             @RequestBody List<Map<String, String>> printersPlusCartridges) throws ObjectAlreadyExists {
-
         ContractFromInputDto transformInputToDto = mapper.transformInputToDto(
                 printersPlusCartridges);
         mapper.createContract(transformInputToDto);
-        //  mapper.createNewContract(printersPlusCartridges);
-
         return "redirect:/main";
-
     }
 
     @GetMapping("/inventories")
     public String getInventories(Model model) {
         Map<String, List<ModelDTO>> outInfo = printerOutInfoService.outInfo();
-        Map<LocationDTO, List<ModelCartridgeByModelPrinters>> showCartridgesAndPrintersByModelAndLocation = cartridgeMapper.showCartridgesAndPrintersByModelAndLocation();
-        Map<LocationDTO, List<PrintersByLocationandModelDto>> printersByLocationAndModel = cartridgeMapper.getPrintersByLocationAndModel();
+        Map<LocationDTO, List<ModelCartridgeByModelPrinters>> showCartridgesAndPrintersByModelAndLocation = cartridgeService.showCartridgesAndPrintersByModelAndLocation();
+        Map<LocationDTO, List<PrintersByLocationandModelDto>> printersByLocationAndModel = printerService.getPrintersByLocationAndModel();
         model.addAttribute("input", showCartridgesAndPrintersByModelAndLocation);
         model.addAttribute("input2", outInfo);
         model.addAttribute("input3", printersByLocationAndModel);
-
         return "inventories";
     }
-    
-    
-      @GetMapping("/inventories/{location}")
+
+    @GetMapping("/inventories/{location}")
     public String getInventoriesByLocation(Model model, @PathVariable(name = "location") String location) {
-            
         long parseLong = Long.parseLong(location);
-        
         LocationDTO locationById = locationService.getLocationById(parseLong);
-        
-            model.addAttribute("locationInfo", locationById);
-            
-            return "inlocation";
+        model.addAttribute("locationInfo", locationById);
+        return "inlocation";
 
     }
-    
-        @GetMapping("/inventories/{location}/{device}")
-    public String getInventoriesbyLocationAndDevice(Model model, 
+
+    @GetMapping("/inventories/{location}/{device}")
+    public String getInventoriesbyLocationAndDevice(Model model,
             @PathVariable(name = "location") String location,
             @PathVariable(name = "device") String device,
             @RequestParam(defaultValue = "0", required = false) Integer page,
@@ -162,90 +153,74 @@ public class MainController {
             @RequestParam(required = false) String contractNumber,
             @RequestParam(defaultValue = "id") String sortBy,
             @RequestParam(defaultValue = "up") String direction) {
-        
         long parseLong = Long.parseLong(location);
-        
-        
-        
+
         Sort.Direction direct = null;
         if (direction.equals("up")) {
             direct = Sort.Direction.ASC;
         } else {
             direct = Sort.Direction.DESC;
         }
-        
         Pageable paging = PageRequest.of(page, pageSize, JpaSort.unsafe(direct, sortBy));
-           
-            
-         if(device.equals("printer")) {
-             Page<Printer> getPage = null;
-             if(contractNumber != null) {
+        if (device.equals("printer")) {
+            Page<Printer> getPage = null;
+            if (contractNumber != null) {
                 getPage = printerRepo.findByLocationIdAndContractContractNumberIgnoreCaseLike(parseLong, contractNumber, paging);
-             }else {
-             getPage = printerRepo.findByLocationId(parseLong, paging);
-             }
-        List<PrinterDTO> dtoes = new ArrayList<>();
-        for (Printer printer : getPage.getContent()) {
-            PrinterDTO printerDto = new PrinterDTO();
-            printerDto.setId(printer.getId());
-            printerDto.setModel(printer.getModel().getName());
-            printerDto.setManufacturer(printer.getManufacturer().getName());
-            printerDto.setInventaryNumber(printer.getInventoryNumber());
-            printerDto.setSerialNumber(printer.getSerialNumber());
-            printerDto.setContractNumber(printer.getContract().getContractNumber());
-            printerDto.setLocation(printer.getLocation().getName());
-            printerDto.setStartContract(printer.getContract().getDateStartContract());
-            printerDto.setEndContract(printer.getContract().getDateStartContract());
-            dtoes.add(printerDto);
+            } else {
+                getPage = printerRepo.findByLocationId(parseLong, paging);
             }
-             model.addAttribute("input", dtoes);
-             model.addAttribute("pages", getPage.getTotalPages());
-         } else {
-             Page<Cartridge> getCartridge = null;
-             if(contractNumber != null) {
-                 getCartridge = cartridgeRepo.findByLocationIdAndContractContractNumberIgnoreCaseLike(parseLong, contractNumber, paging);
-             } else {
-                 getCartridge = cartridgeRepo.findByLocationId(parseLong, paging);
-             }
-             
-             List<CartridgeDTO> dtoes = new ArrayList<>();
-             for (Cartridge cart : getCartridge.getContent()) {
-            CartridgeDTO cartDto = new CartridgeDTO();
-            cartDto.setContract(cart.getContract().getId());
-            cartDto.setContractNumber(cart.getContract().getContractNumber());
-            cartDto.setId(cart.getId());
-            cartDto.setLocation(cart.getLocation().getName());
-            cartDto.setDateEndExploitation(cart.getDateEndExploitation());
-            cartDto.setDateStartExploitation(cart.getDateStartExploitation());
-            cartDto.setType(cart.getModel().getType().getName());
-            cartDto.setResource(cart.getModel().getDefaultNumberPrintPage().toString());
-            cartDto.setUtil(cart.isUtil());
-            cartDto.setModel(cart.getModel().getModel());
-            cartDto.setStartContract(cart.getContract().getDateStartContract());
-            dtoes.add(cartDto);
+            List<PrinterDTO> dtoes = new ArrayList<>();
+            for (Printer printer : getPage.getContent()) {
+                PrinterDTO printerDto = new PrinterDTO();
+                printerDto.setId(printer.getId());
+                printerDto.setModel(printer.getModel().getName());
+                printerDto.setManufacturer(printer.getManufacturer().getName());
+                printerDto.setInventaryNumber(printer.getInventoryNumber());
+                printerDto.setSerialNumber(printer.getSerialNumber());
+                printerDto.setContractNumber(printer.getContract().getContractNumber());
+                printerDto.setLocation(printer.getLocation().getName());
+                printerDto.setStartContract(printer.getContract().getDateStartContract());
+                printerDto.setEndContract(printer.getContract().getDateStartContract());
+                dtoes.add(printerDto);
+            }
+            model.addAttribute("input", dtoes);
+            model.addAttribute("pages", getPage.getTotalPages());
+        } else {
+            Page<Cartridge> getCartridge = null;
+            if (contractNumber != null) {
+                getCartridge = cartridgeRepo.findByLocationIdAndContractContractNumberIgnoreCaseLike(parseLong, contractNumber, paging);
+            } else {
+                getCartridge = cartridgeRepo.findByLocationId(parseLong, paging);
+            }
+
+            List<CartridgeDTO> dtoes = new ArrayList<>();
+            for (Cartridge cart : getCartridge.getContent()) {
+                CartridgeDTO cartDto = new CartridgeDTO();
+                cartDto.setContract(cart.getContract().getId());
+                cartDto.setContractNumber(cart.getContract().getContractNumber());
+                cartDto.setId(cart.getId());
+                cartDto.setLocation(cart.getLocation().getName());
+                cartDto.setDateEndExploitation(cart.getDateEndExploitation());
+                cartDto.setDateStartExploitation(cart.getDateStartExploitation());
+                cartDto.setType(cart.getModel().getType().getName());
+                cartDto.setResource(cart.getModel().getDefaultNumberPrintPage().toString());
+                cartDto.setUtil(cart.isUtil());
+                cartDto.setModel(cart.getModel().getModel());
+                cartDto.setStartContract(cart.getContract().getDateStartContract());
+                dtoes.add(cartDto);
+            }
+            model.addAttribute("input", dtoes);
+            model.addAttribute("pages", getCartridge.getTotalPages());
         }
-             model.addAttribute("input", dtoes);
-             model.addAttribute("pages", getCartridge.getTotalPages());
-         }
-         
-        
-        
         LocationDTO locationById = locationService.getLocationById(parseLong);
         model.addAttribute("locationInfo", locationById);
         model.addAttribute("pageable", paging);
-        
         model.addAttribute("direction", direction);
-        
-        
-        
-            return "devices";
-
+        return "devices";
     }
-    
 
     @RequestMapping("/help")
     public String getHelp(Model model) {
-
         return "help";
     }
 
@@ -276,7 +251,6 @@ public class MainController {
 
     @GetMapping("/contract")
     public String getContract(@RequestParam("idContract") Long idContract, Model model) {
-
         EditContractDTO contract = contractServiceMapper.getContract(idContract);
         model.addAttribute("input", contract);
         return "contract";
@@ -302,12 +276,12 @@ public class MainController {
         LocationDTO locationById = locationService.getLocationById(dto.location);
         List<Printer> printersList = printerMapper.getPrintersByModelId(dto.idModel);
         Page<Printer> getPage = null;
-        if(null != dto.getContractNumber()) {
-            
+        if (null != dto.getContractNumber()) {
+
             try {
                 getPage = printerRepo.findPrintersByModelAndLocationAndContractNumberFilter(locationById.getId(), printersList.get(0).getModel().getId(), dto.getContractNumber(), paging);
-                
-            } catch(NoSuchElementException e) {
+
+            } catch (NoSuchElementException e) {
                 e.printStackTrace();
             } finally {
                 getPage = printerRepo.findPrintersByModelPrinterAndLocationAndContractNumberFilter(locationById.getId(), printersList.get(0).getModel().getId(), dto.getContractNumber(), paging);
@@ -315,15 +289,14 @@ public class MainController {
         } else {
             try {
                 getPage = printerRepo.findPrintersByModelAndLocation(locationById.getId(), printersList.get(0).getModel().getModelCartridges().iterator().next().getId(), paging);
-            } catch(NoSuchElementException e) {
-               e.printStackTrace();
+            } catch (NoSuchElementException e) {
+                e.printStackTrace();
             } finally {
-                 getPage = printerRepo.findPrintersByModelPrinterAndLocation(locationById.getId(), printersList.get(0).getModel().getId(), paging);
+                getPage = printerRepo.findPrintersByModelPrinterAndLocation(locationById.getId(), printersList.get(0).getModel().getId(), paging);
             }
         }
-        
-        List<Printer> content = getPage.getContent();
 
+        List<Printer> content = getPage.getContent();
         List<PrinterDTO> dtoes = new ArrayList<>();
         for (Printer printer : content) {
             PrinterDTO printerDto = new PrinterDTO();
@@ -355,34 +328,6 @@ public class MainController {
 
     }
 
-    @GetMapping(value = "/cartridges")
-    public String showCartridgesByLocations(Model model) {
-
-        Map<String, List<CartridgeDTO>> dtoes = cartridgeMapper.showCatridgesByLocation();
-
-        // Подсчёт повторяющихся элементов
-        Map<List<CartridgeDTO>, Map<String, Integer>> frequency = new HashMap<>();
-
-        for (List<CartridgeDTO> list : dtoes.values()) {
-            Map<String, Integer> collect2 = list.stream()
-                    .map(e -> e.model + " " + e.type)
-                    .collect(Collectors.toMap(e -> e, e -> 1, Integer::sum));
-            frequency.put(list, collect2);
-
-        }
-        int count = 0;
-        for (Map.Entry<List<CartridgeDTO>, Map<String, Integer>> map : frequency.entrySet()) {
-            ++count;
-            System.out.println("\n" + "map: " + count);
-            System.out.println(map.getKey());
-            for (Map.Entry<String, Integer> entry : map.getValue().entrySet()) {
-
-                System.out.println(entry.getKey() + " : " + entry.getValue());
-            }
-        }
-        model.addAttribute("dtoes", frequency);
-        return "cartridges";
-    }
 
     @GetMapping(value = "/addmodelcart")
     public String addModelCartridge(Model model) {
@@ -392,8 +337,8 @@ public class MainController {
 
     @PostMapping("/addmodelcart")
     public ResponseEntity<CartridgeModelDTO> saveModelCartridge(@Valid @ModelAttribute CartridgeModelDTO dto) throws ObjectAlreadyExists {
-
-        cartridgeMapper.saveCartridgeModel(dto);
+        CartridgeModel cartridgeModelDtoToCartridgeModel = cartridgeMapper.cartridgeModelDtoToCartridgeModel(dto);
+        cartridgeService.saveCartridgeModel(cartridgeModelDtoToCartridgeModel);
         return new ResponseEntity<CartridgeModelDTO>(dto, HttpStatus.OK);
 
     }
@@ -409,7 +354,7 @@ public class MainController {
     @GetMapping("/editcartridge")
     public String getCartridge(Model model, @RequestParam Long idCartridge) {
 
-        CartridgeDTO cartridgeDTO = cartridgeMapper.getCartridge(idCartridge);
+        CartridgeDTO cartridgeDTO = cartridgeMapper.getCartridgeById(idCartridge);
         model.addAttribute("dto", cartridgeDTO);
 
         return "editCartridge";
@@ -425,7 +370,7 @@ public class MainController {
     @PostMapping("/editcartridgelocation")
     public ResponseEntity<String> changeCartridgeLocation(ChangeDeviceLocationDTO dto) {
 
-        cartridgeMapper.changeCartridgeLocation(dto);
+        cartridgeService.changeCartridgeLocation(dto);
 
         return new ResponseEntity<String>("Локация успешно изменена", HttpStatus.OK);
     }
@@ -433,7 +378,7 @@ public class MainController {
     @PostMapping("/editcartridgeslocation")
     public ResponseEntity<String> changeCartridgeLocation(ChangeLocationForCartridges dto) {
 
-        cartridgeMapper.changeCartridgesLocation(dto);
+        cartridgeService.changeCartridgesLocation(dto);
 
         return new ResponseEntity<String>("Локация успешно изменена", HttpStatus.OK);
     }
@@ -441,7 +386,7 @@ public class MainController {
     @PostMapping("/utilCartridge")
     public ResponseEntity<String> utilCartridge(Long id) {
 
-        cartridgeMapper.utilCartridge(id);
+        cartridgeService.utilCartridge(id);
 
         return new ResponseEntity<String>("Картридж успешно списан", HttpStatus.OK);
     }
@@ -546,10 +491,5 @@ public class MainController {
     @PostMapping("changestatus")
     public void changePrinterStatus(PrinterStatusDto dto) {
         printerMapper.editPrinterStatus(dto);
-
     }
-    
-    
- 
-
 }
