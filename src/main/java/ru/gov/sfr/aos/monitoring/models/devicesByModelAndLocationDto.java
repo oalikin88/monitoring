@@ -8,29 +8,29 @@ package ru.gov.sfr.aos.monitoring.models;
  *
  * @author 041AlikinOS
  */
-public class CartridgesWithFilterByContractNumber {
-    public Long idPrinter;
+public class DevicesByModelAndLocationDto {
+    public Long idModel;
     public Long location;
     public String contractNumber;
     
 
-    public CartridgesWithFilterByContractNumber(Long idPrinter, Long location, String contractNumber) {
-        this.idPrinter = idPrinter;
+    public DevicesByModelAndLocationDto(Long idModel, Long location, String contractNumber) {
+        this.idModel = idModel;
         this.location = location;
         this.contractNumber = contractNumber;
     }
 
-    public CartridgesWithFilterByContractNumber() {
+    public DevicesByModelAndLocationDto() {
     }
 
     
     
-    public Long getIdPrinter() {
-        return idPrinter;
+    public Long getIdModel() {
+        return idModel;
     }
 
-    public void setIdPrinter(Long idPrinter) {
-        this.idPrinter = idPrinter;
+    public void setIdModel(Long idModel) {
+        this.idModel = idModel;
     }
 
     public Long getLocation() {
