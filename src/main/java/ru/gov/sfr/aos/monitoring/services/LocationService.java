@@ -58,10 +58,5 @@ public class LocationService {
         return dto;
     }
     
-    public LocationDTO getLocationByName(String location) {
-        Optional<Location> findByLocationNameIgnoreCase = locationRepo.findByNameIgnoreCase(location);
-        LocationDTO dto = new LocationDTO(findByLocationNameIgnoreCase.get().getId(), findByLocationNameIgnoreCase.get().getName());
-        return dto;
-    }
     
 }

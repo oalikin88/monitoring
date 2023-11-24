@@ -5,8 +5,9 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
 -->
 <html lang="ru" xmlns:th="http://www.thymeleaf.org">
     <head>
+  
         <link rel="icon" type="image/x-icon" href="/img/favicon.ico">
-        <title th:text="'Поиск по локации ' + ${locationInfo.name}"></title>
+        <title th:text="${locationInfo.name}"></title>
         <script src="/js/jquery-3.6.4.min.js"></script>
          <script src="/js/selectize.js"></script>
          <link href="/css/selectize.bootstrap5.css" rel="stylesheet">

@@ -4,14 +4,9 @@
  */
 package ru.gov.sfr.aos.monitoring.services;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
-import java.util.AbstractList;
-import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -21,7 +16,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.gov.sfr.aos.monitoring.OperationType;
@@ -50,7 +44,6 @@ import ru.gov.sfr.aos.monitoring.repositories.ModelPrinterRepo;
  */
 @Service
 public class PlaningService {
-
     @Autowired
     private ListenerOperationRepo listenerOperationRepo;
     @Autowired
@@ -64,9 +57,7 @@ public class PlaningService {
 
     public Map<String, List<ConsumptionDTO>> showUtilled(PlaningBuyDto dto) {
         long amountDaysFromDto = ChronoUnit.DAYS.between(dto.dateBegin, dto.dateEnd);
-        List<ConsumptionDTO> result = new ArrayList<>();
-        
-        
+        List<ConsumptionDTO> result = new ArrayList<>();      
         List<ListenerOperation> listenersByDateOperationAfterAndDateOperationBefore = listenerOperationRepo.findByDateOperationAfterAndDateOperationBefore(dto.dateBegin.atStartOfDay(), dto.dateEnd.atTime(23, 59, 59));
         List<ListenerOperation> utilled = listenersByDateOperationAfterAndDateOperationBefore.stream()
                 .filter(e -> e.getOperationType().equals(OperationType.UTIL))
@@ -90,9 +81,6 @@ public class PlaningService {
         }
         
         Map<String, List<ConsumptionDTO>> collect = result.stream().collect(Collectors.groupingBy(e -> e.getModel().getModel(), Collectors.toList()));
-
-
-
         return collect;
     }
     
@@ -153,12 +141,10 @@ public class PlaningService {
              ConsumptionDTO outDto = new ConsumptionDTO();
              outDto.setLocation(locDto);
              outDto.setBalance(getMax.getAmountAllCartridgesByModel());
-             out.put(entry.getKey(), outDto);
-             
+             out.put(entry.getKey(), outDto);            
          }
          
-         return out;
-         
+         return out;         
     }
     
     public Map<String, Set<CartridgeModelDTO>> getAmountCartridgeModel() {
@@ -166,8 +152,7 @@ public class PlaningService {
         List<CartridgeModel> findAll = cartridgeModelRepo.findAll();
         
         Map<String, Set<CartridgeModelDTO>> ooout = new HashMap<>();
-        List<Model> modelsPrinter = modelPrinterRepo.findAll();
-        
+        List<Model> modelsPrinter = modelPrinterRepo.findAll();      
         for(Model m : modelsPrinter) {
             Set<CartridgeModelDTO> modelsCart = new HashSet<>();
             Set<CartridgeModel> modelCartridges = m.getModelCartridges();
@@ -203,13 +188,8 @@ public class PlaningService {
                 }
                 }
             }
-        
-        
-        
-        
         return ooout;
     }
-
     
     public Map<String, List<ModelCartridgeByModelPrinters>> getPrintersByCartridgesModel() {
             List<Cartridge> cartridges = cartridgeRepo.findAll();
@@ -266,18 +246,5 @@ public class PlaningService {
     }
     
     
-    public static List<ListenerOperation> getListenersBetweenDay(List<ListenerOperation> input, LocalDate start, LocalDate end) {
-
-        List<ListenerOperation> result = new ArrayList<>();
-
-        for (ListenerOperation listener : input) {
-
-            if (!listener.getDateOperation().isBefore(start.atStartOfDay()) && !listener.getDateOperation().isAfter(end.atStartOfDay().plusDays(1))) {
-                result.add(listener);
-            }
-        }
-
-        return result;
-    }
 
 }
