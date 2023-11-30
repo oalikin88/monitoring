@@ -37,7 +37,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import ru.gov.sfr.aos.monitoring.MonitoringApplication;
 import ru.gov.sfr.aos.monitoring.entities.Cartridge;
 import ru.gov.sfr.aos.monitoring.entities.CartridgeModel;
-import ru.gov.sfr.aos.monitoring.entities.Contract;
 import ru.gov.sfr.aos.monitoring.entities.Printer;
 import ru.gov.sfr.aos.monitoring.exceptions.ObjectAlreadyExists;
 import ru.gov.sfr.aos.monitoring.interfaces.ContractServiceInterface;
@@ -108,9 +107,7 @@ public class MainController {
 
     @GetMapping("/main")
     public String getData(Model model) {
-        List<Contract> contracts = contractServiceInterface.getContracts();
-        ContractDTO contract = new ContractDTO();
-        model.addAttribute("contract", contract);
+    
         return "main";
     }
 
@@ -233,7 +230,6 @@ public class MainController {
 
     @GetMapping("/planing")
     public String getPlaningResult(Model model, PlaningBuyDto dto) {
-        Map<String, List<ModelDTO>> outInfo = printerOutInfoService.outInfo();
         Map<String, List<ConsumptionDTO>> calculatePlaningBuy = planingService.showUtilled(dto);
         Map<String, List<ConsumptionDTO>> showPurchased = planingService.showPurchased(dto);
         Map<String, ConsumptionDTO> amountAllCartridgesByModelAndPeriod = planingService.getAmountAllCartridgesByModelAndPeriod(dto);

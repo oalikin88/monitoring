@@ -65,7 +65,7 @@ public class CartridgeService {
     private ModelPrinterRepo modelPrinterRepo;
     @Autowired
     private CartridgeMapper cartridgeMapper;
-    
+
     public void installCartridge(CartridgeInstallDTO dto) {
         ListenerOperation listener = new ListenerOperation();
         Optional<Printer> findPrinterById = printerRepo.findById(dto.getIdPrinter());
@@ -75,7 +75,6 @@ public class CartridgeService {
             for (Cartridge cartr : cartridges) {
                 if (cartr.isUseInPrinter()) {
                     cartr.setDateEndExploitation(LocalDateTime.now());
-
                     cartr.setUseInPrinter(false);
                     cartr.setUtil(true);
                     cartr.setCount(dto.getCount());
@@ -95,7 +94,7 @@ public class CartridgeService {
                 .collect(Collectors.toSet());
         listener.setAmountDevicesOfLocation(collectCartridgesOfLocation.size());
 
-        List<Cartridge> findByLocationIdAndModelId = cartridgeRepo.findByLocationIdAndModelId(findCartridgeById.get().getLocation().getId(), findCartridgeById.get().getModel().getId(), Pageable.ofSize(25));
+        List<Cartridge> findByLocationIdAndModelId = cartridgeRepo.findByLocationIdAndModelId(findCartridgeById.get().getLocation().getId(), findCartridgeById.get().getModel().getId());
         List<Cartridge> collect = findByLocationIdAndModelId.stream()
                 .filter(e -> !e.isUtil())
                 .filter(e -> !e.isUseInPrinter())
@@ -223,18 +222,17 @@ public class CartridgeService {
     public void saveCartridgeModel(CartridgeModel cartridgeModel) throws ObjectAlreadyExists {
         String replaceAllBreakesFromInput = cartridgeModel.getModel().replaceAll(" ", "");
         String replaceAllDeficesAndBreakesFromInput = replaceAllBreakesFromInput.replaceAll("-", "");
-        Optional<CartridgeModel> findCartridgeModelByName = cartridgeModelRepo.findByModelIgnoreCase(cartridgeModel.getModel());
-        Optional<CartridgeModel> findCartridgeModelByNameReplaceDeficesAndBreakes = cartridgeModelRepo.findByModelIgnoreCase(replaceAllDeficesAndBreakesFromInput);
-        if (findCartridgeModelByName.isEmpty() && findCartridgeModelByNameReplaceDeficesAndBreakes.isEmpty()) {
-            cartridgeModelRepo.save(cartridgeModel);
-        }else {
+        
+        if (cartridgeModelRepo.existsByModelIgnoreCase(replaceAllDeficesAndBreakesFromInput)) {
             throw new ObjectAlreadyExists("Модель " + cartridgeModel.getModel() + " уже есть в базе данных");
+        } else {
+            
+            cartridgeModelRepo.save(cartridgeModel);
         }
     }
 
     public Map<String, List<CartridgeDTO>> showCatridgesByLocation() {
         Map<String, List<CartridgeDTO>> map = new HashMap<>();
-        List<CartridgeModel> models = cartridgeModelRepo.findAll();
         List<Location> locations = locationRepo.findAll();
         for (int i = 0; i < locations.size(); i++) {
             List<CartridgeDTO> list = new ArrayList<>();

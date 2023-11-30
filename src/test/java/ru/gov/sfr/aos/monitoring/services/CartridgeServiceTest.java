@@ -5,12 +5,14 @@
 package ru.gov.sfr.aos.monitoring.services;
 
 import java.util.Arrays;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Profile;
 import org.springframework.test.context.junit4.SpringRunner;
 import ru.gov.sfr.aos.monitoring.CartridgeType;
 import ru.gov.sfr.aos.monitoring.PrintColorType;
@@ -26,7 +28,7 @@ import ru.gov.sfr.aos.monitoring.repositories.ModelPrinterRepo;
  *
  * @author 041AlikinOS
  */
-
+@Profile("dev")
 @RunWith(SpringRunner.class)
 @SpringBootTest
 public class CartridgeServiceTest {
@@ -37,23 +39,43 @@ public class CartridgeServiceTest {
     @Autowired
     private CartridgeService cartridgeService;
     
-
-    
     
   @Test  
   public void saveCartridgeModel() throws ObjectAlreadyExists {
-      
       CartridgeModel cartModel = new CartridgeModel("T1000", 10000L
               , Arrays.asList(new Model("ML3050", PrintColorType.COLOR, PrintFormatType.A4, 40L, new Manufacturer("Samsung")))
               , CartridgeType.ORIGINAL);
-      
-      
-
-    cartridgeService.saveCartridgeModel(cartModel);
-    Mockito.verify(cartridgeModelRepo, Mockito.times(1)).save(cartModel);
-    Mockito.verify(cartridgeModelRepo, Mockito.times(2)).findByModelIgnoreCase(cartModel.getModel());
+      cartridgeService.saveCartridgeModel(cartModel);
+      Mockito.verify(cartridgeModelRepo, Mockito.times(1)).save(cartModel);
+      Mockito.verify(cartridgeModelRepo, Mockito.times(1)).existsByModelIgnoreCase(cartModel.getModel());
     
   }
+  
+  @Test  
+  public void saveCartridgeModelShouldAssertAlreadyExist() throws ObjectAlreadyExists {
+
+      CartridgeModel cartModel1 = new CartridgeModel("T1000", 10000L
+              , Arrays.asList(new Model("ML3050", PrintColorType.COLOR, PrintFormatType.A4, 40L, new Manufacturer("Samsung")))
+              , CartridgeType.ORIGINAL);
+
+    cartridgeService.saveCartridgeModel(cartModel1);
+        Mockito.when(cartridgeModelRepo.existsByModelIgnoreCase(Mockito.eq("T1000"))).thenReturn(true);
+      
+       Assertions.assertThrows(ObjectAlreadyExists.class, () -> cartridgeService.saveCartridgeModel(cartModel1));    
+    
+  }
+  
+  
+  @Test  
+  public void saveCartridgeModelShouldNotAssertAlreadyExist() throws ObjectAlreadyExists {
+         CartridgeModel cartModel1 = new CartridgeModel("T1000", 10000L,
+                  Arrays.asList(new Model("ML3050", PrintColorType.COLOR, PrintFormatType.A4, 40L, new Manufacturer("Samsung"))),
+                  CartridgeType.ORIGINAL);
+         cartridgeService.saveCartridgeModel(cartModel1);
+         Assertions.assertDoesNotThrow(() -> cartridgeService.saveCartridgeModel(cartModel1));
+  }
+  
+  
 }
 
 

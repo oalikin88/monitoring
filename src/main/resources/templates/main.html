@@ -30,7 +30,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
             </div>
 
             <header><h3 class="fw-bold text-center">Добавление контракта</h3></header>
-            <form th:action="@{/main}" th:object="${contract}" method="post" id="sendForm">
+            <form th:action="@{/main}"  method="post" id="sendForm">
 
                 <div role="tab-list">
 
@@ -58,13 +58,13 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
 
                         <div class="row mb-2 contract">
                             <div class="col-md-4 mb-2">
-                                <input type="text"  class="form-control contractDetails" id="inputContractNumber" th:field="*{contractNumber}"/>
+                                <input type="text"  class="form-control contractDetails" id="inputContractNumber" />
                             </div>
                             <div class="col-md-4 mb-2">
-                                <input type="date" class="form-control contractDetails" th:text="*{dateStartContract}" name="startContr" placeholder="date" id='dateStartContract'  />
+                                <input type="date" class="form-control contractDetails"  name="startContr" placeholder="date" id='dateStartContract'  />
                             </div>
                             <div class="col-md-4 mb-2">
-                                <input type="date" class="form-control contractDetails" th:text="*{dateEndContract}" name="endContr" placeholder="date" id='dateEndContract'  />
+                                <input type="date" class="form-control contractDetails"  name="endContr" placeholder="date" id='dateEndContract'  />
                             </div>
                         </div>
 
@@ -152,11 +152,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
             </form>
             </div>
      
-        <div>
-            <ul th:each="contract : ${contracts}">
-                <li th:text="${contract}"></li>
-            </ul>
-        </div>
+       
      <footer th:insert="footer :: footer"></footer>
         <script src="/js/bootstrap.bundle.min.js" ></script>
         

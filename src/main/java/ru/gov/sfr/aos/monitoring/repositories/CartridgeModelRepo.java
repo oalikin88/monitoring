@@ -22,5 +22,6 @@ public interface CartridgeModelRepo extends JpaRepository<CartridgeModel, Long> 
     Optional<CartridgeModel> findByModelIgnoreCase(String model);
     List<CartridgeModel> findByType(CartridgeType type);
     List<CartridgeModel> findByModelsPrintersId(Long id);
+    boolean existsByModelIgnoreCase(String model);
     
 }
