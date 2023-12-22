@@ -21,7 +21,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.annotation.Validated;
-import ru.gov.sfr.aos.monitoring.CartridgeType;
 import ru.gov.sfr.aos.monitoring.OperationType;
 import ru.gov.sfr.aos.monitoring.PrinterStatus;
 import ru.gov.sfr.aos.monitoring.entities.Cartridge;
@@ -37,7 +36,6 @@ import ru.gov.sfr.aos.monitoring.exceptions.ObjectAlreadyExists;
 import ru.gov.sfr.aos.monitoring.models.CartridgeDTO;
 import ru.gov.sfr.aos.monitoring.models.CartridgeFromInputDto;
 import ru.gov.sfr.aos.monitoring.models.CartridgeIncludeFromInputDto;
-import ru.gov.sfr.aos.monitoring.models.CartridgeModelDTO;
 import ru.gov.sfr.aos.monitoring.models.ContractForViewDTO;
 import ru.gov.sfr.aos.monitoring.models.ContractFromInputDto;
 import ru.gov.sfr.aos.monitoring.models.EditContractDTO;
@@ -288,7 +286,8 @@ public class ContractServiceMapper {
         }
         contract.setObjectBuing(objectsBuing);
         contractServiceImpl.saveContract(contract);
-        int cartridgesOnSklad = location.getCartridges().size();
+        List<Cartridge> findCartridgeOnStorage = cartridgeRepo.findByLocationId(1L);
+        int cartridgesOnSklad = findCartridgeOnStorage.size();
         int addedCartridges = modelsCartridges.values().stream().mapToInt(e -> e.intValue()).sum();
           for(Map.Entry<Long, Integer> entry : modelsCartridges.entrySet()) {
                    

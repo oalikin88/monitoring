@@ -4,6 +4,7 @@
  */
 package ru.gov.sfr.aos.monitoring.controllers;
 
+import java.util.ArrayList;
 import java.util.List;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import ru.gov.sfr.aos.monitoring.entities.CartridgeModel;
 import ru.gov.sfr.aos.monitoring.exceptions.ObjectAlreadyExists;
 import ru.gov.sfr.aos.monitoring.models.CartridgeDTO;
 import ru.gov.sfr.aos.monitoring.models.CartridgeModelDTO;
@@ -79,9 +81,14 @@ public class ManufacturersController {
 
     
     @RequestMapping(value = "/cartridge/{type}", method = RequestMethod.GET)
-    public List<CartridgeDTO> getModelCartridgeByType(@PathVariable String type) {
-        List<CartridgeDTO> list = cartridgeService.findModelCartridgeByType(type);
-        return list;
+    public List<CartridgeModelDTO> getModelCartridgeByType(@PathVariable String type) {
+        List<CartridgeModel> list = cartridgeService.findModelCartridgeByType(type);
+        List<CartridgeModelDTO> dtoes = new ArrayList<>();
+        for(CartridgeModel model : list) {
+            CartridgeModelDTO dto = cartridgeMapper.cartridgeModelToCartridgeModelDto(model);
+            dtoes.add(dto);
+        }
+        return dtoes;
     }    
         
     @RequestMapping(value = "/cartridge", method = RequestMethod.GET)
@@ -92,8 +99,13 @@ public class ManufacturersController {
     
      @RequestMapping(value = "/cartridgebymodelprinterid", produces={"application/json; charset=UTF-8"}, method = RequestMethod.GET)
     public List<CartridgeModelDTO> getCartridgesByModelPrinter(@RequestParam("idModel") Long idModel) {
-            List<CartridgeModelDTO> list = cartridgeService.showCartridgeModelByPrinterModel(idModel);
-        return list;
+            List<CartridgeModel> list = cartridgeService.showCartridgesModelByPrinterModel(idModel);
+            List<CartridgeModelDTO> dtoes = new ArrayList<>();
+            for(CartridgeModel model : list) {
+                CartridgeModelDTO dto = cartridgeMapper.cartridgeModelToCartridgeModelDto(model);
+                dtoes.add(dto);
+            }
+        return dtoes;
     }
     
        @RequestMapping(value = "/cartridgebymodelprinter/{type}", produces={"application/json; charset=UTF-8"}, method = RequestMethod.GET)

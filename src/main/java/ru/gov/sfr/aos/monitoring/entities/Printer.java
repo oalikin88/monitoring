@@ -28,8 +28,7 @@ import ru.gov.sfr.aos.monitoring.PrinterStatus;
 public class Printer extends ObjectBuing implements Serializable {
 
     
-    @ManyToOne(cascade = CascadeType.ALL)
-    protected Location location;
+    
     @NotNull(message = "Поле \"Производитель\" не может быть пустым")
     @ManyToOne(cascade = CascadeType.ALL)
     protected Manufacturer manufacturer;
@@ -53,9 +52,8 @@ public class Printer extends ObjectBuing implements Serializable {
     public Printer() {
     }
 
-    public Printer(Location location, Manufacturer manufacturer, String serialNumber, String inventoryNumber, 
+    public Printer(Manufacturer manufacturer, String serialNumber, String inventoryNumber, 
             Set<Cartridge> cartridge, Model model, PrinterStatus printerStatus) {
-        this.location = location;
         this.model = model;
         this.serialNumber = serialNumber;
         this.inventoryNumber = inventoryNumber;
@@ -73,13 +71,6 @@ public class Printer extends ObjectBuing implements Serializable {
         this.id = id;
     }
 
-    public Location getLocation() {
-        return location;
-    }
-
-    public void setLocation(Location location) {
-        this.location = location;
-    }
 
     public Contract getContract() {
         return contract;
@@ -136,6 +127,14 @@ public class Printer extends ObjectBuing implements Serializable {
 
     public void setPrinterStatus(PrinterStatus printerStatus) {
         this.printerStatus = printerStatus;
+    }
+
+    public Location getLocation() {
+        return location;
+    }
+
+    public void setLocation(Location location) {
+        this.location = location;
     }
     
     

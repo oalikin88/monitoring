@@ -5,14 +5,18 @@
 package ru.gov.sfr.aos.monitoring.services;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import org.bouncycastle.crypto.prng.drbg.HashSP800DRBG;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ru.gov.sfr.aos.monitoring.CartridgeType;
 import ru.gov.sfr.aos.monitoring.entities.Cartridge;
 import ru.gov.sfr.aos.monitoring.entities.CartridgeModel;
 import ru.gov.sfr.aos.monitoring.entities.Model;
+import ru.gov.sfr.aos.monitoring.entities.Printer;
 import ru.gov.sfr.aos.monitoring.models.CartridgeDTO;
 import ru.gov.sfr.aos.monitoring.models.CartridgeModelDTO;
 import ru.gov.sfr.aos.monitoring.repositories.CartridgeModelRepo;
@@ -128,4 +132,26 @@ public class CartridgeMapper {
         model.setModelsPrinters(modelsPrinters);
     return model;  
 }
+    public CartridgeModelDTO cartridgeModelToCartridgeModelDto(CartridgeModel cartridgeModel) {
+        CartridgeModelDTO dto = new CartridgeModelDTO();
+        dto.setId(cartridgeModel.getId());
+        dto.setModel(cartridgeModel.getModel());
+        dto.setResource(cartridgeModel.getDefaultNumberPrintPage().toString());
+        dto.setType(cartridgeModel.getType().getName());
+        List<Long> listModelsPrinters = new ArrayList<>();
+        Set<String> printers = new HashSet<>();
+        List<Model> modelsPrinters = cartridgeModel.getModelsPrinters();
+        for(Model model : modelsPrinters) {
+            listModelsPrinters.add(model.getId());
+            for(Printer printer : model.getPrinters()) {
+                printers.add(printer.getManufacturer().getName() + " " + printer.getModel().getName());
+            }
+        }
+        dto.setIdModel(listModelsPrinters);
+        dto.setPrinters(printers);
+        
+        return dto;
+    }
+    
+    
 }

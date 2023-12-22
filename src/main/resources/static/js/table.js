@@ -1,19 +1,19 @@
-/* 
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Other/javascript.js to edit this template
- */
+let parent = document.querySelector('#tabContent');
+let models = new Map(Object.entries(modelsInput));
+let locations = new Map(Object.entries(locationsInput));
+
+
+
+
 
 let searchModel = false;
 window.onload = function () {
 
-    input2sort = Object.entries(input2).sort();
-    input1sort = Object.entries(input).sort();
-    input3sort = Object.entries(input3).sort();
-    let parent = document.querySelector('#tabContent');
+
 
     let tableContainer = document.getElementById('tableContainer');
 
-    if (input1sort.length > 0) {
+    if (input.length > 0) {
         // Вывод таблицы
         let table = document.createElement('table');
         table.id = "table";
@@ -29,9 +29,9 @@ window.onload = function () {
         thThead2.setAttribute('scope', 'col');
         thThead2.setAttribute('rowspan', '2');
         thThead2.className = 'background';
-       // thThead2.innerText = 'Модель принтера \ Локация';
-        
-        let thThead2Div = document.createElement('div'); 
+        // thThead2.innerText = 'Модель принтера \ Локация';
+
+        let thThead2Div = document.createElement('div');
         let thThead2SpanFirst = document.createElement('span');
         thThead2SpanFirst.className = 'bottom';
         thThead2SpanFirst.innerText = 'Локация';
@@ -40,8 +40,8 @@ window.onload = function () {
         thThead2SpanSecond.innerText = 'Модель \n принтера';
         let thThead2Line = document.createElement('div');
         thThead2Line.className = 'line';
-        
-        
+
+
         tableContainer.appendChild(table);
         table.appendChild(thead);
         thead.appendChild(trThead);
@@ -63,13 +63,13 @@ window.onload = function () {
 
         for (let i = 0; i < 1; i++) {
 
-            for (let j = 0; j < input2sort.length; j++) {
+            for (let entry of models) {
                 let th = document.createElement('th');
                 th.setAttribute('scope', 'col');
                 th.className = 'tHeader';
                 th.setAttribute('colspan', '2');
-                th.id = "idModel_" + input2sort[j][1][0].idModel;
-                th.innerText = input2sort[j][0];
+                th.id = "idModel_" + entry[0];
+                th.innerText = entry[1];
                 trThead.appendChild(th);
 
             }
@@ -78,7 +78,7 @@ window.onload = function () {
                 let subtrThead = document.createElement('tr');
                 thead.appendChild(subtrThead);
 
-                for (let j = 0; j < input2sort.length; j++) {
+                for (let j = 0; j < models.size; j++) {
                     thTheadCount = document.createElement('th');
                     thTheadCount.className = 'tHeader';
                     thTheadCount.innerText = "Количество \n принтеров";
@@ -95,102 +95,92 @@ window.onload = function () {
 
         // Вывод тела таблицы
 
-
-        for (inInput1sort = 0; inInput1sort < input1sort.length; inInput1sort++) {
+        let c = 0;
+        for (let locat of locations) {
             tr = document.createElement('tr');
             tbody.appendChild(tr);
             tdCount = document.createElement('td');
-            tdCount.innerText = inInput1sort + 1;
+            tdCount.innerText = c += 1;
             tr.appendChild(tdCount);
             tdLocation = document.createElement('td');
-            tdLocation.setAttribute('id', JSON.parse(input1sort[inInput1sort][0]).id);
+            tdLocation.setAttribute('id', locat[0]);
             tdLocation.className = 'location text-wrap';
             let locLink = document.createElement('a');
-            locLink.href = "/inventories/" + JSON.parse(input1sort[inInput1sort][0]).id;
-            locLink.innerText = JSON.parse(input1sort[inInput1sort][0]).name;
+            locLink.href = "/inventories/" + locat[0];
+            locLink.innerText = locat[1];
             tdLocation.appendChild(locLink);
             tr.appendChild(tdLocation);
 
 
-            for (i = 0; i < input2sort.length; i++) {
+            for (let modIterate of models) {
                 searchModel = false;
                 var amountCartridge = new Set();
                 var amountPrinters = new Set();
-                if(input1sort[inInput1sort][1].length == 0) { //Если к модели принтера нет моделей картриджей
-                    
-                    for (innerInInput3Sort = 0; innerInInput3Sort < input3sort[inInput1sort][1].length; innerInInput3Sort++) {
-                        if(input2sort[i][0].indexOf(input3sort[inInput1sort][1][innerInInput3Sort].modelName) > 0) {
-                            
-                            tdPrintSuccess = document.createElement('td');
-                            tdPrintSuccess.setAttribute('id', 'location_' + JSON.parse(input1sort[inInput1sort][0]).id + '_' + 'model_' + input3sort[inInput1sort][1][innerInInput3Sort].idModel);
+//                if (input1sort[inInput1sort][1].length == 0) { //Если к модели принтера нет моделей картриджей
+//
+//                    for (innerInInput3Sort = 0; innerInInput3Sort < input3sort[inInput1sort][1].length; innerInInput3Sort++) {
+//                        if (input2sort[i][0].indexOf(input3sort[inInput1sort][1][innerInInput3Sort].modelName) > 0) {
+//
+//                            tdPrintSuccess = document.createElement('td');
+//                            tdPrintSuccess.setAttribute('id', 'location_' + JSON.parse(input1sort[inInput1sort][0]).id + '_' + 'model_' + input3sort[inInput1sort][1][innerInInput3Sort].idModel);
+//                            tdPrintSuccess.setAttribute('class', 'model');
+//                            tdPrintSuccess.style.wordBreak = "break-all";
+//                            linkPrinter = document.createElement('a');
+//
+//                            linkPrinter.setAttribute('href', '/printersbylocation?location=' + JSON.parse(input1sort[inInput1sort][0]).id
+//                                    + '&idModel=' + input3sort[inInput1sort][1][innerInInput3Sort].idModel);
+//
+//                            linkPrinter.innerText = input3sort[inInput1sort][1][innerInInput3Sort].amountPrinters;
+//                            tr.appendChild(tdPrintSuccess);
+//                            tdPrintSuccess.appendChild(linkPrinter);
+//
+//                            tdCart = document.createElement('td');
+//                            tdCart.setAttribute('class', 'cart');
+//                            tdCart.style.wordBreak = "break-all";
+//                            tdCart.innerText = "0";
+//                            tr.appendChild(tdCart);
+//                            searchModel = true;
+//                            break;
+//                        }
+//                    }
+//
+//                } else {
+                    for(b = 0; b < input.length; b++) {
+                         
+                         if (input[b].modelId == modIterate[0] && locat[0] == input[b].locationId) {
+                             
+                             tdPrintSuccess = document.createElement('td');
+                            tdPrintSuccess.setAttribute('id', 'location_' + locat[0] + '_' + 'model_' + modIterate[0]);
                             tdPrintSuccess.setAttribute('class', 'model');
                             tdPrintSuccess.style.wordBreak = "break-all";
                             linkPrinter = document.createElement('a');
-                          
-                            linkPrinter.setAttribute('href', '/printersbylocation?location=' + JSON.parse(input1sort[inInput1sort][0]).id
-                                    + '&idModel=' + input3sort[inInput1sort][1][innerInInput3Sort].idModel);
-                            
-                            linkPrinter.innerText = input3sort[inInput1sort][1][innerInInput3Sort].amountPrinters;
+                           
+                            linkPrinter.setAttribute('href', '/printersbylocation?location=' + locat[0]
+                                    + '&idModel=' + input[b].modelId);
+                            linkPrinter.innerText = input[b].countPrinter;
                             tr.appendChild(tdPrintSuccess);
                             tdPrintSuccess.appendChild(linkPrinter);
 
                             tdCart = document.createElement('td');
+                            //        tdCart.setAttribute('id', 'location_' + JSON.parse(input1sort[inInput1sort][0]).id + '_' + 'model_' + input1sort[inInput1sort][1][innerInInput1Sort].id + '_cart');
                             tdCart.setAttribute('class', 'cart');
                             tdCart.style.wordBreak = "break-all";
-                            tdCart.innerText = "0";
+                            link = document.createElement('a');
+                            link.setAttribute('href', '/getcartridgesbymodel?idModel=' + input[b].modelId
+                                    + '&location=' + locat[0]);
+                            link.innerText = input[b].countCartridge;
                             tr.appendChild(tdCart);
-                            searchModel = true;
-                            break;
-                        }
+                            tdCart.appendChild(link);
+                             
+                         } 
+                        
                     }
+                  
                     
-                } else {
-
-                for (innerInInput1Sort = 0; innerInInput1Sort < input1sort[inInput1sort][1].length; innerInInput1Sort++) {
-
-                    for (inCartridgeModelCount = 0; inCartridgeModelCount < input1sort[inInput1sort][1][innerInInput1Sort].modelsPrinter.length; inCartridgeModelCount++) {
-                        if (input2sort[i][1][0].model === input1sort[inInput1sort][1][innerInInput1Sort].modelsPrinter[inCartridgeModelCount].model) {
-                            for (vbn = 0; vbn < input1sort[inInput1sort][1][innerInInput1Sort].printersID.length; vbn++) {
-                                amountPrinters.add(input1sort[inInput1sort][1][innerInInput1Sort].printersID[vbn]);
-                            }
-                            for (vbc = 0; vbc < input1sort[inInput1sort][1][innerInInput1Sort].cartridgesId.length; vbc++) {
-                                amountCartridge.add(input1sort[inInput1sort][1][innerInInput1Sort].cartridgesId[vbc]);
-                            }
-                            
-                            searchModel = true;
-                            break;
-                        }
-                    }
-                }
-                tdPrintSuccess = document.createElement('td');
-                tdPrintSuccess.setAttribute('id', 'location_' + JSON.parse(input1sort[inInput1sort][0]).id + '_' + 'model_' + input2sort[i][1][0].idModel);
-                tdPrintSuccess.setAttribute('class', 'model');
-                tdPrintSuccess.style.wordBreak = "break-all";
-                linkPrinter = document.createElement('a');
-                var temp = "";
-                for (count = 0; count < input2sort[i][1].length; count++) {
-                    temp += '&idModel=' + input2sort[i][1][count].idModel;
-                }
-                linkPrinter.setAttribute('href', '/printersbylocation?location=' + JSON.parse(input1sort[inInput1sort][0]).id
-                        + '&idModel=' + input2sort[i][1][0].idModel);
-                linkPrinter.innerText = amountPrinters.size;
-                tr.appendChild(tdPrintSuccess);
-                tdPrintSuccess.appendChild(linkPrinter);
-
-                tdCart = document.createElement('td');
-                //        tdCart.setAttribute('id', 'location_' + JSON.parse(input1sort[inInput1sort][0]).id + '_' + 'model_' + input1sort[inInput1sort][1][innerInInput1Sort].id + '_cart');
-                tdCart.setAttribute('class', 'cart');
-                tdCart.style.wordBreak = "break-all";
-                link = document.createElement('a');
-                link.setAttribute('href', '/getcartridgesbymodel?idModel=' + input2sort[i][1][0].idModel
-                        + '&location=' + JSON.parse(input1sort[inInput1sort][0]).id);
-                link.innerText = amountCartridge.size;
-                tr.appendChild(tdCart);
-                tdCart.appendChild(link);
                 }
             }
 
-        }
+        
     } else {
         h3AttentionAddLocation = document.createElement('h3');
         h3AttentionAddLocation.className = 'fw-bold text-center';
@@ -199,7 +189,7 @@ window.onload = function () {
         parent.appendChild(h3AttentionAddLocation);
     }
 
-    if (input2sort.length == 0) {
+    if (models.size == 0) {
         h3AttentionAddModelPrinter = document.createElement('h3');
         h3AttentionAddModelPrinter.className = 'fw-bold text-center';
         h3AttentionAddModelPrinter.innerText = "Добавьте модель принтера";
@@ -208,7 +198,7 @@ window.onload = function () {
     }
 
 
-  
+
 
 
     // Модальное окно с редактированием локаций
@@ -386,7 +376,7 @@ window.onload = function () {
                         trThead.appendChild(thThead2);
                         tbody = document.createElement('tbody');
                         table.appendChild(tbody);
-                       
+
 
                         for (i = 0; i < result.sort().length; i++) {
                             tr = document.createElement('tr');
@@ -403,24 +393,24 @@ window.onload = function () {
 
                         }
                     }
-                            
-                         
+
+
                 });
 
             },
-            error: function(callback) {
-                                if($('#exceptionContainer').length == 0) {
-                                 $('#modalBody').append(callback.responseText);
-                             } else {
+            error: function (callback) {
+                if ($('#exceptionContainer').length == 0) {
+                    $('#modalBody').append(callback.responseText);
+                } else {
 
-                                 $('#exceptionContainer').replaceWith(callback.responseText);
+                    $('#exceptionContainer').replaceWith(callback.responseText);
 
-                             }
+                }
 
-                                new bootstrap.Modal(document.getElementById('modalError')).show();
-                               // $('#resultInfo').append(callback.responseText);
-                      }
-             
+                new bootstrap.Modal(document.getElementById('modalError')).show();
+                // $('#resultInfo').append(callback.responseText);
+            }
+
         });
         document.getElementById("modalLocationInput").value = "";
     });
@@ -494,133 +484,133 @@ window.onload = function () {
     modalModelsPrinterFooterCloseBtn.id = "modalMOdelsPrinterWindow1BtnClose";
     modalModelsPrinterFooterDiv.appendChild(modalModelsPrinterFooterCloseBtn);
 
-    
-
-        // Модальное окно с добавлением моделей принтеров
-
-        modalModelsPrinterWrapper2 = document.createElement('div');
-        modalModelsPrinterWrapper2.className = 'modal fade';
-        modalModelsPrinterWrapper2.id = 'modalModelsPrinter2';
-        modalModelsPrinterWrapper2.setAttribute('aria-hidden', 'true');
-        modalModelsPrinterWrapper2.setAttribute('tabindex', '-1');
-        parent.appendChild(modalModelsPrinterWrapper2);
-
-        modalModelsPrinterDialogCenteredDiv2 = document.createElement('div');
-        modalModelsPrinterDialogCenteredDiv2.className = 'modal-dialog modal-dialog-centered modal-xl';
-        modalModelsPrinterWrapper2.appendChild(modalModelsPrinterDialogCenteredDiv2);
-
-        modalModelsPrinterContentDiv2 = document.createElement('div');
-        modalModelsPrinterContentDiv2.className = 'modal-content';
-        modalModelsPrinterDialogCenteredDiv2.appendChild(modalModelsPrinterContentDiv2);
-
-        modalModelsPrinterHeaderDiv2 = document.createElement('div');
-        modalModelsPrinterHeaderDiv2.className = 'modal-header';
-        modalModelsPrinterContentDiv2.appendChild(modalModelsPrinterHeaderDiv2);
-
-        modalModelsPrinterTitle2H1 = document.createElement('h1');
-        modalModelsPrinterTitle2H1.className = 'modal-title fs-5';
-        modalModelsPrinterTitle2H1.id = 'modalModelsPrinterLabel2';
-        modalModelsPrinterTitle2H1.innerText = 'Добавить модель принтера';
-        modalModelsPrinterHeaderDiv2.appendChild(modalModelsPrinterTitle2H1);
-
-        modalModelsPrinterBtnClose2 = document.createElement('button');
-        modalModelsPrinterBtnClose2.className = 'btn-close';
-        modalModelsPrinterBtnClose2.type = 'button';
-        modalModelsPrinterBtnClose2.setAttribute('data-bs-dismiss', 'modal');
-        modalModelsPrinterBtnClose2.setAttribute('aria-label', 'close');
-        modalModelsPrinterHeaderDiv2.appendChild(modalModelsPrinterBtnClose2);
-
-        modalModelsPrinterBodyDiv2 = document.createElement('div');
-        modalModelsPrinterBodyDiv2.className = 'modal-body ml-3 mr-3';
-        modalModelsPrinterContentDiv2.appendChild(modalModelsPrinterBodyDiv2);
 
 
-        modalModelsPrinterContentInnerRow1 = document.createElement('div');
-        modalModelsPrinterContentInnerRow1.className = 'row modalManufacturerModelRow mt-3';
-        modalModelsPrinterBodyDiv2.appendChild(modalModelsPrinterContentInnerRow1);
+    // Модальное окно с добавлением моделей принтеров
 
-        modalModalsPrinterContentInnerManufacturerDiv1 = document.createElement('div');
-        modalModalsPrinterContentInnerManufacturerDiv1.className = 'col';
-        modalModalsPrinterContentInnerManufacturerDiv1.id = 'modalManufacturerDiv';
-        modalModelsPrinterContentInnerRow1.appendChild(modalModalsPrinterContentInnerManufacturerDiv1);
+    modalModelsPrinterWrapper2 = document.createElement('div');
+    modalModelsPrinterWrapper2.className = 'modal fade';
+    modalModelsPrinterWrapper2.id = 'modalModelsPrinter2';
+    modalModelsPrinterWrapper2.setAttribute('aria-hidden', 'true');
+    modalModelsPrinterWrapper2.setAttribute('tabindex', '-1');
+    parent.appendChild(modalModelsPrinterWrapper2);
 
-        modalModalsPrinterContentInnerManufacturerDiv2 = document.createElement('div');
-        modalModalsPrinterContentInnerManufacturerDiv2.className = 'col modalModelDiv';
-        modalModalsPrinterContentInnerManufacturerDiv2.id = 'modalModelDiv';
-        modalModelsPrinterContentInnerRow1.appendChild(modalModalsPrinterContentInnerManufacturerDiv2);
+    modalModelsPrinterDialogCenteredDiv2 = document.createElement('div');
+    modalModelsPrinterDialogCenteredDiv2.className = 'modal-dialog modal-dialog-centered modal-xl';
+    modalModelsPrinterWrapper2.appendChild(modalModelsPrinterDialogCenteredDiv2);
 
-        modalModelsPrinterContentInnerManufacturerSelect = document.createElement('select');
-        modalModelsPrinterContentInnerManufacturerSelect.className = 'form-select modalManufacturerSelect';
-        modalModelsPrinterContentInnerManufacturerSelect.id = 'modalManufacturerSelect';
-        modalModelsPrinterContentInnerManufacturerSelect.value = 'Производитель';
-        modalModalsPrinterContentInnerManufacturerDiv1.appendChild(modalModelsPrinterContentInnerManufacturerSelect);
+    modalModelsPrinterContentDiv2 = document.createElement('div');
+    modalModelsPrinterContentDiv2.className = 'modal-content';
+    modalModelsPrinterDialogCenteredDiv2.appendChild(modalModelsPrinterContentDiv2);
 
-        modalModelsPrinterContentInnerModelSelect = document.createElement('select');
-        modalModelsPrinterContentInnerModelSelect.className = 'form-select modalModelInput';
-        modalModelsPrinterContentInnerModelSelect.type = 'text';
-        modalModelsPrinterContentInnerModelSelect.id = 'modalModelInput';
-        // modalModelsPrinterContentInnerModelInput.placeholder = 'Модель';
-        modalModalsPrinterContentInnerManufacturerDiv2.appendChild(modalModelsPrinterContentInnerModelSelect);
+    modalModelsPrinterHeaderDiv2 = document.createElement('div');
+    modalModelsPrinterHeaderDiv2.className = 'modal-header';
+    modalModelsPrinterContentDiv2.appendChild(modalModelsPrinterHeaderDiv2);
 
-        modalModelsPrinterContentInnerRow2 = document.createElement('div');
-        modalModelsPrinterContentInnerRow2.className = 'row mt-3';
-        modalModelsPrinterBodyDiv2.appendChild(modalModelsPrinterContentInnerRow2);
+    modalModelsPrinterTitle2H1 = document.createElement('h1');
+    modalModelsPrinterTitle2H1.className = 'modal-title fs-5';
+    modalModelsPrinterTitle2H1.id = 'modalModelsPrinterLabel2';
+    modalModelsPrinterTitle2H1.innerText = 'Добавить модель принтера';
+    modalModelsPrinterHeaderDiv2.appendChild(modalModelsPrinterTitle2H1);
 
-        modalModalsPrinterContentInnerPrintColorTypeDiv = document.createElement('div');
-        modalModalsPrinterContentInnerPrintColorTypeDiv.className = 'col modalPrintColorTypeDiv';
-        modalModalsPrinterContentInnerPrintColorTypeDiv.id = 'modalPrintColorTypeDiv';
-        modalModelsPrinterContentInnerRow2.appendChild(modalModalsPrinterContentInnerPrintColorTypeDiv);
+    modalModelsPrinterBtnClose2 = document.createElement('button');
+    modalModelsPrinterBtnClose2.className = 'btn-close';
+    modalModelsPrinterBtnClose2.type = 'button';
+    modalModelsPrinterBtnClose2.setAttribute('data-bs-dismiss', 'modal');
+    modalModelsPrinterBtnClose2.setAttribute('aria-label', 'close');
+    modalModelsPrinterHeaderDiv2.appendChild(modalModelsPrinterBtnClose2);
 
-        modalModalsPrinterContentInnerPrintColorTypeSelect = document.createElement('select');
-        modalModalsPrinterContentInnerPrintColorTypeSelect.className = 'form-select modalPrintColorTypeSelect';
-        modalModalsPrinterContentInnerPrintColorTypeSelect.id = 'modalPrintColorTypeSelect';
-        modalModalsPrinterContentInnerPrintColorTypeSelect.value = 'Цветность печати';
-        modalModalsPrinterContentInnerPrintColorTypeDiv.appendChild(modalModalsPrinterContentInnerPrintColorTypeSelect);
+    modalModelsPrinterBodyDiv2 = document.createElement('div');
+    modalModelsPrinterBodyDiv2.className = 'modal-body ml-3 mr-3';
+    modalModelsPrinterContentDiv2.appendChild(modalModelsPrinterBodyDiv2);
 
 
+    modalModelsPrinterContentInnerRow1 = document.createElement('div');
+    modalModelsPrinterContentInnerRow1.className = 'row modalManufacturerModelRow mt-3';
+    modalModelsPrinterBodyDiv2.appendChild(modalModelsPrinterContentInnerRow1);
 
-        modalModalsPrinterContentInnerPrintFormatTypeDiv = document.createElement('div');
-        modalModalsPrinterContentInnerPrintFormatTypeDiv.className = 'col';
-        modalModalsPrinterContentInnerPrintFormatTypeDiv.id = 'modalPrintFormatTypeDiv';
-        modalModelsPrinterContentInnerRow2.appendChild(modalModalsPrinterContentInnerPrintFormatTypeDiv);
+    modalModalsPrinterContentInnerManufacturerDiv1 = document.createElement('div');
+    modalModalsPrinterContentInnerManufacturerDiv1.className = 'col';
+    modalModalsPrinterContentInnerManufacturerDiv1.id = 'modalManufacturerDiv';
+    modalModelsPrinterContentInnerRow1.appendChild(modalModalsPrinterContentInnerManufacturerDiv1);
 
-        modalModalsPrinterContentInnerPrintFormatTypeSelect = document.createElement('select');
-        modalModalsPrinterContentInnerPrintFormatTypeSelect.className = 'form-select modalPrintFormatTypeSelect';
-        modalModalsPrinterContentInnerPrintFormatTypeSelect.id = 'modalPrintFormatTypeSelect';
-        modalModalsPrinterContentInnerPrintFormatTypeSelect.value = 'Формат печати';
-        modalModalsPrinterContentInnerPrintFormatTypeDiv.appendChild(modalModalsPrinterContentInnerPrintFormatTypeSelect);
+    modalModalsPrinterContentInnerManufacturerDiv2 = document.createElement('div');
+    modalModalsPrinterContentInnerManufacturerDiv2.className = 'col modalModelDiv';
+    modalModalsPrinterContentInnerManufacturerDiv2.id = 'modalModelDiv';
+    modalModelsPrinterContentInnerRow1.appendChild(modalModalsPrinterContentInnerManufacturerDiv2);
 
-        modalModalsPrinterContentInnerPrintSpeedDiv = document.createElement('div');
-        modalModalsPrinterContentInnerPrintSpeedDiv.className = 'col';
-        modalModalsPrinterContentInnerPrintSpeedDiv.id = 'modalPrintSpeedDiv';
-        modalModelsPrinterContentInnerRow2.appendChild(modalModalsPrinterContentInnerPrintSpeedDiv);
+    modalModelsPrinterContentInnerManufacturerSelect = document.createElement('select');
+    modalModelsPrinterContentInnerManufacturerSelect.className = 'form-select modalManufacturerSelect';
+    modalModelsPrinterContentInnerManufacturerSelect.id = 'modalManufacturerSelect';
+    modalModelsPrinterContentInnerManufacturerSelect.value = 'Производитель';
+    modalModalsPrinterContentInnerManufacturerDiv1.appendChild(modalModelsPrinterContentInnerManufacturerSelect);
 
-        modalModalsPrinterContentInnerPrintSpeedInput = document.createElement('input');
-        modalModalsPrinterContentInnerPrintSpeedInput.className = 'form-control';
-        modalModalsPrinterContentInnerPrintSpeedInput.type = 'text';
-        modalModalsPrinterContentInnerPrintSpeedInput.id = 'modalPrintSpeedSelect';
-        modalModalsPrinterContentInnerPrintSpeedInput.placeholder = 'Скорость печати';
-        modalModalsPrinterContentInnerPrintSpeedDiv.appendChild(modalModalsPrinterContentInnerPrintSpeedInput);
+    modalModelsPrinterContentInnerModelSelect = document.createElement('select');
+    modalModelsPrinterContentInnerModelSelect.className = 'form-select modalModelInput';
+    modalModelsPrinterContentInnerModelSelect.type = 'text';
+    modalModelsPrinterContentInnerModelSelect.id = 'modalModelInput';
+    // modalModelsPrinterContentInnerModelInput.placeholder = 'Модель';
+    modalModalsPrinterContentInnerManufacturerDiv2.appendChild(modalModelsPrinterContentInnerModelSelect);
 
-        modalModelsPrinterFooterDiv2 = document.createElement('div');
-        modalModelsPrinterFooterDiv2.className = 'modal-footer';
-        modalModelsPrinterContentDiv2.appendChild(modalModelsPrinterFooterDiv2);
+    modalModelsPrinterContentInnerRow2 = document.createElement('div');
+    modalModelsPrinterContentInnerRow2.className = 'row mt-3';
+    modalModelsPrinterBodyDiv2.appendChild(modalModelsPrinterContentInnerRow2);
 
-        modalModelsPrinterFooterCloseBtn2 = document.createElement('button');
-        modalModelsPrinterFooterCloseBtn2.className = 'btn btn-secondary';
-        modalModelsPrinterFooterCloseBtn2.type = 'button';
-        modalModelsPrinterFooterCloseBtn2.setAttribute('data-bs-toggle', 'modal');
-        modalModelsPrinterFooterCloseBtn2.setAttribute('data-bs-target', '#modalModelsPrinter');
-        modalModelsPrinterFooterCloseBtn2.innerText = 'Закрыть';
-        modalModelsPrinterFooterDiv2.appendChild(modalModelsPrinterFooterCloseBtn2);
+    modalModalsPrinterContentInnerPrintColorTypeDiv = document.createElement('div');
+    modalModalsPrinterContentInnerPrintColorTypeDiv.className = 'col modalPrintColorTypeDiv';
+    modalModalsPrinterContentInnerPrintColorTypeDiv.id = 'modalPrintColorTypeDiv';
+    modalModelsPrinterContentInnerRow2.appendChild(modalModalsPrinterContentInnerPrintColorTypeDiv);
 
-        modalModelsPrinterFooterOKBtn2 = document.createElement('button');
-        modalModelsPrinterFooterOKBtn2.className = 'btn btn-primary';
-        modalModelsPrinterFooterOKBtn2.type = 'button';
-        modalModelsPrinterFooterOKBtn2.setAttribute('data-bs-toggle', 'modal');
-        modalModelsPrinterFooterOKBtn2.setAttribute('data-bs-target', '#modalModelsPrinter');
-        modalModelsPrinterFooterOKBtn2.innerText = 'Добавить';
-        modalModelsPrinterFooterDiv2.appendChild(modalModelsPrinterFooterOKBtn2);
+    modalModalsPrinterContentInnerPrintColorTypeSelect = document.createElement('select');
+    modalModalsPrinterContentInnerPrintColorTypeSelect.className = 'form-select modalPrintColorTypeSelect';
+    modalModalsPrinterContentInnerPrintColorTypeSelect.id = 'modalPrintColorTypeSelect';
+    modalModalsPrinterContentInnerPrintColorTypeSelect.value = 'Цветность печати';
+    modalModalsPrinterContentInnerPrintColorTypeDiv.appendChild(modalModalsPrinterContentInnerPrintColorTypeSelect);
+
+
+
+    modalModalsPrinterContentInnerPrintFormatTypeDiv = document.createElement('div');
+    modalModalsPrinterContentInnerPrintFormatTypeDiv.className = 'col';
+    modalModalsPrinterContentInnerPrintFormatTypeDiv.id = 'modalPrintFormatTypeDiv';
+    modalModelsPrinterContentInnerRow2.appendChild(modalModalsPrinterContentInnerPrintFormatTypeDiv);
+
+    modalModalsPrinterContentInnerPrintFormatTypeSelect = document.createElement('select');
+    modalModalsPrinterContentInnerPrintFormatTypeSelect.className = 'form-select modalPrintFormatTypeSelect';
+    modalModalsPrinterContentInnerPrintFormatTypeSelect.id = 'modalPrintFormatTypeSelect';
+    modalModalsPrinterContentInnerPrintFormatTypeSelect.value = 'Формат печати';
+    modalModalsPrinterContentInnerPrintFormatTypeDiv.appendChild(modalModalsPrinterContentInnerPrintFormatTypeSelect);
+
+    modalModalsPrinterContentInnerPrintSpeedDiv = document.createElement('div');
+    modalModalsPrinterContentInnerPrintSpeedDiv.className = 'col';
+    modalModalsPrinterContentInnerPrintSpeedDiv.id = 'modalPrintSpeedDiv';
+    modalModelsPrinterContentInnerRow2.appendChild(modalModalsPrinterContentInnerPrintSpeedDiv);
+
+    modalModalsPrinterContentInnerPrintSpeedInput = document.createElement('input');
+    modalModalsPrinterContentInnerPrintSpeedInput.className = 'form-control';
+    modalModalsPrinterContentInnerPrintSpeedInput.type = 'text';
+    modalModalsPrinterContentInnerPrintSpeedInput.id = 'modalPrintSpeedSelect';
+    modalModalsPrinterContentInnerPrintSpeedInput.placeholder = 'Скорость печати';
+    modalModalsPrinterContentInnerPrintSpeedDiv.appendChild(modalModalsPrinterContentInnerPrintSpeedInput);
+
+    modalModelsPrinterFooterDiv2 = document.createElement('div');
+    modalModelsPrinterFooterDiv2.className = 'modal-footer';
+    modalModelsPrinterContentDiv2.appendChild(modalModelsPrinterFooterDiv2);
+
+    modalModelsPrinterFooterCloseBtn2 = document.createElement('button');
+    modalModelsPrinterFooterCloseBtn2.className = 'btn btn-secondary';
+    modalModelsPrinterFooterCloseBtn2.type = 'button';
+    modalModelsPrinterFooterCloseBtn2.setAttribute('data-bs-toggle', 'modal');
+    modalModelsPrinterFooterCloseBtn2.setAttribute('data-bs-target', '#modalModelsPrinter');
+    modalModelsPrinterFooterCloseBtn2.innerText = 'Закрыть';
+    modalModelsPrinterFooterDiv2.appendChild(modalModelsPrinterFooterCloseBtn2);
+
+    modalModelsPrinterFooterOKBtn2 = document.createElement('button');
+    modalModelsPrinterFooterOKBtn2.className = 'btn btn-primary';
+    modalModelsPrinterFooterOKBtn2.type = 'button';
+    modalModelsPrinterFooterOKBtn2.setAttribute('data-bs-toggle', 'modal');
+    modalModelsPrinterFooterOKBtn2.setAttribute('data-bs-target', '#modalModelsPrinter');
+    modalModelsPrinterFooterOKBtn2.innerText = 'Добавить';
+    modalModelsPrinterFooterDiv2.appendChild(modalModelsPrinterFooterOKBtn2);
 
 
 
@@ -776,28 +766,28 @@ window.onload = function () {
                             }
                         }
                     });
-                    
+
                     $('#modalModelsPrinter2').modal('hide');
-                    
+
                 },
-                error: function(callback) {
-                                if($('#exceptionContainer').length == 0) {
-                                 $('#modalBody').append(callback.responseText);
-                             } else {
+                error: function (callback) {
+                    if ($('#exceptionContainer').length == 0) {
+                        $('#modalBody').append(callback.responseText);
+                    } else {
 
-                                 $('#exceptionContainer').replaceWith(callback.responseText);
+                        $('#exceptionContainer').replaceWith(callback.responseText);
 
-                             }
+                    }
 
-                                new bootstrap.Modal(document.getElementById('modalError')).show();
-                               // $('#resultInfo').append(callback.responseText);
-                      }
+                    new bootstrap.Modal(document.getElementById('modalError')).show();
+                    // $('#resultInfo').append(callback.responseText);
+                }
             });
-                    $('#modalManufacturerSelect')[0].selectize.clear();
-                    $('#modalModelInput')[0].selectize.clear();
-                    $('#modalPrintColorTypeSelect')[0].value = "";
-                    $('#modalPrintFormatTypeSelect')[0].value = "";
-                    $('#modalPrintSpeedSelect')[0].value = "";
+            $('#modalManufacturerSelect')[0].selectize.clear();
+            $('#modalModelInput')[0].selectize.clear();
+            $('#modalPrintColorTypeSelect')[0].value = "";
+            $('#modalPrintFormatTypeSelect')[0].value = "";
+            $('#modalPrintSpeedSelect')[0].value = "";
         });
 
         modalModelsPrinterFooterCloseBtn.addEventListener("click", function () {
@@ -880,296 +870,296 @@ window.onload = function () {
     modalModelsCartridgeFooterCloseBtn.id = "modalModelsCartridgeWindow1BtnClose";
     modalModelsCartridgeFooterDiv.appendChild(modalModelsCartridgeFooterCloseBtn);
 
-   
-
-        // Модальное окно с добавлением моделей принтеров
-
-        modalModelsCartridgeWrapper2 = document.createElement('div');
-        modalModelsCartridgeWrapper2.className = 'modal fade';
-        modalModelsCartridgeWrapper2.id = 'modalModelsCartridge2';
-        modalModelsCartridgeWrapper2.setAttribute('aria-hidden', 'true');
-        modalModelsCartridgeWrapper2.setAttribute('tabindex', '-1');
-        parent.appendChild(modalModelsCartridgeWrapper2);
-
-        modalModelsCartridgeDialogCenteredDiv2 = document.createElement('div');
-        modalModelsCartridgeDialogCenteredDiv2.className = 'modal-dialog modal-dialog-centered modal-xl';
-        modalModelsCartridgeWrapper2.appendChild(modalModelsCartridgeDialogCenteredDiv2);
-
-        modalModelsCartridgeContentDiv2 = document.createElement('div');
-        modalModelsCartridgeContentDiv2.className = 'modal-content';
-        modalModelsCartridgeDialogCenteredDiv2.appendChild(modalModelsCartridgeContentDiv2);
-
-        modalModelsCartridgeHeaderDiv2 = document.createElement('div');
-        modalModelsCartridgeHeaderDiv2.className = 'modal-header';
-        modalModelsCartridgeContentDiv2.appendChild(modalModelsCartridgeHeaderDiv2);
-
-        modalModelsCartridgeTitle2H1 = document.createElement('h1');
-        modalModelsCartridgeTitle2H1.className = 'modal-title fs-5';
-        modalModelsCartridgeTitle2H1.id = 'modalModelsCartridgeLabel2';
-        modalModelsCartridgeTitle2H1.innerText = 'Добавить модель картриджа';
-        modalModelsCartridgeHeaderDiv2.appendChild(modalModelsCartridgeTitle2H1);
-
-        modalModelsCartridgeBtnClose2 = document.createElement('button');
-        modalModelsCartridgeBtnClose2.className = 'btn-close';
-        modalModelsCartridgeBtnClose2.type = 'button';
-        modalModelsCartridgeBtnClose2.setAttribute('data-bs-dismiss', 'modal');
-        modalModelsCartridgeBtnClose2.setAttribute('aria-label', 'close');
-        modalModelsCartridgeHeaderDiv2.appendChild(modalModelsCartridgeBtnClose2);
-
-        modalModelsCartridgeBodyDiv2 = document.createElement('div');
-        modalModelsCartridgeBodyDiv2.className = 'modal-body ml-3 mr-3';
-        modalModelsCartridgeContentDiv2.appendChild(modalModelsCartridgeBodyDiv2);
 
 
-        modalModelsCartridgeContentInnerRow1 = document.createElement('div');
-        modalModelsCartridgeContentInnerRow1.className = 'row modalModelCartridgeRow mt-3';
-        modalModelsCartridgeBodyDiv2.appendChild(modalModelsCartridgeContentInnerRow1);
+    // Модальное окно с добавлением моделей принтеров
 
-        modalModelsCartridgeContentInnerDiv1 = document.createElement('div');
-        modalModelsCartridgeContentInnerDiv1.className = 'col';
-        modalModelsCartridgeContentInnerDiv1.id = 'modalModelCartridgeDiv';
-        modalModelsCartridgeContentInnerRow1.appendChild(modalModelsCartridgeContentInnerDiv1);
+    modalModelsCartridgeWrapper2 = document.createElement('div');
+    modalModelsCartridgeWrapper2.className = 'modal fade';
+    modalModelsCartridgeWrapper2.id = 'modalModelsCartridge2';
+    modalModelsCartridgeWrapper2.setAttribute('aria-hidden', 'true');
+    modalModelsCartridgeWrapper2.setAttribute('tabindex', '-1');
+    parent.appendChild(modalModelsCartridgeWrapper2);
 
-        modalModelsCartridgeContentInnerDiv2 = document.createElement('div');
-        modalModelsCartridgeContentInnerDiv2.className = 'col modalModelDiv';
-        modalModelsCartridgeContentInnerDiv2.id = 'modalModelDiv';
-        modalModelsCartridgeContentInnerRow1.appendChild(modalModelsCartridgeContentInnerDiv2);
+    modalModelsCartridgeDialogCenteredDiv2 = document.createElement('div');
+    modalModelsCartridgeDialogCenteredDiv2.className = 'modal-dialog modal-dialog-centered modal-xl';
+    modalModelsCartridgeWrapper2.appendChild(modalModelsCartridgeDialogCenteredDiv2);
 
-        modalModelsCartridgeContentInnerTypeSelect = document.createElement('select');
-        modalModelsCartridgeContentInnerTypeSelect.className = 'form-select modalModelTypeInput';
-        modalModelsCartridgeContentInnerTypeSelect.type = 'text';
-        modalModelsCartridgeContentInnerTypeSelect.id = 'modalModelTypeInput';
-        modalModelsCartridgeContentInnerDiv1.appendChild(modalModelsCartridgeContentInnerTypeSelect);
+    modalModelsCartridgeContentDiv2 = document.createElement('div');
+    modalModelsCartridgeContentDiv2.className = 'modal-content';
+    modalModelsCartridgeDialogCenteredDiv2.appendChild(modalModelsCartridgeContentDiv2);
+
+    modalModelsCartridgeHeaderDiv2 = document.createElement('div');
+    modalModelsCartridgeHeaderDiv2.className = 'modal-header';
+    modalModelsCartridgeContentDiv2.appendChild(modalModelsCartridgeHeaderDiv2);
+
+    modalModelsCartridgeTitle2H1 = document.createElement('h1');
+    modalModelsCartridgeTitle2H1.className = 'modal-title fs-5';
+    modalModelsCartridgeTitle2H1.id = 'modalModelsCartridgeLabel2';
+    modalModelsCartridgeTitle2H1.innerText = 'Добавить модель картриджа';
+    modalModelsCartridgeHeaderDiv2.appendChild(modalModelsCartridgeTitle2H1);
+
+    modalModelsCartridgeBtnClose2 = document.createElement('button');
+    modalModelsCartridgeBtnClose2.className = 'btn-close';
+    modalModelsCartridgeBtnClose2.type = 'button';
+    modalModelsCartridgeBtnClose2.setAttribute('data-bs-dismiss', 'modal');
+    modalModelsCartridgeBtnClose2.setAttribute('aria-label', 'close');
+    modalModelsCartridgeHeaderDiv2.appendChild(modalModelsCartridgeBtnClose2);
+
+    modalModelsCartridgeBodyDiv2 = document.createElement('div');
+    modalModelsCartridgeBodyDiv2.className = 'modal-body ml-3 mr-3';
+    modalModelsCartridgeContentDiv2.appendChild(modalModelsCartridgeBodyDiv2);
 
 
-        // modalModelsPrinterContentInnerModelInput.placeholder = 'Модель';
-        modalModelsCartridgeContentInnerModelSelect = document.createElement('select');
-        modalModelsCartridgeContentInnerModelSelect.className = 'form-select modalModelCartridgeSelect';
-        modalModelsCartridgeContentInnerModelSelect.id = 'modalModelCartridgeSelect';
-        modalModelsCartridgeContentInnerModelSelect.value = 'Модель';
-        modalModelsCartridgeContentInnerDiv2.appendChild(modalModelsCartridgeContentInnerModelSelect);
+    modalModelsCartridgeContentInnerRow1 = document.createElement('div');
+    modalModelsCartridgeContentInnerRow1.className = 'row modalModelCartridgeRow mt-3';
+    modalModelsCartridgeBodyDiv2.appendChild(modalModelsCartridgeContentInnerRow1);
 
-        modalModelsPrinterDiv = document.createElement('div');
-        modalModelsPrinterDiv.className = 'col modalPrinterDiv';
-        modalModelsPrinterDiv.id = 'modalPrinterDiv';
-        modalModelsCartridgeContentInnerRow1.appendChild(modalModelsPrinterDiv);
+    modalModelsCartridgeContentInnerDiv1 = document.createElement('div');
+    modalModelsCartridgeContentInnerDiv1.className = 'col';
+    modalModelsCartridgeContentInnerDiv1.id = 'modalModelCartridgeDiv';
+    modalModelsCartridgeContentInnerRow1.appendChild(modalModelsCartridgeContentInnerDiv1);
 
-        modalModelsPrinterSelect = document.createElement('select');
-        modalModelsPrinterSelect.className = 'form-select modalModelsPrinterSelect';
-        modalModelsPrinterSelect.id = 'modalModelsPrinterSelect';
-        modalModelsPrinterSelect.value = 'Принтер';
-        modalModelsPrinterDiv.appendChild(modalModelsPrinterSelect);
+    modalModelsCartridgeContentInnerDiv2 = document.createElement('div');
+    modalModelsCartridgeContentInnerDiv2.className = 'col modalModelDiv';
+    modalModelsCartridgeContentInnerDiv2.id = 'modalModelDiv';
+    modalModelsCartridgeContentInnerRow1.appendChild(modalModelsCartridgeContentInnerDiv2);
 
-        modalNominalResourceDiv = document.createElement('div');
-        modalNominalResourceDiv.className = 'col';
-        modalNominalResourceDiv.id = 'modalPrintSpeedDiv';
-        modalModelsCartridgeContentInnerRow1.appendChild(modalNominalResourceDiv);
+    modalModelsCartridgeContentInnerTypeSelect = document.createElement('select');
+    modalModelsCartridgeContentInnerTypeSelect.className = 'form-select modalModelTypeInput';
+    modalModelsCartridgeContentInnerTypeSelect.type = 'text';
+    modalModelsCartridgeContentInnerTypeSelect.id = 'modalModelTypeInput';
+    modalModelsCartridgeContentInnerDiv1.appendChild(modalModelsCartridgeContentInnerTypeSelect);
 
-        modalNominalResourceInput = document.createElement('input');
-        modalNominalResourceInput.className = 'form-control';
-        modalNominalResourceInput.type = 'text';
-        modalNominalResourceInput.id = 'modalNominalResourceInput';
-        modalNominalResourceInput.placeholder = 'Номинальный ресурс';
-        modalNominalResourceDiv.appendChild(modalNominalResourceInput);
 
-        modalModelsCartridgeFooterDiv2 = document.createElement('div');
-        modalModelsCartridgeFooterDiv2.className = 'modal-footer';
-        modalModelsCartridgeContentDiv2.appendChild(modalModelsCartridgeFooterDiv2);
+    // modalModelsPrinterContentInnerModelInput.placeholder = 'Модель';
+    modalModelsCartridgeContentInnerModelSelect = document.createElement('select');
+    modalModelsCartridgeContentInnerModelSelect.className = 'form-select modalModelCartridgeSelect';
+    modalModelsCartridgeContentInnerModelSelect.id = 'modalModelCartridgeSelect';
+    modalModelsCartridgeContentInnerModelSelect.value = 'Модель';
+    modalModelsCartridgeContentInnerDiv2.appendChild(modalModelsCartridgeContentInnerModelSelect);
 
-        modalModelsCartridgeFooterCloseBtn2 = document.createElement('button');
-        modalModelsCartridgeFooterCloseBtn2.className = 'btn btn-secondary';
-        modalModelsCartridgeFooterCloseBtn2.type = 'button';
-        modalModelsCartridgeFooterCloseBtn2.setAttribute('data-bs-toggle', 'modal');
-        modalModelsCartridgeFooterCloseBtn2.setAttribute('data-bs-target', '#modalModelsCartridge');
-        modalModelsCartridgeFooterCloseBtn2.innerText = 'Закрыть';
-        modalModelsCartridgeFooterDiv2.appendChild(modalModelsCartridgeFooterCloseBtn2);
+    modalModelsPrinterDiv = document.createElement('div');
+    modalModelsPrinterDiv.className = 'col modalPrinterDiv';
+    modalModelsPrinterDiv.id = 'modalPrinterDiv';
+    modalModelsCartridgeContentInnerRow1.appendChild(modalModelsPrinterDiv);
 
-        modalModelsCartridgeFooterOKBtn2 = document.createElement('button');
-        modalModelsCartridgeFooterOKBtn2.className = 'btn btn-primary';
-        modalModelsCartridgeFooterOKBtn2.type = 'button';
-        modalModelsCartridgeFooterOKBtn2.setAttribute('data-bs-toggle', 'modal');
-        modalModelsCartridgeFooterOKBtn2.setAttribute('data-bs-target', '#modalModelsCartridge');
-        modalModelsCartridgeFooterOKBtn2.innerText = 'Добавить';
-        modalModelsCartridgeFooterDiv2.appendChild(modalModelsCartridgeFooterOKBtn2);
+    modalModelsPrinterSelect = document.createElement('select');
+    modalModelsPrinterSelect.className = 'form-select modalModelsPrinterSelect';
+    modalModelsPrinterSelect.id = 'modalModelsPrinterSelect';
+    modalModelsPrinterSelect.value = 'Принтер';
+    modalModelsPrinterDiv.appendChild(modalModelsPrinterSelect);
 
-        const type = document.getElementById('modalModelTypeInput');
-        const model = document.getElementById('modalModelCartridgeSelect');
-        const modelPrinters = document.getElementById('modalModelsPrinterSelect');
-        const resource = document.getElementById('modalNominalResourceInput');
+    modalNominalResourceDiv = document.createElement('div');
+    modalNominalResourceDiv.className = 'col';
+    modalNominalResourceDiv.id = 'modalPrintSpeedDiv';
+    modalModelsCartridgeContentInnerRow1.appendChild(modalNominalResourceDiv);
 
-        let typeChoice;
-        $('.modalModelTypeInput').selectize({
-            create: false,
-            maxItems: 1,
-            placeholder: "тип картриджа",
-            valueField: 'type',
-            labelField: 'type',
-            searchField: "type",
-            options: [{type: "Оригинальный"},
-                {type: "Совместимый"},
-                {type: "Стартовый"}],
-            onChange: function (value) {
-                if (value !== '') {
-                    selectizeModelFromChoisesTypeCartridge = $(this.$control_input[0].closest('.modalModelCartridgeRow')).find('.modalModelCartridgeSelect')[0];
-                    typeChoice = $(this.$control_input[0].closest('.modalModelCartridgeRow')).find('.modalModelTypeInput')[0].innerText;
-                    selectizeModelFromChoisesTypeCartridge.selectize.enable();
-                    typeValueFromSelectize = value;
-                    $.ajax({
-                        url: "/cartridge/" + encodeURIComponent(value),
-                        type: 'GET',
-                        dataType: 'json', // added data type
-                        success: function (res) {
-                            let keys = Object.keys(selectizeModelFromChoisesTypeCartridge.selectize.options);
-                            for (let i = 0; i < keys.length; i++) {
-                                selectizeModelFromChoisesTypeCartridge.selectize.removeOption(keys[i]);
-                            }
-                            res.forEach(model => {
-                                selectizeModelFromChoisesTypeCartridge.selectize.addOption(model);
-                                selectizeModelFromChoisesTypeCartridge.selectize.addItem(model);
-                            });
+    modalNominalResourceInput = document.createElement('input');
+    modalNominalResourceInput.className = 'form-control';
+    modalNominalResourceInput.type = 'text';
+    modalNominalResourceInput.id = 'modalNominalResourceInput';
+    modalNominalResourceInput.placeholder = 'Номинальный ресурс';
+    modalNominalResourceDiv.appendChild(modalNominalResourceInput);
 
-                            selectizeModelFromChoisesTypeCartridge.selectize.refreshOptions();
-                            selectizeModelFromChoisesTypeCartridge.selectize.clear();
-                            selectizeModelFromChoisesTypeCartridge.selectize.enable();
+    modalModelsCartridgeFooterDiv2 = document.createElement('div');
+    modalModelsCartridgeFooterDiv2.className = 'modal-footer';
+    modalModelsCartridgeContentDiv2.appendChild(modalModelsCartridgeFooterDiv2);
+
+    modalModelsCartridgeFooterCloseBtn2 = document.createElement('button');
+    modalModelsCartridgeFooterCloseBtn2.className = 'btn btn-secondary';
+    modalModelsCartridgeFooterCloseBtn2.type = 'button';
+    modalModelsCartridgeFooterCloseBtn2.setAttribute('data-bs-toggle', 'modal');
+    modalModelsCartridgeFooterCloseBtn2.setAttribute('data-bs-target', '#modalModelsCartridge');
+    modalModelsCartridgeFooterCloseBtn2.innerText = 'Закрыть';
+    modalModelsCartridgeFooterDiv2.appendChild(modalModelsCartridgeFooterCloseBtn2);
+
+    modalModelsCartridgeFooterOKBtn2 = document.createElement('button');
+    modalModelsCartridgeFooterOKBtn2.className = 'btn btn-primary';
+    modalModelsCartridgeFooterOKBtn2.type = 'button';
+    modalModelsCartridgeFooterOKBtn2.setAttribute('data-bs-toggle', 'modal');
+    modalModelsCartridgeFooterOKBtn2.setAttribute('data-bs-target', '#modalModelsCartridge');
+    modalModelsCartridgeFooterOKBtn2.innerText = 'Добавить';
+    modalModelsCartridgeFooterDiv2.appendChild(modalModelsCartridgeFooterOKBtn2);
+
+    const type = document.getElementById('modalModelTypeInput');
+    const model = document.getElementById('modalModelCartridgeSelect');
+    const modelPrinters = document.getElementById('modalModelsPrinterSelect');
+    const resource = document.getElementById('modalNominalResourceInput');
+
+    let typeChoice;
+    $('.modalModelTypeInput').selectize({
+        create: false,
+        maxItems: 1,
+        placeholder: "тип картриджа",
+        valueField: 'type',
+        labelField: 'type',
+        searchField: "type",
+        options: [{type: "Оригинальный"},
+            {type: "Совместимый"},
+            {type: "Стартовый"}],
+        onChange: function (value) {
+            if (value !== '') {
+                selectizeModelFromChoisesTypeCartridge = $(this.$control_input[0].closest('.modalModelCartridgeRow')).find('.modalModelCartridgeSelect')[0];
+                typeChoice = $(this.$control_input[0].closest('.modalModelCartridgeRow')).find('.modalModelTypeInput')[0].innerText;
+                selectizeModelFromChoisesTypeCartridge.selectize.enable();
+                typeValueFromSelectize = value;
+                $.ajax({
+                    url: "/cartridge/" + encodeURIComponent(value),
+                    type: 'GET',
+                    dataType: 'json', // added data type
+                    success: function (res) {
+                        let keys = Object.keys(selectizeModelFromChoisesTypeCartridge.selectize.options);
+                        for (let i = 0; i < keys.length; i++) {
+                            selectizeModelFromChoisesTypeCartridge.selectize.removeOption(keys[i]);
                         }
-                    });
-                }
-            }
-        });
+                        res.forEach(model => {
+                            selectizeModelFromChoisesTypeCartridge.selectize.addOption(model);
+                            selectizeModelFromChoisesTypeCartridge.selectize.addItem(model);
+                        });
 
-        // Selectize модель картриджа
-
-        $('.modalModelCartridgeSelect').selectize({
-            create: false,
-            placeholder: "модель картриджа",
-            valueField: 'model',
-            labelField: 'model',
-            searchField: "model",
-            preload: 'focus',
-            create: true,
-            load: function (query, callback) {
-                $.ajax({
-                    url: '/cartridge/' + encodeURIComponent(typeChoice),
-                    type: 'GET',
-                    dataType: 'json',
-                    data: {model: query},
-                    error: callback,
-                    success: callback
+                        selectizeModelFromChoisesTypeCartridge.selectize.refreshOptions();
+                        selectizeModelFromChoisesTypeCartridge.selectize.clear();
+                        selectizeModelFromChoisesTypeCartridge.selectize.enable();
+                    }
                 });
             }
-        });
+        }
+    });
 
-        $(".modalModelsPrinterSelect").selectize({
-            plugins: ["remove_button"],
-            delimiter: ",",
-            valueField: 'idModel',
-            labelField: 'model',
-            searchField: 'model',
-            persist: false,
-            maxItems: null,
-            placeholder: "модель принтера",
-            preload: 'focus',
-            load: function (query, callback) {
-                $.ajax({
-                    url: '/models/',
-                    type: 'GET',
-                    dataType: 'json',
-                    error: callback,
-                    success: callback
-                });
-            },
-            create: function (input) {
-                return {
-                    value: input,
-                    text: input,
-                };
-            }
-        });
+    // Selectize модель картриджа
 
-        modalModelsCartridgeFooterOKBtn2.addEventListener('click', function () {
-
+    $('.modalModelCartridgeSelect').selectize({
+        create: false,
+        placeholder: "модель картриджа",
+        valueField: 'model',
+        labelField: 'model',
+        searchField: "model",
+        preload: 'focus',
+        create: true,
+        load: function (query, callback) {
             $.ajax({
-                url: "/addmodelcart/",
-                type: 'POST',
-                data: {model: $('.modalModelCartridgeSelect')[0].innerText,
-                    type: $(".modalModelTypeInput")[0].innerText,
-                    resource: $('#modalNominalResourceInput')[0].value,
-                    idModel: $(".modalModelsPrinterSelect")[0].selectize.items
-                },
-                success: function (result) {
-                    parent = document.getElementById('modalModelsCartridgeContentInner');
-                    child = document.getElementById('modalTableModelsCartridge');
-                    parent.removeChild(child);
-
-
-                    tableModelsCartridge = document.createElement('table');
-                    tableModelsCartridge.id = "modalTableModelsCartridge";
-                    tableModelsCartridge.className = "table table-striped table-bordered";
-                    modalModelsCartridgeBodyContentInner.appendChild(tableModelsCartridge);
-
-                    theadModelsCartridge = document.createElement('thead');
-                    tableModelsCartridge.appendChild(theadModelsCartridge);
-                    trTheadModelsCartridge = document.createElement('tr');
-                    thTheadModelsCartridge1 = document.createElement('th');
-
-                    thTheadModelsCartridge1.setAttribute('scope', 'col');
-                    thTheadModelsCartridge1.innerText = '#';
-                    thTheadModelsCartridge2 = document.createElement('th');
-                    thTheadModelsCartridge2.setAttribute('scope', 'col');
-                    thTheadModelsCartridge2.innerText = 'Модель картриджа';
-                    theadModelsCartridge.appendChild(trTheadModelsCartridge);
-                    trTheadModelsCartridge.appendChild(thTheadModelsCartridge1);
-                    trTheadModelsCartridge.appendChild(thTheadModelsCartridge2);
-                    tbodyModelCartridge = document.createElement('tbody');
-                    tableModelsCartridge.appendChild(tbodyModelCartridge);
-                    
-                    $.ajax({
-                        url: '/cartridge',
-                        type: 'GET',
-                        dataType: 'json',
-                        success: function (data) {
-                            arr = data.sort();
-                            for (i = 0; i < arr.length; i++) {
-                                trModelsCartridge = document.createElement('tr');
-                                tbodyModelCartridge.appendChild(trModelsCartridge);
-                                tdCountModelsCartridge = document.createElement('td');
-                                tdCountModelsCartridge.innerText = i + 1;
-                                trModelsCartridge.appendChild(tdCountModelsCartridge);
-                                tdModelCartridge = document.createElement('td');
-                                tdModelCartridge.setAttribute('id', arr[i].id);
-                                tdModelCartridge.setAttribute('class', 'model');
-                                tdModelCartridge.innerText = arr[i].model;
-                                trModelsCartridge.appendChild(tdModelCartridge);
-                            }
-                            
-                            
-                        }
-                    });
-
-                },
-                error: function(callback) {
-            if($('#exceptionContainer').length == 0) {
-             $('#modalBody').append(callback.responseText);
-         } else {
-             
-             $('#exceptionContainer').replaceWith(callback.responseText);
-            
-         }
-
-            new bootstrap.Modal(document.getElementById('modalError')).show();
-           // $('#resultInfo').append(callback.responseText);
-  }
-                
+                url: '/cartridge/' + encodeURIComponent(typeChoice),
+                type: 'GET',
+                dataType: 'json',
+                data: {model: query},
+                error: callback,
+                success: callback
             });
-                    $("#modalModelTypeInput")[0].selectize.clear();
-                    $('#modalModelCartridgeSelect')[0].selectize.clear();
-                    $('#modalNominalResourceInput')[0].value = "";
-                    $("#modalModelsPrinterSelect")[0].selectize.clear();
-        });
+        }
+    });
 
-        modalModelsCartridgeFooterCloseBtn.addEventListener('click', function () {
-            window.location.reload();
+    $(".modalModelsPrinterSelect").selectize({
+        plugins: ["remove_button"],
+        delimiter: ",",
+        valueField: 'idModel',
+        labelField: 'model',
+        searchField: 'model',
+        persist: false,
+        maxItems: null,
+        placeholder: "модель принтера",
+        preload: 'focus',
+        load: function (query, callback) {
+            $.ajax({
+                url: '/models/',
+                type: 'GET',
+                dataType: 'json',
+                error: callback,
+                success: callback
+            });
+        },
+        create: function (input) {
+            return {
+                value: input,
+                text: input,
+            };
+        }
+    });
+
+    modalModelsCartridgeFooterOKBtn2.addEventListener('click', function () {
+
+        $.ajax({
+            url: "/addmodelcart/",
+            type: 'POST',
+            data: {model: $('.modalModelCartridgeSelect')[0].innerText,
+                type: $(".modalModelTypeInput")[0].innerText,
+                resource: $('#modalNominalResourceInput')[0].value,
+                idModel: $(".modalModelsPrinterSelect")[0].selectize.items
+            },
+            success: function (result) {
+                parent = document.getElementById('modalModelsCartridgeContentInner');
+                child = document.getElementById('modalTableModelsCartridge');
+                parent.removeChild(child);
+
+
+                tableModelsCartridge = document.createElement('table');
+                tableModelsCartridge.id = "modalTableModelsCartridge";
+                tableModelsCartridge.className = "table table-striped table-bordered";
+                modalModelsCartridgeBodyContentInner.appendChild(tableModelsCartridge);
+
+                theadModelsCartridge = document.createElement('thead');
+                tableModelsCartridge.appendChild(theadModelsCartridge);
+                trTheadModelsCartridge = document.createElement('tr');
+                thTheadModelsCartridge1 = document.createElement('th');
+
+                thTheadModelsCartridge1.setAttribute('scope', 'col');
+                thTheadModelsCartridge1.innerText = '#';
+                thTheadModelsCartridge2 = document.createElement('th');
+                thTheadModelsCartridge2.setAttribute('scope', 'col');
+                thTheadModelsCartridge2.innerText = 'Модель картриджа';
+                theadModelsCartridge.appendChild(trTheadModelsCartridge);
+                trTheadModelsCartridge.appendChild(thTheadModelsCartridge1);
+                trTheadModelsCartridge.appendChild(thTheadModelsCartridge2);
+                tbodyModelCartridge = document.createElement('tbody');
+                tableModelsCartridge.appendChild(tbodyModelCartridge);
+
+                $.ajax({
+                    url: '/cartridge',
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function (data) {
+                        arr = data.sort();
+                        for (i = 0; i < arr.length; i++) {
+                            trModelsCartridge = document.createElement('tr');
+                            tbodyModelCartridge.appendChild(trModelsCartridge);
+                            tdCountModelsCartridge = document.createElement('td');
+                            tdCountModelsCartridge.innerText = i + 1;
+                            trModelsCartridge.appendChild(tdCountModelsCartridge);
+                            tdModelCartridge = document.createElement('td');
+                            tdModelCartridge.setAttribute('id', arr[i].id);
+                            tdModelCartridge.setAttribute('class', 'model');
+                            tdModelCartridge.innerText = arr[i].model;
+                            trModelsCartridge.appendChild(tdModelCartridge);
+                        }
+
+
+                    }
+                });
+
+            },
+            error: function (callback) {
+                if ($('#exceptionContainer').length == 0) {
+                    $('#modalBody').append(callback.responseText);
+                } else {
+
+                    $('#exceptionContainer').replaceWith(callback.responseText);
+
+                }
+
+                new bootstrap.Modal(document.getElementById('modalError')).show();
+                // $('#resultInfo').append(callback.responseText);
+            }
+
         });
+        $("#modalModelTypeInput")[0].selectize.clear();
+        $('#modalModelCartridgeSelect')[0].selectize.clear();
+        $('#modalNominalResourceInput')[0].value = "";
+        $("#modalModelsPrinterSelect")[0].selectize.clear();
+    });
+
+    modalModelsCartridgeFooterCloseBtn.addEventListener('click', function () {
+        window.location.reload();
+    });
 
 
 
@@ -1183,57 +1173,57 @@ window.onload = function () {
     divModalPaningBuy.id = 'modalPlaning';
     divModalPaningBuy.setAttribute('tabindex', '-1');
     parent.appendChild(divModalPaningBuy);
-    
+
     divModalDialogPlaningBuy = document.createElement('div');
     divModalDialogPlaningBuy.className = 'modal-dialog modal-xl';
     divModalPaningBuy.appendChild(divModalDialogPlaningBuy);
-    
+
     divModalContentPlaningBuy = document.createElement('div');
     divModalContentPlaningBuy.className = 'modal-content';
     divModalDialogPlaningBuy.appendChild(divModalContentPlaningBuy);
-    
+
     divModalHeaderPlaningBuy = document.createElement('div');
     divModalHeaderPlaningBuy.className = 'modal-header';
     divModalContentPlaningBuy.appendChild(divModalHeaderPlaningBuy);
-    
+
     titleModalPlaningBuy = document.createElement('h1');
     titleModalPlaningBuy.className = 'modal-title fs-5';
     titleModalPlaningBuy.id = 'titleModalPlaningBuy';
     titleModalPlaningBuy.innerText = 'Показать статистику за период';
-    
+
     btnCloseModalPlaningBuy = document.createElement('button');
     btnCloseModalPlaningBuy.className = 'btn-close';
     btnCloseModalPlaningBuy.setAttribute('data-bs-dismiss', 'modal');
     btnCloseModalPlaningBuy.setAttribute('aria-label', 'Close');
     divModalHeaderPlaningBuy.appendChild(titleModalPlaningBuy);
     divModalHeaderPlaningBuy.appendChild(btnCloseModalPlaningBuy);
-    
+
     divModalBodyPlaningBuy = document.createElement('div');
     divModalBodyPlaningBuy.className = 'modal-body';
     divModalContentPlaningBuy.appendChild(divModalBodyPlaningBuy);
-   
+
     divModalContainerInnerPlaningBuy = document.createElement('div');
     divModalContainerInnerPlaningBuy.className = 'container-fluid mt-4';
     divModalBodyPlaningBuy.appendChild(divModalContainerInnerPlaningBuy);
-    
+
     divContentRowCalendars = document.createElement('div');
     divContentRowCalendars.className = 'row rowModalContent';
     divModalContainerInnerPlaningBuy.appendChild(divContentRowCalendars);
-    
+
     divBeginDate = document.createElement('div');
     divBeginDate.className = 'col';
-    
+
     divEndDate = document.createElement('div');
     divEndDate.className = 'col';
-    
+
     divContentRowCalendars.appendChild(divBeginDate);
     divContentRowCalendars.appendChild(divEndDate);
-    
+
     divFormGroupDateBegin = document.createElement('div');
     divFormGroupDateBegin.className = 'input-group';
     divBeginDate.appendChild(divFormGroupDateBegin);
 
-    
+
     labelForDateBegin = document.createElement('span');
     labelForDateBegin.innerText = 'Дата начала периода';
     labelForDateBegin.className = 'input-group-text';
@@ -1241,231 +1231,231 @@ window.onload = function () {
     inputDateBegin.type = 'date';
     inputDateBegin.className = 'form-control';
     inputDateBegin.id = 'dateBeginInput';
-    
+
     divFormGroupDateBegin.appendChild(labelForDateBegin);
     divFormGroupDateBegin.appendChild(inputDateBegin);
-    
-    
+
+
     divFormGroupDateEnd = document.createElement('div');
     divFormGroupDateEnd.className = 'input-group';
     divEndDate.appendChild(divFormGroupDateEnd);
-    
 
-    
+
+
     labelForDateEnd = document.createElement('span');
     labelForDateEnd.innerText = 'Дата окончания периода';
     labelForDateEnd.className = 'input-group-text';
-    
+
     inputDateEnd = document.createElement('input');
     inputDateEnd.type = 'date';
     inputDateEnd.className = 'form-control';
     inputDateEnd.id = 'dateEndInput';
-    
+
     divFormGroupDateEnd.appendChild(labelForDateEnd);
     divFormGroupDateEnd.appendChild(inputDateEnd);
-    
-    
+
+
     rowContentBtns = document.createElement('div');
     rowContentBtns.className = 'row rowModalContent text-center';
     divModalContainerInnerPlaningBuy.appendChild(rowContentBtns);
-    
+
     divBtnApply = document.createElement('div');
     divBtnApply.className = 'col mt-5';
     rowContentBtns.appendChild(divBtnApply);
-    
+
     let btnApplyPlaning = document.createElement('button');
     btnApplyPlaning.className = 'btn btn-secondary';
     btnApplyPlaning.type = 'button';
     btnApplyPlaning.id = 'btnApplyPlaning';
     btnApplyPlaning.innerText = 'Применить';
     divBtnApply.appendChild(btnApplyPlaning);
-    
-     //Контент ...
-     
-     
-     
-     divModalFooterPlaningBuy = document.createElement('div');
-     divModalFooterPlaningBuy.className = 'modal-footer';
-     divModalContentPlaningBuy.appendChild(divModalFooterPlaningBuy);
-     
-     btnFooterClosePlaningBuy = document.createElement('button');
-     btnFooterClosePlaningBuy.className = 'btn btn-secondary';
-     btnFooterClosePlaningBuy.type = 'button';
-     btnFooterClosePlaningBuy.setAttribute('data-bs-dismiss', 'modal');
-     btnFooterClosePlaningBuy.innerText = 'Закрыть';
-     divModalFooterPlaningBuy.appendChild(btnFooterClosePlaningBuy);
-     
- 
-    
-     
-     
-     btnApplyPlaning.addEventListener('click', function() {
-        
-         
-         dateBegin = $('#dateBeginInput')[0].value;
-         dateEnd = $('#dateEndInput')[0].value;
-        
-         //loc = $('#selectLocationForPlaning')[0].selectize.$input[0].selectedOptions[0].value;
-         var dateEndParse = Date.parse(dateEnd);
-         var dateEndParseB = new Date(dateEndParse);
-         var dateEndFormat = dateEndParseB.toLocaleDateString('ru');
-         
-         var nowDate = new Date();
-         var nowDateFormat = nowDate.toLocaleDateString('ru');
-         
-         if(dateEndFormat <= nowDateFormat) {
-             window.location.href = "/planing?dateBegin=" + dateBegin + "&dateEnd=" + dateEnd;
-         } else {
-             alert("Вы ввели неправильную дату");
-         }
-         
-         
-         
-         
-         
-     });
-    
-    
-     modalError = document.createElement('div');
-            modalError.className = 'modal fade';
-            modalError.id = 'modalError';
-            modalError.setAttribute("tabindex", -1);
-            modalError.setAttribute("aria-labelledby", "modalError");
-            modalError.setAttribute("aria-hidden", true);
-            modalDialog = document.createElement('div');
-            modalDialog.className = 'modal-dialog modal-lg';
-            modalContent = document.createElement('div');
-            modalContent.className = 'modal-content';
-            modalHeader = document.createElement('div');
-            modalHeader.className = 'modal-header';
-            titleModal = document.createElement('h1');
-            titleModal.className = 'modal-title fs-5';
-            titleModal.id = 'titleModal';
-            titleModal.innerText = 'Ошибка!';
-            closeHeaderButton = document.createElement('button');
-            closeHeaderButton.className = 'btn-close';
-            closeHeaderButton.setAttribute("data-bs-dismiss", "modal");
-            closeHeaderButton.setAttribute('aria-label', 'Закрыть');
-            $('body').append(modalError);
-            modalError.appendChild(modalDialog);
-            modalDialog.appendChild(modalContent);
-            modalContent.appendChild(modalHeader);
-            modalHeader.appendChild(titleModal);
-            modalHeader.appendChild(closeHeaderButton);
-            
-            modalBody = document.createElement('div');
-            modalBody.className = 'modal-body';
-            modalBody.id = 'modalBody';
 
-           
-           
-            modalContent.append(modalBody);
-          //  modalBody.appendChild(modalContainer);
-            modalFooter = document.createElement('div');
-            modalFooter.className = 'modal-footer';
-            footerBtnClose = document.createElement('button');
-            footerBtnClose.className = 'btn btn-secondary';
-            footerBtnClose.setAttribute('data-bs-dismiss', 'modal');
-            footerBtnClose.innerText = 'Ok';
-            
-            modalContent.appendChild(modalFooter);
-            modalFooter.appendChild(footerBtnClose);
-    
-          let addModelCartridgeMenu = document.querySelector('#addModelCartridgeMenu');
-          addModelCartridgeMenu.addEventListener('click', function() {
-              tableModelsCartridge = document.createElement('table');
-            tableModelsCartridge.id = "modalTableModelsCartridge";
-            tableModelsCartridge.className = "table table-striped table-bordered";
-            modalModelsCartridgeBodyContentInner.appendChild(tableModelsCartridge);
+    //Контент ...
 
-            theadModelsCartridge = document.createElement('thead');
-            tableModelsCartridge.appendChild(theadModelsCartridge);
-            trTheadModelsCartridge = document.createElement('tr');
-            thTheadModelsCartridge1 = document.createElement('th');
 
-            thTheadModelsCartridge1.setAttribute('scope', 'col');
-            thTheadModelsCartridge1.innerText = '#';
-            thTheadModelsCartridge2 = document.createElement('th');
-            thTheadModelsCartridge2.setAttribute('scope', 'col');
-            thTheadModelsCartridge2.innerText = 'Модель картриджа';
-            theadModelsCartridge.appendChild(trTheadModelsCartridge);
-            trTheadModelsCartridge.appendChild(thTheadModelsCartridge1);
-            trTheadModelsCartridge.appendChild(thTheadModelsCartridge2);
-            tbodyModelCartridge = document.createElement('tbody');
-            tableModelsCartridge.appendChild(tbodyModelCartridge);
 
-            $.ajax({
-                url: '/cartridge',
-                type: 'GET',
-                dataType: 'json',
-                success: function (data) {
-                    arr = data.sort();
-                    for (i = 0; i < arr.length; i++) {
-                        trModelsCartridge = document.createElement('tr');
-                        tbodyModelCartridge.appendChild(trModelsCartridge);
-                        tdCountModelsCartridge = document.createElement('td');
-                        tdCountModelsCartridge.innerText = i + 1;
-                        trModelsCartridge.appendChild(tdCountModelsCartridge);
-                        tdModelCartridge = document.createElement('td');
-                        tdModelCartridge.setAttribute('id', arr[i].id);
-                        tdModelCartridge.setAttribute('class', 'model');
-                        tdModelCartridge.innerText = arr[i].model;
-                        trModelsCartridge.appendChild(tdModelCartridge);
-                    }
+    divModalFooterPlaningBuy = document.createElement('div');
+    divModalFooterPlaningBuy.className = 'modal-footer';
+    divModalContentPlaningBuy.appendChild(divModalFooterPlaningBuy);
+
+    btnFooterClosePlaningBuy = document.createElement('button');
+    btnFooterClosePlaningBuy.className = 'btn btn-secondary';
+    btnFooterClosePlaningBuy.type = 'button';
+    btnFooterClosePlaningBuy.setAttribute('data-bs-dismiss', 'modal');
+    btnFooterClosePlaningBuy.innerText = 'Закрыть';
+    divModalFooterPlaningBuy.appendChild(btnFooterClosePlaningBuy);
+
+
+
+
+
+    btnApplyPlaning.addEventListener('click', function () {
+
+
+        dateBegin = $('#dateBeginInput')[0].value;
+        dateEnd = $('#dateEndInput')[0].value;
+
+        //loc = $('#selectLocationForPlaning')[0].selectize.$input[0].selectedOptions[0].value;
+        var dateEndParse = Date.parse(dateEnd);
+        var dateEndParseB = new Date(dateEndParse);
+        var dateEndFormat = dateEndParseB.toLocaleDateString('ru');
+
+        var nowDate = new Date();
+        var nowDateFormat = nowDate.toLocaleDateString('ru');
+
+        if (dateEndFormat <= nowDateFormat) {
+            window.location.href = "/planing?dateBegin=" + dateBegin + "&dateEnd=" + dateEnd;
+        } else {
+            alert("Вы ввели неправильную дату");
+        }
+
+
+
+
+
+    });
+
+
+    modalError = document.createElement('div');
+    modalError.className = 'modal fade';
+    modalError.id = 'modalError';
+    modalError.setAttribute("tabindex", -1);
+    modalError.setAttribute("aria-labelledby", "modalError");
+    modalError.setAttribute("aria-hidden", true);
+    modalDialog = document.createElement('div');
+    modalDialog.className = 'modal-dialog modal-lg';
+    modalContent = document.createElement('div');
+    modalContent.className = 'modal-content';
+    modalHeader = document.createElement('div');
+    modalHeader.className = 'modal-header';
+    titleModal = document.createElement('h1');
+    titleModal.className = 'modal-title fs-5';
+    titleModal.id = 'titleModal';
+    titleModal.innerText = 'Ошибка!';
+    closeHeaderButton = document.createElement('button');
+    closeHeaderButton.className = 'btn-close';
+    closeHeaderButton.setAttribute("data-bs-dismiss", "modal");
+    closeHeaderButton.setAttribute('aria-label', 'Закрыть');
+    $('body').append(modalError);
+    modalError.appendChild(modalDialog);
+    modalDialog.appendChild(modalContent);
+    modalContent.appendChild(modalHeader);
+    modalHeader.appendChild(titleModal);
+    modalHeader.appendChild(closeHeaderButton);
+
+    modalBody = document.createElement('div');
+    modalBody.className = 'modal-body';
+    modalBody.id = 'modalBody';
+
+
+
+    modalContent.append(modalBody);
+    //  modalBody.appendChild(modalContainer);
+    modalFooter = document.createElement('div');
+    modalFooter.className = 'modal-footer';
+    footerBtnClose = document.createElement('button');
+    footerBtnClose.className = 'btn btn-secondary';
+    footerBtnClose.setAttribute('data-bs-dismiss', 'modal');
+    footerBtnClose.innerText = 'Ok';
+
+    modalContent.appendChild(modalFooter);
+    modalFooter.appendChild(footerBtnClose);
+
+    let addModelCartridgeMenu = document.querySelector('#addModelCartridgeMenu');
+    addModelCartridgeMenu.addEventListener('click', function () {
+        tableModelsCartridge = document.createElement('table');
+        tableModelsCartridge.id = "modalTableModelsCartridge";
+        tableModelsCartridge.className = "table table-striped table-bordered";
+        modalModelsCartridgeBodyContentInner.appendChild(tableModelsCartridge);
+
+        theadModelsCartridge = document.createElement('thead');
+        tableModelsCartridge.appendChild(theadModelsCartridge);
+        trTheadModelsCartridge = document.createElement('tr');
+        thTheadModelsCartridge1 = document.createElement('th');
+
+        thTheadModelsCartridge1.setAttribute('scope', 'col');
+        thTheadModelsCartridge1.innerText = '#';
+        thTheadModelsCartridge2 = document.createElement('th');
+        thTheadModelsCartridge2.setAttribute('scope', 'col');
+        thTheadModelsCartridge2.innerText = 'Модель картриджа';
+        theadModelsCartridge.appendChild(trTheadModelsCartridge);
+        trTheadModelsCartridge.appendChild(thTheadModelsCartridge1);
+        trTheadModelsCartridge.appendChild(thTheadModelsCartridge2);
+        tbodyModelCartridge = document.createElement('tbody');
+        tableModelsCartridge.appendChild(tbodyModelCartridge);
+
+        $.ajax({
+            url: '/cartridge',
+            type: 'GET',
+            dataType: 'json',
+            success: function (data) {
+                arr = data.sort();
+                for (i = 0; i < arr.length; i++) {
+                    trModelsCartridge = document.createElement('tr');
+                    tbodyModelCartridge.appendChild(trModelsCartridge);
+                    tdCountModelsCartridge = document.createElement('td');
+                    tdCountModelsCartridge.innerText = i + 1;
+                    trModelsCartridge.appendChild(tdCountModelsCartridge);
+                    tdModelCartridge = document.createElement('td');
+                    tdModelCartridge.setAttribute('id', arr[i].id);
+                    tdModelCartridge.setAttribute('class', 'model');
+                    tdModelCartridge.innerText = arr[i].model;
+                    trModelsCartridge.appendChild(tdModelCartridge);
                 }
-            });
-          });
-    
-          
-          let addModelPrinterMenu = document.querySelector('#addModelPrinterMenu');
-          addModelPrinterMenu.addEventListener('click', function() {
-              tableModelsPrinter = document.createElement('table');
-            tableModelsPrinter.id = "modalTableModelsPrinter";
-            tableModelsPrinter.className = "table table-striped table-bordered";
-            modalModelsPrinterBodyContentInner.appendChild(tableModelsPrinter);
+            }
+        });
+    });
 
-            theadModelsPrinter = document.createElement('thead');
-            tableModelsPrinter.appendChild(theadModelsPrinter);
-            trTheadModelsPrinter = document.createElement('tr');
-            thTheadModelsPrinter1 = document.createElement('th');
 
-            thTheadModelsPrinter1.setAttribute('scope', 'col');
-            thTheadModelsPrinter1.innerText = '#';
-            thTheadModelsPrinter2 = document.createElement('th');
-            thTheadModelsPrinter2.setAttribute('scope', 'col');
-            thTheadModelsPrinter2.innerText = 'Модель принтера';
-            theadModelsPrinter.appendChild(trTheadModelsPrinter);
-            trTheadModelsPrinter.appendChild(thTheadModelsPrinter1);
-            trTheadModelsPrinter.appendChild(thTheadModelsPrinter2);
-            tbodyModelPrinter = document.createElement('tbody');
-            tableModelsPrinter.appendChild(tbodyModelPrinter);
+    let addModelPrinterMenu = document.querySelector('#addModelPrinterMenu');
+    addModelPrinterMenu.addEventListener('click', function () {
+        tableModelsPrinter = document.createElement('table');
+        tableModelsPrinter.id = "modalTableModelsPrinter";
+        tableModelsPrinter.className = "table table-striped table-bordered";
+        modalModelsPrinterBodyContentInner.appendChild(tableModelsPrinter);
 
-            $.ajax({
-                url: '/models',
-                type: 'GET',
-                dataType: 'json',
-                success: function (data) {
-                    arr = data.sort();
-                    for (i = 0; i < arr.length; i++) {
-                        trModelsPrinter = document.createElement('tr');
-                        tbodyModelPrinter.appendChild(trModelsPrinter);
-                        tdCountModelsPrinter = document.createElement('td');
-                        tdCountModelsPrinter.innerText = i + 1;
-                        trModelsPrinter.appendChild(tdCountModelsPrinter);
-                        tdModel = document.createElement('td');
-                        tdModel.setAttribute('id', arr[i].idModel);
-                        tdModel.setAttribute('class', 'model');
-                        tdModel.innerText = arr[i].manufacturer + " " + arr[i].model;
-                        trModelsPrinter.appendChild(tdModel);
-                    }
+        theadModelsPrinter = document.createElement('thead');
+        tableModelsPrinter.appendChild(theadModelsPrinter);
+        trTheadModelsPrinter = document.createElement('tr');
+        thTheadModelsPrinter1 = document.createElement('th');
+
+        thTheadModelsPrinter1.setAttribute('scope', 'col');
+        thTheadModelsPrinter1.innerText = '#';
+        thTheadModelsPrinter2 = document.createElement('th');
+        thTheadModelsPrinter2.setAttribute('scope', 'col');
+        thTheadModelsPrinter2.innerText = 'Модель принтера';
+        theadModelsPrinter.appendChild(trTheadModelsPrinter);
+        trTheadModelsPrinter.appendChild(thTheadModelsPrinter1);
+        trTheadModelsPrinter.appendChild(thTheadModelsPrinter2);
+        tbodyModelPrinter = document.createElement('tbody');
+        tableModelsPrinter.appendChild(tbodyModelPrinter);
+
+        $.ajax({
+            url: '/models',
+            type: 'GET',
+            dataType: 'json',
+            success: function (data) {
+                arr = data.sort();
+                for (i = 0; i < arr.length; i++) {
+                    trModelsPrinter = document.createElement('tr');
+                    tbodyModelPrinter.appendChild(trModelsPrinter);
+                    tdCountModelsPrinter = document.createElement('td');
+                    tdCountModelsPrinter.innerText = i + 1;
+                    trModelsPrinter.appendChild(tdCountModelsPrinter);
+                    tdModel = document.createElement('td');
+                    tdModel.setAttribute('id', arr[i].idModel);
+                    tdModel.setAttribute('class', 'model');
+                    tdModel.innerText = arr[i].manufacturer + " " + arr[i].model;
+                    trModelsPrinter.appendChild(tdModel);
                 }
-            });
-          });
+            }
+        });
+    });
 
 
-          let addLocationMenu = document.querySelector('#addLocationMenu');
-          addLocationMenu.addEventListener('click', function() {
-              if ($('#tableModal').length == 0) {
+    let addLocationMenu = document.querySelector('#addLocationMenu');
+    addLocationMenu.addEventListener('click', function () {
+        if ($('#tableModal').length == 0) {
             table = document.createElement('table');
             table.id = "tableModal";
             table.className = "table table-striped table-bordered";
@@ -1508,7 +1498,7 @@ window.onload = function () {
                 }
             });
         }
-          });
+    });
 
 
 

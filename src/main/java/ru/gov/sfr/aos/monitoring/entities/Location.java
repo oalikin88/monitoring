@@ -29,10 +29,9 @@ public class Location implements Serializable {
     private Long id;
     @NotEmpty(message = "Поле \"Локация\" не может быть пустым")
     private String name;
-    @OneToMany(targetEntity = Printer.class, mappedBy = "location", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    private Set <Printer> printer = new HashSet<>();
-    @OneToMany(targetEntity = Cartridge.class, mappedBy = "location", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    private Set <Cartridge> cartridge = new HashSet<>();
+ 
+    @OneToMany(targetEntity = ObjectBuing.class, mappedBy = "location", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    private Set<ObjectBuing> objectsSet = new HashSet<>();
 
     public Long getId() {
         return id;
@@ -50,37 +49,25 @@ public class Location implements Serializable {
         this.name = name;
     }
 
-    public Location(String name) {
-        this.name = name;
+    public Set<ObjectBuing> getObjectsSet() {
+        return objectsSet;
     }
 
-    public Set<Printer> getPrinters() {
-        return printer;
+    public void setObjectsSet(Set<ObjectBuing> objectsSet) {
+        this.objectsSet = objectsSet;
     }
-
-    public void setPrinters(Set<Printer> printer) {
-        this.printer = printer;
-    }
-
-    public Set<Cartridge> getCartridges() {
-        return cartridge;
-    }
-
-    public void setCartridges(Set<Cartridge> cartridge) {
-        this.cartridge = cartridge;
-    }
-    
-    
 
     public Location() {
     }
 
-    public Location(String name, Set<Printer> printer, Set<Cartridge> cartridge) {
+    public Location(String name) {
         this.name = name;
-        this.printer = printer;
-        this.cartridge = cartridge;
     }
-
+    
+    public Location(String name, Set<ObjectBuing> objectsSet) {
+        this.name = name;
+        this.objectsSet = objectsSet;
+    }
 
     
     

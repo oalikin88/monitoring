@@ -4,6 +4,7 @@
  */
 package ru.gov.sfr.aos.monitoring.controllers;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import org.opfr.springBootStarterDictionary.models.DictionaryEmployee;
@@ -11,11 +12,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import ru.gov.sfr.aos.monitoring.dao.PrinterAndCartridgeCountByLocationTableDAO;
+import ru.gov.sfr.aos.monitoring.entities.CartridgeModel;
 import ru.gov.sfr.aos.monitoring.models.CartridgeChoiceDto;
-import ru.gov.sfr.aos.monitoring.models.CartridgeDTO;
 import ru.gov.sfr.aos.monitoring.models.CartridgeModelDTO;
 import ru.gov.sfr.aos.monitoring.models.EmployeeDTO;
 import ru.gov.sfr.aos.monitoring.models.LocationDTO;
+import ru.gov.sfr.aos.monitoring.models.PrinterAndCartridgeCountByLocationTable;
 import ru.gov.sfr.aos.monitoring.services.CartridgeMapper;
 import ru.gov.sfr.aos.monitoring.services.CartridgeService;
 import ru.gov.sfr.aos.monitoring.services.DictionaryEmployeeHolder;
@@ -43,6 +46,14 @@ public class GetInfoController {
     @Autowired
     private CartridgeService cartridgeService;
     
+    private final PrinterAndCartridgeCountByLocationTableDAO dao;
+
+    public GetInfoController(PrinterAndCartridgeCountByLocationTableDAO dao) {
+        this.dao = dao;
+    }
+    
+    
+    
     
     @GetMapping("/getinfooo")
     public  List<EmployeeDTO> getEmpl() {
@@ -67,33 +78,31 @@ public class GetInfoController {
 
     @GetMapping("/getmodelcartridge")
     public List<CartridgeModelDTO> getModelCartridgeByModelPrinter(@RequestParam("idModel") Long idModel) {
-        List<CartridgeModelDTO> showCartridgeModelByPrinterModel = cartridgeService.showCartridgeModelByPrinterModel(idModel);
-        return showCartridgeModelByPrinterModel;
+        List<CartridgeModel> list = cartridgeService.showCartridgesModelByPrinterModel(idModel);
+        List<CartridgeModelDTO> dtoes = new ArrayList<>();
+        for(CartridgeModel model : list) {
+            CartridgeModelDTO dto = cartridgeMapper.cartridgeModelToCartridgeModelDto(model);
+            dtoes.add(dto);
+            }
+        return dtoes;
     }
 
-    @GetMapping("/showcartridgesbymodel")
-    public List<CartridgeDTO> getCartridgesByModelPrinter(@RequestParam("idPrinter") Long idPrinter, @RequestParam("location") String location) {
-
-        List<CartridgeDTO> showCartridgesByModelPrinter = cartridgeService.showCartridgesByModelPrinter(idPrinter, location);
-
-        return showCartridgesByModelPrinter;
-    }
     
     
         @GetMapping("/showcartridgesforchoice")
     public List<CartridgeChoiceDto> showCartridgesForChoice(@RequestParam("idPrinter") Long idPrinter, @RequestParam("location") String location) {
 
         List<CartridgeChoiceDto> showCartridgesByModelPrinter = cartridgeService.showCartridgesForChoice(idPrinter, location);
+        
 
         return showCartridgesByModelPrinter;
     }
     
     
-
-//    @PostMapping("/amountcartridgesofday")
-//    public List<ConsumptionDTO> getAmountCartridgesOfDay(PlaningBuyDto dto) {
-//        List<ConsumptionDTO> calculatePlaningBuy = planingService.showPurchased(dto);
-//        return calculatePlaningBuy;
-//    }
+    @GetMapping("/testtest")
+    public List<PrinterAndCartridgeCountByLocationTable> showAll() throws SQLException {
+        List<PrinterAndCartridgeCountByLocationTable> data = dao.getData();
+        return data;
+    }
 
 }

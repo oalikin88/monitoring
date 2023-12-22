@@ -26,10 +26,6 @@ public class Cartridge extends ObjectBuing implements Serializable {
     @NotNull(message = "Поле \"Модель\" не должно быть пустым")
     @ManyToOne(cascade = CascadeType.ALL)
     protected CartridgeModel model;
-   
-    
-    @ManyToOne(cascade = CascadeType.ALL)
-    protected Location location;
     
     protected LocalDateTime dateStartExploitation;
     
@@ -53,10 +49,9 @@ public class Cartridge extends ObjectBuing implements Serializable {
         
     }
    
-    public Cartridge(CartridgeModel model, Location location, LocalDateTime dateStartExploitation, 
+    public Cartridge(CartridgeModel model, LocalDateTime dateStartExploitation, 
             LocalDateTime dateEndExploitation, boolean util, boolean useInPrinter, Long count, String itemCode, String nameMaterial) {
         this.model = model;
-        this.location = location;
         this.dateStartExploitation = dateStartExploitation;
         this.dateEndExploitation = dateEndExploitation;
         this.util = util;
@@ -66,6 +61,11 @@ public class Cartridge extends ObjectBuing implements Serializable {
         this.nameMaterial = nameMaterial;
         
     } 
+    
+    
+  
+    
+    
 
     public String getItemCode() {
         return itemCode;
@@ -100,13 +100,6 @@ public class Cartridge extends ObjectBuing implements Serializable {
     }
 
 
-    public Location getLocation() {
-        return location;
-    }
-
-    public Printer getPrinter() {
-        return printer;
-    }
 
     public void setPrinter(Printer printer) {
         this.printer = printer;
@@ -137,6 +130,18 @@ public class Cartridge extends ObjectBuing implements Serializable {
         this.location = location;
     }
 
+    public Location getLocation() {
+        return location;
+    }
+    
+    public Printer getPrinter() {
+        return printer;
+    }
+
+    
+    
+    
+
 
     public void setDateStartExploitation(LocalDateTime dateStartExploitation) {
         this.dateStartExploitation = dateStartExploitation;
@@ -161,6 +166,16 @@ public class Cartridge extends ObjectBuing implements Serializable {
     public void setModel(CartridgeModel model) {
         this.model = model;
     }
+
+    public Contract getContract() {
+        return contract;
+    }
+
+    public void setContract(Contract contract) {
+        this.contract = contract;
+    }
+    
+    
     
     @Override
     public String toString() {

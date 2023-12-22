@@ -6,11 +6,16 @@ package ru.gov.sfr.aos.monitoring.controllers;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Set;
+import java.util.stream.Collectors;
 import javax.validation.Valid;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
@@ -35,6 +40,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import ru.gov.sfr.aos.monitoring.MonitoringApplication;
+import ru.gov.sfr.aos.monitoring.dao.PrinterAndCartridgeCountByLocationTableDAO;
 import ru.gov.sfr.aos.monitoring.entities.Cartridge;
 import ru.gov.sfr.aos.monitoring.entities.CartridgeModel;
 import ru.gov.sfr.aos.monitoring.entities.Printer;
@@ -57,6 +63,7 @@ import ru.gov.sfr.aos.monitoring.models.LocationDTO;
 import ru.gov.sfr.aos.monitoring.models.ModelCartridgeByModelPrinters;
 import ru.gov.sfr.aos.monitoring.models.ModelDTO;
 import ru.gov.sfr.aos.monitoring.models.PlaningBuyDto;
+import ru.gov.sfr.aos.monitoring.models.PrinterAndCartridgeCountByLocationTable;
 import ru.gov.sfr.aos.monitoring.models.PrinterDTO;
 import ru.gov.sfr.aos.monitoring.models.PrinterStatusDto;
 import ru.gov.sfr.aos.monitoring.models.PrintersByLocationandModelDto;
@@ -67,6 +74,7 @@ import ru.gov.sfr.aos.monitoring.services.CartridgeService;
 import ru.gov.sfr.aos.monitoring.services.ContractServiceMapper;
 import ru.gov.sfr.aos.monitoring.services.LocationService;
 import ru.gov.sfr.aos.monitoring.services.PlaningService;
+import ru.gov.sfr.aos.monitoring.services.PrinterAndCartridgeCountByLocationTableService;
 import ru.gov.sfr.aos.monitoring.services.PrinterOutInfoService;
 import ru.gov.sfr.aos.monitoring.services.PrinterService;
 import ru.gov.sfr.aos.monitoring.services.PrintersMapper;
@@ -102,12 +110,14 @@ public class MainController {
     private PrinterRepo printerRepo;
     @Autowired
     private PrinterService printerService;
+    @Autowired
+    private PrinterAndCartridgeCountByLocationTableService daoService;
 
     private final Logger log = LoggerFactory.getLogger(this.getClass());
 
     @GetMapping("/main")
     public String getData(Model model) {
-    
+
         return "main";
     }
 
@@ -122,13 +132,22 @@ public class MainController {
     }
 
     @GetMapping("/inventories")
-    public String getInventories(Model model) {
-        Map<String, List<ModelDTO>> outInfo = printerOutInfoService.outInfo();
-        Map<LocationDTO, List<ModelCartridgeByModelPrinters>> showCartridgesAndPrintersByModelAndLocation = cartridgeService.showCartridgesAndPrintersByModelAndLocation();
-        Map<LocationDTO, List<PrintersByLocationandModelDto>> printersByLocationAndModel = printerService.getPrintersByLocationAndModel();
-        model.addAttribute("input", showCartridgesAndPrintersByModelAndLocation);
-        model.addAttribute("input2", outInfo);
-        model.addAttribute("input3", printersByLocationAndModel);
+    public String getAllInventories(Model model) throws SQLException {
+
+        List<PrinterAndCartridgeCountByLocationTable> allData = daoService.getAllData();
+        
+        Map<Long, String> models = new HashMap<>();
+        Map<Long, String> locations = new HashMap<>();
+        
+        for(PrinterAndCartridgeCountByLocationTable el : allData) {
+            models.put(el.getModelId(), el.getModelPrinter());
+            locations.put(el.getLocationId(), el.getLocation());
+        }
+        
+        model.addAttribute("input", allData);
+        model.addAttribute("models", models);
+        model.addAttribute("locations", locations);
+
         return "inventories";
     }
 
@@ -251,7 +270,7 @@ public class MainController {
         model.addAttribute("input", contract);
         return "contract";
     }
-
+    
     @GetMapping("/printersbylocation")
     public String getPrintersByLocation(Model model,
             @ModelAttribute(name = "dto") DevicesByModelAndLocationDto dto,
@@ -282,13 +301,13 @@ public class MainController {
             } finally {
                 getPage = printerRepo.findPrintersByModelPrinterAndLocationAndContractNumberFilter(locationById.getId(), printersList.get(0).getModel().getId(), dto.getContractNumber(), paging);
             }
+        } else if(printersList.get(0).getModel().getModelCartridges().isEmpty()){
+            getPage = printerRepo.findByModelIdAndLocationId(dto.idModel, dto.location, paging);
         } else {
             try {
                 getPage = printerRepo.findPrintersByModelAndLocation(locationById.getId(), printersList.get(0).getModel().getModelCartridges().iterator().next().getId(), paging);
             } catch (NoSuchElementException e) {
                 e.printStackTrace();
-            } finally {
-                getPage = printerRepo.findPrintersByModelPrinterAndLocation(locationById.getId(), printersList.get(0).getModel().getId(), paging);
             }
         }
 
@@ -323,7 +342,6 @@ public class MainController {
         return "redirect:/cartridges";
 
     }
-
 
     @GetMapping(value = "/addmodelcart")
     public String addModelCartridge(Model model) {

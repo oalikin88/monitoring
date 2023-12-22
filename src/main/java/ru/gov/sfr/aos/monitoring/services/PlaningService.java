@@ -37,6 +37,7 @@ import ru.gov.sfr.aos.monitoring.repositories.CartridgeRepo;
 import ru.gov.sfr.aos.monitoring.repositories.ListenerOperationRepo;
 import ru.gov.sfr.aos.monitoring.repositories.LocationRepo;
 import ru.gov.sfr.aos.monitoring.repositories.ModelPrinterRepo;
+import ru.gov.sfr.aos.monitoring.repositories.PrinterRepo;
 
 /**
  *
@@ -54,6 +55,8 @@ public class PlaningService {
     private CartridgeModelRepo cartridgeModelRepo;
     @Autowired
     private ModelPrinterRepo modelPrinterRepo;
+    @Autowired
+    private PrinterRepo printerRepo;
 
     public Map<String, List<ConsumptionDTO>> showUtilled(PlaningBuyDto dto) {
         long amountDaysFromDto = ChronoUnit.DAYS.between(dto.dateBegin, dto.dateEnd);
@@ -216,7 +219,7 @@ public class PlaningService {
                 for(Location storage : locations) {
                     
                 for (ModelDTO modelDTO : modelPrinterDTOes) {
-                    for (Printer printer : storage.getPrinters()) {
+                    for (Printer printer : printerRepo.findByLocationId(storage.getId())) {
                         if ((modelDTO.getIdModel() == printer.getModel().getId()) && !printer.getPrinterStatus().equals(PrinterStatus.DELETE)
                                 && !printer.getPrinterStatus().equals(PrinterStatus.MONITORING) && !printer.getPrinterStatus().equals(PrinterStatus.UTILIZATION)) {
                             printersID.add(printer.getId());
