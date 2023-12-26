@@ -19,6 +19,7 @@ public class PrinterDTO {
     public String inventaryNumber;
     public String serialNumber;
     public List<CartridgeDTO> cartridge;
+    public Long locationId;
     public String location;
     public String contractNumber;
     public Date startContract;
@@ -167,6 +168,14 @@ public class PrinterDTO {
 
     public void setPrinterStatus(String printerStatus) {
         this.printerStatus = printerStatus;
+    }
+
+    public Long getLocationId() {
+        return locationId;
+    }
+
+    public void setLocationId(Long locationId) {
+        this.locationId = locationId;
     }
     
     

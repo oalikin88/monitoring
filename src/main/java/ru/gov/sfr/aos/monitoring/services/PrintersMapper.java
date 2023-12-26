@@ -150,7 +150,7 @@ public class PrintersMapper {
         dto.setEndContract(findPrinterById.get().getContract().getDateEndContract());
         dto.setContractId(findPrinterById.get().getContract().getId());
         dto.setPrinterStatus(findPrinterById.get().getPrinterStatus().getStatus());
-        
+        dto.setLocationId(findPrinterById.get().getLocation().getId());
         List<CartridgeDTO> cartridgesForPrinter = new ArrayList<>();
         for(Cartridge car : findPrinterById.get().getCartridge()) {
               CartridgeDTO cartDto = new CartridgeDTO();

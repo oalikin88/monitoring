@@ -137,6 +137,21 @@ public interface CartridgeRepo extends JpaRepository<Cartridge, Long> {
    + "AND cart.use_in_printer = FALSE", nativeQuery = true)
    List<Cartridge> findCartridgesByModelPrinterAndLocation(Long idLocation, Long idPrinter);
    
+   
+   @Query(value = "SELECT cart.*, ob.*, cart_print.*, p.* " +
+    "FROM cartridge cart " +
+    "LEFT JOIN object_buing ob " +
+    "ON cart.cartridge_id = ob.id " +
+    "LEFT JOIN cartridge_model_models_printers cart_print " +
+    "ON cart.model_id = cart_print.model_cartridges_id " +
+    "LEFT JOIN printer p " +
+    "ON p.model_id = cart_print.models_printers_id " +
+    "WHERE ob.location_id = ?1 " +
+    "AND p.printer_id = ?2 " +
+    "AND cart.util = FALSE " +
+    "AND cart.use_in_printer = FALSE", nativeQuery = true)
+   List<Cartridge> findCartridgesByLocationIdAndPrinterIdSuitable(Long locationId, Long printerId);
+   
    Page<Cartridge> findByLocationId(Long idLocation, Pageable pageable);
    List<Cartridge> findByLocationId(Long idLocation);
    Page<Cartridge> findByLocationIdAndContractContractNumberIgnoreCaseLike(Long idLocation, String contractNumber, Pageable pageable);

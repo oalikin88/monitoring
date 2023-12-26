@@ -331,8 +331,13 @@ window.onload = function () {
     modalFooterDiv2.appendChild(modalFooterOKBtn2);
 
 
-    modalFooterCloseBtn.addEventListener('click', function () {
 
+    modalBtnClose.addEventListener('click', function() {
+        $('#modalLocations').empty();
+        window.location.reload();
+    });
+    modalFooterCloseBtn.addEventListener('click', function () {
+        $('#modalLocations').empty();
         window.location.reload();
 
     });
@@ -790,14 +795,20 @@ window.onload = function () {
             $('#modalPrintSpeedSelect')[0].value = "";
         });
 
-        modalModelsPrinterFooterCloseBtn.addEventListener("click", function () {
+       
 
+    });
+    
+     modalModelsPrinterFooterCloseBtn.addEventListener("click", function () {
+            $('#modalModelsPrinter').empty();
             window.location.reload();
 
         });
 
-    });
-
+        modalModelsPrinterBtnClose.addEventListener('click', function() {
+            $('#modalModelsPrinter').empty();
+            window.location.reload();
+        });
 
     // Модальное окно с моделями картриджей
 
@@ -1158,9 +1169,13 @@ window.onload = function () {
     });
 
     modalModelsCartridgeFooterCloseBtn.addEventListener('click', function () {
+        $('#modalModelsCartridge').empty();
         window.location.reload();
     });
-
+    modalModelsCartridgeBtnClose.addEventListener('click', function() {
+        $('#modalModelsCartridge').empty();
+        window.location.reload();
+    });
 
 
 
@@ -1286,8 +1301,15 @@ window.onload = function () {
     divModalFooterPlaningBuy.appendChild(btnFooterClosePlaningBuy);
 
 
-
-
+    btnCloseModalPlaningBuy.addEventListener('click', function() {
+        $('#modalPlaning').empty();
+        window.location.reload();
+    });
+    
+    btnFooterClosePlaningBuy.addEventListener('click', function() {
+        $('#modalPlaning').empty();
+        window.location.reload();
+    });
 
     btnApplyPlaning.addEventListener('click', function () {
 

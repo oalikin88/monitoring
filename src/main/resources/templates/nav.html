@@ -48,6 +48,12 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                         
                        
                     </ul>
+                    
+<!--                    <div th:text="${#authentication.name}">
+                        The value of the "name" property of the authentication object should appear here.
+                    </div>-->
+                    <div th:text="${#authentication.principal.username}"></div>
+                    
 <!--                    <form class="d-flex" role="search">
                         <input class="form-control me-2" type="search" placeholder="Поиск" aria-label="Поиск" id="search">
                         <button class="btn btn-outline-success" type="submit">Поиск</button>

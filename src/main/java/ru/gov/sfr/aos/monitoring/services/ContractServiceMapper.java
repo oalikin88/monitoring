@@ -286,9 +286,15 @@ public class ContractServiceMapper {
         }
         contract.setObjectBuing(objectsBuing);
         contractServiceImpl.saveContract(contract);
+        Map<String, List<CartridgeFromInputDto>> collect = cartridgesDtoList.stream().collect(Collectors.groupingBy(CartridgeFromInputDto::getModel));
+        for(Map.Entry<String, List<CartridgeFromInputDto>> entry : collect.entrySet()) {
+            Optional<CartridgeModel> cartridgeModelOptional = cartridgeModelRepo.findByModelIgnoreCase(entry.getKey());
+            CartridgeModel cartridgeModelFromInput = cartridgeModelOptional.get();
+            modelsCartridges.put(cartridgeModelFromInput.getId(), entry.getValue().size());
+        }
         List<Cartridge> findCartridgeOnStorage = cartridgeRepo.findByLocationId(1L);
         int cartridgesOnSklad = findCartridgeOnStorage.size();
-        int addedCartridges = modelsCartridges.values().stream().mapToInt(e -> e.intValue()).sum();
+        int addedCartridges = cartridgesDtoList.size();
           for(Map.Entry<Long, Integer> entry : modelsCartridges.entrySet()) {
                    
                     ListenerOperation listener = new ListenerOperation();

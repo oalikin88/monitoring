@@ -8,14 +8,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Set;
-import java.util.stream.Collectors;
 import javax.validation.Valid;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
@@ -29,6 +26,7 @@ import org.springframework.data.jpa.domain.JpaSort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -40,7 +38,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import ru.gov.sfr.aos.monitoring.MonitoringApplication;
-import ru.gov.sfr.aos.monitoring.dao.PrinterAndCartridgeCountByLocationTableDAO;
 import ru.gov.sfr.aos.monitoring.entities.Cartridge;
 import ru.gov.sfr.aos.monitoring.entities.CartridgeModel;
 import ru.gov.sfr.aos.monitoring.entities.Printer;
@@ -61,12 +58,10 @@ import ru.gov.sfr.aos.monitoring.models.ContractFromInputDto;
 import ru.gov.sfr.aos.monitoring.models.EditContractDTO;
 import ru.gov.sfr.aos.monitoring.models.LocationDTO;
 import ru.gov.sfr.aos.monitoring.models.ModelCartridgeByModelPrinters;
-import ru.gov.sfr.aos.monitoring.models.ModelDTO;
 import ru.gov.sfr.aos.monitoring.models.PlaningBuyDto;
 import ru.gov.sfr.aos.monitoring.models.PrinterAndCartridgeCountByLocationTable;
 import ru.gov.sfr.aos.monitoring.models.PrinterDTO;
 import ru.gov.sfr.aos.monitoring.models.PrinterStatusDto;
-import ru.gov.sfr.aos.monitoring.models.PrintersByLocationandModelDto;
 import ru.gov.sfr.aos.monitoring.repositories.CartridgeRepo;
 import ru.gov.sfr.aos.monitoring.repositories.PrinterRepo;
 import ru.gov.sfr.aos.monitoring.services.CartridgeMapper;
@@ -114,13 +109,14 @@ public class MainController {
     private PrinterAndCartridgeCountByLocationTableService daoService;
 
     private final Logger log = LoggerFactory.getLogger(this.getClass());
-
+    
+    @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
     @GetMapping("/main")
     public String getData(Model model) {
 
         return "main";
     }
-
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @PostMapping(value = "/main", consumes = "application/json", produces = "application/json")
     public String sendData(
             @Valid
@@ -130,7 +126,7 @@ public class MainController {
         mapper.createContract(transformInputToDto);
         return "redirect:/main";
     }
-
+    @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
     @GetMapping("/inventories")
     public String getAllInventories(Model model) throws SQLException {
 
@@ -150,7 +146,7 @@ public class MainController {
 
         return "inventories";
     }
-
+    @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
     @GetMapping("/inventories/{location}")
     public String getInventoriesByLocation(Model model, @PathVariable(name = "location") String location) {
         long parseLong = Long.parseLong(location);
@@ -159,7 +155,7 @@ public class MainController {
         return "inlocation";
 
     }
-
+    @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
     @GetMapping("/inventories/{location}/{device}")
     public String getInventoriesbyLocationAndDevice(Model model,
             @PathVariable(name = "location") String location,
@@ -234,19 +230,19 @@ public class MainController {
         model.addAttribute("direction", direction);
         return "devices";
     }
-
+    @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
     @RequestMapping("/help")
     public String getHelp(Model model) {
         return "help";
     }
-
+    @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
     @GetMapping(value = "/help/instruction", produces = MediaType.APPLICATION_PDF_VALUE)
     public @ResponseBody
     byte[] getImage() throws IOException {
         InputStream resourceAsStream = MonitoringApplication.class.getClassLoader().getResourceAsStream("instruction.pdf");
         return IOUtils.toByteArray(resourceAsStream);
     }
-
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @GetMapping("/planing")
     public String getPlaningResult(Model model, PlaningBuyDto dto) {
         Map<String, List<ConsumptionDTO>> calculatePlaningBuy = planingService.showUtilled(dto);
@@ -263,14 +259,14 @@ public class MainController {
         model.addAttribute("printers", printersByCartridgesModel);
         return "planing";
     }
-
+    @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
     @GetMapping("/contract")
     public String getContract(@RequestParam("idContract") Long idContract, Model model) {
         EditContractDTO contract = contractServiceMapper.getContract(idContract);
         model.addAttribute("input", contract);
         return "contract";
     }
-    
+    @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
     @GetMapping("/printersbylocation")
     public String getPrintersByLocation(Model model,
             @ModelAttribute(name = "dto") DevicesByModelAndLocationDto dto,
@@ -334,7 +330,7 @@ public class MainController {
         model.addAttribute("direction", direction);
         return "printersbylocation";
     }
-
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @PostMapping("/cartridges")
     public String sendCartridges(
             @ModelAttribute ContractDTO contract) {
@@ -342,13 +338,13 @@ public class MainController {
         return "redirect:/cartridges";
 
     }
-
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @GetMapping(value = "/addmodelcart")
     public String addModelCartridge(Model model) {
         return "addmodelcartridge";
 
     }
-
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @PostMapping("/addmodelcart")
     public ResponseEntity<CartridgeModelDTO> saveModelCartridge(@Valid @ModelAttribute CartridgeModelDTO dto) throws ObjectAlreadyExists {
         CartridgeModel cartridgeModelDtoToCartridgeModel = cartridgeMapper.cartridgeModelDtoToCartridgeModel(dto);
@@ -356,7 +352,7 @@ public class MainController {
         return new ResponseEntity<CartridgeModelDTO>(dto, HttpStatus.OK);
 
     }
-
+    @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
     @GetMapping("/editprinter")
     public String getPrinter(Model model, @RequestParam Long idPrinter) {
 
@@ -364,7 +360,7 @@ public class MainController {
         model.addAttribute("dto", printerDto);
         return "edit";
     }
-
+     @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
     @GetMapping("/editcartridge")
     public String getCartridge(Model model, @RequestParam Long idCartridge) {
 
@@ -373,14 +369,14 @@ public class MainController {
 
         return "editCartridge";
     }
-
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @PostMapping("/editprinterlocation")
     public ResponseEntity<String> changePrinterLocation(ChangeDeviceLocationDTO dto) {
 
         printerMapper.editPrinterLocation(dto);
         return new ResponseEntity<String>("Локация успешно изменена", HttpStatus.OK);
     }
-
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @PostMapping("/editcartridgelocation")
     public ResponseEntity<String> changeCartridgeLocation(ChangeDeviceLocationDTO dto) {
 
@@ -388,7 +384,7 @@ public class MainController {
 
         return new ResponseEntity<String>("Локация успешно изменена", HttpStatus.OK);
     }
-
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @PostMapping("/editcartridgeslocation")
     public ResponseEntity<String> changeCartridgeLocation(ChangeLocationForCartridges dto) {
 
@@ -396,7 +392,7 @@ public class MainController {
 
         return new ResponseEntity<String>("Локация успешно изменена", HttpStatus.OK);
     }
-
+    @PreAuthorize("hasAuthority('ROLE_WRITE') || hasAuthority('ROLE_ADMIN')")
     @PostMapping("/utilCartridge")
     public ResponseEntity<String> utilCartridge(Long id) {
 
@@ -404,7 +400,7 @@ public class MainController {
 
         return new ResponseEntity<String>("Картридж успешно списан", HttpStatus.OK);
     }
-
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @PostMapping("/editprinterserial")
     public ResponseEntity<String> changePrinterSerialNumber(ChangePrinterSerialNumberDTO dto) {
 
@@ -412,7 +408,7 @@ public class MainController {
 
         return new ResponseEntity<>("Серийный номер успешно изменён", HttpStatus.OK);
     }
-
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @PostMapping("/editprinterinventary")
     public ResponseEntity<String> changePrinterInventaryNumber(ChangePrinterInventaryNumberDTO dto) {
 
@@ -420,7 +416,7 @@ public class MainController {
 
         return new ResponseEntity<>("Инвентарный номер успешно изменён", HttpStatus.OK);
     }
-
+    @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
     @GetMapping("/locaions")
     public String getLocations(Model model) {
 
@@ -429,7 +425,7 @@ public class MainController {
 
         return "locations";
     }
-
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @PostMapping("/locations")
     public ResponseEntity<String> addLocation(String nameLocation) throws ObjectAlreadyExists {
 
@@ -437,7 +433,7 @@ public class MainController {
 
         return new ResponseEntity<>("локация успешно добавлена", HttpStatus.OK);
     }
-
+    @PreAuthorize("hasAuthority('ROLE_WRITE') || hasAuthority('ROLE_ADMIN')")
     @PostMapping("/installcart")
     public ResponseEntity<String> installCartridgeInPrinter(CartridgeInstallDTO dto) {
 
@@ -445,7 +441,7 @@ public class MainController {
 
         return new ResponseEntity<>("Ok", HttpStatus.OK);
     }
-
+    @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
     @GetMapping("/getcartridgesbymodel")
     public String getCartridgesByModelPrinterAndLocation(Model model,
             @ModelAttribute(name = "dto") DevicesByModelAndLocationDto dto,
@@ -493,7 +489,7 @@ public class MainController {
         model.addAttribute("direction", direction);
         return "cartridgesbylocation";
     }
-
+    @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
     @GetMapping("/contracts")
     public String getAllContracts(Model model) {
 
@@ -501,7 +497,7 @@ public class MainController {
         model.addAttribute("input", getAllContracts);
         return "contracts";
     }
-
+    @PreAuthorize("hasAuthority('ROLE_WRITE') || hasAuthority('ROLE_ADMIN')")
     @PostMapping("changestatus")
     public void changePrinterStatus(PrinterStatusDto dto) {
         printerMapper.editPrinterStatus(dto);

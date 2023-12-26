@@ -21,7 +21,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 import ru.gov.sfr.aos.monitoring.CartridgeType;
 import ru.gov.sfr.aos.monitoring.OperationType;
-import ru.gov.sfr.aos.monitoring.PrinterStatus;
 import ru.gov.sfr.aos.monitoring.entities.Cartridge;
 import ru.gov.sfr.aos.monitoring.entities.CartridgeModel;
 import ru.gov.sfr.aos.monitoring.entities.ListenerOperation;
@@ -34,9 +33,6 @@ import ru.gov.sfr.aos.monitoring.models.CartridgeInstallDTO;
 import ru.gov.sfr.aos.monitoring.models.CartridgeModelDTO;
 import ru.gov.sfr.aos.monitoring.models.ChangeDeviceLocationDTO;
 import ru.gov.sfr.aos.monitoring.models.ChangeLocationForCartridges;
-import ru.gov.sfr.aos.monitoring.models.LocationDTO;
-import ru.gov.sfr.aos.monitoring.models.ModelCartridgeByModelPrinters;
-import ru.gov.sfr.aos.monitoring.models.ModelDTO;
 import ru.gov.sfr.aos.monitoring.repositories.CartridgeModelRepo;
 import ru.gov.sfr.aos.monitoring.repositories.CartridgeRepo;
 import ru.gov.sfr.aos.monitoring.repositories.LocationRepo;
@@ -191,7 +187,6 @@ public class CartridgeService {
         return list;
     }
 
-
     public void saveCartridgeModel(CartridgeModel cartridgeModel) throws ObjectAlreadyExists {
         String replaceAllBreakesFromInput = cartridgeModel.getModel().replaceAll(" ", "");
         String replaceAllDeficesAndBreakesFromInput = replaceAllBreakesFromInput.replaceAll("-", "");
@@ -204,49 +199,6 @@ public class CartridgeService {
         }
     }
 
-
-    public Map<LocationDTO, List<ModelCartridgeByModelPrinters>> showCartridgesAndPrintersByModelAndLocation() {
-        List<Location> locations = locationRepo.findAll();
-        Map<LocationDTO, List<ModelCartridgeByModelPrinters>> out = new HashMap<>();
-        ModelCartridgeByModelPrinters dto = null;
-        for (Location storage : locations) {
-            LocationDTO locationDTO = new LocationDTO(storage.getId(), storage.getName());
-            Set<Cartridge> cartridges = cartridgeRepo.findByLocationId(storage.getId()).stream().collect(Collectors.toSet());
-            List<CartridgeModel> findAllModelsCartrtridge = cartridgeModelRepo.findAll();
-            List<ModelCartridgeByModelPrinters> list = new ArrayList<>();
-            for (CartridgeModel cartridgeModel : findAllModelsCartrtridge) {
-                List<Long> cartridgesID = new ArrayList<>();
-                List<Long> printersID = new ArrayList<>();
-                List<Model> models = cartridgeModel.getModelsPrinters();
-                dto = new ModelCartridgeByModelPrinters();
-                List<ModelDTO> modelPrinterDTOes = new ArrayList<>();
-                for (Model modelPrinter : models) {
-                    ModelDTO modelDTO = new ModelDTO(modelPrinter.getId(), modelPrinter.getName(), modelPrinter.getManufacturer().getName());
-                    modelPrinterDTOes.add(modelDTO);
-                }
-                for (ModelDTO modelDTO : modelPrinterDTOes) {
-                    for (Printer printer : printerRepo.findByLocationId(storage.getId())) {
-                        if ((modelDTO.getIdModel() == printer.getModel().getId()) && !printer.getPrinterStatus().equals(PrinterStatus.DELETE) && !printer.getPrinterStatus().equals(PrinterStatus.MONITORING) && !printer.getPrinterStatus().equals(PrinterStatus.UTILIZATION)) {
-                            printersID.add(printer.getId());
-                        }
-                    }
-                }
-                for (Cartridge cartridge : cartridges) {
-                    if ((cartridgeModel.getId() == cartridge.getModel().getId()) && (!cartridge.isUtil() && !cartridge.isUseInPrinter())) {
-                        cartridgesID.add(cartridge.getId());
-                    }
-                }
-                dto.setId(cartridgeModel.getId());
-                dto.setModel(cartridgeModel.getModel());
-                dto.setModelsPrinter(modelPrinterDTOes);
-                dto.setCartridgesId(cartridgesID);
-                dto.setPrintersID(printersID);
-                list.add(dto);
-            }
-            out.put(locationDTO, list);
-        }
-        return out;
-    }
 
     public void changeCartridgeLocation(ChangeDeviceLocationDTO dto) {
         String location1;
@@ -340,31 +292,16 @@ public class CartridgeService {
         return dtoes;
     }
 
-    public List<CartridgeChoiceDto> showCartridgesForChoice(Long idPrinter, String location) {
+    public List<CartridgeChoiceDto> showCartridgesForChoice(Long idPrinter, Long locationId) {
         SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
-        List<Cartridge> cartridges = cartridgeRepo.findByLocationName(location);
-        Optional<Location> findByNameIgnoreCase = locationRepo.findByNameIgnoreCase(location);
-        LocationDTO locDto = new LocationDTO();
-        locDto.setId(findByNameIgnoreCase.get().getId());
-        locDto.setName(findByNameIgnoreCase.get().getName());
         List<CartridgeChoiceDto> cartridgesByModelPrinter = new ArrayList<>();
-        Optional<Printer> findPrinterById = printerRepo.findById(idPrinter);
-        Long idModelPrinter = findPrinterById.get().getModel().getId();
+        List<Cartridge> cartridges = cartridgeRepo.findCartridgesByLocationIdAndPrinterIdSuitable(locationId, idPrinter);
         for (Cartridge cartridge : cartridges) {
-            List<Model> modelsPrinters = cartridge.getModel().getModelsPrinters();
-            boolean duplicate = false;
-            for (Model modelPrinter : modelsPrinters) {
-                if ((idModelPrinter == modelPrinter.getId()) && (!cartridge.isUtil() && !cartridge.isUseInPrinter())) {
                     CartridgeChoiceDto dto = new CartridgeChoiceDto();
                     dto.setId(cartridge.getId());
                     dto.setName("Модель: " + cartridge.getModel().getModel() + ", контракт № " + cartridge.getContract().getContractNumber() + " от " + sdf.format(cartridge.getContract().getDateStartContract()));
                     cartridgesByModelPrinter.add(dto);
-                }
-            }
         }
         return cartridgesByModelPrinter;
     }
-    
-    
-
 }

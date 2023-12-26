@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -67,12 +68,12 @@ public class ManufacturersController {
         List<ModelDTO> list = modelMapper.showModelsByManufacturer(manufacturer);
         return list;
     }
-    
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @PostMapping("/manufacturers")
     public void saveManufacturer(@RequestParam String value) {
         mapper.saveManufacturer(value);
     }
-    
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @PostMapping("/models")
     public void saveModel(@Valid ModelDTO dto) throws ObjectAlreadyExists {
         modelMapper.saveModelByManufacturer(dto);

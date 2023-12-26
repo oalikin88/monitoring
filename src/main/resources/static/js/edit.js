@@ -421,7 +421,7 @@ $(document).ready(function () {
                     type: 'GET',
                     dataType: 'json',
                     data: {idPrinter: input.id,
-                        location: input.location},
+                        locationId: input.locationId},
                     error: callback,
                     success: callback
                 });

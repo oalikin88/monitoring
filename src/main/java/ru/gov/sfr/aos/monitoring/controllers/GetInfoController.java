@@ -90,9 +90,9 @@ public class GetInfoController {
     
     
         @GetMapping("/showcartridgesforchoice")
-    public List<CartridgeChoiceDto> showCartridgesForChoice(@RequestParam("idPrinter") Long idPrinter, @RequestParam("location") String location) {
+    public List<CartridgeChoiceDto> showCartridgesForChoice(@RequestParam("idPrinter") Long idPrinter, @RequestParam("locationId") Long locationId) {
 
-        List<CartridgeChoiceDto> showCartridgesByModelPrinter = cartridgeService.showCartridgesForChoice(idPrinter, location);
+        List<CartridgeChoiceDto> showCartridgesByModelPrinter = cartridgeService.showCartridgesForChoice(idPrinter, locationId);
         
 
         return showCartridgesByModelPrinter;

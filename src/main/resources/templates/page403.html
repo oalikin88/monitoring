@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<!--
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this template
+-->
+<html>
+    <head>
+        <link href="/css/bootstrap.min.css" rel="stylesheet">
+        <link href="/css/style.css" rel="stylesheet">
+        <title>Доступ запрщён</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body>
+        <div class="exceptionContainer" id="exceptionContainer">
+            <div class="row text-center">
+                <div class="col">
+                    <h1 th:text="${exception}"></h1>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <p th:text="${statusCode}"></p>
+                </div>
+            </div>
+        </div>
+
+        
+    </body>
+</html>

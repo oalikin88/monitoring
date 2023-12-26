@@ -84,6 +84,16 @@
             <artifactId>h2</artifactId>
             <scope>test</scope>
         </dependency>
+         <dependency>
+            <groupId>org.opfr</groupId>
+            <artifactId>spring-boot-starter-auth-sso</artifactId>
+            <version>0.1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.thymeleaf.extras</groupId>
+            <artifactId>thymeleaf-extras-springsecurity5</artifactId>
+            <version>3.0.4.RELEASE</version>
+        </dependency>
       </dependencies>
 
     <build>

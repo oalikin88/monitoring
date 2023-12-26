@@ -10,6 +10,7 @@ import javax.validation.ConstraintViolationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.web.servlet.error.ErrorController;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindException;
@@ -28,7 +29,7 @@ import ru.gov.sfr.aos.monitoring.models.Response;
 public class ExceptionController implements ErrorController {
     
     private final Logger log = LoggerFactory.getLogger(this.getClass());
-    
+    @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
     @RequestMapping("/error")
     public String handleError(HttpServletRequest request, Model map) {
         Integer statusCode = (Integer)request.getAttribute("javax.servlet.error.status_code");
@@ -64,8 +65,12 @@ public class ExceptionController implements ErrorController {
             
             map.addAttribute("exception", exceptionValue);
             return "page409";
-        }
-        else {
+        }  else if(statusCode == 403) {
+            String exceptionValue = "Доступ запрещён";
+            
+            map.addAttribute("exception", exceptionValue);
+            return "page403";
+        } else {
             if(null != exception) {
                if(exception.getCause() instanceof ConstraintViolationException) {
             cause = (ConstraintViolationException)exception.getCause();
