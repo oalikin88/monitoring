@@ -14,12 +14,14 @@ import java.util.stream.Collectors;
 import org.opfr.springBootStarterDictionary.models.DictionaryEmployee;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.gov.sfr.aos.monitoring.OperationType;
 import ru.gov.sfr.aos.monitoring.PrinterStatus;
 import ru.gov.sfr.aos.monitoring.entities.Cartridge;
 import ru.gov.sfr.aos.monitoring.entities.ListenerOperation;
 import ru.gov.sfr.aos.monitoring.entities.Location;
 import ru.gov.sfr.aos.monitoring.entities.Model;
+import ru.gov.sfr.aos.monitoring.entities.NameFromOneC;
 import ru.gov.sfr.aos.monitoring.entities.Printer;
 import ru.gov.sfr.aos.monitoring.models.CartridgeDTO;
 import ru.gov.sfr.aos.monitoring.models.ChangePrinterInventaryNumberDTO;
@@ -49,49 +51,6 @@ public class PrintersMapper {
     private ListenerOperationRepo listenerOperationRepo;
     @Autowired
     private DictionaryEmployeeHolder dictionaryEmployeeHolder;
-
-    public List<PrinterDTO> showPrinters() {
-
-        List<PrinterDTO> printers = new ArrayList<>();
-        List<Printer> printerList = printerRepo.findAll();
-        List<Model> models = modelPrinterRepo.findAll();
-
-        for (Printer el : printerList) {
-
-            PrinterDTO dto = new PrinterDTO();
-            dto.setManufacturer(el.getManufacturer().getName());
-
-            dto.setModel(el.getModel().getName());
-
-            dto.setInventaryNumber(el.getInventoryNumber());
-            dto.setSerialNumber(el.getSerialNumber());
-
-            Set<Cartridge> cartridges = el.getCartridge();
-            List<CartridgeDTO> cartridgesForPrinterDTO = new ArrayList<>();
-            for(Cartridge car : cartridges) {
-                  CartridgeDTO cartDto = new CartridgeDTO();
-                    cartDto.setContract(car.getContract().getId());
-                    cartDto.setContractNumber(car.getContract().getContractNumber());
-                    cartDto.setId(car.getId());
-                    cartDto.setLocation(car.getLocation().getName());
-                    cartDto.setDateEndExploitation(car.getDateEndExploitation());
-                    cartDto.setDateStartExploitation(car.getDateStartExploitation());
-                    cartDto.setType(car.getModel().getType().getName());
-                    cartDto.setResource(car.getModel().getDefaultNumberPrintPage().toString());
-                    cartDto.setUtil(car.isUtil());
-                    cartDto.setModel(car.getModel().getModel());
-                    cartridgesForPrinterDTO.add(cartDto);
-            }
-            dto.setCartridge(cartridgesForPrinterDTO);
-
-            dto.setLocation(el.getLocation().getName());
-
-            printers.add(dto);
-        }
-
-        return printers;
-    }
-
 
     public Map<String, List<PrinterDTO>> showPrintersByLocation() {
 
@@ -135,24 +94,76 @@ public class PrintersMapper {
         return map;
     }
     
+    
+    public List<PrinterDTO> showPrinters() {
+
+        List<PrinterDTO> printers = new ArrayList<>();
+        List<Printer> printerList = printerRepo.findAll();
+        List<Model> models = modelPrinterRepo.findAll();
+
+        for (Printer el : printerList) {
+
+            PrinterDTO dto = new PrinterDTO();
+            dto.setManufacturer(el.getManufacturer().getName());
+
+            dto.setModel(el.getModel().getName());
+
+            dto.setInventaryNumber(el.getInventoryNumber());
+            dto.setSerialNumber(el.getSerialNumber());
+
+            Set<Cartridge> cartridges = el.getCartridge();
+            List<CartridgeDTO> cartridgesForPrinterDTO = new ArrayList<>();
+            for(Cartridge car : cartridges) {
+                  CartridgeDTO cartDto = new CartridgeDTO();
+                    cartDto.setContract(car.getContract().getId());
+                    cartDto.setContractNumber(car.getContract().getContractNumber());
+                    cartDto.setId(car.getId());
+                    cartDto.setLocation(car.getLocation().getName());
+                    cartDto.setDateEndExploitation(car.getDateEndExploitation());
+                    cartDto.setDateStartExploitation(car.getDateStartExploitation());
+                    cartDto.setType(car.getModel().getType().getName());
+                    cartDto.setResource(car.getModel().getDefaultNumberPrintPage().toString());
+                    cartDto.setUtil(car.isUtil());
+                    cartDto.setModel(car.getModel().getModel());
+                    cartridgesForPrinterDTO.add(cartDto);
+            }
+            dto.setCartridge(cartridgesForPrinterDTO);
+
+            dto.setLocation(el.getLocation().getName());
+
+            printers.add(dto);
+        }
+
+        return printers;
+    }
+
+
+   
+    
     public PrinterDTO getPrinterById(Long id) {
     
         PrinterDTO dto = new PrinterDTO();
-        Optional<Printer> findPrinterById = printerRepo.findById(id);
-        dto.setId(findPrinterById.get().getId());
-        dto.setContractNumber(findPrinterById.get().getContract().getContractNumber().toString());
-        dto.setInventaryNumber(findPrinterById.get().getInventoryNumber());
-        dto.setSerialNumber(findPrinterById.get().getSerialNumber());
-        dto.setLocation(findPrinterById.get().getLocation().getName());
-        dto.setManufacturer(findPrinterById.get().getManufacturer().getName());
-        dto.setModel(findPrinterById.get().getModel().getName());
-        dto.setStartContract(findPrinterById.get().getContract().getDateStartContract());
-        dto.setEndContract(findPrinterById.get().getContract().getDateEndContract());
-        dto.setContractId(findPrinterById.get().getContract().getId());
-        dto.setPrinterStatus(findPrinterById.get().getPrinterStatus().getStatus());
-        dto.setLocationId(findPrinterById.get().getLocation().getId());
+        Printer findPrinterById = printerRepo.findByPrinterId(id);
+        dto.setId(findPrinterById.getId());
+        dto.setContractNumber(findPrinterById.getContract().getContractNumber().toString());
+        dto.setInventaryNumber(findPrinterById.getInventoryNumber());
+        dto.setSerialNumber(findPrinterById.getSerialNumber());
+        dto.setLocation(findPrinterById.getLocation().getName());
+        dto.setManufacturer(findPrinterById.getManufacturer().getName());
+        dto.setModel(findPrinterById.getModel().getName());
+        dto.setStartContract(findPrinterById.getContract().getDateStartContract());
+        dto.setEndContract(findPrinterById.getContract().getDateEndContract());
+        dto.setContractId(findPrinterById.getContract().getId());
+        dto.setPrinterStatus(findPrinterById.getPrinterStatus().getStatus());
+        dto.setLocationId(findPrinterById.getLocation().getId());
+        if(null != findPrinterById.getNameFromOneC()) {
+            dto.setNameFromOneC(findPrinterById.getNameFromOneC().getName());
+        } else {
+            dto.setNameFromOneC("Отсутствует");
+        }
+        
         List<CartridgeDTO> cartridgesForPrinter = new ArrayList<>();
-        for(Cartridge car : findPrinterById.get().getCartridge()) {
+        for(Cartridge car : findPrinterById.getCartridge()) {
               CartridgeDTO cartDto = new CartridgeDTO();
                     List<ListenerOperation> listListenerOperationsByCartridgeID = listenerOperationRepo.findByCartridgeID(car.getId());
                     for(ListenerOperation listener : listListenerOperationsByCartridgeID) {
@@ -194,10 +205,9 @@ public class PrintersMapper {
        return printerRepo.findByModelId(id);  
     }
     
+    @Transactional
     public void editPrinterStatus(PrinterStatusDto dto) {
-        Optional<Printer> findById = printerRepo.findById(dto.getId());
-        if(findById.isPresent()) {
-            Printer printer = findById.get();
+        Printer printer = printerRepo.findByPrinterId(dto.getId());
             switch (dto.getStatus()) {
                 case "OK":
                     printer.setPrinterStatus(PrinterStatus.OK);
@@ -223,34 +233,48 @@ public class PrintersMapper {
             
             printerRepo.save(printer);
             
+    }
+    
+    @Transactional
+    public void editPrinterNameFromOneC(Long id, String value) {
+        Printer findById = printerRepo.findByPrinterId(id);
+        if(!value.isBlank() && !value.isEmpty()) {
+            if(null != findById.getNameFromOneC()) {
+                findById.getNameFromOneC().setName(value);
+            } else {
+                NameFromOneC nameFronOneC = new NameFromOneC(value);
+                findById.setNameFromOneC(nameFronOneC);
+            }
+            printerRepo.save(findById);
         }
     }
     
+    @Transactional
     public void editPrinterLocation(ChangeDeviceLocationDTO dto) {
-        Optional<Printer> findPrinterById = printerRepo.findById(dto.getId());
+        Printer findPrinterById = printerRepo.findByPrinterId(dto.getId());
         Optional<Location> locationTemp = locationRepo.findByNameIgnoreCase(dto.getLocation().toLowerCase());
-        Set<Cartridge> cartridges = findPrinterById.get().getCartridge();
+        Set<Cartridge> cartridges = findPrinterById.getCartridge();
         for(Cartridge cart : cartridges) {
             if(cart.isUseInPrinter()) {
                 cart.setLocation(locationTemp.get());
             }
         }
-        findPrinterById.get().setLocation(locationTemp.get());
-        printerRepo.save(findPrinterById.get());
+        findPrinterById.setLocation(locationTemp.get());
+        printerRepo.save(findPrinterById);
     }
     
-    
+    @Transactional
     public void editPrinterSerialNumber(ChangePrinterSerialNumberDTO dto) {
-        Optional<Printer> findPrinterById = printerRepo.findById(dto.getId());
-        findPrinterById.get().setSerialNumber(dto.getSerialNumber());
-        printerRepo.save(findPrinterById.get());
+        Printer findPrinterById = printerRepo.getReferenceById(dto.getId());
+        findPrinterById.setSerialNumber(dto.getSerialNumber());
+        printerRepo.save(findPrinterById);
     }
     
-    
+    @Transactional
     public void editPrinterInventaryNumber(ChangePrinterInventaryNumberDTO dto) {
-        Optional<Printer> findPrinterById = printerRepo.findById(dto.getId());
-        findPrinterById.get().setInventoryNumber(dto.getInventaryNumber());
-        printerRepo.save(findPrinterById.get());
+        Printer findPrinterById = printerRepo.getReferenceById(dto.getId());
+        findPrinterById.setInventoryNumber(dto.getInventaryNumber());
+        printerRepo.save(findPrinterById);
     }
 
 }

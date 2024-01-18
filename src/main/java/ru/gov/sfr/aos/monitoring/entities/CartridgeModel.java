@@ -126,5 +126,12 @@ public class CartridgeModel implements Serializable {
     public void setModelsPrinters(List<Model> modelsPrinters) {
         this.modelsPrinters = modelsPrinters;
     }
+
+    @Override
+    public String toString() {
+        return "CartridgeModel{" + "id=" + id + ", model=" + model + ", type=" + type + ", defaultNumberPrintPage=" + defaultNumberPrintPage + ", cartridges=" + cartridges + ", modelsPrinters=" + modelsPrinters + '}';
+    }
+    
+    
     
 }

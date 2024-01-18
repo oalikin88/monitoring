@@ -77,14 +77,20 @@ public class ActReport implements Report<ActReportParameters> {
                     .parameter(new Parameter("employeeMOLPost", ""));
         }
 
-        Printer printer = printerRepo.findById(listener.getPrinterID()).orElseThrow(() -> new ReportException("Принтер не найден"));
+        Printer printer = printerRepo.findByPrinterId(listener.getPrinterID());
+        String namePrinterFromOneC;
+        if(null != printer.getNameFromOneC()) {
+            namePrinterFromOneC = printer.getNameFromOneC().getName();
+        } else {
+            namePrinterFromOneC = "";
+        }
         Cartridge cartridge = cartridgeRepo.findById(listener.getCartridgeID()).orElseThrow(() -> new ReportException("Картридж не найден"));
         Row.RowBuilder row = Row.builder()
                 .name("num")
                 .parameter(new Parameter("kod", cartridge.getItemCode()))
                 .parameter(new Parameter("cartName", cartridge.getNameMaterial()))
                 .parameter(new Parameter("date", cartridge.getDateStartExploitation().format(DateTimeFormatter.ISO_DATE)))
-                .parameter(new Parameter("printerName", printer.getManufacturer().getName() + " " + printer.getModel().getName()))
+                .parameter(new Parameter("printerName", namePrinterFromOneC))
                 .parameter(new Parameter("printerNumber", printer.getInventoryNumber()));
         try {
             DictionaryEmployee employeeToSetDevice = employeeClient.getEmployeeByCode(listener.getEmployeeToSetDevice());

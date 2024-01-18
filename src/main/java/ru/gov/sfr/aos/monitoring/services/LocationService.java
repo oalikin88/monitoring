@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import ru.gov.sfr.aos.monitoring.entities.Location;
 import ru.gov.sfr.aos.monitoring.exceptions.ObjectAlreadyExists;
 import ru.gov.sfr.aos.monitoring.models.LocationDTO;
@@ -35,7 +36,7 @@ public class LocationService {
         return dtoes;
     }
 
-    
+    @Transactional
     public void addLocation(String nameLocation) throws ObjectAlreadyExists  {
         String firstFromInput = nameLocation.trim();
         String replaceAllBreakesFromInput = firstFromInput.replaceAll(" ", "");

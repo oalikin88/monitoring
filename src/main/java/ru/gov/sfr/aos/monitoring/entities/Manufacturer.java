@@ -82,6 +82,11 @@ public class Manufacturer implements Serializable {
     public void addPrinter(Printer printer) {
         printers.add(printer);
     }
+
+    @Override
+    public String toString() {
+        return "Manufacturer{" +  "name=" + name +  '}';
+    }
     
     
 }

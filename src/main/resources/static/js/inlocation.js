@@ -434,6 +434,9 @@ window.onload = function () {
           sortBy("serial_number");
       }
     });
+    
+    setInterval('AJAXPing()', 28000);
+    
 };
 
 

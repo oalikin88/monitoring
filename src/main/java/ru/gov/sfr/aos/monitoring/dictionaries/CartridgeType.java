@@ -11,7 +11,7 @@ package ru.gov.sfr.aos.monitoring;
 public enum CartridgeType {
     
     ORIGINAL("Оригинальный"), 
-    ANALOG("Совместимый"),
+    ANALOG("Аналог"),
     START("Стартовый");
     
     private String name;

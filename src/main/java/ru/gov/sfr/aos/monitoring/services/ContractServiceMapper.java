@@ -20,6 +20,7 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 import ru.gov.sfr.aos.monitoring.OperationType;
 import ru.gov.sfr.aos.monitoring.PrinterStatus;
@@ -210,6 +211,7 @@ public class ContractServiceMapper {
         return dto;
     }
     
+    @Transactional
     public void createContract(ContractFromInputDto dto) throws ObjectAlreadyExists {
         CartridgeModel cartridgeModel;
         CartridgeModel cartridgeModelIndepended;

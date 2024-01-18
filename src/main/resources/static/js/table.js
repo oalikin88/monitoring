@@ -8,7 +8,7 @@ let locations = new Map(Object.entries(locationsInput));
 
 let searchModel = false;
 window.onload = function () {
-
+    setInterval('AJAXPing()', 28000);
 
 
     let tableContainer = document.getElementById('tableContainer');
@@ -1007,7 +1007,7 @@ window.onload = function () {
         labelField: 'type',
         searchField: "type",
         options: [{type: "Оригинальный"},
-            {type: "Совместимый"},
+            {type: "Аналог"},
             {type: "Стартовый"}],
         onChange: function (value) {
             if (value !== '') {
@@ -1141,6 +1141,9 @@ window.onload = function () {
                             tdModelCartridge.setAttribute('class', 'model');
                             tdModelCartridge.innerText = arr[i].model;
                             trModelsCartridge.appendChild(tdModelCartridge);
+                            tdModelsCartridgeBtn = document.createElement('td');
+                            
+                            
                         }
 
 

@@ -76,7 +76,7 @@ window.onload = function () {
     btnAddLocationDiv.appendChild(btnAddLocation);
     
     
-    
+    setInterval('AJAXPing()', 28000);
     
     
  };

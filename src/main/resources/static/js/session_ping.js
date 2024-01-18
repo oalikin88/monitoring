@@ -4,3 +4,11 @@
  */
 
 
+function AJAXPing() {
+    $.post('AJAXPing', function (data) {
+        if (data !== 0) {
+            alert(data);
+        }
+    }
+    );
+};

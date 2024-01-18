@@ -38,6 +38,11 @@ public class ChangeLocationForCartridges {
     public void setIdCartridge(List<Long> idCartridge) {
         this.idCartridge = idCartridge;
     }
+
+    @Override
+    public String toString() {
+        return "ChangeLocationForCartridges{" + "idCartridge=" + idCartridge + '}';
+    }
     
     
     

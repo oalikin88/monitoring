@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import ru.gov.sfr.aos.monitoring.entities.CartridgeModel;
 import ru.gov.sfr.aos.monitoring.exceptions.ObjectAlreadyExists;
-import ru.gov.sfr.aos.monitoring.models.CartridgeDTO;
 import ru.gov.sfr.aos.monitoring.models.CartridgeModelDTO;
 import ru.gov.sfr.aos.monitoring.models.ManufacturerDTO;
 import ru.gov.sfr.aos.monitoring.models.ModelDTO;

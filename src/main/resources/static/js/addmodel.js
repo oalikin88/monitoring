@@ -45,7 +45,7 @@ $(document).ready(function () {
         labelField: 'type',
         searchField: "type",
         options: [{type: "Оригинальный"},
-            {type: "Совместимый"},
+            {type: "Аналог"},
             {type: "Стартовый"}],
         onChange: function (value) {
             if (value !== '') {

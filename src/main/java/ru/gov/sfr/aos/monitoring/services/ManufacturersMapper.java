@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.gov.sfr.aos.monitoring.entities.Manufacturer;
 import ru.gov.sfr.aos.monitoring.entities.Model;
 import ru.gov.sfr.aos.monitoring.models.ManufacturerDTO;
@@ -49,7 +50,7 @@ public class ManufacturersMapper {
         return dtoes;
         
     }
-    
+    @Transactional
     public void saveManufacturer(String value) {
         if(manufacturerRepo.findByNameContainingIgnoreCase(value.toLowerCase()).isEmpty()) {
             Manufacturer manufacturer = new Manufacturer(value);

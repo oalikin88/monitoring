@@ -271,3 +271,10 @@ $(document).ready(function () {
         window.location.href = document.referrer;
     });
 });
+
+window.onload = function() {
+    
+    
+    setInterval('AJAXPing()', 28000);
+    
+};

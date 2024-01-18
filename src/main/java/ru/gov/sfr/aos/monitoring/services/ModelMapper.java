@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.gov.sfr.aos.monitoring.PrintColorType;
 import ru.gov.sfr.aos.monitoring.PrintFormatType;
 import ru.gov.sfr.aos.monitoring.entities.Manufacturer;
@@ -65,6 +66,7 @@ public class ModelMapper {
         return list;
     }
     
+    @Transactional
     public void saveModelByManufacturer(ModelDTO dto) throws ObjectAlreadyExists {
         boolean duplicate = false;
         List<ModelDTO> dtoes = showModelsByManufacturer(dto.getManufacturer().trim());

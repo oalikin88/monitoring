@@ -889,7 +889,7 @@ function addPrintersInfo(location) {
         searchField: "type",
         placeholder: "Выберите из списка",
         options: [{type: "Оригинальный"},
-            {type: "Совместимый"},
+            {type: "Аналог"},
             {type: "Стартовый"}],
         onChange: function (value) {
             if (value !== '') {
@@ -899,7 +899,7 @@ function addPrintersInfo(location) {
                     case 'Оригинальный':
                         typeChoice = "ORIGINAL";
                         break;
-                    case 'Совместимый':
+                    case 'Аналог':
                         typeChoice = "ANALOG";
                         break;
                     case 'Стартовый':
@@ -1171,7 +1171,7 @@ function addPrinter(amount, location) {
         searchField: "type",
         placeholder: "Выберите из списка",
         options: [{type: "Оригинальный"},
-            {type: "Совместимый"},
+            {type: "Аналог"},
             {type: "Стартовый"}],
         onChange: function (value) {
             if (value !== '') {
@@ -1404,7 +1404,7 @@ function addCartridges(count, location) {
         labelField: 'type',
         searchField: "type",
         options: [{type: "Оригинальный"},
-            {type: "Совместимый"},
+            {type: "Аналог"},
             {type: "Стартовый"}],
         onChange: function (value) {
             if (value !== '') {
@@ -1632,7 +1632,7 @@ function addCartridgesInfo(location) {
         labelField: 'type',
         searchField: "type",
         options: [{type: "Оригинальный"},
-            {type: "Совместимый"},
+            {type: "Аналог"},
             {type: "Стартовый"}],
         onChange: function (value) {
             if (value !== '') {
@@ -1702,7 +1702,7 @@ $(document).ready(function () {
         searchField: "type",
         placeholder: "Выберите из списка",
         options: [{type: "Оригинальный"},
-            {type: "Совместимый"},
+            {type: "Аналог"},
             {type: "Стартовый"}],
         onChange: function (value) {
             if (value !== '') {
@@ -1882,7 +1882,7 @@ $(document).ready(function () {
         labelField: 'type',
         searchField: "type",
         options: [{type: "Оригинальный"},
-            {type: "Совместимый"},
+            {type: "Аналог"},
             {type: "Стартовый"}],
         onChange: function (value) {
             if (value !== '') {
@@ -1939,6 +1939,13 @@ $(document).ready(function () {
     });
 
 });
+
+window.onload = function() {
+    
+    
+    setInterval('AJAXPing()', 28000);
+    
+};
 
 function getContractPrinterDetails() {
     let printer;

@@ -16,6 +16,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
+import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
@@ -59,12 +60,12 @@ public class CartridgeService {
     @Autowired
     private ModelPrinterRepo modelPrinterRepo;
     
-
+    @Transactional
     public void installCartridge(CartridgeInstallDTO dto) {
         ListenerOperation listener = new ListenerOperation();
-        Optional<Printer> findPrinterById = printerRepo.findById(dto.getIdPrinter());
+        Printer findPrinterById = printerRepo.findByPrinterId(dto.getIdPrinter());
         Optional<Cartridge> findCartridgeById = cartridgeRepo.findById(dto.getIdCartridge());
-        Set<Cartridge> cartridges = findPrinterById.get().getCartridge();
+        Set<Cartridge> cartridges = findPrinterById.getCartridge();
         if (!cartridges.isEmpty()) {
             for (Cartridge cartr : cartridges) {
                 if (cartr.isUseInPrinter()) {
@@ -76,11 +77,11 @@ public class CartridgeService {
             }
         }
         findCartridgeById.get().setUseInPrinter(true);
-        findCartridgeById.get().setPrinter(findPrinterById.get());
-        findPrinterById.get().setCartridge(cartridges);
+        findCartridgeById.get().setPrinter(findPrinterById);
+        findPrinterById.setCartridge(cartridges);
         listener.setDateOperation(LocalDateTime.now());
         listener.setLocation(findCartridgeById.get().getLocation());
-        listener.setCurrentOperation("Установлен в принтер " + findPrinterById.get().getManufacturer().getName() + " " + findPrinterById.get().getModel().getName() + " серийный номер: " + findPrinterById.get().getSerialNumber());
+        listener.setCurrentOperation("Установлен в принтер " + findPrinterById.getManufacturer().getName() + " " + findPrinterById.getModel().getName() + " серийный номер: " + findPrinterById.getSerialNumber());
         listener.setOperationType(OperationType.UTIL);
         Set<Cartridge> collectCartridgesOfLocation = cartridgeRepo.findByLocationId(findCartridgeById.get().getLocation().getId()).stream()
                 .filter(e -> !e.isUtil())
@@ -109,12 +110,12 @@ public class CartridgeService {
                 .collect(Collectors.toList());
         listener.setAmount(1);
         listener.setAmountAllCartridgesByModel(findAllCartridgesExceptUtil.size());
-        printerRepo.save(findPrinterById.get());
+        printerRepo.save(findPrinterById);
         cartridgeRepo.save(findCartridgeById.get());
         listenerOperationService.saveListenerOperation(listener);
 
     }
-
+    @Transactional
     public void changeCartridgesLocation(ChangeLocationForCartridges dto) {
         Optional<Location> findLocationById = locationRepo.findById(dto.getLocation());
         Location currentLocation = findLocationById.get();
@@ -186,7 +187,7 @@ public class CartridgeService {
         
         return list;
     }
-
+    @Transactional
     public void saveCartridgeModel(CartridgeModel cartridgeModel) throws ObjectAlreadyExists {
         String replaceAllBreakesFromInput = cartridgeModel.getModel().replaceAll(" ", "");
         String replaceAllDeficesAndBreakesFromInput = replaceAllBreakesFromInput.replaceAll("-", "");
@@ -199,7 +200,7 @@ public class CartridgeService {
         }
     }
 
-
+    @Transactional
     public void changeCartridgeLocation(ChangeDeviceLocationDTO dto) {
         String location1;
         String location2;
@@ -227,7 +228,7 @@ public class CartridgeService {
         cartridgeRepo.save(findCartridgeById.get());
         listenerOperationService.saveListenerOperation(listener);
     }
-
+    @Transactional
     public void utilCartridge(Long id) {
         ListenerOperation listener = new ListenerOperation();
         Optional<Cartridge> findCartridgeById = cartridgeRepo.findById(id);

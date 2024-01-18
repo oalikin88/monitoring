@@ -25,10 +25,14 @@ $(document).ready(function () {
     let inventarySubmit = document.querySelector('#inventarySubmit');
     let startDateContract = document.getElementsByClassName('startDateContract')[0];
     let endDateContract = document.getElementsByClassName('endDateContract')[0];
-
-
+    let nameFromOneCSubmit = document.querySelector('#nameFromeOneCSubmit');
+    let nameFromOneCBtn = document.querySelector('#nameFromOneCBtn');
     let numberContractDiv = document.getElementById('numberContract');
-
+    let cartridgeSelectOkBtn = document.getElementById('printerInnerCartridgeSubmit');
+    let inventaryBtn = document.querySelector('#inventaryBtn');
+    let serialBtn = document.querySelector('#serialBtn');
+    let printerStatusBtn = document.querySelector('#printerStatusBtn');
+    
     link = document.createElement('a');
     link.setAttribute('href', '/contract?idContract=' + input.contractId);
     link.innerText = input.contractNumber;
@@ -66,23 +70,51 @@ $(document).ready(function () {
     });
     
     
-    $('#printerStatusSelect').selectize({
+    
+    printerStatusBtn.addEventListener('click', function() {
+//        let statusFromPage = document.querySelector('#printerStatus').innerHTML;
+//       let val;
+//       switch(statusFromPage) {
+//           case "Исправен":
+//               val = "OK";
+//                break;
+//            case "Неисправен":
+//                val = "DEFECTIVE";
+//                break;
+//            case "Ремонт":
+//                val = "REPAIR";
+//                break;
+//            case "Списание":
+//                val = "MONITORING";
+//                break;
+//            case "Утилизация":
+//                val = "UTILIZATION";
+//                break;
+//            case "Снят с учёта":
+//                val = "DELETE";
+//                break;
+//       }
+       var $select = $('#printerStatusSelect').selectize({
         placeholder: 'Выберите статус',
         valueField: 'value',
         labelField: 'label',
         searchField: "label",
-         options: [{value: "OK", label: "Исправный"},
-            {value: "DEFECTIVE", label: "Неисправный"},
+         options: [{value: "OK", label: "Исправен"},
+            {value: "DEFECTIVE", label: "Неисправен"},
             {value: "REPAIR", label: "Ремонт"},
             {value: "MONITORING", label: "Списание"},
             {value: "UTILIZATION", label: "Утилизация"},
             {value: "DELETE", label: "Снят с учёта"}]
     });
+       
+//       var sel = $select[0].selectize;
+//       
+//        sel.setValue(Object.entries(sel.options.OK));
+    });
 
-
-    printerStatusBtn = document.querySelector('#printerStatusSubmit');
+    printerStatusSubmit = document.querySelector('#printerStatusSubmit');
     
-    printerStatusBtn.addEventListener('click', function() {
+    printerStatusSubmit.addEventListener('click', function() {
         $.ajax({
             type: "POST",
             async:false,
@@ -91,13 +123,27 @@ $(document).ready(function () {
             dataType: "text",
             success: function (data) {
                 
-                $('#inventarynumberModal').modal('hide');
+                $('#printerStatusModal').modal('hide');
                 
             }
         });
          window.location.reload();
     });
-
+    
+    inventaryBtn.addEventListener('click', function() {
+        let inventaryNumberInput = document.querySelector('#inventaryNumberInput');
+        inventaryNumberInput.value = document.querySelector('#inventaryRefresh').innerHTML;
+        inventaryNumberInput.addEventListener('input', function() {
+            
+            if(inventaryNumberInput.value == '') {
+                inventarySubmit.disabled = true;
+            } else {
+                inventarySubmit.disabled = false;
+            }
+            
+        });
+        
+    });
 
     inventarySubmit.addEventListener('click', function () {
 
@@ -105,14 +151,72 @@ $(document).ready(function () {
 
         $.ajax({
             type: "POST",
+            async:false,
             url: "/editprinterinventary",
             data: {id: input.id, inventaryNumber: $('#inventaryNumberInput')[0].value},
             dataType: "text",
             success: function (data) {
-                $('#printerStatusModal').modal('hide');
+                
+                $('#inventarynumberModal').modal('hide');
+                div.innerText = $('#inventaryNumberInput')[0].value;
 
             }
         });
+        
+    });
+    
+    nameFromOneCBtn.addEventListener('click', function() {
+        
+        if(document.querySelector('#nameFromOneC').innerHTML != 'Отсутствует') {
+        document.querySelector('#nameFromOneCInput').value = document.querySelector('#nameFromOneC').innerHTML;
+        
+    } else {
+        nameFromOneCSubmit.disabled = true;
+    }
+    
+        document.querySelector('#nameFromOneCInput').addEventListener('input', function() {
+             if(document.querySelector('#nameFromOneCInput').value.length == 0) {
+            nameFromOneCSubmit.disabled = true;
+        } else {
+            nameFromOneCSubmit.disabled = false;
+        }
+        });
+       
+    });
+    
+    
+    
+    nameFromOneCSubmit.addEventListener('click', function() {
+        
+        div = $('#nameFromOneC')[0];
+        
+        $.ajax({
+            type: "POST",
+            async: false,
+            url: "/editprinternamefrom1c",
+            data: {id: input.id, value: $('#nameFromOneCInput')[0].value},
+            dataType: "text",
+            success: function (data) {
+                div.innerText = $('#nameFromOneCInput')[0].value;
+                $('#nameFromOneCModal').modal('hide');
+
+            }
+        });
+        
+    });
+
+    serialBtn.addEventListener('click', function() {
+            let serialInput = document.querySelector('#serialNumberInput');
+            serialInput.value = document.querySelector('#serialRefresh').innerHTML;
+            serialInput.addEventListener('input', function() {
+                if(serialInput.value == '') {
+                    serialSubmit.disabled = true;
+                } else {
+                    serialSubmit.disabled = false;
+                }
+            });
+            
+        
     });
 
     serialSubmit.addEventListener('click', function () {
@@ -122,6 +226,7 @@ $(document).ready(function () {
 
         $.ajax({
             type: "POST",
+            async: false,
             url: "/editprinterserial",
             data: {id: input.id, serialNumber: $('#serialNumberInput')[0].value},
             dataType: "text",
@@ -407,6 +512,17 @@ $(document).ready(function () {
 
     let cartridgeUseBtn = document.getElementById("catridgeUsesbtn");
     cartridgeUseBtn.addEventListener('click', function () {
+        
+        cartridgeSelectOkBtn.disabled = true;
+        
+        employeeToDoWorkSelect = document.querySelector('#inputEmployeeToDoWork');
+        employeeToSetDeviceSelect = document.querySelector('#inputEmployeeToSetDevice');
+        employeeMOLSelect = document.querySelector('#inputEmployeeMOL');
+        selectCartridge = false;
+        selectEmpWork = false;
+        selectEmpSetDev = false;
+        selectMOL = false;
+        
 
         $('#cartridgeSelect').selectize({
             preload: true,
@@ -425,6 +541,18 @@ $(document).ready(function () {
                     error: callback,
                     success: callback
                 });
+            },
+            onChange: function(val) {
+                if(val !== '') {
+                    selectCartridge = true;
+                    if(selectCartridge && selectEmpWork && selectEmpSetDev && selectMOL) {
+                        cartridgeSelectOkBtn.disabled = false;
+                    } else {
+                        cartridgeSelectOkBtn.disabled = true;
+                    }
+                } else {
+                        cartridgeSelectOkBtn.disabled = true;
+                    }
             }
 
         });
@@ -445,6 +573,18 @@ $(document).ready(function () {
                     error: callback,
                     success: callback
                 });
+            },
+            onChange: function(val) {
+                if(val !== '') {
+                    selectEmpWork = true;
+                    if(selectCartridge && selectEmpWork && selectEmpSetDev && selectMOL) {
+                        cartridgeSelectOkBtn.disabled = false;
+                    } else {
+                        cartridgeSelectOkBtn.disabled = true;
+                    }
+                } else {
+                        cartridgeSelectOkBtn.disabled = true;
+                    }
             }
 
         });
@@ -464,6 +604,18 @@ $(document).ready(function () {
                     error: callback,
                     success: callback
                 });
+            },
+            onChange: function(val) {
+                if(val !== '') {
+                    selectEmpSetDev = true;
+                    if(selectCartridge && selectEmpWork && selectEmpSetDev && selectMOL) {
+                        cartridgeSelectOkBtn.disabled = false;
+                    } else {
+                        cartridgeSelectOkBtn.disabled = true;
+                    }
+                } else {
+                        cartridgeSelectOkBtn.disabled = true;
+                    }
             }
 
         });
@@ -482,12 +634,24 @@ $(document).ready(function () {
                     error: callback,
                     success: callback
                 });
+            },
+            onChange: function(val) {
+                if(val !== '') {
+                    selectMOL = true;
+                    if(selectCartridge && selectEmpWork && selectEmpSetDev && selectMOL) {
+                        cartridgeSelectOkBtn.disabled = false;
+                    } else {
+                        cartridgeSelectOkBtn.disabled = true;
+                    }
+                } else {
+                        cartridgeSelectOkBtn.disabled = true;
+                    }
             }
 
         });
 
-
-        let cartridgeSelectOkBtn = document.getElementById('printerInnerCartridgeSubmit');
+        
+        
         cartridgeSelectOkBtn.addEventListener('click', function () {
             var countPage = 0;
             if ($('#countPage')[0] != null) {
@@ -533,6 +697,13 @@ $(document).ready(function () {
 
 
 });
+
+window.onload = function() {
+    
+    
+    setInterval('AJAXPing()', 28000);
+    
+};
 
 
 function actInstallReport(input) {

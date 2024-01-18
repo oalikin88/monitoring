@@ -47,20 +47,22 @@ public class Printer extends ObjectBuing implements Serializable {
     @NotNull
     @Enumerated(EnumType.STRING)
     protected PrinterStatus printerStatus;
+    @ManyToOne(cascade = CascadeType.ALL)
+    protected NameFromOneC nameFromOneC;
    
     
     public Printer() {
     }
 
     public Printer(Manufacturer manufacturer, String serialNumber, String inventoryNumber, 
-            Set<Cartridge> cartridge, Model model, PrinterStatus printerStatus) {
+            Set<Cartridge> cartridge, Model model, PrinterStatus printerStatus, NameFromOneC nameFromOneC) {
         this.model = model;
         this.serialNumber = serialNumber;
         this.inventoryNumber = inventoryNumber;
         this.cartridge = cartridge;
         this.manufacturer = manufacturer;
         this.printerStatus = printerStatus;
-        
+        this.nameFromOneC = nameFromOneC;
     }  
 
     public Long getId() {
@@ -136,16 +138,22 @@ public class Printer extends ObjectBuing implements Serializable {
     public void setLocation(Location location) {
         this.location = location;
     }
+
+    public NameFromOneC getNameFromOneC() {
+        return nameFromOneC;
+    }
+
+    public void setNameFromOneC(NameFromOneC nameFromOneC) {
+        this.nameFromOneC = nameFromOneC;
+    }
     
     
 
     @Override
     public String toString() {
         return "Printer [ID: " + super.id + "; Models: " + this.manufacturer.getModelList() + "; Serial: " + this.serialNumber + 
-                "; Invertary number: " + this.inventoryNumber + "; Location: " + this.location + "; Cartridge: " + this.cartridge + "]";
+                "; Invertary number: " + this.inventoryNumber + "; Location: " + this.location + "; Cartridge: " + this.cartridge + "; NameFrom1C: " + this.nameFromOneC.getName() + "]";
     }
-    
-    
     
     
 }

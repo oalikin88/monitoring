@@ -154,6 +154,11 @@ public class Model implements Serializable {
     public void setPrinters(List<Printer> printers) {
         this.printers = printers;
     }
+
+    @Override
+    public String toString() {
+        return "Model{" + "name=" + name + ", printColorType=" + printColorType + ", printFormatType=" + printFormatType + ", printSpeed=" + printSpeed + ", manufacturer=" + manufacturer + '}';
+    }
     
     
     

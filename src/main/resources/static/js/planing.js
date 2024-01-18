@@ -295,6 +295,12 @@ window.onload = function () {
         history.back();
     });
     
+    
+    
+    
+    setInterval('AJAXPing()', 28000);
+    
+
 
 };
 

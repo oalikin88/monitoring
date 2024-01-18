@@ -93,13 +93,13 @@ public interface CartridgeRepo extends JpaRepository<Cartridge, Long> {
    
    @Query(value = "SELECT cart.*, ob.*, contr.*, model.* "
    + "FROM cartridge cart "
-   + "JOIN object_buing ob "
+   + "LEFT JOIN object_buing ob "
    + "ON cart.cartridge_id = ob.id "
-   + "JOIN contract contr "
+   + "LEFT JOIN contract contr "
    + "ON ob.contract_id = contr.id "
-   + "INNER JOIN cartridge_model_models_printers cart_print "
+   + "LEFT JOIN cartridge_model_models_printers cart_print "
    + "ON cart.model_id = cart_print.model_cartridges_id "
-   + "JOIN model model "
+   + "LEFT JOIN model model "
    + "ON cart.model_id = model.id "
    + "WHERE cart_print.models_printers_id = ?2 "
    + "AND ob.location_id = ?1 "
@@ -107,13 +107,13 @@ public interface CartridgeRepo extends JpaRepository<Cartridge, Long> {
    + "AND cart.use_in_printer = FALSE",
    countQuery = "SELECT count(*) "
     + "FROM cartridge cart "
-   + "JOIN object_buing ob "
+   + "LEFT JOIN object_buing ob "
    + "ON cart.cartridge_id = ob.id "
-   + "JOIN contract contr "
+   + "LEFT JOIN contract contr "
    + "ON ob.contract_id = contr.id "
-   + "INNER JOIN cartridge_model_models_printers cart_print "
+   + "LEFT JOIN cartridge_model_models_printers cart_print "
    + "ON cart.model_id = cart_print.model_cartridges_id "
-   + "JOIN model model "
+   + "LEFT JOIN model model "
    + "ON cart.model_id = model.id "
    + "WHERE cart_print.models_printers_id = ?2 "
    + "AND ob.location_id = ?1 "
@@ -144,7 +144,7 @@ public interface CartridgeRepo extends JpaRepository<Cartridge, Long> {
     "ON cart.cartridge_id = ob.id " +
     "LEFT JOIN cartridge_model_models_printers cart_print " +
     "ON cart.model_id = cart_print.model_cartridges_id " +
-    "LEFT JOIN printer p " +
+    "RIGHT JOIN printer p " +
     "ON p.model_id = cart_print.models_printers_id " +
     "WHERE ob.location_id = ?1 " +
     "AND p.printer_id = ?2 " +

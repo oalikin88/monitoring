@@ -15,8 +15,6 @@ import java.util.NoSuchElementException;
 import java.util.Set;
 import javax.validation.Valid;
 import org.apache.commons.io.IOUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -108,7 +106,6 @@ public class MainController {
     @Autowired
     private PrinterAndCartridgeCountByLocationTableService daoService;
 
-    private final Logger log = LoggerFactory.getLogger(this.getClass());
     
     @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
     @GetMapping("/main")
@@ -350,16 +347,16 @@ public class MainController {
         CartridgeModel cartridgeModelDtoToCartridgeModel = cartridgeMapper.cartridgeModelDtoToCartridgeModel(dto);
         cartridgeService.saveCartridgeModel(cartridgeModelDtoToCartridgeModel);
         return new ResponseEntity<CartridgeModelDTO>(dto, HttpStatus.OK);
-
     }
+    
     @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
     @GetMapping("/editprinter")
     public String getPrinter(Model model, @RequestParam Long idPrinter) {
-
         PrinterDTO printerDto = printerMapper.getPrinterById(idPrinter);
         model.addAttribute("dto", printerDto);
         return "edit";
     }
+    
      @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
     @GetMapping("/editcartridge")
     public String getCartridge(Model model, @RequestParam Long idCartridge) {
@@ -376,6 +373,16 @@ public class MainController {
         printerMapper.editPrinterLocation(dto);
         return new ResponseEntity<String>("Локация успешно изменена", HttpStatus.OK);
     }
+    
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    @PostMapping("/editprinternamefrom1c")
+    public ResponseEntity<String> changePrinterNameFromOneC(Long id, String value) {
+
+        printerMapper.editPrinterNameFromOneC(id, value);
+        return new ResponseEntity<String>("Наименование ОС успешно измененено", HttpStatus.OK);
+    }
+    
+    
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @PostMapping("/editcartridgelocation")
     public ResponseEntity<String> changeCartridgeLocation(ChangeDeviceLocationDTO dto) {
@@ -386,7 +393,7 @@ public class MainController {
     }
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @PostMapping("/editcartridgeslocation")
-    public ResponseEntity<String> changeCartridgeLocation(ChangeLocationForCartridges dto) {
+    public ResponseEntity<String> changeCartridgesLocation(ChangeLocationForCartridges dto) {
 
         cartridgeService.changeCartridgesLocation(dto);
 
@@ -502,4 +509,6 @@ public class MainController {
     public void changePrinterStatus(PrinterStatusDto dto) {
         printerMapper.editPrinterStatus(dto);
     }
+    
+
 }
