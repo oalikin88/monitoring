@@ -300,7 +300,7 @@ public class CartridgeService {
         for (Cartridge cartridge : cartridges) {
                     CartridgeChoiceDto dto = new CartridgeChoiceDto();
                     dto.setId(cartridge.getId());
-                    dto.setName("Модель: " + cartridge.getModel().getModel() + ", контракт № " + cartridge.getContract().getContractNumber() + " от " + sdf.format(cartridge.getContract().getDateStartContract()));
+                    dto.setName("Ном.код: " + cartridge.getItemCode() + ", модель: " + cartridge.getModel().getModel());
                     cartridgesByModelPrinter.add(dto);
         }
         return cartridgesByModelPrinter;

@@ -16,16 +16,19 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import ru.gov.sfr.aos.monitoring.dao.PrinterAndCartridgeCountByLocationTableDAO;
 import ru.gov.sfr.aos.monitoring.entities.CartridgeModel;
+import ru.gov.sfr.aos.monitoring.entities.Printer;
 import ru.gov.sfr.aos.monitoring.models.CartridgeChoiceDto;
 import ru.gov.sfr.aos.monitoring.models.CartridgeModelDTO;
 import ru.gov.sfr.aos.monitoring.models.EmployeeDTO;
 import ru.gov.sfr.aos.monitoring.models.LocationDTO;
 import ru.gov.sfr.aos.monitoring.models.PrinterAndCartridgeCountByLocationTable;
+import ru.gov.sfr.aos.monitoring.models.PrinterDTO;
 import ru.gov.sfr.aos.monitoring.services.CartridgeMapper;
 import ru.gov.sfr.aos.monitoring.services.CartridgeService;
 import ru.gov.sfr.aos.monitoring.services.DictionaryEmployeeHolder;
 import ru.gov.sfr.aos.monitoring.services.LocationService;
 import ru.gov.sfr.aos.monitoring.services.PlaningService;
+import ru.gov.sfr.aos.monitoring.services.PrinterService;
 
 /**
  *
@@ -47,6 +50,8 @@ public class GetInfoController {
     private DictionaryEmployeeHolder dictionaryEmployeeHolder;
     @Autowired
     private CartridgeService cartridgeService;
+    @Autowired
+    private PrinterService printerService;
     
     private final PrinterAndCartridgeCountByLocationTableDAO dao;
 
@@ -109,7 +114,14 @@ public class GetInfoController {
     
     @PostMapping("/AJAXPing")
     public Integer getAllContracts() {
-return 0;
+        return 0;
     }
+    
+//    @GetMapping("/searchprinter")
+//    public List<PrinterDTO> searchPrinters(@RequestParam("inventaryNumber") String inventaryNumber) {
+//        List<Printer> printersByInventaryNumber = printerService.getPrintersByInventaryNumber(inventaryNumber);
+//        List<PrinterDTO> printersDtoListFromPrintersList = printerService.getPrintersDtoListFromPrintersList(printersByInventaryNumber);
+//        return printersDtoListFromPrintersList;
+//    }
 
 }

@@ -6,6 +6,7 @@
 const content = document.querySelector('#wrap');
 const pagin = document.querySelector('#content');
 const buttonsRow = document.querySelector("#buttonsRow");
+
 const iconFilter = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-filter-square" viewBox="0 0 16 16"> <path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z"/> <path d="M6 11.5a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 0 1h-3a.5.5 0 0 1-.5-.5zm-2-3a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5zm-2-3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5z"/> </svg>';
 let arrRequest = window.location.search
         .replace('?', '')
@@ -38,11 +39,13 @@ $(document).ready(function () {
     if (input.length > 0) {
 
         let btnAfterTitleRow = document.createElement('div');
-        btnAfterTitleRow.className = 'row buttonsRow mb-3';
+        btnAfterTitleRow.className = 'row buttonsRow mb-5';
         wrapper.appendChild(btnAfterTitleRow);
 
         btnAfterTitleCol1 = document.createElement('div');
         btnAfterTitleCol1.className = 'col col-8';
+        
+        
 
         btnAfterTitleCol2 = document.createElement('div');
         btnAfterTitleCol2.className = 'col col-4';
@@ -56,61 +59,90 @@ $(document).ready(function () {
         btnAfterTitleRow.appendChild(btnAfterTitleCol1);
         btnAfterTitleRow.appendChild(btnAfterTitleCol2);
 
-        let formContainer = document.createElement('form');
-        formContainer.setAttribute('th:action', '@{' + window.location.pathname + '}');
-        formContainer.setAttribute('action', window.location.pathname);
-        formContainer.setAttribute('th:object', '${dto}');
-        formContainer.setAttribute('method', 'GET');
-        formContainer.id = 'formFilter';
+        filterContainer = document.createElement('div');
+        filterContainer.id = 'filterContainer';
+        btnAfterTitleCol1.appendChild(filterContainer);
+        
+        formContainerSearch = document.createElement('form');
+        formContainerSearch.setAttribute('th:action', '@{/getcartridgesbymodel}');
+        formContainerSearch.setAttribute('action', '/getcartridgesbymodel');
+        formContainerSearch.setAttribute('th:object', '${dto}');
+        formContainerSearch.setAttribute('method', 'GET');
+        formContainerSearch.id = 'formContainerSearch';
+        
+        filterContainer.appendChild(formContainerSearch);
+        
+        
+        inputGroupFilter = document.createElement('div');
+        inputGroupFilter.className = 'input-group';
+        inputGroupFilter.id = 'inputGroupFilter';
+        formContainerSearch.appendChild(inputGroupFilter);
+        
+        inputFilter = document.createElement('input');
+        inputFilter.className = 'form-control';
+        inputFilter.id = 'inputFilter';
+        inputFilter.placeholder = 'поиск по номенклатурному коду';
+        inputFilter.name = 'itemCode';
+        inputFilter.setAttribute('th:field', '*{itemCode}');
+        inputFilter.type = 'text';
+        inputGroupFilter.appendChild(inputFilter);
+        
+        selectDropdown = document.createElement('select');
+        selectDropdown.className = 'form-select';
+        selectDropdown.id = 'selectSearch';
+        inputGroupFilter.appendChild(selectDropdown);
+        
+        itemCodeOption = document.createElement('option');
+        itemCodeOption.value = 'itemCode';
+        itemCodeOption.innerHTML = 'номенклатурный код';
+        itemCodeOption.selected = true;
+        selectDropdown.appendChild(itemCodeOption);
+        
+        modelCartridgeOption = document.createElement('option');
+        modelCartridgeOption.value = 'modelCartridge';
+        modelCartridgeOption.innerHTML = 'модель';
+        selectDropdown.appendChild(modelCartridgeOption);
+        
+        
+        filterBtnApply = document.createElement('button');
+        filterBtnApply.id = 'filterBtnApply';
+        filterBtnApply.type = 'submit';
+        filterBtnApply.className = 'btn btn-outline-secondary btn-search';
+        inputGroupFilter.appendChild(filterBtnApply);
+        
+        imgInner = document.createElement('img');
+        imgInner.src = '/img/search.svg?height=16';
+        filterBtnApply.appendChild(imgInner);
+        
+     
+        
+        searchFilterHideFieldLocation = document.createElement('input');
+        searchFilterHideFieldLocation.className = 'form-control';
+        searchFilterHideFieldLocation.setAttribute('th:field', '*{location}');
+        searchFilterHideFieldLocation.name = 'location';
+        searchFilterHideFieldLocation.type = 'hidden';
+        searchFilterHideFieldLocation.value = locationInfo.id;
 
-        btnAfterTitleCol2.appendChild(formContainer);
+
+        searchFilterHideFieldPrinterId = document.createElement('input');
+        searchFilterHideFieldPrinterId.className = 'form-control';
+        searchFilterHideFieldPrinterId.setAttribute('th:field', '*{idModel}');
+        searchFilterHideFieldPrinterId.name = 'idModel';
+        searchFilterHideFieldPrinterId.type = 'hidden';
+        if(arrRequest.idModel) {
+             searchFilterHideFieldPrinterId.value = arrRequest.idModel;
+        } else {
+        searchFilterHideFieldPrinterId.value = null;
+        }
 
         
+        
+        inputGroupFilter.appendChild(searchFilterHideFieldLocation);
+        inputGroupFilter.appendChild(searchFilterHideFieldPrinterId);
 
+        btnAfterTitleCol2.appendChild(filterContainer);
 
-        inputGroupFilterDiv = document.createElement('div');
-        inputGroupFilterDiv.className = 'input-group';
-
-        inputGroupFilterLabel = document.createElement('span');
-        inputGroupFilterLabel.className = 'input-group-text';
-        inputGroupFilterLabel.id = 'filterLabel';
-        inputGroupFilterLabel.innerHTML = iconFilter;
-
-        filterSubmit = document.createElement('button');
-        filterSubmit.type = 'submit';
-        filterSubmit.id = 'submitFiler';
-        filterSubmit.className = 'btn btn-light';
-        filterSubmit.innerText = 'Применить';
-
-        inputGroupFilterInput = document.createElement('input');
-        inputGroupFilterInput.className = 'form-control';
-        inputGroupFilterInput.setAttribute('th:field', '*{contractNumber}');
-        inputGroupFilterInput.name = 'contractNumber';
-        inputGroupFilterInput.placeholder = 'фильтр по номеру контракта';
-
-        inputGroupFilterHideFieldLocation = document.createElement('input');
-        inputGroupFilterHideFieldLocation.className = 'form-control';
-        inputGroupFilterHideFieldLocation.setAttribute('th:field', '*{location}');
-        inputGroupFilterHideFieldLocation.name = 'location';
-        inputGroupFilterHideFieldLocation.type = 'hidden';
-        inputGroupFilterHideFieldLocation.value = locationInfo.id;
-
-
-        inputGroupFilterHideFieldPrinterId = document.createElement('input');
-        inputGroupFilterHideFieldPrinterId.className = 'form-control';
-        inputGroupFilterHideFieldPrinterId.setAttribute('th:field', '*{idModel}');
-        inputGroupFilterHideFieldPrinterId.name = 'idModel';
-        inputGroupFilterHideFieldPrinterId.type = 'hidden';
-        inputGroupFilterHideFieldPrinterId.value = arrRequest.idModel;
-
-
-        formContainer.append(inputGroupFilterDiv);
-        inputGroupFilterDiv.appendChild(inputGroupFilterHideFieldLocation);
-        inputGroupFilterDiv.appendChild(inputGroupFilterHideFieldPrinterId);
-        inputGroupFilterDiv.appendChild(inputGroupFilterLabel);
-        inputGroupFilterDiv.appendChild(inputGroupFilterInput);
-        inputGroupFilterDiv.appendChild(filterSubmit);
-
+       
 
         headTable = document.createElement('div');
         headTable.className = "row fw-bold";
@@ -149,6 +181,26 @@ $(document).ready(function () {
         textModel = document.createElement('span');
         textModel.innerText = "Модель";
         headTableModel.appendChild(textModel);
+        
+        headTableItemCode = document.createElement('div');
+        headTableItemCode.className = "col my-auto mx-auto text-start";
+        headTable.appendChild(headTableItemCode);
+
+        linkSortingItemCode = document.createElement('a');
+        linkSortingItemCode.href = '#';
+        linkSortingItemCode.id = 'itemCodeSortLink';
+        imgInnerItemCode = document.createElement('img');
+        imgInnerItemCode.src = '/img/sorting.png';
+        imgInnerItemCode.alt = 'Сортировка';
+        imgInnerItemCode.className = 'imgSorting';
+        imgInnerItemCode.id = 'itemCodeSort';
+        linkSortingItemCode.appendChild(imgInnerItemCode);
+        headTableItemCode.appendChild(linkSortingItemCode);
+        textItemCode = document.createElement('span');
+        textItemCode.innerText = "Номенклатурный код";
+        headTableItemCode.appendChild(textItemCode);
+        
+        
 
         headTableContractNumber = document.createElement('div');
         headTableContractNumber.className = "col my-auto mx-auto text-start";
@@ -224,6 +276,11 @@ $(document).ready(function () {
             link.setAttribute('href', '/editcartridge?idCartridge=' + input[i].id);
             link.innerText = input[i].model;
             contentRowPrinterName.appendChild(link);
+            
+            contentRowItemCode = document.createElement('div');
+            contentRowItemCode.className = 'col';
+            contentRowItemCode.innerText = input[i].itemCode;
+            contentRow.appendChild(contentRowItemCode);
 
 
             contentRowContractNumber = document.createElement('div');
@@ -518,8 +575,29 @@ $(document).ready(function () {
       }
         });
     
+  let selectCategory = document.querySelector('#selectSearch');  
     
-
+    selectCategory.addEventListener('change', function() {
+            console.log(event.target.value);
+            if(event.target.value === 'itemCode') {
+                document.querySelector('#inputFilter').placeholder = 'поиск по номенклатурному коду';
+            } else {
+                document.querySelector('#inputFilter').placeholder = 'поиск по модели картриджа';
+            }
+    });
+    
+    //let searchApplyBtn = document.querySelector('#filterBtnApply');
+    formContainerSearch.addEventListener('submit', function(e) {
+        e.preventDefault();
+        if(selectCategory.value === 'itemCode') {
+        inputFilter.setAttribute('th:field', '*{itemCode}');
+        inputFilter.name = 'itemCode';
+    } else {
+        inputFilter.setAttribute('th:field', '*{modelName}');
+        inputFilter.name = 'modelName';
+    }
+    formContainerSearch.submit();
+    });
     
 });
 

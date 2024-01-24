@@ -52,14 +52,15 @@ window.onload = function () {
         bufferCol.className = 'col col-8';
         filterRow.appendChild(bufferCol);
         
+        
         let filterCol = document.createElement('div');
         filterCol.className = 'col col-4';
         filterRow.appendChild(filterCol);
         
         
         let formContainer = document.createElement('form');
-        formContainer.setAttribute('th:action', '@{' + window.location.pathname + '}');
-        formContainer.setAttribute('action', window.location.pathname);
+        formContainer.setAttribute('th:action', '@{/printersbylocation}');
+        formContainer.setAttribute('action', '/printersbylocation');
         formContainer.setAttribute('th:object', '${dto}');
         formContainer.setAttribute('method', 'GET');
         formContainer.id = 'formFilter';
@@ -79,15 +80,19 @@ window.onload = function () {
 
         filterSubmit = document.createElement('button');
         filterSubmit.type = 'submit';
-        filterSubmit.id = 'submitFiler';
+        filterSubmit.id = 'submitFilter';
         filterSubmit.className = 'btn btn-light';
-        filterSubmit.innerText = 'Применить';
-
+        
+        imgInner = document.createElement('img');
+        imgInner.src = '/img/search.svg?height=16';
+        filterSubmit.appendChild(imgInner);
+        
+        
         inputGroupFilterInput = document.createElement('input');
         inputGroupFilterInput.className = 'form-control';
-        inputGroupFilterInput.setAttribute('th:field', '*{contractNumber}');
-        inputGroupFilterInput.name = 'contractNumber';
-        inputGroupFilterInput.placeholder = 'фильтр по номеру контракта';
+        inputGroupFilterInput.setAttribute('th:field', '*{inventaryNumber}');
+        inputGroupFilterInput.name = 'inventaryNumber';
+        inputGroupFilterInput.placeholder = 'поиск по инвентарному номеру';
 
         inputGroupFilterHideFieldLocation = document.createElement('input');
         inputGroupFilterHideFieldLocation.className = 'form-control';
@@ -102,7 +107,12 @@ window.onload = function () {
         inputGroupFilterHideFieldPrinterId.setAttribute('th:field', '*{idModel}');
         inputGroupFilterHideFieldPrinterId.name = 'idModel';
         inputGroupFilterHideFieldPrinterId.type = 'hidden';
-        inputGroupFilterHideFieldPrinterId.value = arrRequest.idModel;
+        if(arrRequest) {
+            inputGroupFilterHideFieldPrinterId.value = null;
+        } else {
+            inputGroupFilterHideFieldPrinterId.value = arrRequest.idModel;
+        }
+        
 
 
         formContainer.append(inputGroupFilterDiv);
@@ -437,7 +447,11 @@ window.onload = function () {
     
     setInterval('AJAXPing()', 28000);
     
+    
+
+    
 };
+
 
 
 

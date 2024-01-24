@@ -78,6 +78,8 @@ public class CartridgeMapper {
         dto.setDateEndExploitation(findCartridgeById.get().getDateEndExploitation());
         dto.setCount(findCartridgeById.get().getCount());
         dto.setStartContract(findCartridgeById.get().getContract().getDateStartContract());
+        dto.setItemCode(findCartridgeById.get().getItemCode());
+        dto.setNameMaterial(findCartridgeById.get().getNameMaterial());
         return dto;
     }
     

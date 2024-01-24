@@ -277,4 +277,29 @@ public class PrintersMapper {
         printerRepo.save(findPrinterById);
     }
 
+    
+    public PrinterDTO printerToPrinterDto(Printer printer) {
+        PrinterDTO dto = new PrinterDTO();
+        dto.setId(printer.getId());
+        dto.setContractId(printer.getContract().getId());
+        dto.setContractNumber(printer.getContract().getContractNumber());
+        dto.setEndContract(printer.getContract().getDateEndContract());
+        dto.setInventaryNumber(printer.getInventoryNumber());
+        dto.setLocation(printer.getLocation().getName());
+        dto.setLocationId(printer.getLocation().getId());
+        dto.setManufacturer(printer.getManufacturer().getName());
+        dto.setModel(printer.getModel().getName());
+        if(null != printer.getNameFromOneC()) {
+            dto.setNameFromOneC(printer.getNameFromOneC().getName());
+        } else {
+            dto.setNameFromOneC("Отсутствует");
+        }
+        
+        dto.setPrinterStatus(printer.getPrinterStatus().getStatus());
+        dto.setSerialNumber(printer.getSerialNumber());
+        dto.setStartContract(printer.getContract().getDateStartContract());
+        
+       return dto;
+    }
+
 }

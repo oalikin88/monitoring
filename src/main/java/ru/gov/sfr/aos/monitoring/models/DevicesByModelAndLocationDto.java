@@ -11,13 +11,13 @@ package ru.gov.sfr.aos.monitoring.models;
 public class DevicesByModelAndLocationDto {
     public Long idModel;
     public Long location;
-    public String contractNumber;
+    public String inventaryNumber;
     
 
-    public DevicesByModelAndLocationDto(Long idModel, Long location, String contractNumber) {
+    public DevicesByModelAndLocationDto(Long idModel, Long location, String inventaryNumber) {
         this.idModel = idModel;
         this.location = location;
-        this.contractNumber = contractNumber;
+        this.inventaryNumber = inventaryNumber;
     }
 
     public DevicesByModelAndLocationDto() {
@@ -41,12 +41,12 @@ public class DevicesByModelAndLocationDto {
         this.location = location;
     }
 
-    public String getContractNumber() {
-        return contractNumber;
+    public String getInventaryNumber() {
+        return inventaryNumber;
     }
 
-    public void setContractNumber(String contractNumber) {
-        this.contractNumber = contractNumber;
+    public void setInventaryNumber(String inventaryNumber) {
+        this.inventaryNumber = inventaryNumber;
     }
     
     

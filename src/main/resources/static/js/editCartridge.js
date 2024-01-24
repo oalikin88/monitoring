@@ -45,6 +45,7 @@ $(document).ready(function () {
      let locationBtn = document.getElementById('locationbtn');
      let parent = document.getElementsByClassName('wrapper')[0];
      let contractNumberDiv = document.getElementById('contractNumber');
+     let nameMaterialDiv = document.getElementById('nameMaterial');
      
      link = document.createElement('a');
      link.setAttribute('href', '/contract?idContract=' + input.contract);

@@ -74,6 +74,27 @@ tbody {
     margin-top: 10%;
 }
 
+#selectSearch {
+    max-width: 220px;
+}
+
+#inputFilter {
+    max-width: 270px;
+}
+
+#filterBtnApply {
+    max-width: 45px;
+    width: 45px;
+    min-width: 45px;
+    border-radius: 0px 5px 5px 0px;
+}
+
+#submitFilter {
+     max-width: 45px;
+    width: 45px;
+    min-width: 45px;
+}
+
 .imgSorting {
     height: 12px;
     margin-bottom: 1px !important;

@@ -4,6 +4,7 @@
  */
 package ru.gov.sfr.aos.monitoring.services;
 
+import java.text.SimpleDateFormat;
 import java.time.format.DateTimeFormatter;
 import lombok.RequiredArgsConstructor;
 import org.opfr.doccreatormodels.Block;
@@ -31,7 +32,7 @@ import ru.gov.sfr.aos.reports.parameters.ActReportParameters;
  * @author 041AlikinOS
  */
 @Component
-@ReportAttributes(value = "actReport", templateFilename = "aos/act.xlsx")
+@ReportAttributes(value = "actReport", templateFilename = "aos/act2.xlsx")
 @RequiredArgsConstructor
 public class ActReport implements Report<ActReportParameters> {
 
@@ -39,6 +40,7 @@ public class ActReport implements Report<ActReportParameters> {
     private final CartridgeRepo cartridgeRepo;
     private final PrinterRepo printerRepo;
     private final FallbackEmployeeClient employeeClient;
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
 
     @Override
     public Request proceed(ActReportParameters params, String uid) throws ReportException {
@@ -57,9 +59,22 @@ public class ActReport implements Report<ActReportParameters> {
         }
         try {
             DictionaryEmployee employeeToDoWork = employeeClient.getEmployeeByCode(listener.getEmployeeToDoWork());
+            String inputNameEmployeeToDoWorkPost = employeeToDoWork.getOrganization().getName();
+            String outNameEmployeeToDoWorkPost = "";
+            String[] splitName = inputNameEmployeeToDoWorkPost.split(" ");
+            for(String s : splitName) {
+                 if(s.equals("и")) {
+                    outNameEmployeeToDoWorkPost += s.toLowerCase();
+                } else {
+                    outNameEmployeeToDoWorkPost += s.substring(0, 1).toUpperCase();
+                } 
+                    
+                
+            }
             footer
                     .parameter(new Parameter("employeeToDoWork", employeeToDoWork.getSurname() + " " + employeeToDoWork.getName().substring(0, 1) + ". " + employeeToDoWork.getMiddlename().substring(0, 1) + "."))
-                    .parameter(new Parameter("employeeToDoWorkPost", employeeToDoWork.getPost().getName()));
+                    .parameter(new Parameter("employeeToDoWorkPost", employeeToDoWork.getPost().getName() + " " 
+                            + outNameEmployeeToDoWorkPost));
         } catch (EmployeeNotFoundException ex) {
             footer
                     .parameter(new Parameter("employeeToDoWork", listener.getEmployeeToDoWork()))
@@ -68,9 +83,21 @@ public class ActReport implements Report<ActReportParameters> {
 
         try {
             DictionaryEmployee employeeMOL = employeeClient.getEmployeeByCode(listener.getEmployeeMOL());
+            String inputNameEmployeeMOL = employeeMOL.getOrganization().getName();
+            String outNameEmployeeMOL = "";
+            String[] splitName = inputNameEmployeeMOL.split(" ");
+            for(String s : splitName) {
+                 if(s.equals("и")) {
+                    outNameEmployeeMOL += s.toLowerCase();
+                } else {
+                    outNameEmployeeMOL += s.substring(0, 1).toUpperCase();
+                } 
+                    
+                
+            }
             footer
                     .parameter(new Parameter("employeeMol", employeeMOL.getSurname() + " " + employeeMOL.getName().substring(0, 1) + ". " + employeeMOL.getMiddlename().substring(0, 1) + "."))
-                    .parameter(new Parameter("employeeMOLPost", employeeMOL.getPost().getName()));
+                    .parameter(new Parameter("employeeMOLPost", employeeMOL.getPost().getName() + " " + outNameEmployeeMOL));
         } catch (EmployeeNotFoundException ex) {
             footer
                     .parameter(new Parameter("employeeMol", listener.getEmployeeMOL()))
@@ -89,7 +116,7 @@ public class ActReport implements Report<ActReportParameters> {
                 .name("num")
                 .parameter(new Parameter("kod", cartridge.getItemCode()))
                 .parameter(new Parameter("cartName", cartridge.getNameMaterial()))
-                .parameter(new Parameter("date", cartridge.getDateStartExploitation().format(DateTimeFormatter.ISO_DATE)))
+                .parameter(new Parameter("date", cartridge.getDateStartExploitation().format(formatter)))
                 .parameter(new Parameter("printerName", namePrinterFromOneC))
                 .parameter(new Parameter("printerNumber", printer.getInventoryNumber()));
         try {

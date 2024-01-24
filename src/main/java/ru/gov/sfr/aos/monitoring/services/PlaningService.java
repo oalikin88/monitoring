@@ -219,7 +219,7 @@ public class PlaningService {
                 for(Location storage : locations) {
                     
                 for (ModelDTO modelDTO : modelPrinterDTOes) {
-                    for (Printer printer : printerRepo.findByLocationId(storage.getId())) {
+                    for (Printer printer : printerRepo.findByLocation(storage.getId())) {
                         if ((modelDTO.getIdModel() == printer.getModel().getId()) && !printer.getPrinterStatus().equals(PrinterStatus.DELETE)
                                 && !printer.getPrinterStatus().equals(PrinterStatus.MONITORING) && !printer.getPrinterStatus().equals(PrinterStatus.UTILIZATION)) {
                             printersID.add(printer.getId());

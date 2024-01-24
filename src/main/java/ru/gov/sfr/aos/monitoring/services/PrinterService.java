@@ -15,6 +15,7 @@ import ru.gov.sfr.aos.monitoring.entities.Location;
 import ru.gov.sfr.aos.monitoring.entities.Model;
 import ru.gov.sfr.aos.monitoring.entities.Printer;
 import ru.gov.sfr.aos.monitoring.models.LocationDTO;
+import ru.gov.sfr.aos.monitoring.models.PrinterDTO;
 import ru.gov.sfr.aos.monitoring.models.PrintersByLocationandModelDto;
 import ru.gov.sfr.aos.monitoring.repositories.LocationRepo;
 import ru.gov.sfr.aos.monitoring.repositories.ModelPrinterRepo;
@@ -35,6 +36,7 @@ public class PrinterService {
     private ModelPrinterRepo modelPrinterRepo;
     @Autowired
     private PrinterRepo printerRepo;
+    @Autowired PrintersMapper mapper;
 
     public Map<LocationDTO, List<PrintersByLocationandModelDto>> getPrintersByLocationAndModel() {
         List<Location> locations = locationRepo.findAll();
@@ -56,6 +58,20 @@ public class PrinterService {
             map.put(locDto, listDtoes);
         }
         return map;
+    }
+    
+    public List<Printer> getPrintersByInventaryNumber(String inventary, Long idLocation) {
+        List<Printer> findByInventaryNumber = printerRepo.findByInventaryNumberWhithOutIdModel(inventary, idLocation);
+        return findByInventaryNumber;
+    }
+    
+    public List<PrinterDTO> getPrintersDtoListFromPrintersList(List<Printer> list) {
+        List<PrinterDTO> printersDto = new ArrayList<>();
+        for(Printer p : list) {
+            PrinterDTO printerToPrinterDto = mapper.printerToPrinterDto(p);
+            printersDto.add(printerToPrinterDto);
+        }
+        return printersDto;
     }
     
 }
