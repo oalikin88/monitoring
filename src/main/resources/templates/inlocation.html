@@ -24,13 +24,13 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
             
             <div class="row contentRow pb-2 mb-2 mt-2 pt-2 text-left">
                 <div class="col">
-                    <a th:href="${#httpServletRequest.requestURI + '/printer'}">Принтер</a>
+                    <a href="#" id="printerLink">Принтер</a>
                 </div>
             </div>
             
             <div class="row contentRow pb-2 mb-2 mt-2 pt-2 text-left">
                 <div class="col">
-                    <a th:href="${#httpServletRequest.requestURI + '/cartridge'}">Картридж</a>
+                    <a href="#" id="cartridgeLink" >Картридж</a>
                 </div>
             </div>
             
@@ -41,6 +41,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
         
      <footer th:insert="footer :: footer"></footer>
         <script src="/js/bootstrap.bundle.min.js" ></script>
+        <script src="/js/category_choice.js"></script>
         
     </body>
 </html>

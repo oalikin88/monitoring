@@ -21,6 +21,20 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
             <nav th:insert="nav :: navbar"></nav>
             <div class="container-fluid" id="tabContent">
                 <header><h3 class="fw-bold mb-3">Таблица учёта принтеров и картриджей</h3></header>
+                
+                <div class="row mt-3 mb-3">
+                    <div class="col-2 text-end labelDiv">
+                        <label for="selectDeviceType" class="form-label mt-1">Тип оборудования</label>
+                          </div>
+                    <div class="col-2">
+                        <select class="form-select form-select-sm" id="selectDeviceType">
+                            <option value="ALL">Всё оборудование</option>
+                            <option value="PRINTER">Принтеры</option>
+                            <option value="MFU">МФУ</option>
+                        </select>
+                        
+                    </div>
+                </div>
 
                  <div class="table-responsive" id="tableContainer">
                     <script th:inline="javascript">

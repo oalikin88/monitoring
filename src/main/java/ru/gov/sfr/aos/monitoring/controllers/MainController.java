@@ -12,6 +12,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 import java.util.Set;
 import javax.validation.Valid;
 import org.apache.commons.io.IOUtils;
@@ -62,6 +63,7 @@ import ru.gov.sfr.aos.monitoring.models.PrinterAndCartridgeCountByLocationTable;
 import ru.gov.sfr.aos.monitoring.models.PrinterDTO;
 import ru.gov.sfr.aos.monitoring.models.PrinterStatusDto;
 import ru.gov.sfr.aos.monitoring.repositories.CartridgeRepo;
+import ru.gov.sfr.aos.monitoring.repositories.ModelPrinterRepo;
 import ru.gov.sfr.aos.monitoring.repositories.PrinterRepo;
 import ru.gov.sfr.aos.monitoring.services.CartridgeMapper;
 import ru.gov.sfr.aos.monitoring.services.CartridgeService;
@@ -106,6 +108,8 @@ public class MainController {
     private PrinterService printerService;
     @Autowired
     private PrinterAndCartridgeCountByLocationTableService daoService;
+    @Autowired
+    private ModelPrinterRepo modelPrinterRepo;
 
     @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
     @GetMapping("/main")
@@ -127,9 +131,14 @@ public class MainController {
 
     @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
     @GetMapping("/inventories")
-    public String getAllInventories(Model model) throws SQLException {
-
-        List<PrinterAndCartridgeCountByLocationTable> allData = daoService.getAllData();
+    public String getAllInventories(Model model, @RequestParam(name = "deviceType", required = false) String deviceType) throws SQLException {
+        List<PrinterAndCartridgeCountByLocationTable> allData = null;
+        if(null != deviceType) {
+            allData = daoService.getAllData(deviceType); 
+        } else {
+            allData = daoService.getAllData("ALL"); 
+        }
+        
 
         Map<Long, String> models = new HashMap<>();
         Map<Long, String> locations = new HashMap<>();
@@ -163,9 +172,9 @@ public class MainController {
             @PathVariable(name = "device") String device,
             @RequestParam(defaultValue = "0", required = false) Integer page,
             @RequestParam(defaultValue = "25", required = false) Integer pageSize,
-            @RequestParam(required = false) String contractNumber,
             @RequestParam(defaultValue = "printer_id") String sortBy,
-            @RequestParam(defaultValue = "up") String direction) {
+            @RequestParam(defaultValue = "up") String direction,
+            @RequestParam(defaultValue = "ALL", name = "deviceType", required = false) String deviceType) {
         long parseLong = Long.parseLong(location);
 
         Sort.Direction direct = null;
@@ -177,9 +186,11 @@ public class MainController {
         Pageable paging = PageRequest.of(page, pageSize, JpaSort.unsafe(direct, sortBy));
         if (device.equals("printer")) {
             Page<Printer> getPage = null;
-            if (contractNumber != null) {
-                getPage = printerRepo.findByLocationIdAndContractContractNumberIgnoreCaseLike(parseLong, contractNumber, paging);
+            
+            if(!deviceType.equals("ALL")) {
+                 getPage = printerRepo.findByLocationAndDeviceType(parseLong, deviceType, paging);
             } else {
+            
                 getPage = printerRepo.findByLocation(parseLong, paging);
             }
             List<PrinterDTO> dtoes = new ArrayList<>();
@@ -200,9 +211,11 @@ public class MainController {
             model.addAttribute("pages", getPage.getTotalPages());
         } else {
             Page<Cartridge> getCartridge = null;
-            if (contractNumber != null) {
-                getCartridge = cartridgeRepo.findByLocationIdAndContractContractNumberIgnoreCaseLike(parseLong, contractNumber, paging);
+            
+            if(null != deviceType && !deviceType.equals("ALL")) {
+                getCartridge = cartridgeRepo.findByLocationIdAndDeviceType(parseLong, deviceType, paging);
             } else {
+            
                 getCartridge = cartridgeRepo.findByLocationId(parseLong, paging);
             }
 
@@ -293,6 +306,18 @@ public class MainController {
 
         LocationDTO locationById = locationService.getLocationById(dto.location);
         List<Printer> printersList = printerMapper.getPrintersByModelId(dto.idModel);
+        if(printersList.size() == 0) {
+            List<ru.gov.sfr.aos.monitoring.entities.Model> findAnalogModelByModelId = modelPrinterRepo.findAnalogModelByModelId(dto.idModel);
+            for(ru.gov.sfr.aos.monitoring.entities.Model m : findAnalogModelByModelId) {
+                if(m.getId() != dto.idModel) {
+                    printersList = printerMapper.getPrintersByModelId(m.getId());
+                    if(printersList.size() > 0) {
+                        break;
+                    }
+                }
+            }
+          
+        }
         Page<Printer> getPage = null;
         if (null != dto.getInventaryNumber() && null != dto.getIdModel()) {
 

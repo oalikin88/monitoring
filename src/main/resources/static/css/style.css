@@ -47,6 +47,9 @@ tbody {
     height: 500px;
 }
 
+.labelDiv {
+    max-width: 170px;
+}
 
 
 #tableContainer {

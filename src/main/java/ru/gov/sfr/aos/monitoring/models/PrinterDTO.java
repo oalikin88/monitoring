@@ -27,11 +27,12 @@ public class PrinterDTO {
     public Long contractId;
     public String printerStatus;
     public String nameFromOneC;
+    public String deviceType;
     
     public PrinterDTO() {};
 
     public PrinterDTO(Long id, String manufacturer, String model, String inventaryNumber, String serialNumber, 
-            List<CartridgeDTO> cartridge, String location, String nameFromOneC) {
+            List<CartridgeDTO> cartridge, String location, String deviceType, String nameFromOneC) {
         this.id = id;
         this.manufacturer = manufacturer;
         this.model = model;
@@ -40,10 +41,11 @@ public class PrinterDTO {
         this.cartridge = cartridge;
         this.location = location;
         this.nameFromOneC = nameFromOneC;
+        this.deviceType = deviceType;
     }
     
         public PrinterDTO(Long id, String manufacturer, String model, String inventaryNumber, String serialNumber, 
-            List<CartridgeDTO> cartridge, String location, String contractNumber, Date startContract, Date endContract, String nameFromOneC) {
+            List<CartridgeDTO> cartridge, String location, String contractNumber, Date startContract, Date endContract, String nameFromOneC, String deviceType) {
         this.id = id;
         this.manufacturer = manufacturer;
         this.model = model;
@@ -55,9 +57,10 @@ public class PrinterDTO {
         this.startContract = startContract;
         this.endContract = endContract;
         this.nameFromOneC = nameFromOneC;
+        this.deviceType = deviceType;
     }
 
-    public PrinterDTO(Long id, String manufacturer, String model, String inventaryNumber, String serialNumber, List<CartridgeDTO> cartridge, String location, String contractNumber, Date startContract, Date endContract, Long contractId, String printerStatus, String nameFromOneC) {
+    public PrinterDTO(Long id, String manufacturer, String model, String inventaryNumber, String serialNumber, List<CartridgeDTO> cartridge, String location, String contractNumber, Date startContract, Date endContract, Long contractId, String printerStatus, String nameFromOneC, String deviceType) {
         this.id = id;
         this.manufacturer = manufacturer;
         this.model = model;
@@ -71,6 +74,7 @@ public class PrinterDTO {
         this.contractId = contractId;
         this.printerStatus = printerStatus;
         this.nameFromOneC = nameFromOneC;
+        this.deviceType = deviceType;
     }
         
         
@@ -189,6 +193,15 @@ public class PrinterDTO {
     public void setNameFromOneC(String nameFromOneC) {
         this.nameFromOneC = nameFromOneC;
     }
+
+    public String getDeviceType() {
+        return deviceType;
+    }
+
+    public void setDeviceType(String deviceType) {
+        this.deviceType = deviceType;
+    }
+    
     
     
     

@@ -29,8 +29,22 @@ public class PrinterAndCartridgeCountByLocationTableService {
     @Autowired
     private PrinterAndCartridgeCountByLocationTableDAO dao;
 
-    public List<PrinterAndCartridgeCountByLocationTable> getAllData() throws SQLException {
-        List<PrinterAndCartridgeCountByLocationTable> data = dao.getData();
+    public List<PrinterAndCartridgeCountByLocationTable> getAllData(String typeData) throws SQLException {
+        List<PrinterAndCartridgeCountByLocationTable> data = null;
+        switch (typeData) {
+            case "PRINTER":
+                data = dao.getData(dao.getSELECTPRINTERSSANDCARTRIDGE());
+                break;
+            case "MFU":
+                data = dao.getData(dao.getSELECTMFUSANDCARTRIDGE());
+                break;
+            case "ALL":
+                data = dao.getData(dao.getSELECTALLTYPESANDCARTRIDGE());
+                break;
+            default:
+                data = dao.getData(dao.getSELECTALLTYPESANDCARTRIDGE());
+        }
+        
 
         Map<Long, Set<Long>> modelsPrinterByModelsCartridge = new HashMap<>();
         List<PrinterAndCartridgeCountByLocationTable> out = new ArrayList<>();

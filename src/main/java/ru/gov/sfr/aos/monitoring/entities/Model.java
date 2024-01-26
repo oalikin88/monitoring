@@ -27,6 +27,7 @@ import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 import ru.gov.sfr.aos.monitoring.PrintColorType;
 import ru.gov.sfr.aos.monitoring.PrintFormatType;
+import ru.gov.sfr.aos.monitoring.dictionaries.DeviceType;
 
 /**
  *
@@ -44,7 +45,6 @@ public class Model implements Serializable {
     @NotEmpty(message = "Поле \"Модель\" не может быть пустым")
     @NotNull
     private String name;
-    
     @NotNull(message = "Поле \"Цветность печати\" не может быть пустым")
     @Enumerated(EnumType.STRING)
     private PrintColorType printColorType;
@@ -59,6 +59,9 @@ public class Model implements Serializable {
     @LazyCollection(LazyCollectionOption.FALSE)
     @OneToMany(targetEntity = Printer.class, mappedBy = "model", cascade = CascadeType.ALL)
     private List <Printer> printers = new ArrayList<>();
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    private DeviceType deviceType;
     
     @ManyToMany(mappedBy = "modelsPrinters", fetch = FetchType.EAGER)
     private Set<CartridgeModel> modelCartridges = new HashSet<>();
@@ -66,12 +69,13 @@ public class Model implements Serializable {
     public Model() {
     }
 
-    public Model(String name, PrintColorType printColorType, PrintFormatType printFormatType, Long printSpeed, Manufacturer manufacturer) {
+    public Model(String name, PrintColorType printColorType, PrintFormatType printFormatType, Long printSpeed, Manufacturer manufacturer, DeviceType deviceType) {
         this.name = name;
         this.printColorType = printColorType;
         this.printFormatType = printFormatType;
         this.printSpeed = printSpeed;
         this.manufacturer = manufacturer;
+        this.deviceType = deviceType;
     }
 
     public PrintColorType getPrintColorType() {
@@ -154,6 +158,16 @@ public class Model implements Serializable {
     public void setPrinters(List<Printer> printers) {
         this.printers = printers;
     }
+
+    public DeviceType getDeviceType() {
+        return deviceType;
+    }
+
+    public void setDeviceType(DeviceType deviceType) {
+        this.deviceType = deviceType;
+    }
+    
+    
 
     @Override
     public String toString() {

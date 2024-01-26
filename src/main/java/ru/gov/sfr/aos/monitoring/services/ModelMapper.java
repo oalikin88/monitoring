@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.gov.sfr.aos.monitoring.PrintColorType;
 import ru.gov.sfr.aos.monitoring.PrintFormatType;
+import ru.gov.sfr.aos.monitoring.dictionaries.DeviceType;
 import ru.gov.sfr.aos.monitoring.entities.Manufacturer;
 import ru.gov.sfr.aos.monitoring.entities.Model;
 import ru.gov.sfr.aos.monitoring.exceptions.ObjectAlreadyExists;
@@ -112,6 +113,16 @@ public class ModelMapper {
                 case "A3":
                     model.setPrintFormatType(PrintFormatType.A3);
                     break;
+            }
+            
+            switch (dto.getDeviceType()) {
+                case "PRINTER":
+                    model.setDeviceType(DeviceType.PRINTER);
+                    break;
+                case "MFU":
+                    model.setDeviceType(DeviceType.MFU);
+                    break;
+               
             }
             Long speed = Long.parseLong(dto.getPrintSpeed().trim());
             model.setPrintSpeed(speed);

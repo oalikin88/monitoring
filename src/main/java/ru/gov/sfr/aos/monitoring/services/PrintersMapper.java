@@ -156,6 +156,7 @@ public class PrintersMapper {
         dto.setContractId(findPrinterById.getContract().getId());
         dto.setPrinterStatus(findPrinterById.getPrinterStatus().getStatus());
         dto.setLocationId(findPrinterById.getLocation().getId());
+        dto.setDeviceType(findPrinterById.getModel().getDeviceType().getValue());
         if(null != findPrinterById.getNameFromOneC()) {
             dto.setNameFromOneC(findPrinterById.getNameFromOneC().getName());
         } else {

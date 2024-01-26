@@ -18,6 +18,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
@@ -48,6 +49,7 @@ public class CartridgeModel implements Serializable {
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "cartridge_model_models_printers", joinColumns = @JoinColumn(name = "model_cartridges_id"), inverseJoinColumns = @JoinColumn(name = "models_printers_id"))
     private List<Model> modelsPrinters = new ArrayList<>();
+
     
     
     public CartridgeModel() {
@@ -57,6 +59,7 @@ public class CartridgeModel implements Serializable {
         this.model = model;
         this.type = type;
         this.defaultNumberPrintPage = defaultNumberPrintPage;
+
         this.cartridges = cartridges;
     }
 
@@ -126,6 +129,9 @@ public class CartridgeModel implements Serializable {
     public void setModelsPrinters(List<Model> modelsPrinters) {
         this.modelsPrinters = modelsPrinters;
     }
+
+    
+    
 
     @Override
     public String toString() {

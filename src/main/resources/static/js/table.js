@@ -106,7 +106,14 @@ window.onload = function () {
             tdLocation.setAttribute('id', locat[0]);
             tdLocation.className = 'location text-wrap';
             let locLink = document.createElement('a');
-            locLink.href = "/inventories/" + locat[0];
+            if(window.location.href.indexOf("PRINTER") >= 0) {
+               locLink.href = "/inventories/" + locat[0] + "?deviceType=PRINTER";
+            } else if(window.location.href.indexOf("MFU") >= 0) {
+                locLink.href = "/inventories/" + locat[0] + "?deviceType=MFU";
+            } else {
+                locLink.href = "/inventories/" + locat[0] + "?deviceType=ALL";
+            }
+        //    locLink.href = "/inventories/" + locat[0];
             locLink.innerText = locat[1];
             tdLocation.appendChild(locLink);
             tr.appendChild(tdLocation);
@@ -116,35 +123,7 @@ window.onload = function () {
                 searchModel = false;
                 var amountCartridge = new Set();
                 var amountPrinters = new Set();
-//                if (input1sort[inInput1sort][1].length == 0) { //Если к модели принтера нет моделей картриджей
-//
-//                    for (innerInInput3Sort = 0; innerInInput3Sort < input3sort[inInput1sort][1].length; innerInInput3Sort++) {
-//                        if (input2sort[i][0].indexOf(input3sort[inInput1sort][1][innerInInput3Sort].modelName) > 0) {
-//
-//                            tdPrintSuccess = document.createElement('td');
-//                            tdPrintSuccess.setAttribute('id', 'location_' + JSON.parse(input1sort[inInput1sort][0]).id + '_' + 'model_' + input3sort[inInput1sort][1][innerInInput3Sort].idModel);
-//                            tdPrintSuccess.setAttribute('class', 'model');
-//                            tdPrintSuccess.style.wordBreak = "break-all";
-//                            linkPrinter = document.createElement('a');
-//
-//                            linkPrinter.setAttribute('href', '/printersbylocation?location=' + JSON.parse(input1sort[inInput1sort][0]).id
-//                                    + '&idModel=' + input3sort[inInput1sort][1][innerInInput3Sort].idModel);
-//
-//                            linkPrinter.innerText = input3sort[inInput1sort][1][innerInInput3Sort].amountPrinters;
-//                            tr.appendChild(tdPrintSuccess);
-//                            tdPrintSuccess.appendChild(linkPrinter);
-//
-//                            tdCart = document.createElement('td');
-//                            tdCart.setAttribute('class', 'cart');
-//                            tdCart.style.wordBreak = "break-all";
-//                            tdCart.innerText = "0";
-//                            tr.appendChild(tdCart);
-//                            searchModel = true;
-//                            break;
-//                        }
-//                    }
-//
-//                } else {
+
                     for(b = 0; b < input.length; b++) {
                          
                          if (input[b].modelId == modIterate[0] && locat[0] == input[b].locationId) {
@@ -162,7 +141,6 @@ window.onload = function () {
                             tdPrintSuccess.appendChild(linkPrinter);
 
                             tdCart = document.createElement('td');
-                            //        tdCart.setAttribute('id', 'location_' + JSON.parse(input1sort[inInput1sort][0]).id + '_' + 'model_' + input1sort[inInput1sort][1][innerInInput1Sort].id + '_cart');
                             tdCart.setAttribute('class', 'cart');
                             tdCart.style.wordBreak = "break-all";
                             link = document.createElement('a');
@@ -474,6 +452,7 @@ window.onload = function () {
     modalModelsPrinterBtnAdd.type = 'button';
     modalModelsPrinterBtnAdd.setAttribute('data-bs-target', '#modalModelsPrinter2');
     modalModelsPrinterBtnAdd.setAttribute('data-bs-toggle', 'modal');
+    modalModelsPrinterBtnAdd.id = 'addModelPrinterModal';
     modalModelsPrinterBtnAdd.innerText = 'Добавить модель';
     modalModelsPrinterButtonsRow.appendChild(modalModelsPrinterBtnAdd);
 
@@ -543,6 +522,11 @@ window.onload = function () {
     modalModalsPrinterContentInnerManufacturerDiv2.className = 'col modalModelDiv';
     modalModalsPrinterContentInnerManufacturerDiv2.id = 'modalModelDiv';
     modalModelsPrinterContentInnerRow1.appendChild(modalModalsPrinterContentInnerManufacturerDiv2);
+    
+    modalModalsPrinterContentInnerManufacturerDiv3 = document.createElement('div');
+    modalModalsPrinterContentInnerManufacturerDiv3.className = 'col modalDeviceTypeDiv';
+    modalModalsPrinterContentInnerManufacturerDiv3.id = 'modalDeviceTypeDiv';
+    modalModelsPrinterContentInnerRow1.appendChild(modalModalsPrinterContentInnerManufacturerDiv3);
 
     modalModelsPrinterContentInnerManufacturerSelect = document.createElement('select');
     modalModelsPrinterContentInnerManufacturerSelect.className = 'form-select modalManufacturerSelect';
@@ -556,6 +540,30 @@ window.onload = function () {
     modalModelsPrinterContentInnerModelSelect.id = 'modalModelInput';
     // modalModelsPrinterContentInnerModelInput.placeholder = 'Модель';
     modalModalsPrinterContentInnerManufacturerDiv2.appendChild(modalModelsPrinterContentInnerModelSelect);
+    
+    modalModelsPrinterContentInnerDeviceTypeSelect = document.createElement('select');
+    modalModelsPrinterContentInnerDeviceTypeSelect.className = 'form-select modalDeviceTypeInput';
+    modalModelsPrinterContentInnerDeviceTypeSelect.type = 'text';
+    modalModelsPrinterContentInnerDeviceTypeSelect.id = 'modalDeviceTypeInput';
+    modalModelsPrinterContentInnerDeviceTypeSelect.placeholder = 'Тип оборудования';
+    modalModelsPrinterContentInnerDeviceTypeSelect.style.color = 'gray';
+    modalModalsPrinterContentInnerManufacturerDiv3.appendChild(modalModelsPrinterContentInnerDeviceTypeSelect);
+    
+    optionPrinter = document.createElement('option');
+    optionPrinter.value = '';
+    optionPrinter.innerHTML = 'Тип оборудования';
+    optionPrinter.selected = true;
+    modalModelsPrinterContentInnerDeviceTypeSelect.appendChild(optionPrinter);
+    
+    optionPrinter = document.createElement('option');
+    optionPrinter.value = 'PRINTER';
+    optionPrinter.innerHTML = 'Принтер';
+    modalModelsPrinterContentInnerDeviceTypeSelect.appendChild(optionPrinter);
+    
+    optionPrinter = document.createElement('option');
+    optionPrinter.value = 'MFU';
+    optionPrinter.innerHTML = 'МФУ';
+    modalModelsPrinterContentInnerDeviceTypeSelect.appendChild(optionPrinter);
 
     modalModelsPrinterContentInnerRow2 = document.createElement('div');
     modalModelsPrinterContentInnerRow2.className = 'row mt-3';
@@ -617,8 +625,15 @@ window.onload = function () {
     modalModelsPrinterFooterOKBtn2.innerText = 'Добавить';
     modalModelsPrinterFooterDiv2.appendChild(modalModelsPrinterFooterOKBtn2);
 
-
-
+    deviceTypeSelect = document.querySelector('#modalDeviceTypeInput');
+    deviceTypeSelect.addEventListener('change', function() {
+        if(deviceTypeSelect.value !== '') {
+            deviceTypeSelect.style.color = 'black';
+        } else {
+            deviceTypeSelect.style.color = 'gray';
+        }
+    });
+    
     modalModelsPrinterBtnAdd.addEventListener('click', function () {
         let manufacturerChoice;
         $('#modalManufacturerSelect').selectize({
@@ -724,7 +739,8 @@ window.onload = function () {
                     manufacturer: $('#modalManufacturerSelect')[0].innerText,
                     printColorType: $('#modalPrintColorTypeSelect')[0].innerText,
                     printFormatType: $('#modalPrintFormatTypeSelect')[0].innerText,
-                    printSpeed: $('#modalPrintSpeedSelect')[0].value},
+                    printSpeed: $('#modalPrintSpeedSelect')[0].value,
+                    deviceType: $('#modalDeviceTypeInput')[0].value},
                 success: function (result) {
                     parent = document.getElementById('modalModelsPrinterContentInner');
                     child = document.getElementById('modalTableModelsPrinter');
@@ -1526,7 +1542,31 @@ window.onload = function () {
     });
 
 
-
+   selectDeviceType = document.querySelector('#selectDeviceType');
+   
+   
+   
+   selectDeviceType.addEventListener('change', function() {
+       if(selectDeviceType.value === "PRINTER") {
+           window.location.href = "/inventories?deviceType=PRINTER";
+       } else if(selectDeviceType.value === "MFU") {
+           window.location.href = "/inventories?deviceType=MFU";
+       } else {
+           window.location.href = "/inventories";
+       }
+   });
 
 };
 
+$(document).ready(function () {
+   selectDeviceType = document.querySelector('#selectDeviceType');
+   
+    if(window.location.href.indexOf("PRINTER") >= 0) {
+        selectDeviceType.children[1].selected = true;
+    } else if(window.location.href.indexOf("MFU") >= 0) {
+        selectDeviceType.children[2].selected = true;
+    } else {
+        selectDeviceType.children[0].selected = true;
+    }
+    
+});

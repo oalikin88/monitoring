@@ -75,6 +75,61 @@ public interface CartridgeRepo extends JpaRepository<Cartridge, Long> {
    + "AND cart.use_in_printer = FALSE" ,nativeQuery = true)
    Page<Cartridge> findByContractNumberAndModelPrinterAndLocation(String contractNumber, Long idLocation, Long idPrinter, Pageable pageable);
    
+   @Query(value = "SELECT cart.*, ob.*, contr.* " +
+                    "FROM cartridge cart " +
+                    "LEFT JOIN object_buing ob " +
+                    "ON cart.cartridge_id = ob.id " +
+                    "LEFT JOIN contract contr " +
+                    "ON ob.contract_id = contr.id " +
+                    "WHERE cart.cartridge_id IN " +
+                    "(SELECT DISTINCT c.cartridge_id " +
+                    "FROM cartridge c " +
+                    "LEFT JOIN object_buing ob " +
+                    "ON c.cartridge_id = ob.id " +
+                    "LEFT JOIN cartridge_model_models_printers cart_print " +
+                    "ON c.model_id = cart_print.model_cartridges_id " +
+                    "LEFT JOIN model m " +
+                    "ON cart_print.models_printers_id = m.id " +
+                    "WHERE ob.location_id = ?1 " +
+                    "AND m.device_type = ?2) ",
+           countQuery = "SELECT count(*) " +
+                    "FROM cartridge cart " +
+                    "LEFT JOIN object_buing ob " +
+                    "ON cart.cartridge_id = ob.id " +
+                    "LEFT JOIN contract contr " +
+                    "ON ob.contract_id = contr.id " +
+                    "WHERE cart.cartridge_id IN " +
+                    "(SELECT DISTINCT c.cartridge_id " +
+                    "FROM cartridge c " +
+                    "LEFT JOIN object_buing ob " +
+                    "ON c.cartridge_id = ob.id " +
+                    "LEFT JOIN cartridge_model_models_printers cart_print " +
+                    "ON c.model_id = cart_print.model_cartridges_id " +
+                    "LEFT JOIN model m " +
+                    "ON cart_print.models_printers_id = m.id " +
+                    "WHERE ob.location_id = ?1 " +
+                    "AND m.device_type = ?2)", nativeQuery = true)
+   Page<Cartridge> findByLocationIdAndDeviceType(Long idLocation, String deviceType, Pageable pageable);
+   
+   @Query(value = "SELECT cart.*, ob.*, contr.* " +
+                    "FROM cartridge cart " +
+                    "LEFT JOIN object_buing ob " +
+                    "ON cart.cartridge_id = ob.id " +
+                    "LEFT JOIN contract contr " +
+                    "ON ob.contract_id = contr.id " +
+                    "WHERE cart.cartridge_id IN " +
+                    "(SELECT DISTINCT c.cartridge_id " +
+                    "FROM cartridge c " +
+                    "LEFT JOIN object_buing ob " +
+                    "ON c.cartridge_id = ob.id " +
+                    "LEFT JOIN cartridge_model_models_printers cart_print " +
+                    "ON c.model_id = cart_print.model_cartridges_id " +
+                    "LEFT JOIN model m " +
+                    "ON cart_print.models_printers_id = m.id " +
+                    "WHERE ob.location_id = ?1 " +
+                    "AND m.device_type = ?2)", nativeQuery = true)
+   List<Cartridge> findByLocationIdAndDeviceType(Long idLocation, String deviceType);
+   
    
    @Query(value = "SELECT cart.*, contr.*, ob.*, model.* "
    + "FROM cartridge cart "

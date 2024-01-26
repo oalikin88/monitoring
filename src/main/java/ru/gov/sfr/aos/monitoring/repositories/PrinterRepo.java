@@ -5,7 +5,6 @@
 package ru.gov.sfr.aos.monitoring.repositories;
 
 import java.util.List;
-import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -268,6 +267,43 @@ public interface PrinterRepo extends JpaRepository<Printer, Long> {
                     "WHERE ob.location_id = ?1 " +
                     "AND NOT p.printer_status = 'DELETE' ", nativeQuery = true)
    List<Printer> findByLocation(Long idLocation);
+   
+      @Query(value = "SELECT p.*, ob.*, contr.*, m.* " +
+                    "FROM printer p " +
+                    "LEFT JOIN object_buing ob " +
+                    "ON p.printer_id = ob.id " +
+                    "LEFT JOIN contract contr " +
+                    "ON ob.contract_id = contr.id " +
+                    "LEFT JOIN model m " +
+                    "ON p.model_id = m.id " +
+                    "WHERE ob.location_id = ?1 " +
+                    "AND NOT p.printer_status = 'DELETE' " +
+                    "AND m.device_type = ?2 ",
+            countQuery = "SELECT count(*) " +
+                    "FROM printer p " +
+                    "LEFT JOIN object_buing ob " +
+                    "ON p.printer_id = ob.id " +
+                    "LEFT JOIN contract contr " +
+                    "ON ob.contract_id = contr.id " +
+                    "LEFT JOIN model m " +
+                    "ON p.model_id = m.id " +
+                    "WHERE ob.location_id = ?1 " +
+                    "AND NOT p.printer_status = 'DELETE' " +
+                    "AND m.device_type = ?2 ", nativeQuery = true)
+   Page<Printer> findByLocationAndDeviceType(Long idLocation, String deviceType, Pageable pageable);
+   
+   @Query(value = "SELECT p.*, ob.*, contr.*, m.* " +
+                    "FROM printer p " +
+                    "LEFT JOIN object_buing ob " +
+                    "ON p.printer_id = ob.id " +
+                    "LEFT JOIN contract contr " +
+                    "ON ob.contract_id = contr.id " +
+                    "LEFT JOIN model m " +
+                    "ON p.model_id = m.id " +
+                    "WHERE ob.location_id = ?1 " +
+                    "AND NOT p.printer_status = 'DELETE' " +
+                    "AND m.device_type = ?2 ", nativeQuery = true)
+   List<Printer> findByLocationAndDeviceType(Long idLocation, String deviceType);
    
       @Query(value = "SELECT pr.* "
    + "FROM printer pr "

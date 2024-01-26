@@ -18,6 +18,7 @@ import javax.persistence.PrimaryKeyJoinColumn;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import ru.gov.sfr.aos.monitoring.PrinterStatus;
+import ru.gov.sfr.aos.monitoring.dictionaries.DeviceType;
 
 /**
  *
@@ -146,6 +147,7 @@ public class Printer extends ObjectBuing implements Serializable {
     public void setNameFromOneC(NameFromOneC nameFromOneC) {
         this.nameFromOneC = nameFromOneC;
     }
+
     
     
 

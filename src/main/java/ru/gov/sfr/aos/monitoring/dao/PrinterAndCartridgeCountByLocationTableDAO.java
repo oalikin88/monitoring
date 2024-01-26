@@ -23,7 +23,7 @@ public class PrinterAndCartridgeCountByLocationTableDAO {
   @Autowired
   DBConnection dBConnection;
     
-    private final static String  SELECTPRINTERSANDCARTRIDGE = "SELECT loc.name as location, loc.id as location_id, CONCAT(manufacturer.name, ' ', m.name) as model_printer," 
+    private final static String  SELECTALLTYPESANDCARTRIDGE = "SELECT loc.name as location, loc.id as location_id, CONCAT(manufacturer.name, ' ', m.name) as model_printer," 
                 + " cart_prin.model_cartridges_id, m.id as model_id, "
                 + "(SELECT count(*) "
                 + "FROM printer "
@@ -48,13 +48,67 @@ public class PrinterAndCartridgeCountByLocationTableDAO {
                 + "LEFT JOIN manufacturer manufacturer "
                 + "ON m.manufacturer_id = manufacturer.id ";
     
+    private final static String  SELECTMFUSANDCARTRIDGE = "SELECT loc.name as location, loc.id as location_id, CONCAT(manufacturer.name, ' ', m.name) as model_printer," 
+                + " cart_prin.model_cartridges_id, m.id as model_id, "
+                + "(SELECT count(*) "
+                + "FROM printer "
+                + "JOIN object_buing ob "
+                + "ON printer.printer_id = ob.id  "
+                + "WHERE ob.location_id = loc.id "
+                + "AND printer.model_id = m.id "
+                + "AND m.device_type = 'MFU' "
+                + "AND (printer_status = 'OK' "
+                + "OR printer_status = 'REPAIR' "
+                + "OR printer_status = 'DEFECTIVE') ) as count_printer, "
+                + "(SELECT count(*) "
+                + "FROM cartridge "
+                + "JOIN object_buing ob "
+                + "ON cartridge.cartridge_id = ob.id "
+                + "WHERE ob.location_id = loc.id "
+                + "AND cartridge.model_id = cart_prin.model_cartridges_id "
+                + "AND util = FALSE "
+                + "AND use_in_printer = FALSE) as count_cartridge "
+                + "FROM location as loc, model as m "
+                + "LEFT JOIN cartridge_model_models_printers cart_prin "
+                + "ON m.id = cart_prin.models_printers_id "
+                + "LEFT JOIN manufacturer manufacturer "
+                + "ON m.manufacturer_id = manufacturer.id "
+                + "WHERE m.device_type = 'MFU' ";
+    
+    
+    private final static String  SELECTPRINTERSSANDCARTRIDGE = "SELECT loc.name as location, loc.id as location_id, CONCAT(manufacturer.name, ' ', m.name) as model_printer," 
+                + " cart_prin.model_cartridges_id, m.id as model_id, "
+                + "(SELECT count(*) "
+                + "FROM printer "
+                + "JOIN object_buing ob "
+                + "ON printer.printer_id = ob.id  "
+                + "WHERE ob.location_id = loc.id "
+                + "AND printer.model_id = m.id "
+                + "AND m.device_type = 'PRINTER' "
+                + "AND (printer_status = 'OK' "
+                + "OR printer_status = 'REPAIR' "
+                + "OR printer_status = 'DEFECTIVE') ) as count_printer, "
+                + "(SELECT count(*) "
+                + "FROM cartridge "
+                + "JOIN object_buing ob "
+                + "ON cartridge.cartridge_id = ob.id "
+                + "WHERE ob.location_id = loc.id "
+                + "AND cartridge.model_id = cart_prin.model_cartridges_id "
+                + "AND util = FALSE "
+                + "AND use_in_printer = FALSE) as count_cartridge "
+                + "FROM location as loc, model as m "
+                + "LEFT JOIN cartridge_model_models_printers cart_prin "
+                + "ON m.id = cart_prin.models_printers_id "
+                + "LEFT JOIN manufacturer manufacturer "
+                + "ON m.manufacturer_id = manufacturer.id "
+                + "WHERE m.device_type = 'PRINTER' ";
 
     
 
-    public List<PrinterAndCartridgeCountByLocationTable> getData() throws SQLException {
+    public List<PrinterAndCartridgeCountByLocationTable> getData(String request) throws SQLException {
         
          List<PrinterAndCartridgeCountByLocationTable> list = new ArrayList<>();
-          try ( var connection = dBConnection.getConnection();  var preparedStatement = connection.prepareStatement(SELECTPRINTERSANDCARTRIDGE)){
+          try ( var connection = dBConnection.getConnection();  var preparedStatement = connection.prepareStatement(request)){
         var resultSet = preparedStatement.executeQuery();
        
         while (resultSet.next()) {
@@ -77,5 +131,20 @@ public class PrinterAndCartridgeCountByLocationTableDAO {
         
         return list;
     }
+
+    public static String getSELECTALLTYPESANDCARTRIDGE() {
+        return SELECTALLTYPESANDCARTRIDGE;
+    }
+
+    public static String getSELECTMFUSANDCARTRIDGE() {
+        return SELECTMFUSANDCARTRIDGE;
+    }
+
+    public static String getSELECTPRINTERSSANDCARTRIDGE() {
+        return SELECTPRINTERSSANDCARTRIDGE;
+    }
+    
+    
+    
 
 }

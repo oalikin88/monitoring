@@ -27,7 +27,10 @@ public class ModelDTO implements Serializable {
     public String printFormatType;
     @NotEmpty(message = "Поле \"Скорость печати\" не может быть пустым")
     public String printSpeed;
-
+    @NotEmpty(message = "Поле \"Тип оборудования\" не может быть пустым")
+    public String deviceType;
+    
+    
     public ModelDTO() {
     }
     
@@ -42,13 +45,14 @@ public class ModelDTO implements Serializable {
         this.manufacturer = manufacturer;
     }
 
-    public ModelDTO(Long idModel, String model, String manufacturer, String printColorType, String printFormatType, String printSpeed) {
+    public ModelDTO(Long idModel, String model, String manufacturer, String printColorType, String printFormatType, String printSpeed, String deviceType) {
         this.idModel = idModel;
         this.model = model;
         this.manufacturer = manufacturer;
         this.printColorType = printColorType;
         this.printFormatType = printFormatType;
         this.printSpeed = printSpeed;
+        this.deviceType = deviceType;
     }
 
     public String getPrintSpeed() {
@@ -102,6 +106,16 @@ public class ModelDTO implements Serializable {
     public void setManufacturer(String manufacturer) {
         this.manufacturer = manufacturer;
     }
+
+    public String getDeviceType() {
+        return deviceType;
+    }
+
+    public void setDeviceType(String deviceType) {
+        this.deviceType = deviceType;
+    }
+    
+    
 
     @Override
     public String toString() {

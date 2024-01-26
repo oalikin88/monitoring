@@ -108,7 +108,7 @@ public class GetInfoController {
     
     @GetMapping("/testtest")
     public List<PrinterAndCartridgeCountByLocationTable> showAll() throws SQLException {
-        List<PrinterAndCartridgeCountByLocationTable> data = dao.getData();
+        List<PrinterAndCartridgeCountByLocationTable> data = dao.getData(dao.getSELECTALLTYPESANDCARTRIDGE());
         return data;
     }
     
