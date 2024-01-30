@@ -19,6 +19,8 @@ public class CartridgeModelDTO implements Serializable {
     public Long id;
     @NotEmpty (message = "Поле \"модель картриджа\" не может быть пустым")
     public String model;
+    @NotEmpty (message = "Поле \"производитель\" не может быть пустым")
+    public String manufacturer;
     @NotEmpty(message = "Поле \"тип картриджа\" не может быть пустым")
     public String type;
     @NotEmpty(message = "Поле \"Номинальный ресурс\" не может быть пустым")
@@ -32,21 +34,24 @@ public class CartridgeModelDTO implements Serializable {
     public CartridgeModelDTO() {
     }
 
-    public CartridgeModelDTO(String model, String type, String resource) {
+    public CartridgeModelDTO(String manufacturer, String model, String type, String resource) {
+        this.manufacturer = manufacturer;
         this.model = model;
         this.type = type;
         this.resource = resource;
         
     }
 
-    public CartridgeModelDTO(String model, String type, String resource, List<Long> idModel) {
+    public CartridgeModelDTO(String manufacturer, String model, String type, String resource, List<Long> idModel) {
+        this.manufacturer = manufacturer;
         this.model = model;
         this.type = type;
         this.resource = resource;
         this.idModel = idModel;
     }
 
-    public CartridgeModelDTO(String model, String type, String resource, List<Long> idModel, Set<String> printers) {
+    public CartridgeModelDTO(String manufacturer, String model, String type, String resource, List<Long> idModel, Set<String> printers) {
+        this.manufacturer = manufacturer;
         this.model = model;
         this.type = type;
         this.resource = resource;
@@ -108,6 +113,16 @@ public class CartridgeModelDTO implements Serializable {
         this.resource = resource;
     }
 
+    public String getManufacturer() {
+        return manufacturer;
+    }
+
+    public void setManufacturer(String manufacturer) {
+        this.manufacturer = manufacturer;
+    }
+    
+    
+    
     @Override
     public int hashCode() {
         int hash = 7;
@@ -126,6 +141,9 @@ public class CartridgeModelDTO implements Serializable {
             return false;
         }
         final CartridgeModelDTO other = (CartridgeModelDTO) obj;
+        if (!Objects.equals(this.manufacturer, other.manufacturer)) {
+            return false;
+        }
         if (!Objects.equals(this.model, other.model)) {
             return false;
         }

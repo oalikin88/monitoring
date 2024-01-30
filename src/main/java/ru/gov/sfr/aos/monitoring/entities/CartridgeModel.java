@@ -49,33 +49,38 @@ public class CartridgeModel implements Serializable {
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "cartridge_model_models_printers", joinColumns = @JoinColumn(name = "model_cartridges_id"), inverseJoinColumns = @JoinColumn(name = "models_printers_id"))
     private List<Model> modelsPrinters = new ArrayList<>();
+    @NotNull(message = "Поле \"Производитель\" не может быть пустым")
+    @ManyToOne(cascade = CascadeType.ALL)
+    private CartridgeManufacturer cartridgeManufacturer;
 
     
     
     public CartridgeModel() {
     }
 
-    public CartridgeModel(String model, CartridgeType type, Long defaultNumberPrintPage, List<Cartridge> cartridges) {
+    public CartridgeModel(CartridgeManufacturer cartridgeManufacturer, String model, CartridgeType type, Long defaultNumberPrintPage, List<Cartridge> cartridges) {
         this.model = model;
         this.type = type;
         this.defaultNumberPrintPage = defaultNumberPrintPage;
-
+        this.cartridgeManufacturer = cartridgeManufacturer;
         this.cartridges = cartridges;
     }
 
-    public CartridgeModel(String model, CartridgeType type, Long defaultNumberPrintPage, List<Cartridge> cartridges, List<Model> modelsPrinters) {
+    public CartridgeModel(CartridgeManufacturer cartridgeManufacturer, String model, CartridgeType type, Long defaultNumberPrintPage, List<Cartridge> cartridges, List<Model> modelsPrinters) {
         this.model = model;
         this.type = type;
         this.defaultNumberPrintPage = defaultNumberPrintPage;
         this.cartridges = cartridges;
         this.modelsPrinters = modelsPrinters;
+        this.cartridgeManufacturer = cartridgeManufacturer;
     }
 
-    public CartridgeModel(String model, Long defaultNumberPrintPage, List<Model> modelsPrinters, CartridgeType type) {
+    public CartridgeModel(CartridgeManufacturer cartridgeManufacturer, String model, Long defaultNumberPrintPage, List<Model> modelsPrinters, CartridgeType type) {
         this.model = model;
         this.type = type;
         this.defaultNumberPrintPage = defaultNumberPrintPage;
         this.modelsPrinters = modelsPrinters;
+        this.cartridgeManufacturer = cartridgeManufacturer;
     }
     
     
@@ -128,6 +133,14 @@ public class CartridgeModel implements Serializable {
 
     public void setModelsPrinters(List<Model> modelsPrinters) {
         this.modelsPrinters = modelsPrinters;
+    }
+
+    public CartridgeManufacturer getCartridgeManufacturer() {
+        return cartridgeManufacturer;
+    }
+
+    public void setCartridgeManufacturer(CartridgeManufacturer cartridgeManufacturer) {
+        this.cartridgeManufacturer = cartridgeManufacturer;
     }
 
     

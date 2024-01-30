@@ -124,7 +124,7 @@ public class ContractServiceMapper {
             }
             
             // Добавление принтера в контракт
-            if (input.get(i).size() == 8) {
+            if (input.get(i).size() == 9) {
               PrinterFromInputDto printerDto = new PrinterFromInputDto();
               CartridgeIncludeFromInputDto cartridgeIncudeDto = null;
                boolean cartridgeIncluded = false;
@@ -176,7 +176,7 @@ public class ContractServiceMapper {
             }
             
             //Добавление картриджей в контракт
-            if (input.get(i).size() == 6) {
+            if (input.get(i).size() == 7) {
                 String getAmount = input.get(i).get("amount");
                 int amount = Integer.parseInt(getAmount);
                 
@@ -187,6 +187,9 @@ public class ContractServiceMapper {
                         switch (entry.getKey()) {
                             case "type":
                                 cartridge.setType(entry.getValue());
+                                break;
+                            case "manufacturer":
+                                cartridge.setManufacturer(entry.getValue());
                                 break;
                             case "model":
                                 cartridge.setModel(entry.getValue());
@@ -258,7 +261,6 @@ public class ContractServiceMapper {
                 cartridge.setModel(cartModelInclude);
                 cartridge.setLocation(location);
                 cartridge.setDateStartExploitation(LocalDateTime.now());
-                cartridge.setModel(cartModelInclude);
                 cartridge.setUseInPrinter(true);
                 cartridge.setUtil(true);
                 cartridge.setItemCode("0000000");

@@ -91,6 +91,17 @@ public class ManufacturersController {
         return dtoes;
     }    
         
+     @RequestMapping(value = "/cartridge/{type}/{cartridgeManufacturer}", method = RequestMethod.GET)
+    public List<CartridgeModelDTO> getModelCartridgeByCartridgeModelAndType(@PathVariable String type, @PathVariable String cartridgeManufacturer) {
+        List<CartridgeModel> list = cartridgeService.findModelCartridgeByCartridgeManufacturerAndType(cartridgeManufacturer, type);
+        List<CartridgeModelDTO> dtoes = new ArrayList<>();
+        for(CartridgeModel model : list) {
+            CartridgeModelDTO dto = cartridgeMapper.cartridgeModelToCartridgeModelDto(model);
+            dtoes.add(dto);
+        }
+        return dtoes;
+    }    
+    
     @RequestMapping(value = "/cartridge", method = RequestMethod.GET)
     public List<CartridgeModelDTO> getCartridges() {
             List<CartridgeModelDTO> list = cartridgeMapper.getCartridgeModels();

@@ -187,6 +187,21 @@ public class CartridgeService {
         
         return list;
     }
+    
+    public List<CartridgeModel> findModelCartridgeByCartridgeManufacturerAndType(String cartridgeManufacturer, String type) {
+        CartridgeType currentType;
+        if (type.trim().toLowerCase().equals(CartridgeType.ORIGINAL.getName().trim().toLowerCase())) {
+            currentType = CartridgeType.ORIGINAL;
+        } else if (type.trim().toLowerCase().equals(CartridgeType.ANALOG.getName().trim().toLowerCase())) {
+            currentType = CartridgeType.ANALOG;
+        } else {
+            currentType = CartridgeType.START;
+        }
+        List<CartridgeModel> list = cartridgeModelRepo.findByCartridgeManufacturerManufacturerNameIgnoreCaseAndType(cartridgeManufacturer, currentType);
+        
+        return list;
+    }
+    
     @Transactional
     public void saveCartridgeModel(CartridgeModel cartridgeModel) throws ObjectAlreadyExists {
         String replaceAllBreakesFromInput = cartridgeModel.getModel().replaceAll(" ", "");

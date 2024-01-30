@@ -56,6 +56,74 @@ tbody {
     max-height: 750px;
 }
 
+.labelCount {
+    max-width: 75px;
+}
+.divCount {
+    max-width: 75px;
+}
+.col-05{
+     -ms-flex: 0 0 5%;
+  flex: 0 0 5%;
+  max-width: 5%;
+}
+.col-25 {
+    -ms-flex: 0 0 23%;
+  flex: 0 0 23%;
+  max-width: 23%;
+}
+
+@media (min-width: 576px) {
+  .col-sm-25 {
+    -ms-flex: 0 0 23%;
+    flex: 0 0 23%;
+    max-width: 23%;
+  }
+  .col-sm-05{
+     -ms-flex: 0 0 5%;
+  flex: 0 0 5%;
+  max-width: 5%;
+}
+}
+
+@media (min-width: 768px) {
+  .col-md-25 {
+    -ms-flex: 0 0 23%;
+    flex: 0 0 23%;
+    max-width: 23%;
+  }
+  .col-md-05{
+     -ms-flex: 0 0 5%;
+  flex: 0 0 5%;
+  max-width: 5%;
+}
+}
+
+@media (min-width: 992px) {
+  .col-lg-25 {
+    -ms-flex: 0 0 23%;
+    flex: 0 0 23%;
+    max-width: 23%;
+  }
+  .col-lg-05{
+     -ms-flex: 0 0 5%;
+  flex: 0 0 5%;
+  max-width: 5%;
+}
+}
+
+@media (min-width: 1200px) {
+  .col-xl-25 {
+    -ms-flex: 0 0 23%;
+    flex: 0 0 23%;
+    max-width: 23%;
+  }
+  .col-xl-05 {
+     -ms-flex: 0 0 5%;
+  flex: 0 0 5%;
+  max-width: 5%;
+}
+}
 
 #content {
     width: 100%;

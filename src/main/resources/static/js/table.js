@@ -946,19 +946,31 @@ window.onload = function () {
     modalModelsCartridgeContentInnerDiv1.className = 'col';
     modalModelsCartridgeContentInnerDiv1.id = 'modalModelCartridgeDiv';
     modalModelsCartridgeContentInnerRow1.appendChild(modalModelsCartridgeContentInnerDiv1);
+    
+    modalModelsCartridgeContentInnerDiv5 = document.createElement('div');
+    modalModelsCartridgeContentInnerDiv5.className = 'col modalManufacturerDiv';
+    modalModelsCartridgeContentInnerDiv5.id = 'modalManufacturerDiv';
+    modalModelsCartridgeContentInnerRow1.appendChild(modalModelsCartridgeContentInnerDiv5);
 
     modalModelsCartridgeContentInnerDiv2 = document.createElement('div');
     modalModelsCartridgeContentInnerDiv2.className = 'col modalModelDiv';
     modalModelsCartridgeContentInnerDiv2.id = 'modalModelDiv';
     modalModelsCartridgeContentInnerRow1.appendChild(modalModelsCartridgeContentInnerDiv2);
+    
+    
 
     modalModelsCartridgeContentInnerTypeSelect = document.createElement('select');
     modalModelsCartridgeContentInnerTypeSelect.className = 'form-select modalModelTypeInput';
     modalModelsCartridgeContentInnerTypeSelect.type = 'text';
     modalModelsCartridgeContentInnerTypeSelect.id = 'modalModelTypeInput';
     modalModelsCartridgeContentInnerDiv1.appendChild(modalModelsCartridgeContentInnerTypeSelect);
-
-
+    
+    modalManufacturerCartridgeContentInnerModelSelect = document.createElement('select');
+    modalManufacturerCartridgeContentInnerModelSelect.className = 'form-select modalManufacturerCartridgeSelect';
+    modalManufacturerCartridgeContentInnerModelSelect.id = 'modalManufacturerCartridgeSelect';
+    modalManufacturerCartridgeContentInnerModelSelect.value = 'Производитель';
+    modalModelsCartridgeContentInnerDiv5.appendChild(modalManufacturerCartridgeContentInnerModelSelect);
+    
     // modalModelsPrinterContentInnerModelInput.placeholder = 'Модель';
     modalModelsCartridgeContentInnerModelSelect = document.createElement('select');
     modalModelsCartridgeContentInnerModelSelect.className = 'form-select modalModelCartridgeSelect';
@@ -1027,12 +1039,61 @@ window.onload = function () {
             {type: "Стартовый"}],
         onChange: function (value) {
             if (value !== '') {
-                selectizeModelFromChoisesTypeCartridge = $(this.$control_input[0].closest('.modalModelCartridgeRow')).find('.modalModelCartridgeSelect')[0];
+                selectizeManufacturerFromChoisesTypeCartridge = $(this.$control_input[0].closest('.modalModelCartridgeRow')).find('.modalManufacturerCartridgeSelect')[0];
                 typeChoice = $(this.$control_input[0].closest('.modalModelCartridgeRow')).find('.modalModelTypeInput')[0].innerText;
+                selectizeManufacturerFromChoisesTypeCartridge.selectize.enable();
+                typeValueFromSelectize = value;
+                $.ajax({
+                    url: "/cartridge/" + typeChoice + "/",
+                    type: 'GET',
+                    dataType: 'json', // added data type
+                    success: function (res) {
+                        let keys = Object.keys(selectizeManufacturerFromChoisesTypeCartridge.selectize.options);
+                        for (let i = 0; i < keys.length; i++) {
+                            selectizeManufacturerFromChoisesTypeCartridge.selectize.removeOption(keys[i]);
+                        }
+                        res.forEach(manufacturer => {
+                            selectizeManufacturerFromChoisesTypeCartridge.selectize.addOption(manufacturer);
+                            selectizeManufacturerFromChoisesTypeCartridge.selectize.addItem(manufacturer);
+                        });
+
+                        selectizeManufacturerFromChoisesTypeCartridge.selectize.refreshOptions();
+                        selectizeManufacturerFromChoisesTypeCartridge.selectize.clear();
+                        selectizeManufacturerFromChoisesTypeCartridge.selectize.enable();
+                    }
+                });
+            }
+        }
+    });
+
+    
+    // Selectize производитель картриджа
+
+    $('.modalManufacturerCartridgeSelect').selectize({
+        placeholder: "Производитель",
+        valueField: 'manufacturer',
+        labelField: 'manufacturer',
+        searchField: "manufacturer",
+        preload: 'focus',
+        create: true,
+//        load: function (query, callback) {
+//            $.ajax({
+//                url: '/cartridge/' + encodeURIComponent(typeChoice),
+//                type: 'GET',
+//                dataType: 'json',
+//                data: {manufacturer: query},
+//                error: callback,
+//                success: callback
+//            });
+//        },
+         onChange: function (value) {
+            if (value !== '') {
+                selectizeModelFromChoisesTypeCartridge = $(this.$control_input[0].closest('.modalModelCartridgeRow')).find('.modalModelCartridgeSelect')[0];
+                typeChoice = $(this.$control_input[0].closest('.modalModelCartridgeRow')).find('.modalManufacturerCartridgeSelect')[0].innerText;
                 selectizeModelFromChoisesTypeCartridge.selectize.enable();
                 typeValueFromSelectize = value;
                 $.ajax({
-                    url: "/cartridge/" + encodeURIComponent(value),
+                    url: "/cartridge/" + type.value + "/" + encodeURIComponent(value),
                     type: 'GET',
                     dataType: 'json', // added data type
                     success: function (res) {
@@ -1051,28 +1112,6 @@ window.onload = function () {
                     }
                 });
             }
-        }
-    });
-
-    // Selectize модель картриджа
-
-    $('.modalModelCartridgeSelect').selectize({
-        create: false,
-        placeholder: "модель картриджа",
-        valueField: 'model',
-        labelField: 'model',
-        searchField: "model",
-        preload: 'focus',
-        create: true,
-        load: function (query, callback) {
-            $.ajax({
-                url: '/cartridge/' + encodeURIComponent(typeChoice),
-                type: 'GET',
-                dataType: 'json',
-                data: {model: query},
-                error: callback,
-                success: callback
-            });
         }
     });
 
@@ -1095,13 +1134,63 @@ window.onload = function () {
                 success: callback
             });
         },
-        create: function (input) {
-            return {
-                value: input,
-                text: input,
-            };
+        create: false
+//        create: function (input) {
+//            return {
+//                value: input,
+//                text: input,
+//            };
+//        }
+    });
+
+
+    // Selectize модель картриджа
+
+    $('.modalModelCartridgeSelect').selectize({
+        placeholder: "модель картриджа",
+        valueField: 'model',
+        labelField: 'model',
+        searchField: "model",
+        preload: 'focus',
+        create: true,
+        load: function (query, callback) {
+            $.ajax({
+                url: '/cartridge/' + encodeURIComponent(typeChoice),
+                type: 'GET',
+                dataType: 'json',
+                data: {model: query},
+                error: callback,
+                success: callback
+            });
         }
     });
+
+//    $(".modalModelsPrinterSelect").selectize({
+//        plugins: ["remove_button"],
+//        delimiter: ",",
+//        valueField: 'idModel',
+//        labelField: 'model',
+//        searchField: 'model',
+//        persist: false,
+//        maxItems: null,
+//        placeholder: "модель принтера",
+//        preload: 'focus',
+//        load: function (query, callback) {
+//            $.ajax({
+//                url: '/models/',
+//                type: 'GET',
+//                dataType: 'json',
+//                error: callback,
+//                success: callback
+//            });
+//        },
+//        create: function (input) {
+//            return {
+//                value: input,
+//                text: input,
+//            };
+//        }
+//    });
 
     modalModelsCartridgeFooterOKBtn2.addEventListener('click', function () {
 
@@ -1111,7 +1200,8 @@ window.onload = function () {
             data: {model: $('.modalModelCartridgeSelect')[0].innerText,
                 type: $(".modalModelTypeInput")[0].innerText,
                 resource: $('#modalNominalResourceInput')[0].value,
-                idModel: $(".modalModelsPrinterSelect")[0].selectize.items
+                idModel: $(".modalModelsPrinterSelect")[0].selectize.items,
+                manufacturer: $('.modalManufacturerCartridgeSelect')[0].innerText
             },
             success: function (result) {
                 parent = document.getElementById('modalModelsCartridgeContentInner');

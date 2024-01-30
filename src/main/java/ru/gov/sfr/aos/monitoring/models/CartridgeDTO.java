@@ -14,6 +14,7 @@ import java.util.Date;
 public class CartridgeDTO {
     public Long id;
     public String type;
+    public String manufacturer;
     public String model;
     public String location;
     public String resource;
@@ -36,8 +37,9 @@ public class CartridgeDTO {
     public CartridgeDTO() {
     }
 
-      public CartridgeDTO(Long id, String type, String model, String location, String resource) {
+      public CartridgeDTO(Long id, String manufacturer, String type, String model, String location, String resource) {
         this.id = id;
+        this.manufacturer = manufacturer;
         this.type = type;
         this.model = model;
         this.location = location;
@@ -45,10 +47,11 @@ public class CartridgeDTO {
         
     }
     
-    public CartridgeDTO(Long id, String type, String model, String location, String resource,
+    public CartridgeDTO(Long id, String manufacturer, String type, String model, String location, String resource,
             boolean util, LocalDateTime dateStartExploitation, LocalDateTime dateEndExploitation, Long count,
             boolean usePrinter, Long contract, String contractNumber) {
         this.id = id;
+        this.manufacturer = manufacturer;
         this.type = type;
         this.model = model;
         this.location = location;
@@ -62,10 +65,11 @@ public class CartridgeDTO {
         this.contractNumber = contractNumber;
     }
     
-        public CartridgeDTO(Long id, String type, String model, String location, String resource,
+        public CartridgeDTO(Long id, String manufacturer, String type, String model, String location, String resource,
             boolean util, LocalDateTime dateStartExploitation, LocalDateTime dateEndExploitation, Long count,
             boolean usePrinter, Long contract, String contractNumber, Date startContract, Date endContract) {
         this.id = id;
+        this.manufacturer = manufacturer;
         this.type = type;
         this.model = model;
         this.location = location;
@@ -81,8 +85,9 @@ public class CartridgeDTO {
         this.endContract = endContract;
     }
 
-    public CartridgeDTO(Long id, String type, String model, String location, String resource, boolean util, LocalDateTime dateStartExploitation, LocalDateTime dateEndExploitation, Long count, boolean usePrinter, Long contract, String contractNumber, Date startContract, Date endContract, String itemCode, String nameMaterial) {
+    public CartridgeDTO(Long id, String manufacturer, String type, String model, String location, String resource, boolean util, LocalDateTime dateStartExploitation, LocalDateTime dateEndExploitation, Long count, boolean usePrinter, Long contract, String contractNumber, Date startContract, Date endContract, String itemCode, String nameMaterial) {
         this.id = id;
+        this.manufacturer = manufacturer;
         this.type = type;
         this.model = model;
         this.location = location;
@@ -100,7 +105,8 @@ public class CartridgeDTO {
         this.nameMaterial = nameMaterial;
     }
 
-    public CartridgeDTO(String type, String model, String location, String resource, boolean util, LocalDateTime dateStartExploitation, LocalDateTime dateEndExploitation, Long count, boolean usePrinter, Long contract, String contractNumber, Date startContract, Date endContract, String itemCode, String nameMaterial, String employeeToDoWork, String employeeToSetDevice, String employeeMOL) {
+    public CartridgeDTO(String manufacturer, String type, String model, String location, String resource, boolean util, LocalDateTime dateStartExploitation, LocalDateTime dateEndExploitation, Long count, boolean usePrinter, Long contract, String contractNumber, Date startContract, Date endContract, String itemCode, String nameMaterial, String employeeToDoWork, String employeeToSetDevice, String employeeMOL) {
+        this.manufacturer = manufacturer;
         this.type = type;
         this.model = model;
         this.location = location;
@@ -121,8 +127,9 @@ public class CartridgeDTO {
         this.employeeMOL = employeeMOL;
     }
 
-    public CartridgeDTO(Long id, String type, String model, String location, String resource, boolean util, LocalDateTime dateStartExploitation, LocalDateTime dateEndExploitation, Long count, boolean usePrinter, Long contract, String contractNumber, Date startContract, Date endContract, String itemCode, String nameMaterial, String employeeToDoWork, String employeeToSetDevice, String employeeMOL, Long listenerId) {
+    public CartridgeDTO(Long id, String manufacturer, String type, String model, String location, String resource, boolean util, LocalDateTime dateStartExploitation, LocalDateTime dateEndExploitation, Long count, boolean usePrinter, Long contract, String contractNumber, Date startContract, Date endContract, String itemCode, String nameMaterial, String employeeToDoWork, String employeeToSetDevice, String employeeMOL, Long listenerId) {
         this.id = id;
+        this.manufacturer = manufacturer;
         this.type = type;
         this.model = model;
         this.location = location;
@@ -181,9 +188,15 @@ public class CartridgeDTO {
     public void setEndContract(Date endContract) {
         this.endContract = endContract;
     }
-        
-        
 
+    public String getManufacturer() {
+        return manufacturer;
+    }
+
+    public void setManufacturer(String manufacturer) {
+        this.manufacturer = manufacturer;
+    }
+        
     public Long getId() {
         return id;
     }

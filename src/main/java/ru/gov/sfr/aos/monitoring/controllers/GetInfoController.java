@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import ru.gov.sfr.aos.monitoring.CartridgeType;
 import ru.gov.sfr.aos.monitoring.dao.PrinterAndCartridgeCountByLocationTableDAO;
 import ru.gov.sfr.aos.monitoring.entities.CartridgeModel;
 import ru.gov.sfr.aos.monitoring.entities.Printer;
@@ -23,6 +24,7 @@ import ru.gov.sfr.aos.monitoring.models.EmployeeDTO;
 import ru.gov.sfr.aos.monitoring.models.LocationDTO;
 import ru.gov.sfr.aos.monitoring.models.PrinterAndCartridgeCountByLocationTable;
 import ru.gov.sfr.aos.monitoring.models.PrinterDTO;
+import ru.gov.sfr.aos.monitoring.repositories.CartridgeModelRepo;
 import ru.gov.sfr.aos.monitoring.services.CartridgeMapper;
 import ru.gov.sfr.aos.monitoring.services.CartridgeService;
 import ru.gov.sfr.aos.monitoring.services.DictionaryEmployeeHolder;
@@ -52,6 +54,8 @@ public class GetInfoController {
     private CartridgeService cartridgeService;
     @Autowired
     private PrinterService printerService;
+    @Autowired
+    private CartridgeModelRepo cartridgeModelRepo;
     
     private final PrinterAndCartridgeCountByLocationTableDAO dao;
 
@@ -93,7 +97,30 @@ public class GetInfoController {
             }
         return dtoes;
     }
-
+    
+    @GetMapping("/getmodelbytype")
+    public List<CartridgeModelDTO> getModelsCartridgeByModelPrinterAndCartridgeType(@RequestParam("modelPrinter") String modelPrinter, @RequestParam("cartridgeType") String cartridgeType) {
+        List<CartridgeModel> list = cartridgeModelRepo.findByModelPrinterAndCartridgeType(modelPrinter, cartridgeType);
+        List<CartridgeModelDTO> dtoes = new ArrayList<>();
+        for(CartridgeModel model : list) {
+            CartridgeModelDTO dto = cartridgeMapper.cartridgeModelToCartridgeModelDto(model);
+            dtoes.add(dto);
+            }
+        return dtoes;
+    }   
+    
+        @GetMapping("/getmodelbytypeandmanuf")
+    public List<CartridgeModelDTO> getModelsCartridgeByModelPrinterAndCartridgeTypeAndManufacturer(@RequestParam("modelPrinter") String modelPrinter, 
+                                                                                                    @RequestParam("cartridgeType") String cartridgeType, 
+                                                                                                    @RequestParam("cartridgeManufacturer") String cartridgeManufacturer) {
+        List<CartridgeModel> list = cartridgeModelRepo.findByModelPrinterAndCartridgeTypeAndCartridgeManufacturer(modelPrinter, cartridgeType, cartridgeManufacturer);
+        List<CartridgeModelDTO> dtoes = new ArrayList<>();
+        for(CartridgeModel model : list) {
+            CartridgeModelDTO dto = cartridgeMapper.cartridgeModelToCartridgeModelDto(model);
+            dtoes.add(dto);
+            }
+        return dtoes;
+    } 
     
     
         @GetMapping("/showcartridgesforchoice")

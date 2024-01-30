@@ -17,14 +17,17 @@ public class CartridgeFromInputDto {
     @NotBlank
     private String type;
     @NotBlank
+    private String manufacturer;
+    @NotBlank
     private String itemCode;
     @NotBlank
     private String nameMaterial;
-
+    
     public CartridgeFromInputDto() {
     }
 
-    public CartridgeFromInputDto(String model, String type, String itemCode, String nameMaterial) {
+    public CartridgeFromInputDto(String manufacturer, String model, String type, String itemCode, String nameMaterial) {
+        this.manufacturer = manufacturer;
         this.model = model;
         this.type = type;
         this.itemCode = itemCode;
@@ -61,6 +64,14 @@ public class CartridgeFromInputDto {
 
     public void setNameMaterial(String nameMaterial) {
         this.nameMaterial = nameMaterial;
+    }
+
+    public String getManufacturer() {
+        return manufacturer;
+    }
+
+    public void setManufacturer(String manufacturer) {
+        this.manufacturer = manufacturer;
     }
     
     

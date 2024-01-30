@@ -13,11 +13,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ru.gov.sfr.aos.monitoring.CartridgeType;
 import ru.gov.sfr.aos.monitoring.entities.Cartridge;
+import ru.gov.sfr.aos.monitoring.entities.CartridgeManufacturer;
 import ru.gov.sfr.aos.monitoring.entities.CartridgeModel;
 import ru.gov.sfr.aos.monitoring.entities.Model;
 import ru.gov.sfr.aos.monitoring.entities.Printer;
 import ru.gov.sfr.aos.monitoring.models.CartridgeDTO;
 import ru.gov.sfr.aos.monitoring.models.CartridgeModelDTO;
+import ru.gov.sfr.aos.monitoring.repositories.CartridgeManufacturerRepo;
 import ru.gov.sfr.aos.monitoring.repositories.CartridgeModelRepo;
 import ru.gov.sfr.aos.monitoring.repositories.CartridgeRepo;
 import ru.gov.sfr.aos.monitoring.repositories.ModelPrinterRepo;
@@ -36,6 +38,8 @@ public class CartridgeMapper {
     private CartridgeModelRepo cartridgeModelRepo;
     @Autowired
     private ModelPrinterRepo modelPrinterRepo;
+    @Autowired
+    private CartridgeManufacturerRepo cartridgeManufacturerRepo;
 
 
 
@@ -64,6 +68,7 @@ public class CartridgeMapper {
         Optional<Cartridge> findCartridgeById = cartridgeRepo.findById(id);
 
         dto.setId(findCartridgeById.get().getId());
+        dto.setManufacturer(findCartridgeById.get().getModel().getCartridgeManufacturer().getManufacturerName());
         dto.setContract(findCartridgeById.get().getContract().getId());
         dto.setContractNumber(findCartridgeById.get().getContract().getContractNumber().toString());
         dto.setLocation(findCartridgeById.get().getLocation().getName());
@@ -110,6 +115,7 @@ public class CartridgeMapper {
         CartridgeType currentType = null;
         CartridgeModel model = null;
         List<Model> modelsPrinters = new ArrayList<>();
+        
         for (Long l : dto.getIdModel()) {
             Optional<Model> findById = modelPrinterRepo.findById(l);
             if (findById.isPresent()) {
@@ -127,6 +133,15 @@ public class CartridgeMapper {
         
         String modelNameTrim = dto.getModel().trim();
         model = new CartridgeModel();
+        String manufacturerNameInput = dto.getManufacturer().trim();
+        List<CartridgeManufacturer> listManufacturers = cartridgeManufacturerRepo.findByManufacturerNameIgnoreCase(manufacturerNameInput);
+          if(listManufacturers.size() != 0) {
+            model.setCartridgeManufacturer(listManufacturers.get(0));
+            
+        } else {
+            CartridgeManufacturer cartridgeManufacturer = new CartridgeManufacturer("manufacturerNameInput");
+            model.setCartridgeManufacturer(cartridgeManufacturer);
+        }
         model.setModel(modelNameTrim);
         model.setType(currentType);
         model.setDefaultNumberPrintPage(parseResource);
@@ -136,6 +151,7 @@ public class CartridgeMapper {
     public CartridgeModelDTO cartridgeModelToCartridgeModelDto(CartridgeModel cartridgeModel) {
         CartridgeModelDTO dto = new CartridgeModelDTO();
         dto.setId(cartridgeModel.getId());
+        dto.setManufacturer(cartridgeModel.getCartridgeManufacturer().getManufacturerName());
         dto.setModel(cartridgeModel.getModel());
         dto.setResource(cartridgeModel.getDefaultNumberPrintPage().toString());
         dto.setType(cartridgeModel.getType().getName());
