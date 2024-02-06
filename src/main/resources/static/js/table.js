@@ -16,8 +16,8 @@ window.onload = function () {
     if (input.length > 0) {
         // Вывод таблицы
         let table = document.createElement('table');
-        table.id = "table";
-        table.className = "table align-middle table-hover table-scroll table-striped table-bordered";
+        table.id = "inventoriesTable";
+        table.className = "table align-middle table-hover table-scroll table-striped table-bordered inventoriesTable";
         let thead = document.createElement('thead');
         thead.className = "text-center fixedThead";
         let trThead = document.createElement('tr');
@@ -52,6 +52,8 @@ window.onload = function () {
         thThead2Div.appendChild(thThead2SpanSecond);
         thThead2Div.appendChild(thThead2Line);
         let tbody = document.createElement('tbody');
+        tbody.id = 'inventoriesTbody';
+        tbody.className = 'inventoriesTbody';
         let tr = document.createElement('tr');
         table.appendChild(tbody);
         tbody.appendChild(tr);

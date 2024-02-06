@@ -3,6 +3,15 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to c
 Click nbfs://nbhost/SystemFileSystem/Templates/Other/CascadeStyleSheet.css to edit this template
 */
 /* 
+    Created on : 31 янв. 2024 г., 15:46:25
+    Author     : 041AlikinOS
+*/
+
+/*
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/Other/CascadeStyleSheet.css to edit this template
+*/
+/* 
     Created on : 21 февр. 2023 г., 16:13:32
     Author     : 041AlikinOS
 */
@@ -28,14 +37,7 @@ body, html {
     overflow: auto;
     
 }
-#inventoriesTable > .inventoriesTbody > th:nth-child(2), td:nth-child(2)
-{
-  position:sticky;
-  left:0px;
-  z-index: 1;
-  background-color: lightgrey;
 
-}
 
 #tablePlaning > .planingTbody > th:nth-child(1), td:nth-child(1)
 {
@@ -264,23 +266,8 @@ nav span {
     margin: 0 auto;
 }
 
-#dateStartContract {
-    max-width: 170px;
-    float: none;
-    margin: 0 auto;
-}
 
-#dateEndContract {
-    max-width: 170px;
-    float: none;
-    margin: 0 auto;
-}
 
-#printerLabel {
-    text-align: center;
-    vertical-align: middle;
-
-}
 
 .btn  {
     min-width: 100px;
@@ -295,25 +282,13 @@ nav span {
     pointer-events: none;
 }
 
-#amountPrinterInput {
-    max-width: 120px;
-}
 
-#amountCartridgeInput {
-    max-width: 120px;
-}
 
 #search {
     max-height: 38px;
 }
 
-.pagination {
-  margin-top: 1rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
 
-}
 
 .tab-status {
   display: flex;
@@ -322,7 +297,6 @@ nav span {
 }
 
 .tab-status span {
-  
   appearance: none;
   background: var(--status-btn-bg);
   border: none;
@@ -447,39 +421,9 @@ nav span {
 }
 
 
-#addBtnPrinter:hover {
-    background-color: rgba(22, 160, 133, 0.8);
-    border-color: transparent;
-    color: #fff;
-    max-width: 50px;
-    min-width: 50px;
-    padding: 0.5em;
-    margin: 0.5em;
-    
-}
 
-#addBtnPrinter {
-    border-color: rgb(189, 195, 199);
-    padding: 0.5em;
-    margin: 0.5em;
-    max-width: 50px;
-    min-width: 50px;
-    
-}
 
-#btnDel {
-    border-color: rgb(189, 195, 199);
-    max-width: 50px;
-    min-width: 50px;
-}
 
-#btnDel:hover {
-    background-color: rgba(217, 30, 24, 0.8);
-    border-color: transparent;
-    color: #fff;
-    max-width: 50px;
-    min-width: 50px;
-}
 
 .background {
   width: 170px;

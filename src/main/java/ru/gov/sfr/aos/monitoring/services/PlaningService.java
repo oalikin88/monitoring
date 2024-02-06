@@ -197,10 +197,10 @@ public class PlaningService {
     public Map<String, List<ModelCartridgeByModelPrinters>> getPrintersByCartridgesModel() {
             List<Cartridge> cartridges = cartridgeRepo.findAll();
         List<Location> locations = locationRepo.findAll();
-        Set<Cartridge> collectCartridges = cartridges.stream() // Все актуальные картриджи
-                .filter(e -> !e.isUseInPrinter())
-                .filter(e -> !e.isUtil())
-                .collect(Collectors.toSet());
+//        Set<Cartridge> collectCartridges = cartridges.stream() // Все актуальные картриджи
+//                .filter(e -> !e.isUseInPrinter())
+//                .filter(e -> !e.isUtil())
+//                .collect(Collectors.toSet());
                 
             List<ModelCartridgeByModelPrinters> out = new ArrayList<>();
             ModelCartridgeByModelPrinters dto = null;

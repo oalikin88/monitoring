@@ -4,7 +4,18 @@
  */
 
 let parent = document.getElementById('content');
-
+ let cartridgeRows;
+ let sortedPrinterCount = false;
+ let sortedPrinterName = false;
+ let sortedPrinterSerialNumber = false;
+ let sortedPrinterInventaryNumber = false;
+ let sortedPrinterLocation = false;
+ let sortedCartridgeCount = false;
+ let sortedCartridgeNamesUp = false;
+ let sortedCartridgeItemCode = false;
+ let sortedCartridgeType = false;
+ let sortedCartridgeStatus = false;
+ let sortedCartridgeLocation = false;
 
 window.onload = function () {
     
@@ -47,36 +58,117 @@ window.onload = function () {
         
         divCountLabel = document.createElement('div');
         divCountLabel.className = 'col-md-1';
-        divCountLabel.innerHTML = '№';
+        
+        linkSortingPrinterCount = document.createElement('a');
+        linkSortingPrinterCount.href = '#';
+        linkSortingPrinterCount.id = 'printerCountSortLink';
+        imgInnerPrinterCount = document.createElement('img');
+        imgInnerPrinterCount.src = '/img/sorting.png';
+        imgInnerPrinterCount.alt = 'Сортировка';
+        imgInnerPrinterCount.className = 'imgSorting';
+        imgInnerPrinterCount.id = 'printerCountSort';
+
+        spanPrinterCount = document.createElement('span');
+        spanPrinterCount.innerHTML = '№';
         
         divNameLabel = document.createElement('div');
         divNameLabel.className = 'col';
-        divNameLabel.innerHTML = 'Наименование';
+        
+        linkSortingPrinterName = document.createElement('a');
+        linkSortingPrinterName.href = '#';
+        linkSortingPrinterName.id = 'printerNameSortLink';
+        imgInnerPrinterName = document.createElement('img');
+        imgInnerPrinterName.src = '/img/sorting.png';
+        imgInnerPrinterName.alt = 'Сортировка';
+        imgInnerPrinterName.className = 'imgSorting';
+        imgInnerPrinterName.id = 'printerNameSort';
+
+        spanPrinterName = document.createElement('span');
+        spanPrinterName.innerHTML = 'Наименование';
+        
         
         divSerialNumberLabel = document.createElement('div');
         divSerialNumberLabel.className = 'col';
-        divSerialNumberLabel.innerHTML = 'Серийный номер';
+        
+        linkSortingPrinterSerialNumber = document.createElement('a');
+        linkSortingPrinterSerialNumber.href = '#';
+        linkSortingPrinterSerialNumber.id = 'printerSerialNumberSortLink';
+        imgInnerPrinterSerialNumber = document.createElement('img');
+        imgInnerPrinterSerialNumber.src = '/img/sorting.png';
+        imgInnerPrinterSerialNumber.alt = 'Сортировка';
+        imgInnerPrinterSerialNumber.className = 'imgSorting';
+        imgInnerPrinterSerialNumber.id = 'printerSerialNumberSort';
+
+        spanPrinterSerialNumber = document.createElement('span');
+        spanPrinterSerialNumber.innerHTML = 'Серийный номер';
+        
         
         divInvLabel = document.createElement('div');
         divInvLabel.className = 'col';
-        divInvLabel.innerHTML = 'Инвентарный номер';
+        
+        linkSortingPrinterInventaryNumber = document.createElement('a');
+        linkSortingPrinterInventaryNumber.href = '#';
+        linkSortingPrinterInventaryNumber.id = 'printerInventaryNumberSortLink';
+        imgInnerPrinterInventaryNumber = document.createElement('img');
+        imgInnerPrinterInventaryNumber.src = '/img/sorting.png';
+        imgInnerPrinterInventaryNumber.alt = 'Сортировка';
+        imgInnerPrinterInventaryNumber.className = 'imgSorting';
+        imgInnerPrinterInventaryNumber.id = 'printerInventaryNumberSort';
+
+        spanPrinterInventaryNumber = document.createElement('span');
+        spanPrinterInventaryNumber.innerHTML = 'Инвентарный номер';
         
         divLocationLabel = document.createElement('div');
         divLocationLabel.className = 'col';
-        divLocationLabel.innerHTML = 'Локация';
+        
+        linkSortingPrinterLocation = document.createElement('a');
+        linkSortingPrinterLocation.href = '#';
+        linkSortingPrinterLocation.id = 'printerLocationSortLink';
+        imgInnerPrinterLocation = document.createElement('img');
+        imgInnerPrinterLocation.src = '/img/sorting.png';
+        imgInnerPrinterLocation.alt = 'Сортировка';
+        imgInnerPrinterLocation.className = 'imgSorting';
+        imgInnerPrinterLocation.id = 'printerLocationSort';
+
+        spanPrinterLocation = document.createElement('span');
+        spanPrinterLocation.innerHTML = 'Локация';
         
         
         parent.appendChild(rowLabels);
         rowLabels.appendChild(divCountLabel);
+        
+        divCountLabel.appendChild(linkSortingPrinterCount);
+        linkSortingPrinterCount.appendChild(imgInnerPrinterCount);
+        divCountLabel.appendChild(spanPrinterCount);
+        
         rowLabels.appendChild(divNameLabel);
+        divNameLabel.appendChild(linkSortingPrinterName);
+        linkSortingPrinterName.appendChild(imgInnerPrinterName);
+        divNameLabel.appendChild(spanPrinterName);
+        
         rowLabels.appendChild(divSerialNumberLabel);
+        divSerialNumberLabel.appendChild(linkSortingPrinterSerialNumber);
+        linkSortingPrinterSerialNumber.appendChild(imgInnerPrinterSerialNumber);
+        divSerialNumberLabel.appendChild(spanPrinterSerialNumber);
+        
         rowLabels.appendChild(divInvLabel);
+        divInvLabel.appendChild(linkSortingPrinterInventaryNumber);
+        linkSortingPrinterInventaryNumber.appendChild(imgInnerPrinterInventaryNumber);
+        divInvLabel.appendChild(spanPrinterInventaryNumber);
+        
         rowLabels.appendChild(divLocationLabel);
+        divLocationLabel.appendChild(linkSortingPrinterLocation);
+        linkSortingPrinterLocation.appendChild(imgInnerPrinterLocation);
+        divLocationLabel.appendChild(spanPrinterLocation);
+        
+        divPrintersContainer = document.createElement('div');
+        divPrintersContainer.className = 'printersContainer';
+        parent.appendChild(divPrintersContainer);
         
         for(i = 0; i < input.printers.length; i++) {
             
             rowContent = document.createElement('div');
-            rowContent.className = 'row contentItemContract';
+            rowContent.className = 'row contentItemPrinterContract';
             
             divCountContent = document.createElement('div');
             divCountContent.className = 'col-md-1';
@@ -101,7 +193,7 @@ window.onload = function () {
             divLocationContent.className = 'col';
             divLocationContent.innerHTML = input.printers[i].location;
             
-            parent.appendChild(rowContent);
+            divPrintersContainer.appendChild(rowContent);
             rowContent.appendChild(divCountContent);
             rowContent.appendChild(divNamePrinter);
             divNamePrinter.appendChild(link);
@@ -136,57 +228,154 @@ window.onload = function () {
         
         divCountLabel = document.createElement('div');
         divCountLabel.className = 'col-md-1';
-        divCountLabel.innerHTML = '№';
+        
+        linkSortingCartridgeCount = document.createElement('a');
+        linkSortingCartridgeCount.href = '#';
+        linkSortingCartridgeCount.id = 'cartridgeLocationSortLink';
+        imgInnerCartridgeCount = document.createElement('img');
+        imgInnerCartridgeCount.src = '/img/sorting.png';
+        imgInnerCartridgeCount.alt = 'Сортировка';
+        imgInnerCartridgeCount.className = 'imgSorting';
+        imgInnerCartridgeCount.id = 'cartridgeLocation';
+        
+        spanCartridgeCount = document.createElement('span');
+        spanCartridgeCount.innerHTML = '№';
+        
+        linkSortingName = document.createElement('a');
+        linkSortingName.href = '#';
+        linkSortingName.id = 'nameSortLink';
+        imgInnerName = document.createElement('img');
+        imgInnerName.src = '/img/sorting.png';
+        imgInnerName.alt = 'Сортировка';
+        imgInnerName.className = 'imgSorting';
+        imgInnerName.id = 'nameSort';
+        
+        spanName = document.createElement('span');
+        spanName.innerHTML = 'Наименование';
         
         divNameLabel = document.createElement('div');
         divNameLabel.className = 'col';
-        divNameLabel.innerHTML = 'Наименование';
+        
+        linkSortingName.appendChild(imgInnerName);
+        divNameLabel.appendChild(linkSortingName);
+        divNameLabel.appendChild(spanName);
         
         divItemCodeLabel = document.createElement('div');
         divItemCodeLabel.className = 'col';
-        divItemCodeLabel.innerHTML = 'Номенклатурный код';
+        
+        linkSortingItemCode = document.createElement('a');
+        linkSortingItemCode.href = '#';
+        linkSortingItemCode.id = 'itemCodeSortLink';
+        imgInnerItemCode = document.createElement('img');
+        imgInnerItemCode.src = '/img/sorting.png';
+        imgInnerItemCode.alt = 'Сортировка';
+        imgInnerItemCode.className = 'imgSorting';
+        imgInnerItemCode.id = 'itemCodeSort';
+        
+        spanItemCode = document.createElement('span');
+        spanItemCode.innerHTML = 'Номенклатурный код';
+        
+        
+        
         
         divTypeLabel = document.createElement('div');
-        divTypeLabel.className = 'col';
-        divTypeLabel.innerHTML = 'Тип';
+        divTypeLabel.className = 'col cartridgeType';
+        
+        linkSortingCartridgeType = document.createElement('a');
+        linkSortingCartridgeType.href = '#';
+        linkSortingCartridgeType.id = 'cartridgeTypeSortLink';
+        imgInnerCartridgeType = document.createElement('img');
+        imgInnerCartridgeType.src = '/img/sorting.png';
+        imgInnerCartridgeType.alt = 'Сортировка';
+        imgInnerCartridgeType.className = 'imgSorting';
+        imgInnerCartridgeType.id = 'cartridgeTypeSort';
+        
+        spanCartridgeType = document.createElement('span');
+        spanCartridgeType.innerHTML = 'Тип';
         
         
         divStatusLabel = document.createElement('div');
-        divStatusLabel.className = 'col';
-        divStatusLabel.innerHTML = 'Статус';
+        divStatusLabel.className = 'col cartridgeStatus';
+        
+        linkSortingCartridgeStatus = document.createElement('a');
+        linkSortingCartridgeStatus.href = '#';
+        linkSortingCartridgeStatus.id = 'cartridgeStatusSortLink';
+        imgInnerCartridgeStatus = document.createElement('img');
+        imgInnerCartridgeStatus.src = '/img/sorting.png';
+        imgInnerCartridgeStatus.alt = 'Сортировка';
+        imgInnerCartridgeStatus.className = 'imgSorting';
+        imgInnerCartridgeStatus.id = 'cartridgeStatus';
+        
+        spanCartridgeStatus = document.createElement('span');
+        spanCartridgeStatus.innerHTML = 'Статус';
         
         
         divLocationLabel = document.createElement('div');
         divLocationLabel.className = 'col';
-        divLocationLabel.innerHTML = 'Локация';
+        
+        linkSortingCartridgeLocation = document.createElement('a');
+        linkSortingCartridgeLocation.href = '#';
+        linkSortingCartridgeLocation.id = 'cartridgeLocationSortLink';
+        imgInnerCartridgeLocation = document.createElement('img');
+        imgInnerCartridgeLocation.src = '/img/sorting.png';
+        imgInnerCartridgeLocation.alt = 'Сортировка';
+        imgInnerCartridgeLocation.className = 'imgSorting';
+        imgInnerCartridgeLocation.id = 'cartridgeLocation';
+        
+        spanCartridgeLocation = document.createElement('span');
+        spanCartridgeLocation.innerHTML = 'Локация';
+        
         
         parent.appendChild(rowLabels);
         rowLabels.appendChild(divCountLabel);
+        divCountLabel.appendChild(linkSortingCartridgeCount);
+        linkSortingCartridgeCount.appendChild(imgInnerCartridgeCount);
+        divCountLabel.appendChild(spanCartridgeCount);
+        
         rowLabels.appendChild(divNameLabel);
         rowLabels.appendChild(divItemCodeLabel);
+        divItemCodeLabel.appendChild(linkSortingItemCode);
+        linkSortingItemCode.appendChild(imgInnerItemCode);
+        divItemCodeLabel.appendChild(spanItemCode);
         rowLabels.appendChild(divTypeLabel);
-        rowLabels.appendChild(divStatusLabel);
-        rowLabels.appendChild(divLocationLabel);
+        divTypeLabel.appendChild(linkSortingCartridgeType);
+        linkSortingCartridgeType.appendChild(imgInnerCartridgeType);
+        divTypeLabel.appendChild(spanCartridgeType);
         
+        
+        rowLabels.appendChild(divStatusLabel);
+        divStatusLabel.appendChild(linkSortingCartridgeStatus);
+        linkSortingCartridgeStatus.appendChild(imgInnerCartridgeStatus);
+        divStatusLabel.appendChild(spanCartridgeStatus);
+        
+        
+        rowLabels.appendChild(divLocationLabel);
+        divLocationLabel.appendChild(linkSortingCartridgeLocation);
+        linkSortingCartridgeLocation.appendChild(imgInnerCartridgeLocation);
+        divLocationLabel.appendChild(spanCartridgeLocation);
+        
+        divCartridgesContainer = document.createElement('div');
+        divCartridgesContainer.className = 'cartridgesContainer';
+        parent.appendChild(divCartridgesContainer);
         
         for(i = 0; i < input.cartridges.length > 0; i++) {
             
             rowContent = document.createElement('div');
-            rowContent.className = 'row contentItemContract';
+            rowContent.className = 'row contentItemCartridgeContract';
             
             divCountContent = document.createElement('div');
             divCountContent.className = 'col-md-1';
             divCountContent.innerHTML = i + 1;
             
             divNameCartridge = document.createElement('div');
-            divNameCartridge.className = 'col';
+            divNameCartridge.className = 'col cartridgeName';
             
             link = document.createElement('a');
             link.setAttribute('href', '/editcartridge?idCartridge=' + input.cartridges[i].id);
             link.innerText = input.cartridges[i].model;
             
             divItemCodeContent = document.createElement('div');
-            divItemCodeContent.className = 'col';
+            divItemCodeContent.className = 'col itemCode';
             divItemCodeContent.innerHTML = input.cartridges[i].itemCode;
             
             divTypeContent = document.createElement('div');
@@ -196,7 +385,7 @@ window.onload = function () {
             divStatusContent = document.createElement('div');
             divStatusContent.className = 'col';
             
-            if(input.cartridges[i].usePrinter == true && input.cartridges[i].util == true) {
+            if(input.cartridges[i].usePrinter == true && input.cartridges[i].util == false) {
                  var mes = document.createElement('p');
                 var span = document.createElement('span');
                 mes.className = 'message';
@@ -228,7 +417,7 @@ window.onload = function () {
             divLocationContent.className = 'col';
             divLocationContent.innerHTML = input.cartridges[i].location;
             
-            parent.appendChild(rowContent);
+            divCartridgesContainer.appendChild(rowContent);
             rowContent.appendChild(divCountContent);
             rowContent.appendChild(divNameCartridge);
             divNameCartridge.appendChild(link);
@@ -261,5 +450,218 @@ window.onload = function () {
     btnCancel.addEventListener('click', function () {
         history.back();
     });
+    
+    linkSortingPrinterCount.addEventListener('click', function() {
+        printerRows = [...document.querySelectorAll('.contentItemPrinterContract')];
+        if(sortedPrinterCount == false) {
+        printerRows.sort((a, b) => (a.childNodes[0].innerText - b.childNodes[0].innerText));
+        divPrintersContainer.innerHTML = '';
+        for(let item of printerRows) {
+            divPrintersContainer.appendChild(item);
+        }
+        sortedPrinterCount = true;
+        } else {
+            printerRows.sort((a, b) => (b.childNodes[0].innerText - a.childNodes[0].innerText));
+        divPrintersContainer.innerHTML = '';
+        for(let item of printerRows) {
+            divPrintersContainer.appendChild(item);
+        }
+        sortedPrinterCount = false; 
+        }
+    });
+    
+    linkSortingPrinterName.addEventListener('click', function() {
+        printerRows = [...document.querySelectorAll('.contentItemPrinterContract')];
+        if(sortedPrinterName == false) {
+            printerRows.sort((a, b) => (a.childNodes[1].innerText > b.childNodes[1].innerText) ? 1 : ((b.childNodes[1].innerText > a.childNodes[1].innerText) ? -1 : 0));
+            divPrintersContainer.innerHTML = '';
+            for(let item of printerRows) {
+            divPrintersContainer.appendChild(item);
+        }
+        sortedPrinterName = true;
+        } else {
+            printerRows.sort((a, b) => (a.childNodes[1].innerText < b.childNodes[1].innerText) ? 1 : ((b.childNodes[1].innerText < a.childNodes[1].innerText) ? -1 : 0));
+            divPrintersContainer.innerHTML = '';
+            for(let item of printerRows) {
+            divPrintersContainer.appendChild(item);
+        }
+        sortedPrinterName = false;
+        }
+    });
+    
+    
+    linkSortingPrinterSerialNumber.addEventListener('click', function() {
+        printerRows = [...document.querySelectorAll('.contentItemPrinterContract')];
+        if(sortedPrinterSerialNumber == false) {
+            printerRows.sort((a, b) => (a.childNodes[2].innerText > b.childNodes[2].innerText) ? 1 : ((b.childNodes[2].innerText > a.childNodes[2].innerText) ? -1 : 0));
+            divPrintersContainer.innerHTML = '';
+            for(let item of printerRows) {
+            divPrintersContainer.appendChild(item);
+        }
+        sortedPrinterSerialNumber = true;
+        } else {
+            printerRows.sort((a, b) => (a.childNodes[2].innerText < b.childNodes[2].innerText) ? 1 : ((b.childNodes[2].innerText < a.childNodes[2].innerText) ? -1 : 0));
+            divPrintersContainer.innerHTML = '';
+            for(let item of printerRows) {
+            divPrintersContainer.appendChild(item);
+        }
+        sortedPrinterSerialNumber = false;
+        }
+    });
+    
+    linkSortingPrinterInventaryNumber.addEventListener('click', function() {
+        printerRows = [...document.querySelectorAll('.contentItemPrinterContract')];
+        if(sortedPrinterInventaryNumber == false) {
+            printerRows.sort((a, b) => (a.childNodes[3].innerText > b.childNodes[3].innerText) ? 1 : ((b.childNodes[3].innerText > a.childNodes[3].innerText) ? -1 : 0));
+            divPrintersContainer.innerHTML = '';
+            for(let item of printerRows) {
+            divPrintersContainer.appendChild(item);
+        }
+        sortedPrinterInventaryNumber = true;
+        } else {
+            printerRows.sort((a, b) => (a.childNodes[3].innerText < b.childNodes[3].innerText) ? 1 : ((b.childNodes[3].innerText < a.childNodes[3].innerText) ? -1 : 0));
+            divPrintersContainer.innerHTML = '';
+            for(let item of printerRows) {
+            divPrintersContainer.appendChild(item);
+        }
+        sortedPrinterInventaryNumber = false;
+        }
+    });
+    
+    linkSortingPrinterLocation.addEventListener('click', function() {
+        printerRows = [...document.querySelectorAll('.contentItemPrinterContract')];
+        if(sortedPrinterLocation == false) {
+            printerRows.sort((a, b) => (a.childNodes[4].innerText > b.childNodes[4].innerText) ? 1 : ((b.childNodes[4].innerText > a.childNodes[4].innerText) ? -1 : 0));
+            divPrintersContainer.innerHTML = '';
+            for(let item of printerRows) {
+            divPrintersContainer.appendChild(item);
+        }
+        sortedPrinterLocation = true;
+        } else {
+            printerRows.sort((a, b) => (a.childNodes[4].innerText < b.childNodes[4].innerText) ? 1 : ((b.childNodes[4].innerText < a.childNodes[4].innerText) ? -1 : 0));
+            divPrintersContainer.innerHTML = '';
+            for(let item of printerRows) {
+            divPrintersContainer.appendChild(item);
+        }
+        sortedPrinterLocation = false;
+        }
+    });
+    
+    linkSortingCartridgeCount.addEventListener('click', function() {
+        cartridgeRows = [...document.querySelectorAll('.contentItemCartridgeContract')];
+        if(sortedCartridgeCount == false) {
+        cartridgeRows.sort((a, b) => (a.childNodes[0].innerText - b.childNodes[0].innerText));
+        divCartridgesContainer.innerHTML = '';
+        for(let item of cartridgeRows) {
+            divCartridgesContainer.appendChild(item);
+        }
+        sortedCartridgeCount = true;
+    } else {
+        cartridgeRows.sort((a, b) => (b.childNodes[0].innerText - a.childNodes[0].innerText));
+        divCartridgesContainer.innerHTML = '';
+        for(let item of cartridgeRows) {
+            divCartridgesContainer.appendChild(item);
+        }
+        sortedCartridgeCount = false; 
+    }
+    });
+    
+    linkSortingName.addEventListener('click', function() {
+        cartridgeRows = [...document.querySelectorAll('.contentItemCartridgeContract')];
+        if(sortedCartridgeNamesUp == false) {
+        cartridgeRows.sort((a, b) => (a.childNodes[1].innerText > b.childNodes[1].innerText) ? 1 : ((b.childNodes[1].innerText > a.childNodes[1].innerText) ? -1 : 0));
+        divCartridgesContainer.innerHTML = '';
+        for(let item of cartridgeRows) {
+            divCartridgesContainer.appendChild(item);
+        }
+        sortedCartridgeNamesUp = true;
+    } else {
+        cartridgeRows.sort((a, b) => (a.childNodes[1].innerText < b.childNodes[1].innerText) ? 1 : ((b.childNodes[1].innerText < a.childNodes[1].innerText) ? -1 : 0));
+        divCartridgesContainer.innerHTML = '';
+        for(let item of cartridgeRows) {
+            divCartridgesContainer.appendChild(item);
+        }
+        sortedCartridgeNamesUp = false;
+    }
+        
+    });
+    
+    linkSortingItemCode.addEventListener('click', function() {
+        cartridgeRows = [...document.querySelectorAll('.contentItemCartridgeContract')];
+        if(sortedCartridgeItemCode == false) {
+            cartridgeRows.sort((a, b) => (a.childNodes[2].innerText > b.childNodes[2].innerText) ? 1 : ((b.childNodes[2].innerText > a.childNodes[2].innerText) ? -1 : 0));
+        divCartridgesContainer.innerHTML = '';
+        for(let item of cartridgeRows) {
+            divCartridgesContainer.appendChild(item);
+        }
+        sortedCartridgeItemCode = true;
+        } else {
+            cartridgeRows.sort((a, b) => (a.childNodes[2].innerText < b.childNodes[2].innerText) ? 1 : ((b.childNodes[2].innerText < a.childNodes[2].innerText) ? -1 : 0));
+        divCartridgesContainer.innerHTML = '';
+        for(let item of cartridgeRows) {
+            divCartridgesContainer.appendChild(item);
+        }
+        sortedCartridgeItemCode = false;
+        }
+    });
+    
+    linkSortingCartridgeType.addEventListener('click', function() {
+         cartridgeRows = [...document.querySelectorAll('.contentItemCartridgeContract')];
+         if(sortedCartridgeType == false) {
+             cartridgeRows.sort((a, b) => (a.childNodes[3].innerText > b.childNodes[3].innerText) ? 1 : ((b.childNodes[3].innerText > a.childNodes[3].innerText) ? -1 : 0));
+        divCartridgesContainer.innerHTML = '';
+        for(let item of cartridgeRows) {
+            divCartridgesContainer.appendChild(item);
+        }
+        sortedCartridgeType = true;
+         } else {
+             cartridgeRows.sort((a, b) => (a.childNodes[3].innerText < b.childNodes[3].innerText) ? 1 : ((b.childNodes[3].innerText < a.childNodes[3].innerText) ? -1 : 0));
+        divCartridgesContainer.innerHTML = '';
+        for(let item of cartridgeRows) {
+            divCartridgesContainer.appendChild(item);
+        }
+        sortedCartridgeType = false;
+         }
+    });
+    
+    linkSortingCartridgeStatus.addEventListener('click', function() {
+        cartridgeRows = [...document.querySelectorAll('.contentItemCartridgeContract')];
+        if(sortedCartridgeStatus == false) {
+            cartridgeRows.sort((a, b) => (a.childNodes[4].innerText > b.childNodes[4].innerText) ? 1 : ((b.childNodes[4].innerText > a.childNodes[4].innerText) ? -1 : 0));
+        divCartridgesContainer.innerHTML = '';
+        for(let item of cartridgeRows) {
+            divCartridgesContainer.appendChild(item);
+        }
+        sortedCartridgeStatus = true;
+        } else {
+            cartridgeRows.sort((a, b) => (a.childNodes[4].innerText < b.childNodes[4].innerText) ? 1 : ((b.childNodes[4].innerText < a.childNodes[4].innerText) ? -1 : 0));
+        divCartridgesContainer.innerHTML = '';
+        for(let item of cartridgeRows) {
+            divCartridgesContainer.appendChild(item);
+        }
+        sortedCartridgeStatus = false;
+        }
+    });
+    
+    
+    linkSortingCartridgeLocation.addEventListener('click', function() {
+         cartridgeRows = [...document.querySelectorAll('.contentItemCartridgeContract')];
+        if(sortedCartridgeLocation == false) {
+            cartridgeRows.sort((a, b) => (a.childNodes[5].innerText > b.childNodes[5].innerText) ? 1 : ((b.childNodes[5].innerText > a.childNodes[5].innerText) ? -1 : 0));
+        divCartridgesContainer.innerHTML = '';
+        for(let item of cartridgeRows) {
+            divCartridgesContainer.appendChild(item);
+        }
+        sortedCartridgeLocation = true;
+        } else {
+            cartridgeRows.sort((a, b) => (a.childNodes[5].innerText < b.childNodes[5].innerText) ? 1 : ((b.childNodes[5].innerText < a.childNodes[5].innerText) ? -1 : 0));
+        divCartridgesContainer.innerHTML = '';
+        for(let item of cartridgeRows) {
+            divCartridgesContainer.appendChild(item);
+        }
+        sortedCartridgeLocation = false;
+        }
+    });
+    
     
 };

@@ -2,13 +2,16 @@ let utilledInput = Object.entries(utilled).sort();
 let purchasedInput = Object.entries(purchased).sort();
 let models = Object.entries(amountModels).sort();
 let balanceInput = Object.entries(balance).sort();
+let modelsArr = new Array();
 
 window.onload = function () {
 
     let parent = document.getElementsByClassName('inventoriesContent')[0];
 
     let amountUtilledCartridges = utilled.length;
+    
 
+    
     var header = document.createElement('header');
     var titleContent = document.createElement('h3');
     titleContent.className = 'fw-bold';
@@ -25,15 +28,15 @@ window.onload = function () {
     
     let tableContainer = document.createElement('div');
     tableContainer.className = 'table-responsive';
-    tableContainer.id = "tableContainer";
+    tableContainer.id = "planingContainer";
     
     parent.appendChild(tableContainer);
     
     if(models.length > 0) {
         
         let table = document.createElement('table');
-        table.id = "table";
-        table.className = "table align-middle table-hover table-striped table-bordered";
+        table.id = "tablePlaning";
+        table.className = "table align-middle table-hover table-striped table-bordered planingTable";
         let thead = document.createElement('thead');
         thead.className = "text-center";
         let trThead = document.createElement('tr');
@@ -47,11 +50,13 @@ window.onload = function () {
         trThead.appendChild(thThead1);
     
         let tbody = document.createElement('tbody');
+        tbody.className = 'planingTbody';
+        tbody.id = 'planingTbody';
         let tr1 = document.createElement('tr');
         table.appendChild(tbody);
         tbody.appendChild(tr1);
         amountColums = 0;
-        for(i = 0; i < models.length; i++) {
+        for(let i = 0; i < models.length; i++) {
             amountColums = amountColums + models[i][1].length;
         }
         
@@ -94,6 +99,7 @@ window.onload = function () {
             tdModelCartridgeCol.className = 'modelCartridgeValue text-center';
             tdModelCartridgeCol.setAttribute('scope', 'col');
             tdModelCartridgeCol.innerText = models[i][1][inner].model;
+            modelsArr.push(models[i][1][inner].model);
             tr2.appendChild(tdModelCartridgeCol);
         }
     }
@@ -116,6 +122,7 @@ window.onload = function () {
     }
         
         tr4 = document.createElement('tr');
+        tr4.className = 'trPurchasedCartridges';
         tbody.appendChild(tr4);
         
         tdPurchaseCartName = document.createElement('td');
@@ -123,31 +130,40 @@ window.onload = function () {
         tr4.appendChild(tdPurchaseCartName);
         
         for(i = 0; i < models.length; i++) {
+            
             for(inner = 0; inner < models[i][1].length; inner++) {
             var modelSearchPurchased = false;
-            for (t = 0; t < purchasedInput.length; t++) {
+            for (let t = 0; t < purchasedInput.length; t++) {
                 if (purchasedInput[t][0].indexOf(models[i][1][inner].model) === 0) {
                     tdPurchaseCartValue = document.createElement('td');
+                    tdPurchaseCartValue.className = 'purchasedCartridges';
                     tdPurchaseCartValue.setAttribute('scope', 'col');
                     tdPurchaseCartValue.innerText = purchasedInput[t][1][0].incoming;
                     tr4.appendChild(tdPurchaseCartValue);
                     allPurchased = allPurchased + purchasedInput[t][1][0].incoming;
                     modelSearchPurchased = true;
+                    break;
                     
                     
-                }
+                } 
                 
-                if (t == purchasedInput.length - 1 && modelSearchPurchased == false) {
+//                if (t == purchasedInput.length - 1 && modelSearchPurchased == false) {
+//                   
+//                }
+            }
+             if(modelSearchPurchased == false) {
                     tdPurchaseCartValue = document.createElement('td');
+                    tdPurchaseCartValue.className = 'purchasedCartridges';
                     tdPurchaseCartValue.setAttribute('scope', 'col');
                     tdPurchaseCartValue.innerText = 0;
                     tr4.appendChild(tdPurchaseCartValue);
                 }
-            }
         }
+           
         }
         
         tr5 = document.createElement('tr');
+        tr5.className = 'trUtilledCartridges';
         tbody.appendChild(tr5);
         
         tdUtilledName = document.createElement('td');
@@ -161,6 +177,7 @@ window.onload = function () {
                 if (utilledInput[j].indexOf(models[i][1][inner].model) === 0) {
                     tdUtilledCartValue = document.createElement('td');
                     tdUtilledCartValue.setAttribute('scope', 'col');
+                    tdUtilledCartValue.className = 'utilledCartridges';
                     tdUtilledCartValue.innerText = utilledInput[j][1].length;
                     tr5.appendChild(tdUtilledCartValue);
                     allUtil = allUtil + utilledInput[j][1].length;
@@ -172,6 +189,7 @@ window.onload = function () {
                 if (j == utilledInput.length - 1 && modelSearchUtilled == false) {
                     tdUtilledCartValue = document.createElement('td');
                     tdUtilledCartValue.setAttribute('scope', 'col');
+                    tdUtilledCartValue.className = 'utilledCartridges';
                     tdUtilledCartValue.innerText = 0;
                     tr5.appendChild(tdUtilledCartValue);
                 }
@@ -180,36 +198,62 @@ window.onload = function () {
         }
         
         tr6 = document.createElement('tr');
+        tr6.className = 'trBalanceCartridges';
         tbody.appendChild(tr6);
         
         tdBalanceCartridgeName = document.createElement('td');
         tdBalanceCartridgeName.innerText = 'Остаток';
         tr6.appendChild(tdBalanceCartridgeName);
         
-        for(i = 0; i < models.length; i++) {
-            for(inner = 0; inner < models[i][1].length; inner++) {
-            var modelSearchBalance = false;
-            for (y = 0; y < balanceInput.length; y++) {
-                if (balanceInput[y].indexOf(models[i][1][inner].model) === 0) {
-                    tdBalanceCartValue = document.createElement('td');
-                    tdBalanceCartValue.setAttribute('scope', 'col');
-                    tdBalanceCartValue.innerText = balanceInput[y][1].balance;
-                    tr6.appendChild(tdBalanceCartValue);
-                    allBalance = allBalance + balanceInput[y][1].balance;
-                    modelSearchBalance = true;
-                    
-                    
-                }
-                
-                if (y == balanceInput.length - 1 && modelSearchBalance == false) {
-                    tdBalanceCartValue = document.createElement('td');
-                    tdBalanceCartValue.setAttribute('scope', 'col');
-                    tdBalanceCartValue.innerText = 0;
-                    tr6.appendChild(tdBalanceCartValue);
-                }
-            }
-        }
-        }
+        
+        for(i = 0; i < modelsArr.length; i++) {
+                       // let currentModelCartridge = $(this.$('.balanceCartridges').closest('.planingTbody')).find('.modelCartridgeValue');
+                        
+                        tdBalanceCartValue = document.createElement('td');
+                        tdBalanceCartValue.setAttribute('scope', 'col');
+                        tdBalanceCartValue.className = 'balanceCartridges';
+                        tr6.appendChild(tdBalanceCartValue);
+                        let purchasedCartridges = $(this.$('.balanceCartridges').closest('.planingTbody')).find('.purchasedCartridges')[i].innerText;
+                        let utilledCartridges = $(this.$('.balanceCartridges').closest('.planingTbody')).find('.utilledCartridges')[i].innerText;
+                        let balancedCartridges = eval(purchasedCartridges - utilledCartridges);
+                        tdBalanceCartValue.innerText = balancedCartridges;
+                        allBalance = allBalance + balancedCartridges;
+                    }
+        
+//        for(i = 0; i < models.length; i++) {
+//            for(inner = 0; inner < models[i][1].length; inner++) {
+//            var modelSearchBalance = false;
+//            for (y = 0; y < balanceInput.length; y++) {
+//                if (balanceInput[y].indexOf(models[i][1][inner].model) === 0) {
+////                    tdBalanceCartValue = document.createElement('td');
+////                    tdBalanceCartValue.setAttribute('scope', 'col');
+////                   tdBalanceCartValue.className = 'balanceCartridges';
+//                   // tdBalanceCartValue.innerText = balanceInput[y][1].balance;
+//                    tr6.appendChild(tdBalanceCartValue);
+//                    allBalance = allBalance + balanceInput[y][1].balance;
+//                    modelSearchBalance = true;
+//                    let indexCol = 0;
+//                    
+//                    
+//                    
+//                
+//            
+//            
+//                    
+//                    
+//                    
+//                }
+//                
+////                if (y == balanceInput.length - 1 && modelSearchBalance == false) {
+////                    tdBalanceCartValue = document.createElement('td');
+////                    tdBalanceCartValue.setAttribute('scope', 'col');
+////                    tdBalanceCartValue.className = 'balanceCartridges';
+////                    tdBalanceCartValue.innerText = 0;
+////                    tr6.appendChild(tdBalanceCartValue);
+////                }
+//            }
+//        }
+//        }
         
         tr7 = document.createElement('tr');
         tbody.appendChild(tr7);

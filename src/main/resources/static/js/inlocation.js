@@ -13,7 +13,7 @@ const pageParam = window.location.search
         .split('&');
 
 let arrRequest = null; 
-
+let pageBuf = 25;
 
 if(document.readyState == 'loading') {
     arrRequest = window.location.search
@@ -22,7 +22,7 @@ if(document.readyState == 'loading') {
         .reduce(
                 function (p, e) {
                     var a = e.split('=');
-                    p[ decodeURIComponent(a[0])] = decodeURIComponent(a[1]);
+                    p[decodeURIComponent(a[0])] = decodeURIComponent(a[1]);
                     return p;
                 },
                  {}
@@ -45,17 +45,21 @@ window.onload = function () {
       
       
         let filterRow = document.createElement('div');
-        filterRow.className = 'row mb-3 text-end';
+        filterRow.className = 'row mb-3 text-end btnAfterTitle';
         wrapper.appendChild(filterRow);
         
         let bufferCol = document.createElement('div');
-        bufferCol.className = 'col col-8';
+        bufferCol.className = 'col col-4';
         filterRow.appendChild(bufferCol);
         
         
         let filterCol = document.createElement('div');
         filterCol.className = 'col col-4';
         filterRow.appendChild(filterCol);
+        
+        let pageSizeCol = document.createElement('div');
+        pageSizeCol.className = 'col col-4';
+        filterRow.appendChild(pageSizeCol);
         
         
         let formContainer = document.createElement('form');
@@ -122,7 +126,48 @@ window.onload = function () {
         inputGroupFilterDiv.appendChild(inputGroupFilterInput);
         inputGroupFilterDiv.appendChild(filterSubmit);
         
+        // Отображение записей на странице
+        
+        var pageSizeNav = document.createElement('nav');
+        var pageSizeNavUl = document.createElement('ul');
+        pageSizeNavUl.className = 'pagination mt-0';
+        pageSizeCol.appendChild(pageSizeNav);
+        pageSizeNav.appendChild(pageSizeNavUl);
+        
       
+        
+        var paginationTitle = document.createElement('li');
+        paginationTitle.className = 'page-item disabled';
+        paginationTitleLink = document.createElement('a');
+        paginationTitleLink.className = 'page-link';
+        paginationTitleLink.href = "#";
+        paginationTitleLink.innerText = "Записей на странице";
+        var spanPaginationTitleAria = document.createElement('span');
+        spanPaginationTitleAria.setAttribute('aria-hidden', true);
+        paginationTitle.appendChild(paginationTitleLink);
+        paginationTitleLink.appendChild(spanPaginationTitleAria);
+        pageSizeNavUl.appendChild(paginationTitle); 
+        
+        
+        
+        for(let j = 0; j < 3; j++) {
+            var paginationPageSizeEl = document.createElement('li');
+            if(pageable.pageSize == pageBuf) {
+                paginationPageSizeEl.className = 'page-item active';
+            } else {
+                 paginationPageSizeEl.className = 'page-item';
+            }
+            paginationPageSizeLink = document.createElement('a');
+            paginationPageSizeLink.className = 'page-link';
+            
+            paginationPageSizeLink.href = getLinkForPageSize(pageParam, pageBuf);
+            paginationPageSizeLink.innerText = pageBuf;
+            pageBuf = pageBuf * 2;
+            paginationPageSizeEl.appendChild(paginationPageSizeLink);
+            pageSizeNavUl.appendChild(paginationPageSizeEl);
+        }    
+        
+        pageBuf = pageable.pageSize;
       
       headTable = document.createElement('div');
       headTable.className = "row fw-bold";
@@ -398,51 +443,39 @@ window.onload = function () {
     
     let modelSort = document.querySelector('#modelSortLink');
     modelSort.addEventListener('click', function(){
-        
-        if(window.location.pathname.indexOf('inventories') > 0) {
-          sortBy("model");
+          
+       if(window.location.pathname.indexOf('inventories') > 0) {
+          sortBy("manuf.name");
       } else {
-          sortBy("model.name");
+          sortBy("manufacturer.name");
       }
         
       });
     
     let dateSort = document.querySelector('#dateSortLink');
     dateSort.addEventListener('click', function () {
-        
-         if(window.location.pathname.indexOf('inventories') > 0) {
-          sortBy("contract.dateStartContract");
-      } else {
           sortBy("contr.date_start_contract");
-      }
+      
   });
     
     let contractSort = document.querySelector('#contractNumberSortLink');
     contractSort.addEventListener('click', function () {
-        if(window.location.pathname.indexOf('inventories') > 0) {
-          sortBy("contract.contractNumber");
-      } else {
           sortBy("contr.contract_number");
-      }
+      
     });
     
     let inventaryNumberSort = document.querySelector('#inventarySortLink');
     inventaryNumberSort.addEventListener('click', function() {
-          if(window.location.pathname.indexOf('inventories') > 0) {
-          sortBy("inventoryNumber");
-      } else {
           sortBy("inventory_number");
-      }
+      
        
     });
     
     let serialNumberSort = document.querySelector('#serialSortLink');
     serialNumberSort.addEventListener('click', function() {
-        if(window.location.pathname.indexOf('inventories') > 0) {
-          sortBy("serialNumber");
-      } else {
+        
           sortBy("serial_number");
-      }
+      
     });
     
     setInterval('AJAXPing()', 28000);
@@ -459,9 +492,15 @@ function getLinkForPage(inputHref, target) {
     getLink = '';
     pageInLinFlag = false;
     for (j = 0; j < inputHref.length; j++) {
-        if (pageParam[j].indexOf('page') >= 0) {
+         endStr = pageParam[j].indexOf('=');
+          str = pageParam[j].substring(0, endStr);
+        if ('page' === str) {
+        
             pageParam[j] = "page=" + target;
             pageInLinFlag = true;
+        }
+        if('pageSize' === str) {
+            pageParam[j] = "pageSize=" + pageBuf;
         }
         if (j == 0) {
             getLink += "?" + pageParam[j];
@@ -471,6 +510,30 @@ function getLinkForPage(inputHref, target) {
     }
     if (pageInLinFlag == false) {
         getLink += "&page=" + target;
+    }
+    return getLink;
+
+}
+
+function getLinkForPageSize(inputHref, target) {
+    getLink = '';
+    pageInLinFlag = false;
+    for (j = 0; j < inputHref.length; j++) {
+          endStr = pageParam[j].indexOf('=');
+          str = pageParam[j].substring(0, endStr);
+        if ('pageSize' === str) {
+          
+            pageParam[j] = "pageSize=" + target;
+            pageInLinFlag = true;
+        }
+        if (j == 0) {
+            getLink += "?" + pageParam[j];
+        } else {
+            getLink += "&" + pageParam[j];
+        }
+    }
+    if (pageInLinFlag == false) {
+        getLink += "&pageSize=" + target;
     }
     return getLink;
 

@@ -233,6 +233,7 @@ public class MainController {
                 cartDto.setModel(cart.getModel().getModel());
                 cartDto.setStartContract(cart.getContract().getDateStartContract());
                 cartDto.setItemCode(cart.getItemCode());
+                cartDto.setManufacturer(cart.getModel().getCartridgeManufacturer().getManufacturerName());
                 dtoes.add(cartDto);
             }
             model.addAttribute("input", dtoes);
@@ -532,6 +533,7 @@ public class MainController {
             cartDto.setContractNumber(cart.getContract().getContractNumber());
             cartDto.setId(cart.getId());
             cartDto.setLocation(cart.getLocation().getName());
+            cartDto.setIdLocation(cart.getLocation().getId());
             cartDto.setDateEndExploitation(cart.getDateEndExploitation());
             cartDto.setDateStartExploitation(cart.getDateStartExploitation());
             cartDto.setType(cart.getModel().getType().getName());
@@ -540,6 +542,7 @@ public class MainController {
             cartDto.setModel(cart.getModel().getModel());
             cartDto.setStartContract(cart.getContract().getDateStartContract());
             cartDto.setItemCode(cart.getItemCode());
+            cartDto.setManufacturer(cart.getModel().getCartridgeManufacturer().getManufacturerName());
             cartDtoesList.add(cartDto);
         }
 

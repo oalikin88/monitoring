@@ -17,6 +17,7 @@ public class CartridgeDTO {
     public String manufacturer;
     public String model;
     public String location;
+    public Long idLocation;
     public String resource;
     public boolean util;
     public LocalDateTime dateStartExploitation;
@@ -127,11 +128,12 @@ public class CartridgeDTO {
         this.employeeMOL = employeeMOL;
     }
 
-    public CartridgeDTO(Long id, String manufacturer, String type, String model, String location, String resource, boolean util, LocalDateTime dateStartExploitation, LocalDateTime dateEndExploitation, Long count, boolean usePrinter, Long contract, String contractNumber, Date startContract, Date endContract, String itemCode, String nameMaterial, String employeeToDoWork, String employeeToSetDevice, String employeeMOL, Long listenerId) {
+    public CartridgeDTO(Long id, String manufacturer, String type, String model,Long idLocation, String location, String resource, boolean util, LocalDateTime dateStartExploitation, LocalDateTime dateEndExploitation, Long count, boolean usePrinter, Long contract, String contractNumber, Date startContract, Date endContract, String itemCode, String nameMaterial, String employeeToDoWork, String employeeToSetDevice, String employeeMOL, Long listenerId) {
         this.id = id;
         this.manufacturer = manufacturer;
         this.type = type;
         this.model = model;
+        this.idLocation = idLocation;
         this.location = location;
         this.resource = resource;
         this.util = util;
@@ -323,6 +325,14 @@ public class CartridgeDTO {
 
     public void setListenerId(Long listenerId) {
         this.listenerId = listenerId;
+    }
+
+    public Long getIdLocation() {
+        return idLocation;
+    }
+
+    public void setIdLocation(Long idLocation) {
+        this.idLocation = idLocation;
     }
     
     

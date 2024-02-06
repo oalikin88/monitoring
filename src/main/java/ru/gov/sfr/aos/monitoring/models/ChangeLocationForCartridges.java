@@ -14,6 +14,7 @@ public class ChangeLocationForCartridges {
     
     public Long location;
     public List<Long> idCartridge;
+    public Long fromLocation;
 
     public ChangeLocationForCartridges() {
     }
@@ -39,6 +40,16 @@ public class ChangeLocationForCartridges {
         this.idCartridge = idCartridge;
     }
 
+    public Long getFromLocation() {
+        return fromLocation;
+    }
+
+    public void setFromLocation(Long fromLocation) {
+        this.fromLocation = fromLocation;
+    }
+
+    
+    
     @Override
     public String toString() {
         return "ChangeLocationForCartridges{" + "idCartridge=" + idCartridge + '}';

@@ -6,6 +6,7 @@
 const content = document.querySelector('#wrap');
 const pagin = document.querySelector('#content');
 const buttonsRow = document.querySelector("#buttonsRow");
+let pageBuf = 25;
 
 const iconFilter = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-filter-square" viewBox="0 0 16 16"> <path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z"/> <path d="M6 11.5a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 0 1h-3a.5.5 0 0 1-.5-.5zm-2-3a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5zm-2-3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5z"/> </svg>';
 let arrRequest = window.location.search
@@ -20,7 +21,7 @@ let arrRequest = window.location.search
                 {}
         );
 
-const pageParam = window.location.search
+var pageParam = window.location.search
         .replace('?', '')
         .split('&');
 
@@ -43,13 +44,60 @@ $(document).ready(function () {
         wrapper.appendChild(btnAfterTitleRow);
 
         btnAfterTitleCol1 = document.createElement('div');
-        btnAfterTitleCol1.className = 'col col-8';
+        btnAfterTitleCol1.className = 'col col-4';
         
         
 
         btnAfterTitleCol2 = document.createElement('div');
         btnAfterTitleCol2.className = 'col col-4';
 
+        btnAfterTitleCol3 = document.createElement('div');
+        btnAfterTitleCol3.className = 'col col-4';
+        
+        // Отображение записей на странице
+        
+        var pageSizeNav = document.createElement('nav');
+        var pageSizeNavUl = document.createElement('ul');
+        pageSizeNavUl.className = 'pagination mt-0';
+        btnAfterTitleCol3.appendChild(pageSizeNav);
+        pageSizeNav.appendChild(pageSizeNavUl);
+        
+      
+        
+        var paginationTitle = document.createElement('li');
+        paginationTitle.className = 'page-item disabled';
+        paginationTitleLink = document.createElement('a');
+        paginationTitleLink.className = 'page-link';
+        paginationTitleLink.href = "#";
+        paginationTitleLink.innerText = "Записей на странице";
+        var spanPaginationTitleAria = document.createElement('span');
+        spanPaginationTitleAria.setAttribute('aria-hidden', true);
+        paginationTitle.appendChild(paginationTitleLink);
+        paginationTitleLink.appendChild(spanPaginationTitleAria);
+        pageSizeNavUl.appendChild(paginationTitle); 
+        
+        
+        
+        for(let j = 0; j < 3; j++) {
+            var paginationPageSizeEl = document.createElement('li');
+            if(pageable.pageSize == pageBuf) {
+                paginationPageSizeEl.className = 'page-item active';
+            } else {
+                 paginationPageSizeEl.className = 'page-item';
+            }
+            paginationPageSizeLink = document.createElement('a');
+            paginationPageSizeLink.className = 'page-link';
+            
+            paginationPageSizeLink.href = getLinkForPageSize(pageParam, pageBuf);
+            paginationPageSizeLink.innerText = pageBuf;
+            pageBuf = pageBuf * 2;
+            paginationPageSizeEl.appendChild(paginationPageSizeLink);
+            pageSizeNavUl.appendChild(paginationPageSizeEl);
+        }    
+        
+        pageBuf = pageable.pageSize;
+        
+        
         let choiceBtn = document.createElement('button');
         choiceBtn.className = 'btn btn-secondary';
         choiceBtn.type = 'button';
@@ -58,6 +106,7 @@ $(document).ready(function () {
 
         btnAfterTitleRow.appendChild(btnAfterTitleCol1);
         btnAfterTitleRow.appendChild(btnAfterTitleCol2);
+        btnAfterTitleRow.appendChild(btnAfterTitleCol3);
 
         filterContainer = document.createElement('div');
         filterContainer.id = 'filterContainer';
@@ -274,7 +323,7 @@ $(document).ready(function () {
 
             link = document.createElement('a');
             link.setAttribute('href', '/editcartridge?idCartridge=' + input[i].id);
-            link.innerText = input[i].model;
+            link.innerText = input[i].manufacturer + " " + input[i].model;
             contentRowPrinterName.appendChild(link);
             
             contentRowItemCode = document.createElement('div');
@@ -534,7 +583,7 @@ $(document).ready(function () {
         $.ajax({
             url: '/editcartridgeslocation',
             type: 'POST',
-            data: {idCartridge: arr, location: selectLocation.value},
+            data: {idCartridge: arr, location: selectLocation.value, fromLocation: input[0].idLocation},
             success: function () {
                 window.location.reload();
             },
@@ -558,9 +607,9 @@ $(document).ready(function () {
         
         
         if(window.location.pathname.indexOf('inventories') > 0) {
-          sortBy("model");
+          sortBy("modelCartridgeManufacturer");
       } else {
-          sortBy("model.name");
+          sortBy("model.model");
       }
         
         
@@ -572,6 +621,15 @@ $(document).ready(function () {
           sortBy("contract.dateStartContract");
       } else {
           sortBy("contr.date_start_contract");
+      }
+        });
+        
+    let itemCodeSort = document.querySelector('#itemCodeSortLink');
+    itemCodeSort.addEventListener('click', function () {
+          if(window.location.pathname.indexOf('inventories') > 0) {
+          sortBy("itemCode");
+      } else {
+          sortBy("item_code");
       }
         });
     
@@ -614,9 +672,15 @@ function getLinkForPage(inputHref, target) {
     getLink = '';
     pageInLinFlag = false;
     for (j = 0; j < inputHref.length; j++) {
-        if (pageParam[j].indexOf('page') >= 0) {
+         endStr = pageParam[j].indexOf('=');
+          str = pageParam[j].substring(0, endStr);
+        if ('page' === str) {
+        
             pageParam[j] = "page=" + target;
             pageInLinFlag = true;
+        }
+        if('pageSize' === str) {
+            pageParam[j] = "pageSize=" + pageBuf;
         }
         if (j == 0) {
             getLink += "?" + pageParam[j];
@@ -626,6 +690,30 @@ function getLinkForPage(inputHref, target) {
     }
     if (pageInLinFlag == false) {
         getLink += "&page=" + target;
+    }
+    return getLink;
+
+}
+
+function getLinkForPageSize(inputHref, target) {
+    getLink = '';
+    pageInLinFlag = false;
+    for (j = 0; j < inputHref.length; j++) {
+          endStr = pageParam[j].indexOf('=');
+          str = pageParam[j].substring(0, endStr);
+        if ('pageSize' === str) {
+          
+            pageParam[j] = "pageSize=" + target;
+            pageInLinFlag = true;
+        }
+        if (j == 0) {
+            getLink += "?" + pageParam[j];
+        } else {
+            getLink += "&" + pageParam[j];
+        }
+    }
+    if (pageInLinFlag == false) {
+        getLink += "&pageSize=" + target;
     }
     return getLink;
 

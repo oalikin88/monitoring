@@ -117,31 +117,34 @@ public class CartridgeService {
     }
     @Transactional
     public void changeCartridgesLocation(ChangeLocationForCartridges dto) {
+        Set<Cartridge> cartridgesFromLocationBeforeTransfer = cartridgeRepo.findByLocationId(dto.getFromLocation()).stream().collect(Collectors.toSet());
         Optional<Location> findLocationById = locationRepo.findById(dto.getLocation());
         Location currentLocation = findLocationById.get();
         Optional<Location> beforeTransferLocation = Optional.empty();
+        if(cartridgesFromLocationBeforeTransfer.size() > 0) {
+            beforeTransferLocation = Optional.of(cartridgesFromLocationBeforeTransfer.iterator().next().getLocation());
+        }
         List<Cartridge> cartridgesChangeLocation = new ArrayList<>();
         Map<Long, Integer> mapForListener = new HashMap<>();
         for (int i = 0; i < dto.getIdCartridge().size(); i++) {
             Optional<Cartridge> findCartridgeById = cartridgeRepo.findById(dto.getIdCartridge().get(i));
             if (findCartridgeById.isPresent()) {
-                beforeTransferLocation = Optional.of(findCartridgeById.get().getLocation());
                 findCartridgeById.get().setLocation(currentLocation);
                 cartridgeRepo.save(findCartridgeById.get());
                 cartridgesChangeLocation.add(findCartridgeById.get());
             }
         }
-        Optional<Location> findLocById = locationRepo.findById(dto.getLocation());
-        Set<Cartridge> cartridges = cartridgeRepo.findByLocationId(findLocById.get().getId()).stream().collect(Collectors.toSet());
-        Set<Cartridge> actualCartSet = new HashSet<>();
-        for (Cartridge cart : cartridges) {
-            if (!cart.isUtil() && !cart.isUseInPrinter()) {
-                actualCartSet.add(cart);
-            }
-        }
-        int actualAmountSizeLocation = actualCartSet.size();
+       
+        Set<Cartridge> cartridges = cartridgeRepo.findByLocationId(dto.getLocation()).stream().collect(Collectors.toSet()); // получение картриджей на переносимую локацию
+//        Set<Cartridge> actualCartSet = new HashSet<>();
+//        for (Cartridge cart : cartridges) {
+//            if (!cart.isUtil() && !cart.isUseInPrinter()) {
+//                actualCartSet.add(cart);
+//            }
+//        }
+        int actualAmountSizeLocation;
         
-        Set<Cartridge> cartridgesFromLocationBeforeTransfer = cartridgeRepo.findByLocationId(beforeTransferLocation.get().getId()).stream().collect(Collectors.toSet());
+        
         Set<Cartridge> actualcartridgesFromLocationBeforeTransfer = new HashSet<>();
         for (Cartridge cart : cartridgesFromLocationBeforeTransfer) {
             if (!cart.isUtil() && !cart.isUseInPrinter()) {
@@ -157,17 +160,19 @@ public class CartridgeService {
             }
             mapForListener.put(entry.getKey().getId(), cartridgesId.size());
             ListenerOperation listenerOperation = new ListenerOperation();
-            List<Cartridge> findByLocationIdAndModelId = cartridgeRepo.findByLocationIdAndModelId(findLocById.get().getId(), entry.getKey().getId(), Pageable.ofSize(25));
+            List<Cartridge> findByLocationIdAndModelId = cartridgeRepo.findByLocationIdAndModelId(currentLocation.getId(), entry.getKey().getId());
+            
             listenerOperation.setCurrentOperation("Перемещение из " + beforeTransferLocation.get().getName() + " в " + currentLocation.getName());
             listenerOperation.setLocation(currentLocation);
             listenerOperation.setOperationType(OperationType.TRANSFER);
             listenerOperation.setDateOperation(LocalDateTime.now());
-            actualAmountSizeLocation = actualAmountSizeLocation + cartridgesId.size();
+            actualAmountSizeLocation = cartridges.size() + cartridgesId.size();
             listenerOperation.setAmountDevicesOfLocation(actualAmountSizeLocation);
             listenerOperation.setAmountCurrentModelOfLocation(findByLocationIdAndModelId.size());
             listenerOperation.setModel(entry.getKey());
             listenerOperation.setLocationBeforeTransfer(beforeTransferLocation.get());
-            List<Cartridge> findByBeforeTransferLocationIdAndModelId = cartridgeRepo.findByLocationIdAndModelId(beforeTransferLocation.get().getId(), entry.getKey().getId(), Pageable.ofSize(25));
+          //  int amountCartridgesByModelBeforeTransaction = 
+            List<Cartridge> findByBeforeTransferLocationIdAndModelId = cartridgeRepo.findByLocationIdAndModelId(beforeTransferLocation.get().getId(), entry.getKey().getId());
             listenerOperation.setAmountCurrentModelOfTransferedLocation(findByBeforeTransferLocationIdAndModelId.size());
             listenerOperation.setAmountDevicesOfTransferedLocation(actualAmountSizeLocationBeforeTransfer - cartridgesId.size());
             listenerOperationService.saveListenerOperation(listenerOperation);
