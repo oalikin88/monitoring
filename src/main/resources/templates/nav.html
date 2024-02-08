@@ -31,10 +31,14 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                         <li class="nav-item">
                             <a class="nav-link" href="/contracts">Все контракты</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="/help">Помощь</a>
+                        
+                        <li th:if="${#strings.contains(#httpServletRequest.requestURI,'inventories') and #strings.contains(#httpServletRequest.requestURI,'printer')}">
+                            <a class="nav-link" href="#" id="downloadDocByLocation" >Скачать список</a>
                         </li>
-                        <li th:if="${#httpServletRequest.requestURI} eq '/inventories'" class="nav-item dropdown">
+                        <li th:if="${#strings.contains(#httpServletRequest.requestURI,'printersbylocation')}">
+                            <a class="nav-link" href="#" id="downloadDocByModel" >Скачать список</a>
+                        </li>
+                         <li th:if="${#httpServletRequest.requestURI} eq '/inventories'" class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                 Правка
                             </a>
@@ -45,6 +49,10 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                                 <li id="getPlaningServiceMenu" data-bs-toggle='modal' data-bs-target='#modalPlaning'><a class="dropdown-item" href="#">Планирование закупок</a></li>
                             </ul>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/help">Помощь</a>
+                        </li>
+                       
                         
                        
                     </ul>

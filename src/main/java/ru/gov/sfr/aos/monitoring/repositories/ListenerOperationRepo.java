@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import ru.gov.sfr.aos.monitoring.entities.ListenerOperation;
 
@@ -25,4 +26,11 @@ public interface ListenerOperationRepo extends JpaRepository<ListenerOperation, 
     List<ListenerOperation> findByLocationIdAndModelId(Long locationId, Long modelId);
     List<ListenerOperation> findByCartridgeID(Long cartridgeID);
     List<ListenerOperation> findByDateOperationAfterAndDateOperationBefore(LocalDateTime startPeriod, LocalDateTime endPeriod);
+    
+    @Query(value = "SELECT listener.* " +
+                   "FROM listener_operation listener " +
+                    "WHERE listener.printerid = ?1 " +
+                    "AND listener.date_operation = " +
+                    "(SELECT MAX(date_operation) FROM listener_operation) ", nativeQuery = true)
+    List<ListenerOperation> findByPrinterIdLastDayCartridgeInstall(Long id);
 }

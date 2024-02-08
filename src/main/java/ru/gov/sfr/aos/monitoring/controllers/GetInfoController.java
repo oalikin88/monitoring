@@ -25,6 +25,7 @@ import ru.gov.sfr.aos.monitoring.models.LocationDTO;
 import ru.gov.sfr.aos.monitoring.models.PrinterAndCartridgeCountByLocationTable;
 import ru.gov.sfr.aos.monitoring.models.PrinterDTO;
 import ru.gov.sfr.aos.monitoring.repositories.CartridgeModelRepo;
+import ru.gov.sfr.aos.monitoring.repositories.PrinterRepo;
 import ru.gov.sfr.aos.monitoring.services.CartridgeMapper;
 import ru.gov.sfr.aos.monitoring.services.CartridgeService;
 import ru.gov.sfr.aos.monitoring.services.DictionaryEmployeeHolder;
@@ -56,6 +57,8 @@ public class GetInfoController {
     private PrinterService printerService;
     @Autowired
     private CartridgeModelRepo cartridgeModelRepo;
+    @Autowired
+    private PrinterRepo printerRepo;
     
     private final PrinterAndCartridgeCountByLocationTableDAO dao;
 
@@ -64,7 +67,19 @@ public class GetInfoController {
     }
     
     
-    
+    @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
+    @GetMapping("/printerList")
+    public List<Printer> getPrintersByLocation(@RequestParam(name = "idLocation", required = true) Long idLocation,
+                                                @RequestParam(name = "deviceType", required = true) String deviceType) {
+        List<Printer> findByLocationAndDeviceType = null;
+        if(deviceType.equals("ALL")) {
+            findByLocationAndDeviceType = printerRepo.findByLocation(idLocation);
+        } else {
+            findByLocationAndDeviceType = printerRepo.findByLocationAndDeviceType(idLocation, deviceType);
+        }
+        
+        return findByLocationAndDeviceType;
+    }
     
     @GetMapping("/getinfooo")
     public  List<EmployeeDTO> getEmpl() {

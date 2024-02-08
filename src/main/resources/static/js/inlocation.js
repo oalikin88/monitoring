@@ -14,7 +14,8 @@ const pageParam = window.location.search
 
 let arrRequest = null; 
 let pageBuf = 25;
-
+let downloadDocLink = document.querySelector('#downloadDocByLocation');
+let downloadDocLinkByModel = document.querySelector('#downloadDocByModel');
 if(document.readyState == 'loading') {
     arrRequest = window.location.search
         .replace('?', '')
@@ -48,14 +49,15 @@ window.onload = function () {
         filterRow.className = 'row mb-3 text-end btnAfterTitle';
         wrapper.appendChild(filterRow);
         
-        let bufferCol = document.createElement('div');
-        bufferCol.className = 'col col-4';
-        filterRow.appendChild(bufferCol);
+        let bufferCol1 = document.createElement('div');
+        bufferCol1.className = 'col col-4';
+        filterRow.appendChild(bufferCol1);
         
+
         
-        let filterCol = document.createElement('div');
-        filterCol.className = 'col col-4';
-        filterRow.appendChild(filterCol);
+        let filterCol2 = document.createElement('div');
+        filterCol2.className = 'col col-4';
+        filterRow.appendChild(filterCol2);
         
         let pageSizeCol = document.createElement('div');
         pageSizeCol.className = 'col col-4';
@@ -69,7 +71,7 @@ window.onload = function () {
         formContainer.setAttribute('method', 'GET');
         formContainer.id = 'formFilter';
 
-        filterCol.appendChild(formContainer);
+        filterCol2.appendChild(formContainer);
 
         
 
@@ -480,7 +482,33 @@ window.onload = function () {
     
     setInterval('AJAXPing()', 28000);
     
+    if(downloadDocLink) {
+            downloadDocLink.addEventListener('click', function() {
+             var id = input[0].locationId;
+             let arrOut = new Array();
+             arrOut.push(id);
+             arrOut.push(arrRequest.deviceType);
+             actInstallReport(arrOut);
+
+        });
+    }
     
+    if(downloadDocLinkByModel) {
+        if(!arrRequest.idModel) {
+            $(downloadDocLinkByModel).addClass('disabled');
+        } else {
+            $(downloadDocLinkByModel).removeClass('disabled');
+        }
+            downloadDocLinkByModel.addEventListener('click', function() {
+             var id = input[0].locationId;
+             let arrOut = new Array();
+             arrOut.push(id);
+             arrOut.push(arrRequest.idModel);
+             arrOut.push("byModel");
+             actInstallReport(arrOut);
+
+        });
+    }
 
     
 };
@@ -577,4 +605,18 @@ function sortBy (link) { //Разобраться почему подставл�
         }
         this.event.target.parentElement.href = window.location.pathname + adress;
         this.event.target.parentElement.click();
+    };
+    
+    function actInstallReport(input) {
+    var fileDownloadManager = new FileDownloadManager({autoOpen: true});
+    if(input.length > 2) {
+        $.get('../../report/printersByModel?idLocation=' + input[0] + '&idModel=' + input[1], function (data) {
+        fileDownloadManager.createFileBlock(data, 'Акт' + data + '.xlsx');
+    });
+    } else {
+          $.get('../../report/printers?idLocation=' + input[0] + '&deviceType=' + input[1], function (data) {
+        fileDownloadManager.createFileBlock(data, 'Акт' + data + '.xlsx');
+    });
+    }
+  
     };

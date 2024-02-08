@@ -311,13 +311,19 @@ public interface PrinterRepo extends JpaRepository<Printer, Long> {
                     "AND m.device_type = ?2 ", nativeQuery = true)
    List<Printer> findByLocationAndDeviceType(Long idLocation, String deviceType);
    
-      @Query(value = "SELECT pr.* "
+      @Query(value = "SELECT pr.*, ob.*, contr.*, m.* "
    + "FROM printer pr "
-   + "JOIN object_buing ob "
+   + "LEFT JOIN object_buing ob "
    + "ON ob.id = pr.printer_id "
+   + "LEFT JOIN contract contr " 
+   + "ON ob.contract_id = contr.id " 
+   + "LEFT JOIN model m " 
+   + "ON pr.model_id = m.id " 
    + "WHERE pr.model_id = ?1 "
    + "AND ob.location_id = ?2 "
-   + "AND pr.printer_status = 'OK' ", nativeQuery = true)
+   + "AND (pr.printer_status = 'OK' "
+   + "OR pr.printer_status = 'DEFECTIVE' "
+   + "OR pr.printer_status = 'REPAIR') ", nativeQuery = true)
    List<Printer> findByModelIdAndLocationId(Long idModel, Long idLocation);
    
    @Query(value = "SELECT pr.* "

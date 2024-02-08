@@ -164,6 +164,8 @@ public class MainController {
 
     }
 
+    
+    
     @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
     @GetMapping("/inventories/{location}/{device}")
     public String getInventoriesbyLocationAndDevice(Model model,
@@ -202,6 +204,7 @@ public class MainController {
                 printerDto.setSerialNumber(printer.getSerialNumber());
                 printerDto.setContractNumber(printer.getContract().getContractNumber());
                 printerDto.setLocation(printer.getLocation().getName());
+                printerDto.setLocationId(printer.getLocation().getId());
                 printerDto.setStartContract(printer.getContract().getDateStartContract());
                 printerDto.setEndContract(printer.getContract().getDateStartContract());
                 dtoes.add(printerDto);
@@ -293,7 +296,8 @@ public class MainController {
             @RequestParam(defaultValue = "0", required = false) Integer page,
             @RequestParam(defaultValue = "25", required = false) Integer pageSize,
             @RequestParam(defaultValue = "printer_id") String sortBy,
-            @RequestParam(defaultValue = "up") String direction) {
+            @RequestParam(defaultValue = "up") String direction,
+            @RequestParam(name = "getList", required = false) boolean getList) {
 
         Sort.Direction direct = null;
         if (direction.equals("up")) {
@@ -327,9 +331,7 @@ public class MainController {
             } catch (NoSuchElementException e) {
                 e.printStackTrace();
             }
-//            finally {
-//                getPage = printerRepo.findPrintersByModelPrinterAndLocationAndContractNumberFilter(locationById.getId(), printersList.get(0).getModel().getId(), dto.getInventaryNumber(), paging);
-//            }
+
         } else if (null != dto.getInventaryNumber() && null == dto.getIdModel()) {
             getPage = printerRepo.findByInventaryNumberWhithOutIdModel(dto.getInventaryNumber(), locationById.getId(), paging);
         } else if (printersList.get(0).getModel().getModelCartridges().isEmpty()) {
@@ -353,6 +355,7 @@ public class MainController {
             printerDto.setSerialNumber(printer.getSerialNumber());
             printerDto.setContractNumber(printer.getContract().getContractNumber());
             printerDto.setLocation(printer.getLocation().getName());
+            printerDto.setLocationId(printer.getLocation().getId());
             printerDto.setStartContract(printer.getContract().getDateStartContract());
             printerDto.setEndContract(printer.getContract().getDateStartContract());
             dtoes.add(printerDto);
