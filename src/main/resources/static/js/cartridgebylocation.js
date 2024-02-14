@@ -568,6 +568,224 @@ $(document).ready(function () {
     modalFooterCloseBtn.id = "modalWindow1BtnOk";
     modalFooterDiv.appendChild(modalFooterSubmitBtn);
 
+    // Модальное окно выбора параметров скачивания актов
+    
+    divModalActsParameters = document.createElement('div');
+    divModalActsParameters.className = 'modal fade';
+    divModalActsParameters.id = 'modalActsParameters';
+    divModalActsParameters.setAttribute("data-bs-backdrop", "static");
+    divModalActsParameters.setAttribute("data-bs-keyboard", false);
+    divModalActsParameters.setAttribute('tabindex', '-1');
+    wrapper.appendChild(divModalActsParameters);
+
+    divModalDialogActsParameters = document.createElement('div');
+    divModalDialogActsParameters.className = 'modal-dialog modal-xl';
+    divModalActsParameters.appendChild(divModalDialogActsParameters);
+
+    divModalContentActsParameters = document.createElement('div');
+    divModalContentActsParameters.className = 'modal-content';
+    divModalDialogActsParameters.appendChild(divModalContentActsParameters);
+
+    divModalHeaderActsParameters = document.createElement('div');
+    divModalHeaderActsParameters.className = 'modal-header';
+    divModalContentActsParameters.appendChild(divModalHeaderActsParameters);
+
+    titleModalActsParameters = document.createElement('h1');
+    titleModalActsParameters.className = 'modal-title fs-5';
+    titleModalActsParameters.id = 'titleModalActsParameters';
+    titleModalActsParameters.innerText = 'Сформировать список установленных картриджей за период';
+
+    btnCloseModalActsParameters = document.createElement('button');
+    btnCloseModalActsParameters.className = 'btn-close';
+    btnCloseModalActsParameters.setAttribute('data-bs-dismiss', 'modal');
+    btnCloseModalActsParameters.setAttribute('aria-label', 'Close');
+    btnCloseModalActsParameters.id = "btnCloseModalHeader";
+    divModalHeaderActsParameters.appendChild(titleModalActsParameters);
+    divModalHeaderActsParameters.appendChild(btnCloseModalActsParameters);
+
+    divModalBodyActsParameters = document.createElement('div');
+    divModalBodyActsParameters.className = 'modal-body';
+    divModalContentActsParameters.appendChild(divModalBodyActsParameters);
+
+    divModalContainerInnerActsParameters = document.createElement('div');
+    divModalContainerInnerActsParameters.className = 'container-fluid mt-4';
+    divModalContainerInnerActsParameters.id = "containerInnerModal";
+    divModalBodyActsParameters.appendChild(divModalContainerInnerActsParameters);
+
+    divContentRowCalendars = document.createElement('div');
+    divContentRowCalendars.className = 'row rowModalContent';
+    divModalContainerInnerActsParameters.appendChild(divContentRowCalendars);
+
+    divBeginDate = document.createElement('div');
+    divBeginDate.className = 'col';
+
+    divEndDate = document.createElement('div');
+    divEndDate.className = 'col';
+
+    divContentRowCalendars.appendChild(divBeginDate);
+    divContentRowCalendars.appendChild(divEndDate);
+    
+    divContentRowEmployeeSelect = document.createElement('div');
+    divContentRowEmployeeSelect.className = 'row rowModalContent text-center';
+    divModalContainerInnerActsParameters.appendChild(divContentRowEmployeeSelect);
+    divEmployeeSelectColBuf1 = document.createElement('div');
+    divEmployeeSelectColBuf1.className = 'col-2';
+    divContentRowEmployeeSelect.appendChild(divEmployeeSelectColBuf1);
+    divEmployeeSelectCol = document.createElement('div');
+    divEmployeeSelectCol.className = 'col-8';
+    divContentRowEmployeeSelect.appendChild(divEmployeeSelectCol);
+    divEmployeeSelectColBuf2 = document.createElement('div');
+    divEmployeeSelectColBuf2.className = 'col-2';
+    divContentRowEmployeeSelect.appendChild(divEmployeeSelectColBuf2);
+    
+    divFormGroupDateBegin = document.createElement('div');
+    divFormGroupDateBegin.className = 'input-group';
+    divBeginDate.appendChild(divFormGroupDateBegin);
+
+
+    labelForDateBegin = document.createElement('span');
+    labelForDateBegin.innerText = 'Дата начала периода';
+    labelForDateBegin.className = 'input-group-text';
+    inputDateBegin = document.createElement('input');
+    inputDateBegin.type = 'date';
+    inputDateBegin.className = 'form-control';
+    inputDateBegin.id = 'dateBeginInput';
+
+    divFormGroupDateBegin.appendChild(labelForDateBegin);
+    divFormGroupDateBegin.appendChild(inputDateBegin);
+    
+    divFormGroupDateEnd = document.createElement('div');
+    divFormGroupDateEnd.className = 'input-group';
+    divEndDate.appendChild(divFormGroupDateEnd);
+
+    labelForDateEnd = document.createElement('span');
+    labelForDateEnd.innerText = 'Дата окончания периода';
+    labelForDateEnd.className = 'input-group-text';
+
+    inputDateEnd = document.createElement('input');
+    inputDateEnd.type = 'date';
+    inputDateEnd.className = 'form-control';
+    inputDateEnd.id = 'dateEndInput';
+
+    divFormGroupDateEnd.appendChild(labelForDateEnd);
+    divFormGroupDateEnd.appendChild(inputDateEnd);
+    
+    inputGroupEmployeeSelect = document.createElement('div');
+    inputGroupEmployeeSelect.className = 'input-group';
+    inputGroupEmployeeSelect.id = 'inputGroupEmployeeSelect';
+    divEmployeeSelectCol.appendChild(inputGroupEmployeeSelect);
+    
+    labelForEmployeeMOL = document.createElement('span');
+    labelForEmployeeMOL.innerText = 'МОЛ';
+    labelForEmployeeMOL.className = 'input-group-text';
+    
+    inputEmployeeMOL = document.createElement('select');
+    inputEmployeeMOL.className = 'form-select';
+    inputEmployeeMOL.type = 'text';
+    inputEmployeeMOL.placeholder = 'Согласовал';
+    inputEmployeeMOL.id = 'inputEmployeeMOL';
+    inputGroupEmployeeSelect.appendChild(labelForEmployeeMOL);
+    inputGroupEmployeeSelect.appendChild(inputEmployeeMOL);
+    
+    
+    rowContentBtns = document.createElement('div');
+    rowContentBtns.className = 'row rowModalContent text-center';
+    divModalContainerInnerActsParameters.appendChild(rowContentBtns);
+
+    divBtnApply = document.createElement('div');
+    divBtnApply.className = 'col mt-5';
+    rowContentBtns.appendChild(divBtnApply);
+
+    let btnApplyActsParameters = document.createElement('button');
+    btnApplyActsParameters.className = 'btn btn-secondary';
+    btnApplyActsParameters.type = 'button';
+    btnApplyActsParameters.id = 'btnApplyActsParameters';
+    btnApplyActsParameters.innerText = 'Скачать';
+    divBtnApply.appendChild(btnApplyActsParameters);
+
+    //Контент ...
+
+
+
+    divModalFooterActsParameters = document.createElement('div');
+    divModalFooterActsParameters.className = 'modal-footer';
+    divModalContentActsParameters.appendChild(divModalFooterActsParameters);
+
+    btnFooterCloseActsParameters = document.createElement('button');
+    btnFooterCloseActsParameters.className = 'btn btn-secondary';
+    btnFooterCloseActsParameters.type = 'button';
+    btnFooterCloseActsParameters.id = 'btnCloseModalFooter';
+    btnFooterCloseActsParameters.setAttribute('data-bs-dismiss', 'modal');
+    btnFooterCloseActsParameters.innerText = 'Закрыть';
+    divModalFooterActsParameters.appendChild(btnFooterCloseActsParameters);
+
+
+    btnCloseModalActsParameters.addEventListener('click', function() {
+       $('#dateBeginInput')[0].value = '';
+        $('#dateEndInput')[0].value = '';
+        $('#modalActsParameters').modal('hide');
+        
+    });
+
+    btnFooterCloseActsParameters.addEventListener('click', function() {
+        $('#dateBeginInput')[0].value = '';
+        $('#dateEndInput')[0].value = '';
+        $('#modalActsParameters').modal('hide');
+    });
+
+    btnApplyActsParameters.addEventListener('click', function () {
+
+
+        dateBegin = $('#dateBeginInput')[0].value;
+        dateEnd = $('#dateEndInput')[0].value;
+
+        var dateEndParse = Date.parse(dateEnd);
+        var dateEndParseB = new Date(dateEndParse);
+        var dateEndFormat = dateEndParseB.toLocaleDateString('ru');
+        
+        var dateBeginParse = Date.parse(dateBegin);
+        var dateBeginParseB = new Date(dateBeginParse);
+        var dateBeginFormat = dateBeginParseB.toLocaleString('ru');
+        
+        var nowDate = new Date();
+        var nowDateFormat = nowDate.toLocaleDateString('ru');
+
+        if($('#inputEmployeeMOL')[0].value) {
+        if (dateBeginFormat <= dateEndFormat && $('#dateBeginInput')[0].value && dateBeginFormat <= nowDateFormat) {
+           
+            
+               var fileDownloadManager = new FileDownloadManager({autoOpen: true});
+                var dto  =  {
+                        location: input[0].idLocation,
+                        startDate: dateBegin,
+                        endDate: dateEnd,
+                        mol: $('#inputEmployeeMOL')[0].value
+                    };
+                
+                   
+                    $.ajax({
+                            url: '../../report/acts',
+                            type: 'POST',
+                            async: false,
+                            data: dto,
+                            success: function (data) {
+                                fileDownloadManager.createFileBlock(data, 'Акт' + data + '.xlsx');
+                }
+            });
+                
+            
+    
+    
+        } else {
+            alert("Вы ввели неправильную дату");
+        }
+    } else {
+        alert("Поле \"МОЛ\" не может быть пустым");
+    }
+    
+
+    });
+    
     
 
     modalFooterSubmitBtn.addEventListener('click', function () {
@@ -656,6 +874,27 @@ $(document).ready(function () {
     }
     formContainerSearch.submit();
     });
+    
+ 
+           $('#inputEmployeeMOL').selectize({
+            preload: true,
+            placeholder: 'Согласовал',
+            valueField: 'code',
+            labelField: 'name',
+            searchField: "name",
+
+            load: function (query, callback) {
+                $.ajax({
+                    url: '/getinfooo',
+                    type: 'GET',
+                    error: callback,
+                    success: callback
+                });
+            },
+            
+
+        });
+    
     
 });
 
@@ -758,3 +997,22 @@ function sortBy (link) {
         this.event.target.parentElement.href = window.location.pathname + adress;
         this.event.target.parentElement.click();
     };
+    
+    
+    function actInstallReport(input) {
+    var fileDownloadManager = new FileDownloadManager({autoOpen: true});
+    if(input.length > 2) {
+        $.get({
+                url: '../../report/acts?location=' + input[0] + '&startDate=' + input[1] + "&endDate=" + input[2],
+                success: function (data) {
+                    console.log("success");
+                    fileDownloadManager.createFileBlock(data, 'Акт' + data + '.xlsx');
+    }
+});
+    } else {
+          $.get('../../report/acts?location=' + input[0] + '&startDate=' + input[1], function (data) {
+        fileDownloadManager.createFileBlock(data, 'Акт' + data + '.xlsx');
+    });
+    }
+    };
+  

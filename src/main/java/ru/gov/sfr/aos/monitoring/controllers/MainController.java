@@ -228,6 +228,7 @@ public class MainController {
                 cartDto.setContractNumber(cart.getContract().getContractNumber());
                 cartDto.setId(cart.getId());
                 cartDto.setLocation(cart.getLocation().getName());
+                cartDto.setIdLocation(cart.getLocation().getId());
                 cartDto.setDateEndExploitation(cart.getDateEndExploitation());
                 cartDto.setDateStartExploitation(cart.getDateStartExploitation());
                 cartDto.setType(cart.getModel().getType().getName());

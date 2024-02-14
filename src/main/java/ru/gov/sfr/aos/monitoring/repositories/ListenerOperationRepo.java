@@ -31,6 +31,18 @@ public interface ListenerOperationRepo extends JpaRepository<ListenerOperation, 
                    "FROM listener_operation listener " +
                     "WHERE listener.printerid = ?1 " +
                     "AND listener.date_operation = " +
-                    "(SELECT MAX(date_operation) FROM listener_operation) ", nativeQuery = true)
+                    "(SELECT MAX(date_operation) FROM listener_operation WHERE printerid = ?1) ", nativeQuery = true)
     List<ListenerOperation> findByPrinterIdLastDayCartridgeInstall(Long id);
+    
+    @Query(value = "SELECT * FROM listener_operation listener " +
+                    "WHERE listener.location_id = ?1 " +
+                    "AND listener.operation_type = 'UTIL' " +
+                    "AND DATE(listener.date_operation) = ?2 ", nativeQuery = true)
+    List<ListenerOperation> findByLocationAndDate(Long location, LocalDate startDate);
+    
+    @Query(value = "SELECT * FROM listener_operation listener " +
+                    "WHERE listener.location_id = ?1 " +
+                    "AND listener.operation_type = 'UTIL' " +
+                    "AND (DATE(listener.date_operation) BETWEEN ?2 AND ?3) ", nativeQuery = true)
+    List<ListenerOperation> findByLocationAndPeriod(Long location, LocalDate startDate, LocalDate endDate);
 }

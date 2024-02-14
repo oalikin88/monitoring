@@ -23,18 +23,22 @@ class FileDownloadManager {
     }
 
     createFileBlock(uid, text, additionalFunc) {
-        let li = $('<li/>').addClass('collection-item avatar');
-        $('<i/>').addClass('material-icons circle blue file-to-download-avatar').html('assessment').attr('data-id', uid).appendTo(li);
-        $('<span class="title"/>').html(text).appendTo(li);
-        let div = $('<div/>').addClass('secondary-content');
-        $('<p/>').html('Статус загрузки файла').addClass('file-to-download-status').attr('data-id', uid).appendTo(li);
-        $('<a/>').addClass('file-to-download grey-text').attr('data-id', uid).attr('href', '#').append($('<em class="material-icons"/>').html("file_download")).appendTo(div);
-        $('<a/>').addClass('delete-file-to-download red-text text-lighten-1')
-                .attr('data-id', uid).attr('href', '#')
-                .click(() => this._removeFile(uid))
-                .append($('<em class="material-icons"/>').html("delete")).appendTo(div);
-        div.appendTo(li);
-        li.appendTo($(this._containerSelector));
+        let modalBody = $('#containerInnerModal');
+        let btn = $('#btnApplyActsParameters');
+        let closeBtnHeader = $('#btnCloseModalHeader');
+        closeBtnHeader.addClass("disabled");
+        let dateBeginInput = $('#dateBeginInput')[0];
+        let dateEndInput = $('#dateEndInput')[0];
+        dateEndInput.disabled = true;
+        dateBeginInput.disabled = true;
+        $('#inputEmployeeMOL')[0].selectize.disable();
+        let closeBtnFooter = $('#btnCloseModalFooter');
+        closeBtnFooter.addClass("disabled");
+        btn.addClass('disabled');
+        btn.append($('<span id="spanBreake"> </span>'));
+        btn.append($('<span id="spanSpinner" class="spinner-border spinner-border-sm" aria-hidden="true"></span>'));
+        modalBody.append($('<div id="inform">Формируется акт</div>'));
+        
         this._tick(uid, text, this, additionalFunc);
         if (this._autoOpen) {
             $(this._containerSelector).closest('.modal').modal('open');
@@ -69,7 +73,29 @@ class FileDownloadManager {
 //        window.open('http://sa04100uitwa243.0041.pfr.ru:8012/file-chest-service/getFile/' + filename + '?duid=' + duid);
         var downloadHyperLink = document.createElement('a');
         downloadHyperLink.setAttribute('href', 'http://sa04100uitwa243.0041.pfr.ru:8012/file-chest-service/getFile/' + filename + '?duid=' + duid);
+         $('#inform').empty();
+        let modalActsParameters = $('#modalActsParameters');
+         modalActsParameters.modal('hide');
+        let dateBeginInput = $('#dateBeginInput')[0];
+        let dateEndInput = $('#dateEndInput')[0];
+        dateEndInput.disabled = false;
+        dateEndInput.value = '';
+        dateBeginInput.disabled = false;
+        dateBeginInput.value = '';
+        $('#inputEmployeeMOL')[0].selectize.enable();
+        $('#inputEmployeeMOL')[0].selectize.setValue();
+        let closeBtnHeader = $('#btnCloseModalHeader');
+        closeBtnHeader.removeClass('disabled');
+        let closeBtnFooter = $('#btnCloseModalFooter');
+        closeBtnFooter.removeClass('disabled');
+        let btn = $('#btnApplyActsParameters');
+        btn.removeClass('disabled');
+        $('#spanBreake').empty();
+        $('#spanSpinner').remove();
+        
+       
         downloadHyperLink.click();
+       
         
     }
 

@@ -1078,16 +1078,7 @@ window.onload = function () {
         searchField: "manufacturer",
         preload: 'focus',
         create: true,
-//        load: function (query, callback) {
-//            $.ajax({
-//                url: '/cartridge/' + encodeURIComponent(typeChoice),
-//                type: 'GET',
-//                dataType: 'json',
-//                data: {manufacturer: query},
-//                error: callback,
-//                success: callback
-//            });
-//        },
+
          onChange: function (value) {
             if (value !== '') {
                 selectizeModelFromChoisesTypeCartridge = $(this.$control_input[0].closest('.modalModelCartridgeRow')).find('.modalModelCartridgeSelect')[0];
@@ -1137,12 +1128,7 @@ window.onload = function () {
             });
         },
         create: false
-//        create: function (input) {
-//            return {
-//                value: input,
-//                text: input,
-//            };
-//        }
+
     });
 
 
@@ -1167,32 +1153,7 @@ window.onload = function () {
         }
     });
 
-//    $(".modalModelsPrinterSelect").selectize({
-//        plugins: ["remove_button"],
-//        delimiter: ",",
-//        valueField: 'idModel',
-//        labelField: 'model',
-//        searchField: 'model',
-//        persist: false,
-//        maxItems: null,
-//        placeholder: "модель принтера",
-//        preload: 'focus',
-//        load: function (query, callback) {
-//            $.ajax({
-//                url: '/models/',
-//                type: 'GET',
-//                dataType: 'json',
-//                error: callback,
-//                success: callback
-//            });
-//        },
-//        create: function (input) {
-//            return {
-//                value: input,
-//                text: input,
-//            };
-//        }
-//    });
+
 
     modalModelsCartridgeFooterOKBtn2.addEventListener('click', function () {
 

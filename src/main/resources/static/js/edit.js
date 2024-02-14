@@ -72,28 +72,7 @@ $(document).ready(function () {
     
     
     printerStatusBtn.addEventListener('click', function() {
-//        let statusFromPage = document.querySelector('#printerStatus').innerHTML;
-//       let val;
-//       switch(statusFromPage) {
-//           case "Исправен":
-//               val = "OK";
-//                break;
-//            case "Неисправен":
-//                val = "DEFECTIVE";
-//                break;
-//            case "Ремонт":
-//                val = "REPAIR";
-//                break;
-//            case "Списание":
-//                val = "MONITORING";
-//                break;
-//            case "Утилизация":
-//                val = "UTILIZATION";
-//                break;
-//            case "Снят с учёта":
-//                val = "DELETE";
-//                break;
-//       }
+
        var $select = $('#printerStatusSelect').selectize({
         placeholder: 'Выберите статус',
         valueField: 'value',
@@ -107,9 +86,7 @@ $(document).ready(function () {
             {value: "DELETE", label: "Снят с учёта"}]
     });
        
-//       var sel = $select[0].selectize;
-//       
-//        sel.setValue(Object.entries(sel.options.OK));
+
     });
 
     printerStatusSubmit = document.querySelector('#printerStatusSubmit');
@@ -146,9 +123,7 @@ $(document).ready(function () {
     });
 
     inventarySubmit.addEventListener('click', function () {
-
         div = $('#inventaryRefresh')[0];
-
         $.ajax({
             type: "POST",
             async:false,
@@ -156,13 +131,10 @@ $(document).ready(function () {
             data: {id: input.id, inventaryNumber: $('#inventaryNumberInput')[0].value},
             dataType: "text",
             success: function (data) {
-                
                 $('#inventarynumberModal').modal('hide');
                 div.innerText = $('#inventaryNumberInput')[0].value;
-
             }
         });
-        
     });
     
     nameFromOneCBtn.addEventListener('click', function() {
@@ -183,13 +155,9 @@ $(document).ready(function () {
         });
        
     });
-    
-    
-    
-    nameFromOneCSubmit.addEventListener('click', function() {
-        
+ 
+    nameFromOneCSubmit.addEventListener('click', function() { 
         div = $('#nameFromOneC')[0];
-        
         $.ajax({
             type: "POST",
             async: false,
@@ -199,10 +167,8 @@ $(document).ready(function () {
             success: function (data) {
                 div.innerText = $('#nameFromOneCInput')[0].value;
                 $('#nameFromOneCModal').modal('hide');
-
             }
         });
-        
     });
 
     serialBtn.addEventListener('click', function() {
@@ -215,15 +181,10 @@ $(document).ready(function () {
                     serialSubmit.disabled = false;
                 }
             });
-            
-        
     });
 
     serialSubmit.addEventListener('click', function () {
-
         div = $('#serialRefresh')[0];
-
-
         $.ajax({
             type: "POST",
             async: false,
@@ -233,7 +194,6 @@ $(document).ready(function () {
             success: function (data) {
                 div.innerText = $('#serialNumberInput')[0].value;
                 $('#serialnumberModal').modal('hide');
-
             }
         });
     });
@@ -274,8 +234,6 @@ $(document).ready(function () {
             }
         }
 
-
-
         let inputDiv = document.getElementsByClassName('contentInnerDiv1')[0];
 
         inputEmployeeToDoWork = document.createElement('select');
@@ -298,7 +256,6 @@ $(document).ready(function () {
         inputEmployeeMOL.placeholder = 'Согласовал';
         inputEmployeeMOL.id = 'inputEmployeeMOL';
         inputDiv.appendChild(inputEmployeeMOL);
-
 
         if (input.cartridge.length >= 1) {
             inputValue = document.createElement('input');
@@ -418,17 +375,11 @@ $(document).ready(function () {
                 tdDateInstall.innerText = startDateCartFormat;
                 trCartridge.appendChild(tdDateInstall);
                 
-                
-                
-                
-                
                 if(input.cartridge[i].usePrinter == false) {
                 tdCartridgeCountPage = document.createElement('td');
                 tdCartridgeCountPage.setAttribute('class', 'tdCountPage');
                 tdCartridgeCountPage.innerText = input.cartridge[i].count;
                
-
-
                 dateEndParse = Date.parse(input.cartridge[i].dateEndExploitation);
                 dateStartParse = Date.parse(input.cartridge[i].dateStartExploitation);
 
@@ -500,11 +451,8 @@ $(document).ready(function () {
 
                 tdCartridgeActInstall.appendChild(linkActInstall);
                 trCartridge.appendChild(tdCartridgeActInstall);
-            
+           
         }
-
-
-
 
     } else {
         cartridgeUse.innerHTML = "Пусто";
@@ -557,8 +505,6 @@ $(document).ready(function () {
 
         });
 
-
-
         $('#inputEmployeeToDoWork').selectize({
             preload: true,
             placeholder: 'Выполнил работу',
@@ -588,7 +534,6 @@ $(document).ready(function () {
             }
 
         });
-
 
         $('#inputEmployeeToSetDevice').selectize({
             preload: true,
@@ -650,8 +595,6 @@ $(document).ready(function () {
 
         });
 
-        
-        
         cartridgeSelectOkBtn.addEventListener('click', function () {
             var countPage = 0;
             if ($('#countPage')[0] != null) {
@@ -670,7 +613,6 @@ $(document).ready(function () {
             if ($('#inputEmployeeMOL')[0].value) {
                 emplMOL = $('#inputEmployeeMOL')[0].value;
             }
-
 
             $.ajax({
                 type: "POST",
@@ -694,8 +636,6 @@ $(document).ready(function () {
         location.href = document.referrer;
     });
 
-
-
 });
 
 window.onload = function() {
@@ -704,7 +644,6 @@ window.onload = function() {
     setInterval('AJAXPing()', 28000);
     
 };
-
 
 function actInstallReport(input) {
     var fileDownloadManager = new FileDownloadManager({autoOpen: true});

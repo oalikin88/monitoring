@@ -35,6 +35,9 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                         <li th:if="${#strings.contains(#httpServletRequest.requestURI,'inventories') and #strings.contains(#httpServletRequest.requestURI,'printer')}">
                             <a class="nav-link" href="#" id="downloadDocByLocation" >Скачать список</a>
                         </li>
+                        <li th:if="${#strings.contains(#httpServletRequest.requestURI,'inventories') and #strings.contains(#httpServletRequest.requestURI,'cartridge')}">
+                            <a class="nav-link" href="#" id="downloadActs" data-bs-toggle="modal" data-bs-target="#modalActsParameters">Скачать акт</a>
+                        </li>
                         <li th:if="${#strings.contains(#httpServletRequest.requestURI,'printersbylocation')}">
                             <a class="nav-link" href="#" id="downloadDocByModel" >Скачать список</a>
                         </li>

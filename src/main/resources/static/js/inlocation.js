@@ -614,7 +614,7 @@ function sortBy (link) { //Разобраться почему подставл�
         fileDownloadManager.createFileBlock(data, 'Акт' + data + '.xlsx');
     });
     } else {
-          $.get('../../report/printers?idLocation=' + input[0] + '&deviceType=' + input[1], function (data) {
+        $.get('../../report/printers?idLocation=' + input[0] + '&deviceType=' + input[1], function (data) {
         fileDownloadManager.createFileBlock(data, 'Акт' + data + '.xlsx');
     });
     }

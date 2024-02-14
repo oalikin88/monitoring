@@ -7,10 +7,14 @@ package ru.gov.sfr.aos.monitoring.controllers;
 import lombok.RequiredArgsConstructor;
 import org.opfr.starter.report.exception.ReportException;
 import org.opfr.starter.report.service.ReportCreateFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import ru.gov.sfr.aos.monitoring.auth.AuthenticationService;
 import ru.gov.sfr.aos.reports.parameters.ActReportParameters;
+import ru.gov.sfr.aos.reports.parameters.ActsByPeriodParameters;
 import ru.gov.sfr.aos.reports.parameters.PrinterListReportParameters;
 
 /**
@@ -21,12 +25,21 @@ import ru.gov.sfr.aos.reports.parameters.PrinterListReportParameters;
 @RequestMapping("/report")
 @RequiredArgsConstructor
 public class ReportController {
-
+    @Autowired
+    private AuthenticationService authenticationService;
     private final ReportCreateFactory reportCreateFactory;
-
+    
+    
     @GetMapping("/act")
     public String actReport(ActReportParameters actReportParameters) throws ReportException {
         return reportCreateFactory.proceedReport("actReport", actReportParameters);
+    }
+    
+    @PostMapping(value = "/acts")
+    public String actsRepost(ActsByPeriodParameters actsByPeriodParameters) throws ReportException {
+        String userCode = authenticationService.authUser().getUsername();
+        actsByPeriodParameters.setEmployee(userCode);
+        return reportCreateFactory.proceedReport("actsByPeriod", actsByPeriodParameters);
     }
     
     
