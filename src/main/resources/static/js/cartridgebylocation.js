@@ -723,19 +723,45 @@ $(document).ready(function () {
     btnCloseModalActsParameters.addEventListener('click', function() {
        $('#dateBeginInput')[0].value = '';
         $('#dateEndInput')[0].value = '';
+        $('#inputEmployeeMOL')[0].selectize.setValue();
+        if(document.querySelector('#infoDate') != null) {
+                   $('#infoDate').empty();
+               }
+           
+               if(document.querySelector('#inform') != null) {
+                   $('#inform').empty();
+               }
         $('#modalActsParameters').modal('hide');
         
+         
     });
 
     btnFooterCloseActsParameters.addEventListener('click', function() {
         $('#dateBeginInput')[0].value = '';
         $('#dateEndInput')[0].value = '';
+        $('#inputEmployeeMOL')[0].selectize.setValue();
+        if(document.querySelector('#infoDate') != null) {
+                   $('#infoDate').remove();
+               }
+           
+               if(document.querySelector('#inform') != null) {
+                   $('#inform').remove();
+               }
+        
         $('#modalActsParameters').modal('hide');
+         
     });
 
     btnApplyActsParameters.addEventListener('click', function () {
-
-
+        
+         if(document.querySelector('#infoDate') != null) {
+                   $('#infoDate').remove();
+               }
+           
+               if(document.querySelector('#inform') != null) {
+                   $('#inform').remove();
+               }
+               
         dateBegin = $('#dateBeginInput')[0].value;
         dateEnd = $('#dateEndInput')[0].value;
 
@@ -745,15 +771,14 @@ $(document).ready(function () {
         
         var dateBeginParse = Date.parse(dateBegin);
         var dateBeginParseB = new Date(dateBeginParse);
-        var dateBeginFormat = dateBeginParseB.toLocaleString('ru');
+        var dateBeginFormat = dateBeginParseB.toLocaleDateString('ru');
         
         var nowDate = new Date();
         var nowDateFormat = nowDate.toLocaleDateString('ru');
 
         if($('#inputEmployeeMOL')[0].value) {
-        if (dateBeginFormat <= dateEndFormat && $('#dateBeginInput')[0].value && dateBeginFormat <= nowDateFormat) {
-           
-            
+        if ((dateBeginFormat <= dateEndFormat) && ($('#dateBeginInput')[0].value) && (dateBeginFormat <= nowDateFormat)) {
+              
                var fileDownloadManager = new FileDownloadManager({autoOpen: true});
                 var dto  =  {
                         location: input[0].idLocation,
@@ -775,9 +800,12 @@ $(document).ready(function () {
                 
             
     
-    
         } else {
-            alert("Вы ввели неправильную дату");
+            alert("Вы неверно установили дату");
+            if(document.querySelector('#infoDate') == null) {
+                $('#containerInnerModal').append('<div id="infoDate"><br><br>*При выборе даты нельзя уставливать в поле "Дата начала периода" дату, которая ещё не наступила. А также нельзя устанавливать период, когда окончание периода раньше начала периода.</div>');
+            }
+            
         }
     } else {
         alert("Поле \"МОЛ\" не может быть пустым");

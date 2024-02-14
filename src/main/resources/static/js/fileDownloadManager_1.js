@@ -73,7 +73,7 @@ class FileDownloadManager {
 //        window.open('http://sa04100uitwa243.0041.pfr.ru:8012/file-chest-service/getFile/' + filename + '?duid=' + duid);
         var downloadHyperLink = document.createElement('a');
         downloadHyperLink.setAttribute('href', 'http://sa04100uitwa243.0041.pfr.ru:8012/file-chest-service/getFile/' + filename + '?duid=' + duid);
-         $('#inform').empty();
+         $('#inform').remove();
         let modalActsParameters = $('#modalActsParameters');
          modalActsParameters.modal('hide');
         let dateBeginInput = $('#dateBeginInput')[0];
@@ -92,7 +92,9 @@ class FileDownloadManager {
         btn.removeClass('disabled');
         $('#spanBreake').empty();
         $('#spanSpinner').remove();
-        
+        if(document.querySelector('#infoDate') != null) {
+                   $('#infoDate').remove();
+               }
        
         downloadHyperLink.click();
        
