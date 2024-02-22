@@ -475,15 +475,21 @@ window.onload = function () {
         if(sortedPrinterName == false) {
             printerRows.sort((a, b) => (a.childNodes[1].innerText > b.childNodes[1].innerText) ? 1 : ((b.childNodes[1].innerText > a.childNodes[1].innerText) ? -1 : 0));
             divPrintersContainer.innerHTML = '';
+            let count = 1;
             for(let item of printerRows) {
+                item.childNodes[0].innerHTML = count;
             divPrintersContainer.appendChild(item);
+            count++;
         }
         sortedPrinterName = true;
         } else {
             printerRows.sort((a, b) => (a.childNodes[1].innerText < b.childNodes[1].innerText) ? 1 : ((b.childNodes[1].innerText < a.childNodes[1].innerText) ? -1 : 0));
             divPrintersContainer.innerHTML = '';
+            let count = 1;
             for(let item of printerRows) {
+            item.childNodes[0].innerHTML = count;
             divPrintersContainer.appendChild(item);
+            count++;
         }
         sortedPrinterName = false;
         }
@@ -495,15 +501,21 @@ window.onload = function () {
         if(sortedPrinterSerialNumber == false) {
             printerRows.sort((a, b) => (a.childNodes[2].innerText > b.childNodes[2].innerText) ? 1 : ((b.childNodes[2].innerText > a.childNodes[2].innerText) ? -1 : 0));
             divPrintersContainer.innerHTML = '';
+            let count = 1;
             for(let item of printerRows) {
+            item.childNodes[0].innerHTML = count;
             divPrintersContainer.appendChild(item);
+            count++;
         }
         sortedPrinterSerialNumber = true;
         } else {
             printerRows.sort((a, b) => (a.childNodes[2].innerText < b.childNodes[2].innerText) ? 1 : ((b.childNodes[2].innerText < a.childNodes[2].innerText) ? -1 : 0));
             divPrintersContainer.innerHTML = '';
+            let count = 1;
             for(let item of printerRows) {
+            item.childNodes[0].innerHTML = count;
             divPrintersContainer.appendChild(item);
+            count++;
         }
         sortedPrinterSerialNumber = false;
         }
@@ -514,15 +526,21 @@ window.onload = function () {
         if(sortedPrinterInventaryNumber == false) {
             printerRows.sort((a, b) => (a.childNodes[3].innerText > b.childNodes[3].innerText) ? 1 : ((b.childNodes[3].innerText > a.childNodes[3].innerText) ? -1 : 0));
             divPrintersContainer.innerHTML = '';
+            let count = 1;
             for(let item of printerRows) {
+            item.childNodes[0].innerHTML = count;
             divPrintersContainer.appendChild(item);
+            count++;
         }
         sortedPrinterInventaryNumber = true;
         } else {
             printerRows.sort((a, b) => (a.childNodes[3].innerText < b.childNodes[3].innerText) ? 1 : ((b.childNodes[3].innerText < a.childNodes[3].innerText) ? -1 : 0));
             divPrintersContainer.innerHTML = '';
+            let count = 1;
             for(let item of printerRows) {
+            item.childNodes[0].innerHTML = count;
             divPrintersContainer.appendChild(item);
+            count++;
         }
         sortedPrinterInventaryNumber = false;
         }
@@ -533,15 +551,21 @@ window.onload = function () {
         if(sortedPrinterLocation == false) {
             printerRows.sort((a, b) => (a.childNodes[4].innerText > b.childNodes[4].innerText) ? 1 : ((b.childNodes[4].innerText > a.childNodes[4].innerText) ? -1 : 0));
             divPrintersContainer.innerHTML = '';
+            let count = 1;
             for(let item of printerRows) {
+            item.childNodes[0].innerHTML = count;
             divPrintersContainer.appendChild(item);
+            count++;
         }
         sortedPrinterLocation = true;
         } else {
             printerRows.sort((a, b) => (a.childNodes[4].innerText < b.childNodes[4].innerText) ? 1 : ((b.childNodes[4].innerText < a.childNodes[4].innerText) ? -1 : 0));
             divPrintersContainer.innerHTML = '';
+            let count = 1;
             for(let item of printerRows) {
+            item.childNodes[0].innerHTML = count;
             divPrintersContainer.appendChild(item);
+            count++;
         }
         sortedPrinterLocation = false;
         }
@@ -571,15 +595,21 @@ window.onload = function () {
         if(sortedCartridgeNamesUp == false) {
         cartridgeRows.sort((a, b) => (a.childNodes[1].innerText > b.childNodes[1].innerText) ? 1 : ((b.childNodes[1].innerText > a.childNodes[1].innerText) ? -1 : 0));
         divCartridgesContainer.innerHTML = '';
+        let count = 1;
         for(let item of cartridgeRows) {
+            item.childNodes[0].innerHTML = count;
             divCartridgesContainer.appendChild(item);
+            count++;
         }
         sortedCartridgeNamesUp = true;
     } else {
         cartridgeRows.sort((a, b) => (a.childNodes[1].innerText < b.childNodes[1].innerText) ? 1 : ((b.childNodes[1].innerText < a.childNodes[1].innerText) ? -1 : 0));
         divCartridgesContainer.innerHTML = '';
+        let count = 1;
         for(let item of cartridgeRows) {
+            item.childNodes[0].innerHTML = count;
             divCartridgesContainer.appendChild(item);
+            count++;
         }
         sortedCartridgeNamesUp = false;
     }
@@ -591,15 +621,21 @@ window.onload = function () {
         if(sortedCartridgeItemCode == false) {
             cartridgeRows.sort((a, b) => (a.childNodes[2].innerText > b.childNodes[2].innerText) ? 1 : ((b.childNodes[2].innerText > a.childNodes[2].innerText) ? -1 : 0));
         divCartridgesContainer.innerHTML = '';
+        let count = 1;
         for(let item of cartridgeRows) {
+            item.childNodes[0].innerHTML = count;
             divCartridgesContainer.appendChild(item);
+            count++;
         }
         sortedCartridgeItemCode = true;
         } else {
             cartridgeRows.sort((a, b) => (a.childNodes[2].innerText < b.childNodes[2].innerText) ? 1 : ((b.childNodes[2].innerText < a.childNodes[2].innerText) ? -1 : 0));
         divCartridgesContainer.innerHTML = '';
+        let count = 1;
         for(let item of cartridgeRows) {
+            item.childNodes[0].innerHTML = count;
             divCartridgesContainer.appendChild(item);
+            count++;
         }
         sortedCartridgeItemCode = false;
         }
@@ -610,15 +646,21 @@ window.onload = function () {
          if(sortedCartridgeType == false) {
              cartridgeRows.sort((a, b) => (a.childNodes[3].innerText > b.childNodes[3].innerText) ? 1 : ((b.childNodes[3].innerText > a.childNodes[3].innerText) ? -1 : 0));
         divCartridgesContainer.innerHTML = '';
+        let count = 1;
         for(let item of cartridgeRows) {
+            item.childNodes[0].innerHTML = count;
             divCartridgesContainer.appendChild(item);
+            count++;
         }
         sortedCartridgeType = true;
          } else {
              cartridgeRows.sort((a, b) => (a.childNodes[3].innerText < b.childNodes[3].innerText) ? 1 : ((b.childNodes[3].innerText < a.childNodes[3].innerText) ? -1 : 0));
         divCartridgesContainer.innerHTML = '';
+        let count = 1;
         for(let item of cartridgeRows) {
+            item.childNodes[0].innerHTML = count;
             divCartridgesContainer.appendChild(item);
+            count++;
         }
         sortedCartridgeType = false;
          }
@@ -629,15 +671,21 @@ window.onload = function () {
         if(sortedCartridgeStatus == false) {
             cartridgeRows.sort((a, b) => (a.childNodes[4].innerText > b.childNodes[4].innerText) ? 1 : ((b.childNodes[4].innerText > a.childNodes[4].innerText) ? -1 : 0));
         divCartridgesContainer.innerHTML = '';
+        let count = 1;
         for(let item of cartridgeRows) {
+            item.childNodes[0].innerHTML = count;
             divCartridgesContainer.appendChild(item);
+            count++;
         }
         sortedCartridgeStatus = true;
         } else {
             cartridgeRows.sort((a, b) => (a.childNodes[4].innerText < b.childNodes[4].innerText) ? 1 : ((b.childNodes[4].innerText < a.childNodes[4].innerText) ? -1 : 0));
         divCartridgesContainer.innerHTML = '';
+        let count = 1;
         for(let item of cartridgeRows) {
+            item.childNodes[0].innerHTML = count;
             divCartridgesContainer.appendChild(item);
+            count++;
         }
         sortedCartridgeStatus = false;
         }
@@ -649,15 +697,21 @@ window.onload = function () {
         if(sortedCartridgeLocation == false) {
             cartridgeRows.sort((a, b) => (a.childNodes[5].innerText > b.childNodes[5].innerText) ? 1 : ((b.childNodes[5].innerText > a.childNodes[5].innerText) ? -1 : 0));
         divCartridgesContainer.innerHTML = '';
+        let count = 1;
         for(let item of cartridgeRows) {
+            item.childNodes[0].innerHTML = count;
             divCartridgesContainer.appendChild(item);
+            count++;
         }
         sortedCartridgeLocation = true;
         } else {
             cartridgeRows.sort((a, b) => (a.childNodes[5].innerText < b.childNodes[5].innerText) ? 1 : ((b.childNodes[5].innerText < a.childNodes[5].innerText) ? -1 : 0));
         divCartridgesContainer.innerHTML = '';
+        let count = 1;
         for(let item of cartridgeRows) {
+            item.childNodes[0].innerHTML = count;
             divCartridgesContainer.appendChild(item);
+            count++;
         }
         sortedCartridgeLocation = false;
         }
