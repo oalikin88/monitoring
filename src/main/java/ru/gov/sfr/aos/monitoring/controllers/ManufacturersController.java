@@ -9,6 +9,7 @@ import java.util.List;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -103,9 +104,27 @@ public class ManufacturersController {
     }    
     
     @RequestMapping(value = "/cartridge", method = RequestMethod.GET)
-    public List<CartridgeModelDTO> getCartridges() {
-            List<CartridgeModelDTO> list = cartridgeMapper.getCartridgeModels();
+    public List<CartridgeModelDTO> getCartridges(@RequestParam(name = "archived", required = false) boolean archived) {
+        List<CartridgeModelDTO> list = null;
+        if(archived) {
+            list = cartridgeService.getArchivedModelsCartridgeListDto();
+        } else {
+            list = cartridgeMapper.getCartridgeModels();
+        }
         return list;
+    }
+    
+    @PostMapping(value = "/cartridge")
+    public void repearCartridgeModel(Long id, boolean archived) {
+        if(archived) {
+            cartridgeService.repearCartridgeModel(id);
+        }
+    }
+    
+    @RequestMapping(value = "/editModelCartridge", method = RequestMethod.GET)
+    public CartridgeModelDTO getModelCartridgeById(@RequestParam(value = "id", required = true) Long id) {
+        CartridgeModelDTO cartridgeModelById = cartridgeService.getCartridgeModelById(id);
+        return cartridgeModelById;
     }
     
      @RequestMapping(value = "/cartridgebymodelprinterid", produces={"application/json; charset=UTF-8"}, method = RequestMethod.GET)
@@ -123,5 +142,15 @@ public class ManufacturersController {
     public List<CartridgeModelDTO> getCartridgesByModelPrinterAndType(@RequestParam("model") String model, @PathVariable String type) {
             List<CartridgeModelDTO> list = cartridgeService.showCartridgeModelByPrinterModelAndType(model, type);
         return list;
+    }
+    
+      @PostMapping(value = "/updatecartridgebymodel")
+    public void updateModelCartridge(CartridgeModelDTO dto) {
+            cartridgeService.updateCartridgeModel(dto);
+    }
+    
+    @DeleteMapping(value = "/editModelCartridge")
+    public void deleteModelCartridge(Long id) {
+        cartridgeService.deleteModelCartridge(id);
     }
 }

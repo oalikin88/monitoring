@@ -29,6 +29,6 @@ public interface ModelPrinterRepo extends JpaRepository<Model, Long> {
                     "FROM model m " +
                     "LEFT JOIN cartridge_model_models_printers cart_print " +
                     "ON m.id = cart_print.models_printers_id " +
-                    "WHERE m.id = 45)", nativeQuery = true)
+                    "WHERE m.id = ?1)", nativeQuery = true)
     List<Model> findAnalogModelByModelId(Long idModel);
 }

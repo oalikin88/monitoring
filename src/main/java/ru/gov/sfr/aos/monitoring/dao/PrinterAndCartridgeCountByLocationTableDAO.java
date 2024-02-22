@@ -38,15 +38,21 @@ public class PrinterAndCartridgeCountByLocationTableDAO {
                 + "FROM cartridge "
                 + "JOIN object_buing ob "
                 + "ON cartridge.cartridge_id = ob.id "
+                + "LEFT JOIN cartridge_model cart_model " 
+                + "ON cartridge.model_id = cart_model.id "
                 + "WHERE ob.location_id = loc.id "
                 + "AND cartridge.model_id = cart_prin.model_cartridges_id "
+                + "AND cart_model.archived = FALSE "
                 + "AND util = FALSE "
                 + "AND use_in_printer = FALSE) as count_cartridge "
                 + "FROM location as loc, model as m "
                 + "LEFT JOIN cartridge_model_models_printers cart_prin "
                 + "ON m.id = cart_prin.models_printers_id "
                 + "LEFT JOIN manufacturer manufacturer "
-                + "ON m.manufacturer_id = manufacturer.id ";
+                + "ON m.manufacturer_id = manufacturer.id "
+                + "LEFT JOIN cartridge_model cart_model " 
+                + "ON cart_prin.model_cartridges_id = cart_model.id " 
+                + "WHERE cart_model.archived = FALSE ";
     
     private final static String  SELECTMFUSANDCARTRIDGE = "SELECT loc.name as location, loc.id as location_id, CONCAT(manufacturer.name, ' ', m.name) as model_printer," 
                 + " cart_prin.model_cartridges_id, m.id as model_id, "
@@ -64,8 +70,11 @@ public class PrinterAndCartridgeCountByLocationTableDAO {
                 + "FROM cartridge "
                 + "JOIN object_buing ob "
                 + "ON cartridge.cartridge_id = ob.id "
+                + "LEFT JOIN cartridge_model cart_model " 
+                + "ON cartridge.model_id = cart_model.id "
                 + "WHERE ob.location_id = loc.id "
                 + "AND cartridge.model_id = cart_prin.model_cartridges_id "
+                + "AND cart_model.archived = FALSE "
                 + "AND util = FALSE "
                 + "AND use_in_printer = FALSE) as count_cartridge "
                 + "FROM location as loc, model as m "
@@ -73,7 +82,10 @@ public class PrinterAndCartridgeCountByLocationTableDAO {
                 + "ON m.id = cart_prin.models_printers_id "
                 + "LEFT JOIN manufacturer manufacturer "
                 + "ON m.manufacturer_id = manufacturer.id "
-                + "WHERE m.device_type = 'MFU' ";
+                + "LEFT JOIN cartridge_model cart_model " 
+                + "ON cart_prin.model_cartridges_id = cart_model.id " 
+                + "WHERE cart_model.archived = FALSE "
+                + "AND m.device_type = 'MFU' ";
     
     
     private final static String  SELECTPRINTERSSANDCARTRIDGE = "SELECT loc.name as location, loc.id as location_id, CONCAT(manufacturer.name, ' ', m.name) as model_printer," 
@@ -92,8 +104,11 @@ public class PrinterAndCartridgeCountByLocationTableDAO {
                 + "FROM cartridge "
                 + "JOIN object_buing ob "
                 + "ON cartridge.cartridge_id = ob.id "
+                + "LEFT JOIN cartridge_model cart_model " 
+                + "ON cartridge.model_id = cart_model.id "
                 + "WHERE ob.location_id = loc.id "
                 + "AND cartridge.model_id = cart_prin.model_cartridges_id "
+                + "AND cart_model.archived = FALSE "
                 + "AND util = FALSE "
                 + "AND use_in_printer = FALSE) as count_cartridge "
                 + "FROM location as loc, model as m "
@@ -101,7 +116,10 @@ public class PrinterAndCartridgeCountByLocationTableDAO {
                 + "ON m.id = cart_prin.models_printers_id "
                 + "LEFT JOIN manufacturer manufacturer "
                 + "ON m.manufacturer_id = manufacturer.id "
-                + "WHERE m.device_type = 'PRINTER' ";
+                + "LEFT JOIN cartridge_model cart_model " 
+                + "ON cart_prin.model_cartridges_id = cart_model.id " 
+                + "WHERE cart_model.archived = FALSE "
+                + "AND m.device_type = 'PRINTER' ";
 
     
 

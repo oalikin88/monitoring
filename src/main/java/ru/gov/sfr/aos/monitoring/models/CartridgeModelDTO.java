@@ -25,6 +25,7 @@ public class CartridgeModelDTO implements Serializable {
     public String type;
     @NotEmpty(message = "Поле \"Номинальный ресурс\" не может быть пустым")
     public String resource;
+    public Long idManufacturer;
     //Printers
     @NotNull
     public List<Long> idModel;
@@ -50,11 +51,12 @@ public class CartridgeModelDTO implements Serializable {
         this.idModel = idModel;
     }
 
-    public CartridgeModelDTO(String manufacturer, String model, String type, String resource, List<Long> idModel, Set<String> printers) {
+    public CartridgeModelDTO(String manufacturer, String model, String type, String resource, Long idManufacturer, List<Long> idModel, Set<String> printers) {
         this.manufacturer = manufacturer;
         this.model = model;
         this.type = type;
         this.resource = resource;
+        this.idManufacturer = idManufacturer;
         this.idModel = idModel;
         this.printers = printers;
     }
@@ -112,6 +114,15 @@ public class CartridgeModelDTO implements Serializable {
     public void setResource(String resource) {
         this.resource = resource;
     }
+
+    public Long getIdManufacturer() {
+        return idManufacturer;
+    }
+
+    public void setIdManufacturer(Long idManufacturer) {
+        this.idManufacturer = idManufacturer;
+    }
+    
 
     public String getManufacturer() {
         return manufacturer;

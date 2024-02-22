@@ -81,7 +81,10 @@ public interface CartridgeRepo extends JpaRepository<Cartridge, Long> {
                     "ON cart.cartridge_id = ob.id " +
                     "LEFT JOIN contract contr " +
                     "ON ob.contract_id = contr.id " +
-                    "WHERE cart.cartridge_id IN " +
+                    "LEFT JOIN cartridge_model cart_model " +
+                    "ON cart.model_id = cart_model.id " +
+                    "WHERE cart_model.archived = FALSE " +
+                    "AND cart.cartridge_id IN " +
                     "(SELECT DISTINCT c.cartridge_id " +
                     "FROM cartridge c " +
                     "LEFT JOIN object_buing ob " +
@@ -98,7 +101,10 @@ public interface CartridgeRepo extends JpaRepository<Cartridge, Long> {
                     "ON cart.cartridge_id = ob.id " +
                     "LEFT JOIN contract contr " +
                     "ON ob.contract_id = contr.id " +
-                    "WHERE cart.cartridge_id IN " +
+                   "LEFT JOIN cartridge_model cart_model " +
+                    "ON cart.model_id = cart_model.id " +
+                    "WHERE cart_model.archived = FALSE " +
+                    "AND cart.cartridge_id IN " +
                     "(SELECT DISTINCT c.cartridge_id " +
                     "FROM cartridge c " +
                     "LEFT JOIN object_buing ob " +
@@ -117,7 +123,10 @@ public interface CartridgeRepo extends JpaRepository<Cartridge, Long> {
                     "ON cart.cartridge_id = ob.id " +
                     "LEFT JOIN contract contr " +
                     "ON ob.contract_id = contr.id " +
-                    "WHERE cart.cartridge_id IN " +
+                   "LEFT JOIN cartridge_model cart_model " +
+                    "ON cart.model_id = cart_model.id " +
+                    "WHERE cart_model.archived = FALSE " +
+                    "AND cart.cartridge_id IN " +
                     "(SELECT DISTINCT c.cartridge_id " +
                     "FROM cartridge c " +
                     "LEFT JOIN object_buing ob " +
@@ -163,7 +172,8 @@ public interface CartridgeRepo extends JpaRepository<Cartridge, Long> {
    + "AND cart.item_code LIKE CONCAT('%',:itemCode,'%')  "
    + "AND ob.location_id = :idLocation "
    + "AND cart.util = FALSE "
-   + "AND cart.use_in_printer = FALSE",
+   + "AND cart.use_in_printer = FALSE "
+   + "AND model.archived = FALSE ",
    countQuery = "SELECT count(*) "
     + "FROM cartridge cart "
    + "LEFT JOIN object_buing ob "
@@ -178,7 +188,8 @@ public interface CartridgeRepo extends JpaRepository<Cartridge, Long> {
    + "AND cart.item_code LIKE CONCAT('%',:itemCode,'%')  "
    + "AND ob.location_id = :idLocation "
    + "AND cart.util = FALSE "
-   + "AND cart.use_in_printer = FALSE" ,nativeQuery = true)
+   + "AND cart.use_in_printer = FALSE "
+   + "AND model.archived = FALSE " ,nativeQuery = true)
    Page<Cartridge> findByItemCodeAndModelPrinterAndLocation(@Param("itemCode") String itemCode, @Param("idLocation") Long idLocation, @Param("idPrinter") Long idPrinter, Pageable pageable);
    
    @Query(value = "SELECT cart.*, ob.*, contr.*, model.* "
@@ -195,7 +206,8 @@ public interface CartridgeRepo extends JpaRepository<Cartridge, Long> {
    + "AND cart.item_code LIKE CONCAT('%',:itemCode,'%')  "
    + "AND ob.location_id = :idLocation "
    + "AND cart.util = FALSE "
-   + "AND cart.use_in_printer = FALSE", nativeQuery = true)
+   + "AND cart.use_in_printer = FALSE "
+   + "AND model.archived = FALSE ", nativeQuery = true)
    List<Cartridge> findByItemCodeAndModelPrinterAndLocation(@Param("itemCode") String itemCode, @Param("idLocation") Long idLocation, @Param("idPrinter") Long idPrinter);
    
    
@@ -210,7 +222,8 @@ public interface CartridgeRepo extends JpaRepository<Cartridge, Long> {
    + "WHERE cart.item_code LIKE CONCAT('%',:itemCode,'%') "
    + "AND ob.location_id = :idLocation "
    + "AND cart.util = FALSE "
-   + "AND cart.use_in_printer = FALSE",
+   + "AND cart.use_in_printer = FALSE "
+   + "AND model.archived = FALSE ",
    countQuery = "SELECT count(*) "
     + "FROM cartridge cart "
     + "LEFT JOIN cartridge_model model "
@@ -222,7 +235,8 @@ public interface CartridgeRepo extends JpaRepository<Cartridge, Long> {
    + "WHERE cart.item_code LIKE CONCAT('%',:itemCode,'%')  "
    + "AND ob.location_id = :idLocation "
    + "AND cart.util = FALSE "
-   + "AND cart.use_in_printer = FALSE" ,nativeQuery = true)
+   + "AND cart.use_in_printer = FALSE "
+   + "AND model.archived = FALSE ", nativeQuery = true)
    Page<Cartridge> findByItemCodeAndLocation(@Param("itemCode") String itemCode, @Param("idLocation") Long idLocation, Pageable pageable);
    
    @Query(value = "SELECT cart.*, ob.*, contr.*, model.* "
@@ -238,7 +252,8 @@ public interface CartridgeRepo extends JpaRepository<Cartridge, Long> {
    + "WHERE cart_print.models_printers_id = ?2 "
    + "AND ob.location_id = ?1 "
    + "AND cart.util = FALSE "
-   + "AND cart.use_in_printer = FALSE",
+   + "AND cart.use_in_printer = FALSE "
+   + "AND model.archived = FALSE ",
    countQuery = "SELECT count(*) "
     + "FROM cartridge cart "
    + "LEFT JOIN object_buing ob "
@@ -252,7 +267,8 @@ public interface CartridgeRepo extends JpaRepository<Cartridge, Long> {
    + "WHERE cart_print.models_printers_id = ?2 "
    + "AND ob.location_id = ?1 "
    + "AND cart.util = FALSE "
-   + "AND cart.use_in_printer = FALSE" ,nativeQuery = true)
+   + "AND cart.use_in_printer = FALSE "
+   + "AND model.archived = FALSE " ,nativeQuery = true)
    Page<Cartridge> findCartridgesByModelPrinterAndLocation(Long idLocation, Long idPrinter, Pageable pageable);
    
    
@@ -270,7 +286,8 @@ public interface CartridgeRepo extends JpaRepository<Cartridge, Long> {
    + "AND model.model LIKE CONCAT('%',:cartridgeModel,'%') "
    + "AND ob.location_id = :idLocation "
    + "AND cart.util = FALSE "
-   + "AND cart.use_in_printer = FALSE",
+   + "AND cart.use_in_printer = FALSE "
+   + "AND model.archived = FALSE ",
    countQuery = "SELECT count(*) "
     + "FROM cartridge cart "
    + "LEFT JOIN object_buing ob "
@@ -285,7 +302,8 @@ public interface CartridgeRepo extends JpaRepository<Cartridge, Long> {
    + "AND model.model LIKE CONCAT('%',:cartridgeModel,'%') "
    + "AND ob.location_id = :idLocation "
    + "AND cart.util = FALSE "
-   + "AND cart.use_in_printer = FALSE" ,nativeQuery = true)
+   + "AND cart.use_in_printer = FALSE "
+   + "AND model.archived = FALSE " ,nativeQuery = true)
    Page<Cartridge> findCartridgesByModelPrinterAndLocationAndCartridgeModel(@Param("idLocation") Long idLocation, @Param("idPrinter") Long idPrinter, @Param("cartridgeModel") String cartridgeModel, Pageable pageable);
    
    
@@ -302,7 +320,8 @@ public interface CartridgeRepo extends JpaRepository<Cartridge, Long> {
    + "WHERE model.model LIKE CONCAT('%',:cartridgeModel,'%') "
    + "AND ob.location_id = :idLocation "
    + "AND cart.util = FALSE "
-   + "AND cart.use_in_printer = FALSE",
+   + "AND cart.use_in_printer = FALSE "
+   + "AND model.archived = FALSE ",
    countQuery = "SELECT count(*) "
     + "FROM cartridge cart "
    + "LEFT JOIN object_buing ob "
@@ -316,10 +335,9 @@ public interface CartridgeRepo extends JpaRepository<Cartridge, Long> {
    + "WHERE model.model LIKE CONCAT('%',:cartridgeModel,'%') "
    + "AND ob.location_id = :idLocation "
    + "AND cart.util = FALSE "
-   + "AND cart.use_in_printer = FALSE" ,nativeQuery = true)
+   + "AND cart.use_in_printer = FALSE "
+   + "AND model.archived = FALSE " ,nativeQuery = true)
    Page<Cartridge> findCartridgesByLocationAndCartridgeModel(@Param("idLocation") Long idLocation, @Param("cartridgeModel") String cartridgeModel, Pageable pageable);
-   
-   
    
    
    @Query(value = "SELECT cart.*, ob.*, contr.*, model.* "
@@ -335,7 +353,8 @@ public interface CartridgeRepo extends JpaRepository<Cartridge, Long> {
    + "WHERE cart_print.models_printers_id = ?2 "
    + "AND ob.location_id = ?1 "
    + "AND cart.util = FALSE "
-   + "AND cart.use_in_printer = FALSE", nativeQuery = true)
+   + "AND cart.use_in_printer = FALSE "
+   + "AND model.archived = FALSE ", nativeQuery = true)
    List<Cartridge> findCartridgesByModelPrinterAndLocation(Long idLocation, Long idPrinter);
    
    
@@ -357,24 +376,33 @@ public interface CartridgeRepo extends JpaRepository<Cartridge, Long> {
                 "FROM cartridge cart " +
                 "LEFT JOIN object_buing ob " +
                 "ON cart.cartridge_id = ob.id " +
+                "LEFT JOIN cartridge_model cart_model " +
+                "ON cart.model_id = cart_model.id " +
                 "WHERE ob.location_id = ?1 " +
                 "AND cart.use_in_printer = FALSE " +
-                "AND cart.util = FALSE ",
+                "AND cart.util = FALSE " +
+                "AND cart_model.archived = FALSE ",
            countQuery = "SELECT count(*) " +
                 "FROM cartridge cart " +
                 "LEFT JOIN object_buing ob " +
                 "ON cart.cartridge_id = ob.id " +
+               "LEFT JOIN cartridge_model cart_model " +
+                "ON cart.model_id = cart_model.id " +
                 "WHERE ob.location_id = ?1 " +
                 "AND cart.use_in_printer = false " +
-                "AND cart.util = false ", nativeQuery = true)
+                "AND cart.util = false " +
+                "AND cart_model.archived = FALSE ", nativeQuery = true)
    Page<Cartridge> findByLocationId(Long idLocation, Pageable pageable); // Изменить чтобы не подтягивались картриджи списанные и использующиеся
    @Query(value = "SELECT cart.*, ob.* " +
                 "FROM cartridge cart " +
                 "LEFT JOIN object_buing ob " +
                 "ON cart.cartridge_id = ob.id " +
+               "LEFT JOIN cartridge_model cart_model " +
+                "ON cart.model_id = cart_model.id " +
                 "WHERE ob.location_id = ?1 " +
                 "AND cart.use_in_printer = false " +
-                "AND cart.util = false ", nativeQuery = true)
+                "AND cart.util = false " +
+                "AND cart_model.archived = FALSE ", nativeQuery = true)
    List<Cartridge> findByLocationId(Long idLocation);
    Page<Cartridge> findByLocationIdAndContractContractNumberIgnoreCaseLike(Long idLocation, String contractNumber, Pageable pageable);
    

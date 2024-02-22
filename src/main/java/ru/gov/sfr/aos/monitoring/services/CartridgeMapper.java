@@ -42,9 +42,9 @@ public class CartridgeMapper {
     private CartridgeManufacturerRepo cartridgeManufacturerRepo;
 
 
-
+// Переписать!
     public List<CartridgeModelDTO> getCartridgeModels() {
-        List<CartridgeModel> list = cartridgeModelRepo.findAll();
+        List<CartridgeModel> list = cartridgeModelRepo.findAllIsArchivedFalse();
         List<CartridgeModelDTO> dtoes = new ArrayList<>();
         for (int i = 0; i < list.size(); i++) {
             CartridgeModelDTO cartridgeModelDTO = new CartridgeModelDTO();
@@ -52,6 +52,8 @@ public class CartridgeMapper {
             cartridgeModelDTO.setResource(list.get(i).getDefaultNumberPrintPage().toString());
             cartridgeModelDTO.setModel(list.get(i).getModel());
             cartridgeModelDTO.setType(list.get(i).getType().getName());
+            cartridgeModelDTO.setManufacturer(list.get(i).getCartridgeManufacturer().getManufacturerName());
+            cartridgeModelDTO.setIdManufacturer(list.get(i).getCartridgeManufacturer().getId());
             List<Long> printers = new ArrayList<>();
             for (int j = 0; j < list.get(i).getModelsPrinters().size(); j++) {
                 printers.add(list.get(i).getModelsPrinters().get(j).getId());
@@ -61,6 +63,27 @@ public class CartridgeMapper {
         }
         return dtoes;
     }
+    
+      public List<CartridgeModelDTO> cartridgeModelListToCartridgeModelListDto(List<CartridgeModel> list) {
+        List<CartridgeModelDTO> dtoes = new ArrayList<>();
+        for (int i = 0; i < list.size(); i++) {
+            CartridgeModelDTO cartridgeModelDTO = new CartridgeModelDTO();
+            cartridgeModelDTO.setId(list.get(i).getId());
+            cartridgeModelDTO.setResource(list.get(i).getDefaultNumberPrintPage().toString());
+            cartridgeModelDTO.setModel(list.get(i).getModel());
+            cartridgeModelDTO.setType(list.get(i).getType().getName());
+            cartridgeModelDTO.setManufacturer(list.get(i).getCartridgeManufacturer().getManufacturerName());
+            cartridgeModelDTO.setIdManufacturer(list.get(i).getCartridgeManufacturer().getId());
+            List<Long> printers = new ArrayList<>();
+            for (int j = 0; j < list.get(i).getModelsPrinters().size(); j++) {
+                printers.add(list.get(i).getModelsPrinters().get(j).getId());
+            }
+            cartridgeModelDTO.setIdModel(printers);
+            dtoes.add(cartridgeModelDTO);
+        }
+        return dtoes;
+    }
+    
 
     public CartridgeDTO getCartridgeById(Long id) {
         CartridgeDTO dto = new CartridgeDTO();

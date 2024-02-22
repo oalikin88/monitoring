@@ -52,6 +52,7 @@ public class CartridgeModel implements Serializable {
     @NotNull(message = "Поле \"Производитель\" не может быть пустым")
     @ManyToOne(cascade = CascadeType.ALL)
     private CartridgeManufacturer cartridgeManufacturer;
+    private boolean archived;
 
     
     
@@ -84,9 +85,6 @@ public class CartridgeModel implements Serializable {
     }
     
     
-    
-    
-
     public Long getDefaultNumberPrintPage() {
         return defaultNumberPrintPage;
     }
@@ -141,6 +139,14 @@ public class CartridgeModel implements Serializable {
 
     public void setCartridgeManufacturer(CartridgeManufacturer cartridgeManufacturer) {
         this.cartridgeManufacturer = cartridgeManufacturer;
+    }
+
+    public boolean isArchived() {
+        return archived;
+    }
+
+    public void setArchived(boolean archived) {
+        this.archived = archived;
     }
 
     

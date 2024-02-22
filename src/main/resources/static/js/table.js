@@ -1,7 +1,7 @@
 let parent = document.querySelector('#tabContent');
 let models = new Map(Object.entries(modelsInput));
 let locations = new Map(Object.entries(locationsInput));
-
+let oldModelIdValue;
 
 
 
@@ -840,7 +840,7 @@ window.onload = function () {
     parent.appendChild(modalModelsCartridgeWrapper);
 
     modalDialogCenteredModelsCartridgeDiv = document.createElement('div');
-    modalDialogCenteredModelsCartridgeDiv.className = 'modal-dialog modal-dialog-centered';
+    modalDialogCenteredModelsCartridgeDiv.className = 'modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable';
     modalModelsCartridgeWrapper.appendChild(modalDialogCenteredModelsCartridgeDiv);
 
     modalContentModelsCartridgeDiv = document.createElement('div');
@@ -850,12 +850,33 @@ window.onload = function () {
     modalHeaderModelsCartridgeDiv = document.createElement('div');
     modalHeaderModelsCartridgeDiv.className = 'modal-header';
     modalContentModelsCartridgeDiv.appendChild(modalHeaderModelsCartridgeDiv);
-
+    
+    modalHeaderForNavModelsCartridgeDiv = document.createElement('div');
+    modalHeaderForNavModelsCartridgeDiv.className = 'modal-header';
+    modalHeaderForNavModelsCartridgeDiv.id = 'modalHeaderForNav';
+    modalContentModelsCartridgeDiv.appendChild(modalHeaderForNavModelsCartridgeDiv);
+    modalTitleModelsCartridgeRow = document.createElement('div');
+    modalTitleModelsCartridgeRow.id = 'modalTitleModelsCartridgeRow';
+    modalTitleModelsCartridgeRow.className = 'row text-center';
+    modalHeaderModelsCartridgeDiv.appendChild(modalTitleModelsCartridgeRow);
+    
     modalTitleModelsCartridgeH1 = document.createElement('h1');
-    modalTitleModelsCartridgeH1.className = 'modal-title fs-5';
+    modalTitleModelsCartridgeH1.className = 'modal-title fs-5 text-center';
     modalTitleModelsCartridgeH1.id = 'modalModelsCartridgeLabel';
     modalTitleModelsCartridgeH1.innerText = 'Список моделей картриджей';
-    modalHeaderModelsCartridgeDiv.appendChild(modalTitleModelsCartridgeH1);
+    modalTitleModelsCartridgeRow.appendChild(modalTitleModelsCartridgeH1);
+    
+
+
+    modalHeaderForNavModelsCartridgeDiv.innerHTML = '<nav id="modelCartridgeNav"><div class="nav nav-tabs" id="nav-tab" role="tablist"> ' +
+                                                 '<button class="nav-link active" id="actualModels" data-bs-toggle="tab" data-bs-target="#activeCartridgeList" type="button" role="tab" aria-controls="nav-home" aria-selected="true">Актуальные</button> ' +
+                                                 '<button class="nav-link" id="archivedModels" data-bs-toggle="tab" data-bs-target="#archivedCartridgeList" type="button" role="tab" aria-controls="nav-contact" aria-selected="false">В архиве</button></div></nav> ' + 
+                                                 '<div class="input-group mb-3" id="searchModelCart">' +
+                                                  '<input type="text" class="form-control" placeholder="Поиск" aria-label="SearchModel" aria-describedby="basic-addon1">' +
+                                                  '<span class="input-group-text" id="basic-addon1"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">' +
+                                                  '<path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>' +
+                                                    '</svg></span>' +
+                                                  '</div>';
 
     modalModelsCartridgeBtnClose = document.createElement('button');
     modalModelsCartridgeBtnClose.className = 'btn-close';
@@ -869,28 +890,30 @@ window.onload = function () {
     modalContentModelsCartridgeDiv.appendChild(modalModelsCartridgeBodyDiv);
 
     modalModelsCartridgeBodyContentInner = document.createElement('div');
-    modalModelsCartridgeBodyContentInner.className = 'modalContentInner';
+    modalModelsCartridgeBodyContentInner.className = 'tab-content modalContentInner';
     modalModelsCartridgeBodyContentInner.id = 'modalModelsCartridgeContentInner';
     modalModelsCartridgeBodyDiv.appendChild(modalModelsCartridgeBodyContentInner);
 
+
     //Content
 
-    modalModelsCartridgeButtonsRow = document.createElement('div');
-    modalModelsCartridgeButtonsRow.className = 'row';
-    modalModelsCartridgeBodyDiv.appendChild(modalModelsCartridgeButtonsRow);
 
+
+    
+
+    modalModelsCartridgeFooterDiv = document.createElement('div');
+    modalModelsCartridgeFooterDiv.className = 'modal-footer';
+    modalContentModelsCartridgeDiv.appendChild(modalModelsCartridgeFooterDiv);
+    
     modalModelsCartridgeBtnAdd = document.createElement('button');
     modalModelsCartridgeBtnAdd.className = 'btn btn-secondary ';
     modalModelsCartridgeBtnAdd.type = 'button';
     modalModelsCartridgeBtnAdd.setAttribute('data-bs-target', '#modalModelsCartridge2');
     modalModelsCartridgeBtnAdd.setAttribute('data-bs-toggle', 'modal');
     modalModelsCartridgeBtnAdd.innerText = 'Добавить модель';
-    modalModelsCartridgeButtonsRow.appendChild(modalModelsCartridgeBtnAdd);
-
-    modalModelsCartridgeFooterDiv = document.createElement('div');
-    modalModelsCartridgeFooterDiv.className = 'modal-footer';
-    modalContentModelsCartridgeDiv.appendChild(modalModelsCartridgeFooterDiv);
-
+    modalModelsCartridgeBtnAdd.id = 'addCartridgeModel';
+    modalModelsCartridgeFooterDiv.appendChild(modalModelsCartridgeBtnAdd);
+    
     modalModelsCartridgeFooterCloseBtn = document.createElement('button');
     modalModelsCartridgeFooterCloseBtn.className = 'btn btn-secondary';
     modalModelsCartridgeFooterCloseBtn.type = 'button';
@@ -898,8 +921,183 @@ window.onload = function () {
     modalModelsCartridgeFooterCloseBtn.innerText = 'Закрыть';
     modalModelsCartridgeFooterCloseBtn.id = "modalModelsCartridgeWindow1BtnClose";
     modalModelsCartridgeFooterDiv.appendChild(modalModelsCartridgeFooterCloseBtn);
+    
+
+    
+        // Модальное окно с редактированием модели картриджа
 
 
+    modalEditModelCartridgeWrapper = document.createElement('div');
+    modalEditModelCartridgeWrapper.className = 'modal fade';
+    modalEditModelCartridgeWrapper.id = 'modalEditModelCartridge';
+    modalEditModelCartridgeWrapper.setAttribute('data-bs-backdrop', 'static');
+    modalEditModelCartridgeWrapper.setAttribute('data-bs-keyboard', 'false');
+    modalEditModelCartridgeWrapper.setAttribute('tabindex', '-1');
+    parent.appendChild(modalEditModelCartridgeWrapper);
+
+    modalDialogCenteredEditModelCartridgeDiv = document.createElement('div');
+    modalDialogCenteredEditModelCartridgeDiv.className = 'modal-dialog modal-dialog-centered modal-lg';
+    modalEditModelCartridgeWrapper.appendChild(modalDialogCenteredEditModelCartridgeDiv);
+
+    modalContentEditModelCartridgeDiv = document.createElement('div');
+    modalContentEditModelCartridgeDiv.className = 'modal-content';
+    modalDialogCenteredEditModelCartridgeDiv.appendChild(modalContentEditModelCartridgeDiv);
+
+    modalHeaderEditModelCartridgeDiv = document.createElement('div');
+    modalHeaderEditModelCartridgeDiv.className = 'modal-header';
+    modalContentEditModelCartridgeDiv.appendChild(modalHeaderEditModelCartridgeDiv);
+
+    modalTitleEditModelCartridgeH1 = document.createElement('h1');
+    modalTitleEditModelCartridgeH1.className = 'modal-title fs-5';
+    modalTitleEditModelCartridgeH1.id = 'modalEditModelCartridgeTitle';
+    modalTitleEditModelCartridgeH1.innerText = 'Редактирование модели картриджа';
+    modalHeaderEditModelCartridgeDiv.appendChild(modalTitleEditModelCartridgeH1);
+
+    modalEditdModelCartridgeBtnClose = document.createElement('button');
+    modalEditdModelCartridgeBtnClose.className = 'btn-close';
+    modalEditdModelCartridgeBtnClose.type = 'button';
+    modalEditdModelCartridgeBtnClose.id = 'modalEditModelCartridgeCloseBtnHeader';
+    modalEditdModelCartridgeBtnClose.setAttribute('data-bs-toggle', 'modal');
+    modalEditdModelCartridgeBtnClose.setAttribute('data-bs-target', '#modalModelsCartridge');
+    modalEditdModelCartridgeBtnClose.setAttribute('aria-label', 'close');
+    modalHeaderEditModelCartridgeDiv.appendChild(modalEditdModelCartridgeBtnClose);
+
+    modalEditModelCartridgeBodyDiv = document.createElement('div');
+    modalEditModelCartridgeBodyDiv.className = 'modal-body ml-3 mr-3';
+    modalEditModelCartridgeBodyDiv.id = 'modalEditModelCartridgeBody';
+    modalContentEditModelCartridgeDiv.appendChild(modalEditModelCartridgeBodyDiv);
+
+    modalEditModelCartridgeBodyContentInner = document.createElement('div');
+    modalEditModelCartridgeBodyContentInner.className = 'modalEditModelContentInner';
+    modalEditModelCartridgeBodyContentInner.id = 'modalEditModelCartridgeContentInner';
+    modalEditModelCartridgeBodyDiv.appendChild(modalEditModelCartridgeBodyContentInner);
+
+
+    //Content
+
+    modalEditModelCartridgeButtonsRow = document.createElement('div');
+    modalEditModelCartridgeButtonsRow.className = 'row btnSaveCartridgeModel mt-5 mx-3 px-3 text-center';
+    modalEditModelCartridgeBodyDiv.appendChild(modalEditModelCartridgeButtonsRow);
+    
+    modalEditColBtnSave = document.createElement('div');
+    modalEditColBtnSave.className = 'col-6';
+    
+    modalEditColBtnRemove = document.createElement('div');
+    modalEditColBtnRemove.className = 'col-6';
+    
+    modalEditModelCartridgeButtonsRow.appendChild(modalEditColBtnRemove);
+    modalEditModelCartridgeButtonsRow.appendChild(modalEditColBtnSave);
+    
+    modalEditModelCartridgeBtnSave = document.createElement('button');
+    modalEditModelCartridgeBtnSave.className = 'btn btn-success';
+    modalEditModelCartridgeBtnSave.type = 'button';
+
+    modalEditModelCartridgeBtnSave.innerText = 'Применить';
+    modalEditModelCartridgeBtnSave.id = 'btnSaveCartridgeModel';
+    
+    modalEditModelCartridgeBtnRemove = document.createElement('button');
+    modalEditModelCartridgeBtnRemove.className = 'btn btn-danger';
+    modalEditModelCartridgeBtnRemove.type = 'button';
+
+    modalEditModelCartridgeBtnRemove.innerText = 'Удалить';
+    modalEditModelCartridgeBtnRemove.id = 'btnRemoveCartridgeModel';
+    modalEditColBtnSave.appendChild(modalEditModelCartridgeBtnSave);
+    modalEditColBtnRemove.appendChild(modalEditModelCartridgeBtnRemove);
+    
+    // Удаление модели картриджа
+    
+    modalEditModelCartridgeBtnRemove.addEventListener('click', function(){
+        $.ajax({
+        type: "DELETE",
+        url: "/editModelCartridge/",
+        data: {id: oldModelIdValue},
+        async: false,
+        success: function () {
+            $('#modalEditModelCartridge').modal('hide');
+            document.querySelector('#modalEditModelCartridgeContentInner').innerHTML = '';
+            $('#addModelCartridgeMenu').click();
+            alert("Успешно удалён");
+            
+        },
+        error: function(callback) {
+            alert("Ошибка");
+  }, 
+    
+
+    });
+        
+    });
+    
+    modalEditModelCartridgeFooterDiv = document.createElement('div');
+    modalEditModelCartridgeFooterDiv.className = 'modal-footer';
+    modalContentEditModelCartridgeDiv.appendChild(modalEditModelCartridgeFooterDiv);
+
+    modalEditModelCartridgeFooterCloseBtn = document.createElement('button');
+    modalEditModelCartridgeFooterCloseBtn.className = 'btn btn-secondary';
+    modalEditModelCartridgeFooterCloseBtn.type = 'button';
+    modalEditModelCartridgeFooterCloseBtn.setAttribute('data-bs-toggle', 'modal');
+    modalEditModelCartridgeFooterCloseBtn.setAttribute('data-bs-target', '#modalModelsCartridge');
+    modalEditModelCartridgeFooterCloseBtn.innerText = 'Отмена';
+    modalEditModelCartridgeFooterCloseBtn.id = "modalEditModelCartridgeWindow1BtnClose"; 
+    modalEditModelCartridgeFooterDiv.appendChild(modalEditModelCartridgeFooterCloseBtn);
+    
+    modalEditModelCartridgeFooterCloseBtn.addEventListener('click', function() {
+        document.querySelector('#modalEditModelCartridgeContentInner').innerHTML = '';
+    });
+    modalEditdModelCartridgeBtnClose.addEventListener('click', function() {
+        document.querySelector('#modalEditModelCartridgeContentInner').innerHTML = '';
+    });
+    
+        /*
+         * Обработчик нажатия кнопки "Применить"
+         * Получение изменений с полей формы
+         */
+    modalEditModelCartridgeBtnSave.addEventListener('click', function() {
+        let options = Object.entries($('#editModelCartridgeManufacturer')[0].selectize.options);
+        let target = $('#editModelCartridgeManufacturer')[0].selectize.getValue();
+        let idManufacturer;
+        let modelName;
+        let typeModelCartridge;
+        let modelCartridgeResource;
+        let idModelsPrinter = $('#selectModelPrinter')[0].selectize.getValue();
+        for(let el = 0; el < options.length; el++) {
+            if(target.indexOf(options[el][0]) === 0) {
+                idManufacturer = options[el][1].idManufacturer;
+                break;
+            }
+        }
+        typeModelCartridge = $('#modelCartridgeEditType')[0].value;
+        modelName = $('#editModelCartridgeModel')[0].selectize.getValue();
+        modelCartridgeResource = $('#modelCartridgeEditResource')[0].value;
+        let dto = {
+            id: oldModelIdValue,
+            model: modelName,
+            idManufacturer: idManufacturer,
+            type: typeModelCartridge,
+            resource: modelCartridgeResource,
+            idModel: idModelsPrinter
+        }
+        
+            $.ajax({
+        type: "POST",
+        url: "/updatecartridgebymodel/",
+        data: dto,
+        async: false,
+        success: function () {
+            $('#modalEditModelCartridge').modal('hide');
+            document.querySelector('#modalEditModelCartridgeContentInner').innerHTML = '';
+            $('#addModelCartridgeMenu').click();
+            alert("Успешно сохранен");
+            
+        },
+        error: function(callback) {
+            alert("Ошибка");
+  }, 
+    
+
+    });
+        
+    });
 
     // Модальное окно с добавлением моделей принтеров
 
@@ -1018,10 +1216,9 @@ window.onload = function () {
     modalModelsCartridgeFooterOKBtn2 = document.createElement('button');
     modalModelsCartridgeFooterOKBtn2.className = 'btn btn-primary';
     modalModelsCartridgeFooterOKBtn2.type = 'button';
-    modalModelsCartridgeFooterOKBtn2.setAttribute('data-bs-toggle', 'modal');
-    modalModelsCartridgeFooterOKBtn2.setAttribute('data-bs-target', '#modalModelsCartridge');
     modalModelsCartridgeFooterOKBtn2.innerText = 'Добавить';
     modalModelsCartridgeFooterDiv2.appendChild(modalModelsCartridgeFooterOKBtn2);
+    
 
     const type = document.getElementById('modalModelTypeInput');
     const model = document.getElementById('modalModelCartridgeSelect');
@@ -1167,57 +1364,14 @@ window.onload = function () {
                 manufacturer: $('.modalManufacturerCartridgeSelect')[0].innerText
             },
             success: function (result) {
-                parent = document.getElementById('modalModelsCartridgeContentInner');
-                child = document.getElementById('modalTableModelsCartridge');
-                parent.removeChild(child);
 
-
-                tableModelsCartridge = document.createElement('table');
-                tableModelsCartridge.id = "modalTableModelsCartridge";
-                tableModelsCartridge.className = "table table-striped table-bordered";
-                modalModelsCartridgeBodyContentInner.appendChild(tableModelsCartridge);
-
-                theadModelsCartridge = document.createElement('thead');
-                tableModelsCartridge.appendChild(theadModelsCartridge);
-                trTheadModelsCartridge = document.createElement('tr');
-                thTheadModelsCartridge1 = document.createElement('th');
-
-                thTheadModelsCartridge1.setAttribute('scope', 'col');
-                thTheadModelsCartridge1.innerText = '#';
-                thTheadModelsCartridge2 = document.createElement('th');
-                thTheadModelsCartridge2.setAttribute('scope', 'col');
-                thTheadModelsCartridge2.innerText = 'Модель картриджа';
-                theadModelsCartridge.appendChild(trTheadModelsCartridge);
-                trTheadModelsCartridge.appendChild(thTheadModelsCartridge1);
-                trTheadModelsCartridge.appendChild(thTheadModelsCartridge2);
-                tbodyModelCartridge = document.createElement('tbody');
-                tableModelsCartridge.appendChild(tbodyModelCartridge);
-
-                $.ajax({
-                    url: '/cartridge',
-                    type: 'GET',
-                    dataType: 'json',
-                    success: function (data) {
-                        arr = data.sort();
-                        for (i = 0; i < arr.length; i++) {
-                            trModelsCartridge = document.createElement('tr');
-                            tbodyModelCartridge.appendChild(trModelsCartridge);
-                            tdCountModelsCartridge = document.createElement('td');
-                            tdCountModelsCartridge.innerText = i + 1;
-                            trModelsCartridge.appendChild(tdCountModelsCartridge);
-                            tdModelCartridge = document.createElement('td');
-                            tdModelCartridge.setAttribute('id', arr[i].id);
-                            tdModelCartridge.setAttribute('class', 'model');
-                            tdModelCartridge.innerText = arr[i].model;
-                            trModelsCartridge.appendChild(tdModelCartridge);
-                            tdModelsCartridgeBtn = document.createElement('td');
-                            
-                            
-                        }
-
-
-                    }
-                });
+            $('#modalModelTypeInput')[0].selectize.setValue();
+            $('#modalManufacturerCartridgeSelect')[0].selectize.setValue();
+            $('#modalModelCartridgeSelect')[0].selectize.setValue();
+            $('#modalModelsPrinterSelect')[0].selectize.setValue();
+            $('#modalNominalResourceInput')[0].value = '';
+            $('#modalModelsCartridge2').modal('hide');
+            $('#addModelCartridgeMenu').click();
 
             },
             error: function (callback) {
@@ -1403,10 +1557,6 @@ window.onload = function () {
             alert("Вы ввели неправильную дату");
         }
 
-
-
-
-
     });
 
 
@@ -1457,52 +1607,421 @@ window.onload = function () {
 
     let addModelCartridgeMenu = document.querySelector('#addModelCartridgeMenu');
     addModelCartridgeMenu.addEventListener('click', function () {
-        tableModelsCartridge = document.createElement('table');
-        tableModelsCartridge.id = "modalTableModelsCartridge";
-        tableModelsCartridge.className = "table table-striped table-bordered";
-        modalModelsCartridgeBodyContentInner.appendChild(tableModelsCartridge);
-
-        theadModelsCartridge = document.createElement('thead');
-        tableModelsCartridge.appendChild(theadModelsCartridge);
-        trTheadModelsCartridge = document.createElement('tr');
-        thTheadModelsCartridge1 = document.createElement('th');
-
-        thTheadModelsCartridge1.setAttribute('scope', 'col');
-        thTheadModelsCartridge1.innerText = '#';
-        thTheadModelsCartridge2 = document.createElement('th');
-        thTheadModelsCartridge2.setAttribute('scope', 'col');
-        thTheadModelsCartridge2.innerText = 'Модель картриджа';
-        theadModelsCartridge.appendChild(trTheadModelsCartridge);
-        trTheadModelsCartridge.appendChild(thTheadModelsCartridge1);
-        trTheadModelsCartridge.appendChild(thTheadModelsCartridge2);
-        tbodyModelCartridge = document.createElement('tbody');
-        tableModelsCartridge.appendChild(tbodyModelCartridge);
+        modalModelsCartridgeBodyContentInner.innerHTML = '';
+        
+        cartridgeListContainer = document.createElement('div');
+        cartridgeListContainer.id = "activeCartridgeList";
+        cartridgeListContainer.className = "tab-pane fade show active cartridgeList";
+        cartridgeListContainer.role = 'tabpanel';
+        cartridgeListContainer.setAttribute('aria-labelledby', 'activeCartridgeList-tab');
+        cartridgeListContainer.setAttribute('tabindex', 0);
+        modalModelsCartridgeBodyContentInner.appendChild(cartridgeListContainer);
+        
+        headRow = document.createElement('div');
+        headRow.className = 'row fw-bold pt-2 pb-3 mx-3 mb-3 px-3';
+        headRow.style = 'border-bottom: solid rgb(43, 43, 43);';
+        cartridgeListContainer.appendChild(headRow);
+        headLabelCount = document.createElement('div');
+        headLabelCount.className = 'col-1';
+        headLabelCount.innerText = '#';
+        headRow.appendChild(headLabelCount);
+        headLabelManufacturerCartridge = document.createElement('div');
+        headLabelManufacturerCartridge.className = 'col-5';
+        headLabelManufacturerCartridge.innerText = 'Производитель';
+        headRow.appendChild(headLabelManufacturerCartridge);
+        headLabelModelCartridge = document.createElement('div');
+        headLabelModelCartridge.className = 'col-5';
+        headLabelModelCartridge.innerText = 'Модель';
+        headRow.appendChild(headLabelModelCartridge);
+        headLabelModelCartridgeId = document.createElement('div');
+        headLabelModelCartridgeId.className = 'col-1';
+        headRow.appendChild(headLabelModelCartridgeId);
 
         $.ajax({
             url: '/cartridge',
             type: 'GET',
+            async: false,
             dataType: 'json',
             success: function (data) {
-                arr = data.sort();
+                //printerRows.sort((a, b) => (a.childNodes[0].innerText - b.childNodes[0].innerText));
+                let arr = data.sort((a, b) => a.manufacturer > b.manufacturer ? 1 : -1);
+                modelCartridgesContainer = document.createElement('div');
+                modelCartridgesContainer.id = 'modelCartridgesContainer';
+                cartridgeListContainer.appendChild(modelCartridgesContainer);
                 for (i = 0; i < arr.length; i++) {
-                    trModelsCartridge = document.createElement('tr');
-                    tbodyModelCartridge.appendChild(trModelsCartridge);
-                    tdCountModelsCartridge = document.createElement('td');
-                    tdCountModelsCartridge.innerText = i + 1;
-                    trModelsCartridge.appendChild(tdCountModelsCartridge);
-                    tdModelCartridge = document.createElement('td');
-                    tdModelCartridge.setAttribute('id', arr[i].id);
-                    tdModelCartridge.setAttribute('class', 'model');
-                    tdModelCartridge.innerText = arr[i].model;
-                    trModelsCartridge.appendChild(tdModelCartridge);
+                    if(i == arr.length - 1) {
+                        nextRow = document.createElement('div');
+                        nextRow.className = 'row modelCartridgeRow mx-3 px-3 pb-3';
+                        modelCartridgesContainer.appendChild(nextRow);
+                    }else {
+                            nextRow = document.createElement('div');
+                            nextRow.className = 'row modelCartridgeRow mx-3 px-3';
+                            nextRow.style = 'border-bottom: 0.1rem solid rgb(195, 195, 200);';
+                            modelCartridgesContainer.appendChild(nextRow);
+                        }
+                    countCartridge = document.createElement('div');
+                    countCartridge.className = 'col-1';
+                    countCartridge.innerText = i + 1;
+                    
+                    manufacturerCartridge = document.createElement('div');
+                    manufacturerCartridge.className = 'col-5 manufacturer';
+                    manufacturerCartridge.innerText = arr[i].manufacturer;
+                    
+                    modelCartridge = document.createElement('div');
+                    modelCartridge.className = 'col-5 model';
+                    modelCartridge.innerText = arr[i].model;
+                    
+                    modelCartridgeId = document.createElement('div');
+                    modelCartridgeId.className = 'col-1 idModel';
+                    
+                    linkCartridgeModel = document.createElement('a');
+                    linkCartridgeModel.href = '#';
+                    linkCartridgeModel.id = "idModel=" + arr[i].id;
+                    linkCartridgeModel.setAttribute("arrIndex", i);
+                    linkCartridgeModel.setAttribute("data-bs-toggle", "modal");
+                    linkCartridgeModel.setAttribute("data-bs-target", "#modalEditModelCartridge");
+                    imgInner = document.createElement('img');
+                    imgInner.src = '/img/pencil-square.svg?height=16';
+                    linkCartridgeModel.appendChild(imgInner);
+                    modelCartridgeId.appendChild(linkCartridgeModel);
+                    
+                    nextRow.appendChild(countCartridge);
+                    nextRow.appendChild(manufacturerCartridge);
+                    nextRow.appendChild(modelCartridge);
+                    nextRow.appendChild(modelCartridgeId);
+                    linkCartridgeModel.addEventListener('click', function(event) {
+                        
+                        // Вызов модального окна редактирования модели картриджа
+                        let modelCart = arr[event.target.parentElement.getAttribute('arrIndex')];
+                        modalInner = document.querySelector('#modalEditModelCartridgeContentInner');
+                        rowName = document.createElement('div');
+                        rowName.className = 'row mb-3 mt-3';
+                        rowName.id = 'rowName';
+                        modalInner.appendChild(rowName);
+                        divColManufNameLabel = document.createElement('div');
+                        divColManufNameLabel.className = 'col-2 mt-1';
+                        divColManufNameLabel.innerText = 'Производитель';
+                        divColManufNameValue = document.createElement('div');
+                        divColManufNameValue.className = 'col-4';
+                        divColManufNameValue.id = 'editModelCartridgeManufacturerDiv';
+                        //divColManufNameValue.innerText = modelCart.manufacturer;
+                        selectManufacturer = document.createElement('select');
+                        selectManufacturer.className = 'form-select';
+                        selectManufacturer.id = 'editModelCartridgeManufacturer';
+                        divColManufNameValue.appendChild(selectManufacturer);
+                        rowName.appendChild(divColManufNameLabel);
+                        rowName.appendChild(divColManufNameValue);
+                        divColModelLabel = document.createElement('div');
+                        divColModelLabel.className = 'col-1 mt-1';
+                        divColModelLabel.innerText = 'Модель';
+                        divColModelValue = document.createElement('div');
+                        divColModelValue.className = 'col-5';
+                       // divColModelValue.innerText = modelCart.model;
+                        selectModel = document.createElement('select');
+                        selectModel.className = 'form-select';
+                        selectModel.id = 'editModelCartridgeModel';
+                        divColModelValue.appendChild(selectModel);
+                        rowName.appendChild(divColModelLabel);
+                        rowName.appendChild(divColModelValue);
+                        rowModelPrinter = document.createElement('div');
+                        rowModelPrinter.className = 'row mb-3 mt-3';
+                        rowModelPrinter.id = 'rowModelPrinter';
+                        modalInner.appendChild(rowModelPrinter);
+                        divColModelPrinterLabel = document.createElement('div');
+                        divColModelPrinterLabel.className = 'col-3 mt-1';
+                        divColModelPrinterLabel.innerText = 'Модель принтера';
+                        rowModelPrinter.appendChild(divColModelPrinterLabel);
+                        divColModelPrinterValue = document.createElement('div');
+                        divColModelPrinterValue.className = 'col-9';
+                        selectModelPrinter = document.createElement('select');
+                        selectModelPrinter.className = 'form-select';
+                        selectModelPrinter.id = 'selectModelPrinter';
+                        divColModelPrinterValue.appendChild(selectModelPrinter);
+                        rowModelPrinter.appendChild(divColModelPrinterValue);
+                        rowProperties = document.createElement('div');
+                        rowProperties.className = 'row mt-3 mb-5';
+                        rowProperties.id = 'rowProperties';
+                        modalInner.appendChild(rowProperties);
+                        divColTypeModelLabel = document.createElement('div');
+                        divColTypeModelLabel.className = 'col mt-1';
+                        divColTypeModelLabel.innerText = 'Тип';
+                        rowProperties.appendChild(divColTypeModelLabel);
+                        divColTypeModelValue = document.createElement('div');
+                        divColTypeModelValue.className = 'col';
+                        selectTypeModel = document.createElement('select');
+                        selectTypeModel.className = 'form-select';
+                        selectTypeModel.id = 'modelCartridgeEditType';
+                        divColTypeModelValue.appendChild(selectTypeModel);
+                        optionOriginal = document.createElement('option');
+                        optionOriginal.value = 'ORIGINAL';
+                        optionOriginal.innerHTML = 'Оригинальный';
+                        selectTypeModel.appendChild(optionOriginal);
+                        optionAnalog = document.createElement('option');
+                        optionAnalog.value = 'ANALOG';
+                        optionAnalog.innerHTML = 'Аналог';
+                        selectTypeModel.appendChild(optionAnalog);
+                        optionStart = document.createElement('option');
+                        optionStart.value = 'START';
+                        optionStart.innerHTML = 'Стартовый';
+                        selectTypeModel.appendChild(optionStart);
+                        switch (modelCart.type) {
+                            case "Оригинальный":
+                                optionOriginal.selected = true;
+                                break;
+                            case "Аналог":
+                                optionAnalog.selected = true;
+                                break;
+                            case "Стартовый":
+                                optionStart.selected = true;
+                                break;
+                        }
+                        rowProperties.appendChild(divColTypeModelValue);
+                        divColModelResourceLabel = document.createElement('div');
+                        divColModelResourceLabel.className = 'col mt-1';
+                        divColModelResourceLabel.innerText = "Номинальный ресурс";
+                        rowProperties.appendChild(divColModelResourceLabel);
+                        divColModelResourceValue = document.createElement('div');
+                        divColModelResourceValue.className = 'col';
+                        inputModelResource = document.createElement('input');
+                        inputModelResource.className = 'form-control';
+                        inputModelResource.id = 'modelCartridgeEditResource';
+                        inputModelResource.type = 'text';
+                        inputModelResource.value = modelCart.resource;
+                        divColModelResourceValue.appendChild(inputModelResource);
+                        rowProperties.appendChild(divColModelResourceValue);
+                        
+                        // Выбор производителя и модели картриджа
+                        
+                         $('#editModelCartridgeManufacturer').selectize({
+                            placeholder: "Производитель",
+                            valueField: 'manufacturer',
+                            labelField: 'manufacturer',
+                            searchField: "manufacturer",
+                            preload: true,
+                             load: function (value, callback) {
+                                    $.ajax({
+                                        url: "/cartridge/",
+                                        type: 'GET',
+                                        async: false,
+                                        dataType: 'json', 
+                                        error: callback,
+                                        success: callback
+                                    });
+                                     $('#editModelCartridgeManufacturer')[0].selectize.setValue($('#editModelCartridgeManufacturer')[0].selectize.search(modelCart.manufacturer).items[0].id);
+                            }
+                        });
+
+                        $("#selectModelPrinter").selectize({
+                            plugins: ["remove_button"],
+                            create: false,
+                            delimiter: ",",
+                            valueField: 'idModel',
+                            labelField: 'model',
+                            searchField: ['model','idModel'],
+                            persist: false,
+                            maxItems: null,
+                            placeholder: "модель принтера",
+                            preload: true,
+                            load: function (query, callback) {
+                                $.ajax({
+                                    url: '/models/',
+                                    async: false,
+                                    type: 'GET',
+                                    dataType: 'json',
+                                    error: callback,
+                                    success: callback
+                                });
+                                forModelPrinter = new Array();
+                                for(let r = 0; r < modelCart.idModel.length; r++) {
+                                    forModelPrinter.push($('#selectModelPrinter')[0].selectize.search(modelCart.idModel[r]).items[0].id);
+                                }
+                                $('#selectModelPrinter')[0].selectize.setValue(forModelPrinter);
+                            },
+                            
+                        });
+                        
+                        // Selectize модель картриджа
+                        $('#editModelCartridgeModel').selectize({
+                            create: true,
+                            persist: false,
+                            placeholder: "модель картриджа",
+                            valueField: 'model',
+                            labelField: 'model',
+                            searchField: "model",
+                            preload: true,
+                            load: function (query, callback) {
+                                $.ajax({
+                                    url: '/cartridge/',
+                                    async: false,
+                                    type: 'GET',
+                                    dataType: 'json',
+                                    error: callback,
+                                    success: callback
+                                });
+                                if(query.length < 1) {
+                                   
+                                 $('#editModelCartridgeModel')[0].selectize.setValue($('#editModelCartridgeModel')[0].selectize.search(modelCart.model).items[0].id);
+                                 let curOptions = Object.entries($('#editModelCartridgeModel')[0].selectize.options);
+                                 for(let el = 0; el < curOptions.length; el++) {
+                                     if(modelCart.model.indexOf(curOptions[el][0]) === 0) {
+                                         oldModelIdValue = curOptions[el][1].id;
+                                     }
+                                 }
+                             }
+                            }
+                        });
+                    });
                 }
             }
         });
+        
+        // archived cartridge tab
+        
+        archivedCartridgeListContainer = document.createElement('div');
+        archivedCartridgeListContainer.id = "archivedCartridgeList";
+        archivedCartridgeListContainer.className = "tab-pane fade cartridgeList";
+        archivedCartridgeListContainer.role = 'tabpanel';
+        archivedCartridgeListContainer.setAttribute('aria-labelledby', 'archivedCartridgeList-tab');
+        archivedCartridgeListContainer.setAttribute('tabindex', 0);
+        modalModelsCartridgeBodyContentInner.appendChild(archivedCartridgeListContainer);
+        
+        headRow = document.createElement('div');
+        headRow.className = 'row fw-bold pt-2 pb-3 mx-3 mb-3 px-3';
+        headRow.style = 'border-bottom: solid rgb(43, 43, 43);';
+        archivedCartridgeListContainer.appendChild(headRow);
+        headLabelCount = document.createElement('div');
+        headLabelCount.className = 'col-1';
+        headLabelCount.innerText = '#';
+        headRow.appendChild(headLabelCount);
+        headLabelManufacturerCartridge = document.createElement('div');
+        headLabelManufacturerCartridge.className = 'col-5';
+        headLabelManufacturerCartridge.innerText = 'Производитель';
+        headRow.appendChild(headLabelManufacturerCartridge);
+        headLabelModelCartridge = document.createElement('div');
+        headLabelModelCartridge.className = 'col-5';
+        headLabelModelCartridge.innerText = 'Модель';
+        headRow.appendChild(headLabelModelCartridge);
+        headLabelModelCartridgeId = document.createElement('div');
+        headLabelModelCartridgeId.className = 'col-1';
+        headRow.appendChild(headLabelModelCartridgeId);
+
+        $.ajax({
+            url: '/cartridge?archived=true',
+            type: 'GET',
+            async: false,
+            dataType: 'json',
+            success: function (data) {
+               modelCartridgesContainer = document.createElement('div');
+                modelCartridgesContainer.id = 'modelArchivedCartridgesContainer';
+                archivedCartridgeListContainer.appendChild(modelCartridgesContainer);
+                arr = data.sort((a, b) => a.manufacturer > b.manufacturer ? 1 : -1);
+                for (i = 0; i < arr.length; i++) {
+                    if(i == arr.length - 1) {
+                        nextRow = document.createElement('div');
+                        nextRow.className = 'row modelArchivedCartridgeRow mx-3 px-3 pb-3';
+                        modelCartridgesContainer.appendChild(nextRow);
+                    }else {
+                            nextRow = document.createElement('div');
+                            nextRow.className = 'row modelArchivedCartridgeRow mx-3 px-3';
+                            nextRow.style = 'border-bottom: 0.1rem solid rgb(195, 195, 200);';
+                            modelCartridgesContainer.appendChild(nextRow);
+                        }
+                    countCartridge = document.createElement('div');
+                    countCartridge.className = 'col-1';
+                    countCartridge.innerText = i + 1;
+                    
+                    manufacturerCartridge = document.createElement('div');
+                    manufacturerCartridge.className = 'col-5 manufacturer';
+                    manufacturerCartridge.innerText = arr[i].manufacturer;
+                    
+                    modelCartridge = document.createElement('div');
+                    modelCartridge.className = 'col-5 model';
+                    modelCartridge.innerText = arr[i].model;
+                    
+                    modelCartridgeId = document.createElement('div');
+                    modelCartridgeId.className = 'col-1 idModel';
+                    
+                    linkCartridgeModel = document.createElement('a');
+                    linkCartridgeModel.href = '#';
+                    linkCartridgeModel.id = "idModel=" + arr[i].id;
+                    linkCartridgeModel.setAttribute("arrIndex", i);
+                    linkCartridgeModel.setAttribute("data-bs-toggle", "modal");
+                    linkCartridgeModel.setAttribute("data-bs-target", "#modalRepearModel");
+                    imgInner = document.createElement('img');
+                    imgInner.src = '/img/wrench.svg?height=16';
+                    linkCartridgeModel.appendChild(imgInner);
+                    modelCartridgeId.appendChild(linkCartridgeModel);
+                    nextRow.appendChild(countCartridge);
+                    nextRow.appendChild(manufacturerCartridge);
+                    nextRow.appendChild(modelCartridge);
+                    nextRow.appendChild(modelCartridgeId);
+                    linkCartridgeModel.addEventListener('click', function(event) {
+                        
+                        $('#innr')[0].innerHTML = 'Вы действительно хотите восстановить ' + event.target.parentElement.parentElement.parentElement.childNodes[1].innerText +
+                               ' ' + event.target.parentElement.parentElement.parentElement.childNodes[2].innerText + '?';
+                       idModelCartridge = event.delegateTarget.id;
+                       arrId = idModelCartridge.split('=');
+                       $('#repearModelCartridgeBtn')[0].addEventListener('click', function() {
+                           $.ajax({
+                            url: '/cartridge',
+                            type: 'POST',
+                            async: false,
+                            data: {id: arrId[1], archived: true},
+                            success: function (callback) {
+                                 $('#modalRepearModel').modal('hide');
+                                document.querySelector('#modalEditModelCartridgeContentInner').innerHTML = '';
+                                $('#addModelCartridgeMenu').click();
+                                $('#activeCartridgeList').removeClass('show active');
+                                $('#archivedCartridgeList').addClass('show active');
+                            }
+                        });
+                       });
+                       
+                    });
+                }
+            }
+        });
+        
+        let actualModelsRows = [...document.querySelectorAll('.modelCartridgeRow')];
+        let archivedModelsRows = [...document.querySelectorAll('.modelArchivedCartridgeRow')];
+        $('#searchModelCart')[0].addEventListener('input', function(input) {
+            if($('#actualModels')[0].ariaSelected === "true") {
+           $('#modelCartridgesContainer')[0].innerHTML = '';
+           resultArray = new Array();
+            let count = 1;
+            for(kkk=0; kkk < actualModelsRows.length; kkk++){
+               
+                target = actualModelsRows[kkk].childNodes[1].innerHTML + " " + actualModelsRows[kkk].childNodes[2].innerHTML;
+                if(target.toLowerCase().search($('#searchModelCart').find('input')[0].value.toLowerCase()) > -1){
+                    actualModelsRows[kkk].childNodes[0].innerHTML = count;
+                    resultArray.push(actualModelsRows[kkk]);
+                    $('#modelCartridgesContainer')[0].appendChild(actualModelsRows[kkk]);
+                    count++;
+                    }
+                }
+            } else {
+                //modelArchivedCartridgeRow
+                $('#modelArchivedCartridgesContainer')[0].innerHTML = '';
+           resultArray = new Array();
+            let count = 1;
+            for(kkk=0; kkk < archivedModelsRows.length; kkk++){
+               
+                target = archivedModelsRows[kkk].childNodes[1].innerHTML + " " + archivedModelsRows[kkk].childNodes[2].innerHTML;
+                if(target.toLowerCase().search($('#searchModelCart').find('input')[0].value.toLowerCase()) > -1){
+                    archivedModelsRows[kkk].childNodes[0].innerHTML = count;
+                    resultArray.push(archivedModelsRows[kkk]);
+                    $('#modelArchivedCartridgesContainer')[0].appendChild(archivedModelsRows[kkk]);
+                    count++;
+                    }
+                }
+            }
+        });
+        
     });
 
 
     let addModelPrinterMenu = document.querySelector('#addModelPrinterMenu');
-    addModelPrinterMenu.addEventListener('click', function () {
+        addModelPrinterMenu.addEventListener('click', function () {
         tableModelsPrinter = document.createElement('table');
         tableModelsPrinter.id = "modalTableModelsPrinter";
         tableModelsPrinter.className = "table table-striped table-bordered";
@@ -1527,6 +2046,7 @@ window.onload = function () {
         $.ajax({
             url: '/models',
             type: 'GET',
+            async: false,
             dataType: 'json',
             success: function (data) {
                 arr = data.sort();
@@ -1608,7 +2128,29 @@ window.onload = function () {
            window.location.href = "/inventories";
        }
    });
-
+   
+                        modalRepearModel = document.createElement('div');
+                        modalRepearModel.className = 'modal fade';
+                        modalRepearModel.id = 'modalRepearModel';
+                        modalRepearModel.setAttribute('tabindex', -1);
+                        modalRepearModel.setAttribute('aria-labelledby', 'exampleModalLabel');
+                        modalRepearModel.setAttribute('aria-hidden', 'true');
+                        modalRepearModel.innerHTML = '<div class="modal-dialog"> ' +
+                                                        '<div class="modal-content">' +
+                                                          '<div class="modal-header">' +
+                                                            '<h1 class="modal-title fs-5" id="exampleModalLabel">Восстановление модели картриджа</h1>' +
+                                                            '<button type="button" class="btn-close" data-bs-toggle="modal" data-bs-target="#modalModelsCartridge" aria-label="Закрыть"></button>' +
+                                                          '</div>' +
+                                                          '<div class="modal-body">' +
+                                                            '<div id="innr"></div>' +
+                                                          '</div>' +
+                                                          '<div class="modal-footer">' +
+                                                            '<button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#modalModelsCartridge">Отмена</button>' +
+                                                            '<button type="button" id="repearModelCartridgeBtn" class="btn btn-primary">Восстановить</button>' +
+                                                          '</div>' +
+                                                        '</div>' +
+                                                      '</div>';
+                        parent.appendChild(modalRepearModel);
 };
 
 $(document).ready(function () {

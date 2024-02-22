@@ -61,9 +61,27 @@ tbody {
     max-width: 170px;
 }
 
+#activeCartridgeList {
+    background-color: rgb(229,229,229);
+    border-radius: 5px;
+}
+
+#archivedCartridgeList {
+    background-color: rgb(229,229,229);
+    border-radius: 5px;
+}
+
+#modelCartridgeNav {
+    min-width: 300px;
+}
+
+#searchModelCart {
+    max-width: 300px;
+}
 
 #tableContainer {
     max-height: 750px;
+    border-radius: 5px;
 }
 
 .labelCount {
