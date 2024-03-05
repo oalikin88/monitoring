@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import ru.gov.sfr.aos.monitoring.entities.CartridgeModel;
+import ru.gov.sfr.aos.monitoring.entities.Model;
 import ru.gov.sfr.aos.monitoring.exceptions.ObjectAlreadyExists;
 import ru.gov.sfr.aos.monitoring.models.CartridgeModelDTO;
 import ru.gov.sfr.aos.monitoring.models.ManufacturerDTO;
@@ -27,6 +28,7 @@ import ru.gov.sfr.aos.monitoring.services.CartridgeMapper;
 import ru.gov.sfr.aos.monitoring.services.CartridgeService;
 import ru.gov.sfr.aos.monitoring.services.ManufacturersMapper;
 import ru.gov.sfr.aos.monitoring.services.ModelMapper;
+import ru.gov.sfr.aos.monitoring.services.ModelService;
 
 /**
  *
@@ -46,7 +48,9 @@ public class ManufacturersController {
     @Autowired
     private CartridgeRepo repo;
     @Autowired
-    private CartridgeService cartridgeService; 
+    private CartridgeService cartridgeService;
+    @Autowired
+    private ModelService modelService;
 
     @RequestMapping(value = "/manufacturers", method = RequestMethod.GET)
     public List<ManufacturerDTO> showPrinters() {
@@ -56,10 +60,17 @@ public class ManufacturersController {
     }
 
     @RequestMapping(value = "/models", method = RequestMethod.GET)
-    public List<ModelDTO> showModels() {
-
-        List<ModelDTO> list = modelMapper.showModels();
-        return list;
+    public List<ModelDTO> showModels(@RequestParam(name = "archived", required = false) boolean archived) {
+        List<ModelDTO> dtoes = null;
+        List<Model> models = null;
+        if(archived) {
+            models = modelService.showArchivedModels();
+            dtoes = modelMapper.listModelsToListModelsDto(models);
+        } else {
+            models = modelService.showAllModels();
+            dtoes = modelMapper.listModelsToListModelsDto(models);
+        }
+        return dtoes;
     }
 
     @RequestMapping(value = "/models/{manufacturer}", method = RequestMethod.GET)
@@ -76,10 +87,10 @@ public class ManufacturersController {
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @PostMapping("/models")
     public void saveModel(@Valid ModelDTO dto) throws ObjectAlreadyExists {
-        modelMapper.saveModelByManufacturer(dto);
+        modelMapper.saveModelPrinter(dto);
     }
     
-
+    
     
     @RequestMapping(value = "/cartridge/{type}", method = RequestMethod.GET)
     public List<CartridgeModelDTO> getModelCartridgeByType(@PathVariable String type) {
@@ -121,6 +132,13 @@ public class ManufacturersController {
         }
     }
     
+    @PostMapping(value = "/recovery-model")
+    public void recoveryModelPrinter(Long id, boolean archived) {
+        if(archived) {
+            modelService.recoveryModel(id);
+        }
+    }
+    
     @RequestMapping(value = "/editModelCartridge", method = RequestMethod.GET)
     public CartridgeModelDTO getModelCartridgeById(@RequestParam(value = "id", required = true) Long id) {
         CartridgeModelDTO cartridgeModelById = cartridgeService.getCartridgeModelById(id);
@@ -153,4 +171,11 @@ public class ManufacturersController {
     public void deleteModelCartridge(Long id) {
         cartridgeService.deleteModelCartridge(id);
     }
+    
+     @DeleteMapping(value = "/models")
+    public void deleteModel(Long id) {
+        modelService.deleteModel(id);
+    }
+    
+    
 }

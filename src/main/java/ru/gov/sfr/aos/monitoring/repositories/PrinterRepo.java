@@ -28,22 +28,19 @@ public interface PrinterRepo extends JpaRepository<Printer, Long> {
     List<Printer> findByLocationName(String name);
     List<Printer> findByLocationIdAndModelId(Long idLocation, Long idModel);
     List<Printer> findByLocationNameAndModelIdAndPrinterStatusEquals(String location, Long idModel, PrinterStatus status);
+    @Query(value = "SELECT p.*, ob.*, c.*, m.* " +
+                   "FROM printer p " +
+                   "LEFT JOIN object_buing ob " +
+                   "ON ob.id = p.printer_id " +
+                   "LEFT JOIN contract c " +
+                   "ON c.id = ob.contract_id " +
+                   "LEFT JOIN model m " +
+                   "ON p.model_id = m.id " +
+                   "WHERE p.printer_id = ?1 " +
+                   "AND m.archived = FALSE ", nativeQuery = true)
     List<Printer> findByModelId(Long id);
     
-    @Query(value = "SELECT p.*, ob.*, c.*, l.* " +
-                   "FROM printer p " +
-                   "LEFT JOIN object_buing ob " +
-                   "ON ob.id = p.printer_id "
-            + "LEFT JOIN location l "
-            + "ON ob.location_id = l.id " +
-                   "LEFT JOIN contract c " +
-                   "ON c.id = ob.contract_id " +
-                   "WHERE p.inventory_number LIKE CONCAT('%',:inventaryNumber,'%') "
-            + "AND l.id = :idLocation "
-            + "AND p.model_id = :idModel "
-            + "AND NOT p.printer_status = 'DELETE' ", nativeQuery = true)
-    List<Printer> findByInventaryNumber(@Param("inventaryNumber") String inventaryNumber, @Param("idModel") Long idModel, @Param("idLocation") Long idLocation);
-    @Query(value = "SELECT p.*, ob.*, c.*, l.* " +
+    @Query(value = "SELECT p.*, ob.*, c.*, l.*, m.* " +
                    "FROM printer p " +
                    "LEFT JOIN object_buing ob " +
                    "ON ob.id = p.printer_id " +
@@ -51,10 +48,29 @@ public interface PrinterRepo extends JpaRepository<Printer, Long> {
                    "ON ob.location_id = l.id " +
                    "LEFT JOIN contract c " +
                    "ON c.id = ob.contract_id " +
+                   "LEFT JOIN model m " +
+                   "ON p.model_id = m.id " +
                    "WHERE p.inventory_number LIKE CONCAT('%',:inventaryNumber,'%') " +
                    "AND l.id = :idLocation " +
                    "AND p.model_id = :idModel " +
-                   "AND NOT p.printer_status = 'DELETE' ",
+                   "AND NOT p.printer_status = 'DELETE' " +
+                   "AND m.archived = FALSE ", nativeQuery = true)
+    List<Printer> findByInventaryNumber(@Param("inventaryNumber") String inventaryNumber, @Param("idModel") Long idModel, @Param("idLocation") Long idLocation);
+    @Query(value = "SELECT p.*, ob.*, c.*, l.*, m.* " +
+                   "FROM printer p " +
+                   "LEFT JOIN object_buing ob " +
+                   "ON ob.id = p.printer_id " +
+                   "LEFT JOIN location l " +
+                   "ON ob.location_id = l.id " +
+                   "LEFT JOIN contract c " +
+                   "ON c.id = ob.contract_id " +
+                   "LEFT JOIN model m " +
+                   "ON p.model_id = m.id " +
+                   "WHERE p.inventory_number LIKE CONCAT('%',:inventaryNumber,'%') " +
+                   "AND l.id = :idLocation " +
+                   "AND p.model_id = :idModel " +
+                   "AND NOT p.printer_status = 'DELETE' " +
+                   "AND m.archived = FALSE ",
             countQuery = "SELECT count(*) " +
                    "FROM printer p " +
                    "LEFT JOIN object_buing ob " +
@@ -63,26 +79,16 @@ public interface PrinterRepo extends JpaRepository<Printer, Long> {
                    "ON ob.location_id = l.id " +
                    "LEFT JOIN contract c " +
                    "ON c.id = ob.contract_id " +
+                   "LEFT JOIN model m " +
+                   "ON p.model_id = m.id " +
                    "WHERE p.inventory_number LIKE CONCAT('%',:inventaryNumber,'%') " +
                    "AND l.id = :idLocation " +
                    "AND p.model_id = :idModel " +
-                   "AND NOT p.printer_status = 'DELETE' "
-            , nativeQuery = true)
+                   "AND NOT p.printer_status = 'DELETE' " +
+                   "AND m.archived = FALSE ", nativeQuery = true)
     Page<Printer> findByInventaryNumber(@Param("inventaryNumber") String inventaryNumber, @Param("idModel") Long idModel, @Param("idLocation") Long idLocation, Pageable pageable);
     
-     @Query(value = "SELECT p.*, ob.*, c.*, l.* " +
-                   "FROM printer p " +
-                   "LEFT JOIN object_buing ob " +
-                   "ON ob.id = p.printer_id "
-            + "LEFT JOIN location l "
-            + "ON ob.location_id = l.id " +
-                   "LEFT JOIN contract c " +
-                   "ON c.id = ob.contract_id " +
-                   "WHERE p.inventory_number LIKE CONCAT('%',:inventaryNumber,'%') "
-            + "AND l.id = :idLocation "
-            + "AND NOT p.printer_status = 'DELETE' ", nativeQuery = true)
-    List<Printer> findByInventaryNumberWhithOutIdModel(@Param("inventaryNumber") String inventaryNumber, @Param("idLocation") Long idLocation);
-    @Query(value = "SELECT p.*, ob.*, c.*, l.* " +
+     @Query(value = "SELECT p.*, ob.*, c.*, l.*, m.* " +
                    "FROM printer p " +
                    "LEFT JOIN object_buing ob " +
                    "ON ob.id = p.printer_id " +
@@ -90,9 +96,27 @@ public interface PrinterRepo extends JpaRepository<Printer, Long> {
                    "ON ob.location_id = l.id " +
                    "LEFT JOIN contract c " +
                    "ON c.id = ob.contract_id " +
+                   "LEFT JOIN model m " +
+                   "ON p.model_id = m.id " +
                    "WHERE p.inventory_number LIKE CONCAT('%',:inventaryNumber,'%') " +
                    "AND l.id = :idLocation " +
-                   "AND NOT p.printer_status = 'DELETE' ",
+                   "AND NOT p.printer_status = 'DELETE' " +
+                   "AND m.archived = FALSE ", nativeQuery = true)
+    List<Printer> findByInventaryNumberWhithOutIdModel(@Param("inventaryNumber") String inventaryNumber, @Param("idLocation") Long idLocation);
+    @Query(value = "SELECT p.*, ob.*, c.*, l.*, m.* " +
+                   "FROM printer p " +
+                   "LEFT JOIN object_buing ob " +
+                   "ON ob.id = p.printer_id " +
+                   "LEFT JOIN location l " +
+                   "ON ob.location_id = l.id " +
+                   "LEFT JOIN contract c " +
+                   "ON c.id = ob.contract_id " +
+                   "LEFT JOIN model m " +
+                   "ON p.model_id = m.id " +
+                   "WHERE p.inventory_number LIKE CONCAT('%',:inventaryNumber,'%') " +
+                   "AND l.id = :idLocation " +
+                   "AND NOT p.printer_status = 'DELETE' " +
+                   "AND m.archived = FALSE ",
             countQuery = "SELECT count(*) " +
                    "FROM printer p " +
                    "LEFT JOIN object_buing ob " +
@@ -101,10 +125,12 @@ public interface PrinterRepo extends JpaRepository<Printer, Long> {
                    "ON ob.location_id = l.id " +
                    "LEFT JOIN contract c " +
                    "ON c.id = ob.contract_id " +
+                   "LEFT JOIN model m " +
+                   "ON p.model_id = m.id " +
                    "WHERE p.inventory_number LIKE CONCAT('%',:inventaryNumber,'%') " +
                    "AND l.id = :idLocation " +
-                   "AND NOT p.printer_status = 'DELETE' "
-            , nativeQuery = true)
+                   "AND NOT p.printer_status = 'DELETE' " +
+                   "AND m.archived = FALSE ", nativeQuery = true)
     Page<Printer> findByInventaryNumberWhithOutIdModel(@Param("inventaryNumber") String inventaryNumber, @Param("idLocation") Long idLocation, Pageable pageable);
     
     @Query(value = "SELECT p.*, ob.*, c.* " +
@@ -117,35 +143,37 @@ public interface PrinterRepo extends JpaRepository<Printer, Long> {
     Printer findByPrinterId(Long id);
     
    @Query(value = "SELECT printer.*, manufacturer.*, model.*, cartridge_printer.*, contr.*, ob.* "
-   + "FROM printer printer "
-   + "JOIN manufacturer manufacturer "
-   + "ON printer.manufacturer_id = manufacturer.id "
-   + "JOIN model model "
-   + "ON printer.model_id = model.id "
-   + "JOIN cartridge_model_models_printers cartridge_printer "
-   + "ON printer.model_id = cartridge_printer.models_printers_id "
-   + "JOIN object_buing ob "
-   + "ON printer.printer_id = ob.id "
-   + "JOIN contract contr "
-   + "ON ob.contract_id = contr.id "
-   + "WHERE cartridge_printer.model_cartridges_id = ?2 "
-   + "AND ob.location_id = ?1 "
-   + "AND NOT printer.printer_status = 'DELETE' ",
-   countQuery = "SELECT count(*) "
-   + "FROM printer printer "
-   + "JOIN manufacturer manufacturer "
-   + "ON printer.manufacturer_id = manufacturer.id "
-   + "JOIN model model "
-   + "ON printer.model_id = model.id "
-   + "JOIN cartridge_model_models_printers cartridge_printer "
-   + "ON printer.model_id = cartridge_printer.models_printers_id "
-   + "JOIN object_buing ob "
-   + "ON printer.printer_id = ob.id "
-   + "JOIN contract contr "
-   + "ON ob.contract_id = contr.id "
-   + "WHERE cartridge_printer.model_cartridges_id = ?2 "
-   + "AND ob.location_id = ?1 " 
-   + "AND NOT printer.printer_status = 'DELETE' ", nativeQuery = true)
+                   + "FROM printer printer "
+                   + "JOIN manufacturer manufacturer "
+                   + "ON printer.manufacturer_id = manufacturer.id "
+                   + "JOIN model model "
+                   + "ON printer.model_id = model.id "
+                   + "JOIN cartridge_model_models_printers cartridge_printer "
+                   + "ON printer.model_id = cartridge_printer.models_printers_id "
+                   + "JOIN object_buing ob "
+                   + "ON printer.printer_id = ob.id "
+                   + "JOIN contract contr "
+                   + "ON ob.contract_id = contr.id "
+                   + "WHERE cartridge_printer.model_cartridges_id = ?2 "
+                   + "AND ob.location_id = ?1 "
+                   + "AND NOT printer.printer_status = 'DELETE' "
+                   + "AND model.archived = FALSE ",
+       countQuery = "SELECT count(*) "
+                   + "FROM printer printer "
+                   + "JOIN manufacturer manufacturer "
+                   + "ON printer.manufacturer_id = manufacturer.id "
+                   + "JOIN model model "
+                   + "ON printer.model_id = model.id "
+                   + "JOIN cartridge_model_models_printers cartridge_printer "
+                   + "ON printer.model_id = cartridge_printer.models_printers_id "
+                   + "JOIN object_buing ob "
+                   + "ON printer.printer_id = ob.id "
+                   + "JOIN contract contr "
+                   + "ON ob.contract_id = contr.id "
+                   + "WHERE cartridge_printer.model_cartridges_id = ?2 "
+                   + "AND ob.location_id = ?1 " 
+                   + "AND NOT printer.printer_status = 'DELETE' "
+                   + "AND model.archived = FALSE ", nativeQuery = true)
     Page<Printer> findPrintersByModelAndLocation(Long idLocation, Long idModelCarttridge, Pageable pageable);
     
     @Query(value = "SELECT printer.*, manufacturer.*, model.*, cartridge_printer.*, ob.*, contr.* "
@@ -162,7 +190,8 @@ public interface PrinterRepo extends JpaRepository<Printer, Long> {
    + "ON ob.contract_id = contr.id "
    + "WHERE cartridge_printer.model_cartridges_id = ?2 "
    + "AND ob.location_id = ?1 "
-    + "AND contr.contract_number LIKE ?3%",
+   + "AND contr.contract_number LIKE ?3% "
+   + "AND model.archived = FALSE ",
    countQuery = "SELECT count(*) "
    + "FROM printer printer "
    + "JOIN manufacturer manufacturer "
@@ -177,7 +206,8 @@ public interface PrinterRepo extends JpaRepository<Printer, Long> {
    + "ON ob.contract_id = contr.id "
    + "WHERE cartridge_printer.model_cartridges_id = ?2 "
    + "AND ob.location_id = ?1 "
-   + "AND contr.contract_number LIKE ?3%" ,nativeQuery = true)
+   + "AND contr.contract_number LIKE ?3% "
+   + "AND model.archived = FALSE " ,nativeQuery = true)
     Page<Printer> findPrintersByModelAndLocationAndContractNumberFilter(Long idLocation, Long idModelCartridge, String contractNumber, Pageable pageable);
     
     
@@ -195,7 +225,8 @@ public interface PrinterRepo extends JpaRepository<Printer, Long> {
    + "ON ob.contract_id = contr.id "
    + "WHERE contr.contract_number LIKE ?3% "
    + "AND ob.location_id = ?1 "
-   + "AND model.id = ?2 ",
+   + "AND model.id = ?2 "
+   + "AND model.archived = FALSE ",
    countQuery = "SELECT count(*) "
    + "FROM printer printer "
    + "JOIN manufacturer manufacturer "
@@ -210,7 +241,8 @@ public interface PrinterRepo extends JpaRepository<Printer, Long> {
    + "ON ob.contract_id = contr.id "
    + "WHERE contr.contract_number LIKE ?3% "
    + "AND ob.location_id = ?1 "
-   + "AND model.id = ?2 " ,nativeQuery = true)
+   + "AND model.id = ?2 "
+   + "AND model.archived = FALSE ", nativeQuery = true)
     Page<Printer> findPrintersByModelPrinterAndLocationAndContractNumberFilter(Long idLocation, Long idModelPrinter, String contractNumber, Pageable pageable);
     
     
@@ -225,7 +257,8 @@ public interface PrinterRepo extends JpaRepository<Printer, Long> {
    + "JOIN contract contr "
    + "ON ob.contract_id = contr.id "
    + "WHERE model.id = ?2 "
-   + "AND ob.location_id = ?1 ",
+   + "AND ob.location_id = ?1 "
+   + "AND model.archived = FALSE ",
    countQuery = "SELECT count(*) "
    + "FROM printer printer "
    + "JOIN manufacturer manufacturer "
@@ -237,32 +270,39 @@ public interface PrinterRepo extends JpaRepository<Printer, Long> {
    + "JOIN contract contr "
    + "ON ob.contract_id = contr.id "
    + "WHERE model.id = ?2 "
-   + "AND ob.location_id = ?1 " ,nativeQuery = true)
+   + "AND ob.location_id = ?1 "
+   + "AND model.archived = FALSE " ,nativeQuery = true)
     Page<Printer> findPrintersByModelPrinterAndLocation(Long idLocation, Long idModelPrinter, Pageable pageable);
 
-    @Query(value = "SELECT p.*, ob.*, contr.*, manuf.* " +
+    @Query(value = "SELECT p.*, ob.*, contr.*, manuf.*, m.* " +
                     "FROM printer p " +
                     "LEFT JOIN manufacturer manuf " +
-                     "ON p.manufacturer_id = manuf.id " +
+                    "ON p.manufacturer_id = manuf.id " +
                     "LEFT JOIN object_buing ob " +
                     "ON p.printer_id = ob.id " +
                     "LEFT JOIN contract contr " +
                     "ON ob.contract_id = contr.id " +
+                    "LEFT JOIN model m " +
+                    "ON p.model_id = m.id " +
                     "WHERE ob.location_id = ?1 " +
-                    "AND NOT p.printer_status = 'DELETE' ",
+                    "AND NOT p.printer_status = 'DELETE' " +
+                    "AND m.archived = FALSE ",
             countQuery = "SELECT count(*) " +
                     "FROM printer p " +
-                     "LEFT JOIN manufacturer manuf " +
-                     "ON p.manufacturer_id = manuf.id " +
+                    "LEFT JOIN manufacturer manuf " +
+                    "ON p.manufacturer_id = manuf.id " +
                     "LEFT JOIN object_buing ob " +
                     "ON p.printer_id = ob.id " +
-                     "LEFT JOIN contract contr " +
+                    "LEFT JOIN contract contr " +
                     "ON ob.contract_id = contr.id " +
+                    "LEFT JOIN model m " +
+                    "ON p.model_id = m.id " +
                     "WHERE ob.location_id = ?1 " +
-                    "AND NOT p.printer_status = 'DELETE' ", nativeQuery = true)
+                    "AND NOT p.printer_status = 'DELETE' " +
+                    "AND m.archived = FALSE ", nativeQuery = true)
    Page<Printer> findByLocation(Long idLocation, Pageable pageable);
    
-   @Query(value = "SELECT p.*, ob.*, contr.*, manuf.* " +
+   @Query(value = "SELECT p.*, ob.*, contr.*, manuf.*, m.* " +
                      "FROM printer p " +
                      "LEFT JOIN manufacturer manuf " +
                      "ON p.manufacturer_id = manuf.id " +
@@ -270,8 +310,11 @@ public interface PrinterRepo extends JpaRepository<Printer, Long> {
                     "ON p.printer_id = ob.id " +
                     "JOIN contract contr " +
                     "ON ob.contract_id = contr.id " +
+                    "LEFT JOIN model m " +
+                    "ON p.model_id = m.id " +
                     "WHERE ob.location_id = ?1 " +
-                    "AND NOT p.printer_status = 'DELETE' ", nativeQuery = true)
+                    "AND NOT p.printer_status = 'DELETE' " +
+                    "AND m.archived = FALSE ", nativeQuery = true)
    List<Printer> findByLocation(Long idLocation);
    
       @Query(value = "SELECT p.*, ob.*, contr.*, m.* " +
@@ -284,7 +327,8 @@ public interface PrinterRepo extends JpaRepository<Printer, Long> {
                     "ON p.model_id = m.id " +
                     "WHERE ob.location_id = ?1 " +
                     "AND NOT p.printer_status = 'DELETE' " +
-                    "AND m.device_type = ?2 ",
+                    "AND m.device_type = ?2 " +
+                    "AND m.archived = FALSE ",
             countQuery = "SELECT count(*) " +
                     "FROM printer p " +
                     "LEFT JOIN object_buing ob " +
@@ -295,7 +339,8 @@ public interface PrinterRepo extends JpaRepository<Printer, Long> {
                     "ON p.model_id = m.id " +
                     "WHERE ob.location_id = ?1 " +
                     "AND NOT p.printer_status = 'DELETE' " +
-                    "AND m.device_type = ?2 ", nativeQuery = true)
+                    "AND m.device_type = ?2 " +
+                    "AND m.archived = FALSE ", nativeQuery = true)
    Page<Printer> findByLocationAndDeviceType(Long idLocation, String deviceType, Pageable pageable);
    
    @Query(value = "SELECT p.*, ob.*, contr.*, m.* " +
@@ -308,7 +353,8 @@ public interface PrinterRepo extends JpaRepository<Printer, Long> {
                     "ON p.model_id = m.id " +
                     "WHERE ob.location_id = ?1 " +
                     "AND NOT p.printer_status = 'DELETE' " +
-                    "AND m.device_type = ?2 ", nativeQuery = true)
+                    "AND m.device_type = ?2 " +
+                    "AND m.archived = FALSE ", nativeQuery = true)
    List<Printer> findByLocationAndDeviceType(Long idLocation, String deviceType);
    
       @Query(value = "SELECT pr.*, ob.*, contr.*, m.* "
@@ -323,27 +369,34 @@ public interface PrinterRepo extends JpaRepository<Printer, Long> {
    + "AND ob.location_id = ?2 "
    + "AND (pr.printer_status = 'OK' "
    + "OR pr.printer_status = 'DEFECTIVE' "
-   + "OR pr.printer_status = 'REPAIR') ", nativeQuery = true)
+   + "OR pr.printer_status = 'REPAIR') "
+   + "AND m.archived = FALSE ", nativeQuery = true)
    List<Printer> findByModelIdAndLocationId(Long idModel, Long idLocation);
    
    @Query(value = "SELECT pr.* "
    + "FROM printer pr "
    + "JOIN object_buing ob "
    + "ON ob.id = pr.printer_id "
+   + "LEFT JOIN model m "
+   + "ON pr.model_id = m.id "
    + "WHERE pr.model_id = ?1 "
    + "AND ob.location_id = ?2 "
    + "AND (pr.printer_status = 'OK' "
    + "OR pr.printer_status = 'DEFECTIVE' "
-   + "OR pr.printer_status = 'REPAIR') ",
+   + "OR pr.printer_status = 'REPAIR') "
+   + "AND m.archived = FALSE ",
       countQuery = "SELECT count(*) "
    + "FROM printer pr "
    + "JOIN object_buing ob "
    + "ON ob.id = pr.printer_id "
+   + "LEFT JOIN model m "
+   + "ON pr.model_id = m.id "
    + "WHERE pr.model_id = ?1 "
    + "AND ob.location_id = ?2 "
    + "AND (pr.printer_status = 'OK' "
    + "OR pr.printer_status = 'DEFECTIVE' "
-   + "OR pr.printer_status = 'REPAIR') " ,nativeQuery = true)
+   + "OR pr.printer_status = 'REPAIR') "
+   + "AND m.archived = FALSE " ,nativeQuery = true)
    Page<Printer> findByModelIdAndLocationId(Long idModel, Long idLocation, Pageable paging);
    Page<Printer> findByLocationIdAndContractContractNumberIgnoreCaseLike(Long parseLong, String contractNumber, Pageable paging);
 }

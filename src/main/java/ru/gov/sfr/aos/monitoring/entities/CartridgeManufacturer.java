@@ -6,6 +6,7 @@ package ru.gov.sfr.aos.monitoring.entities;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -63,6 +64,33 @@ public class CartridgeManufacturer {
     public void setModelsList(List<CartridgeModel> modelsList) {
         this.modelsList = modelsList;
     }
+
+    @Override
+    public int hashCode() {
+        int hash = Long.hashCode(this.id);
+        hash = 31 * hash + (this.manufacturerName == null ? 0 : this.manufacturerName.hashCode());
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final CartridgeManufacturer other = (CartridgeManufacturer) obj;
+        if (!this.manufacturerName.equals(other.manufacturerName)) {
+            return false;
+        }
+        return this.id == other.id;
+    }
+    
+    
     
     
 }

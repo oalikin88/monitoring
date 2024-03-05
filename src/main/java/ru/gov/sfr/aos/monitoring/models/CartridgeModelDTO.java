@@ -131,12 +131,14 @@ public class CartridgeModelDTO implements Serializable {
     public void setManufacturer(String manufacturer) {
         this.manufacturer = manufacturer;
     }
-    
-    
-    
+
     @Override
     public int hashCode() {
-        int hash = 7;
+        int hash = Long.hashCode(this.id);
+        hash = 31 * hash + Objects.hashCode(this.model);
+        hash = 31 * hash + Objects.hashCode(this.manufacturer);
+        hash = 31 * hash + Objects.hashCode(this.type);
+        hash = 31 * hash + Objects.hashCode(this.resource);
         return hash;
     }
 
@@ -152,10 +154,10 @@ public class CartridgeModelDTO implements Serializable {
             return false;
         }
         final CartridgeModelDTO other = (CartridgeModelDTO) obj;
-        if (!Objects.equals(this.manufacturer, other.manufacturer)) {
+        if (!Objects.equals(this.model, other.model)) {
             return false;
         }
-        if (!Objects.equals(this.model, other.model)) {
+        if (!Objects.equals(this.manufacturer, other.manufacturer)) {
             return false;
         }
         if (!Objects.equals(this.type, other.type)) {
@@ -164,14 +166,15 @@ public class CartridgeModelDTO implements Serializable {
         if (!Objects.equals(this.resource, other.resource)) {
             return false;
         }
-        if (!Objects.equals(this.id, other.id)) {
-            return false;
-        }
-        if (!Objects.equals(this.idModel, other.idModel)) {
-            return false;
-        }
-        return Objects.equals(this.printers, other.printers);
+       
+            
+        
+        return this.id == other.id;
     }
+    
+    
+    
+
   
     
 }

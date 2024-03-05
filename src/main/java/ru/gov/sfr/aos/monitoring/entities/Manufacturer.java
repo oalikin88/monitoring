@@ -7,6 +7,7 @@ package ru.gov.sfr.aos.monitoring.entities;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -87,6 +88,32 @@ public class Manufacturer implements Serializable {
     public String toString() {
         return "Manufacturer{" +  "name=" + name +  '}';
     }
+
+    @Override
+    public int hashCode() {
+        int hash = Long.hashCode(this.id);
+        hash = 31 * hash + (this.name == null ? 0 : this.name.hashCode());
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Manufacturer other = (Manufacturer) obj;
+        if (!this.name.equals(other.name)) {
+            return false;
+        }
+        return this.id == other.id;
+    }
+    
     
     
 }

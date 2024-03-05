@@ -37,6 +37,7 @@ body, html {
 
 }
 
+
 #tablePlaning > .planingTbody > th:nth-child(1), td:nth-child(1)
 {
   position:sticky;
@@ -71,11 +72,25 @@ tbody {
     border-radius: 5px;
 }
 
+#activePrinterModelList {
+    background-color: rgb(229,229,229);
+    border-radius: 5px;
+}
+
+#archivedModelPrinterContainer {
+    background-color: rgb(229,229,229);
+    border-radius: 5px;
+}
+
 #modelCartridgeNav {
     min-width: 300px;
 }
 
 #searchModelCart {
+    max-width: 300px;
+}
+
+#searchModelPrinter {
     max-width: 300px;
 }
 

@@ -220,7 +220,7 @@ public class CartridgeService {
         List<Model> modelsPrintersFromCartridgeModelDB = cartridgeModelFromDB.getModelsPrinters();
         List<Long> idModelsPrinters  = modelsPrintersFromCartridgeModelDB.stream().map(e -> e.getId()).collect(Collectors.toList());
         Set<Long> commonSet = findCommonElements(idModelsPrinters, dto.idModel);
-        if(commonSet.size() != idModelsPrinters.size()) {
+        if(commonSet.size() != cartridgeModelFromDB.getModelsPrinters().size()) {
             List<Model> updatedModelsPrinters = new ArrayList<>();
             for(Long el : dto.idModel) {
                 Model model = modelPrinterRepo.findById(el).orElseThrow();
@@ -394,7 +394,7 @@ public class CartridgeService {
         
     }
     
-     private static <T> Set<T> findCommonElements(List<T> first, List<T> second)
+     public static <T> Set<T> findCommonElements(List<T> first, List<T> second)
     {
         Set<T> common = new HashSet<>(first);
         common.retainAll(second);

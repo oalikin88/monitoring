@@ -7,6 +7,7 @@ package ru.gov.sfr.aos.monitoring.repositories;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import ru.gov.sfr.aos.monitoring.entities.Location;
@@ -29,6 +30,22 @@ public interface ModelPrinterRepo extends JpaRepository<Model, Long> {
                     "FROM model m " +
                     "LEFT JOIN cartridge_model_models_printers cart_print " +
                     "ON m.id = cart_print.models_printers_id " +
-                    "WHERE m.id = ?1)", nativeQuery = true)
+                    "WHERE m.id = ?1) " +
+                    "AND m.archived = FALSE ", nativeQuery = true)
     List<Model> findAnalogModelByModelId(Long idModel);
+    
+    @Modifying
+    @Query(value = "DELETE FROM model"
+                 + "WHERE id = ?1 ", nativeQuery = true)
+    void deleteModelPrinterById(Long id);
+    
+    @Query(value = "SELECT m.* " +
+                    "FROM model m " +
+                    "WHERE m.archived = FALSE ", nativeQuery = true)
+    List<Model> findAllNotArchived();
+    
+     @Query(value = "SELECT m.* " +
+                    "FROM model m " +
+                    "WHERE m.archived = TRUE ", nativeQuery = true)
+    List<Model> findAllArchived();
 }

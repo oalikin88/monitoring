@@ -7,6 +7,7 @@ package ru.gov.sfr.aos.monitoring.entities;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -149,12 +150,49 @@ public class CartridgeModel implements Serializable {
         this.archived = archived;
     }
 
+    @Override
+    public int hashCode() {
+        int hash = Long.hashCode(this.id);
+        hash = 31 * hash + (this.model == null ? 0 : this.model.hashCode());
+        hash = 31 * hash + this.type.getName().hashCode();
+        hash = 31 * hash + Long.hashCode(this.defaultNumberPrintPage);
+        hash = 31 * hash + Objects.hashCode(this.cartridgeManufacturer);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final CartridgeModel other = (CartridgeModel) obj;
+        if (!Objects.equals(this.model, other.model)) {
+            return false;
+        }
+        if (this.id != other.id) {
+            return false;
+        }
+        if (!this.type.getName().equals(other.type.getName())) {
+            return false;
+        }
+        if (this.defaultNumberPrintPage != other.defaultNumberPrintPage) {
+            return false;
+        }
+        return Objects.equals(this.cartridgeManufacturer, other.cartridgeManufacturer);
+    }
+
     
     
 
     @Override
     public String toString() {
-        return "CartridgeModel{" + "id=" + id + ", model=" + model + ", type=" + type + ", defaultNumberPrintPage=" + defaultNumberPrintPage + ", cartridges=" + cartridges + ", modelsPrinters=" + modelsPrinters + '}';
+        return "CartridgeModel{" + "id=" + id + ", model=" + model + ", type=" + type.getName() + ", defaultNumberPrintPage=" + defaultNumberPrintPage + ",  modelsPrinters=" + modelsPrinters + '}';
     }
     
     

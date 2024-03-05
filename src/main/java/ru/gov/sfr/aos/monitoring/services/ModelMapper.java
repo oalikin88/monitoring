@@ -33,20 +33,22 @@ public class ModelMapper {
     @Autowired
     private ManufacturerRepo manufacturerRepo;
     
-    public List<ModelDTO> showModels() {
-        List<ModelDTO> list = new ArrayList<>();
-        List<Model> inputList = modelRepo.findAll();
-        for(int i = 0; i < inputList.size(); i++) {
+    
+    public List<ModelDTO> listModelsToListModelsDto(List<Model> list) {
+        List<ModelDTO> out = new ArrayList<>();
+        for(int i = 0; i < list.size(); i++) {
                 ModelDTO dto = new ModelDTO();
-                dto.model = inputList.get(i).getName();
-                dto.idModel = inputList.get(i).getId();
-                dto.printColorType = inputList.get(i).getPrintColorType().getType();
-                dto.printFormatType = inputList.get(i).getPrintFormatType().name();
-                dto.printSpeed = inputList.get(i).getPrintSpeed().toString();
-                dto.manufacturer = inputList.get(i).getManufacturer().getName();
-                list.add(dto);
+                dto.model = list.get(i).getName();
+                dto.idModel = list.get(i).getId();
+                dto.printColorType = list.get(i).getPrintColorType().getType();
+                dto.printFormatType = list.get(i).getPrintFormatType().name();
+                dto.printSpeed = list.get(i).getPrintSpeed().toString();
+                dto.manufacturer = list.get(i).getManufacturer().getName();
+                dto.setDeviceType(list.get(i).getDeviceType().getValue());
+                out.add(dto);
         }
-        return list;
+        
+        return out;
     }
     
     public List<ModelDTO> showModelsByManufacturer(String manufacturer) {
@@ -135,5 +137,31 @@ public class ModelMapper {
         
     }
     
+    
+    public void saveModelPrinter(ModelDTO dto) {
+        Model modelFromDB = modelRepo.findById(dto.idModel).orElseThrow();
+        modelFromDB.setName(dto.getModel().trim());
+        modelFromDB.setPrintSpeed(Long.parseLong(dto.getPrintSpeed()));
+        if(dto.getPrintFormatType().equals("A4")) {
+                modelFromDB.setPrintFormatType(PrintFormatType.A4);
+        }else{
+                modelFromDB.setPrintFormatType(PrintFormatType.A3);
+        }
+        if(dto.getPrintColorType().equals("COLOR")) {
+            modelFromDB.setPrintColorType(PrintColorType.COLOR);
+        } else {
+            modelFromDB.setPrintColorType(PrintColorType.BLACKANDWHITE);
+        }
+        if(dto.getDeviceType().equals("PRINTER")) {
+            modelFromDB.setDeviceType(DeviceType.PRINTER);
+        } else {
+            modelFromDB.setDeviceType(DeviceType.MFU);
+        }
+        if(!dto.getManufacturer().trim().equals(modelFromDB.getManufacturer().getName())) {
+            Manufacturer manufacturer = manufacturerRepo.findByNameContainingIgnoreCase(dto.getManufacturer().trim()).orElseThrow();
+            modelFromDB.setManufacturer(manufacturer);
+        }
+        modelRepo.save(modelFromDB);
+    }
     
 }

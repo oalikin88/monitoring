@@ -2,6 +2,7 @@ let parent = document.querySelector('#tabContent');
 let models = new Map(Object.entries(modelsInput));
 let locations = new Map(Object.entries(locationsInput));
 let oldModelIdValue;
+let oldModelPrinterIdValue;
 
 
 
@@ -410,7 +411,7 @@ window.onload = function () {
     parent.appendChild(modalModelsPrinterWrapper);
 
     modalDialogCenteredModelsPrinterDiv = document.createElement('div');
-    modalDialogCenteredModelsPrinterDiv.className = 'modal-dialog modal-dialog-centered';
+    modalDialogCenteredModelsPrinterDiv.className = 'modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable';
     modalModelsPrinterWrapper.appendChild(modalDialogCenteredModelsPrinterDiv);
 
     modalContentModelsPrinterDiv = document.createElement('div');
@@ -426,6 +427,22 @@ window.onload = function () {
     modalTitleModelsPrinterH1.id = 'modalModelsPrinterLabel';
     modalTitleModelsPrinterH1.innerText = 'Список моделей';
     modalHeaderModelsPrinterDiv.appendChild(modalTitleModelsPrinterH1);
+    
+    modalHeaderForNavModelsPrinterDiv = document.createElement('div');
+    modalHeaderForNavModelsPrinterDiv.className = 'modal-header';
+    modalHeaderForNavModelsPrinterDiv.id = 'modalHeaderPrinterForNav';
+    modalContentModelsPrinterDiv.appendChild(modalHeaderForNavModelsPrinterDiv);
+    
+    modalHeaderForNavModelsPrinterDiv.innerHTML = '<nav id="modelPrinterNav"><div class="nav nav-tabs" id="nav-tab-modelsPrinter" role="tablist"> ' +
+                                                 '<button class="nav-link active" id="actualModelsPrinter" data-bs-toggle="tab" data-bs-target="#activePrinterModelList" type="button" role="tab" aria-controls="nav-home" aria-selected="true">Актуальные</button> ' +
+                                                 '<button class="nav-link" id="archivedModelsPrinter" data-bs-toggle="tab" data-bs-target="#archivedModelPrinterList" type="button" role="tab" aria-controls="nav-contact" aria-selected="false">В архиве</button></div></nav> ' + 
+                                                 '<div class="input-group mb-3" id="searchModelPrinter">' +
+                                                  '<input type="text" class="form-control" placeholder="Поиск" aria-label="SearchModel" aria-describedby="basic-addon1">' +
+                                                  '<span class="input-group-text" id="basic-addon12"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">' +
+                                                  '<path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>' +
+                                                    '</svg></span>' +
+                                                  '</div>';
+
 
     modalModelsPrinterBtnClose = document.createElement('button');
     modalModelsPrinterBtnClose.className = 'btn-close';
@@ -439,15 +456,17 @@ window.onload = function () {
     modalContentModelsPrinterDiv.appendChild(modalModelsPrinterBodyDiv);
 
     modalModelsPrinterBodyContentInner = document.createElement('div');
-    modalModelsPrinterBodyContentInner.className = 'modalContentInner';
+    modalModelsPrinterBodyContentInner.className = 'tab-content modalContentInner';
     modalModelsPrinterBodyContentInner.id = 'modalModelsPrinterContentInner';
     modalModelsPrinterBodyDiv.appendChild(modalModelsPrinterBodyContentInner);
 
     //Content
 
-    modalModelsPrinterButtonsRow = document.createElement('div');
-    modalModelsPrinterButtonsRow.className = 'row';
-    modalModelsPrinterBodyDiv.appendChild(modalModelsPrinterButtonsRow);
+
+    modalModelsPrinterFooterDiv = document.createElement('div');
+    modalModelsPrinterFooterDiv.className = 'modal-footer';
+    modalContentModelsPrinterDiv.appendChild(modalModelsPrinterFooterDiv);
+
 
     modalModelsPrinterBtnAdd = document.createElement('button');
     modalModelsPrinterBtnAdd.className = 'btn btn-secondary ';
@@ -456,12 +475,8 @@ window.onload = function () {
     modalModelsPrinterBtnAdd.setAttribute('data-bs-toggle', 'modal');
     modalModelsPrinterBtnAdd.id = 'addModelPrinterModal';
     modalModelsPrinterBtnAdd.innerText = 'Добавить модель';
-    modalModelsPrinterButtonsRow.appendChild(modalModelsPrinterBtnAdd);
-
-    modalModelsPrinterFooterDiv = document.createElement('div');
-    modalModelsPrinterFooterDiv.className = 'modal-footer';
-    modalContentModelsPrinterDiv.appendChild(modalModelsPrinterFooterDiv);
-
+    modalModelsPrinterFooterDiv.appendChild(modalModelsPrinterBtnAdd);
+    
     modalModelsPrinterFooterCloseBtn = document.createElement('button');
     modalModelsPrinterFooterCloseBtn.className = 'btn btn-secondary';
     modalModelsPrinterFooterCloseBtn.type = 'button';
@@ -469,7 +484,85 @@ window.onload = function () {
     modalModelsPrinterFooterCloseBtn.innerText = 'Закрыть';
     modalModelsPrinterFooterCloseBtn.id = "modalMOdelsPrinterWindow1BtnClose";
     modalModelsPrinterFooterDiv.appendChild(modalModelsPrinterFooterCloseBtn);
+    
+    
+    // Модальное окно с редактированием моделей принтеров
+    
+    
+    modalEditModelPrinterWrapper = document.createElement('div');
+    modalEditModelPrinterWrapper.className = 'modal fade';
+    modalEditModelPrinterWrapper.id = 'modalEditModelPrinter';
+    modalEditModelPrinterWrapper.setAttribute('data-bs-backdrop', 'static');
+    modalEditModelPrinterWrapper.setAttribute('data-bs-keyboard', 'false');
+    modalEditModelPrinterWrapper.setAttribute('tabindex', '-1');
+    parent.appendChild(modalEditModelPrinterWrapper);
 
+    modalDialogCenteredEditModelPrinterDiv = document.createElement('div');
+    modalDialogCenteredEditModelPrinterDiv.className = 'modal-dialog modal-dialog-centered modal-lg';
+    modalEditModelPrinterWrapper.appendChild(modalDialogCenteredEditModelPrinterDiv);
+
+    modalContentEditModelPrinterDiv = document.createElement('div');
+    modalContentEditModelPrinterDiv.className = 'modal-content';
+    modalDialogCenteredEditModelPrinterDiv.appendChild(modalContentEditModelPrinterDiv);
+
+    modalHeaderEditModelPrinterDiv = document.createElement('div');
+    modalHeaderEditModelPrinterDiv.className = 'modal-header';
+    modalContentEditModelPrinterDiv.appendChild(modalHeaderEditModelPrinterDiv);
+
+    modalTitleEditModelPrinterH1 = document.createElement('h1');
+    modalTitleEditModelPrinterH1.className = 'modal-title fs-5';
+    modalTitleEditModelPrinterH1.id = 'modalEditModelPrinterTitle';
+    modalTitleEditModelPrinterH1.innerText = 'Редактирование модели принтера';
+    modalHeaderEditModelPrinterDiv.appendChild(modalTitleEditModelPrinterH1);
+
+    modalEditdModelPrinterBtnClose = document.createElement('button');
+    modalEditdModelPrinterBtnClose.className = 'btn-close';
+    modalEditdModelPrinterBtnClose.type = 'button';
+    modalEditdModelPrinterBtnClose.id = 'modalEditModelPrinterCloseBtnHeader';
+    modalEditdModelPrinterBtnClose.setAttribute('data-bs-toggle', 'modal');
+    modalEditdModelPrinterBtnClose.setAttribute('data-bs-target', '#modalModelsPrinter');
+    modalEditdModelPrinterBtnClose.setAttribute('aria-label', 'close');
+    modalHeaderEditModelPrinterDiv.appendChild(modalEditdModelPrinterBtnClose);
+
+    modalEditModelPrinterBodyDiv = document.createElement('div');
+    modalEditModelPrinterBodyDiv.className = 'modal-body ml-3 mr-3';
+    modalEditModelPrinterBodyDiv.id = 'modalEditModelPrinterBody';
+    modalContentEditModelPrinterDiv.appendChild(modalEditModelPrinterBodyDiv);
+
+    modalEditModelPrinterBodyContentInner = document.createElement('div');
+    modalEditModelPrinterBodyContentInner.className = 'modalEditModelPrinterContentInner';
+    modalEditModelPrinterBodyContentInner.id = 'modalEditModelPrinterContentInner';
+    modalEditModelPrinterBodyDiv.appendChild(modalEditModelPrinterBodyContentInner);
+    
+    modalEditModelPrinterFooterDiv = document.createElement('div');
+    modalEditModelPrinterFooterDiv.className = 'modal-footer';
+    modalContentEditModelPrinterDiv.appendChild(modalEditModelPrinterFooterDiv);
+    
+    
+    modalEditModelPrinterBtnRemove = document.createElement('button');
+    modalEditModelPrinterBtnRemove.className = 'btn btn-danger';
+    modalEditModelPrinterBtnRemove.type = 'button';
+    modalEditModelPrinterBtnRemove.innerText = 'Удалить';
+    modalEditModelPrinterBtnRemove.id = 'btnRemovePrinterModel';
+    modalEditModelPrinterFooterDiv.appendChild(modalEditModelPrinterBtnRemove);
+    
+    
+    modalEditModelPrinterBtnSave = document.createElement('button');
+    modalEditModelPrinterBtnSave.className = 'btn btn-success';
+    modalEditModelPrinterBtnSave.type = 'button';
+    modalEditModelPrinterBtnSave.innerText = 'Применить';
+    modalEditModelPrinterBtnSave.id = 'btnSavePrinterModel';
+    modalEditModelPrinterFooterDiv.appendChild(modalEditModelPrinterBtnSave);
+    
+    modalEditModelPrinterFooterCloseBtn = document.createElement('button');
+    modalEditModelPrinterFooterCloseBtn.className = 'btn btn-secondary';
+    modalEditModelPrinterFooterCloseBtn.type = 'button';
+    modalEditModelPrinterFooterCloseBtn.setAttribute('data-bs-toggle', 'modal');
+    modalEditModelPrinterFooterCloseBtn.setAttribute('data-bs-target', '#modalModelsPrinter');
+    modalEditModelPrinterFooterCloseBtn.innerText = 'Отмена';
+    modalEditModelPrinterFooterCloseBtn.id = "modalEditModelPrinterWindow1BtnClose"; 
+    modalEditModelPrinterFooterDiv.appendChild(modalEditModelPrinterFooterCloseBtn);
+    
 
 
     // Модальное окно с добавлением моделей принтеров
@@ -540,7 +633,6 @@ window.onload = function () {
     modalModelsPrinterContentInnerModelSelect.className = 'form-select modalModelInput';
     modalModelsPrinterContentInnerModelSelect.type = 'text';
     modalModelsPrinterContentInnerModelSelect.id = 'modalModelInput';
-    // modalModelsPrinterContentInnerModelInput.placeholder = 'Модель';
     modalModalsPrinterContentInnerManufacturerDiv2.appendChild(modalModelsPrinterContentInnerModelSelect);
     
     modalModelsPrinterContentInnerDeviceTypeSelect = document.createElement('select');
@@ -1016,8 +1108,11 @@ window.onload = function () {
             $('#modalEditModelCartridge').modal('hide');
             document.querySelector('#modalEditModelCartridgeContentInner').innerHTML = '';
             $('#addModelCartridgeMenu').click();
-            alert("Успешно удалён");
-            
+            $('body').append('<div id="delete-alert-cartridge" class="alert alert-success alert-dismissible fade" style="position: fixed; bottom: 15px; right: 25px; max-width: 360px; margin: 0 auto; z-index: 1055;">Модель успешно удалена<button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>');
+            document.querySelector('#delete-alert-cartridge').classList.add('show');
+            $("#delete-alert-cartridge").fadeTo(5000, 500).slideUp(500, function(){
+                                        $("#delete-alert-cartridge").slideUp(500);
+                                    });
         },
         error: function(callback) {
             alert("Ошибка");
@@ -1171,7 +1266,6 @@ window.onload = function () {
     modalManufacturerCartridgeContentInnerModelSelect.value = 'Производитель';
     modalModelsCartridgeContentInnerDiv5.appendChild(modalManufacturerCartridgeContentInnerModelSelect);
     
-    // modalModelsPrinterContentInnerModelInput.placeholder = 'Модель';
     modalModelsCartridgeContentInnerModelSelect = document.createElement('select');
     modalModelsCartridgeContentInnerModelSelect.className = 'form-select modalModelCartridgeSelect';
     modalModelsCartridgeContentInnerModelSelect.id = 'modalModelCartridgeSelect';
@@ -1973,6 +2067,11 @@ window.onload = function () {
                                 $('#addModelCartridgeMenu').click();
                                 $('#activeCartridgeList').removeClass('show active');
                                 $('#archivedCartridgeList').addClass('show active');
+                                $('body').append('<div id="recovery-alert-model-cartridge" class="alert alert-success alert-dismissible fade" style="position: fixed; bottom: 15px; right: 25px; max-width: 360px; margin: 0 auto; z-index: 1055;">Модель успешно восстановлена<button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>');
+                                document.querySelector('#recovery-alert-model-cartridge').classList.add('show');
+                                $("#recovery-alert-model-cartridge").fadeTo(5000, 500).slideUp(500, function(){
+                                        $("#recovery-alert-model-cartridge").slideUp(500);
+                                    });
                             }
                         });
                        });
@@ -2000,7 +2099,6 @@ window.onload = function () {
                     }
                 }
             } else {
-                //modelArchivedCartridgeRow
                 $('#modelArchivedCartridgesContainer')[0].innerHTML = '';
            resultArray = new Array();
             let count = 1;
@@ -2019,29 +2117,44 @@ window.onload = function () {
         
     });
 
-
+        // Вызов модального окна списка моделей принтеров
+ 
     let addModelPrinterMenu = document.querySelector('#addModelPrinterMenu');
+    
         addModelPrinterMenu.addEventListener('click', function () {
-        tableModelsPrinter = document.createElement('table');
-        tableModelsPrinter.id = "modalTableModelsPrinter";
-        tableModelsPrinter.className = "table table-striped table-bordered";
-        modalModelsPrinterBodyContentInner.appendChild(tableModelsPrinter);
-
-        theadModelsPrinter = document.createElement('thead');
-        tableModelsPrinter.appendChild(theadModelsPrinter);
-        trTheadModelsPrinter = document.createElement('tr');
-        thTheadModelsPrinter1 = document.createElement('th');
-
-        thTheadModelsPrinter1.setAttribute('scope', 'col');
-        thTheadModelsPrinter1.innerText = '#';
-        thTheadModelsPrinter2 = document.createElement('th');
-        thTheadModelsPrinter2.setAttribute('scope', 'col');
-        thTheadModelsPrinter2.innerText = 'Модель принтера';
-        theadModelsPrinter.appendChild(trTheadModelsPrinter);
-        trTheadModelsPrinter.appendChild(thTheadModelsPrinter1);
-        trTheadModelsPrinter.appendChild(thTheadModelsPrinter2);
-        tbodyModelPrinter = document.createElement('tbody');
-        tableModelsPrinter.appendChild(tbodyModelPrinter);
+            
+          modalModelsCartridgeBodyContentInner.innerHTML = '';
+        
+        printerModelListContainer = document.createElement('div');
+        printerModelListContainer.id = "activePrinterModelList";
+        printerModelListContainer.className = "tab-pane fade show active printerModelList";
+        printerModelListContainer.role = 'tabpanel';
+        printerModelListContainer.setAttribute('aria-labelledby', 'actualModelsPrinter');
+        printerModelListContainer.setAttribute('tabindex', 0);
+        modalModelsPrinterBodyContentInner.appendChild(printerModelListContainer);
+            
+        
+        headRow = document.createElement('div');
+        headRow.className = 'row fw-bold pt-2 pb-3 mx-3 mb-3 px-3';
+        headRow.style = 'border-bottom: solid rgb(43, 43, 43);';
+        printerModelListContainer.appendChild(headRow);
+        
+        
+        headLabelCount = document.createElement('div');
+        headLabelCount.className = 'col-1';
+        headLabelCount.innerText = '#';
+        headRow.appendChild(headLabelCount);
+        headLabelManufacturerPrinter = document.createElement('div');
+        headLabelManufacturerPrinter.className = 'col-5';
+        headLabelManufacturerPrinter.innerText = 'Производитель';
+        headRow.appendChild(headLabelManufacturerPrinter);
+        headLabelModelPrinter = document.createElement('div');
+        headLabelModelPrinter.className = 'col-5';
+        headLabelModelPrinter.innerText = 'Модель';
+        headRow.appendChild(headLabelModelPrinter);
+        headLabelModelPrinterId = document.createElement('div');
+        headLabelModelPrinterId.className = 'col-1';
+        headRow.appendChild(headLabelModelPrinterId);
 
         $.ajax({
             url: '/models',
@@ -2049,23 +2162,360 @@ window.onload = function () {
             async: false,
             dataType: 'json',
             success: function (data) {
-                arr = data.sort();
+                arr = data.sort((a, b) => a.manufacturer > b.manufacturer ? 1 : -1);
+                 modelPrinterContainer = document.createElement('div');
+                 modelPrinterContainer.id = 'modelPrinterContainer';
+                 printerModelListContainer.appendChild(modelPrinterContainer);
                 for (i = 0; i < arr.length; i++) {
-                    trModelsPrinter = document.createElement('tr');
-                    tbodyModelPrinter.appendChild(trModelsPrinter);
-                    tdCountModelsPrinter = document.createElement('td');
-                    tdCountModelsPrinter.innerText = i + 1;
-                    trModelsPrinter.appendChild(tdCountModelsPrinter);
-                    tdModel = document.createElement('td');
-                    tdModel.setAttribute('id', arr[i].idModel);
-                    tdModel.setAttribute('class', 'model');
-                    tdModel.innerText = arr[i].manufacturer + " " + arr[i].model;
-                    trModelsPrinter.appendChild(tdModel);
+                   
+                    if(i == arr.length - 1) {
+                        nextRow = document.createElement('div');
+                        nextRow.className = 'row modelPrinterRow mx-3 px-3 pb-3';
+                        modelPrinterContainer.appendChild(nextRow);
+                    }else {
+                            nextRow = document.createElement('div');
+                            nextRow.className = 'row modelPrinterRow mx-3 px-3';
+                            nextRow.style = 'border-bottom: 0.1rem solid rgb(195, 195, 200);';
+                            modelPrinterContainer.appendChild(nextRow);
+                        }
+                    
+                    countPrinter = document.createElement('div');
+                    countPrinter.className = 'col-1';
+                    countPrinter.innerText = i + 1;
+                    nextRow.appendChild(countPrinter);
+                    
+                    manufacturerPrinter = document.createElement('div');
+                    manufacturerPrinter.className = 'col-5 manufacturer';
+                    manufacturerPrinter.innerText = arr[i].manufacturer;
+                    nextRow.appendChild(manufacturerPrinter);
+                    
+                    modelPrinter = document.createElement('div');
+                    modelPrinter.className = 'col-5 model';
+                    modelPrinter.innerText = arr[i].model;
+                    nextRow.appendChild(modelPrinter);
+                    
+                    modelPrinterId = document.createElement('div');
+                    modelPrinterId.className = 'col-1 idModelPrinter';
+                    
+                    linkPrinterModel = document.createElement('a');
+                    linkPrinterModel.href = '#';
+                    linkPrinterModel.id = 'idModelPrinter=' + arr[i].idModel;
+                    linkPrinterModel.setAttribute("arrIndex", i);
+                    linkPrinterModel.setAttribute("data-bs-toggle", "modal");
+                    linkPrinterModel.setAttribute("data-bs-target", "#modalEditModelPrinter");
+                    
+                    imgInner = document.createElement('img');
+                    imgInner.src = '/img/pencil-square.svg?height=16';
+                    linkPrinterModel.appendChild(imgInner);
+                    modelPrinterId.appendChild(linkPrinterModel);
+                    
+                    nextRow.appendChild(countPrinter);
+                    nextRow.appendChild(manufacturerPrinter);
+                    nextRow.appendChild(modelPrinter);
+                    nextRow.appendChild(modelPrinterId);
+                    
+                    linkPrinterModel.addEventListener('click', function(event) {
+                        
+                        // Вызов модального окна редактирования модели принтера
+                        let modelPrinterEd = arr[event.target.parentElement.getAttribute('arrIndex')];
+                        modalEditModelPrinterInner = document.querySelector('#modalEditModelPrinterContentInner'); // Изменить на актуальный
+                        modalEditModelPrinterInner.innerHTML = '<div class="row modalEditModelPrinterRow mt-3"><div class="col" id="modalEditModelPrinterManufacturerDiv">' +
+                                                                '<select class="form-select" id="modalEditModelPrinterManufacturerSelect"></select></div>' + 
+                                                                '<div class="col" id="modalEditModelPrinterModelDiv">' +
+                                                                '<select class="form-select" id="modalEditModelPrinterModelSelect"></select></div>' + 
+                                                                '<div class="col" id="modalEditModelPrinterDeviceTypeDiv">' +
+                                                                '<select class="form-select" id="modalEditModelPrinterDeviceTypeSelect"><option value="PRINTER" id="printerOption">Принтер</option><option value="MFU" id="mfuOption">МФУ</option></select></div></div>' +
+                                                                '<div class="row modalEditModelPrinterRow mt-3"><div class="col" id="modalEditModelPrinterColorDiv">' + 
+                                                                '<select class="form-select" id="modalEditModelPrinterColorSelect"><option value="BLACKANDWHITE" id="blackTypeOption">Чернобелый</option><option value="COLOR" id="colorTypeOption">Цветной</option></select></div>' + 
+                                                                '<div class="col" id="modalEditModelPrinterFormatDiv">' + 
+                                                                '<select class="form-select" id="modalEditModelPrinterFormatSelect"><option value="A4" id="a4FormatOption">A4</option><option value="A3" id="a3FormatOption">A3</option></select></div>' + 
+                                                                '<div class="col" id="modalEditModelPrinterSpeedDiv">' + 
+                                                                '<input class="form-control" type="text" id="modalEditModelPrinterSpeedInput" placeholder="Скорость печати"></div></div>'
+                    switch (modelPrinterEd.deviceType) {
+                        case "МФУ":
+                            $('#mfuOption')[0].selected = true;
+                            break;
+                        case "Принтер":
+                            $('#printerOption')[0].selected = true;
+                            break;
+                    }
+                    
+                    switch (modelPrinterEd.printColorType) {
+                        case "Чернобелый":
+                            $('#blackTypeOption')[0].selected = true;
+                            break;
+                        case "Цветной":
+                            $('#colorTypeOption')[0].selected = true;
+                            break;
+                    }
+                    
+                    switch (modelPrinterEd.printFormatType) {
+                        case "A4":
+                            $('#a4FormatOption')[0].selected = true;
+                            break;
+                        case "A3":
+                            $('#a3FormatOption')[0].selected = true;
+                            break;
+                    }
+                    
+                   $('#modalEditModelPrinterSpeedInput')[0].value = modelPrinterEd.printSpeed;
+                    
+                    $('#modalEditModelPrinterManufacturerSelect').selectize({
+                        placeholder: "Производитель",
+                        valueField: 'manufacturer',
+                        labelField: 'manufacturer',
+                        searchField: "manufacturer",
+                        preload: true,
+                        load: function (value, callback) {
+                                $.ajax({
+                                    url: "/models",
+                                    type: 'GET',
+                                    async: false,
+                                    dataType: 'json', 
+                                    error: callback,
+                                    success: callback
+                                });
+                                $('#modalEditModelPrinterManufacturerSelect')[0].selectize.setValue($('#modalEditModelPrinterManufacturerSelect')[0].selectize.search(modelPrinterEd.manufacturer).items[0].id);
+                        }
+                    });
+                    
+                    $('#modalEditModelPrinterModelSelect').selectize({
+                        create: true,
+                        persist: false,
+                        placeholder: "Модель",
+                        valueField: 'model',
+                        labelField: 'model',
+                        searchField: "model",
+                        preload: true,
+                        load: function (query, callback) {
+                                $.ajax({
+                                    url: "/models",
+                                    type: 'GET',
+                                    async: false,
+                                    dataType: 'json', 
+                                    error: callback,
+                                    success: callback
+                                });
+                                if(query.length < 1) {
+                                   
+                                 $('#modalEditModelPrinterModelSelect')[0].selectize.setValue($('#modalEditModelPrinterModelSelect')[0].selectize.search(modelPrinterEd.model).items[0].id);
+                                 let curOptions = Object.entries($('#modalEditModelPrinterModelSelect')[0].selectize.options);
+                                 for(let el = 0; el < curOptions.length; el++) {
+                                     if(modelPrinterEd.model.indexOf(curOptions[el][0]) === 0) {
+                                         oldModelPrinterIdValue = curOptions[el][1].id;
+                                     }
+                                 }
+                             }
+                                
+                        }
+                    });
+                        
+                        $('#btnRemovePrinterModel')[0].addEventListener('click', function() {
+                            $.ajax({
+                                type: "DELETE",
+                                url: "/models/",
+                                data: {id: modelPrinterEd.idModel},
+                                async: false,
+                                success: function () {
+                                    $('#modalEditModelPrinter').modal('hide');
+                                    $('#modalModelsPrinterContentInner')[0].innerHTML = '';
+                                    $('#addModelPrinterMenu').click();
+                                    $('body').append('<div id="delete-alert-model-printer" class="alert alert-success alert-dismissible fade" style="position: fixed; bottom: 15px; right: 25px; max-width: 360px; margin: 0 auto; z-index: 1055;">Модель успешно удалена<button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>');
+                                    document.querySelector('#delete-alert-model-printer').classList.add('show');
+                                    $("#delete-alert-model-printer").fadeTo(5000, 500).slideUp(500, function(){
+                                        $("#delete-alert-model-printer").slideUp(500);
+                                    });
+                                },
+                                error: function(callback) {
+                                    alert("Ошибка");
+                          }, 
+
+
+                            });
+                        });
+                        
+                         $('#btnSavePrinterModel')[0].addEventListener('click', function() {
+                            let dto = {
+                                idModel: modelPrinterEd.idModel,
+                                model: $('#modalEditModelPrinterModelSelect')[0].value,
+                                manufacturer: $('#modalEditModelPrinterManufacturerSelect')[0].value,
+                                printColorType: $('#modalEditModelPrinterColorSelect')[0].value,
+                                printFormatType: $('#modalEditModelPrinterFormatSelect')[0].value,
+                                printSpeed: $('#modalEditModelPrinterSpeedInput')[0].value,
+                                deviceType: $('#modalEditModelPrinterDeviceTypeSelect')[0].value
+                            }
+                            
+                                 $.ajax({
+                                    type: "POST",
+                                    url: "/models/",
+                                    data: dto,
+                                    async: false,
+                                    success: function () {
+                                        $('#modalEditModelCartridge').modal('hide');
+                                        document.querySelector('#modalEditModelCartridgeContentInner').innerHTML = '';
+                                        $('#addModelCartridgeMenu').click();
+                                        alert("Успешно сохранен");
+                                    },
+                                    error: function(callback) {
+                                        alert("Ошибка");
+                              }, 
+
+
+                                });
+                            
+                        });
+                        
+                    });
+                    
+                }
+            }
+        });
+        
+        //archivedModelsPrinter tab
+        
+        archivedModelPrinterListContainer = document.createElement('div');
+        archivedModelPrinterListContainer.id = "archivedModelPrinterList";
+        archivedModelPrinterListContainer.className = "tab-pane fade printerModelList";
+        archivedModelPrinterListContainer.role = 'tabpanel';
+        archivedModelPrinterListContainer.setAttribute('aria-labelledby', 'archivedModelsPrinter');
+        archivedModelPrinterListContainer.setAttribute('tabindex', 0);
+        modalModelsPrinterBodyContentInner.appendChild(archivedModelPrinterListContainer);
+        
+        archivedModelPrinterListContainer.innerHTML = '<div class="row fw-bold pt-2 pb-3 mx-3 mb-3 px-3" style="border-bottom: solid rgb(43, 43, 43);">' + 
+                                                        '<div class="col-1">#</div><div class="col-5">Производитель</div><div class="col-5">Модель</div><div class="col-1"></div></div>';
+
+        
+        $.ajax({
+            url: '/models?archived=true',
+            type: 'GET',
+            async: false,
+            dataType: 'json',
+            success: function (data) {
+                 let arr = data.sort((a, b) => a.manufacturer > b.manufacturer ? 1 : -1);
+                 modelPrinterContainer = document.createElement('div');
+                 modelPrinterContainer.id = 'archivedModelPrinterContainer';
+                 archivedModelPrinterListContainer.appendChild(modelPrinterContainer);
+                for (i = 0; i < arr.length; i++) {
+                   
+                    if(i == arr.length - 1) {
+                        nextRow = document.createElement('div');
+                        nextRow.className = 'row archivedModelPrinterRow mx-3 px-3 pb-3';
+                        modelPrinterContainer.appendChild(nextRow);
+                    }else {
+                            nextRow = document.createElement('div');
+                            nextRow.className = 'row archivedModelPrinterRow mx-3 px-3';
+                            nextRow.style = 'border-bottom: 0.1rem solid rgb(195, 195, 200);';
+                            modelPrinterContainer.appendChild(nextRow);
+                        }
+                    
+                    countPrinter = document.createElement('div');
+                    countPrinter.className = 'col-1';
+                    countPrinter.innerText = i + 1;
+                    nextRow.appendChild(countPrinter);
+                    
+                    manufacturerPrinter = document.createElement('div');
+                    manufacturerPrinter.className = 'col-5 manufacturer';
+                    manufacturerPrinter.innerText = arr[i].manufacturer;
+                    nextRow.appendChild(manufacturerPrinter);
+                    
+                    modelPrinter = document.createElement('div');
+                    modelPrinter.className = 'col-5 model';
+                    modelPrinter.innerText = arr[i].model;
+                    nextRow.appendChild(modelPrinter);
+                    
+                    modelPrinterId = document.createElement('div');
+                    modelPrinterId.className = 'col-1 idModelPrinter';
+                    
+                    linkPrinterModel = document.createElement('a');
+                    linkPrinterModel.href = '#';
+                    linkPrinterModel.id = 'idModelPrinter=' + arr[i].idModel;
+                    linkPrinterModel.setAttribute("arrIndex", i);
+                    linkPrinterModel.setAttribute("data-bs-toggle", "modal");
+                    linkPrinterModel.setAttribute("data-bs-target", "#modalRepearModelPrinter");
+                    
+                    imgInner = document.createElement('img');
+                    imgInner.src = '/img/wrench.svg?height=16';
+                    linkPrinterModel.appendChild(imgInner);
+                    modelPrinterId.appendChild(linkPrinterModel);
+                    nextRow.appendChild(countPrinter);
+                    nextRow.appendChild(manufacturerPrinter);
+                    nextRow.appendChild(modelPrinter);
+                    nextRow.appendChild(modelPrinterId);
+                    
+                    // вызов модального окна восстановить модель принтера
+                    
+                    linkPrinterModel.addEventListener('click', function(event) {
+                        
+                        $('#innrModelPrinter')[0].innerHTML = 'Вы действительно хотите восстановить ' + event.target.parentElement.parentElement.parentElement.childNodes[1].innerText +
+                               ' ' + event.target.parentElement.parentElement.parentElement.childNodes[2].innerText + '?';
+                       idModelPrinter = event.delegateTarget.id;
+                       arrId = idModelPrinter.split('=');
+                       $('#repearModelPrinterBtn')[0].addEventListener('click', function() {
+                           $.ajax({
+                            url: '/recovery-model',
+                            type: 'POST',
+                            async: false,
+                            data: {id: arrId[1], archived: true},
+                            success: function (callback) {
+                                 $('#modalRepearModelPrinter').modal('hide');
+                                document.querySelector('#modalModelsPrinterContentInner').innerHTML = '';
+                                $('#addModelPrinterMenu').click();
+                                $('#activePrinterModelList').removeClass('show active');
+                                $('#archivedModelPrinterList').addClass('show active');
+                                $('body').append('<div id="recovery-alert-model-printer" class="alert alert-success alert-dismissible fade" style="position: fixed; bottom: 15px; right: 25px; max-width: 360px; margin: 0 auto; z-index: 1055;">Модель успешно восстановлена<button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>');
+                                document.querySelector('#recovery-alert-model-printer').classList.add('show');
+                                $("#recovery-alert-model-printer").fadeTo(5000, 500).slideUp(500, function(){
+                                        $("#recovery-alert-model-printer").slideUp(500);
+                                    });
+                            }
+                        });
+                       });
+                        
+                    });
+                    
+                }
+            }
+        });
+        
+        // Поиск по списку моделей принтеров в модальном окне
+        
+        let actualModelsPrinterRows = [...document.querySelectorAll('.modelPrinterRow')];
+        let archivedModelsPrinterRows = [...document.querySelectorAll('.archivedModelPrinterRow')];
+        
+        $('#searchModelPrinter')[0].addEventListener('input', function(input) {
+            if($('#actualModelsPrinter')[0].ariaSelected === "true") {
+           $('#modelPrinterContainer')[0].innerHTML = '';
+           resultArray = new Array();
+            let count = 1;
+            for(kkk=0; kkk < actualModelsPrinterRows.length; kkk++){
+               
+                target = actualModelsPrinterRows[kkk].childNodes[1].innerHTML + " " + actualModelsPrinterRows[kkk].childNodes[2].innerHTML;
+                if(target.toLowerCase().search($('#searchModelPrinter').find('input')[0].value.toLowerCase()) > -1){
+                    actualModelsPrinterRows[kkk].childNodes[0].innerHTML = count;
+                    resultArray.push(actualModelsPrinterRows[kkk]);
+                    $('#modelPrinterContainer')[0].appendChild(actualModelsPrinterRows[kkk]);
+                    count++;
+                    }
+                }
+            } else {
+                $('#archivedModelPrinterContainer')[0].innerHTML = '';
+           resultArray = new Array();
+            let count = 1;
+            for(kkk=0; kkk < archivedModelsPrinterRows.length; kkk++){
+               
+                target = archivedModelsPrinterRows[kkk].childNodes[1].innerHTML + " " + archivedModelsPrinterRows[kkk].childNodes[2].innerHTML;
+                if(target.toLowerCase().search($('#searchModelPrinter').find('input')[0].value.toLowerCase()) > -1){
+                    archivedModelsPrinterRows[kkk].childNodes[0].innerHTML = count;
+                    resultArray.push(archivedModelsPrinterRows[kkk]);
+                    $('#archivedModelPrinterContainer')[0].appendChild(archivedModelsPrinterRows[kkk]);
+                    count++;
+                    }
                 }
             }
         });
     });
-
+    
+    
 
     let addLocationMenu = document.querySelector('#addLocationMenu');
     addLocationMenu.addEventListener('click', function () {
@@ -2117,8 +2567,6 @@ window.onload = function () {
 
    selectDeviceType = document.querySelector('#selectDeviceType');
    
-   
-   
    selectDeviceType.addEventListener('change', function() {
        if(selectDeviceType.value === "PRINTER") {
            window.location.href = "/inventories?deviceType=PRINTER";
@@ -2151,6 +2599,32 @@ window.onload = function () {
                                                         '</div>' +
                                                       '</div>';
                         parent.appendChild(modalRepearModel);
+                        
+                        
+                        modalRepearModelPrinter = document.createElement('div');
+                        modalRepearModelPrinter.className = 'modal fade';
+                        modalRepearModelPrinter.id = 'modalRepearModelPrinter';
+                        modalRepearModelPrinter.setAttribute('tabindex', -1);
+                        modalRepearModelPrinter.setAttribute('aria-labelledby', 'exampleModalLabel');
+                        modalRepearModelPrinter.setAttribute('aria-hidden', 'true');
+                        modalRepearModelPrinter.innerHTML = '<div class="modal-dialog"> ' +
+                                                        '<div class="modal-content">' +
+                                                          '<div class="modal-header">' +
+                                                            '<h1 class="modal-title fs-5" id="exampleModalLabel">Восстановление модели принтера</h1>' +
+                                                            '<button type="button" class="btn-close" data-bs-toggle="modal" data-bs-target="#modalModelsPrinter" aria-label="Закрыть"></button>' +
+                                                          '</div>' +
+                                                          '<div class="modal-body">' +
+                                                            '<div id="innrModelPrinter"></div>' +
+                                                          '</div>' +
+                                                          '<div class="modal-footer">' +
+                                                            '<button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#modalModelsPrinter">Отмена</button>' +
+                                                            '<button type="button" id="repearModelPrinterBtn" class="btn btn-primary">Восстановить</button>' +
+                                                          '</div>' +
+                                                        '</div>' +
+                                                      '</div>';
+                        parent.appendChild(modalRepearModelPrinter);
+
+
 };
 
 $(document).ready(function () {
@@ -2164,4 +2638,6 @@ $(document).ready(function () {
         selectDeviceType.children[0].selected = true;
     }
     
+    
 });
+

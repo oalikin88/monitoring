@@ -191,7 +191,6 @@ public class MainController {
             if(!deviceType.equals("ALL")) {
                  getPage = printerRepo.findByLocationAndDeviceType(parseLong, deviceType, paging);
             } else {
-            
                 getPage = printerRepo.findByLocation(parseLong, paging);
             }
             List<PrinterDTO> dtoes = new ArrayList<>();
@@ -220,7 +219,6 @@ public class MainController {
             
                 getCartridge = cartridgeRepo.findByLocationId(parseLong, paging);
             }
-
             List<CartridgeDTO> dtoes = new ArrayList<>();
             for (Cartridge cart : getCartridge.getContent()) {
                 CartridgeDTO cartDto = new CartridgeDTO();

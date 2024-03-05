@@ -183,7 +183,7 @@ public class CartridgeMapper {
         List<Model> modelsPrinters = cartridgeModel.getModelsPrinters();
         for(Model model : modelsPrinters) {
             listModelsPrinters.add(model.getId());
-            for(Printer printer : model.getPrinters()) {
+            for(Printer printer : model.getPrintersList()) {
                 printers.add(printer.getManufacturer().getName() + " " + printer.getModel().getName());
             }
         }

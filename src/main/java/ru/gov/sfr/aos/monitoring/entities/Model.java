@@ -8,6 +8,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -66,16 +67,19 @@ public class Model implements Serializable {
     @ManyToMany(mappedBy = "modelsPrinters", fetch = FetchType.EAGER)
     private Set<CartridgeModel> modelCartridges = new HashSet<>();
     
+    private boolean archived;
+    
     public Model() {
     }
 
-    public Model(String name, PrintColorType printColorType, PrintFormatType printFormatType, Long printSpeed, Manufacturer manufacturer, DeviceType deviceType) {
+    public Model(String name, PrintColorType printColorType, PrintFormatType printFormatType, Long printSpeed, Manufacturer manufacturer, DeviceType deviceType, boolean archived) {
         this.name = name;
         this.printColorType = printColorType;
         this.printFormatType = printFormatType;
         this.printSpeed = printSpeed;
         this.manufacturer = manufacturer;
         this.deviceType = deviceType;
+        this.archived = archived;
     }
 
     public PrintColorType getPrintColorType() {
@@ -151,13 +155,6 @@ public class Model implements Serializable {
         this.id = id;
     }
 
-    public List<Printer> getPrinters() {
-        return printers;
-    }
-
-    public void setPrinters(List<Printer> printers) {
-        this.printers = printers;
-    }
 
     public DeviceType getDeviceType() {
         return deviceType;
@@ -165,6 +162,59 @@ public class Model implements Serializable {
 
     public void setDeviceType(DeviceType deviceType) {
         this.deviceType = deviceType;
+    }
+
+    public boolean isArchived() {
+        return archived;
+    }
+
+    public void setArchived(boolean archived) {
+        this.archived = archived;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = Long.hashCode(this.id);
+        hash = 31 * hash + (this.name == null ? 0 : this.name.hashCode());
+        hash = 31 * hash + this.printColorType.getType().hashCode();
+        hash = 31 * hash + Objects.hashCode(this.printFormatType);
+        hash = 31 * hash + Long.hashCode(this.printSpeed);
+        hash = 31 * hash + Objects.hashCode(this.manufacturer);
+        hash = 31 * hash + Objects.hashCode(this.deviceType);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Model other = (Model) obj;
+        if (!Objects.equals(this.name, other.name)) {
+            return false;
+        }
+        if (this.id != other.id) {
+            return false;
+        }
+        if (!this.printColorType.getType().equals(other.printColorType.getType())) {
+            return false;
+        }
+        if (!this.printFormatType.equals(other.printFormatType)) {
+            return false;
+        }
+        if (this.printSpeed != other.printSpeed) {
+            return false;
+        }
+        if (!this.manufacturer.equals(other.manufacturer)) {
+            return false;
+        }
+        return this.deviceType.getValue().equals(other.deviceType.getValue());
     }
     
     

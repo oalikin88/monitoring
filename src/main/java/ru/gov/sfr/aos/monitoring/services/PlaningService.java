@@ -7,6 +7,7 @@ package ru.gov.sfr.aos.monitoring.services;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -151,45 +152,53 @@ public class PlaningService {
     }
     
     public Map<String, Set<CartridgeModelDTO>> getAmountCartridgeModel() {
-        
-        List<CartridgeModel> findAll = cartridgeModelRepo.findAll();
-        
         Map<String, Set<CartridgeModelDTO>> ooout = new HashMap<>();
         List<Model> modelsPrinter = modelPrinterRepo.findAll();      
         for(Model m : modelsPrinter) {
             Set<CartridgeModelDTO> modelsCart = new HashSet<>();
             Set<CartridgeModel> modelCartridges = m.getModelCartridges();
-            for(CartridgeModel carmod : modelCartridges) {
+            Iterator<CartridgeModel> iteratorCartridgeModel = modelCartridges.iterator();
+            StringBuilder key = new StringBuilder();
+            while(iteratorCartridgeModel.hasNext()) {
+                CartridgeModel carmod = iteratorCartridgeModel.next();
                 CartridgeModelDTO dto = new CartridgeModelDTO();
-                StringBuilder sb = new StringBuilder();
                 dto.setId(carmod.getId());
                 dto.setModel(carmod.getModel());
                 dto.setResource(carmod.getDefaultNumberPrintPage().toString());
                 dto.setType(carmod.getType().getName());
-                Iterator<Model> iterator = carmod.getModelsPrinters().iterator();
-                
-                List<Long> collectPrintersID = carmod.getModelsPrinters().stream().flatMap(e -> e.getPrinters().stream())
+                dto.setIdModel(carmod.getModelsPrinters().stream().map(e -> e.getId()).collect(Collectors.toList()));
+                List<Long> collectPrintersID = carmod.getModelsPrinters().stream().flatMap(e -> e.getPrintersList().stream())
                         .map(el -> el.getId())
                         .collect(Collectors.toList());
                 dto.setIdModel(collectPrintersID);
-                while (iterator.hasNext()) {
-                    Model element = iterator.next();
-                    sb.append(element.getManufacturer().getName());
-                    sb.append(" ");
-                    sb.append(element.getName());
-                    if(iterator.hasNext()) {
-                    sb.append("/");
+                if(!iteratorCartridgeModel.hasNext()) {
+                    if(carmod.getModelsPrinters().size() > 1) {
+                        List<String> labelList = new ArrayList<>();
+                        for(int j = 0; j < carmod.getModelsPrinters().size(); j++) {
+                            String s = carmod.getModelsPrinters().get(j).getManufacturer().getName() + " " + carmod.getModelsPrinters().get(j).getName();
+                            labelList.add(s);
+                        }
+                        Collections.sort(labelList);
+                        for(int i = 0; i < labelList.size(); i++) {
+                            key.append(labelList.get(i));
+                            if(i != labelList.size() - 1) {
+                                key.append("/");
+                            }
+                        }
+                    } else {
+                        key.append(carmod.getModelsPrinters().get(0).getManufacturer().getName() + " " + carmod.getModelsPrinters().get(0).getName());
                     }
+                }
                 modelsCart.add(dto);
-                
-                    
-                }
-                if(ooout.get(sb.toString()) == null || ooout.get(sb.toString()).isEmpty()) {
-                    ooout.put(sb.toString(), modelsCart);
+            }
+            if (!key.toString().isEmpty() && !key.toString().isBlank()) {
+                if (!ooout.containsKey(key.toString())) {
+                    ooout.put(key.toString(), modelsCart);
                 } else {
-                    ooout.get(sb.toString()).add(dto);
+                    ooout.get(key.toString()).addAll(modelsCart);
                 }
-                }
+            }
+                key.setLength(0);
             }
         return ooout;
     }
