@@ -84,10 +84,10 @@ window.onload = function () {
                 for (let j = 0; j < models.size; j++) {
                     thTheadCount = document.createElement('th');
                     thTheadCount.className = 'tHeader';
-                    thTheadCount.innerText = "Количество \n принтеров";
+                    thTheadCount.innerText = "принтеров";
                     thTheadCount2 = document.createElement('th');
                     thTheadCount2.className = 'tHeader';
-                    thTheadCount2.innerText = "Количество \n картриджей";
+                    thTheadCount2.innerText = "картриджей";
                     subtrThead.appendChild(thTheadCount);
                     subtrThead.appendChild(thTheadCount2);
                 }

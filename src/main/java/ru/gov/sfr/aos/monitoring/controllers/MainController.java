@@ -7,6 +7,7 @@ package ru.gov.sfr.aos.monitoring.controllers;
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.SQLException;
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -124,7 +125,8 @@ public class MainController {
             @RequestBody List<Map<String, String>> printersPlusCartridges) throws ObjectAlreadyExists {
         ContractFromInputDto transformInputToDto = mapper.transformInputToDto(
                 printersPlusCartridges);
-        mapper.createContract(transformInputToDto);
+            mapper.createContract(transformInputToDto);
+        
         return "redirect:/main";
     }
 

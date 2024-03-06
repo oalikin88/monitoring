@@ -360,21 +360,26 @@ $(document).ready(function () {
 
 
                     $('.selectLocation').selectize({
-        preload: true,
-        valueField: 'id',
-        labelField: 'name',
-        searchField: "name",
-        placeholder: 'локация',
-        load: function (query, callback) {
-            $.ajax({
-                url: '/locations',
-                type: 'GET',
-                dataType: 'json',
-                data: {model: query},
-                error: callback,
-                success: callback
+                    preload: true,
+                    valueField: 'id',
+                    labelField: 'name',
+                    searchField: ['name', 'id'],
+                    placeholder: 'локация',
+                    load: function (query, callback) {
+                        $.ajax({
+                            url: '/locations',
+                            type: 'GET',
+                            async: false,
+                            dataType: 'json',
+                            data: {model: query},
+                            error: callback,
+                            success: callback
 
-            });
+                        });
+
+            if(query.length < 1) {
+                $('#selectLocation')[0].selectize.setValue($('#selectLocation')[0].selectize.search(locationInfo.id).items[0].id);
+            }
         }
     });
 

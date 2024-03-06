@@ -55,16 +55,18 @@ $(document).ready(function () {
         preload: true,
         valueField: 'name',
         labelField: 'name',
-        searchField: "name",
+        searchField: ["id", "name"],
         load: function (query, callback) {
             $.ajax({
                 url: '/locations',
                 type: 'GET',
+                async: false,
                 dataType: 'json',
                 data: {model: query},
                 error: callback,
                 success: callback
             });
+            $('#locationSelect')[0].selectize.setValue( $('#locationSelect')[0].selectize.search(input.locationId).items[0].id);
         }
 
     });
@@ -73,19 +75,26 @@ $(document).ready(function () {
     
     printerStatusBtn.addEventListener('click', function() {
 
-       var $select = $('#printerStatusSelect').selectize({
-        placeholder: 'Выберите статус',
-        valueField: 'value',
-        labelField: 'label',
-        searchField: "label",
-         options: [{value: "OK", label: "Исправен"},
-            {value: "DEFECTIVE", label: "Неисправен"},
-            {value: "REPAIR", label: "Ремонт"},
-            {value: "MONITORING", label: "Списание"},
-            {value: "UTILIZATION", label: "Утилизация"},
-            {value: "DELETE", label: "Снят с учёта"}]
-    });
-       
+        switch (input.printerStatus) {
+            case "Исправен":
+                $('#optionOk').attr("selected", "true");
+                break;
+            case "Неисправен":
+                $('#optionDefective').attr("selected", "true");
+                break;
+            case "Ремонт":
+                $('#optionRepear').attr("selected", "true");
+                break;
+            case "Списание":
+                $('#optionUtilization').attr("selected", "true");
+                break;
+            case "Утилизация":
+                $('#optionUtilization').attr("selected", "true");
+                break;
+            case "Снят с учёта":
+                $('#optionDelete').attr("selected", "true");
+                break;
+        }
 
     });
 
@@ -198,9 +207,6 @@ $(document).ready(function () {
         });
     });
 
-    locationbtn.addEventListener('click', function () {
-        $('#locationSelect')[0].selectize.setValue(Object.entries($('#locationSelect')[0].selectize.options)[0][1].name);
-    });
 
     locationSubmit.addEventListener('click', function () {
         var div = $('#locationRefresh')[0];

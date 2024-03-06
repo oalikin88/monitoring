@@ -50,8 +50,6 @@ public class Manufacturer implements Serializable {
         return id;
     }
 
-   
-
     public String getName() {
         return name;
     }
@@ -72,17 +70,6 @@ public class Manufacturer implements Serializable {
         modelsList.add(model);
     }
 
-    public List<Printer> getPrintersList() {
-        return printers;
-    }
-
-    public void setPrintersList(List<Printer> printers) {
-        this.printers = printers;
-    }
-
-    public void addPrinter(Printer printer) {
-        printers.add(printer);
-    }
 
     @Override
     public String toString() {
