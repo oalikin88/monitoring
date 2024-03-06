@@ -29,7 +29,7 @@ public class NameFromOneC {
     private String name;
     
    
-     @OneToMany(targetEntity = Printer.class, mappedBy = "nameFromOneC", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToMany(targetEntity = Printer.class, mappedBy = "nameFromOneC", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List <Printer> printers = new ArrayList<>();
 
     public NameFromOneC() {

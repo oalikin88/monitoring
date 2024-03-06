@@ -8,6 +8,7 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.ForeignKey;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -24,7 +25,7 @@ import javax.validation.constraints.NotNull;
 @PrimaryKeyJoinColumn(name = "CARTRIDGE_ID")
 public class Cartridge extends ObjectBuing implements Serializable {
     @NotNull(message = "Поле \"Модель\" не должно быть пустым")
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     protected CartridgeModel model;
     
     protected LocalDateTime dateStartExploitation;
@@ -36,7 +37,7 @@ public class Cartridge extends ObjectBuing implements Serializable {
     protected boolean useInPrinter;
     
     protected Long count;
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "PRINTER_ID",
 			foreignKey = @ForeignKey(name = "PRINTER_ID_FK"))
     protected Printer printer;

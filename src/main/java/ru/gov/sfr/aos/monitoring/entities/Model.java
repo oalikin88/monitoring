@@ -55,16 +55,15 @@ public class Model implements Serializable {
     @NotNull(message = "Поле \"Скорость печати\" не может быть пустым")
     private Long printSpeed;
     @NotNull(message = "Поле \"Производитель\" не может быть пустым")
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Manufacturer manufacturer;
-    @LazyCollection(LazyCollectionOption.FALSE)
-    @OneToMany(targetEntity = Printer.class, mappedBy = "model", cascade = CascadeType.ALL)
+    @OneToMany(targetEntity = Printer.class, mappedBy = "model", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List <Printer> printers = new ArrayList<>();
     @NotNull
     @Enumerated(EnumType.STRING)
     private DeviceType deviceType;
     
-    @ManyToMany(mappedBy = "modelsPrinters", fetch = FetchType.EAGER)
+    @ManyToMany(mappedBy = "modelsPrinters", fetch = FetchType.LAZY)
     private Set<CartridgeModel> modelCartridges = new HashSet<>();
     
     private boolean archived;

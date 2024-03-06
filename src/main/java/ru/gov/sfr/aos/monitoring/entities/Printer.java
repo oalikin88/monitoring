@@ -18,7 +18,6 @@ import javax.persistence.PrimaryKeyJoinColumn;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import ru.gov.sfr.aos.monitoring.PrinterStatus;
-import ru.gov.sfr.aos.monitoring.dictionaries.DeviceType;
 
 /**
  *
@@ -31,7 +30,7 @@ public class Printer extends ObjectBuing implements Serializable {
     
     
     @NotNull(message = "Поле \"Производитель\" не может быть пустым")
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     protected Manufacturer manufacturer;
     @NotEmpty(message = "Поле \"Серийный номер\" не может быть пустым")
     @Column(unique = true)
@@ -40,15 +39,15 @@ public class Printer extends ObjectBuing implements Serializable {
     @Column(unique=true)
     protected String inventoryNumber;
     
-    @OneToMany(mappedBy = "printer", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "printer", fetch = FetchType.LAZY)
     protected Set<Cartridge> cartridge;
     @NotNull(message = "Поле \"Модель\" не должно быть пустым")
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     protected Model model;
     @NotNull
     @Enumerated(EnumType.STRING)
     protected PrinterStatus printerStatus;
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     protected NameFromOneC nameFromOneC;
    
     

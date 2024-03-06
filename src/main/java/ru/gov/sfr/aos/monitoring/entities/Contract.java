@@ -30,7 +30,7 @@ public class Contract implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @NotNull
-    @OneToMany(targetEntity = ObjectBuing.class, mappedBy = "contract", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToMany(targetEntity = ObjectBuing.class, mappedBy = "contract", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set <ObjectBuing> objectBuing;
     @NotEmpty(message = "Поле \"Номер контракта\" не должно быть пустым")
     private String contractNumber; 

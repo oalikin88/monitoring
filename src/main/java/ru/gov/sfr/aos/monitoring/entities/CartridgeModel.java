@@ -44,14 +44,14 @@ public class CartridgeModel implements Serializable {
     private CartridgeType type;
     @NotNull(message = "Поле \"Номинальный ресурс\" не должно быть пустым")
     private Long defaultNumberPrintPage;
-    @OneToMany(targetEntity = Cartridge.class, mappedBy = "model", cascade = CascadeType.ALL)
+    @OneToMany(targetEntity = Cartridge.class, mappedBy = "model", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Cartridge> cartridges;
    // @NotNull(message = "Поле \"модель принтера\" не должно быть пустым")
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "cartridge_model_models_printers", joinColumns = @JoinColumn(name = "model_cartridges_id"), inverseJoinColumns = @JoinColumn(name = "models_printers_id"))
     private List<Model> modelsPrinters = new ArrayList<>();
     @NotNull(message = "Поле \"Производитель\" не может быть пустым")
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private CartridgeManufacturer cartridgeManufacturer;
     private boolean archived;
 

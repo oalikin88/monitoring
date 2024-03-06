@@ -231,12 +231,12 @@ window.onload = function () {
         
         linkSortingCartridgeCount = document.createElement('a');
         linkSortingCartridgeCount.href = '#';
-        linkSortingCartridgeCount.id = 'cartridgeLocationSortLink';
+        linkSortingCartridgeCount.id = 'cartridgeCountSortLink';
         imgInnerCartridgeCount = document.createElement('img');
         imgInnerCartridgeCount.src = '/img/sorting.png';
         imgInnerCartridgeCount.alt = 'Сортировка';
         imgInnerCartridgeCount.className = 'imgSorting';
-        imgInnerCartridgeCount.id = 'cartridgeLocation';
+        imgInnerCartridgeCount.id = 'cartridgeCountImg';
         
         spanCartridgeCount = document.createElement('span');
         spanCartridgeCount.innerHTML = '№';
@@ -450,7 +450,7 @@ window.onload = function () {
     btnCancel.addEventListener('click', function () {
         history.back();
     });
-    
+    if($('#printerCountSortLink')[0] != null) {
     linkSortingPrinterCount.addEventListener('click', function() {
         printerRows = [...document.querySelectorAll('.contentItemPrinterContract')];
         if(sortedPrinterCount == false) {
@@ -570,7 +570,8 @@ window.onload = function () {
         sortedPrinterLocation = false;
         }
     });
-    
+}
+    if($('#cartridgeCountSortLink')[0] != null) {
     linkSortingCartridgeCount.addEventListener('click', function() {
         cartridgeRows = [...document.querySelectorAll('.contentItemCartridgeContract')];
         if(sortedCartridgeCount == false) {
@@ -717,5 +718,5 @@ window.onload = function () {
         }
     });
     
-    
+    }
 };

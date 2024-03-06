@@ -30,7 +30,7 @@ public class Location implements Serializable {
     @NotEmpty(message = "Поле \"Локация\" не может быть пустым")
     private String name;
  
-    @OneToMany(targetEntity = ObjectBuing.class, mappedBy = "location", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToMany(targetEntity = ObjectBuing.class, mappedBy = "location", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<ObjectBuing> objectsSet = new HashSet<>();
 
     public Long getId() {
