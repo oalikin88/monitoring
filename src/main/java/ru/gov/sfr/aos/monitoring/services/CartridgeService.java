@@ -7,10 +7,8 @@ package ru.gov.sfr.aos.monitoring.services;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -19,35 +17,29 @@ import java.util.stream.Collectors;
 import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Component;
-import ru.gov.sfr.aos.monitoring.CartridgeType;
+import org.springframework.stereotype.Service;
 import ru.gov.sfr.aos.monitoring.OperationType;
 import ru.gov.sfr.aos.monitoring.entities.Cartridge;
-import ru.gov.sfr.aos.monitoring.entities.CartridgeManufacturer;
 import ru.gov.sfr.aos.monitoring.entities.CartridgeModel;
 import ru.gov.sfr.aos.monitoring.entities.ListenerOperation;
 import ru.gov.sfr.aos.monitoring.entities.Location;
-import ru.gov.sfr.aos.monitoring.entities.Model;
 import ru.gov.sfr.aos.monitoring.entities.Printer;
-import ru.gov.sfr.aos.monitoring.exceptions.ObjectAlreadyExists;
+import ru.gov.sfr.aos.monitoring.interfaces.CartridgeServiceInterface;
 import ru.gov.sfr.aos.monitoring.models.CartridgeChoiceDto;
 import ru.gov.sfr.aos.monitoring.models.CartridgeInstallDTO;
-import ru.gov.sfr.aos.monitoring.models.CartridgeModelDTO;
 import ru.gov.sfr.aos.monitoring.models.ChangeDeviceLocationDTO;
 import ru.gov.sfr.aos.monitoring.models.ChangeLocationForCartridges;
-import ru.gov.sfr.aos.monitoring.repositories.CartridgeManufacturerRepo;
-import ru.gov.sfr.aos.monitoring.repositories.CartridgeModelRepo;
 import ru.gov.sfr.aos.monitoring.repositories.CartridgeRepo;
 import ru.gov.sfr.aos.monitoring.repositories.LocationRepo;
-import ru.gov.sfr.aos.monitoring.repositories.ModelPrinterRepo;
 import ru.gov.sfr.aos.monitoring.repositories.PrinterRepo;
 
 /**
  *
  * @author 041AlikinOS
  */
-@Component
-public class CartridgeService {
+
+@Service
+public class CartridgeService implements CartridgeServiceInterface {
 
     @Autowired
     private CartridgeRepo cartridgeRepo;
@@ -57,15 +49,8 @@ public class CartridgeService {
     private ListenerOperationService listenerOperationService;
     @Autowired
     private LocationRepo locationRepo;
-    @Autowired
-    private CartridgeModelRepo cartridgeModelRepo;
-    @Autowired
-    private ModelPrinterRepo modelPrinterRepo;
-    @Autowired
-    private CartridgeMapper cartridgeMapper;
-    @Autowired
-    private CartridgeManufacturerRepo cartridgeManufacturerRepo;
-    
+
+    @Override
     @Transactional
     public void installCartridge(CartridgeInstallDTO dto) {
         ListenerOperation listener = new ListenerOperation();
@@ -121,6 +106,7 @@ public class CartridgeService {
         listenerOperationService.saveListenerOperation(listener);
 
     }
+    @Override
     @Transactional
     public void changeCartridgesLocation(ChangeLocationForCartridges dto) {
         Set<Cartridge> cartridgesFromLocationBeforeTransfer = cartridgeRepo.findByLocationId(dto.getFromLocation()).stream().collect(Collectors.toSet());
@@ -178,105 +164,7 @@ public class CartridgeService {
             listenerOperationService.saveListenerOperation(listenerOperation);
         }
     }
-
-    public List<CartridgeModel> findModelCartridgeByType(String type) {
-        CartridgeType currentType;
-        if (type.trim().toLowerCase().equals(CartridgeType.ORIGINAL.getName().trim().toLowerCase())) {
-            currentType = CartridgeType.ORIGINAL;
-        } else if (type.trim().toLowerCase().equals(CartridgeType.ANALOG.getName().trim().toLowerCase())) {
-            currentType = CartridgeType.ANALOG;
-        } else {
-            currentType = CartridgeType.START;
-        }
-        List<CartridgeModel> list = cartridgeModelRepo.findByType(currentType);
-        
-        return list;
-    }
-    
-       // Редактирование модели картриджа
-    
-    @Transactional
-    public void updateCartridgeModel(CartridgeModelDTO dto) {
-        CartridgeModel cartridgeModelFromDB = cartridgeModelRepo.findById(dto.getId()).orElseThrow();
-        if(cartridgeModelFromDB.getCartridgeManufacturer().getId() != dto.getIdManufacturer()) {
-            CartridgeManufacturer updatedManufacturer = cartridgeManufacturerRepo.findById(dto.getIdManufacturer()).orElseThrow();
-            cartridgeModelFromDB.setCartridgeManufacturer(updatedManufacturer);
-        }
-        cartridgeModelFromDB.setModel(dto.getModel().trim());
-        cartridgeModelFromDB.setDefaultNumberPrintPage(Long.parseLong(dto.getResource()));
-        CartridgeType cartridgeType = null;
-        switch (dto.getType()) {
-            case "ORIGINAL":
-                cartridgeType = CartridgeType.ORIGINAL;
-                break;
-            case "ANALOG":
-                cartridgeType = CartridgeType.ANALOG;
-                break;
-            case "START":
-                cartridgeType = CartridgeType.START;
-                break;
-        }
-        cartridgeModelFromDB.setType(cartridgeType);
-        List<Model> modelsPrintersFromCartridgeModelDB = cartridgeModelFromDB.getModelsPrinters();
-        List<Long> idModelsPrinters  = modelsPrintersFromCartridgeModelDB.stream().map(e -> e.getId()).collect(Collectors.toList());
-        Set<Long> commonSet = findCommonElements(idModelsPrinters, dto.idModel);
-        if(commonSet.size() != cartridgeModelFromDB.getModelsPrinters().size()) {
-            List<Model> updatedModelsPrinters = new ArrayList<>();
-            for(Long el : dto.idModel) {
-                Model model = modelPrinterRepo.findById(el).orElseThrow();
-                updatedModelsPrinters.add(model);
-            }
-            cartridgeModelFromDB.setModelsPrinters(updatedModelsPrinters);
-        }
-        
-        cartridgeModelRepo.save(cartridgeModelFromDB);
-    }
-    
-    public List<CartridgeModel> findModelCartridgeByCartridgeManufacturerAndType(String cartridgeManufacturer, String type) {
-        String currentType;
-        if (type.trim().toLowerCase().equals(CartridgeType.ORIGINAL.getName().trim().toLowerCase())) {
-            currentType = "ORIGINAL";
-        } else if (type.trim().toLowerCase().equals(CartridgeType.ANALOG.getName().trim().toLowerCase())) {
-            currentType = "ANALOG";
-        } else {
-            currentType = "START";
-        }
-        List<CartridgeModel> list = cartridgeModelRepo.findByManufacturerAndType(cartridgeManufacturer, currentType);
-        
-        return list;
-    }
-    
-    @Transactional
-    public void saveCartridgeModel(CartridgeModel cartridgeModel) throws ObjectAlreadyExists {
-        String replaceAllBreakesFromInput = cartridgeModel.getModel().replaceAll(" ", "");
-        String replaceAllDeficesAndBreakesFromInput = replaceAllBreakesFromInput.replaceAll("-", "");
-        
-        if (cartridgeModelRepo.existsByModelIgnoreCase(replaceAllDeficesAndBreakesFromInput)) {
-            throw new ObjectAlreadyExists("Модель " + cartridgeModel.getModel() + " уже есть в базе данных");
-        } else {
-            
-            cartridgeModelRepo.save(cartridgeModel);
-        }
-    }
-    
-    public CartridgeModelDTO getCartridgeModelById(Long id) {
-        CartridgeModel cartridgeModel = cartridgeModelRepo.findById(id).orElseThrow();
-        CartridgeModelDTO cartridgeModelDto = cartridgeMapper.cartridgeModelToCartridgeModelDto(cartridgeModel);
-        return cartridgeModelDto;
-    }
-    
-    public List<CartridgeModelDTO> getArchivedModelsCartridgeListDto() {
-        List<CartridgeModel> list = cartridgeModelRepo.findAllIsArchivedTrue();
-        List<CartridgeModelDTO> cartridgeModelListDto = cartridgeMapper.cartridgeModelListToCartridgeModelListDto(list);
-        return cartridgeModelListDto;
-    }
-    
-    public void repearCartridgeModel(Long id) {
-        CartridgeModel cartridgeModel = cartridgeModelRepo.findById(id).orElseThrow();
-        cartridgeModel.setArchived(false);
-        cartridgeModelRepo.save(cartridgeModel);
-    }
-
+    @Override
     @Transactional
     public void changeCartridgeLocation(ChangeDeviceLocationDTO dto) {
         String location1;
@@ -305,6 +193,7 @@ public class CartridgeService {
         cartridgeRepo.save(findCartridgeById.get());
         listenerOperationService.saveListenerOperation(listener);
     }
+    @Override
     @Transactional
     public void utilCartridge(Long id) {
         ListenerOperation listener = new ListenerOperation();
@@ -327,49 +216,7 @@ public class CartridgeService {
         listener.setCurrentOperation("Списан");
         cartridgeRepo.save(findCartridgeById.get());
     }
-
-    public List<CartridgeModel> showCartridgesModelByPrinterModel(Long id) {
-        List<CartridgeModel> list = cartridgeModelRepo.findByModelsPrintersId(id);
-        return list;
-    }
-
-    public List<CartridgeModelDTO> showCartridgeModelByPrinterModelAndType(String model, String type) {
-        CartridgeType cartridgeType = null;
-        switch (type) {
-            case "ORIGINAL":
-                cartridgeType = cartridgeType.ORIGINAL;
-                break;
-            case "ANALOG":
-                cartridgeType = cartridgeType.ANALOG;
-                break;
-            case "START":
-                cartridgeType = CartridgeType.START;
-                break;
-        }
-        Optional<Model> findModelPrinterByName = modelPrinterRepo.findByNameIgnoreCase(model.toLowerCase());
-        List<CartridgeModelDTO> dtoes = new ArrayList<>();
-        Set<CartridgeModel> modelCartridges = null;
-        if (findModelPrinterByName.isPresent()) {
-            modelCartridges = findModelPrinterByName.get().getModelCartridges();
-        }
-        List<Long> idModel = new ArrayList<>(Arrays.asList(0L));
-        Set<String> printr = new HashSet<>(Arrays.asList("отсутствует"));
-        for (Iterator<CartridgeModel> it = modelCartridges.iterator(); it.hasNext();) {
-            CartridgeModel cartModel = it.next();
-            if (cartModel.getType().equals(cartridgeType)) {
-                CartridgeModelDTO dto = new CartridgeModelDTO();
-                dto.setId(cartModel.getId());
-                dto.setModel(cartModel.getModel());
-                dto.setResource(cartModel.getDefaultNumberPrintPage().toString());
-                dto.setType(cartModel.getType().getName());
-                dto.setIdModel(idModel);
-                dto.setPrinters(printr);
-                dtoes.add(dto);
-            }
-        }
-        return dtoes;
-    }
-
+    @Override
     public List<CartridgeChoiceDto> showCartridgesForChoice(Long idPrinter, Long locationId) {
         SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
         List<CartridgeChoiceDto> cartridgesByModelPrinter = new ArrayList<>();
@@ -382,18 +229,7 @@ public class CartridgeService {
         }
         return cartridgesByModelPrinter;
     }
-    
-    @Transactional
-    public void deleteModelCartridge(Long id) {
-        CartridgeModel cartridgeModel = cartridgeModelRepo.findById(id).orElseThrow();
-        if(cartridgeModel.getCartridges().size() < 1) {
-            cartridgeModelRepo.deleteCartridgeModelById(id);
-        } else {
-            cartridgeModel.setArchived(true);
-        }
-        
-    }
-    
+
      public static <T> Set<T> findCommonElements(List<T> first, List<T> second)
     {
         Set<T> common = new HashSet<>(first);

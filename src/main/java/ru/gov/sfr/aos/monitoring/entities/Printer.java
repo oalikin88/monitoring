@@ -30,7 +30,7 @@ public class Printer extends ObjectBuing implements Serializable {
     
     
     @NotNull(message = "Поле \"Производитель\" не может быть пустым")
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     protected Manufacturer manufacturer;
     @NotEmpty(message = "Поле \"Серийный номер\" не может быть пустым")
     @Column(unique = true)
@@ -42,12 +42,12 @@ public class Printer extends ObjectBuing implements Serializable {
     @OneToMany(mappedBy = "printer", fetch = FetchType.LAZY)
     protected Set<Cartridge> cartridge;
     @NotNull(message = "Поле \"Модель\" не должно быть пустым")
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     protected Model model;
     @NotNull
     @Enumerated(EnumType.STRING)
     protected PrinterStatus printerStatus;
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     protected NameFromOneC nameFromOneC;
    
     

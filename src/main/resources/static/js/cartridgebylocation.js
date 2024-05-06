@@ -846,7 +846,8 @@ $(document).ready(function () {
     let contractSort = document.querySelector('#contractSort');
     contractSort.addEventListener('click', function () {
       if(window.location.pathname.indexOf('inventories') > 0) {
-          sortBy("contract");
+        //  sortBy("contract"); 
+          sortBy("contr.contract_number");
       } else {
           sortBy("contr.contract_number");
       }
@@ -858,7 +859,9 @@ $(document).ready(function () {
         
         
         if(window.location.pathname.indexOf('inventories') > 0) {
-          sortBy("modelCartridgeManufacturer");
+          //sortBy("modelCartridgeManufacturer");
+         // sortBy("model.model");
+         sortBy("cart_manuf.manufacturer_name");
       } else {
           sortBy("model.model");
       }
@@ -869,7 +872,8 @@ $(document).ready(function () {
     let dateSort = document.querySelector('#dateSortLink');
     dateSort.addEventListener('click', function () {
           if(window.location.pathname.indexOf('inventories') > 0) {
-          sortBy("contract.dateStartContract");
+          //sortBy("contract.dateStartContract");
+          sortBy("contr.date_start_contract");
       } else {
           sortBy("contr.date_start_contract");
       }
@@ -878,7 +882,8 @@ $(document).ready(function () {
     let itemCodeSort = document.querySelector('#itemCodeSortLink');
     itemCodeSort.addEventListener('click', function () {
           if(window.location.pathname.indexOf('inventories') > 0) {
-          sortBy("itemCode");
+         // sortBy("itemCode");
+          sortBy("item_code");
       } else {
           sortBy("item_code");
       }

@@ -37,6 +37,11 @@ body, html {
 
 }
 
+#acountIconLink {
+  color: #000 !important;
+  text-decoration: none;
+  margin-left: 30px;
+}
 
 #tablePlaning > .planingTbody > th:nth-child(1), td:nth-child(1)
 {
@@ -57,7 +62,9 @@ tbody {
     overflow-y: scroll;
     height: 500px;
 }
-
+.contentAccount {
+    margin-bottom: 1.5rem;
+}
 .labelDiv {
     max-width: 170px;
 }
@@ -278,9 +285,9 @@ footer {
     background-color: #292929;
 }
 
-nav span {
+#mainLabel {
     font-size: 19px;
-    font-weight: 798;
+    font-weight: 700;
     line-height: 106.34%;
     white-space: nowrap;
     letter-spacing: normal;

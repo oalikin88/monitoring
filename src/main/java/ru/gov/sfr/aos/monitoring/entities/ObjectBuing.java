@@ -34,7 +34,7 @@ public abstract class ObjectBuing {
 			foreignKey = @ForeignKey(name = "CONTRACT_ID_FK"))
     protected Contract contract;
     
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     protected Location location;
     
     

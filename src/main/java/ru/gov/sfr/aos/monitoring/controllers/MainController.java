@@ -62,10 +62,12 @@ import ru.gov.sfr.aos.monitoring.models.PlaningBuyDto;
 import ru.gov.sfr.aos.monitoring.models.PrinterAndCartridgeCountByLocationTable;
 import ru.gov.sfr.aos.monitoring.models.PrinterDTO;
 import ru.gov.sfr.aos.monitoring.models.PrinterStatusDto;
+import ru.gov.sfr.aos.monitoring.repositories.CartridgeModelRepo;
 import ru.gov.sfr.aos.monitoring.repositories.CartridgeRepo;
 import ru.gov.sfr.aos.monitoring.repositories.ModelPrinterRepo;
 import ru.gov.sfr.aos.monitoring.repositories.PrinterRepo;
 import ru.gov.sfr.aos.monitoring.services.CartridgeMapper;
+import ru.gov.sfr.aos.monitoring.services.CartridgeModelService;
 import ru.gov.sfr.aos.monitoring.services.CartridgeService;
 import ru.gov.sfr.aos.monitoring.services.ContractServiceMapper;
 import ru.gov.sfr.aos.monitoring.services.LocationService;
@@ -110,6 +112,10 @@ public class MainController {
     private PrinterAndCartridgeCountByLocationTableService daoService;
     @Autowired
     private ModelPrinterRepo modelPrinterRepo;
+    @Autowired
+    private CartridgeModelRepo cartridgeModelRepo;
+    @Autowired
+    private CartridgeModelService cartridgeModelService;
 
     @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
     @GetMapping("/main")
@@ -311,6 +317,7 @@ public class MainController {
 
         LocationDTO locationById = locationService.getLocationById(dto.location);
         List<Printer> printersList = printerMapper.getPrintersByModelId(dto.idModel);
+        List<CartridgeModel> listCartridgeModel = cartridgeModelRepo.findByModelsPrintersId(dto.idModel);
         if(printersList.size() == 0) {
             List<ru.gov.sfr.aos.monitoring.entities.Model> findAnalogModelByModelId = modelPrinterRepo.findAnalogModelByModelId(dto.idModel);
             for(ru.gov.sfr.aos.monitoring.entities.Model m : findAnalogModelByModelId) {
@@ -327,7 +334,7 @@ public class MainController {
         if (null != dto.getInventaryNumber() && null != dto.getIdModel()) {
 
             try {
-                getPage = printerRepo.findByInventaryNumber(dto.getInventaryNumber(), printersList.get(0).getModel().getId(), locationById.getId(), paging);
+                getPage = printerRepo.findByInventaryNumber(dto.getInventaryNumber(), dto.idModel, locationById.getId(), paging);
 
             } catch (NoSuchElementException e) {
                 e.printStackTrace();
@@ -339,7 +346,7 @@ public class MainController {
             getPage = printerRepo.findByModelIdAndLocationId(dto.idModel, dto.location, paging);
         } else {
             try {
-                getPage = printerRepo.findPrintersByModelAndLocation(locationById.getId(), printersList.get(0).getModel().getModelCartridges().iterator().next().getId(), paging);
+                getPage = printerRepo.findPrintersByModelAndLocation(locationById.getId(), listCartridgeModel.get(0).getId(), paging);
             } catch (NoSuchElementException e) {
                 e.printStackTrace();
             }
@@ -390,7 +397,7 @@ public class MainController {
     @PostMapping("/addmodelcart")
     public ResponseEntity<CartridgeModelDTO> saveModelCartridge(@Valid @ModelAttribute CartridgeModelDTO dto) throws ObjectAlreadyExists {
         CartridgeModel cartridgeModelDtoToCartridgeModel = cartridgeMapper.cartridgeModelDtoToCartridgeModel(dto);
-        cartridgeService.saveCartridgeModel(cartridgeModelDtoToCartridgeModel);
+        cartridgeModelService.saveCartridgeModel(cartridgeModelDtoToCartridgeModel);
         return new ResponseEntity<CartridgeModelDTO>(dto, HttpStatus.OK);
     }
 

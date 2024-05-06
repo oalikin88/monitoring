@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import ru.gov.sfr.aos.monitoring.CartridgeType;
 import ru.gov.sfr.aos.monitoring.dao.PrinterAndCartridgeCountByLocationTableDAO;
 import ru.gov.sfr.aos.monitoring.entities.CartridgeModel;
 import ru.gov.sfr.aos.monitoring.entities.Printer;
@@ -23,10 +22,10 @@ import ru.gov.sfr.aos.monitoring.models.CartridgeModelDTO;
 import ru.gov.sfr.aos.monitoring.models.EmployeeDTO;
 import ru.gov.sfr.aos.monitoring.models.LocationDTO;
 import ru.gov.sfr.aos.monitoring.models.PrinterAndCartridgeCountByLocationTable;
-import ru.gov.sfr.aos.monitoring.models.PrinterDTO;
 import ru.gov.sfr.aos.monitoring.repositories.CartridgeModelRepo;
 import ru.gov.sfr.aos.monitoring.repositories.PrinterRepo;
 import ru.gov.sfr.aos.monitoring.services.CartridgeMapper;
+import ru.gov.sfr.aos.monitoring.services.CartridgeModelService;
 import ru.gov.sfr.aos.monitoring.services.CartridgeService;
 import ru.gov.sfr.aos.monitoring.services.DictionaryEmployeeHolder;
 import ru.gov.sfr.aos.monitoring.services.LocationService;
@@ -45,20 +44,16 @@ public class GetInfoController {
     private LocationService locationService;
     @Autowired
     private CartridgeMapper cartridgeMapper;
-
-    @Autowired
-    private PlaningService planingService;
-
     @Autowired
     private DictionaryEmployeeHolder dictionaryEmployeeHolder;
     @Autowired
     private CartridgeService cartridgeService;
     @Autowired
-    private PrinterService printerService;
-    @Autowired
     private CartridgeModelRepo cartridgeModelRepo;
     @Autowired
     private PrinterRepo printerRepo;
+    @Autowired
+    private CartridgeModelService cartridgeModelService;
     
     private final PrinterAndCartridgeCountByLocationTableDAO dao;
 
@@ -104,7 +99,7 @@ public class GetInfoController {
 
     @GetMapping("/getmodelcartridge")
     public List<CartridgeModelDTO> getModelCartridgeByModelPrinter(@RequestParam("idModel") Long idModel) {
-        List<CartridgeModel> list = cartridgeService.showCartridgesModelByPrinterModel(idModel);
+        List<CartridgeModel> list = cartridgeModelService.showCartridgesModelByPrinterModel(idModel);
         List<CartridgeModelDTO> dtoes = new ArrayList<>();
         for(CartridgeModel model : list) {
             CartridgeModelDTO dto = cartridgeMapper.cartridgeModelToCartridgeModelDto(model);

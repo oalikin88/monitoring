@@ -13,7 +13,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                         <div class="logo d-flex align-items-center pl-sm-3 pl-md-4">
                             <a class="navbar-brand" href="/main">
                                 <img id="logo" src="/img/logo.svg" alt="логотип СФР">
-                                <span>
+                                <span id="mainLabel">
                                     Социальный фонд России
                                 </span>
                             </a>
@@ -60,10 +60,17 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                        
                     </ul>
                     
-<!--                    <div th:text="${#authentication.name}">
-                        The value of the "name" property of the authentication object should appear here.
-                    </div>-->
-                    <div th:text="${#authentication.principal.username}"></div>
+                    
+
+                        <div >
+                            <a href="#" id="acountIconLink" data-bs-toggle="modal" data-bs-target="#accountModal">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="currentColor" class="bi bi-person-circle" viewBox="0 0 16 16">
+                                <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0"/>
+                                <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1"/>
+                                </svg>
+                            </a>
+
+                        </div>
                     
 <!--                    <form class="d-flex" role="search">
                         <input class="form-control me-2" type="search" placeholder="Поиск" aria-label="Поиск" id="search">
@@ -72,6 +79,41 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
 
                 </div>
             </div>
+            <div class="modal fade" id="accountModal" tabindex="-1" aria-labelledby="accountModalLabel" aria-hidden="true">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Информация об аккаунте</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body" id="bodyAccount">
+                      <div class="contentAccount">
+                      <div class="row">
+                          <div class="col-6">Пользователь: </div>
+                          <div class="col-6" th:text="${#authentication.getPrincipal().getFio()}"></div>
+                      </div>
+                      <div class="row">
+                          <div class="col-6">Доступ: </div>
+                          <div class="col-6" th:each="currentRole : ${#authentication.getPrincipal().getRoleList()}">
+                              <div th:switch="${currentRole.getAuthority()}">
+                                  <p th:if="'ROLE_ADMIN'">админ</p>
+                                  <p th:unless="'ROLE_ADMIN'">ограничен</p>
+                              </div>
+                    </div>
+                          </div>
+                          </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+
+                  </div>
+                </div>
+              </div>
+            </div>
+            </body>
         </nav>
-    </body>
+
+
+
+
+
 </html>

@@ -69,11 +69,6 @@
             <artifactId>spring-boot-starter-validation</artifactId>
         </dependency>
         <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.10</version>
-        </dependency>
-        <dependency>
             <groupId>org.testng</groupId>
             <artifactId>testng</artifactId>
             <version>6.8.1</version>
@@ -84,7 +79,7 @@
             <artifactId>h2</artifactId>
             <scope>test</scope>
         </dependency>
-         <dependency>
+        <dependency>
             <groupId>org.opfr</groupId>
             <artifactId>spring-boot-starter-auth-sso</artifactId>
             <version>0.1.0</version>
@@ -94,7 +89,7 @@
             <artifactId>thymeleaf-extras-springsecurity5</artifactId>
             <version>3.0.4.RELEASE</version>
         </dependency>
-      </dependencies>
+    </dependencies>
 
     <build>
         <resources>
@@ -129,7 +124,7 @@
                     <argLine>${argLine}</argLine>
                 </configuration>
             </plugin>
-           <plugin>
+            <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
                 <version>0.8.5</version>

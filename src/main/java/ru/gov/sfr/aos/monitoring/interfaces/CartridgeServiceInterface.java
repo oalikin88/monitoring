@@ -5,15 +5,20 @@
 package ru.gov.sfr.aos.monitoring.interfaces;
 
 import java.util.List;
-import ru.gov.sfr.aos.monitoring.entities.Cartridge;
+import ru.gov.sfr.aos.monitoring.models.CartridgeChoiceDto;
+import ru.gov.sfr.aos.monitoring.models.CartridgeInstallDTO;
+import ru.gov.sfr.aos.monitoring.models.ChangeDeviceLocationDTO;
+import ru.gov.sfr.aos.monitoring.models.ChangeLocationForCartridges;
 
 /**
  *
  * @author 041AlikinOS
  */
 public interface CartridgeServiceInterface {
-    
-    List<Cartridge> getCartridges();
-    
-    
+    public void installCartridge(CartridgeInstallDTO dto);
+    void utilCartridge(Long id);
+    void changeCartridgeLocation(ChangeDeviceLocationDTO dto);
+    void changeCartridgesLocation(ChangeLocationForCartridges dto);
+    List<CartridgeChoiceDto> showCartridgesForChoice(Long idPrinter, Long locationId);
 }
+

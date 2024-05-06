@@ -372,12 +372,16 @@ public interface CartridgeRepo extends JpaRepository<Cartridge, Long> {
     "AND cart.use_in_printer = FALSE", nativeQuery = true)
    List<Cartridge> findCartridgesByLocationIdAndPrinterIdSuitable(Long locationId, Long printerId);
    
-   @Query(value = "SELECT cart.*, ob.* " +
+   @Query(value = "SELECT cart.*, ob.*, contr.*, cart_model.*, cart_manuf.* " +
                 "FROM cartridge cart " +
                 "LEFT JOIN object_buing ob " +
                 "ON cart.cartridge_id = ob.id " +
+                "LEFT JOIN contract contr " +
+                "ON contr.id = ob.contract_id " +
                 "LEFT JOIN cartridge_model cart_model " +
                 "ON cart.model_id = cart_model.id " +
+                "LEFT JOIN cartridge_manufacturer cart_manuf " +
+                "ON cart_model.cartridge_manufacturer_id = cart_manuf.id " +
                 "WHERE ob.location_id = ?1 " +
                 "AND cart.use_in_printer = FALSE " +
                 "AND cart.util = FALSE " +
@@ -386,19 +390,27 @@ public interface CartridgeRepo extends JpaRepository<Cartridge, Long> {
                 "FROM cartridge cart " +
                 "LEFT JOIN object_buing ob " +
                 "ON cart.cartridge_id = ob.id " +
+                   "LEFT JOIN contract contr " +
+                "ON contr.id = ob.contract_id " +
                "LEFT JOIN cartridge_model cart_model " +
                 "ON cart.model_id = cart_model.id " +
+              "LEFT JOIN cartridge_manufacturer cart_manuf " +
+                "ON cart_model.cartridge_manufacturer_id = cart_manuf.id " +
                 "WHERE ob.location_id = ?1 " +
                 "AND cart.use_in_printer = false " +
                 "AND cart.util = false " +
                 "AND cart_model.archived = FALSE ", nativeQuery = true)
    Page<Cartridge> findByLocationId(Long idLocation, Pageable pageable); // Изменить чтобы не подтягивались картриджи списанные и использующиеся
-   @Query(value = "SELECT cart.*, ob.* " +
+   @Query(value = "SELECT cart.*, ob.*, contr.*, cart_model.*, cart_manuf.* " +
                 "FROM cartridge cart " +
                 "LEFT JOIN object_buing ob " +
-                "ON cart.cartridge_id = ob.id " +
+                "ON cart.cartridge_id = ob.id "  +
+            "LEFT JOIN contract contr " +
+            "ON ob.contract_id = contr.id " +
                "LEFT JOIN cartridge_model cart_model " +
                 "ON cart.model_id = cart_model.id " +
+                  "LEFT JOIN cartridge_manufacturer cart_manuf " +
+                "ON cart_model.cartridge_manufacturer_id = cart_manuf.id " +
                 "WHERE ob.location_id = ?1 " +
                 "AND cart.use_in_printer = false " +
                 "AND cart.util = false " +

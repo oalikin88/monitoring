@@ -25,6 +25,7 @@ import ru.gov.sfr.aos.monitoring.models.ModelDTO;
 import ru.gov.sfr.aos.monitoring.repositories.CartridgeRepo;
 import ru.gov.sfr.aos.monitoring.repositories.ModelPrinterRepo;
 import ru.gov.sfr.aos.monitoring.services.CartridgeMapper;
+import ru.gov.sfr.aos.monitoring.services.CartridgeModelService;
 import ru.gov.sfr.aos.monitoring.services.CartridgeService;
 import ru.gov.sfr.aos.monitoring.services.ManufacturersMapper;
 import ru.gov.sfr.aos.monitoring.services.ModelMapper;
@@ -51,6 +52,8 @@ public class ManufacturersController {
     private CartridgeService cartridgeService;
     @Autowired
     private ModelService modelService;
+    @Autowired
+    private CartridgeModelService cartridgeModelService;
 
     @RequestMapping(value = "/manufacturers", method = RequestMethod.GET)
     public List<ManufacturerDTO> showPrinters() {
@@ -94,7 +97,7 @@ public class ManufacturersController {
     
     @RequestMapping(value = "/cartridge/{type}", method = RequestMethod.GET)
     public List<CartridgeModelDTO> getModelCartridgeByType(@PathVariable String type) {
-        List<CartridgeModel> list = cartridgeService.findModelCartridgeByType(type);
+        List<CartridgeModel> list = cartridgeModelService.findModelCartridgeByType(type);
         List<CartridgeModelDTO> dtoes = new ArrayList<>();
         for(CartridgeModel model : list) {
             CartridgeModelDTO dto = cartridgeMapper.cartridgeModelToCartridgeModelDto(model);
@@ -105,7 +108,7 @@ public class ManufacturersController {
         
      @RequestMapping(value = "/cartridge/{type}/{cartridgeManufacturer}", method = RequestMethod.GET)
     public List<CartridgeModelDTO> getModelCartridgeByCartridgeModelAndType(@PathVariable String type, @PathVariable String cartridgeManufacturer) {
-        List<CartridgeModel> list = cartridgeService.findModelCartridgeByCartridgeManufacturerAndType(cartridgeManufacturer, type);
+        List<CartridgeModel> list = cartridgeModelService.findModelCartridgeByCartridgeManufacturerAndType(cartridgeManufacturer, type);
         List<CartridgeModelDTO> dtoes = new ArrayList<>();
         for(CartridgeModel model : list) {
             CartridgeModelDTO dto = cartridgeMapper.cartridgeModelToCartridgeModelDto(model);
@@ -118,7 +121,7 @@ public class ManufacturersController {
     public List<CartridgeModelDTO> getCartridges(@RequestParam(name = "archived", required = false) boolean archived) {
         List<CartridgeModelDTO> list = null;
         if(archived) {
-            list = cartridgeService.getArchivedModelsCartridgeListDto();
+            list = cartridgeModelService.getArchivedModelsCartridgeListDto();
         } else {
             list = cartridgeMapper.getCartridgeModels();
         }
@@ -128,7 +131,7 @@ public class ManufacturersController {
     @PostMapping(value = "/cartridge")
     public void repearCartridgeModel(Long id, boolean archived) {
         if(archived) {
-            cartridgeService.repearCartridgeModel(id);
+            cartridgeModelService.repearCartridgeModel(id);
         }
     }
     
@@ -141,13 +144,13 @@ public class ManufacturersController {
     
     @RequestMapping(value = "/editModelCartridge", method = RequestMethod.GET)
     public CartridgeModelDTO getModelCartridgeById(@RequestParam(value = "id", required = true) Long id) {
-        CartridgeModelDTO cartridgeModelById = cartridgeService.getCartridgeModelById(id);
+        CartridgeModelDTO cartridgeModelById = cartridgeModelService.getCartridgeModelById(id);
         return cartridgeModelById;
     }
     
      @RequestMapping(value = "/cartridgebymodelprinterid", produces={"application/json; charset=UTF-8"}, method = RequestMethod.GET)
     public List<CartridgeModelDTO> getCartridgesByModelPrinter(@RequestParam("idModel") Long idModel) {
-            List<CartridgeModel> list = cartridgeService.showCartridgesModelByPrinterModel(idModel);
+            List<CartridgeModel> list = cartridgeModelService.showCartridgesModelByPrinterModel(idModel);
             List<CartridgeModelDTO> dtoes = new ArrayList<>();
             for(CartridgeModel model : list) {
                 CartridgeModelDTO dto = cartridgeMapper.cartridgeModelToCartridgeModelDto(model);
@@ -158,18 +161,18 @@ public class ManufacturersController {
     
        @RequestMapping(value = "/cartridgebymodelprinter/{type}", produces={"application/json; charset=UTF-8"}, method = RequestMethod.GET)
     public List<CartridgeModelDTO> getCartridgesByModelPrinterAndType(@RequestParam("model") String model, @PathVariable String type) {
-            List<CartridgeModelDTO> list = cartridgeService.showCartridgeModelByPrinterModelAndType(model, type);
+            List<CartridgeModelDTO> list = cartridgeModelService.showCartridgeModelByPrinterModelAndType(model, type);
         return list;
     }
     
       @PostMapping(value = "/updatecartridgebymodel")
     public void updateModelCartridge(CartridgeModelDTO dto) {
-            cartridgeService.updateCartridgeModel(dto);
+            cartridgeModelService.updateCartridgeModel(dto);
     }
     
     @DeleteMapping(value = "/editModelCartridge")
     public void deleteModelCartridge(Long id) {
-        cartridgeService.deleteModelCartridge(id);
+        cartridgeModelService.deleteModelCartridge(id);
     }
     
      @DeleteMapping(value = "/models")

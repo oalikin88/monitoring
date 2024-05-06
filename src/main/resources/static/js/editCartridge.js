@@ -199,7 +199,7 @@ $(document).ready(function () {
      
      
      
-         $('.locationSelect').selectize({
+         $('#locationSelect').selectize({
                   preload: true,
                   valueField: 'name',
                   labelField: 'name',
@@ -209,18 +209,19 @@ $(document).ready(function () {
                         url: '/locations',
                         type: 'GET',
                         dataType: 'json',
+                        async: false,
                         data: {model:query},
                         error: callback,
                         success: callback
                          });
+                         
+                         $('#locationSelect')[0].selectize.setValue( $('#locationSelect')[0].selectize.search(input.location).items[0].id);
                 }
          
      });
      
      
-          locationbtn.addEventListener('click', function() {
-        $('#locationSelect')[0].selectize.setValue(Object.entries($('#locationSelect')[0].selectize.options)[0][1].name); 
-     });
+
      
     utilSubmit.addEventListener('click', function() {
          if(utilSelect.value === "true") {
