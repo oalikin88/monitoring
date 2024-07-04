@@ -29,13 +29,13 @@ public abstract class ObjectBuing {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     protected Long id;
     @NotNull
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "CONTRACT_ID",
 			foreignKey = @ForeignKey(name = "CONTRACT_ID_FK"))
     protected Contract contract;
     
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    protected Location location;
+    protected Place place;
     
     
     protected ObjectBuing() {
@@ -59,6 +59,14 @@ public abstract class ObjectBuing {
 
     public void setContract(Contract contract) {
         this.contract = contract;
+    }
+
+    public Place getPlace() {
+        return place;
+    }
+
+    public void setPlace(Place place) {
+        this.place = place;
     }
     
   

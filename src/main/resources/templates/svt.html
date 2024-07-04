@@ -1,0 +1,232 @@
+<html>
+    <body> 
+        <aside id="sidebar" th:fragment="sidebar">
+            <div class="d-flex">
+                <button id="toggle-btn" type="button">
+                    <i class="lni lni-grid-alt"></i>
+                </button>
+                <div class="sidebar-logo">
+                    <a href="#">СВТ 2.0</a>
+                </div>
+            </div>
+            <ul class="sidebar-nav">
+                <li class="sidebar-item">
+                    <a href="#" class="sidebar-link has-dropdown collapsed" data-bs-toggle="collapse" 
+                       data-bs-target="#place" aria-expanded="false" aria-controls="place">
+                        <i class="lni lni-laptop-phone"></i>
+                        <span>Рабочие места</span>
+                    </a>
+                    <ul id="place" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
+                        <li class="sidebar-item">
+                            <a href="/sysblocks" class="sidebar-link">Системные блоки</a>
+                        </li>
+                        <li class="sidebar-item">
+                            <a href="/monitors" class="sidebar-link">Мониторы</a>
+                        </li>
+                        <li class="sidebar-item">
+                            <a href="#" class="sidebar-link">Принтеры</a>
+                        </li>
+                        <li class="sidebar-item">
+                            <a href="#" class="sidebar-link">Сканеры</a>
+                        </li>
+                        <li class="sidebar-item">
+                            <a href="/ups" class="sidebar-link">ИБП</a>
+                        </li>
+                        <li class="sidebar-item">
+                            <a href="/phones" class="sidebar-link">Телефоны</a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="sidebar-item">
+                    <a href="#" class="sidebar-link has-dropdown collapsed" data-bs-toggle="collapse" 
+                       data-bs-target="#server" aria-expanded="false" aria-controls="server">
+                        <i class="lni lni-database"></i>
+                        <span>Серверная</span>
+                    </a>
+                    <ul id="server" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
+                        <li class="sidebar-item">
+                            <a href="#" class="sidebar-link">Серверы</a>
+                        </li>
+                        <li class="sidebar-item">
+                            <a href="#" class="sidebar-link">Коммутаторы / Концентраторы</a>
+                        </li>
+                        <li class="sidebar-item">
+                            <a href="#" class="sidebar-link">Маршрутизаторы</a>
+                        </li>
+                        <li class="sidebar-item">
+                            <a href="#" class="sidebar-link">ИБП для серверов</a>
+                        </li>
+                        <li class="sidebar-item">
+                            <a href="#" class="sidebar-link">АТС</a>
+                        </li>
+                        <li class="sidebar-item">
+                            <a href="#" class="sidebar-link">VipNet</a>
+                        </li>
+                        <li class="sidebar-item">
+                            <a href="#" class="sidebar-link">Кондиционеры</a>
+                        </li>
+                    </ul>
+                </li>
+
+                <li class="sidebar-item">
+                    <a href="#" class="sidebar-link has-dropdown collapsed" data-bs-toggle="collapse" 
+                       data-bs-target="#officeEquipment" aria-expanded="false" aria-controls="officeEquipment">
+                        <i class="lni lni-printer"></i>
+                        <span>Оргтехника</span>
+                    </a>
+                    <ul id="officeEquipment" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
+                        <li class="sidebar-item">
+                            <a href="#" class="sidebar-link">Копиры</a>
+                        </li>
+                        <li class="sidebar-item">
+                            <a href="#" class="sidebar-link">МФУ</a>
+                        </li>
+                        <li class="sidebar-item">
+                            <a href="#" class="sidebar-link">Факсы</a>
+                        </li>
+                        <li class="sidebar-item">
+                            <a href="#" class="sidebar-link">Инфоматы</a>
+                        </li>
+                        <li class="sidebar-item">
+                            <a href="#" class="sidebar-link">АСУО</a>
+                        </li>
+
+                    </ul>
+
+                </li>
+
+                <li class="sidebar-item">
+                    <a href="#" class="sidebar-link has-dropdown collapsed" data-bs-toggle="collapse" 
+                       data-bs-target="#dictionaries" aria-expanded="false" aria-controls="dictionaries">
+                        <i class="lni lni-library"></i>
+                        <span>Справочники</span>
+                    </a>
+                    <ul id="dictionaries" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
+                        <li class="sidebar-item">
+                            <a href="#" class="sidebar-link">Районы</a>
+                        </li>
+                        <li class="sidebar-item">
+                            <a href="/dep" class="sidebar-link">Отделы</a>
+                        </li>
+                        <li class="sidebar-item">
+                            <a href="/places" class="sidebar-link">Рабочие места</a>
+                        </li>
+                        <li class="sidebar-item">
+                            <a href="/msysblock" class="sidebar-link">Системные блоки</a>
+                        </li>
+                        <li class="sidebar-item">
+                            <a href="/mmonitors" class="sidebar-link">Мониторы</a>
+                        </li>
+                        <li class="sidebar-item">
+                            <a href="#" class="sidebar-link">Принтеры</a>
+                        </li>
+                        <li class="sidebar-item">
+                            <a href="/mphones" class="sidebar-link">Телефоны</a>
+                        </li>
+                        <li class="sidebar-item">
+                            <a href="#" class="sidebar-link">Оргтехника</a>
+                        </li>
+                      
+                        <li class="sidebar-item">
+                            <a href="/contr" class="sidebar-link">Контракты</a>
+                        </li>
+                        
+                        <li class="sidebar-item">
+                            <a href="/os" class="sidebar-link">Операционные системы</a>
+                        </li>
+                        
+                        
+                          <li class="sidebar-item">
+                               <a href="#" class="sidebar-link collapsed" data-bs-toggle="collapse" 
+                                data-bs-target="#ups-list" aria-expanded="false" aria-controls="ups-list">
+                                ИБП
+                            </a>
+                                <ul id="ups-list" class="sidebar-dropdown list-unstyled collapse">
+                                    <li class="sidebar-item">
+                                        <a href="/mups" class="sidebar-link">Модель ИБП</a>
+                                    </li>
+                                    <li class="sidebar-item">
+                                        <a href="/mupsbat" class="sidebar-link">Тип батареи ИБП</a>
+                                    </li>
+                                    
+                                </ul>
+                            </li>
+                        
+                        
+                        
+                        
+                        
+                          
+                            <li class="sidebar-item">
+                               <a href="#" class="sidebar-link collapsed" data-bs-toggle="collapse" 
+                                data-bs-target="#components" aria-expanded="false" aria-controls="components">
+                                Комплектующие
+                            </a>
+                                <ul id="components" class="sidebar-dropdown list-unstyled collapse">
+                                    <li class="sidebar-item">
+                                        <a href="/mmotherboard" class="sidebar-link">Материнская плата</a>
+                                    </li>
+                                    <li class="sidebar-item">
+                                        <a href="/mcpu" class="sidebar-link">Процессор</a>
+                                    </li>
+                                    <li class="sidebar-item">
+                                        <a href="/mram" class="sidebar-link">ОЗУ</a>
+                                    </li>
+                                    <li class="sidebar-item">
+                                        <a href="/mhdd" class="sidebar-link">НЖМД</a>
+                                    </li>
+                                    <li class="sidebar-item">
+                                        <a href="/mvideo" class="sidebar-link">Видеоадаптер</a>
+                                    </li>
+                                    <li class="sidebar-item">
+                                        <a href="/mcddrive" class="sidebar-link">Привод</a>
+                                    </li>
+                                    <li class="sidebar-item">
+                                        <a href="/mscard" class="sidebar-link">Звуковая карта</a>
+                                    </li>
+                                    <li class="sidebar-item">
+                                        <a href="/mlcard" class="sidebar-link">Сетевая карта</a>
+                                    </li>
+                                    <li class="sidebar-item">
+                                        <a href="/mkeyboard" class="sidebar-link">Клавиатура</a>
+                                    </li>
+                                    <li class="sidebar-item">
+                                        <a href="/mmouse" class="sidebar-link">Мышь</a>
+                                    </li>
+                                    <li class="sidebar-item">
+                                        <a href="/mspeakers" class="sidebar-link">Колонки</a>
+                                    </li>
+                                </ul>
+                            </li>
+                       
+                        
+                        
+                    </ul>
+                </li>
+
+                <li class="sidebar-item">
+                    <a href="#" class="sidebar-link has-dropdown collapsed" data-bs-toggle="collapse" 
+                       data-bs-target="#storage" aria-expanded="false" aria-controls="storage">
+                        <i class="lni lni-package"></i>
+                        <span>Склад</span>
+                    </a>
+                    <ul id="storage" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
+                        <li class="sidebar-item">
+                            <a href="#" class="sidebar-link">Расходные материалы</a>
+                        </li>
+                        <li class="sidebar-item">
+                            <a href="#" class="sidebar-link">Запасные части</a>
+                        </li>
+                        
+                    </ul>
+                </li>
+            </ul>
+            <div class="sidebar-footer">
+                    <a href="/inventories" class="sidebar-link">
+                        <i class="lni lni-exit"></i>
+                        <span>Выйти</span>
+                    </a>
+                </div>
+        </aside>
+    </body>
+</html>

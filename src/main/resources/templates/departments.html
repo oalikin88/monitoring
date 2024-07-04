@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<!--
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this template
+-->
+<html>
+    <head>
+        <title>Отделы</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script src="/js/jquery-3.6.4.min.js"></script>
+        <script src="/js/selectize.js"></script>
+        <link href="/css/bootstrap.min.css" rel="stylesheet">
+        <link href="/css/selectize.bootstrap5.css" rel="stylesheet">
+        <link href="/css/style_svt.css" rel="stylesheet">
+        <link href="/css/lineicons.css" rel="stylesheet">
+        <link href="/css/icons.css" rel="stylesheet">
+    </head>
+    <body>
+        <div class="wrapper">
+            <aside th:insert="svt :: sidebar"></aside>
+           <div class="main p-3">
+                <div class="text-center">
+                    <h1>Отделы</h1>
+                 
+                    
+                    <div class="row fw-bold">
+                        <div class="col-1">№ п/п</div>
+                        <div class="col-6 text-start">Отдел</div>
+                        <div class="col-5 text-start">Код</div>
+                        
+                    </div>
+                    
+                    <div class="row pb-2 mb-2 mt-2 pt-2" th:each="dto, stat : ${dtoes}">
+                        <div class="col">
+                            <div class="row" >
+                                <div class="col-1" th:text="${stat.count}"></div>
+                                <div class="col-6 text-start" th:text="${dto.name}"></div>
+                                <div class="col-5 text-start" th:text="${dto.code}"></div>
+                            </div>
+                        </div>
+                        
+                    </div>
+                </div>
+               
+            </div>
+        </div>
+         
+        
+
+        
+         <script src="/js/bootstrap.bundle.min.js"></script>
+        <script src="/js/main_svt.js"></script>
+    </body>
+</html>

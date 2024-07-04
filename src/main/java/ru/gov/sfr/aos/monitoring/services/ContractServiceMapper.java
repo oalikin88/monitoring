@@ -24,14 +24,17 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 import ru.gov.sfr.aos.monitoring.OperationType;
 import ru.gov.sfr.aos.monitoring.PrinterStatus;
+import ru.gov.sfr.aos.monitoring.dictionaries.PlaceType;
 import ru.gov.sfr.aos.monitoring.entities.Cartridge;
 import ru.gov.sfr.aos.monitoring.entities.CartridgeModel;
 import ru.gov.sfr.aos.monitoring.entities.Contract;
+import ru.gov.sfr.aos.monitoring.entities.Department;
 import ru.gov.sfr.aos.monitoring.entities.ListenerOperation;
 import ru.gov.sfr.aos.monitoring.entities.Location;
 import ru.gov.sfr.aos.monitoring.entities.Manufacturer;
 import ru.gov.sfr.aos.monitoring.entities.Model;
 import ru.gov.sfr.aos.monitoring.entities.ObjectBuing;
+import ru.gov.sfr.aos.monitoring.entities.Place;
 import ru.gov.sfr.aos.monitoring.entities.Printer;
 import ru.gov.sfr.aos.monitoring.exceptions.ObjectAlreadyExists;
 import ru.gov.sfr.aos.monitoring.models.CartridgeDTO;
@@ -249,7 +252,15 @@ public class ContractServiceMapper {
             }
             printer.setSerialNumber(printerDto.getSerialNumber());
             printer.setInventoryNumber(printerDto.getInventoryNumber());
-            printer.setLocation(location);
+            if(null == printer.getPlace()) {
+                Place place = new Place();
+                place.setDepartment("УИТ");
+                place.setLocation(location);
+                place.setPlaceType(PlaceType.STORAGE);
+                place.setUsername("склад");
+                
+            } 
+           
             Set<Cartridge> cartridgesInclude = new HashSet<>();
             if(null != printerDto.getCartridgeInclude()){
                 CartridgeModel cartModelInclude = null;
@@ -259,7 +270,7 @@ public class ContractServiceMapper {
                 }
                 Cartridge cartridge = new Cartridge();
                 cartridge.setModel(cartModelInclude);
-                cartridge.setLocation(location);
+                cartridge.getPlace().setLocation(location);
                 cartridge.setDateStartExploitation(LocalDateTime.now());
                 cartridge.setUseInPrinter(true);
                 cartridge.setUtil(true);
@@ -282,7 +293,7 @@ public class ContractServiceMapper {
             if(findCartridgeModel.isPresent()) {
                 cartridge.setModel(findCartridgeModel.get());
             }
-            cartridge.setLocation(location);
+            cartridge.getPlace().setLocation(location);
             cartridge.setContract(contract);
             cartridge.setItemCode(cartridgeDto.getItemCode());
             cartridge.setNameMaterial(cartridgeDto.getNameMaterial());
@@ -309,7 +320,7 @@ public class ContractServiceMapper {
                     .filter(el -> !el.isUseInPrinter())
                     .collect(Collectors.toList());
                             
-                    List<Cartridge> findByLocationIdAndModelId = cartridgeRepo.findByLocationIdAndModelId(location.getId(), findModelCartridgeByName.get().getId(), Pageable.ofSize(25));
+                    List<Cartridge> findByLocationIdAndModelId = cartridgeRepo.findByPlaceLocationIdAndModelId(location.getId(), findModelCartridgeByName.get().getId(), Pageable.ofSize(25));
                     listener.setModel(findModelCartridgeByName.get());
                     listener.setDateOperation(LocalDateTime.now());
                     listener.setLocation(location);
@@ -453,7 +464,7 @@ public class ContractServiceMapper {
             printerDto.setSerialNumber(printer.getSerialNumber());
             printerDto.setModel(printer.getModel().getName());
             printerDto.setManufacturer(printer.getManufacturer().getName());
-            printerDto.setLocation(printer.getLocation().getName());
+            printerDto.setLocation(printer.getPlace().getLocation().getName());
             Set<Cartridge> cartridges = printer.getCartridge();
             List<CartridgeDTO> cartridgesForPrinterDTO = new ArrayList<>();
              for(Cartridge car : cartridges) {
@@ -461,7 +472,7 @@ public class ContractServiceMapper {
                     cartDto.setContract(car.getContract().getId());
                     cartDto.setContractNumber(car.getContract().getContractNumber());
                     cartDto.setId(car.getId());
-                    cartDto.setLocation(car.getLocation().getName());
+                    cartDto.setLocation(car.getPlace().getLocation().getName());
                     cartDto.setDateEndExploitation(car.getDateEndExploitation());
                     cartDto.setDateStartExploitation(car.getDateStartExploitation());
                     cartDto.setType(car.getModel().getType().getName());
@@ -480,7 +491,7 @@ public class ContractServiceMapper {
             cartridgeDto.setId(cartridge.getId());
             cartridgeDto.setDateStartExploitation(cartridge.getDateStartExploitation());
             cartridgeDto.setDateEndExploitation(cartridge.getDateEndExploitation());
-            cartridgeDto.setLocation(cartridge.getLocation().getName());
+            cartridgeDto.setLocation(cartridge.getPlace().getLocation().getName());
             cartridgeDto.setType(cartridge.getModel().getType().getName());
             cartridgeDto.setModel(cartridge.getModel().getModel());
             cartridgeDto.setResource(cartridge.getModel().getDefaultNumberPrintPage().toString());

@@ -31,6 +31,8 @@ public class CacheConfig extends CachingConfigurerSupport {
         cacheTTLDuration = new HashMap<>();
         cacheTTLUnits.put("dictonaryEmployee_employees", TimeUnit.MINUTES);
         cacheTTLDuration.put("dictonaryEmployee_employees", 10l);
+        cacheTTLUnits.put("organization", TimeUnit.MINUTES);
+        cacheTTLDuration.put("organization", 10l);
  
     }
 

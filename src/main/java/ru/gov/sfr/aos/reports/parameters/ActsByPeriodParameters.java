@@ -22,4 +22,46 @@ public class ActsByPeriodParameters implements ReportParametersInput {
     private String mol;
     private String employee;
     private Long location;
+
+    public LocalDate getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(LocalDate startDate) {
+        this.startDate = startDate;
+    }
+
+    public LocalDate getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(LocalDate endDate) {
+        this.endDate = endDate;
+    }
+
+    public String getMol() {
+        return mol;
+    }
+
+    public void setMol(String mol) {
+        this.mol = mol;
+    }
+
+    public String getEmployee() {
+        return employee;
+    }
+
+    public void setEmployee(String employee) {
+        this.employee = employee;
+    }
+
+    public Long getLocation() {
+        return location;
+    }
+
+    public void setLocation(Long location) {
+        this.location = location;
+    }
+    
+    
 }

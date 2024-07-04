@@ -30,8 +30,8 @@ public class Location implements Serializable {
     @NotEmpty(message = "Поле \"Локация\" не может быть пустым")
     private String name;
  
-    @OneToMany(targetEntity = ObjectBuing.class, mappedBy = "location", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private Set<ObjectBuing> objectsSet = new HashSet<>();
+    @OneToMany(targetEntity = Place.class, mappedBy = "location", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private Set<Place> placesSet = new HashSet<>();
 
     public Long getId() {
         return id;
@@ -49,12 +49,12 @@ public class Location implements Serializable {
         this.name = name;
     }
 
-    public Set<ObjectBuing> getObjectsSet() {
-        return objectsSet;
+    public Set<Place> getPlacesSet() {
+        return placesSet;
     }
 
-    public void setObjectsSet(Set<ObjectBuing> objectsSet) {
-        this.objectsSet = objectsSet;
+    public void setPlacesSet(Set<Place> placesSet) {
+        this.placesSet = placesSet;
     }
 
     public Location() {
@@ -64,9 +64,9 @@ public class Location implements Serializable {
         this.name = name;
     }
     
-    public Location(String name, Set<ObjectBuing> objectsSet) {
+    public Location(String name, Set<Place> placesSet) {
         this.name = name;
-        this.objectsSet = objectsSet;
+        this.placesSet = placesSet;
     }
 
     

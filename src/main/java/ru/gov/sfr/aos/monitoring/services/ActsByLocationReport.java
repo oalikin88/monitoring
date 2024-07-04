@@ -18,6 +18,7 @@ import org.opfr.springBootStarterDictionary.models.DictionaryEmployee;
 import org.opfr.starter.report.annotations.ReportAttributes;
 import org.opfr.starter.report.exception.ReportException;
 import org.opfr.starter.report.interfaces.Report;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ru.gov.sfr.aos.monitoring.entities.Cartridge;
 import ru.gov.sfr.aos.monitoring.entities.ListenerOperation;
@@ -36,10 +37,15 @@ import ru.gov.sfr.aos.reports.parameters.ActsByPeriodParameters;
 @RequiredArgsConstructor
 public class ActsByLocationReport implements Report<ActsByPeriodParameters> {
 
-    private final ListenerOperationRepo listenerOperationRepo;
-    private final CartridgeRepo cartridgeRepo;
-    private final PrinterRepo printerRepo;
-    private final FallbackEmployeeClient employeeClient;
+    
+    @Autowired
+    private ListenerOperationRepo listenerOperationRepo;
+    @Autowired
+    private CartridgeRepo cartridgeRepo;
+    @Autowired
+    private PrinterRepo printerRepo;
+    @Autowired
+    private FallbackEmployeeClient employeeClient;
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
     
     @Override

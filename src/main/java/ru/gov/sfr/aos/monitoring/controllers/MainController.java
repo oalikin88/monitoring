@@ -7,7 +7,6 @@ package ru.gov.sfr.aos.monitoring.controllers;
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.SQLException;
-import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -41,7 +40,6 @@ import ru.gov.sfr.aos.monitoring.entities.Cartridge;
 import ru.gov.sfr.aos.monitoring.entities.CartridgeModel;
 import ru.gov.sfr.aos.monitoring.entities.Printer;
 import ru.gov.sfr.aos.monitoring.exceptions.ObjectAlreadyExists;
-import ru.gov.sfr.aos.monitoring.interfaces.ContractServiceInterface;
 import ru.gov.sfr.aos.monitoring.models.CartridgeDTO;
 import ru.gov.sfr.aos.monitoring.models.CartridgeInstallDTO;
 import ru.gov.sfr.aos.monitoring.models.CartridgeModelDTO;
@@ -73,9 +71,9 @@ import ru.gov.sfr.aos.monitoring.services.ContractServiceMapper;
 import ru.gov.sfr.aos.monitoring.services.LocationService;
 import ru.gov.sfr.aos.monitoring.services.PlaningService;
 import ru.gov.sfr.aos.monitoring.services.PrinterAndCartridgeCountByLocationTableService;
-import ru.gov.sfr.aos.monitoring.services.PrinterOutInfoService;
 import ru.gov.sfr.aos.monitoring.services.PrinterService;
 import ru.gov.sfr.aos.monitoring.services.PrintersMapper;
+
 
 /**
  *
@@ -85,13 +83,9 @@ import ru.gov.sfr.aos.monitoring.services.PrintersMapper;
 public class MainController {
 
     @Autowired
-    private ContractServiceInterface contractServiceInterface;
-    @Autowired
     private ContractServiceMapper mapper;
     @Autowired
     private CartridgeMapper cartridgeMapper;
-    @Autowired
-    private PrinterOutInfoService printerOutInfoService;
     @Autowired
     private PrintersMapper printerMapper;
     @Autowired
@@ -116,6 +110,8 @@ public class MainController {
     private CartridgeModelRepo cartridgeModelRepo;
     @Autowired
     private CartridgeModelService cartridgeModelService;
+
+    
 
     @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
     @GetMapping("/main")
@@ -210,8 +206,8 @@ public class MainController {
                 printerDto.setInventaryNumber(printer.getInventoryNumber());
                 printerDto.setSerialNumber(printer.getSerialNumber());
                 printerDto.setContractNumber(printer.getContract().getContractNumber());
-                printerDto.setLocation(printer.getLocation().getName());
-                printerDto.setLocationId(printer.getLocation().getId());
+                printerDto.setLocation(printer.getPlace().getLocation().getName());
+                printerDto.setLocationId(printer.getPlace().getLocation().getId());
                 printerDto.setStartContract(printer.getContract().getDateStartContract());
                 printerDto.setEndContract(printer.getContract().getDateStartContract());
                 dtoes.add(printerDto);
@@ -233,8 +229,8 @@ public class MainController {
                 cartDto.setContract(cart.getContract().getId());
                 cartDto.setContractNumber(cart.getContract().getContractNumber());
                 cartDto.setId(cart.getId());
-                cartDto.setLocation(cart.getLocation().getName());
-                cartDto.setIdLocation(cart.getLocation().getId());
+                cartDto.setLocation(cart.getPlace().getLocation().getName());
+                cartDto.setIdLocation(cart.getPlace().getLocation().getId());
                 cartDto.setDateEndExploitation(cart.getDateEndExploitation());
                 cartDto.setDateStartExploitation(cart.getDateStartExploitation());
                 cartDto.setType(cart.getModel().getType().getName());
@@ -343,7 +339,7 @@ public class MainController {
         } else if (null != dto.getInventaryNumber() && null == dto.getIdModel()) {
             getPage = printerRepo.findByInventaryNumberWhithOutIdModel(dto.getInventaryNumber(), locationById.getId(), paging);
         } else if (printersList.get(0).getModel().getModelCartridges().isEmpty()) {
-            getPage = printerRepo.findByModelIdAndLocationId(dto.idModel, dto.location, paging);
+            getPage = printerRepo.findByModelIdAndPlaceLocationId(dto.idModel, dto.location, paging);
         } else {
             try {
                 getPage = printerRepo.findPrintersByModelAndLocation(locationById.getId(), listCartridgeModel.get(0).getId(), paging);
@@ -362,8 +358,8 @@ public class MainController {
             printerDto.setInventaryNumber(printer.getInventoryNumber());
             printerDto.setSerialNumber(printer.getSerialNumber());
             printerDto.setContractNumber(printer.getContract().getContractNumber());
-            printerDto.setLocation(printer.getLocation().getName());
-            printerDto.setLocationId(printer.getLocation().getId());
+            printerDto.setLocation(printer.getPlace().getLocation().getName());
+            printerDto.setLocationId(printer.getPlace().getLocation().getId());
             printerDto.setStartContract(printer.getContract().getDateStartContract());
             printerDto.setEndContract(printer.getContract().getDateStartContract());
             dtoes.add(printerDto);
@@ -543,8 +539,8 @@ public class MainController {
             cartDto.setContract(cart.getContract().getId());
             cartDto.setContractNumber(cart.getContract().getContractNumber());
             cartDto.setId(cart.getId());
-            cartDto.setLocation(cart.getLocation().getName());
-            cartDto.setIdLocation(cart.getLocation().getId());
+            cartDto.setLocation(cart.getPlace().getLocation().getName());
+            cartDto.setIdLocation(cart.getPlace().getLocation().getId());
             cartDto.setDateEndExploitation(cart.getDateEndExploitation());
             cartDto.setDateStartExploitation(cart.getDateStartExploitation());
             cartDto.setType(cart.getModel().getType().getName());
@@ -580,5 +576,7 @@ public class MainController {
     public void changePrinterStatus(PrinterStatusDto dto) {
         printerMapper.editPrinterStatus(dto);
     }
-
+    
+   
+    
 }

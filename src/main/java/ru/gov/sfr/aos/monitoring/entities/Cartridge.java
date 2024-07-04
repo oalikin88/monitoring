@@ -126,22 +126,18 @@ public class Cartridge extends ObjectBuing implements Serializable {
         this.id = id;
     }
 
-
-    public void setLocation(Location location) {
-        this.location = location;
+    public Place getPlace() {
+        return place;
     }
 
-    public Location getLocation() {
-        return location;
+    public void setPlace(Place place) {
+        this.place = place;
     }
-    
+
+
     public Printer getPrinter() {
         return printer;
     }
-
-    
-    
-    
 
 
     public void setDateStartExploitation(LocalDateTime dateStartExploitation) {
@@ -180,7 +176,7 @@ public class Cartridge extends ObjectBuing implements Serializable {
     
     @Override
     public String toString() {
-        return "Model: " + this.model.getModel() + "; Type: " + this.model.getType().getName() + "; Location: " + this.location +
+        return "Model: " + this.model.getModel() + "; Type: " + this.model.getType().getName() + "; Location: " + this.place +
                 "; Date start exploitation: " + this.dateStartExploitation + "; Date end exploitation: " + this.dateEndExploitation 
                 + "; Count: " + this.count + "; Default number print page: " + this.model.getDefaultNumberPrintPage();
     }

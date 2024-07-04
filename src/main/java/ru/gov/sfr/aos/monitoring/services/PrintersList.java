@@ -18,6 +18,7 @@ import org.opfr.springBootStarterDictionary.models.DictionaryEmployee;
 import org.opfr.starter.report.annotations.ReportAttributes;
 import org.opfr.starter.report.exception.ReportException;
 import org.opfr.starter.report.interfaces.Report;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ru.gov.sfr.aos.monitoring.entities.ListenerOperation;
 import ru.gov.sfr.aos.monitoring.entities.Printer;
@@ -32,10 +33,12 @@ import ru.gov.sfr.aos.monitoring.repositories.PrinterRepo;
 @ReportAttributes(value = "printersList", templateFilename = "aos/printers.xlsx")
 @RequiredArgsConstructor
 public class PrintersList implements Report<PrinterListReportParameters> {
-    
-    private final FallbackEmployeeClient employeeClient;
-    private final ListenerOperationRepo listenerOperationRepo;
-    private final PrinterRepo printerRepo;
+    @Autowired
+    private FallbackEmployeeClient employeeClient;
+    @Autowired
+    private ListenerOperationRepo listenerOperationRepo;
+    @Autowired
+    private PrinterRepo printerRepo;
 
     @Override
     public Request proceed(PrinterListReportParameters params, String uid) throws ReportException {
@@ -88,7 +91,7 @@ public class PrintersList implements Report<PrinterListReportParameters> {
           }
           Block.BlockBuilder footer = Block.builder();
           footer
-                  .parameter(new Parameter("location", findPrinters.get(0).getLocation().getName()));
+                  .parameter(new Parameter("location", findPrinters.get(0).getPlace().getLocation().getName()));
           blo = Block.builder().name("dataBlock").rows(rows).build();
                 Record rec = Record.builder().block(blo).build();
                 Request.builder().record(rec).build();

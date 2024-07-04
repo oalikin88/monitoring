@@ -131,13 +131,15 @@ public class Printer extends ObjectBuing implements Serializable {
         this.printerStatus = printerStatus;
     }
 
-    public Location getLocation() {
-        return location;
+    public Place getPlace() {
+        return place;
     }
 
-    public void setLocation(Location location) {
-        this.location = location;
+    public void setPlace(Place place) {
+        this.place = place;
     }
+
+   
 
     public NameFromOneC getNameFromOneC() {
         return nameFromOneC;
@@ -153,7 +155,7 @@ public class Printer extends ObjectBuing implements Serializable {
     @Override
     public String toString() {
         return "Printer [ID: " + super.id + "; Models: " + this.manufacturer.getModelList() + "; Serial: " + this.serialNumber + 
-                "; Invertary number: " + this.inventoryNumber + "; Location: " + this.location + "; Cartridge: " + this.cartridge + "; NameFrom1C: " + this.nameFromOneC.getName() + "]";
+                "; Invertary number: " + this.inventoryNumber + "; Location: " + this.place + "; Cartridge: " + this.cartridge + "; NameFrom1C: " + this.nameFromOneC.getName() + "]";
     }
     
     

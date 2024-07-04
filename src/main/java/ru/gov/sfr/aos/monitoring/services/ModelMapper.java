@@ -139,29 +139,42 @@ public class ModelMapper {
     
     
     public void saveModelPrinter(ModelDTO dto) {
-        Model modelFromDB = modelRepo.findById(dto.idModel).orElseThrow();
-        modelFromDB.setName(dto.getModel().trim());
-        modelFromDB.setPrintSpeed(Long.parseLong(dto.getPrintSpeed()));
+         Model model = null;
+        if(null == dto.getIdModel()) {
+           model = new Model();
+        } else {
+            model = modelRepo.findById(dto.idModel).orElseThrow();
+        }
+        
+        model.setName(dto.getModel().trim());
+        model.setPrintSpeed(Long.parseLong(dto.getPrintSpeed()));
         if(dto.getPrintFormatType().equals("A4")) {
-                modelFromDB.setPrintFormatType(PrintFormatType.A4);
+                model.setPrintFormatType(PrintFormatType.A4);
         }else{
-                modelFromDB.setPrintFormatType(PrintFormatType.A3);
+                model.setPrintFormatType(PrintFormatType.A3);
         }
         if(dto.getPrintColorType().equals("COLOR")) {
-            modelFromDB.setPrintColorType(PrintColorType.COLOR);
+            model.setPrintColorType(PrintColorType.COLOR);
         } else {
-            modelFromDB.setPrintColorType(PrintColorType.BLACKANDWHITE);
+            model.setPrintColorType(PrintColorType.BLACKANDWHITE);
         }
         if(dto.getDeviceType().equals("PRINTER")) {
-            modelFromDB.setDeviceType(DeviceType.PRINTER);
+            model.setDeviceType(DeviceType.PRINTER);
         } else {
-            modelFromDB.setDeviceType(DeviceType.MFU);
+            model.setDeviceType(DeviceType.MFU);
         }
-        if(!dto.getManufacturer().trim().equals(modelFromDB.getManufacturer().getName())) {
-            Manufacturer manufacturer = manufacturerRepo.findByNameContainingIgnoreCase(dto.getManufacturer().trim()).orElseThrow();
-            modelFromDB.setManufacturer(manufacturer);
+        Optional<Manufacturer> findManufacturer = manufacturerRepo.findByNameContainingIgnoreCase(dto.getManufacturer().trim());
+        Manufacturer manufacturer = null;
+        if(findManufacturer.isEmpty()) {
+            manufacturer = new Manufacturer(dto.getManufacturer());
+        } else{
+     
+            manufacturer = findManufacturer.get();
+        
+            
         }
-        modelRepo.save(modelFromDB);
+        model.setManufacturer(manufacturer);
+        modelRepo.save(model);
     }
     
 }

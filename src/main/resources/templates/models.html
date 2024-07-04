@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<!--
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this template
+-->
+<html>
+    <head>
+        <title th:text="${namePage}"></title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script src="/js/jquery-3.6.4.min.js"></script>
+        <script src="/js/selectize.js"></script>
+        <link href="/css/bootstrap.min.css" rel="stylesheet">
+        <link href="/css/selectize.bootstrap5.css" rel="stylesheet">
+        <link href="/css/style_svt.css" rel="stylesheet">
+        <link href="/css/lineicons.css" rel="stylesheet">
+        <link href="/css/icons.css" rel="stylesheet">
+    </head>
+    <body>
+        <div class="wrapper">
+            <aside th:insert="svt :: sidebar"></aside>
+            <div class="main p-3">
+                <div class="row mb-2" id="top-panel">
+                    <div class="col-6">
+                        <th:block th:switch="${attribute}">
+                            <h1 th:case="'mphones'">Справочник моделей телефонов</h1>
+                            <h1 th:case="'mmonitors'">Справочник моделей мониторов</h1>
+                            <h1 th:case="'mups'">Справочник моделей ИБП</h1>
+                            <h1 th:case="'mupsbat'">Справочник типов батарей для ИБП</h1>
+                            <h1 th:case="'systemBlock'">Справочник моделей системных блоков</h1>
+                            <h1 th:case="'mmotherboard'">Справочник моделей материнских плат</h1>
+                            <h1 th:case="'mcpu'">Справочник моделей процессоров</h1>
+                            <h1 th:case="'mram'">Справочник моделей ОЗУ</h1>
+                            <h1 th:case="'mhdd'">Справочник моделей НЖМД</h1>
+                            <h1 th:case="'mvideo'">Справочник моделей видеоадаптеров</h1>
+                            <h1 th:case="'mcddrive'">Справочник моделей приводов</h1>
+                            <h1 th:case="'mscard'">Справочник моделей звуковых карт</h1>
+                            <h1 th:case="'mlcard'">Справочник моделей сетевых карт</h1>
+                            <h1 th:case="'mkeyboard'">Справочник моделей клавиатур</h1>
+                            <h1 th:case="'mmouse'">Справочник моделей мышей</h1>
+                            <h1 th:case="'mspeakers'">Справочник моделей колонок</h1>
+                            <h1 th:case="'os'">Справочник операционных систем</h1>
+                        </th:block>
+                    </div>
+                    <div class="col-6 text-end">
+                        <!-- Button trigger modal add place-->
+                        <button type="button" class="btn btn-primary btn-sm" id="addPlaceBtn" data-bs-toggle="modal" data-bs-target="#addPlaceModal">Добавить</button>
+                    </div>
+                </div>
+                <div class="content" id="content"  th:if="${dtoes.size}> 0"> 
+                    <div class="models">
+                        <th:block th:switch="${attribute}">
+                        <div class="row fw-bold" th:case="'mcpu'">
+                            <div class="col-1">№ п/п</div>
+                            <div class="col-5 text-start">Наименование модели</div>
+                            <div class="col-3 text-start">Количество ядер</div>
+                            <div class="col-3 text-start">Частота</div>
+ 
+                        </div>
+                            <div class="row fw-bold" th:case="'mram'">
+                            <div class="col-1">№ п/п</div>
+                            <div class="col-6 text-start">Тип ОЗУ</div>
+                            <div class="col-5 text-start">Объём, ГБ</div>
+ 
+                        </div>
+                            <div class="row fw-bold" th:case="'mhdd'">
+                            <div class="col-1">№ п/п</div>
+                            <div class="col-4 text-start">Наименование модели</div>
+                            <div class="col-1 text-start ms-0 ps-0">Объём, ед.изм</div>
+                            <div class="col-3 text-start ma-0 ps-0">Серийный номер</div>
+                            <div class="col-3 text-start ms-0 ps-0">Учётный номер</div>
+ 
+                        </div>
+                            <div class="row fw-bold" th:case="'os'">
+                            <div class="col-1">№ п/п</div>
+                            <div class="col-7 text-start">Наименование</div>
+                            <div class="col-4 text-start ms-0 ps-0">Лицензия</div>
+
+ 
+                        </div>
+                              <div class="row fw-bold" th:case="*">
+                            <div class="col-1">№ п/п</div>
+                            <div class="col-11 text-start">Наименование модели</div>
+                        </div>
+                            </th:block>
+                        <div class="row pb-2 mb-2 mt-2 pt-2" th:each="dto, stat : ${dtoes}">
+                            <th:block th:switch="${attribute}">
+                                <div class="row" th:case="'mupsbat'">
+                                    <div class="col-1" th:text="${stat.count}"></div>
+                                    <div class="col-11 text-start" >
+                                        <span th:text="${dto.type}"></span>
+                                      </div>
+                                </div> 
+                                <div class="row" th:case="'mcpu'">
+                                    <div class="col-1" th:text="${stat.count}"></div>
+                                    <div class="col-5 text-start" >
+                                        <span th:text="${dto.model}"></span>
+                                      </div>
+                                    <div class="col-3 text-start" >
+                                        <span th:text="${dto.core}"></span>
+                                      </div>
+                                    <div class="col-3 text-start" >
+                                        <span th:text="${dto.freq}"></span>
+                                      </div>
+                                </div>
+                                <div class="row" th:case="'mram'">
+                                    <div class="col-1" th:text="${stat.count}"></div>
+                                    <div class="col-6 text-start" >
+                                        <span th:text="${dto.model}"></span>
+                                      </div>
+                                    <div class="col-5 text-start" >
+                                        <span th:text="${dto.capacity}"></span>
+                                      </div>
+                                </div>
+                                <div class="row" th:case="'mhdd'">
+                                    <div class="col-1" th:text="${stat.count}"></div>
+                                    <div class="col-4 text-start">
+                                        <span th:text="${dto.model}"></span>
+                                      </div>
+                                    <div class="col-1">
+                                        <span th:text="${dto.capacity + ' ' + dto.unit}"></span>
+                                      
+                                      </div>
+                                      <div class="col-3 text-start" >
+                                        <span th:text="${dto.serialNumber}"></span>
+                                      </div>
+                                    <div class="col-3 text-start" >
+                                        <span th:text="${dto.inventaryNumber}"></span>
+                                      </div>
+                                </div>
+                                <div class="row" th:case="'os'">
+                                    <div class="col-1" th:text="${stat.count}"></div>
+                                    <div class="col-7 text-start">
+                                        <span th:text="${dto.name}"></span>
+                                      </div>
+                                    <div class="col-4" th:switch="${dto.license}">
+                                        <span th:case="true">Есть</span>
+                                        <span th:case="false">Нет</span>
+                                      
+                                      </div>
+                                      
+                                </div>
+                                 <div class="row" th:case="*">
+                                    <div class="col-1" th:text="${stat.count}"></div>
+                                    <div class="col-11 text-start">
+                                        <span th:text="${dto.model}"></span>
+                                      </div>
+
+                                </div>         
+                                        
+                                        
+                                    
+                           </th:block>
+                        </div>
+                    </div>
+
+
+                </div>
+                <div th:if="${dtoes.size} == 0">
+                    <h3 class="mt-5 pt-5 text-center">В базе данных отсутствуют [[${namePage.substring(0, 1).toLowerCase() + namePage.substring(1)}]]</h3>
+                </div>
+
+            </div>
+        </div>
+
+
+        <!-- Modal add place -->
+        <div class="modal fade" id="addPlaceModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <th:block th:switch="${attribute}">
+                         <h1 th:case="'os'" class="modal-title fs-5" id="exampleModalLabel">Добавление операционной системы</h1>   
+                        <h1 th:case="'*'" class="modal-title fs-5" id="exampleModalLabel">Добавление [[${namePage.substring(0, 1).toLowerCase() + namePage.substring(1)}]]</h1>
+                        </th:block>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="container">
+
+                            <div class="row">
+                                <div class="col">Наименование</div>
+                                <div class="col">
+                                    <div class="input-group input-group-sm mb-3">
+                                        <input type="text" class="form-control" id="modelNameInput" placeholder="наименование" aria-label="наименование" aria-describedby="model-name">
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            
+                            <th:block th:switch="${attribute}">
+                        <div th:case="'mcpu'">
+                            
+                            <div class="row">
+                                <div class="col">Количество ядер</div>
+                                <div class="col">
+                                    <div class="input-group input-group-sm mb-3">
+                                        <input type="number" class="form-control" id="coreAmount" placeholder="количество ядер" aria-label="количество ядер" aria-describedby="core-amount">
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col">Частота</div>
+                                <div class="col">
+                                    <div class="input-group input-group-sm mb-3">
+                                        <input type="number" class="form-control" id="freq" placeholder="частота процессора" aria-label="частота процессора" aria-describedby="freq-core">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                                <div th:case="'mram'">
+
+                                    <div class="row">
+                                        <div class="col">Объём, ГБ</div>
+                                        <div class="col">
+                                            <div class="input-group input-group-sm mb-3">
+                                                <input type="number" class="form-control" id="capacity" placeholder="объём ОЗУ" aria-label="объём ОЗУ" aria-describedby="ram-capacity">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div th:case="'mhdd'">
+
+                                    <div class="row">
+                                        <div class="col">Объём</div>
+                                        <div class="col">
+                                            <div class="input-group input-group-sm mb-3">
+                                                <input type="number" class="form-control" id="capacity" placeholder="объём ОЗУ" aria-label="объём ОЗУ" aria-describedby="ram-capacity" min="1" value="1">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="row">
+                                        <div class="col">Единица измерения</div>
+                                        <div class="col">
+                                            <div class="input-group input-group-sm mb-3">
+                                                <select class="form-select form-select-sm" aria-label="Default select example" id="unit">
+                                                  <option value="GB" selected>ГБ</option>
+                                                  <option value="MB">МБ</option>
+                                                  <option value="TB">ТБ</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="row">
+                                        <div class="col">Серийный номер</div>
+                                        <div class="col">
+                                            <div class="input-group input-group-sm mb-3">
+                                                <input type="text" class="form-control" id="serialNumber" placeholder="серийный номер" aria-label="серийный номер" aria-describedby="serial-number">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="row">
+                                        <div class="col">Учётный номер</div>
+                                        <div class="col">
+                                            <div class="input-group input-group-sm mb-3">
+                                                <input type="text" class="form-control" id="inventaryNumber" placeholder="учётный номер" aria-label="учётный номер" aria-describedby="inventary-number">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div th:case="'os'">
+
+                                    <div class="row">
+                                        <div class="col">
+                                            <div class="form-check">
+                                          <input class="form-check-input" type="checkbox" value="" id="licenseFlag">
+                                          <label class="form-check-label" for="flexCheckDefault">
+                                            Лицензия
+                                          </label>
+                                        </div>
+                                        </div>
+                                        
+                                    </div>
+
+                                </div>
+                    </th:block>
+
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary btn-sm"  data-bs-dismiss="modal">Отменить</button>
+                        <button type="button" class="btn btn-primary btn-sm" id="btnSaveModelPhone" >Сохранить</button>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+        <script th:inline="javascript">
+            let attribute = [[${attribute}]];
+            let dtoes = [[${dtoes}]];
+        </script>
+        <script src="/js/bootstrap.bundle.min.js"></script>
+        <script src="/js/main_svt.js"></script>
+        <script src="/js/mphones.js"></script>
+    </body>
+</html>

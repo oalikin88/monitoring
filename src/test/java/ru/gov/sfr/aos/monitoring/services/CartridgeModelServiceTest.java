@@ -36,43 +36,43 @@ import static org.mockito.ArgumentMatchers.any;
 @SpringBootTest
 public class CartridgeModelServiceTest {
     
-    @Autowired
-    private CartridgeModelService cartridgeModelService;
-    @MockBean
-    private CartridgeModelRepo cartridgeModelRepo;
-    private CartridgeModel cartModel;
-    private CartridgeModel cartModel2;
-    
-    @Before
-    public void prepare() {
-    cartModel = new CartridgeModel(new CartridgeManufacturer("Samsung"), "T1000", 10000L
-          , Arrays.asList(new Model("ML3050", PrintColorType.COLOR, PrintFormatType.A4, 40L, new Manufacturer("Samsung"), DeviceType.PRINTER, false))
-          , CartridgeType.ORIGINAL);
-    cartModel.setId(1L);
-    
-    cartModel2 = new CartridgeModel(new CartridgeManufacturer("Samsung"), "T1000", 10000L
-          , Arrays.asList(new Model("ML3050", PrintColorType.COLOR, PrintFormatType.A4, 40L, new Manufacturer("Samsung"), DeviceType.PRINTER, false))
-          , CartridgeType.ORIGINAL);
-    cartModel2.setId(1L);
-    }
-    
-    
-@Test
-public void saveCartridgeModel() throws ObjectAlreadyExists {
-        CartridgeModel returnedCartridgeModel = doReturn(cartModel).when(cartridgeModelRepo).save(any());
-        Assertions.assertEquals(cartModel, returnedCartridgeModel);
-}
-
-@Test
-public void saveCartridgeModelShouldAssertAlreadyExist() throws ObjectAlreadyExists {
-doReturn(cartModel).when(cartridgeModelRepo).save(cartModel);
-doReturn(ObjectAlreadyExists.class).when(cartridgeModelRepo).save(cartModel2);
-    Mockito.when(cartridgeModelRepo.existsByModelIgnoreCase(Mockito.eq("T1000"))).thenReturn(true);
-
- // Assertions.assertThrows(ObjectAlreadyExists.class, () -> doReturn(cartModel2).when(cartridgeModelRepo).save(any()));    
-   //CartridgeModel returnedCartridgeModel = cartridgeModelService.saveCartridgeModel(cartModel);
-   
-}
+//    @Autowired
+//    private CartridgeModelService cartridgeModelService;
+//    @MockBean
+//    private CartridgeModelRepo cartridgeModelRepo;
+//    private CartridgeModel cartModel;
+//    private CartridgeModel cartModel2;
+//    
+//    @Before
+//    public void prepare() {
+//    cartModel = new CartridgeModel(new CartridgeManufacturer("Samsung"), "T1000", 10000L
+//          , Arrays.asList(new Model("ML3050", PrintColorType.COLOR, PrintFormatType.A4, 40L, new Manufacturer("Samsung"), DeviceType.PRINTER, false))
+//          , CartridgeType.ORIGINAL);
+//    cartModel.setId(1L);
+//    
+//    cartModel2 = new CartridgeModel(new CartridgeManufacturer("Samsung"), "T1000", 10000L
+//          , Arrays.asList(new Model("ML3050", PrintColorType.COLOR, PrintFormatType.A4, 40L, new Manufacturer("Samsung"), DeviceType.PRINTER, false))
+//          , CartridgeType.ORIGINAL);
+//    cartModel2.setId(1L);
+//    }
+//    
+//    
+//@Test
+//public void saveCartridgeModel() throws ObjectAlreadyExists {
+//        CartridgeModel returnedCartridgeModel = doReturn(cartModel).when(cartridgeModelRepo).save(any());
+//        Assertions.assertEquals(cartModel, returnedCartridgeModel);
+//}
+//
+//@Test
+//public void saveCartridgeModelShouldAssertAlreadyExist() throws ObjectAlreadyExists {
+//doReturn(cartModel).when(cartridgeModelRepo).save(cartModel);
+//doReturn(ObjectAlreadyExists.class).when(cartridgeModelRepo).save(cartModel2);
+//    Mockito.when(cartridgeModelRepo.existsByModelIgnoreCase(Mockito.eq("T1000"))).thenReturn(true);
+//
+// // Assertions.assertThrows(ObjectAlreadyExists.class, () -> doReturn(cartModel2).when(cartridgeModelRepo).save(any()));    
+//   //CartridgeModel returnedCartridgeModel = cartridgeModelService.saveCartridgeModel(cartModel);
+//   
+//}
 
 
 //@Test

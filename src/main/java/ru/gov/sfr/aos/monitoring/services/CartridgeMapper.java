@@ -94,7 +94,7 @@ public class CartridgeMapper {
         dto.setManufacturer(findCartridgeById.get().getModel().getCartridgeManufacturer().getManufacturerName());
         dto.setContract(findCartridgeById.get().getContract().getId());
         dto.setContractNumber(findCartridgeById.get().getContract().getContractNumber().toString());
-        dto.setLocation(findCartridgeById.get().getLocation().getName());
+        dto.setLocation(findCartridgeById.get().getPlace().getLocation().getName());
         dto.setModel(findCartridgeById.get().getModel().getModel());
         dto.setType(findCartridgeById.get().getModel().getType().getName());
         dto.setUtil(findCartridgeById.get().isUtil());
@@ -116,7 +116,7 @@ public class CartridgeMapper {
         dto.setId(cartridge.getId());
         dto.setContract(cartridge.getContract().getId());
         dto.setContractNumber(cartridge.getContract().getContractNumber().toString());
-        dto.setLocation(cartridge.getLocation().getName());
+        dto.setLocation(cartridge.getPlace().getLocation().getName());
         dto.setModel(cartridge.getModel().getModel());
         dto.setType(cartridge.getModel().getType().getName());
         dto.setUtil(cartridge.isUtil());

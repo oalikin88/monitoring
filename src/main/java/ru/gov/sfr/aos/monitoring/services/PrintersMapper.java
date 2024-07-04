@@ -65,7 +65,7 @@ public class PrintersMapper {
         for (int i = 0; i < locations.size(); i++) {
             List<PrinterDTO> list = new ArrayList<>();
            
-                List<Printer> printers = printerRepo.findByLocationName(locations.get(i).getName());
+                List<Printer> printers = printerRepo.findByPlaceLocationName(locations.get(i).getName());
                 for (int j = 0; j < printers.size(); j++) {
                     PrinterDTO dto = new PrinterDTO();
                     if (!printers.get(j).getManufacturer().getName().isEmpty()) {
@@ -80,8 +80,8 @@ public class PrintersMapper {
                         dto.setModel("По умолчанию");
                     }
 
-                    if (!printers.get(j).getLocation().getName().isEmpty()) {
-                        dto.setLocation(printers.get(j).getLocation().getName());
+                    if (!printers.get(j).getPlace().getLocation().getName().isEmpty()) {
+                        dto.setLocation(printers.get(j).getPlace().getLocation().getName());
                     } else {
                         dto.setLocation("Склад");
                     }
@@ -118,7 +118,7 @@ public class PrintersMapper {
                     cartDto.setContract(car.getContract().getId());
                     cartDto.setContractNumber(car.getContract().getContractNumber());
                     cartDto.setId(car.getId());
-                    cartDto.setLocation(car.getLocation().getName());
+                    cartDto.setLocation(car.getPlace().getLocation().getName());
                     cartDto.setDateEndExploitation(car.getDateEndExploitation());
                     cartDto.setDateStartExploitation(car.getDateStartExploitation());
                     cartDto.setType(car.getModel().getType().getName());
@@ -129,7 +129,7 @@ public class PrintersMapper {
             }
             dto.setCartridge(cartridgesForPrinterDTO);
 
-            dto.setLocation(el.getLocation().getName());
+            dto.setLocation(el.getPlace().getLocation().getName());
 
             printers.add(dto);
         }
@@ -148,14 +148,14 @@ public class PrintersMapper {
         dto.setContractNumber(findPrinterById.getContract().getContractNumber().toString());
         dto.setInventaryNumber(findPrinterById.getInventoryNumber());
         dto.setSerialNumber(findPrinterById.getSerialNumber());
-        dto.setLocation(findPrinterById.getLocation().getName());
+        dto.setLocation(findPrinterById.getPlace().getLocation().getName());
         dto.setManufacturer(findPrinterById.getManufacturer().getName());
         dto.setModel(findPrinterById.getModel().getName());
         dto.setStartContract(findPrinterById.getContract().getDateStartContract());
         dto.setEndContract(findPrinterById.getContract().getDateEndContract());
         dto.setContractId(findPrinterById.getContract().getId());
         dto.setPrinterStatus(findPrinterById.getPrinterStatus().getStatus());
-        dto.setLocationId(findPrinterById.getLocation().getId());
+        dto.setLocationId(findPrinterById.getPlace().getLocation().getId());
         dto.setDeviceType(findPrinterById.getModel().getDeviceType().getValue());
         if(null != findPrinterById.getNameFromOneC()) {
             dto.setNameFromOneC(findPrinterById.getNameFromOneC().getName());
@@ -183,7 +183,7 @@ public class PrintersMapper {
                     cartDto.setContractNumber(car.getContract().getContractNumber());
                     cartDto.setStartContract(car.getContract().getDateStartContract());
                     cartDto.setId(car.getId());
-                    cartDto.setLocation(car.getLocation().getName());
+                    cartDto.setLocation(car.getPlace().getLocation().getName());
                     cartDto.setDateEndExploitation(car.getDateEndExploitation());
                     cartDto.setDateStartExploitation(car.getDateStartExploitation());
                     cartDto.setType(car.getModel().getType().getName());
@@ -257,10 +257,10 @@ public class PrintersMapper {
         Set<Cartridge> cartridges = findPrinterById.getCartridge();
         for(Cartridge cart : cartridges) {
             if(cart.isUseInPrinter()) {
-                cart.setLocation(locationTemp.get());
+                cart.getPlace().setLocation(locationTemp.get());
             }
         }
-        findPrinterById.setLocation(locationTemp.get());
+        findPrinterById.getPlace().setLocation(locationTemp.get());
         printerRepo.save(findPrinterById);
     }
     
@@ -286,8 +286,8 @@ public class PrintersMapper {
         dto.setContractNumber(printer.getContract().getContractNumber());
         dto.setEndContract(printer.getContract().getDateEndContract());
         dto.setInventaryNumber(printer.getInventoryNumber());
-        dto.setLocation(printer.getLocation().getName());
-        dto.setLocationId(printer.getLocation().getId());
+        dto.setLocation(printer.getPlace().getLocation().getName());
+        dto.setLocationId(printer.getPlace().getLocation().getId());
         dto.setManufacturer(printer.getManufacturer().getName());
         dto.setModel(printer.getModel().getName());
         if(null != printer.getNameFromOneC()) {

@@ -18,5 +18,30 @@ public class PrinterListReportParameters implements ReportParametersInput {
     private Long idLocation;
     private Long idModel;
     private String deviceType;
+
+    public Long getIdLocation() {
+        return idLocation;
+    }
+
+    public void setIdLocation(Long idLocation) {
+        this.idLocation = idLocation;
+    }
+
+    public Long getIdModel() {
+        return idModel;
+    }
+
+    public void setIdModel(Long idModel) {
+        this.idModel = idModel;
+    }
+
+    public String getDeviceType() {
+        return deviceType;
+    }
+
+    public void setDeviceType(String deviceType) {
+        this.deviceType = deviceType;
+    }
+    
     
 }

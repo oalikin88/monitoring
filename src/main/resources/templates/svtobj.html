@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<!--
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this template
+-->
+<html>
+    <head>
+        <th:block th:switch="${attribute}">
+    <title th:case="'phones'">
+        Телефоны
+    </title>
+    <title th:case="'monitors'">
+        Мониторы
+    </title>
+    <title th:case="'ups'">
+        ИБП
+    </title>
+            <title th:case="'systemblock'">
+        Системные блоки
+    </title>
+</th:block>
+        
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script src="/js/jquery-3.6.4.min.js"></script>
+        <script src="/js/selectize.js"></script>
+        <link href="/css/bootstrap.min.css" rel="stylesheet">
+        <link href="/css/selectize.bootstrap5.css" rel="stylesheet">
+        <link href="/css/style_svt.css" rel="stylesheet">
+        <link href="/css/content_style.css" rel="stylesheet">
+        <link href="/css/lineicons.css" rel="stylesheet">
+        <link href="/css/icons.css" rel="stylesheet">
+    </head>
+    <body>
+        <div class="wrapper">
+            <aside th:insert="svt :: sidebar"></aside>
+            <div class="main p-3">
+                <div class="row mb-2" id="top-panel">
+                <div class="col-1">
+                    <th:block th:switch="${attribute}">
+                        <h1 class="ms-2 ps-2" th:case="'phones'">
+                            Телефоны
+                        </h1>
+                        <h1 class="ms-2 ps-2" th:case="'monitors'">
+                            Мониторы
+                        </h1>
+                        <h1 class="ms-2 ps-2" th:case="'ups'">
+                            ИБП
+                        </h1>
+                        <h1 class="ms-2 ps-2" th:case="'systemblock'">
+                            Системные блоки
+                        </h1>
+                    </th:block>
+                </div>
+                
+                    <div class="col-1 text-end">
+                        <!-- Button trigger modal add place-->
+                        <button type="button" class="btn btn-primary btn-sm addPlaceBtn" id="addPlaceBtn" data-bs-toggle="modal" data-bs-target="#addPlaceModal">Добавить</button>
+                    </div>
+                    <div class="col-10">
+                        <div class="input-group mb-3" id="searchSvtObj">
+                            <input type="text" class="form-control form-control-sm" placeholder="Поиск" aria-label="SearchModel" aria-describedby="basic-addon1">
+                            <span class="input-group-text" id="basic-addon1">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16"><path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"></path>
+                                </svg>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="content" id="content"> 
+                <ul class="tree" >
+                    <li class="location" th:each="dto : ${dtoes}" >
+                        <details>
+                            <summary th:text="${dto.locationName}"></summary>
+
+                            <ul class="departments" th:each="innerDto : ${dto.departments}">
+                                <li class="department">
+                                    <details>
+                                        <summary th:text="${innerDto.department}"></summary>
+                                         <div class="row fw-bold mt-3 mb-3">
+                                                    <div class="col">Модель</div>
+                                                    <div class="col">ФИО</div>
+                                                    <div class="col">Серийный номер</div>
+                                                    <div class="col">Инвентарный номер</div>
+                                                    <div class="col">Дата ввода в экспл</div>
+                                                    <div class="col">Состояние</div>
+                                                    <div class="col">Дата выпуска</div>
+                                                     <th:block th:switch="${attribute}">
+                                                        <div class="col" th:case="'phones'">
+                                                            Внутренний номер
+                                                        </div>
+                                                        <div class="col" th:case="'monitors'">
+                                                            По ведомости ОС
+                                                        </div>
+                                                        <div class="col" th:case="'ups'">
+                                                            Год замены
+                                                        </div>
+                                                    </th:block>
+                                                </div>
+                                        <ul th:each="inInnerDto, stat : ${innerDto.dtoes}">
+                                           
+                                            <li  class="element" th:attr="id=${inInnerDto.id}" data-bs-toggle="modal" data-bs-target="#addPlaceModal">
+                                                
+                                                <div class="row mb-2 d-flex align-items-center text-start phone">
+                                                <div class="col" th:text="${stat.count} + '. ' + ${inInnerDto.model}"></div>
+                                                <div class="col" th:text="${inInnerDto.placeName}"></div>
+                                                <div class="col" th:text="${inInnerDto.serialNumber}"></div>
+                                                <div class="col" th:text="${inInnerDto.inventaryNumber}"></div>
+                                                <div class="col" th:text="${#dates.format(inInnerDto.dateExploitationBegin, 'dd.MM.yyyy')}"></div>
+                                                <div class="col" th:text="${inInnerDto.status}"></div>
+                                                <div class="col" th:text="${inInnerDto.yearCreated}"></div>
+                                                <th:block th:switch="${attribute}">
+                                                        <div class="col" th:text="${inInnerDto.phoneNumber}" th:case="'phones'">
+                                                           
+                                                        </div>
+                                                        <div class="col" th:case="'monitors'">
+                                                            <th:block th:switch="${inInnerDto.baseType}">
+                                                                <span th:case="'ARM'">
+                                                                    в составе ПК, АРМ
+                                                                </span>
+                                                                <span th:case="'SINGLE'">
+                                                                    отдельно
+                                                                </span>
+                                                        </th:block>
+                                                        
+                                                        </div>
+                                                        <div class="col" th:case="'ups'">
+                                                           <span th:text="${inInnerDto.yearReplacement}"></span>
+                                                        </div>
+                                                    </th:block>
+                                                
+                                                </div>
+                                                
+                                            </li>
+                                        </ul>
+
+                                    </details>
+                                </li>
+                            </ul>
+
+                        </details>
+                    </li>
+                </ul>
+                    </div>
+            </div>
+        </div>
+
+
+        <!-- Модальное окно добавления/редактирования-->
+        
+        <div class="modal fade" id="addPlaceModal" data-bs-backdrop="static" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        
+                        <th:block th:switch="${attribute}">
+                        <h5 class="modal-title fs-5" id="exampleModalLabel" th:case="'phones'">
+                            Добавить телефон
+                        </h5>
+                        <h5 class="modal-title fs-5" id="exampleModalLabel" th:case="'monitors'">
+                            Добавить монитор
+                        </h5>
+                        <h5 class="modal-title fs-5" id="exampleModalLabel" th:case="'ups'">
+                            Добавить ИБП
+                        </h5>
+                            <h5 class="modal-title fs-5" id="exampleModalLabel" th:case="'systemblock'">
+                            Добавить системный блок
+                        </h5>
+                    </th:block>
+                        
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close" id="closeBtn"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="container" id="modalContent">
+                           
+                            
+                            <div class="row mt-2">
+                                <div class="col">Район</div>
+                                <div class="col">
+                                    <select class="form-select form-select-sm" id="locationSelect" aria-label="Default select example" >
+
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row mt-2">
+                                <div class="col">Отдел</div>
+                                <div class="col">
+                                    <select class="form-select form-select-sm" id="departmentSelect" aria-label="Default select example" >
+
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row mt-2">
+                                <div class="col">ФИО</div>
+                                <div class="col">
+                                    <select class="form-select form-select-sm" id="placeSelect" aria-label="Default select example" >
+
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row mt-2">
+                                <div class="col">Модель</div>
+                                <div class="col">
+                                    <select class="form-select form-select-sm" id="modelSelect" aria-label="Default select example" >
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row mt-2">
+                                <div class="col">Состояние</div>
+                                <div class="col">
+                                    <select class="form-select form-select-sm" id="statusSelect" aria-label="Default select example" >
+                                        <option value="OK" selected="">Исправен</option>
+                                        <option value="REPAIR">Ремонт</option>
+                                        <option value="MONITORING">Списание</option>
+                                        <option value="DEFECTIVE">Неисправен</option>
+                                        <option value="UTILIZATION">Утилизирован</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row mt-2">
+                                <div class="col">Инвентарный номер</div>
+                                <div class="col">
+                                    <input class="form-control form-control-sm" type="text" placeholder="введите инвентарный номер" aria-label="inventaryNumber" id="inventaryNumber">
+                                </div>
+                            </div>
+                            <div class="row mt-2">
+                                <div class="col">Серийный номер</div>
+                                <div class="col">
+                                    <input class="form-control form-control-sm" type="text" placeholder="введите серийный номер" aria-label="serialNumber" id="serialNumber">
+                                </div>
+                            </div>
+                            
+                            
+
+                            <div class="row mt-2">
+                                <div class="col">Год выпуска</div>
+                                <div class="col">
+                                    <select class="form-select form-select-sm" id="dateCreateSelect" aria-label="dateCreate">
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="row mt-2">
+                                <div class="col">Дата ввода в эксплуатацию</div>
+                                <div class="col">
+                                    <input type="date" class="form-control form-control-sm" name="startExploitation" placeholder="date" id="startExploitation">
+                                </div>
+                            </div>
+                            
+                            <th:block th:switch="${attribute}">
+                          <div th:case="'phones'">
+                                <div class="row mt-2">
+                                <div class="col">Внутренний номер</div>
+                                <div class="col">
+                                    <input class="form-control form-control-sm" type="text" placeholder="введите внутренний номер" aria-label="innerCallNumber" id="innerCallNumber">
+                                </div>
+                            </div>
+                              </div>
+                        <div th:case="'monitors'">
+                            <div class="row mt-2">
+                                <div class="col">Наименование в ведомости ОС</div>
+                                <div class="col">
+                                    <input class="form-control form-control-sm" type="text" placeholder="введите наименование" aria-label="nameFromOneC" id="nameFromOneC">
+                                </div>
+                            </div>
+                            <div class="row mt-2">
+                                <div class="col">По ведомости ОС</div>
+                                <div class="col">
+                                    <select class="form-select form-select-sm" id="baseTypeSelect" aria-label="baseTypeSelect" >
+                                        <option value="ARM" selected="">В составе ПК, АРМ</option>
+                                        <option value="SINGLE">Отдельно</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div th:case="'ups'">
+                            <div class="row mt-2">
+                                <div class="col">Год замены батареи</div>
+                                <div class="col">
+                                    <select class="form-select form-select-sm" id="dateReplaceSelect" aria-label="date replace select">
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row mt-2">
+                                <div class="col">Тип батареи</div>
+                                <div class="col">
+                                    <select class="form-select form-select-sm" id="batteryTypeSelect" aria-label="Default select example" >
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row mt-2">
+                                <div class="col">Количество батарей</div>
+                                <div class="col">
+                                    <input class="form-control form-control-sm" type="number" min="1" max="100" value="1" aria-label="battery amount" id="batteryAmount">
+                                </div>
+                            </div>
+                        </div>
+                                <div th:case="'systemblock'">
+                                    
+                                    <div class="row mt-2">
+                                <div class="col">Операционная система</div>
+                                <div class="col">
+                                    <select class="form-select form-select-sm" id="osSelect" aria-label="os select" >
+                                    </select>
+                                </div>
+                            </div>
+                                    
+                                    <div class="row mt-2 ">
+                                        <div class="col text-center fw-bold">
+                                            <span>
+                                                Перечень комплектующих
+                                            </span>
+                                            </div>
+                                        
+                                    </div>
+                            <div class="row mt-2">
+                                <div class="col">Материнская плата</div>
+                                <div class="col">
+                                    <select class="form-select form-select-sm" id="motherboardSelect" aria-label="motherboard select">
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row mt-2">
+                                <div class="col">Процессор</div>
+                                <div class="col">
+                                    <select class="form-select form-select-sm" id="cpuSelect" aria-label="cpu select" >
+                                    </select>
+                                </div>
+                            </div>
+                                    <div class="row mt-2">
+                                <div class="col">ОЗУ</div>
+                                <div class="col">
+                                    <select class="form-select form-select-sm" id="ramSelect" aria-label="ram select" >
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row mt-2">
+                                <div class="col">НЖМД</div>
+                                <div class="col">
+                                    <select class="form-select form-select-sm" id="hddSelect" aria-label="hdd select" >
+                                    </select>
+                                </div>
+                            </div>
+                                    <div class="row mt-2">
+                                <div class="col">Видеоадаптер</div>
+                                <div class="col">
+                                    <select class="form-select form-select-sm" id="videoCardSelect" aria-label="video card select" >
+                                    </select>
+                                </div>
+                            </div>
+                                    <div class="row mt-2">
+                                <div class="col">Звуковая карта</div>
+                                <div class="col">
+                                    <select class="form-select form-select-sm" id="soundCardSelect" aria-label="sound card select" >
+                                    </select>
+                                </div>
+                            </div>
+                                 <div class="row mt-2">
+                                <div class="col">Сетевая карта</div>
+                                <div class="col">
+                                    <select class="form-select form-select-sm" id="lanCardSelect" aria-label="lan card select" >
+                                    </select>
+                                </div>
+                            </div>
+                                    <div class="row mt-2">
+                                <div class="col">Привод</div>
+                                <div class="col">
+                                    <select class="form-select form-select-sm" id="cdDriveSelect" aria-label="keyboard select">
+                                    </select>
+                                </div>
+                            </div>
+                                    <div class="row mt-2">
+                                <div class="col">Клавиатура</div>
+                                <div class="col">
+                                    <select class="form-select form-select-sm" id="keyboardSelect" aria-label="keyboard select">
+                                    </select>
+                                </div>
+                            </div>
+                                    
+                                    <div class="row mt-2">
+                                <div class="col">Мышь</div>
+                                <div class="col">
+                                    <select class="form-select form-select-sm" id="mouseSelect" aria-label="mouse select">
+                                    </select>
+                                </div>
+                            </div>
+                                    <div class="row mt-2">
+                                <div class="col">Колонки</div>
+                                <div class="col">
+                                    <select class="form-select form-select-sm" id="speakersSelect" aria-label="speakers select">
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </th:block>
+
+                        </div>
+                    </div>
+
+                    <div class="modal-footer svtObjModalFooter">
+                        <button type="button" class="btn btn-secondary btn-sm"  data-bs-dismiss="modal">Отменить</button>
+                        <button type="button" class="btn btn-primary btn-sm" id="btnSave">Сохранить</button>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+        
+        <!--Модальное окно подтвеждения действия возврата/отправки на склад-->
+        
+                        <div class="modal fade" id="confirmationModal" data-bs-backdrop="static" aria-hidden="true" aria-labelledby="exampleModalToggleLabel2" tabindex="-1">
+                  <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h3 class="modal-title fs-5" id="titleConfirmationModal">Предупреждение</h3>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                      </div>
+                      <div class="modal-body">
+                          <div class="container">
+                              <div class="row">
+                                  <div class="col">
+                                      <p class="fw-bold"> Вы уверены, что хотите вернуть устройство со склада? </p>
+                                  </div>
+                              </div>
+                              <div class="row">
+                                  <div class="col">
+                                      <br>
+                                      <br>
+                                      <p class="fst-italic"> На следующем шаге выберите рабочее место сотрудника, где данное устройство установлено.</p>
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+                      <div class="modal-footer confirmationModalFooter">
+                        <button type="button" class="btn btn-secondary btn-sm"  data-bs-dismiss="modal">Нет</button>
+                        <button class="btn btn-primary btn-sm" data-bs-target="#addPlaceModal" data-bs-toggle="modal" data-bs-dismiss="modal" id="backFromStorageConfirmBtn" >Да</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                
+                <!--объявление переменных из данных приходящих с бэка-->
+                
+                <script th:inline="javascript">                
+                                let storageDtoes = [[${dtoesStorage}]];
+                                let attrib = [[${attribute}]];
+                                let dtoes = [[${dtoes}]];
+                </script>
+        
+        
+        
+        <script src="/js/popper.min.js"></script>
+        <script src="/js/bootstrap.bundle.min.js"></script>
+        <script src="/js/main_svt.js"></script>
+        <script src="/js/svtobj.js"></script>
+    </body>
+</html>

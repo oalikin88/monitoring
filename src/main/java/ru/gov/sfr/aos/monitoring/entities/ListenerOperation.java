@@ -92,7 +92,6 @@ public class ListenerOperation implements Serializable {
         this.dateOperation = dateOperation;
     }
 
-
     
     public String getCurrentOperation() {
         return currentOperation;

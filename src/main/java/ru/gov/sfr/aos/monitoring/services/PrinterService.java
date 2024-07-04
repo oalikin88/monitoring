@@ -46,7 +46,7 @@ public class PrinterService {
             LocationDTO locDto = new LocationDTO(loc.getId(), loc.getName());
             List<PrintersByLocationandModelDto> listDtoes = new ArrayList<>();
             for (Model model : allModels) {
-                List<Printer> printersByLocationAnModel = printerRepo.findByLocationNameAndModelIdAndPrinterStatusEquals(loc.getName(), model.getId(), PrinterStatus.OK);
+                List<Printer> printersByLocationAnModel = printerRepo.findByPlaceLocationNameAndModelIdAndPrinterStatusEquals(loc.getName(), model.getId(), PrinterStatus.OK);
                 PrintersByLocationandModelDto printersByLocationandModelDto = new PrintersByLocationandModelDto();
                 printersByLocationandModelDto.setIdModel(model.getId());
                 printersByLocationandModelDto.setModelName(model.getName());

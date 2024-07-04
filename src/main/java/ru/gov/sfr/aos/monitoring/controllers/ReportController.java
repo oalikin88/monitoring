@@ -27,7 +27,8 @@ import ru.gov.sfr.aos.reports.parameters.PrinterListReportParameters;
 public class ReportController {
     @Autowired
     private AuthenticationService authenticationService;
-    private final ReportCreateFactory reportCreateFactory;
+    @Autowired
+    private ReportCreateFactory reportCreateFactory;
     
     
     @GetMapping("/act")

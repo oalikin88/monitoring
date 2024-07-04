@@ -1,0 +1,48 @@
+/*
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/Other/CascadeStyleSheet.css to edit this template
+*/
+/* 
+    Created on : 27 мая 2024 г., 8:45:46
+    Author     : 041AlikinOS
+*/
+
+.element:hover {
+    background-color: rgba(14, 34, 62, 0.3);
+    padding-left: 10px;
+    padding-right: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.element {
+    padding-left: 10px;
+    padding-right: 10px;
+
+}
+
+.modal-header {
+    background-color: #0e223e;
+    padding: 5px 15px 5px 15px;
+    user-select: none;
+}
+
+.modal-title {
+    color: #FFF;
+}
+
+.modal-body > .container > div {
+    user-select: none;
+}
+
+.confirmationModalFooter > button {
+    min-width: 80px;
+}
+
+ul {
+    user-select: none;
+}
+
+.headTitle {
+    user-select: none;
+}
