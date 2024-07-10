@@ -39,7 +39,7 @@ public class SystemBlock extends ObjectBuingWithSerialAndInventary implements Se
     private Date dateExploitationBegin;
     private String nameFromOneC;
     private Date dateUpgrade;
-    private int numberRoom;
+    private String numberRoom;
     private String ipAdress;
     @NotNull(message = "Поле \"Материнская плата\" не должно быть пустым")
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
@@ -78,7 +78,7 @@ public class SystemBlock extends ObjectBuingWithSerialAndInventary implements Se
     
     
 
-    public SystemBlock(SystemBlockModel systemBlockModel, Status status, String inventaryNumber, String serialNumber, int yearCreated, Date dateExploitationBegin, String nameFromOneC, Date dateUpgrade, int numberRoom, Motherboard motherBoard, Cpu cpu, Ram ram, Hdd hdd, VideoCard videoCard, CdDrive cdDrive, SoundCard soundCard, LanCard lanCard, Keyboard keyboard, Mouse mouse, Speakers speakers, Contract contract, boolean archived, String ipAdress, Set<OperationSystem> operationSystems) {
+    public SystemBlock(SystemBlockModel systemBlockModel, Status status, String inventaryNumber, String serialNumber, int yearCreated, Date dateExploitationBegin, String nameFromOneC, Date dateUpgrade, String numberRoom, Motherboard motherBoard, Cpu cpu, Ram ram, Hdd hdd, VideoCard videoCard, CdDrive cdDrive, SoundCard soundCard, LanCard lanCard, Keyboard keyboard, Mouse mouse, Speakers speakers, Contract contract, boolean archived, String ipAdress, Set<OperationSystem> operationSystems) {
         super(status, inventaryNumber, serialNumber, contract, archived);
         this.systemBlockModel = systemBlockModel;
         this.yearCreated = yearCreated;
@@ -165,11 +165,11 @@ public class SystemBlock extends ObjectBuingWithSerialAndInventary implements Se
         this.dateUpgrade = dateUpgrade;
     }
 
-    public int getNumberRoom() {
+    public String getNumberRoom() {
         return numberRoom;
     }
 
-    public void setNumberRoom(int numberRoom) {
+    public void setNumberRoom(String numberRoom) {
         this.numberRoom = numberRoom;
     }
 

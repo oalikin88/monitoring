@@ -9,7 +9,20 @@ import org.mapstruct.Mapping;
 import org.springframework.beans.factory.annotation.Autowired;
 import ru.gov.sfr.aos.monitoring.entities.SystemBlock;
 import ru.gov.sfr.aos.monitoring.models.SvtSystemBlockDTO;
+import ru.gov.sfr.aos.monitoring.repositories.CdDriveRepo;
+import ru.gov.sfr.aos.monitoring.repositories.CpuRepo;
+import ru.gov.sfr.aos.monitoring.repositories.HddRepo;
+import ru.gov.sfr.aos.monitoring.repositories.KeyboardRepo;
+import ru.gov.sfr.aos.monitoring.repositories.LanCardRepo;
+import ru.gov.sfr.aos.monitoring.repositories.MotherboardRepo;
+import ru.gov.sfr.aos.monitoring.repositories.MouseRepo;
+import ru.gov.sfr.aos.monitoring.repositories.OperationSystemRepo;
+import ru.gov.sfr.aos.monitoring.repositories.RamRepo;
+import ru.gov.sfr.aos.monitoring.repositories.SoundCardRepo;
+import ru.gov.sfr.aos.monitoring.repositories.SpeakersRepo;
+import ru.gov.sfr.aos.monitoring.repositories.SystemBlockModelRepo;
 import ru.gov.sfr.aos.monitoring.repositories.SystemBlockRepo;
+import ru.gov.sfr.aos.monitoring.repositories.VideoCardRepo;
 
 /**
  *
@@ -20,6 +33,33 @@ import ru.gov.sfr.aos.monitoring.repositories.SystemBlockRepo;
 public abstract class SystemBlockMapper implements SvtMapper <SystemBlock, SvtSystemBlockDTO> {
     @Autowired
     protected SystemBlockRepo systemblockRepo;
+    @Autowired
+    protected SystemBlockModelRepo systemblockModelRepo;
+    @Autowired
+    protected MotherboardRepo motherboardRepo;
+    @Autowired
+    protected CpuRepo cpuRepo;
+    @Autowired
+    protected RamRepo ramRepo;
+    @Autowired
+    protected HddRepo hddRepo;
+    @Autowired
+    protected VideoCardRepo videoCardRepo;
+    @Autowired
+    protected SoundCardRepo soundCardRepo;
+    @Autowired
+    protected LanCardRepo lanCardRepo;
+    @Autowired
+    protected CdDriveRepo cdDriveRepo;
+    @Autowired
+    protected KeyboardRepo keyboardRepo;
+    @Autowired
+    protected MouseRepo mouseRepo;
+    @Autowired
+    protected SpeakersRepo speakersRepo;
+    @Autowired
+    protected OperationSystemRepo operationSystemRepo;
+   
     
     
     @Mapping(source = "systemBlockModel.model", target = "model")
@@ -67,8 +107,7 @@ public abstract class SystemBlockMapper implements SvtMapper <SystemBlock, SvtSy
     public abstract SvtSystemBlockDTO getDto(SystemBlock systemBlock);
     
     @Mapping(target = "contract", expression = "java(systemblockRepo.findById(dto.getId()).get().getContract())")
-    @Mapping(target = "systemBlockModel.model", source = "model")
-    @Mapping(target = "systemBlockModel.id", source = "modelId")
+    @Mapping(target = "systemBlockModel", expression = "java(systemblockModelRepo.findById(dto.getModelId()).get())")
     @Mapping(target = "place.id", source = "placeId")
     @Mapping(target = "place.username", source = "placeName")
     @Mapping(target = "place.placeType", source = "placeType")
@@ -76,37 +115,20 @@ public abstract class SystemBlockMapper implements SvtMapper <SystemBlock, SvtSy
     @Mapping(target = "place.location.id", source = "locationId")
     @Mapping(target = "nameFromOneC", source = "nameFromOneC")
     @Mapping(target = "dateUpgrade", source = "dateUpgrade")
-    @Mapping(target = "motherBoard.id", source = "motherboardId")
-    @Mapping(target = "motherBoard.model", source = "motherboardModel")
+    @Mapping(target = "motherBoard", expression = "java(motherboardRepo.findById(dto.getMotherboardId()).get())")
     @Mapping(target = "numberRoom", source = "numberRoom")
     @Mapping(target = "ipAdress", source = "ipAdress")
-    @Mapping(target = "cpu.id", source = "cpuId")
-    @Mapping(target = "cpu.model", source = "cpuModel")
-    @Mapping(target = "cpu.core", source = "cpuCore")
-    @Mapping(target = "cpu.freq", source = "cpuFreq")
-    @Mapping(target = "ram.id", source = "ramId")
-    @Mapping(target = "ram.model", source = "ramModel")
-    @Mapping(target = "ram.capacity", source = "ramCapacity")
-    @Mapping(target = "hdd.id", source = "hddId")
-    @Mapping(target = "hdd.model", source = "hddModel")
-    @Mapping(target = "hdd.capacity", source = "hddCapacity")
-    @Mapping(target = "hdd.unit", source = "hddUnit")
-    @Mapping(target = "hdd.serialNumber", source = "hddSerialNumber")
-    @Mapping(target = "hdd.inventaryNumber", source = "hddInventaryNumber")
-    @Mapping(target = "videoCard.id", source = "videoCardId")
-    @Mapping(target = "videoCard.model", source = "videoCardModel")
-    @Mapping(target = "cdDrive.id", source = "cdDriveId")
-    @Mapping(target = "cdDrive.model", source = "cdDriveModel")
-    @Mapping(target = "soundCard.id", source = "soundCardId")
-    @Mapping(target = "soundCard.model", source = "soundCardModel")
-    @Mapping(target = "lanCard.id", source = "lanCardId")
-    @Mapping(target = "lanCard.model", source = "lanCardModel")
-    @Mapping(target = "keyboard.id", source = "keyboardId")
-    @Mapping(target = "keyboard.model", source = "keyboardModel")
-    @Mapping(target = "mouse.id", source = "mouseId")
-    @Mapping(target = "mouse.model", source = "mouseModel")
-    @Mapping(target = "speakers.id", source = "speakersId")
-    @Mapping(target = "speakers.model", source = "speakersModel")
+    @Mapping(target = "cpu", expression = "java(cpuRepo.findById(dto.getCpuId()).get())")
+    @Mapping(target = "ram", expression = "java(ramRepo.findById(dto.getRamId()).get())")
+    @Mapping(target = "hdd", expression = "java(hddRepo.findById(dto.getHddId()).get())")
+    @Mapping(target = "videoCard", expression = "java(videoCardRepo.findById(dto.getVideoCardId()).get())")
+    @Mapping(target = "cdDrive", expression = "java(cdDriveRepo.findById(dto.getCdDriveId()).get())")
+    @Mapping(target = "soundCard", expression = "java(soundCardRepo.findById(dto.getSoundCardId()).get())")
+    @Mapping(target = "lanCard", expression = "java(lanCardRepo.findById(dto.getLanCardId()).get())")
+    @Mapping(target = "keyboard", expression = "java(keyboardRepo.findById(dto.getKeyboardId()).get())")
+    @Mapping(target = "mouse", expression = "java(mouseRepo.findById(dto.getMouseId()).get())")
+    @Mapping(target = "speakers", expression = "java(speakersRepo.findById(dto.getSpeakersId()).get())")
+    @Mapping(target = "operationSystems", expression = "java(operationSystemRepo.findAllById(dto.getOperationSystemId()).stream().collect(java.util.stream.Collectors.toSet()))")
     @Override
     public abstract SystemBlock getEntityFromDto(SvtSystemBlockDTO dto);
     

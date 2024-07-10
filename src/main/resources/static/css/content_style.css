@@ -46,3 +46,7 @@ ul {
 .headTitle {
     user-select: none;
 }
+
+#searchSvtObjBtn:hover {
+    cursor: pointer;
+}

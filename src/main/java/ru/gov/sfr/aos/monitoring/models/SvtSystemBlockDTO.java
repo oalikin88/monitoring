@@ -14,7 +14,7 @@ import java.util.Set;
  */
 public class SvtSystemBlockDTO extends SvtDTO {
     
-    public int numberRoom;
+    public String numberRoom;
     public Date dateUpgrade;
     public Long motherboardId;
     public String motherboardModel;
@@ -49,7 +49,7 @@ public class SvtSystemBlockDTO extends SvtDTO {
     public String operationSystemName;
     public List<Long> operationSystemId;
 
-    public SvtSystemBlockDTO(int numberRoom, Date dateUpgrade, Long motherboardId, String motherboardModel, Long cpuId, String cpuModel, int cpuCore, int cpuFreq, Long ramId, String ramModel, int ramCapacity, Long hddId, String hddModel, int hddCapacity, String hddUnit, String hddSerialNumber, String hddInventaryNumber, Long videoCardId, String videoCardModel, Long cdDriveId, String cdDriveModel, Long soundCardId, String soundCardModel, Long lanCardId, String lanCardModel, Long keyboardId, String keyboardModel, Long mouseId, String mouseModel, Long speakersId, String speakersModel, String ipAdress, String operationSystemName, List<Long> operationSystemId) {
+    public SvtSystemBlockDTO(String numberRoom, Date dateUpgrade, Long motherboardId, String motherboardModel, Long cpuId, String cpuModel, int cpuCore, int cpuFreq, Long ramId, String ramModel, int ramCapacity, Long hddId, String hddModel, int hddCapacity, String hddUnit, String hddSerialNumber, String hddInventaryNumber, Long videoCardId, String videoCardModel, Long cdDriveId, String cdDriveModel, Long soundCardId, String soundCardModel, Long lanCardId, String lanCardModel, Long keyboardId, String keyboardModel, Long mouseId, String mouseModel, Long speakersId, String speakersModel, String ipAdress, String operationSystemName, List<Long> operationSystemId) {
         this.numberRoom = numberRoom;
         this.dateUpgrade = dateUpgrade;
         this.motherboardId = motherboardId;
@@ -89,11 +89,11 @@ public class SvtSystemBlockDTO extends SvtDTO {
     
     
     
-    public int getNumberRoom() {
+    public String getNumberRoom() {
         return numberRoom;
     }
 
-    public void setNumberRoom(int numberRoom) {
+    public void setNumberRoom(String numberRoom) {
         this.numberRoom = numberRoom;
     }
 
@@ -361,8 +361,10 @@ public class SvtSystemBlockDTO extends SvtDTO {
         this.operationSystemId = operationSystemId;
     }
 
-    
 
+
+    
+    
 
     
     

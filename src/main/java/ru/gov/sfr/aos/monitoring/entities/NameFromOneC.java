@@ -4,15 +4,15 @@
  */
 package ru.gov.sfr.aos.monitoring.entities;
 
-import java.util.ArrayList;
+
 import java.util.List;
-import javax.persistence.CascadeType;
+
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
+
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
+
 import javax.persistence.PrimaryKeyJoinColumn;
 
 
@@ -29,8 +29,6 @@ public class NameFromOneC {
     private String name;
     
    
-    @OneToMany(targetEntity = Printer.class, mappedBy = "nameFromOneC", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List <Printer> printers = new ArrayList<>();
 
     public NameFromOneC() {
     }
@@ -55,13 +53,7 @@ public class NameFromOneC {
         this.name = name;
     }
 
-    public List<Printer> getPrinters() {
-        return printers;
-    }
 
-    public void setPrinters(List<Printer> printers) {
-        this.printers = printers;
-    }
     
     
     

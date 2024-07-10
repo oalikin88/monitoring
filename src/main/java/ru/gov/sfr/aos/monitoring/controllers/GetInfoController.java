@@ -4,7 +4,6 @@
  */
 package ru.gov.sfr.aos.monitoring.controllers;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -12,15 +11,11 @@ import org.opfr.springBootStarterDictionary.fallback.FallbackOrganizationClient;
 import org.opfr.springBootStarterDictionary.models.DictionaryEmployee;
 import org.opfr.springBootStarterDictionary.models.DictionaryOrganization;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import ru.gov.sfr.aos.monitoring.dao.PrinterAndCartridgeCountByLocationTableDAO;
 import ru.gov.sfr.aos.monitoring.dictionaries.PlaceType;
 import ru.gov.sfr.aos.monitoring.entities.BatteryType;
-import ru.gov.sfr.aos.monitoring.entities.CartridgeModel;
 import ru.gov.sfr.aos.monitoring.entities.CdDrive;
 import ru.gov.sfr.aos.monitoring.entities.Cpu;
 import ru.gov.sfr.aos.monitoring.entities.Hdd;
@@ -33,7 +28,6 @@ import ru.gov.sfr.aos.monitoring.entities.Mouse;
 import ru.gov.sfr.aos.monitoring.entities.OperationSystem;
 import ru.gov.sfr.aos.monitoring.entities.Phone;
 import ru.gov.sfr.aos.monitoring.entities.PhoneModel;
-import ru.gov.sfr.aos.monitoring.entities.Printer;
 import ru.gov.sfr.aos.monitoring.entities.Ram;
 import ru.gov.sfr.aos.monitoring.entities.SoundCard;
 import ru.gov.sfr.aos.monitoring.entities.Speakers;
@@ -46,8 +40,6 @@ import ru.gov.sfr.aos.monitoring.mappers.BatteryTypeMapper;
 import ru.gov.sfr.aos.monitoring.mappers.MonitorMapper;
 import ru.gov.sfr.aos.monitoring.mappers.OperationSystemMapper;
 import ru.gov.sfr.aos.monitoring.mappers.SvtModelMapper;
-import ru.gov.sfr.aos.monitoring.models.CartridgeChoiceDto;
-import ru.gov.sfr.aos.monitoring.models.CartridgeModelDTO;
 import ru.gov.sfr.aos.monitoring.models.DepartmentDTO;
 import ru.gov.sfr.aos.monitoring.models.EmployeeDTO;
 import ru.gov.sfr.aos.monitoring.models.LocationDTO;
@@ -55,12 +47,6 @@ import ru.gov.sfr.aos.monitoring.models.SvtDTO;
 import ru.gov.sfr.aos.monitoring.models.SvtModelDto;
 import ru.gov.sfr.aos.monitoring.models.PlaceDTO;
 import ru.gov.sfr.aos.monitoring.models.PlaceStatusDto;
-import ru.gov.sfr.aos.monitoring.models.PrinterAndCartridgeCountByLocationTable;
-import ru.gov.sfr.aos.monitoring.repositories.CartridgeModelRepo;
-import ru.gov.sfr.aos.monitoring.repositories.PrinterRepo;
-import ru.gov.sfr.aos.monitoring.services.CartridgeMapper;
-import ru.gov.sfr.aos.monitoring.services.CartridgeModelService;
-import ru.gov.sfr.aos.monitoring.services.CartridgeService;
 import ru.gov.sfr.aos.monitoring.services.DepartmentService;
 import ru.gov.sfr.aos.monitoring.services.DictionaryEmployeeHolder;
 import ru.gov.sfr.aos.monitoring.services.LocationService;
@@ -106,18 +92,10 @@ public class GetInfoController {
 
     @Autowired
     private LocationService locationService;
-    @Autowired
-    private CartridgeMapper cartridgeMapper;
+
     @Autowired
     private DictionaryEmployeeHolder dictionaryEmployeeHolder;
-    @Autowired
-    private CartridgeService cartridgeService;
-    @Autowired
-    private CartridgeModelRepo cartridgeModelRepo;
-    @Autowired
-    private PrinterRepo printerRepo;
-    @Autowired
-    private CartridgeModelService cartridgeModelService;
+
     @Autowired
     private FallbackOrganizationClient organizationClient;
     @Autowired
@@ -184,26 +162,6 @@ public class GetInfoController {
     private SystemBlockMapper systemBlockMapper;
 
 
-    private final PrinterAndCartridgeCountByLocationTableDAO dao;
-
-    public GetInfoController(PrinterAndCartridgeCountByLocationTableDAO dao) {
-        this.dao = dao;
-    }
-
-    @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
-    @GetMapping("/printerList")
-    public List<Printer> getPrintersByLocation(@RequestParam(name = "idLocation", required = true) Long idLocation,
-            @RequestParam(name = "deviceType", required = true) String deviceType) {
-        List<Printer> findByLocationAndDeviceType = null;
-        if (deviceType.equals("ALL")) {
-            findByLocationAndDeviceType = printerRepo.findByLocation(idLocation);
-        } else {
-            findByLocationAndDeviceType = printerRepo.findByLocationAndDeviceType(idLocation, deviceType);
-        }
-
-        return findByLocationAndDeviceType;
-    }
-
     @GetMapping("/getinfooo")
     public List<EmployeeDTO> getEmpl() {
         List<DictionaryEmployee> employees = dictionaryEmployeeHolder.getEmployees();
@@ -234,107 +192,45 @@ public class GetInfoController {
         return locations;
     }
 
-    @GetMapping("/getmodelcartridge")
-    public List<CartridgeModelDTO> getModelCartridgeByModelPrinter(@RequestParam("idModel") Long idModel) {
-        List<CartridgeModel> list = cartridgeModelService.showCartridgesModelByPrinterModel(idModel);
-        List<CartridgeModelDTO> dtoes = new ArrayList<>();
-        for (CartridgeModel model : list) {
-            CartridgeModelDTO dto = cartridgeMapper.cartridgeModelToCartridgeModelDto(model);
-            dtoes.add(dto);
-        }
-        return dtoes;
-    }
 
-    @GetMapping("/getmodelbytype")
-    public List<CartridgeModelDTO> getModelsCartridgeByModelPrinterAndCartridgeType(@RequestParam("modelPrinter") String modelPrinter, @RequestParam("cartridgeType") String cartridgeType) {
-        List<CartridgeModel> list = cartridgeModelRepo.findByModelPrinterAndCartridgeType(modelPrinter, cartridgeType);
-        List<CartridgeModelDTO> dtoes = new ArrayList<>();
-        for (CartridgeModel model : list) {
-            CartridgeModelDTO dto = cartridgeMapper.cartridgeModelToCartridgeModelDto(model);
-            dtoes.add(dto);
-        }
-        return dtoes;
-    }
 
-    @GetMapping("/getmodelbytypeandmanuf")
-    public List<CartridgeModelDTO> getModelsCartridgeByModelPrinterAndCartridgeTypeAndManufacturer(@RequestParam("modelPrinter") String modelPrinter,
-            @RequestParam("cartridgeType") String cartridgeType,
-            @RequestParam("cartridgeManufacturer") String cartridgeManufacturer) {
-        List<CartridgeModel> list = cartridgeModelRepo.findByModelPrinterAndCartridgeTypeAndCartridgeManufacturer(modelPrinter, cartridgeType, cartridgeManufacturer);
-        List<CartridgeModelDTO> dtoes = new ArrayList<>();
-        for (CartridgeModel model : list) {
-            CartridgeModelDTO dto = cartridgeMapper.cartridgeModelToCartridgeModelDto(model);
-            dtoes.add(dto);
-        }
-        return dtoes;
-    }
-
-    @GetMapping("/showcartridgesforchoice")
-    public List<CartridgeChoiceDto> showCartridgesForChoice(@RequestParam("idPrinter") Long idPrinter, @RequestParam("locationId") Long locationId) {
-
-        List<CartridgeChoiceDto> showCartridgesByModelPrinter = cartridgeService.showCartridgesForChoice(idPrinter, locationId);
-
-        return showCartridgesByModelPrinter;
-    }
-
-    @GetMapping("/testtest")
-    public List<PrinterAndCartridgeCountByLocationTable> showAll() throws SQLException {
-        List<PrinterAndCartridgeCountByLocationTable> data = dao.getData(dao.getSELECTALLTYPESANDCARTRIDGE());
-        return data;
-    }
 
     @PostMapping("/AJAXPing")
     public Integer getAllContracts() {
         return 0;
     }
 
-//    @GetMapping("/searchprinter")
-//    public List<PrinterDTO> searchPrinters(@RequestParam("inventaryNumber") String inventaryNumber) {
-//        List<Printer> printersByInventaryNumber = printerService.getPrintersByInventaryNumber(inventaryNumber);
-//        List<PrinterDTO> printersDtoListFromPrintersList = printerService.getPrintersDtoListFromPrintersList(printersByInventaryNumber);
-//        return printersDtoListFromPrintersList;
-//    }
     
     @GetMapping("/placesel")
     public List<PlaceDTO> getPlacesByLocationAndDepartment() {
-
         List<PlaceDTO> places = placeService.getPlacesByPlaceType(PlaceType.EMPLOYEE);
-
         return places;
     }
 
     @GetMapping("/placebyid")
     public PlaceDTO getPlacesById(Long placeId) {
-
         PlaceDTO place = placeService.getPlaceById(placeId);
-
         return place;
     }
 
     @GetMapping("/modphones")
     public List<SvtModelDto> getModelPhones() {
-
         List<PhoneModel> allModels = phoneModelService.getAllModels();
         List<SvtModelDto> phoneModelsDtoes = svtModelMapper.getPhoneModelsDtoes(allModels);
-
         return phoneModelsDtoes;
     }
     
        @GetMapping("/modmonitors")
     public List<SvtModelDto> getModelMonitors() {
-
         List<MonitorModel> allModels = monitorModelService.getAllModels();
         List<SvtModelDto> monitorModelsDtoes = svtModelMapper.getMonitorModelsDtoes(allModels);
-
         return monitorModelsDtoes;
     }
     
      @GetMapping("/modups")
     public List<SvtModelDto> getModelUps() {
-
         List<UpsModel> allModels = upsModelService.getAllModels();
         List<SvtModelDto> monitorModelsDtoes = svtModelMapper.getUpsModelsDtoes(allModels);
-
         return monitorModelsDtoes;
     }
     

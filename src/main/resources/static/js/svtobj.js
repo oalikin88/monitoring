@@ -40,6 +40,20 @@ let batteryTypeId;
 let eventReasonGlobal;
 let backtoStorageFlag;
 let stor;
+let operationSystemId;
+let cpuId;
+let ramId;
+let hddId;
+let videoCardId;
+let soundCardId;
+let lanCardId;
+let cdDriveId;
+let keyboardId;
+let mouseId;
+let speakersId;
+let ipAdress;
+let numberRoom;
+let dateUpgrade;
 
 let handleClickArchivedBtn = function() {
     let requestLink;
@@ -58,6 +72,9 @@ let handleClickArchivedBtn = function() {
             break;
         case "ups":
             requestLink = "/upsarchived";
+            break;
+        case "systemblock":
+            requestLink = "/sysblocksarchived";
             break;
     }
         $.ajax({
@@ -121,6 +138,25 @@ let handleClickSendToStorageBtn = function () {
             dto.batteryAmount = document.querySelector("#batteryAmount").value;
             dto.yearReplacement = document.querySelector("#dateReplaceSelect").value;
             break;
+            
+        case "systemblock":
+            requestLink = "/sysblockstostor";
+             dto.motherboardId = $("#motherboardSelect")[0].selectize.getValue();
+            dto.cpuId = $("#cpuSelect")[0].selectize.getValue();
+            dto.hddId = $("#hddSelect")[0].selectize.getValue();
+            dto.ramId = $("#ramSelect")[0].selectize.getValue();
+            dto.cdDriveId = $("#cdDriveSelect")[0].selectize.getValue();
+            dto.soundCardId = $("#soundCardSelect")[0].selectize.getValue();
+            dto.videoCardId = $("#videoCardSelect")[0].selectize.getValue();
+            dto.lanCardId = $("#lanCardSelect")[0].selectize.getValue();
+            dto.keyboardId = $("#keyboardSelect")[0].selectize.getValue();
+            dto.mouseId = $("#mouseSelect")[0].selectize.getValue();
+            dto.speakersId = $("#speakersSelect")[0].selectize.getValue();
+            dto.operationSystemId = $("#osSelect")[0].selectize.getValue();
+            dto.ipAdress = $("#ipAdress")[0].value;
+            dto.nameFromOneC = $("#nameFromOneC")[0].value;
+            dto.numberRoom = $("#numberRoom")[0].value;
+            dto.dateUpgrade = $("#dateUpgrade")[0].value;
     }
 
                 $.ajax({
@@ -185,6 +221,24 @@ let handleClickBackToStorageBtn = function () {
             dto.batteryAmount = document.querySelector("#batteryAmount").value;
             dto.yearReplacement = document.querySelector("#dateReplaceSelect").value;
             break;
+        case "systemblock":
+            requestLink = "/sysblocksbackstor";
+            dto.motherboardId = $("#motherboardSelect")[0].selectize.getValue();
+            dto.cpuId = $("#cpuSelect")[0].selectize.getValue();
+            dto.hddId = $("#hddSelect")[0].selectize.getValue();
+            dto.ramId = $("#ramSelect")[0].selectize.getValue();
+            dto.cdDriveId = $("#cdDriveSelect")[0].selectize.getValue();
+            dto.soundCardId = $("#soundCardSelect")[0].selectize.getValue();
+            dto.videoCardId = $("#videoCardSelect")[0].selectize.getValue();
+            dto.lanCardId = $("#lanCardSelect")[0].selectize.getValue();
+            dto.keyboardId = $("#keyboardSelect")[0].selectize.getValue();
+            dto.mouseId = $("#mouseSelect")[0].selectize.getValue();
+            dto.speakersId = $("#speakersSelect")[0].selectize.getValue();
+            dto.operationSystemId = $("#osSelect")[0].selectize.getValue();
+            dto.ipAdress = $("#ipAdress")[0].value;
+            dto.nameFromOneC = $("#nameFromOneC")[0].value;
+            dto.numberRoom = $("#numberRoom")[0].value;
+            dto.dateUpgrade = $("#dateUpgrade")[0].value;
     }
 
                 $.ajax({
@@ -247,6 +301,24 @@ let handleClickUpdateBtn = function () {
             dto.batteryAmount = document.querySelector("#batteryAmount").value;
             dto.yearReplacement = document.querySelector("#dateReplaceSelect").value;
             break;
+        case "systemblock":
+            requestLink = "/updsysblocks";
+            dto.motherboardId = $("#motherboardSelect")[0].selectize.getValue();
+            dto.cpuId = $("#cpuSelect")[0].selectize.getValue();
+            dto.hddId = $("#hddSelect")[0].selectize.getValue();
+            dto.ramId = $("#ramSelect")[0].selectize.getValue();
+            dto.cdDriveId = $("#cdDriveSelect")[0].selectize.getValue();
+            dto.soundCardId = $("#soundCardSelect")[0].selectize.getValue();
+            dto.videoCardId = $("#videoCardSelect")[0].selectize.getValue();
+            dto.lanCardId = $("#lanCardSelect")[0].selectize.getValue();
+            dto.keyboardId = $("#keyboardSelect")[0].selectize.getValue();
+            dto.mouseId = $("#mouseSelect")[0].selectize.getValue();
+            dto.speakersId = $("#speakersSelect")[0].selectize.getValue();
+            dto.operationSystemId = $("#osSelect")[0].selectize.getValue();
+            dto.ipAdress = $("#ipAdress")[0].value;
+            dto.nameFromOneC = $("#nameFromOneC")[0].value;
+            dto.numberRoom = $("#numberRoom")[0].value;
+            dto.dateUpgrade = $("#dateUpgrade")[0].value;
     }
     $.ajax({
         type: "POST",
@@ -277,7 +349,24 @@ let handleClickUpdateBtn = function () {
 
 };
 
-
+let handleClickSearchSvtObject = function(input) {
+    let request;
+    switch (attrib) {
+        case "phones":
+            request = "/phones?username=";
+            break;
+        case "systemblock":
+            request = "/sysblocks?username=";
+            break;
+        case "monitors":
+            request = "/monitors?username=";
+            break;
+        case "ups":
+            request = "/ups?username=";
+            break;
+    }
+        window.location.href = request + input;
+}
 
 
 let handleClickSavePhoneBtn = function () {
@@ -313,7 +402,7 @@ let handleClickSavePhoneBtn = function () {
             break;
         case "systemblock":
             requestLink = "/sysblocks";
-            dto.license = 
+            
             dto.motherboardId = $("#motherboardSelect")[0].selectize.getValue();
             dto.cpuId = $("#cpuSelect")[0].selectize.getValue();
             dto.hddId = $("#hddSelect")[0].selectize.getValue();
@@ -326,6 +415,10 @@ let handleClickSavePhoneBtn = function () {
             dto.mouseId = $("#mouseSelect")[0].selectize.getValue();
             dto.speakersId = $("#speakersSelect")[0].selectize.getValue();
             dto.operationSystemId = $("#osSelect")[0].selectize.getValue();
+            dto.ipAdress = $("#ipAdress")[0].value;
+            dto.nameFromOneC = $("#nameFromOneC")[0].value;
+            dto.numberRoom = $("#numberRoom")[0].value;
+            dto.dateUpgrade = $("#dateUpgrade")[0].value;
             break;
     }
     $.ajax({
@@ -400,6 +493,10 @@ let requestToEnableStorage = function () {
 
 
 window.onload = function () {
+    
+    $("#searchSvtObjBtn")[0].addEventListener("click", function() {
+        handleClickSearchSvtObject($("#searchSvtObjInput")[0].value);
+    });
 
     let elem = document.querySelectorAll('.element');
 
@@ -415,91 +512,6 @@ window.onload = function () {
         });
     }
 
-
-//$('#btnSave')[0].addEventListener('click', handleClickUpdateBtn);
-
-// Поиск по всем полям телефона
-
-
-//    $('#searchSvtObj')[0].addEventListener('input', function (input) {
-//
-//        $('.tree')[0].innerHTML = '';
-//        
-//        
-//        phoneArray = new Array();
-//        phoneTarget = "";
-//        departmentTarget = "";
-//        let count = 0;
-//        
-//        for (i = 0; i < locationRows.length; i++) {
-//            let target = "";
-//            locationArray = new Array();
-//             departmentArray = new Array();
-//            let locationTarget = locationRows[i].childNodes[1].childNodes[1].innerText;
-//            
-//            
-//            for (j = 0; j < locationRows[i].childNodes[1].childNodes[3].childNodes.length; j++) {
-//                
-//                if(locationRows[i].childNodes[1].childNodes[3].childNodes[j].tagName == "LI") {
-//                    for(p = 0; p < locationRows[i].childNodes[1].childNodes[3].childNodes[j].childNodes.length; p++) {
-//                       
-//                        if(locationRows[i].childNodes[1].childNodes[3].childNodes[j].childNodes[p].tagName == "DETAILS") {
-//                    departmentArray.push(locationRows[i].childNodes[1].childNodes[3].childNodes[j]);
-//                    
-//                    target = locationRows[i].childNodes[1].childNodes[3].childNodes[j].childNodes[p].childNodes[1].innerText;
-//                    if(target.toLowerCase().search($('#searchSvtObj').find('input')[0].value.toLowerCase()) > -1) {
-//                        departmentArray.push(locationRows[i].childNodes[1].childNodes[3].childNodes[j].childNodes[p]);
-//                       
-//                console.log("target: " + target + "\n**********");
-//            }
-//                    
-//                }
-////                    for (k = 0; k < locationRows[i].childNodes[1].childNodes[3].childNodes[j].childNodes[0].childNodes.length; k++) {
-////                        if(locationRows[i].childNodes[1].childNodes[3].childNodes[j].childNodes[0].childNodes[k].tagName == "LI") {
-////                            
-////                            console.log("phone: " + locationRows[i].childNodes[1].childNodes[3].childNodes[j]);
-////                    }
-////                }
-//                
-//
-//
-//
-//
-////                    target = target + " " + locationRows[i].childNodes[1].childNodes[1].innerText;
-////                    if (target.toLowerCase().search($('#searchSvtObj').find('input')[0].value.toLowerCase()) > -1) {
-////
-////                      //  resultArray.push(phoneRows[i]);
-////                     //   $('.tree')[0].appendChild(phoneRows[i]);
-////                       
-////
-////                    }
-//                    if(locationTarget.toLowerCase().search($('#searchSvtObj').find('input')[0].value.toLowerCase()) > -1) {
-//                locationArray.push(locationRows[i]);
-//            }
-//               
-//                
-//            }
-//            
-//            }
-//        }
-//          
-//            for(h = 0; h < locationArray.length; h++) {
-//                $('.tree')[0].append(locationArray[h]);
-//                   
-//            }
-//            
-//            
-//             for(s = 0; s < departmentArray.length; s++) {
-//                 if(null == document.querySelector('.tree').closest("li")) {
-//                $('.tree')[0].append(departmentArray[s].parentElement.parentElement.parentElement);
-//                
-//            }
-//                      //  $('.tree')[0].append(departmentArray[s]);
-//                    } 
-//        }
-//          
-//
-//    });
 
 
 
@@ -559,11 +571,29 @@ let modalContentLoad = function (eventReason, svtObjId) {
                 batteryAmount = callback.batteryAmount;
                 dateReplaceBattery = callback.yearReplacement;
                 batteryTypeId = callback.batteryTypeId;
+                if(attrib == "systemblock") {
+                    operationSystemId = callback.operationSystemId;
+                    motherboardId = callback.motherboardId;
+                    cpuId = callback.cpuId;
+                    ramId = callback.ramId;
+                    hddId = callback.hddId;
+                    videoCardId = callback.videoCardId;
+                    soundCardId = callback.soundCardId;
+                    lanCardId = callback.lanCardId;
+                    cdDriveId = callback.cdDriveId;
+                    keyboardId = callback.keyboardId;
+                    mouseId = callback.mouseId;
+                    speakersId = callback.speakersId;
+                    ipAdress = callback.ipAdress;
+                    numberRoom = callback.numberRoom;
+                    dateUpgrade = callback.dateUpgrade;
+                }
             }
         });
 
         startDate = new Date(parseStartDate);
         startExploitation = startDate.toISOString().slice(0, 10);
+        
 
         switch (status) {
             case "Ремонт":
@@ -602,6 +632,15 @@ let modalContentLoad = function (eventReason, svtObjId) {
                 $("#batteryAmount")[0].value = batteryAmount;
                 // тут поля для ИБП
                 break;
+            case "systemblock":
+                $("#nameFromOneC")[0].value = nameFromOneC;
+                $("#numberRoom")[0].value = numberRoom;
+                $("#ipAdress")[0].value = ipAdress;
+                if(dateUpgrade != null) {
+                let parseDateUpgrade = new Date(dateUpgrade);
+                let dateUpgradeParsed = parseDateUpgrade.toISOString().slice(0, 10);
+                $("#dateUpgrade")[0].value = dateUpgradeParsed;
+            }
         }
         
 
@@ -623,6 +662,11 @@ let modalContentLoad = function (eventReason, svtObjId) {
                     $("#dateReplaceSelect")[0].disabled = true;
                     $("#batteryAmount")[0].disabled = true;
                     break;
+                case "systemblock":
+                    $("#ipAdress")[0].disabled = true;
+                    $("#numberRoom")[0].disabled = true;
+                    $("#nameFromOneC")[0].disabled = true;
+                    $("#dateUpgrade")[0].disabled = true;
             }
             
         }
@@ -670,8 +714,9 @@ let modalContentLoad = function (eventReason, svtObjId) {
                 }
 
             } else {
-                oldPlaceId = $('#placeSelect')[0].selectize.search(0).items[0].id;
+                
                 $('#placeSelect')[0].selectize.setValue($('#placeSelect')[0].selectize.search(0).items[0].id);
+                oldPlaceId = $('#placeSelect')[0].selectize.search(0).items[0].id;
             }
         },
 
@@ -679,7 +724,7 @@ let modalContentLoad = function (eventReason, svtObjId) {
             if (value !== '') {
                 if (oldPlaceId != value) {
                     $.ajax({
-                        url: '/placebyid?placeId=' + $('#placeSelect')[0].selectize.getValue(),
+                        url: '/placebyid?placeId=' + value,
                         type: 'GET',
                         async: false,
                         dataType: 'json',
@@ -687,10 +732,10 @@ let modalContentLoad = function (eventReason, svtObjId) {
                             departmentSelect = callback.departmentCode;
                             locationId = callback.locationId;
                             oldPlaceId = callback.placeId;
-                            if(!stor) {
-                            $('#departmentSelect')[0].selectize.setValue($('#departmentSelect')[0].selectize.search(departmentSelect).items[0].id);
-                            $('#locationSelect')[0].selectize.setValue($('#placeSelect')[0].selectize.options[$('#placeSelect')[0].selectize.items[0]].locationId);
-                        }
+//                            if(!stor) {
+//                            $('#departmentSelect')[0].selectize.setValue($('#departmentSelect')[0].selectize.search(departmentSelect).items[0].id);
+//                            $('#locationSelect')[0].selectize.setValue($('#placeSelect')[0].selectize.options[$('#placeSelect')[0].selectize.items[0]].locationId);
+//                        }
                         }
                     });
 
@@ -765,8 +810,9 @@ let modalContentLoad = function (eventReason, svtObjId) {
                             $('#departmentSelect')[0].selectize.enable();
                         }
                     } else {
-                        oldDepartment = $('#departmentSelect')[0].selectize.search(departmentSelect).items[0].id;
+                        
                         $('#departmentSelect')[0].selectize.setValue($('#departmentSelect')[0].selectize.search(departmentSelect).items[0].id);
+                        oldDepartment = $('#departmentSelect')[0].selectize.search(departmentSelect).items[0].id;
                     }
                 }
             });
@@ -866,7 +912,7 @@ let modalContentLoad = function (eventReason, svtObjId) {
                                 $('#placeSelect')[0].selectize.addItem(model);
                             });
 
-                            oldLocationId = $('#placeSelect')[0].selectize.search(0).items[0].id;
+                            //oldLocationId = $('#placeSelect')[0].selectize.search(0).items[0].id;
                         }
                     });
 
@@ -880,7 +926,7 @@ let modalContentLoad = function (eventReason, svtObjId) {
                             locationId = callback.locationId;
                         }
                     });
-
+                    
                     $.ajax({
                         url: '/depbyloc?locationId=' + locationId,
                         type: 'GET',
@@ -897,16 +943,55 @@ let modalContentLoad = function (eventReason, svtObjId) {
                             });
 
 
-                            oldLocationId = $('#departmentSelect')[0].selectize.search(0).items[0].id;
+                            oldDepartment = $('#departmentSelect')[0].selectize.search(0).items[0].id;
                             $('#departmentSelect')[0].selectize.setValue($('#departmentSelect')[0].selectize.search(0).items[0].id);
                         }
                     });
 
                     $('#placeSelect')[0].selectize.setValue($('#placeSelect')[0].selectize.search(0).items[0].id);
-                    oldDepartment = $('#departmentSelect')[0].selectize.search(departmentSelect).items[0].id;
-                    $('#departmentSelect')[0].selectize.setValue($('#departmentSelect')[0].selectize.search(departmentSelect).items[0].id);
-                } else {
+//                    oldDepartment = $('#departmentSelect')[0].selectize.search(departmentSelect).items[0].id;
+//                    $('#departmentSelect')[0].selectize.setValue($('#departmentSelect')[0].selectize.search(departmentSelect).items[0].id);
+                }  else {
+                    $.ajax({
+                        url: "/placebyloc?locationId=" + locationId,
+                        type: 'GET',
+                        async: false,
+                        dataType: 'json', // added data type
+                        success: function (res) {
+                            let keys = Object.keys($('#placeSelect')[0].selectize.options);
+                            for (let i = 0; i < keys.length; i++) {
+                                $('#placeSelect')[0].selectize.removeOption(keys[i]);
+                            }
+                            res.forEach(model => {
+                                $('#placeSelect')[0].selectize.addOption(model);
+                                $('#placeSelect')[0].selectize.addItem(model);
+                            });
+
+                            //oldLocationId = $('#placeSelect')[0].selectize.search(0).items[0].id;
+                        }
+                    });
+                    $.ajax({
+                        url: '/depbyloc?locationId=' + locationId,
+                        type: 'GET',
+                        async: false,
+                        dataType: 'json',
+                        success: function (res) {
+                            let keys = Object.keys($('#departmentSelect')[0].selectize.options);
+                            for (let i = 0; i < keys.length; i++) {
+                                $('#departmentSelect')[0].selectize.removeOption(keys[i]);
+                            }
+                            res.forEach(model => {
+                                $('#departmentSelect')[0].selectize.addOption(model);
+                                $('#departmentSelect')[0].selectize.addItem(model);
+                            });
+
+
+                            oldDepartment = $('#departmentSelect')[0].selectize.search(0).items[0].id;
+                            $('#departmentSelect')[0].selectize.setValue($('#departmentSelect')[0].selectize.search(0).items[0].id);
+                        }
+                    });
                 $('#placeSelect')[0].selectize.setValue($('#placeSelect')[0].selectize.search(idPlace).items[0].id);
+                $('#departmentSelect')[0].selectize.setValue($('#departmentSelect')[0].selectize.search(codeDepartment).items[0].id);
             }
             } 
 
@@ -1068,6 +1153,14 @@ let modalContentLoad = function (eventReason, svtObjId) {
             break;
             
         case "systemblock":
+            $("#ipAdress")[0].value = "";
+            if(ipAdress) {
+                $("#ipAdress")[0].value = ipAdress;
+            }
+            
+             $('#ipAdress').mask('0ZZ.0ZZ.0ZZ.0ZZ', {translation: {'Z': {pattern: /[0-9]/, optional: true}}});
+
+            
             
             $("#osSelect").selectize({
                     plugins: ["remove_button"],
@@ -1089,7 +1182,35 @@ let modalContentLoad = function (eventReason, svtObjId) {
                             error: callback,
                             success: callback
                         });
+                        if (eventReason.indexOf("element") >= 0 || eventReason.indexOf("storage") >= 0)  {
+                         forOs = new Array();
+                                for(let r = 0; r < operationSystemId.length; r++) {
+                                    forOs.push($('#osSelect')[0].selectize.search(operationSystemId[r]).items[0].id);
+                                }
+                                
+                                $('#osSelect')[0].selectize.setValue(forOs);
+                                
+                                if (eventReason.indexOf("storage") >= 0) {
+                                $('#osSelect')[0].selectize.disable();
+                            } else {
+                                $('#osSelect')[0].selectize.enable();
+                            }
+                            }
+                        
                     }});
+                
+                if($('#osSelect')[0].selectize.getValue() == "" && $('#osSelect')[0].selectize.order > 0) {
+                    forOs = new Array();
+                                for(let r = 0; r < operationSystemId.length; r++) {
+                                    forOs.push($('#osSelect')[0].selectize.search(operationSystemId[r]).items[0].id);
+                                }
+                                $('#osSelect')[0].selectize.setValue(forOs);
+                    if (eventReason.indexOf("storage") >= 0) {
+                                $('#osSelect')[0].selectize.disable();
+                            } else {
+                                $('#osSelect')[0].selectize.enable();
+                            }
+                }
             
             $("#motherboardSelect").selectize({
                     preload: true,
@@ -1106,7 +1227,28 @@ let modalContentLoad = function (eventReason, svtObjId) {
                             error: callback,
                             success: callback
                         });
+                        
+                          if (eventReason.indexOf("element") >= 0 || eventReason.indexOf("storage") >= 0) {
+                            $('#motherboardSelect')[0].selectize.setValue($('#motherboardSelect')[0].selectize.search(motherboardId).items[0].id);
+                            if (eventReason.indexOf("storage") >= 0) {
+                                $('#motherboardSelect')[0].selectize.disable();
+                            } else {
+                                $('#motherboardSelect')[0].selectize.enable();
+                            }
+                        } else {
+                            $('#motherboardSelect')[0].selectize.setValue($('#motherboardSelect')[0].selectize.search(0).items[0].id);
+                        }
+                        
                     }});
+                
+                if($('#motherboardSelect')[0].selectize.getValue() == "" && $('#motherboardSelect')[0].selectize.order > 0) {
+                    $('#motherboardSelect')[0].selectize.setValue($('#motherboardSelect')[0].selectize.search(motherboardId).items[0].id);
+                    if (eventReason.indexOf("storage") >= 0) {
+                                $('#motherboardSelect')[0].selectize.disable();
+                            } else {
+                                $('#motherboardSelect')[0].selectize.enable();
+                            }
+                }
                 
                 
                 $("#cpuSelect").selectize({
@@ -1124,9 +1266,28 @@ let modalContentLoad = function (eventReason, svtObjId) {
                             error: callback,
                             success: callback
                         });
+                        
+                           if (eventReason.indexOf("element") >= 0 || eventReason.indexOf("storage") >= 0) {
+                            $('#cpuSelect')[0].selectize.setValue($('#cpuSelect')[0].selectize.search(cpuId).items[0].id);
+                            if (eventReason.indexOf("storage") >= 0) {
+                                $('#cpuSelect')[0].selectize.disable();
+                            } else {
+                                $('#cpuSelect')[0].selectize.enable();
+                            }
+                        } else {
+                            $('#cpuSelect')[0].selectize.setValue($('#cpuSelect')[0].selectize.search(0).items[0].id);
+                        }
+                        
                     }});
                 
-            
+               if($('#cpuSelect')[0].selectize.getValue() == "" && $('#cpuSelect')[0].selectize.order > 0) {
+                    $('#cpuSelect')[0].selectize.setValue($('#cpuSelect')[0].selectize.search(cpuId).items[0].id);
+                    if (eventReason.indexOf("storage") >= 0) {
+                                $('#cpuSelect')[0].selectize.disable();
+                            } else {
+                                $('#cpuSelect')[0].selectize.enable();
+                            }
+                }
                 
                  $("#ramSelect").selectize({
                     preload: true,
@@ -1143,6 +1304,19 @@ let modalContentLoad = function (eventReason, svtObjId) {
                             error: callback,
                             success: callback
                         });
+                        
+                          if (eventReason.indexOf("element") >= 0 || eventReason.indexOf("storage") >= 0) {
+                            $('#ramSelect')[0].selectize.setValue($('#ramSelect')[0].selectize.search(ramId).items[0].id);
+                            if (eventReason.indexOf("storage") >= 0) {
+                                $('#ramSelect')[0].selectize.disable();
+                            } else {
+                                $('#ramSelect')[0].selectize.enable();
+                            }
+                        } else {
+                            $('#ramSelect')[0].selectize.setValue($('#ramSelect')[0].selectize.search(0).items[0].id);
+                        }
+                        
+                        
                     },
                       render: {
                       option: function(item, escape) {
@@ -1161,6 +1335,15 @@ let modalContentLoad = function (eventReason, svtObjId) {
                       }
                     }
             });
+            
+            if($('#ramSelect')[0].selectize.getValue() == "" && $('#ramSelect')[0].selectize.order > 0) {
+                    $('#ramSelect')[0].selectize.setValue($('#ramSelect')[0].selectize.search(ramId).items[0].id);
+                    if (eventReason.indexOf("storage") >= 0) {
+                                $('#ramSelect')[0].selectize.disable();
+                            } else {
+                                $('#ramSelect')[0].selectize.enable();
+                            }
+                }
                 
                     $("#hddSelect").selectize({
                     preload: true,
@@ -1177,6 +1360,18 @@ let modalContentLoad = function (eventReason, svtObjId) {
                             error: callback,
                             success: callback
                         });
+                        
+                          if (eventReason.indexOf("element") >= 0 || eventReason.indexOf("storage") >= 0) {
+                            $('#hddSelect')[0].selectize.setValue($('#hddSelect')[0].selectize.search(hddId).items[0].id);
+                            if (eventReason.indexOf("storage") >= 0) {
+                                $('#hddSelect')[0].selectize.disable();
+                            } else {
+                                $('#hddSelect')[0].selectize.enable();
+                            }
+                        } else {
+                            $('#hddSelect')[0].selectize.setValue($('#hddSelect')[0].selectize.search(0).items[0].id);
+                        }
+                        
                     },
                     render: {
                       option: function(item, escape) {
@@ -1199,6 +1394,16 @@ let modalContentLoad = function (eventReason, svtObjId) {
             
             });
             
+            if($('#hddSelect')[0].selectize.getValue() == "" && $('#hddSelect')[0].selectize.order > 0) {
+                    $('#hddSelect')[0].selectize.setValue($('#hddSelect')[0].selectize.search(hddId).items[0].id);
+                    if (eventReason.indexOf("storage") >= 0) {
+                                $('#hddSelect')[0].selectize.disable();
+                            } else {
+                                $('#hddSelect')[0].selectize.enable();
+                            }
+                }
+            
+            
             $("#videoCardSelect").selectize({
                     preload: true,
                     valueField: 'id',
@@ -1214,7 +1419,31 @@ let modalContentLoad = function (eventReason, svtObjId) {
                             error: callback,
                             success: callback
                         });
+                        
+                           if (eventReason.indexOf("element") >= 0 || eventReason.indexOf("storage") >= 0) {
+                            $('#videoCardSelect')[0].selectize.setValue($('#videoCardSelect')[0].selectize.search(videoCardId).items[0].id);
+                            if (eventReason.indexOf("storage") >= 0) {
+                                $('#videoCardSelect')[0].selectize.disable();
+                            } else {
+                                $('#videoCardSelect')[0].selectize.enable();
+                            }
+                        } else {
+                            $('#videoCardSelect')[0].selectize.setValue($('#videoCardSelect')[0].selectize.search(0).items[0].id);
+                        }
+                        
+                        
                     }});
+                
+                
+                 if($('#videoCardSelect')[0].selectize.getValue() == "" && $('#videoCardSelect')[0].selectize.order > 0) {
+                    $('#videoCardSelect')[0].selectize.setValue($('#videoCardSelect')[0].selectize.search(videoCardId).items[0].id);
+                    if (eventReason.indexOf("storage") >= 0) {
+                                $('#videoCardSelect')[0].selectize.disable();
+                            } else {
+                                $('#videoCardSelect')[0].selectize.enable();
+                            }
+                }
+                
                 
                 $("#soundCardSelect").selectize({
                     preload: true,
@@ -1231,7 +1460,31 @@ let modalContentLoad = function (eventReason, svtObjId) {
                             error: callback,
                             success: callback
                         });
+                        
+                         if (eventReason.indexOf("element") >= 0 || eventReason.indexOf("storage") >= 0) {
+                            $('#soundCardSelect')[0].selectize.setValue($('#soundCardSelect')[0].selectize.search(soundCardId).items[0].id);
+                            if (eventReason.indexOf("storage") >= 0) {
+                                $('#soundCardSelect')[0].selectize.disable();
+                            } else {
+                                $('#soundCardSelect')[0].selectize.enable();
+                            }
+                        } else {
+                            $('#soundCardSelect')[0].selectize.setValue($('#soundCardSelect')[0].selectize.search(0).items[0].id);
+                        }
+                        
+                        
                     }});
+                
+                
+                if($('#soundCardSelect')[0].selectize.getValue() == "" && $('#soundCardSelect')[0].selectize.order > 0) {
+                    $('#soundCardSelect')[0].selectize.setValue($('#soundCardSelect')[0].selectize.search(soundCardId).items[0].id);
+                    if (eventReason.indexOf("storage") >= 0) {
+                                $('#soundCardSelect')[0].selectize.disable();
+                            } else {
+                                $('#soundCardSelect')[0].selectize.enable();
+                            }
+                }
+                
                 
                 $("#lanCardSelect").selectize({
                     preload: true,
@@ -1248,7 +1501,29 @@ let modalContentLoad = function (eventReason, svtObjId) {
                             error: callback,
                             success: callback
                         });
+                        
+                         if (eventReason.indexOf("element") >= 0 || eventReason.indexOf("storage") >= 0) {
+                            $('#lanCardSelect')[0].selectize.setValue($('#lanCardSelect')[0].selectize.search(lanCardId).items[0].id);
+                            if (eventReason.indexOf("storage") >= 0) {
+                                $('#lanCardSelect')[0].selectize.disable();
+                            } else {
+                                $('#lanCardSelect')[0].selectize.enable();
+                            }
+                        } else {
+                            $('#lanCardSelect')[0].selectize.setValue($('#lanCardSelect')[0].selectize.search(0).items[0].id);
+                        }
+                        
+                        
                     }});
+                
+                if($('#lanCardSelect')[0].selectize.getValue() == "" && $('#lanCardSelect')[0].selectize.order > 0) {
+                    $('#lanCardSelect')[0].selectize.setValue($('#lanCardSelect')[0].selectize.search(lanCardId).items[0].id);
+                    if (eventReason.indexOf("storage") >= 0) {
+                                $('#lanCardSelect')[0].selectize.disable();
+                            } else {
+                                $('#lanCardSelect')[0].selectize.enable();
+                            }
+                }
                 
                 $("#cdDriveSelect").selectize({
                     preload: true,
@@ -1265,7 +1540,28 @@ let modalContentLoad = function (eventReason, svtObjId) {
                             error: callback,
                             success: callback
                         });
+                        
+                        if (eventReason.indexOf("element") >= 0 || eventReason.indexOf("storage") >= 0) {
+                            $('#cdDriveSelect')[0].selectize.setValue($('#cdDriveSelect')[0].selectize.search(cdDriveId).items[0].id);
+                            if (eventReason.indexOf("storage") >= 0) {
+                                $('#cdDriveSelect')[0].selectize.disable();
+                            } else {
+                                $('#cdDriveSelect')[0].selectize.enable();
+                            }
+                        } else {
+                            $('#cdDriveSelect')[0].selectize.setValue($('#cdDriveSelect')[0].selectize.search(0).items[0].id);
+                        }
+                        
                     }});
+                
+                if($('#cdDriveSelect')[0].selectize.getValue() == "" && $('#cdDriveSelect')[0].selectize.order > 0) {
+                    $('#cdDriveSelect')[0].selectize.setValue($('#cdDriveSelect')[0].selectize.search(cdDriveId).items[0].id);
+                    if (eventReason.indexOf("storage") >= 0) {
+                                $('#cdDriveSelect')[0].selectize.disable();
+                            } else {
+                                $('#cdDriveSelect')[0].selectize.enable();
+                            }
+                }
                 
                 $("#keyboardSelect").selectize({
                     preload: true,
@@ -1282,7 +1578,31 @@ let modalContentLoad = function (eventReason, svtObjId) {
                             error: callback,
                             success: callback
                         });
+                        
+                        if (eventReason.indexOf("element") >= 0 || eventReason.indexOf("storage") >= 0) {
+                            $('#keyboardSelect')[0].selectize.setValue($('#keyboardSelect')[0].selectize.search(keyboardId).items[0].id);
+                            if (eventReason.indexOf("storage") >= 0) {
+                                $('#keyboardSelect')[0].selectize.disable();
+                            } else {
+                                $('#keyboardSelect')[0].selectize.enable();
+                            }
+                        } else {
+                            $('#keyboardSelect')[0].selectize.setValue($('#keyboardSelect')[0].selectize.search(0).items[0].id);
+                        }
+                        
+                        
                     }});
+                
+                
+                if($('#keyboardSelect')[0].selectize.getValue() == "" && $('#keyboardSelect')[0].selectize.order > 0) {
+                    $('#keyboardSelect')[0].selectize.setValue($('#keyboardSelect')[0].selectize.search(keyboardId).items[0].id);
+                    if (eventReason.indexOf("storage") >= 0) {
+                                $('#keyboardSelect')[0].selectize.disable();
+                            } else {
+                                $('#keyboardSelect')[0].selectize.enable();
+                            }
+                }
+                
                 
                 $("#mouseSelect").selectize({
                     preload: true,
@@ -1299,7 +1619,30 @@ let modalContentLoad = function (eventReason, svtObjId) {
                             error: callback,
                             success: callback
                         });
+                        
+                        if (eventReason.indexOf("element") >= 0 || eventReason.indexOf("storage") >= 0) {
+                            $('#mouseSelect')[0].selectize.setValue($('#mouseSelect')[0].selectize.search(mouseId).items[0].id);
+                            if (eventReason.indexOf("storage") >= 0) {
+                                $('#mouseSelect')[0].selectize.disable();
+                            } else {
+                                $('#mouseSelect')[0].selectize.enable();
+                            }
+                        } else {
+                            $('#mouseSelect')[0].selectize.setValue($('#mouseSelect')[0].selectize.search(0).items[0].id);
+                        }
+                        
+                        
                     }});
+                
+                
+                if($('#mouseSelect')[0].selectize.getValue() == "" && $('#mouseSelect')[0].selectize.order > 0) {
+                    $('#mouseSelect')[0].selectize.setValue($('#mouseSelect')[0].selectize.search(mouseId).items[0].id);
+                    if (eventReason.indexOf("storage") >= 0) {
+                                $('#mouseSelect')[0].selectize.disable();
+                            } else {
+                                $('#mouseSelect')[0].selectize.enable();
+                            }
+                }
                 
                 $("#speakersSelect").selectize({
                     preload: true,
@@ -1316,7 +1659,29 @@ let modalContentLoad = function (eventReason, svtObjId) {
                             error: callback,
                             success: callback
                         });
+                        
+                         if (eventReason.indexOf("element") >= 0 || eventReason.indexOf("storage") >= 0) {
+                            $('#speakersSelect')[0].selectize.setValue($('#speakersSelect')[0].selectize.search(speakersId).items[0].id);
+                            if (eventReason.indexOf("storage") >= 0) {
+                                $('#speakersSelect')[0].selectize.disable();
+                            } else {
+                                $('#speakersSelect')[0].selectize.enable();
+                            }
+                        } else {
+                            $('#speakersSelect')[0].selectize.setValue($('#speakersSelect')[0].selectize.search(0).items[0].id);
+                        }
+                        
+                        
                     }});
+                
+                if($('#speakersSelect')[0].selectize.getValue() == "" && $('#speakersSelect')[0].selectize.order > 0) {
+                    $('#speakersSelect')[0].selectize.setValue($('#speakersSelect')[0].selectize.search(speakersId).items[0].id);
+                    if (eventReason.indexOf("storage") >= 0) {
+                                $('#speakersSelect')[0].selectize.disable();
+                            } else {
+                                $('#speakersSelect')[0].selectize.enable();
+                            }
+                }
             
             break;
     }
@@ -1382,6 +1747,24 @@ let modalContentLoad = function (eventReason, svtObjId) {
                         $("#dateReplaceSelect")[0].disabled = false;
                         $("#batteryAmount")[0].disabled = false;
                         break;
+                    case "systemblock":
+                        $("#ipAdress")[0].disabled = false;
+                        $("#numberRoom")[0].disabled = false;
+                        $("#nameFromOneC")[0].disabled = false;
+                        $("#dateUpgrade")[0].disabled = false;
+                        $("#osSelect")[0].selectize.enable();
+                        $("#motherboardSelect")[0].selectize.enable();
+                        $("#cpuSelect")[0].selectize.enable();
+                        $("#ramSelect")[0].selectize.enable();
+                        $("#hddSelect")[0].selectize.enable();
+                        $("#videoCardSelect")[0].selectize.enable();
+                        $("#soundCardSelect")[0].selectize.enable();
+                        $("#lanCardSelect")[0].selectize.enable();
+                        $("#cdDriveSelect")[0].selectize.enable();
+                        $("#keyboardSelect")[0].selectize.enable();
+                        $("#mouseSelect")[0].selectize.enable();
+                        $("#speakersSelect")[0].selectize.enable();
+                        
                 }
                 dateCreate.disabled = false;
                 $('#btnSave')[0].removeEventListener('click', handleClickSavePhoneBtn);
@@ -1447,6 +1830,67 @@ let modalContentLoad = function (eventReason, svtObjId) {
                     $('#batteryTypeSelect')[0].selectize.clear();
                 }
         }
+            if($('#cpuSelect')[0]) {
+                    if($('#cpuSelect')[0].selectize) {
+                        $('#cpuSelect')[0].selectize.clear();
+                    }
+            }
+            if($('#motherboardSelect')[0]) {
+                    if($('#motherboardSelect')[0].selectize) {
+                        $('#motherboardSelect')[0].selectize.clear();
+                    }
+            }
+            
+            if($('#hddSelect')[0]) {
+                    if($('#hddSelect')[0].selectize) {
+                        $('#hddSelect')[0].selectize.clear();
+                    }
+            }
+            if($('#ramSelect')[0]) {
+                    if($('#ramSelect')[0].selectize) {
+                        $('#ramSelect')[0].selectize.clear();
+                    }
+            }
+            if($('#videoCardSelect')[0]) {
+                    if($('#videoCardSelect')[0].selectize) {
+                        $('#videoCardSelect')[0].selectize.clear();
+                    }
+            }
+            if($('#soundCardSelect')[0]) {
+                    if($('#soundCardSelect')[0].selectize) {
+                        $('#soundCardSelect')[0].selectize.clear();
+                    }
+            }
+            if($('#lanCardSelect')[0]) {
+                    if($('#lanCardSelect')[0].selectize) {
+                        $('#lanCardSelect')[0].selectize.clear();
+                    }
+            }
+            if($('#cdDriveSelect')[0]) {
+                    if($('#cdDriveSelect')[0].selectize) {
+                        $('#cdDriveSelect')[0].selectize.clear();
+                    }
+            }
+            if($('#speakersSelect')[0]) {
+                    if($('#speakersSelect')[0].selectize) {
+                        $('#speakersSelect')[0].selectize.clear();
+                    }
+            }
+            if($('#keyboardSelect')[0]) {
+                    if($('#keyboardSelect')[0].selectize) {
+                        $('#keyboardSelect')[0].selectize.clear();
+                    }
+            }
+            if($('#mouseSelect')[0]) {
+                    if($('#mouseSelect')[0].selectize) {
+                        $('#mouseSelect')[0].selectize.clear();
+                    }
+            }
+            if($('#osSelect')[0]) {
+                    if($('#osSelect')[0].selectize) {
+                        $('#osSelect')[0].selectize.clear();
+                    }
+            }
          
         }
         
@@ -1470,6 +1914,10 @@ let modalContentLoad = function (eventReason, svtObjId) {
                  if($("#innerCallNumber")[0].disabled) {
                      $("#innerCallNumber")[0].disabled = false;
                  }
+             }
+             
+             if($("#dateUpgrade")[0].value != null) {
+                 $("#dateUpgrade")[0].value = "";
              }
         toggle = false;
     });
@@ -1514,7 +1962,9 @@ document.addEventListener("DOMContentLoaded", function () {
                 treeLocations[i].childNodes[1].childNodes[3].append(liItem);
                 headerElement = document.createElement('div');
                 headerElement.className = "row fw-bold mt-3 mb-3";
-                headerElement.innerHTML = '<div class="col">Модель</div>' +
+                
+                if(dynamicLabel != null) {
+                    headerElement.innerHTML = '<div class="col">Модель</div>' +
                         '<div class="col">ФИО</div>' +
                         '<div class="col">Серийный номер</div>' +
                         '<div class="col">Инвентарный номер</div>' +
@@ -1522,6 +1972,15 @@ document.addEventListener("DOMContentLoaded", function () {
                         '<div class="col">Состояние</div>' +
                         '<div class="col">Дата выпуска</div>' +
                         '<div class="col">' + dynamicLabel + '</div>';
+                } else {
+                    headerElement.innerHTML = '<div class="col">Модель</div>' +
+                        '<div class="col">ФИО</div>' +
+                        '<div class="col">Серийный номер</div>' +
+                        '<div class="col">Инвентарный номер</div>' +
+                        '<div class="col">Дата ввода в экспл</div>' +
+                        '<div class="col">Состояние</div>' +
+                        '<div class="col">Дата выпуска</div>';
+                }
                 liItem.childNodes[0].append(headerElement);
                 for (d = 0; d < storageDtoes[j].departments.length; d++) {
                     for (t = 0; t < storageDtoes[j].departments[d].dtoes.length; t++) {
@@ -1572,6 +2031,18 @@ document.addEventListener("DOMContentLoaded", function () {
                                 '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].yearReplacement + '</div>' +
                                 '</div>';
                                 break;
+                                case "systemblock":
+
+                                 elDepartment.innerHTML = '<div class="row mb-2 d-flex align-items-center text-start">' +
+                                '<div class="col">' + count + '. ' + storageDtoes[j].departments[d].dtoes[t].model + '</div>' +
+                                '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].placeName + '</div>' +
+                                '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].serialNumber + '</div>' +
+                                '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].inventaryNumber + '</div>' +
+                                '<div class="col">' + formatedDate + '</div>' +
+                                '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].status + '</div>' +
+                                '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].yearCreated + '</div>' +
+                                '</div>';
+                                break;
                         }
                         
                         liItem.childNodes[0].append(elDepartment);
@@ -1605,7 +2076,8 @@ document.addEventListener("DOMContentLoaded", function () {
          liLocation.childNodes[0].childNodes[2].append(liItem);
          headerElement = document.createElement('div');
          headerElement.className = "row fw-bold mt-3 mb-3";
-         headerElement.innerHTML = '<div class="col">Модель</div>' +
+         if(dynamicLabel != null) {
+             headerElement.innerHTML = '<div class="col">Модель</div>' +
                 '<div class="col">ФИО</div>' +
                 '<div class="col">Серийный номер</div>' +
                 '<div class="col">Инвентарный номер</div>' +
@@ -1613,6 +2085,16 @@ document.addEventListener("DOMContentLoaded", function () {
                 '<div class="col">Состояние</div>' +
                 '<div class="col">Дата выпуска</div>' +
                 '<div class="col">' + dynamicLabel + '</div>';
+         } else {
+             headerElement.innerHTML = '<div class="col">Модель</div>' +
+                '<div class="col">ФИО</div>' +
+                '<div class="col">Серийный номер</div>' +
+                '<div class="col">Инвентарный номер</div>' +
+                '<div class="col">Дата ввода в экспл</div>' +
+                '<div class="col">Состояние</div>' +
+                '<div class="col">Дата выпуска</div>';
+         }
+         
          liItem.childNodes[0].append(headerElement);
           for (d = 0; d < storageDtoes[j].departments.length; d++) {
                     for (t = 0; t < storageDtoes[j].departments[d].dtoes.length; t++) {
@@ -1663,6 +2145,19 @@ document.addEventListener("DOMContentLoaded", function () {
                                 '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].yearReplacement + '</div>' +
                                 '</div>';
                                 break;
+                            case "systemblock":
+
+                                 elDepartment.innerHTML = '<div class="row mb-2 d-flex align-items-center text-start">' +
+                                '<div class="col">' + count + '. ' + storageDtoes[j].departments[d].dtoes[t].model + '</div>' +
+                                '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].placeName + '</div>' +
+                                '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].serialNumber + '</div>' +
+                                '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].inventaryNumber + '</div>' +
+                                '<div class="col">' + formatedDate + '</div>' +
+                                '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].status + '</div>' +
+                                '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].yearCreated + '</div>' +
+                                '</div>';
+                                break;
+                                
                         }
                         liItem.childNodes[0].append(elDepartment);
                     }

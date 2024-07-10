@@ -184,6 +184,12 @@ public class SystemBlockService extends SvtObjService<SystemBlock, SystemBlockRe
                 
             }
             systemBlock.setContract(contract);
+            systemBlock.setNameFromOneC(dto.getNameFromOneC());
+            Set<OperationSystem> operationSystemsFromDtoes = operationSystemService.getOperationSystemsFromDtoes(dto.getOperationSystemId());
+            systemBlock.setOperationSystems(operationSystemsFromDtoes);
+            systemBlock.setIpAdress(dto.getIpAdress());
+            systemBlock.setDateUpgrade(dto.getDateUpgrade());
+            systemBlock.setNumberRoom(dto.getNumberRoom());
             systemBlockRepo.save(systemBlock);
             
         }
@@ -252,10 +258,13 @@ public class SystemBlockService extends SvtObjService<SystemBlock, SystemBlockRe
             systemBlockFromDB.setYearCreated(dto.getYearCreated());
             systemBlockFromDB.setDateExploitationBegin(dto.getDateExploitationBegin());
             systemBlockFromDB.setPlace(place);
+            Set<OperationSystem> operationSystemsFromDtoes = operationSystemService.getOperationSystemsFromDtoes(dto.getOperationSystemId());
+            systemBlockFromDB.setOperationSystems(operationSystemsFromDtoes);
+            systemBlockFromDB.setIpAdress(dto.getIpAdress());
+            systemBlockFromDB.setNameFromOneC(dto.getNameFromOneC());
+            systemBlockFromDB.setDateUpgrade(dto.getDateUpgrade());
+            systemBlockFromDB.setNumberRoom(dto.getNumberRoom());
             systemBlockRepo.save(systemBlockFromDB);
     }
 
-    
-   
-    
 }

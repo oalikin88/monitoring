@@ -85,6 +85,16 @@ public abstract class SvtObjService <E extends ObjectBuingWithSerialAndInventary
             e.setArchived(true);
             repository.save(e);
         }
+        
+        public Map<Location, List<E>> getSvtObjectsByName(String nameEmployee, PlaceType placeType) {
+             Map<Location, List<E>> collect = (Map<Location, List<E>>) repository.findByPlaceUsernameContainingAndPlacePlaceTypeLikeAndArchivedFalse(nameEmployee, placeType)
+                .stream()
+                .collect(Collectors
+                        .groupingBy((E el) -> el.getPlace()
+                                .getLocation()));
+        
+        return collect;
+}
           
         public abstract void createSvtObj(D dto);
         
