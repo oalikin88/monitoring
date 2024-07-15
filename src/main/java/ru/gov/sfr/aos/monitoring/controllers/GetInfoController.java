@@ -29,6 +29,8 @@ import ru.gov.sfr.aos.monitoring.entities.OperationSystem;
 import ru.gov.sfr.aos.monitoring.entities.Phone;
 import ru.gov.sfr.aos.monitoring.entities.PhoneModel;
 import ru.gov.sfr.aos.monitoring.entities.Ram;
+import ru.gov.sfr.aos.monitoring.entities.Scanner;
+import ru.gov.sfr.aos.monitoring.entities.ScannerModel;
 import ru.gov.sfr.aos.monitoring.entities.SoundCard;
 import ru.gov.sfr.aos.monitoring.entities.Speakers;
 import ru.gov.sfr.aos.monitoring.entities.SystemBlock;
@@ -55,6 +57,7 @@ import ru.gov.sfr.aos.monitoring.services.PhoneModelService;
 import ru.gov.sfr.aos.monitoring.services.PhoneService;
 import ru.gov.sfr.aos.monitoring.services.PlaceService;
 import ru.gov.sfr.aos.monitoring.mappers.PhoneMapper;
+import ru.gov.sfr.aos.monitoring.mappers.ScannerMapper;
 import ru.gov.sfr.aos.monitoring.mappers.SystemBlockMapper;
 import ru.gov.sfr.aos.monitoring.mappers.UpsMapper;
 import ru.gov.sfr.aos.monitoring.models.BatteryTypeDto;
@@ -62,6 +65,7 @@ import ru.gov.sfr.aos.monitoring.models.CpuModelDto;
 import ru.gov.sfr.aos.monitoring.models.HddDto;
 import ru.gov.sfr.aos.monitoring.models.OperationSystemDto;
 import ru.gov.sfr.aos.monitoring.models.RamDto;
+import ru.gov.sfr.aos.monitoring.models.SvtScannerDTO;
 import ru.gov.sfr.aos.monitoring.models.SvtSystemBlockDTO;
 import ru.gov.sfr.aos.monitoring.repositories.BatteryTypeRepo;
 import ru.gov.sfr.aos.monitoring.services.BatteryTypeService;
@@ -75,6 +79,8 @@ import ru.gov.sfr.aos.monitoring.services.MotherboardModelService;
 import ru.gov.sfr.aos.monitoring.services.MouseModelService;
 import ru.gov.sfr.aos.monitoring.services.OperationSystemService;
 import ru.gov.sfr.aos.monitoring.services.RamModelService;
+import ru.gov.sfr.aos.monitoring.services.ScannerModelService;
+import ru.gov.sfr.aos.monitoring.services.ScannerService;
 import ru.gov.sfr.aos.monitoring.services.SoundCardModelService;
 import ru.gov.sfr.aos.monitoring.services.SpeakersModelService;
 import ru.gov.sfr.aos.monitoring.services.SystemBlockModelService;
@@ -160,6 +166,12 @@ public class GetInfoController {
     private SystemBlockService systemBlockService;
     @Autowired
     private SystemBlockMapper systemBlockMapper;
+    @Autowired
+    private ScannerService scannerService;
+    @Autowired
+    private ScannerMapper scannerMapper;
+    @Autowired
+    private ScannerModelService scannerModelService;
 
 
     @GetMapping("/getinfooo")
@@ -446,7 +458,6 @@ public class GetInfoController {
     public Set<DepartmentDTO> getDepsByPlaces() {
 
         Set<DepartmentDTO> departmentsByPlaces = departmentService.getDepartmentsByPlaces();
-
         return departmentsByPlaces;
     }
 
@@ -454,8 +465,25 @@ public class GetInfoController {
     public PlaceDTO getStorageByPlace(Long locationId) {
 
         PlaceDTO dto = placeService.getPlaceStorageByLocation(locationId);
-
         return dto;
     }
 
+    @GetMapping("/getscanner")
+    public SvtDTO getScannerById(Long scannerId) {
+
+        Scanner scanner = scannerService.getById(scannerId);
+        SvtScannerDTO scannerDto = scannerMapper.getDto(scanner);
+
+        return scannerDto;
+    }
+    
+    
+    @GetMapping("/modscanner")
+    public List<SvtModelDto> getModelScanner() {
+        List<ScannerModel> allModels = scannerModelService.getAllModels();
+        List<SvtModelDto> scannerModelsDtoes = svtModelMapper.getModelScannerDtoes(allModels);
+        return scannerModelsDtoes;
+    }
+    
+    
 }

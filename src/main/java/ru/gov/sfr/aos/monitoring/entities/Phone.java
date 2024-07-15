@@ -8,8 +8,7 @@ import java.io.Serializable;
 import java.util.Date;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
+
 import javax.persistence.FetchType;
 import javax.persistence.ManyToOne;
 import javax.persistence.PrimaryKeyJoinColumn;
@@ -26,20 +25,17 @@ public class Phone extends ObjectBuingWithSerialAndInventary implements Serializ
     @NotNull(message = "Поле \"Модель\" не должно быть пустым")
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private PhoneModel phoneModel;
-    @Enumerated(EnumType.STRING)
-    private Status status;
-    private String inventaryNumber;
-    private String serialNumber;
     private int yearCreated;
     private Date dateExploitationBegin;
     private String phoneNumber;
+    private String nameFromeOneC;
 
      public Phone() {
     }
  
 
     public Phone(PhoneModel phoneModel, Status status, String inventaryNumber,
-            String serialNumber, int yearCreated, Date dateExploitationBegin, String phoneNumber, Contract contract, boolean archived) {
+            String serialNumber, int yearCreated, Date dateExploitationBegin, String phoneNumber, String nameFromeOneC, Contract contract, boolean archived) {
         super(status, inventaryNumber, serialNumber, contract, archived);
         this.phoneModel = phoneModel;
         this.status = status;
@@ -48,6 +44,7 @@ public class Phone extends ObjectBuingWithSerialAndInventary implements Serializ
         this.yearCreated = yearCreated;
         this.dateExploitationBegin = dateExploitationBegin;
         this.phoneNumber = phoneNumber;
+        this.nameFromeOneC = nameFromeOneC;
     }
     
     
@@ -140,6 +137,14 @@ public class Phone extends ObjectBuingWithSerialAndInventary implements Serializ
 
     public void setArchived(boolean archived) {
         this.archived = archived;
+    }
+
+    public String getNameFromeOneC() {
+        return nameFromeOneC;
+    }
+
+    public void setNameFromeOneC(String nameFromeOneC) {
+        this.nameFromeOneC = nameFromeOneC;
     }
     
     

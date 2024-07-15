@@ -6,7 +6,6 @@ package ru.gov.sfr.aos.monitoring.controllers;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -32,6 +31,8 @@ import ru.gov.sfr.aos.monitoring.entities.OperationSystem;
 import ru.gov.sfr.aos.monitoring.entities.Phone;
 import ru.gov.sfr.aos.monitoring.entities.PhoneModel;
 import ru.gov.sfr.aos.monitoring.entities.Ram;
+import ru.gov.sfr.aos.monitoring.entities.Scanner;
+import ru.gov.sfr.aos.monitoring.entities.ScannerModel;
 import ru.gov.sfr.aos.monitoring.entities.SoundCard;
 import ru.gov.sfr.aos.monitoring.entities.Speakers;
 import ru.gov.sfr.aos.monitoring.entities.SystemBlock;
@@ -44,6 +45,7 @@ import ru.gov.sfr.aos.monitoring.mappers.BatteryTypeMapper;
 import ru.gov.sfr.aos.monitoring.mappers.MonitorMapper;
 import ru.gov.sfr.aos.monitoring.mappers.OperationSystemMapper;
 import ru.gov.sfr.aos.monitoring.mappers.PhoneMapper;
+import ru.gov.sfr.aos.monitoring.mappers.ScannerMapper;
 import ru.gov.sfr.aos.monitoring.mappers.SvtModelMapper;
 import ru.gov.sfr.aos.monitoring.mappers.SystemBlockMapper;
 import ru.gov.sfr.aos.monitoring.mappers.UpsMapper;
@@ -58,6 +60,7 @@ import ru.gov.sfr.aos.monitoring.models.PlaceDTO;
 import ru.gov.sfr.aos.monitoring.models.RamDto;
 import ru.gov.sfr.aos.monitoring.models.SvtDTO;
 import ru.gov.sfr.aos.monitoring.models.SvtModelDto;
+import ru.gov.sfr.aos.monitoring.models.SvtScannerDTO;
 import ru.gov.sfr.aos.monitoring.models.SvtSystemBlockDTO;
 import ru.gov.sfr.aos.monitoring.repositories.BatteryTypeRepo;
 import ru.gov.sfr.aos.monitoring.repositories.SystemBlockRepo;
@@ -79,6 +82,9 @@ import ru.gov.sfr.aos.monitoring.services.PhoneOutDtoTreeService;
 import ru.gov.sfr.aos.monitoring.services.PhoneService;
 import ru.gov.sfr.aos.monitoring.services.PlaceService;
 import ru.gov.sfr.aos.monitoring.services.RamModelService;
+import ru.gov.sfr.aos.monitoring.services.ScannerModelService;
+import ru.gov.sfr.aos.monitoring.services.ScannerOutDtoTreeService;
+import ru.gov.sfr.aos.monitoring.services.ScannerService;
 import ru.gov.sfr.aos.monitoring.services.SoundCardModelService;
 import ru.gov.sfr.aos.monitoring.services.SpeakersModelService;
 import ru.gov.sfr.aos.monitoring.services.SystemBlockModelService;
@@ -168,6 +174,14 @@ public class SvtViewController {
     private OperationSystemMapper operationSystemMapper;
     @Autowired
     private SystemBlockRepo sysrepo;
+    @Autowired
+    private ScannerModelService scannerModelService;
+    @Autowired
+    private ScannerService scannerService;
+    @Autowired
+    private ScannerOutDtoTreeService scannerOutDtoTreeService;
+    @Autowired
+    private ScannerMapper scannerMapper;
     
     
 //  @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
@@ -879,6 +893,104 @@ public class SvtViewController {
             operationSystemService.saveOperationSystem(operationSystem);
         return "redirect:/os";
         
+    }
+    
+     //   @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
+    @GetMapping("/mscanner")
+    public String getModelScanner(Model model) {
+
+        List<ScannerModel> scannerModels = scannerModelService.getAllModels();
+        List<SvtModelDto> scannerModelsDtoes = svtModelMapper.getModelScannerDtoes(scannerModels);
+        model.addAttribute("dtoes", scannerModelsDtoes);
+        model.addAttribute("namePage", "Модели сканеров");
+        model.addAttribute("attribute", "mscanner");
+        
+        return "models";
+    }
+    
+//    @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
+    @PostMapping("/mscanner")
+    public String saveModelScanner(@RequestBody SvtModelDto dto) throws ObjectAlreadyExists {
+        ScannerModel scannerModel = svtModelMapper.getModelScanner(dto);
+        scannerModelService.saveModel(scannerModel);
+        return "redirect:/mscanner";
+        
+    }
+    
+    
+    //   @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
+    @GetMapping("/scanner")
+    public String getScanners(Model model, @RequestParam(value="username", required=false) String username) {
+        Map<Location, List<Scanner>> svtObjectsByEmployee = null;
+        if(null != username) {
+            svtObjectsByEmployee = scannerService.getSvtObjectsByName(username, PlaceType.EMPLOYEE);
+        } else {
+            svtObjectsByEmployee = scannerService.getSvtObjectsByPlaceType(PlaceType.EMPLOYEE);
+        }
+        List<LocationByTreeDto> treeSvtDtoByEmployee = scannerOutDtoTreeService.getTreeSvtDtoByPlaceType(svtObjectsByEmployee)
+                .stream()
+                .sorted((o1, o2) -> o1.getLocationName().compareTo(o2.getLocationName()))
+                .collect(Collectors.toList());
+        
+        Map<Location, List<Scanner>> svtObjectsByStorage = null;
+        if(null != username) {
+            svtObjectsByStorage = scannerService.getSvtObjectsByName(username, PlaceType.STORAGE);
+        } else {
+           svtObjectsByStorage = scannerService.getSvtObjectsByPlaceType(PlaceType.STORAGE); 
+        }
+        
+        List<LocationByTreeDto> treeSvtDtoByStorage = scannerOutDtoTreeService.getTreeSvtDtoByPlaceType(svtObjectsByStorage)
+                .stream()
+                .sorted((o1, o2) -> o1.getLocationName().compareTo(o2.getLocationName()))
+                .collect(Collectors.toList());
+        
+        model.addAttribute("dtoes", treeSvtDtoByEmployee);
+        model.addAttribute("dtoesStorage", treeSvtDtoByStorage);
+        model.addAttribute("attribute", "scanner");
+        
+        return "svtobj";
+    }
+    
+//    @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
+    @PostMapping("/scanner")
+    public String saveScanner(@RequestBody SvtScannerDTO dto) throws ObjectAlreadyExists {
+        scannerService.createSvtObj(dto);
+        return "redirect:/scanner";
+     
+    }
+    
+    //      @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
+    @PostMapping("/scannertostor")
+    public String sendToStorageScanner (@RequestBody SvtScannerDTO dto) throws ObjectAlreadyExists {
+           // SystemBlock findById = sysrepo.findById(dto.getId()).get();
+            Scanner scanner = scannerMapper.getEntityFromDto(dto);
+        scannerService.sendToStorage(scanner);
+        return "redirect:/scanner";
+        
+    }
+    
+ //   @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
+    @PostMapping("/scannerbackstor")
+    public String backFromStorageScanner (@RequestBody SvtScannerDTO dto) throws ObjectAlreadyExists {
+            Scanner scanner = scannerMapper.getEntityFromDto(dto);
+        scannerService.backFromStorage(scanner, dto.getPlaceId());
+        return "redirect:/scanner";
+        
+    }
+    
+        @PostMapping("/updscanner")
+    public String updateScanner(@RequestBody SvtScannerDTO dto) throws ObjectAlreadyExists {
+        scannerService.updateSvtObj(dto);
+        return "redirect:/scanner";
+     
+    }
+    
+    
+     //   @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
+    @PostMapping("/scannerarchived")
+    public String sendScannerToArchive(@RequestBody ArchivedDto dto) throws ObjectAlreadyExists {
+        scannerService.svtObjToArchive(dto);
+        return "redirect:/scanner";
     }
     
 }

@@ -62,6 +62,9 @@ btnSaveModelPhone.addEventListener('click', function() {
             case "mspeakers":
                 link = "/mspeakers/";
                 break;
+            case "mscanner":
+                link = "/mscanner/";
+                break;
             case "os":
                 link = "/os/";
                 delete dto.model;

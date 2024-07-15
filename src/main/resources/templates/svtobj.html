@@ -15,9 +15,12 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
     <title th:case="'ups'">
         ИБП
     </title>
-            <title th:case="'systemblock'">
+    <title th:case="'systemblock'">
         Системные блоки
     </title>
+    <title th:case="'scanner'">
+        Сканеры
+    </title>        
 </th:block>
         
         <meta charset="UTF-8">
@@ -49,6 +52,9 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                         </h1>
                         <h1 class="ms-2 ps-2" th:case="'systemblock'">
                             Системные блоки
+                        </h1>
+                          <h1 class="ms-2 ps-2" th:case="'scanner'">
+                            Сканеры
                         </h1>
                     </th:block>
                 </div>
@@ -150,8 +156,8 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
         
         <div class="modal fade" id="addPlaceModal" data-bs-backdrop="static" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-lg modal-dialog-centered">
-                <div class="modal-content">
-                    <div class="modal-header">
+                <div class="modal-content" id="modalContent">
+<!--                    <div class="modal-header">
                         
                         <th:block th:switch="${attribute}">
                         <h5 class="modal-title fs-5" id="exampleModalLabel" th:case="'phones'">
@@ -165,6 +171,9 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                         </h5>
                             <h5 class="modal-title fs-5" id="exampleModalLabel" th:case="'systemblock'">
                             Добавить системный блок
+                        </h5>
+                              <h5 class="modal-title fs-5" id="exampleModalLabel" th:case="'scanner'">
+                            Добавить сканер
                         </h5>
                     </th:block>
                         
@@ -292,6 +301,26 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                                 <div class="col">Количество батарей</div>
                                 <div class="col">
                                     <input class="form-control form-control-sm" type="number" min="1" max="100" value="1" aria-label="battery amount" id="batteryAmount">
+                                </div>
+                            </div>
+                        </div>
+                                <div th:case="'scanner'">
+                            <div class="row mt-2">
+                                <div class="col">ip адрес</div>
+                                <div class="col">
+                                    <input type="text" class="form-control form-select-sm" id="ipAdress" name="ipAdress" placeholder="xxx.xxx.xxx.xxx" pattern="^([0-9]{1,3}\.){3}[0-9]{1,3}$" >
+                                </div>
+                            </div>
+                            <div class="row mt-2">
+                                <div class="col">Кабинет</div>
+                                <div class="col">
+                                    <input type="text" class="form-control form-select-sm" id="numberRoom" name="numberRoom" placeholder="укажите расположение">
+                                </div>
+                            </div>
+                            <div class="row mt-2">
+                                <div class="col">Наименование по ведомости ОС</div>
+                                <div class="col">
+                                    <textarea class="form-control" id="nameFromOneC" name="nameFromOneC"  ></textarea>
                                 </div>
                             </div>
                         </div>
@@ -428,7 +457,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                     <div class="modal-footer svtObjModalFooter">
                         <button type="button" class="btn btn-secondary btn-sm"  data-bs-dismiss="modal">Отменить</button>
                         <button type="button" class="btn btn-primary btn-sm" id="btnSave">Сохранить</button>
-                    </div>
+                    </div>-->
 
                 </div>
 
@@ -437,7 +466,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
         
         <!--Модальное окно подтвеждения действия возврата/отправки на склад-->
         
-                        <div class="modal fade" id="confirmationModal" data-bs-backdrop="static" aria-hidden="true" aria-labelledby="exampleModalToggleLabel2" tabindex="-1">
+<!--                        <div class="modal fade" id="confirmationModal" data-bs-backdrop="static" aria-hidden="true" aria-labelledby="exampleModalToggleLabel2" tabindex="-1">
                   <div class="modal-dialog modal-dialog-centered">
                     <div class="modal-content">
                       <div class="modal-header">
@@ -466,7 +495,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                       </div>
                     </div>
                   </div>
-                </div>
+                </div>-->
 
                 
                 <!--объявление переменных из данных приходящих с бэка-->

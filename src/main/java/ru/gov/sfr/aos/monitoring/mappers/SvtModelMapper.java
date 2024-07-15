@@ -19,6 +19,7 @@ import ru.gov.sfr.aos.monitoring.entities.Motherboard;
 import ru.gov.sfr.aos.monitoring.entities.Mouse;
 import ru.gov.sfr.aos.monitoring.entities.PhoneModel;
 import ru.gov.sfr.aos.monitoring.entities.Ram;
+import ru.gov.sfr.aos.monitoring.entities.ScannerModel;
 import ru.gov.sfr.aos.monitoring.entities.SoundCard;
 import ru.gov.sfr.aos.monitoring.entities.Speakers;
 import ru.gov.sfr.aos.monitoring.entities.SystemBlockModel;
@@ -115,4 +116,10 @@ public abstract class SvtModelMapper {
     public abstract List<Hdd> getHddList(List<HddDto> dtoes);
     public abstract List<HddDto> getHddDtoes (List<Hdd> ramList);
     
+    
+    
+    public abstract ScannerModel getModelScanner (SvtModelDto dto);
+    public abstract SvtModelDto getModelScannerDto(ScannerModel scannerModel);
+    public abstract List<ScannerModel> getModelScannerList(List<SvtModelDto> dtoes);
+    public abstract List<SvtModelDto> getModelScannerDtoes (List<ScannerModel> modelScannerList);
 }
