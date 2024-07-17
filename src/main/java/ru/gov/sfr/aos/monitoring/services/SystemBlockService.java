@@ -105,7 +105,7 @@ public class SystemBlockService extends SvtObjService<SystemBlock, SystemBlockRe
             Motherboard motherboard = null;
             CdDrive cdDrive = null;
             Cpu cpu = null;
-            Hdd hdd = null;
+            Set<Hdd> hdd = new HashSet<>();
             Keyboard keyboard = null;
             LanCard lanCard = null;
             Mouse mouse = null;
@@ -118,7 +118,12 @@ public class SystemBlockService extends SvtObjService<SystemBlock, SystemBlockRe
             motherboard = motherboardRepo.findById(dto.getMotherboardId()).get();
             cdDrive = cdDriveRepo.findById(dto.getCdDriveId()).get();
             cpu = cpuRepo.findById(dto.getCpuId()).get();
-            hdd = hddRepo.findById(dto.getHddId()).get();
+            if(dto.getHddIdList().size() > 0) {
+                for(Long el : dto.getHddIdList()) {
+                    Hdd hddFromDto = hddRepo.findById(el).get();
+                    hdd.add(hddFromDto);
+                }
+            }
             keyboard = keyboardRepo.findById(dto.getKeyboardId()).get();
             lanCard = lanCardRepo.findById(dto.getLanCardId()).get();
             mouse = mouseRepo.findById(dto.getMouseId()).get();
@@ -203,7 +208,7 @@ public class SystemBlockService extends SvtObjService<SystemBlock, SystemBlockRe
             Motherboard motherboard = null;
             CdDrive cdDrive = null;
             Cpu cpu = null;
-            Hdd hdd = null;
+            Set<Hdd> hdd = new HashSet<>();
             Keyboard keyboard = null;
             LanCard lanCard = null;
             Mouse mouse = null;
@@ -216,7 +221,12 @@ public class SystemBlockService extends SvtObjService<SystemBlock, SystemBlockRe
             motherboard = motherboardRepo.findById(dto.getMotherboardId()).get();
             cdDrive = cdDriveRepo.findById(dto.getCdDriveId()).get();
             cpu = cpuRepo.findById(dto.getCpuId()).get();
-            hdd = hddRepo.findById(dto.getHddId()).get();
+            if(dto.getHddIdList().size() > 0) {
+                for(Long el : dto.getHddIdList()) {
+                    Hdd hddFromDto = hddRepo.findById(el).get();
+                    hdd.add(hddFromDto);
+                }
+            }
             keyboard = keyboardRepo.findById(dto.getKeyboardId()).get();
             lanCard = lanCardRepo.findById(dto.getLanCardId()).get();
             mouse = mouseRepo.findById(dto.getMouseId()).get();

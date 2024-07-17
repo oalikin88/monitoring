@@ -44,7 +44,7 @@ public class DepartmentService {
     }
     
     public Set<DepartmentDTO> getDepartmentsByPlaces() {
-        List<Place> places = placeRepo.findByPlaceType(PlaceType.EMPLOYEE);
+        List<Place> places = placeRepo.findByPlaceTypeAndArchivedFalse(PlaceType.EMPLOYEE);
         Map<String, List<Place>> collect = places.stream().collect(Collectors.groupingBy(Place::getDepartmentCode));
         List<DictionaryOrganization> departments = organizationClient.getList();
         Set<DepartmentDTO> departmentsDtoes = new HashSet<>();

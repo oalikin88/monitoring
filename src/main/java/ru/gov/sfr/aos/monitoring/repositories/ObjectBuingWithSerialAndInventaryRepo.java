@@ -18,7 +18,8 @@ import ru.gov.sfr.aos.monitoring.entities.ObjectBuingWithSerialAndInventary;
 @NoRepositoryBean
 public interface ObjectBuingWithSerialAndInventaryRepo <E extends ObjectBuingWithSerialAndInventary> extends JpaRepository<E, Long> {
     boolean existsBySerialNumberIgnoreCase(String serialNumber);
-    List<E> findByPlacePlaceTypeLikeAndArchivedFalse(PlaceType placetype);
-    List<E> findByPlaceUsernameContainingAndPlacePlaceTypeLikeAndArchivedFalse(String username, PlaceType placetype);
+    List<E> findByPlacePlaceTypeLikeAndPlaceArchivedFalse(PlaceType placetype);
+    List<E> findByPlaceUsernameContainingAndPlacePlaceTypeLikeAndPlaceArchivedFalse(String username, PlaceType placetype);
+    List<E> findByPlaceArchivedFalse();
     Optional<E> findById(Long id);
 }

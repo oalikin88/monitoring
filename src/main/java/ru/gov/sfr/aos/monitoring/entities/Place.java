@@ -32,15 +32,17 @@ public class Place {
     private Location location;
     private String department;
     private String departmentCode;
+    private boolean archived;
 
     public Place() {
     }
 
-    public Place(String username, PlaceType placeType, Location location, String department) {
+    public Place(String username, PlaceType placeType, Location location, String department, boolean archived) {
         this.username = username;
         this.placeType = placeType;
         this.location = location;
         this.department = department;
+        this.archived = archived;
     }
 
     public String getUsername() {
@@ -89,6 +91,14 @@ public class Place {
 
     public void setDepartmentCode(String departmentCode) {
         this.departmentCode = departmentCode;
+    }
+
+    public boolean isArchived() {
+        return archived;
+    }
+
+    public void setArchived(boolean archived) {
+        this.archived = archived;
     }
     
     

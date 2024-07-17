@@ -43,6 +43,7 @@ let operationSystemId;
 let cpuId;
 let ramId;
 let hddId;
+let hddListId;
 let videoCardId;
 let soundCardId;
 let lanCardId;
@@ -146,7 +147,7 @@ let handleClickSendToStorageBtn = function () {
             requestLink = "/sysblockstostor";
              dto.motherboardId = $("#motherboardSelect")[0].selectize.getValue();
             dto.cpuId = $("#cpuSelect")[0].selectize.getValue();
-            dto.hddId = $("#hddSelect")[0].selectize.getValue();
+            dto.hddIdList = $("#hddSelect")[0].selectize.getValue();
             dto.ramId = $("#ramSelect")[0].selectize.getValue();
             dto.cdDriveId = $("#cdDriveSelect")[0].selectize.getValue();
             dto.soundCardId = $("#soundCardSelect")[0].selectize.getValue();
@@ -160,11 +161,13 @@ let handleClickSendToStorageBtn = function () {
             dto.nameFromOneC = $("#nameFromOneC")[0].value;
             dto.numberRoom = $("#numberRoom")[0].value;
             dto.dateUpgrade = $("#dateUpgrade")[0].value;
+            break;
         case "scanner":
             requestLink = "/scannertostor";
             dto.ipAdress = $("#ipAdress")[0].value;
             dto.nameFromOneC = $("#nameFromOneC")[0].value;
             dto.numberRoom = $("#numberRoom")[0].value;
+            break;
     }
 
                 $.ajax({
@@ -233,7 +236,7 @@ let handleClickBackToStorageBtn = function () {
             requestLink = "/sysblocksbackstor";
             dto.motherboardId = $("#motherboardSelect")[0].selectize.getValue();
             dto.cpuId = $("#cpuSelect")[0].selectize.getValue();
-            dto.hddId = $("#hddSelect")[0].selectize.getValue();
+            dto.hddIdList = $("#hddSelect")[0].selectize.getValue();
             dto.ramId = $("#ramSelect")[0].selectize.getValue();
             dto.cdDriveId = $("#cdDriveSelect")[0].selectize.getValue();
             dto.soundCardId = $("#soundCardSelect")[0].selectize.getValue();
@@ -247,11 +250,13 @@ let handleClickBackToStorageBtn = function () {
             dto.nameFromOneC = $("#nameFromOneC")[0].value;
             dto.numberRoom = $("#numberRoom")[0].value;
             dto.dateUpgrade = $("#dateUpgrade")[0].value;
+            break;
         case "scanner":
             requestLink = "/scannerbackstor";
             dto.ipAdress = $("#ipAdress")[0].value;
             dto.nameFromOneC = $("#nameFromOneC")[0].value;
             dto.numberRoom = $("#numberRoom")[0].value;
+            break;
     }
 
                 $.ajax({
@@ -318,7 +323,7 @@ let handleClickUpdateBtn = function () {
             requestLink = "/updsysblocks";
             dto.motherboardId = $("#motherboardSelect")[0].selectize.getValue();
             dto.cpuId = $("#cpuSelect")[0].selectize.getValue();
-            dto.hddId = $("#hddSelect")[0].selectize.getValue();
+            dto.hddIdList = $("#hddSelect")[0].selectize.getValue();
             dto.ramId = $("#ramSelect")[0].selectize.getValue();
             dto.cdDriveId = $("#cdDriveSelect")[0].selectize.getValue();
             dto.soundCardId = $("#soundCardSelect")[0].selectize.getValue();
@@ -332,11 +337,13 @@ let handleClickUpdateBtn = function () {
             dto.nameFromOneC = $("#nameFromOneC")[0].value;
             dto.numberRoom = $("#numberRoom")[0].value;
             dto.dateUpgrade = $("#dateUpgrade")[0].value;
+            break;
         case "scanner":
             requestLink = "/updscanner";
             dto.ipAdress = $("#ipAdress")[0].value;
             dto.nameFromOneC = $("#nameFromOneC")[0].value;
             dto.numberRoom = $("#numberRoom")[0].value;
+            break;
     }
     $.ajax({
         type: "POST",
@@ -426,7 +433,7 @@ let handleClickSavePhoneBtn = function () {
             
             dto.motherboardId = $("#motherboardSelect")[0].selectize.getValue();
             dto.cpuId = $("#cpuSelect")[0].selectize.getValue();
-            dto.hddId = $("#hddSelect")[0].selectize.getValue();
+            dto.hddIdList = $("#hddSelect")[0].selectize.getValue();
             dto.ramId = $("#ramSelect")[0].selectize.getValue();
             dto.cdDriveId = $("#cdDriveSelect")[0].selectize.getValue();
             dto.soundCardId = $("#soundCardSelect")[0].selectize.getValue();
@@ -446,6 +453,7 @@ let handleClickSavePhoneBtn = function () {
             dto.ipAdress = $("#ipAdress")[0].value;
             dto.nameFromOneC = $("#nameFromOneC")[0].value;
             dto.numberRoom = $("#numberRoom")[0].value;
+            break;
     }
     $.ajax({
         type: "POST",
@@ -549,25 +557,33 @@ window.onload = function () {
 
 let modalContentLoad = function (eventReason, svtObjId) {
    let requestLink; 
-    
+   let titleAction; 
     // Сборка header
     let divModalHeader = document.createElement("div");
     divModalHeader.className = "modal-header";
     
     let titleModal = document.createElement("h5");
     titleModal.className = "modal-title fs-5";
+    if(null != svtObjId) {
+        titleAction = "Редактировать";
+    } else {
+        titleAction = "Добавить";
+    }
     switch (attrib) {
         case "phones":
-            titleModal.innerText = "Добавить телефон";
+            titleModal.innerText = titleAction + " телефон";
             break;
         case "monitors":
-            titleModal.innerText = "Добавить монитор";
+            titleModal.innerText = titleAction + " монитор";
             break;
         case "ups":
-            titleModal.innerText = "Добавить ИБП";
+            titleModal.innerText = titleAction + " ИБП";
             break;
         case "scanner":
-            titleModal.innerText = "Добавить сканер";
+            titleModal.innerText = titleAction + " сканер";
+            break;
+        case "systemblock":
+            titleModal.innerText = titleAction + " системный блок";
             break;
     }
     
@@ -973,7 +989,7 @@ let modalContentLoad = function (eventReason, svtObjId) {
             divRowHddSelect.className = "row mt-2";
             let divColLabelHddSelect = document.createElement("div");
             divColLabelHddSelect.className = "col";
-            divColLabelHddSelect.innerText = "ОЗУ";
+            divColLabelHddSelect.innerText = "НЖМД";
             let divColHddSelect = document.createElement("div");
             divColHddSelect.className = "col";
             let selectHdd = document.createElement("select");
@@ -1183,7 +1199,7 @@ let modalContentLoad = function (eventReason, svtObjId) {
                     motherboardId = callback.motherboardId;
                     cpuId = callback.cpuId;
                     ramId = callback.ramId;
-                    hddId = callback.hddId;
+                    hddListId = callback.hddIdList;
                     videoCardId = callback.videoCardId;
                     soundCardId = callback.soundCardId;
                     lanCardId = callback.lanCardId;
@@ -1250,12 +1266,14 @@ let modalContentLoad = function (eventReason, svtObjId) {
                 let parseDateUpgrade = new Date(dateUpgrade);
                 let dateUpgradeParsed = parseDateUpgrade.toISOString().slice(0, 10);
                 $("#dateUpgrade")[0].value = dateUpgradeParsed;
+                break;
                 
             }
             case "scanner":
                 $("#nameFromOneC")[0].value = nameFromOneC;
                 $("#numberRoom")[0].value = numberRoom;
                 $("#ipAdress")[0].value = ipAdress;
+                break;
               
         }
         
@@ -1283,6 +1301,7 @@ let modalContentLoad = function (eventReason, svtObjId) {
                     $("#numberRoom")[0].disabled = true;
                     $("#nameFromOneC")[0].disabled = true;
                     $("#dateUpgrade")[0].disabled = true;
+                    break;
             }
             
         }
@@ -1390,7 +1409,7 @@ let modalContentLoad = function (eventReason, svtObjId) {
 //                        }
 //                    });
                     $.ajax({
-                        url: '/depbyloc?locationId=' + locationId,
+                        url: '/depbyloc?locationId=' + $('#locationSelect')[0].selectize.getValue(),
                         type: 'GET',
                         async: false,
                         dataType: 'json',
@@ -1465,7 +1484,7 @@ let modalContentLoad = function (eventReason, svtObjId) {
         searchField: ["code", "name"],
 
         load: function (query, callback) {
-            if(null != svtObjId) {
+            if(null != svtObjId && eventReason.indexOf("storage") < 0) {
                $.ajax({
                         url: '/depbyloc?locationId=' + locationId,
                         type: 'GET',
@@ -1476,6 +1495,18 @@ let modalContentLoad = function (eventReason, svtObjId) {
                         
                     }); 
                     $('#departmentSelect')[0].selectize.setValue($('#departmentSelect')[0].selectize.search(codeDepartment).items[0].id)
+            } else if(eventReason.indexOf("storage") >= 0){
+                $.ajax({
+                        url: '/depbyloc?locationId=' + locationId,
+                        type: 'GET',
+                        async: false,
+                        dataType: 'json',
+                        error: callback,
+                        success: callback
+                        
+                    }); 
+                    $('#departmentSelect')[0].selectize.setValue($('#departmentSelect')[0].selectize.search(codeDepartment).items[0].id)
+                    $('#departmentSelect')[0].selectize.disable();
             } else {
             $.ajax({
                 url: '/depbyplaces',
@@ -1557,17 +1588,13 @@ let modalContentLoad = function (eventReason, svtObjId) {
     });
     
     if($('#departmentSelect')[0].selectize.getValue() == "" && $('#departmentSelect')[0].selectize.order > 0) {
-        
-
                 
                         if (eventReason.indexOf("storage") >= 0) {
                             $('#departmentSelect')[0].selectize.disable();
                         } else {
                             $('#departmentSelect')[0].selectize.enable();
-                        }
-                        
+                        }                        
     }
-
 
   $('#placeSelect').selectize({
         preload: true,
@@ -1575,7 +1602,7 @@ let modalContentLoad = function (eventReason, svtObjId) {
         labelField: 'username',
         searchField: ["placeId", "username"],
         load: function (query, callback) {
-            if(null != svtObjId) {
+            if(null != svtObjId && eventReason.indexOf("storage") < 0) {
                  $.ajax({
                         url: '/placebydepandloc?locationId=' + locationId + '&departmentCode=' + codeDepartment,
                         type: 'GET',
@@ -1584,10 +1611,13 @@ let modalContentLoad = function (eventReason, svtObjId) {
                         error: callback,
                         success: callback
                     });
-                 $('#placeSelect')[0].selectize.setValue($('#placeSelect')[0].selectize.search(idPlace).items[0].id)
+                 if(null != $('#placeSelect')[0].selectize.search(idPlace).items[0]) {
+                 $('#placeSelect')[0].selectize.setValue($('#placeSelect')[0].selectize.search(idPlace).items[0].id);
+             } else {
+                 $('#placeSelect')[0].selectize.setValue($('#placeSelect')[0].selectize.search(0).items[0].id);
+             }
                 
-            } else {
-                
+            } else {                
                 $.ajax({
                 url: '/placesel',
                 type: 'GET',
@@ -1595,10 +1625,8 @@ let modalContentLoad = function (eventReason, svtObjId) {
                 dataType: 'json',
                 error: callback,
                 success: callback
-            });
-                
-            }
-            
+            });               
+            }          
             if (eventReason.indexOf("storage") >= 0) {
                 $.ajax({
                     url: '/placebyid?placeId=' + idPlace,
@@ -1615,9 +1643,12 @@ let modalContentLoad = function (eventReason, svtObjId) {
                 });
             }
             if (eventReason.indexOf("element") >= 0 || eventReason.indexOf("storage") >= 0) {
+                if(eventReason.indexOf("backtostor") >= 0) {
+                    $('#placeSelect')[0].selectize.setValue($('#placeSelect')[0].selectize.search(0).items[0].id);
+                } else {
                 oldPlaceId = $('#placeSelect')[0].selectize.search(idPlace).items[0].id;
                 $('#placeSelect')[0].selectize.setValue($('#placeSelect')[0].selectize.search(idPlace).items[0].id);
-
+            }
                 if (eventReason.indexOf("storage") >= 0) {
                     $('#placeSelect')[0].selectize.disable();
                 } else {
@@ -1630,14 +1661,10 @@ let modalContentLoad = function (eventReason, svtObjId) {
                 oldPlaceId = $('#placeSelect')[0].selectize.search(0).items[0].id;
             }
         }
-
-
     });
 
     if($('#placeSelect')[0].selectize.getValue() == "" && $('#placeSelect')[0].selectize.order > 0) {
      
-
-
                 if (eventReason.indexOf("storage") >= 0) {
              
                     $('#placeSelect')[0].selectize.disable();
@@ -1645,14 +1672,8 @@ let modalContentLoad = function (eventReason, svtObjId) {
                 } else {
                     $('#placeSelect')[0].selectize.enable();
                 }
-                
-                
-               
-               
+            
     }
-
-
-    
 
     $('#modelSelect').selectize({
         preload: true,
@@ -1748,17 +1769,19 @@ let modalContentLoad = function (eventReason, svtObjId) {
                 }
 
                 let dateReplaceSelect = document.querySelector('#dateReplaceSelect');
+                    option = document.createElement('option');
+                    option.innerHTML = "Нет";
+                    option.value = "";
+                    dateReplaceSelect.appendChild(option);
                 for (i = currentYear; i >= 2000; i--) {
                     option = document.createElement('option');
                     option.value = i;
                     option.innerHTML = i;
                     dateReplaceSelect.appendChild(option);
                 }
-                if (dateReplaceBattery) {
+                if (dateReplaceBattery > 0) {
                     dateReplaceSelect.value = dateReplaceBattery;
-                } else {
-                    dateReplaceSelect.value = currentYear;
-                }
+                } 
             break;
             
         case "monitors":
@@ -1968,6 +1991,11 @@ let modalContentLoad = function (eventReason, svtObjId) {
                 }
                 
                     $("#hddSelect").selectize({
+                    plugins: ["remove_button"],
+                    delimiter: ",",
+                    persist: false,
+                    maxItems: null,
+                    placeholder: "Выберите из списка",
                     preload: true,
                     valueField: 'id',
                     labelField: "model",
@@ -1984,20 +2012,27 @@ let modalContentLoad = function (eventReason, svtObjId) {
                         });
                         
                           if (eventReason.indexOf("element") >= 0 || eventReason.indexOf("storage") >= 0) {
-                            $('#hddSelect')[0].selectize.setValue($('#hddSelect')[0].selectize.search(hddId).items[0].id);
+                              
+                              forHdd = new Array();
+                                for(let r = 0; r < hddListId.length; r++) {
+                                    forHdd.push($('#hddSelect')[0].selectize.search(hddListId[r]).items[0].id);
+                                }
+                              
+                              
+                              
+                              
+                            $('#hddSelect')[0].selectize.setValue(forHdd);
                             if (eventReason.indexOf("storage") >= 0) {
                                 $('#hddSelect')[0].selectize.disable();
                             } else {
                                 $('#hddSelect')[0].selectize.enable();
                             }
-                        } else {
-                            $('#hddSelect')[0].selectize.setValue($('#hddSelect')[0].selectize.search(0).items[0].id);
-                        }
+                        } 
                         
                     },
                     render: {
                       option: function(item, escape) {
-                        return '<div>'
+                        return '<div style="margin-left:2px; padding-left:10px; margin-right:2px;padding-right:10px; border-radius:5px;">'
                           + '<strong>'       
                           + escape(item.model) + '- ' 
                           + '</strong>' 
@@ -2017,7 +2052,15 @@ let modalContentLoad = function (eventReason, svtObjId) {
             });
             
             if($('#hddSelect')[0].selectize.getValue() == "" && $('#hddSelect')[0].selectize.order > 0) {
-                    $('#hddSelect')[0].selectize.setValue($('#hddSelect')[0].selectize.search(hddId).items[0].id);
+                
+                
+                
+                
+                    forHdd = new Array();
+                                for(let r = 0; r < hddListId.length; r++) {
+                                    forHdd.push($('#hddSelect')[0].selectize.search(hddListId[r]).items[0].id);
+                                }
+                                
                     if (eventReason.indexOf("storage") >= 0) {
                                 $('#hddSelect')[0].selectize.disable();
                             } else {
@@ -2306,6 +2349,21 @@ let modalContentLoad = function (eventReason, svtObjId) {
                 }
             
             break;
+            
+            case "scanner":
+            
+            if (eventReason.indexOf("storage") >= 0) {
+                        $("#ipAdress")[0].disabled = true;
+                        $("#numberRoom")[0].disabled = true;
+                        $("#nameFromOneC")[0].disabled = true;
+                    } else {
+                        $("#ipAdress")[0].disabled = false;
+                        $("#numberRoom")[0].disabled = false;
+                        $("#nameFromOneC")[0].disabled = false;
+                    }
+                
+            
+            break;
     }
  
     var dateCreate = $("#dateCreateSelect")[0];
@@ -2345,6 +2403,75 @@ let modalContentLoad = function (eventReason, svtObjId) {
             $('#backFromStorageBtn')[0].addEventListener('click', function () {
                 toggle = true;
                 
+//                $('#placeSelect')[0].selectize.enable();
+//                $('#modelSelect')[0].selectize.enable();
+//                $('#locationSelect')[0].selectize.enable();
+//                $('#departmentSelect')[0].selectize.enable();
+//                $('#btnSave')[0].disabled = false;
+//                $('#statusSelect')[0].disabled = false;
+//                $("#inventaryNumber")[0].disabled = false;
+//                $("#serialNumber")[0].disabled = false;
+//                $("#startExploitation")[0].disabled = false;
+//                
+//                switch (attrib) {
+//                    case "phones":
+//                        $("#innerCallNumber")[0].disabled = false;
+//                        
+//                        break;
+//                    case "monitors":
+//                        $("#nameFromOneC")[0].disabled = false;
+//                        $("#baseTypeSelect")[0].disabled = false;
+//                        break;
+//                    case "ups":
+//                        $('#batteryTypeSelect')[0].selectize.enable();
+//                        $("#dateReplaceSelect")[0].disabled = false;
+//                        $("#batteryAmount")[0].disabled = false;
+//                        break;
+//                    case "systemblock":
+//                        $("#ipAdress")[0].disabled = false;
+//                        $("#numberRoom")[0].disabled = false;
+//                        $("#nameFromOneC")[0].disabled = false;
+//                        $("#dateUpgrade")[0].disabled = false;
+//                        $("#osSelect")[0].selectize.enable();
+//                        $("#motherboardSelect")[0].selectize.enable();
+//                        $("#cpuSelect")[0].selectize.enable();
+//                        $("#ramSelect")[0].selectize.enable();
+//                        $("#hddSelect")[0].selectize.enable();
+//                        $("#videoCardSelect")[0].selectize.enable();
+//                        $("#soundCardSelect")[0].selectize.enable();
+//                        $("#lanCardSelect")[0].selectize.enable();
+//                        $("#cdDriveSelect")[0].selectize.enable();
+//                        $("#keyboardSelect")[0].selectize.enable();
+//                        $("#mouseSelect")[0].selectize.enable();
+//                        $("#speakersSelect")[0].selectize.enable();
+//                        break;
+//                        
+//                }
+//                dateCreate.disabled = false;
+//                $('#btnSave')[0].removeEventListener('click', handleClickSavePhoneBtn);
+//                $('#archivedBtn')[0].removeEventListener('click', handleClickArchivedBtn);
+//                $('.svtObjModalFooter')[0].innerHTML = "";
+//                $('.svtObjModalFooter').append('<button type="button" class="btn btn-danger btn-sm" id="archivedBtn" data-bs-dismiss="modal">Удалить</button> ' +
+//                        '<button type="button" class="btn btn-warning btn-sm" data-bs-dismiss="modal" id="sendToStorageBtn">Отправить на склад</button>' +
+//                        '<button type="button" class="btn btn-secondary btn-sm"  data-bs-dismiss="modal">Отменить</button>' +
+//                        '<button type="button" class="btn btn-primary btn-sm" id="btnSave">Применить</button>');
+
+            //    oldPlaceId = $('#placeSelect')[0].selectize.search(0).items[0].id;
+               
+//
+//                $('#sendToStorageBtn')[0].addEventListener('click', handleClickSendToStorageBtn);
+//                $('#btnSave')[0].addEventListener('click', handleClickBackToStorageBtn);
+//                $('#archivedBtn')[0].addEventListener('click', handleClickArchivedBtn);
+                
+             // Подтверждение вернуть со склада
+             
+               $("#backFromStorageConfirmBtn")[0].addEventListener('click', function (event) {
+                if(modalParent.innerHTML !== '') {
+                    modalParent.innerHTML = '';
+                }  
+                modalContentLoad("element backtostor", svtObjId);
+                    
+                    
                 $('#placeSelect')[0].selectize.enable();
                 $('#modelSelect')[0].selectize.enable();
                 $('#locationSelect')[0].selectize.enable();
@@ -2386,37 +2513,22 @@ let modalContentLoad = function (eventReason, svtObjId) {
                         $("#keyboardSelect")[0].selectize.enable();
                         $("#mouseSelect")[0].selectize.enable();
                         $("#speakersSelect")[0].selectize.enable();
+                        break;
                         
                 }
                 dateCreate.disabled = false;
-                $('#btnSave')[0].removeEventListener('click', handleClickSavePhoneBtn);
-                $('#archivedBtn')[0].removeEventListener('click', handleClickArchivedBtn);
-                $('.svtObjModalFooter')[0].innerHTML = "";
-                $('.svtObjModalFooter').append('<button type="button" class="btn btn-danger btn-sm" id="archivedBtn" data-bs-dismiss="modal">Удалить</button> ' +
-                        '<button type="button" class="btn btn-warning btn-sm" data-bs-dismiss="modal" id="sendToStorageBtn">Отправить на склад</button>' +
-                        '<button type="button" class="btn btn-secondary btn-sm"  data-bs-dismiss="modal">Отменить</button>' +
-                        '<button type="button" class="btn btn-primary btn-sm" id="btnSave">Применить</button>');
-
-            //    oldPlaceId = $('#placeSelect')[0].selectize.search(0).items[0].id;
-               
-
-                $('#sendToStorageBtn')[0].addEventListener('click', handleClickSendToStorageBtn);
-                $('#btnSave')[0].addEventListener('click', handleClickBackToStorageBtn);
-                $('#archivedBtn')[0].addEventListener('click', handleClickArchivedBtn);
-                
-             // Подтверждение вернуть со склада
-             
-               $("#backFromStorageConfirmBtn")[0].addEventListener('click', function (event) {
+                    
+                    
                     Object.entries($('#placeSelect')[0].selectize.options).forEach(option => {
                         if (option[1].placeType == "Склад") {
                             $('#placeSelect')[0].selectize.removeOption(option[0]);
                         }
                     });
-                     $('#placeSelect')[0].selectize.setValue($('#placeSelect')[0].selectize.search(0).items[0].id);
-                    $('#modelSelect')[0].selectize.setValue($('#modelSelect')[0].selectize.search(modelId).items[0].id);
-                    if(attrib == "ups") {
-                        $('#batteryTypeSelect')[0].selectize.setValue($('#batteryTypeSelect')[0].selectize.search(batteryTypeId).items[0].id);
-                    } 
+//                     $('#placeSelect')[0].selectize.setValue($('#placeSelect')[0].selectize.search(0).items[0].id);
+//                    $('#modelSelect')[0].selectize.setValue($('#modelSelect')[0].selectize.search(modelId).items[0].id);
+//                    if(attrib == "ups") {
+//                        $('#batteryTypeSelect')[0].selectize.setValue($('#batteryTypeSelect')[0].selectize.search(batteryTypeId).items[0].id);
+//                    } 
                 });
 
             });

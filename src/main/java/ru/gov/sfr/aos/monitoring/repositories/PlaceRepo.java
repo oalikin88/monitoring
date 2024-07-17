@@ -17,9 +17,11 @@ import ru.gov.sfr.aos.monitoring.entities.Place;
 
 @Repository
 public interface PlaceRepo extends JpaRepository<Place, Long> {
-    List<Place> findByLocationId(Long locationId);
-    List<Place> findByDepartmentCode(String departmentCode);
-    List<Place> findByLocationIdAndDepartmentCodeAndPlaceType(Long locationId, String departmentCode, PlaceType placeType);
-    List<Place> findByPlaceType(PlaceType placetype);
-    List<Place> findByLocationIdAndPlaceType(Long locationId, PlaceType placeType);
+    List<Place> findByArchivedFalse();
+    List<Place> findByLocationIdAndArchivedFalse(Long locationId);
+    List<Place> findByDepartmentCodeAndArchivedFalse(String departmentCode);
+    List<Place> findByLocationIdAndDepartmentCodeAndPlaceTypeAndArchivedFalse(Long locationId, String departmentCode, PlaceType placeType);
+    List<Place> findByPlaceTypeAndArchivedFalse(PlaceType placetype);
+    List<Place> findByLocationIdAndPlaceTypeAndArchivedFalse(Long locationId, PlaceType placeType);
+    List<Place> findByUsernameContainingAndArchivedFalse(String username);
 }

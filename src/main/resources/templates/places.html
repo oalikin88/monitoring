@@ -19,16 +19,28 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
     </head>
     <body>
         <div class="wrapper">
-            <aside th:insert="svt :: sidebar"></aside>
+            <aside th:insert="svt :: sidebar" id="sticky-aside"></aside>
            <div class="main p-3">
-                <div class="text-center">
-                    <h1>Рабочие места</h1>
-                    <div class="row pb-2 mb-2 mt-2 pt-2">
-                        <div class="col">
-                            <!-- Button trigger modal add place-->
-                            <button type="button" class="btn btn-primary btn-sm" id="addPlaceBtn" data-bs-toggle="modal" data-bs-target="#addPlaceModal">Добавить</button>
+               <div class="row mb-2" id="top-panel">
+                   <div class="col-2">
+                       <h1>Рабочие места</h1>
+                   </div>
+                   <div class="col-2 text-end">
+                       <button type="button" class="btn btn-primary btn-sm" id="addPlaceBtn" data-bs-toggle="modal" data-bs-target="#addPlaceModal">Добавить</button>
+                   </div>
+                   <div class="col-8">
+                        <div class="input-group mb-3" id="searchSvtObjDiv">
+                            <input type="text" class="form-control form-control-sm" placeholder="Поиск по ФИО" aria-label="searchModel" aria-describedby="basic-addon1" id="searchSvtObjInput">
+                            <span class="input-group-text" id="searchSvtObjBtn">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16"><path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"></path>
+                                </svg>
+                            </span>
                         </div>
                     </div>
+               </div>
+                <div class="content" id="content">
+                    
+                    
                     
                     <div class="row fw-bold">
                         <div class="col-1">№ п/п</div>
@@ -40,7 +52,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                     
                     <div class="row pb-2 mb-2 mt-2 pt-2" th:each="dto, stat : ${dtoes}">
                         <div class="col">
-                            <div class="row" >
+                            <div class="row element" data-bs-toggle="modal" data-bs-target="#addPlaceModal" th:attr="id=${dto.placeId}">
                                 <div class="col-1" th:text="${stat.count}"></div>
                                 <div class="col-2 text-start" th:text="${dto.locationName}"></div>
                                 <div class="col-4 text-start" th:text="${dto.department}"></div>
@@ -57,10 +69,10 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
          
         
         <!-- Modal add place -->
-<div class="modal fade" id="addPlaceModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered ">
-    <div class="modal-content">
-      <div class="modal-header">
+<div class="modal fade" id="addPlaceModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content" id="modalContent">
+<!--      <div class="modal-header">
         <h5 class="modal-title fs-5" id="exampleModalLabel">Добавление рабочего места</h5>
         <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
@@ -106,7 +118,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary btn-sm"  data-bs-dismiss="modal">Отменить</button>
         <button type="button" class="btn btn-primary btn-sm" id="btnSavePlace" >Сохранить</button>
-      </div>
+      </div>-->
                 
     
           

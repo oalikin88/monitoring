@@ -4,12 +4,15 @@
  */
 package ru.gov.sfr.aos.monitoring.entities;
 
+import java.util.HashSet;
+import java.util.Set;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import ru.gov.sfr.aos.monitoring.enums.UnitHdd;
 
 /**
@@ -27,7 +30,8 @@ public class Hdd extends SvtModel {
     private UnitHdd unit;
     private String serialNumber;
     private String inventaryNumber;
-
+    @ManyToMany(mappedBy = "hdd")
+    private Set<SystemBlock> systemblocks = new HashSet<>();
  
     
 
@@ -77,6 +81,14 @@ public class Hdd extends SvtModel {
 
     public void setInventaryNumber(String inventaryNumber) {
         this.inventaryNumber = inventaryNumber;
+    }
+
+    public Set<SystemBlock> getSystemblocks() {
+        return systemblocks;
+    }
+
+    public void setSystemblocks(Set<SystemBlock> systemblocks) {
+        this.systemblocks = systemblocks;
     }
     
     

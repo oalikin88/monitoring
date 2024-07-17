@@ -64,16 +64,53 @@ public class PlaceService {
         placeRepo.save(place);
     }
     
+    public void updatePlace(PlaceDTO dto) {
+        Place placeFromDb = placeRepo.findById(dto.getPlaceId()).get();
+        placeFromDb.setDepartment(dto.getDepartment());
+        placeFromDb.setDepartmentCode(dto.getDepartmentCode());
+        Location location = locationRepo.findById(dto.getLocationId()).get();
+        placeFromDb.setLocation(location);
+        switch (dto.getPlaceType()) {
+            case "Сотрудник":
+                placeFromDb.setPlaceType(PlaceType.EMPLOYEE);
+                break;
+            case "Серверная":
+                placeFromDb.setPlaceType(PlaceType.SERVERROOM);
+                break;
+            case "Оргтехника":
+                placeFromDb.setPlaceType(PlaceType.OFFICEEQUIPMENT);
+                break;
+            case "Склад":
+                placeFromDb.setPlaceType(PlaceType.STORAGE);
+                break;
+        }
+        placeFromDb.setUsername(dto.getUsername());
+        placeRepo.save(placeFromDb);
+        
+    }
+    
+    public void sendPlaceToArchive(Long id) {
+        Place placeFromDb = placeRepo.findById(id).get();
+        placeFromDb.setArchived(true);
+        placeRepo.save(placeFromDb);
+    }
+    
     public List<PlaceDTO> getPlaces() {
         
-        List<Place> findAllPlaces = placeRepo.findAll();
+        List<Place> findAllPlaces = placeRepo.findByArchivedFalse();
         List<PlaceDTO> dtoes = placeMapper.listPlaceDtoFromListPlace(findAllPlaces);
         return dtoes;
     }
     
     public List<PlaceDTO> getPlacesByPlaceType(PlaceType placeType) {
         
-        List<Place> places = placeRepo.findByPlaceType(placeType);
+        List<Place> places = placeRepo.findByPlaceTypeAndArchivedFalse(placeType);
+        List<PlaceDTO> dtoes = placeMapper.listPlaceDtoFromListPlace(places);
+        return dtoes;
+    }
+    
+    public List<PlaceDTO> getPlaceByUsername(String username) {
+        List<Place> places = placeRepo.findByUsernameContainingAndArchivedFalse(username);
         List<PlaceDTO> dtoes = placeMapper.listPlaceDtoFromListPlace(places);
         return dtoes;
     }
@@ -85,13 +122,13 @@ public class PlaceService {
     }
     
     public List<PlaceDTO> getPlacesByLocationId(Long locationId) {
-        List<Place> places = placeRepo.findByLocationId(locationId);
+        List<Place> places = placeRepo.findByLocationIdAndArchivedFalse(locationId);
         List<PlaceDTO> dtoes = placeMapper.listPlaceDtoFromListPlace(places);
         return dtoes;
     }
     
     public PlaceDTO getPlaceStorageByLocation(Long locationId) {
-        List<Place> places = placeRepo.findByLocationIdAndPlaceType(locationId, PlaceType.STORAGE);
+        List<Place> places = placeRepo.findByLocationIdAndPlaceTypeAndArchivedFalse(locationId, PlaceType.STORAGE);
         PlaceDTO dto = null;
         if (places.size() > 0) {
             Place place = places.get(0);
@@ -101,7 +138,7 @@ public class PlaceService {
     }
     
     public List<PlaceDTO> getPlacesByDepartmentCode(String departmentCode) {
-        List<Place> places = placeRepo.findByDepartmentCode(departmentCode);
+        List<Place> places = placeRepo.findByDepartmentCodeAndArchivedFalse(departmentCode);
         List<PlaceDTO> dtoes = placeMapper.listPlaceDtoFromListPlace(places);
         return dtoes;
     }
@@ -130,14 +167,14 @@ public class PlaceService {
     }
     
     public List<PlaceDTO> getPlacesByLocationAndDepartment(Long locationId, String departmentCode) {
-        List<Place> places = placeRepo.findByLocationIdAndDepartmentCodeAndPlaceType(locationId, departmentCode, PlaceType.EMPLOYEE);
+        List<Place> places = placeRepo.findByLocationIdAndDepartmentCodeAndPlaceTypeAndArchivedFalse(locationId, departmentCode, PlaceType.EMPLOYEE);
         List<PlaceDTO> dtoes = placeMapper.listPlaceDtoFromListPlace(places);
         return dtoes;
     }
     
     public List<PlaceStatusDto> getPlacesByStatus() {
         List<PlaceStatusDto> dtoes = new ArrayList<>();
-        Map<String, String> collect = placeRepo.findAll().stream().collect(Collectors.groupingBy(Place::getPlaceType)).keySet().stream().collect(Collectors.toMap(PlaceType::name, PlaceType::getType));
+        Map<String, String> collect = placeRepo.findByArchivedFalse().stream().collect(Collectors.groupingBy(Place::getPlaceType)).keySet().stream().collect(Collectors.toMap(PlaceType::name, PlaceType::getType));
         for(Map.Entry<String, String> entry : collect.entrySet()) {
             PlaceStatusDto dto = new PlaceStatusDto(entry.getKey(), entry.getValue());
             dtoes.add(dto);

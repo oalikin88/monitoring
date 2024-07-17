@@ -82,12 +82,6 @@ public abstract class SystemBlockMapper implements SvtMapper <SystemBlock, SvtSy
     @Mapping(source = "ram.id", target = "ramId")
     @Mapping(source = "ram.model", target = "ramModel")
     @Mapping(source = "ram.capacity", target = "ramCapacity")
-    @Mapping(source = "hdd.id", target = "hddId")
-    @Mapping(source = "hdd.model", target = "hddModel")
-    @Mapping(source = "hdd.capacity", target = "hddCapacity")
-    @Mapping(source = "hdd.unit", target = "hddUnit")
-    @Mapping(source = "hdd.serialNumber", target = "hddSerialNumber")
-    @Mapping(source = "hdd.inventaryNumber", target = "hddInventaryNumber")
     @Mapping(source = "videoCard.id", target = "videoCardId")
     @Mapping(source = "videoCard.model", target = "videoCardModel")
     @Mapping(source = "cdDrive.id", target = "cdDriveId")
@@ -103,6 +97,7 @@ public abstract class SystemBlockMapper implements SvtMapper <SystemBlock, SvtSy
     @Mapping(source = "speakers.id", target = "speakersId")
     @Mapping(source = "speakers.model", target = "speakersModel")
     @Mapping(expression = "java(systemBlock.getOperationSystems().stream().map(e -> e.getId()).collect(java.util.stream.Collectors.toList()))", target = "operationSystemId")
+    @Mapping(expression = "java(systemBlock.getHdd().stream().map(e -> e.getId()).collect(java.util.stream.Collectors.toList()))", target = "hddIdList")
     @Override
     public abstract SvtSystemBlockDTO getDto(SystemBlock systemBlock);
     
@@ -120,7 +115,6 @@ public abstract class SystemBlockMapper implements SvtMapper <SystemBlock, SvtSy
     @Mapping(target = "ipAdress", source = "ipAdress")
     @Mapping(target = "cpu", expression = "java(cpuRepo.findById(dto.getCpuId()).get())")
     @Mapping(target = "ram", expression = "java(ramRepo.findById(dto.getRamId()).get())")
-    @Mapping(target = "hdd", expression = "java(hddRepo.findById(dto.getHddId()).get())")
     @Mapping(target = "videoCard", expression = "java(videoCardRepo.findById(dto.getVideoCardId()).get())")
     @Mapping(target = "cdDrive", expression = "java(cdDriveRepo.findById(dto.getCdDriveId()).get())")
     @Mapping(target = "soundCard", expression = "java(soundCardRepo.findById(dto.getSoundCardId()).get())")
@@ -129,6 +123,7 @@ public abstract class SystemBlockMapper implements SvtMapper <SystemBlock, SvtSy
     @Mapping(target = "mouse", expression = "java(mouseRepo.findById(dto.getMouseId()).get())")
     @Mapping(target = "speakers", expression = "java(speakersRepo.findById(dto.getSpeakersId()).get())")
     @Mapping(target = "operationSystems", expression = "java(operationSystemRepo.findAllById(dto.getOperationSystemId()).stream().collect(java.util.stream.Collectors.toSet()))")
+    @Mapping(target = "hdd", expression = "java(hddRepo.findAllById(dto.getHddIdList()).stream().collect(java.util.stream.Collectors.toSet()))")
     @Override
     public abstract SystemBlock getEntityFromDto(SvtSystemBlockDTO dto);
     

@@ -50,3 +50,11 @@ ul {
 #searchSvtObjBtn:hover {
     cursor: pointer;
 }
+
+.content {
+    user-select: none;
+}
+
+#top-panel {
+    user-select: none;
+}

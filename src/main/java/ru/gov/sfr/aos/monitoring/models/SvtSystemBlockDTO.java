@@ -25,12 +25,7 @@ public class SvtSystemBlockDTO extends SvtDTO {
     public Long ramId;
     public String ramModel;
     public int ramCapacity;
-    public Long hddId;
-    public String hddModel;
-    public int hddCapacity;
-    public String hddUnit;
-    public String hddSerialNumber;
-    public String hddInventaryNumber;
+    public List <Long> hddIdList;
     public Long videoCardId;
     public String videoCardModel;
     public Long cdDriveId;
@@ -49,7 +44,7 @@ public class SvtSystemBlockDTO extends SvtDTO {
     public String operationSystemName;
     public List<Long> operationSystemId;
 
-    public SvtSystemBlockDTO(String numberRoom, Date dateUpgrade, Long motherboardId, String motherboardModel, Long cpuId, String cpuModel, int cpuCore, int cpuFreq, Long ramId, String ramModel, int ramCapacity, Long hddId, String hddModel, int hddCapacity, String hddUnit, String hddSerialNumber, String hddInventaryNumber, Long videoCardId, String videoCardModel, Long cdDriveId, String cdDriveModel, Long soundCardId, String soundCardModel, Long lanCardId, String lanCardModel, Long keyboardId, String keyboardModel, Long mouseId, String mouseModel, Long speakersId, String speakersModel, String ipAdress, String operationSystemName, List<Long> operationSystemId) {
+    public SvtSystemBlockDTO(String numberRoom, Date dateUpgrade, Long motherboardId, String motherboardModel, Long cpuId, String cpuModel, int cpuCore, int cpuFreq, Long ramId, String ramModel, int ramCapacity, Long videoCardId, String videoCardModel, Long cdDriveId, String cdDriveModel, Long soundCardId, String soundCardModel, Long lanCardId, String lanCardModel, Long keyboardId, String keyboardModel, Long mouseId, String mouseModel, Long speakersId, String speakersModel, String ipAdress, String operationSystemName, List<Long> operationSystemId) {
         this.numberRoom = numberRoom;
         this.dateUpgrade = dateUpgrade;
         this.motherboardId = motherboardId;
@@ -61,12 +56,6 @@ public class SvtSystemBlockDTO extends SvtDTO {
         this.ramId = ramId;
         this.ramModel = ramModel;
         this.ramCapacity = ramCapacity;
-        this.hddId = hddId;
-        this.hddModel = hddModel;
-        this.hddCapacity = hddCapacity;
-        this.hddUnit = hddUnit;
-        this.hddSerialNumber = hddSerialNumber;
-        this.hddInventaryNumber = hddInventaryNumber;
         this.videoCardId = videoCardId;
         this.videoCardModel = videoCardModel;
         this.cdDriveId = cdDriveId;
@@ -153,21 +142,6 @@ public class SvtSystemBlockDTO extends SvtDTO {
         this.ramModel = ramModel;
     }
 
-    public Long getHddId() {
-        return hddId;
-    }
-
-    public void setHddId(Long hddId) {
-        this.hddId = hddId;
-    }
-
-    public String getHddModel() {
-        return hddModel;
-    }
-
-    public void setHddModel(String hddModel) {
-        this.hddModel = hddModel;
-    }
 
     public Long getVideoCardId() {
         return videoCardId;
@@ -313,37 +287,6 @@ public class SvtSystemBlockDTO extends SvtDTO {
         this.ramCapacity = ramCapacity;
     }
 
-    public int getHddCapacity() {
-        return hddCapacity;
-    }
-
-    public void setHddCapacity(int hddCapacity) {
-        this.hddCapacity = hddCapacity;
-    }
-
-    public String getHddUnit() {
-        return hddUnit;
-    }
-
-    public void setHddUnit(String hddUnit) {
-        this.hddUnit = hddUnit;
-    }
-
-    public String getHddSerialNumber() {
-        return hddSerialNumber;
-    }
-
-    public void setHddSerialNumber(String hddSerialNumber) {
-        this.hddSerialNumber = hddSerialNumber;
-    }
-
-    public String getHddInventaryNumber() {
-        return hddInventaryNumber;
-    }
-
-    public void setHddInventaryNumber(String hddInventaryNumber) {
-        this.hddInventaryNumber = hddInventaryNumber;
-    }
 
     public String getOperationSystemName() {
         return operationSystemName;
@@ -359,6 +302,14 @@ public class SvtSystemBlockDTO extends SvtDTO {
 
     public void setOperationSystemId(List<Long> operationSystemId) {
         this.operationSystemId = operationSystemId;
+    }
+
+    public List<Long> getHddIdList() {
+        return hddIdList;
+    }
+
+    public void setHddIdList(List<Long> hddIdList) {
+        this.hddIdList = hddIdList;
     }
 
 

@@ -54,7 +54,7 @@ public abstract class SvtObjService <E extends ObjectBuingWithSerialAndInventary
       
         public void sendToStorage(E objectBuing) {
        
-        List<Place> places = placeRepo.findByLocationIdAndPlaceType(objectBuing.getPlace().getLocation().getId(), PlaceType.STORAGE);
+        List<Place> places = placeRepo.findByLocationIdAndPlaceTypeAndArchivedFalse(objectBuing.getPlace().getLocation().getId(), PlaceType.STORAGE);
         Place place = places.get(0);
         objectBuing.setPlace(place);
         repository.save(objectBuing);
@@ -62,7 +62,7 @@ public abstract class SvtObjService <E extends ObjectBuingWithSerialAndInventary
     }
         
         public Map<Location, List<E>> getSvtObjectsByPlace() {
-        Map<Location, List<E>> collect = (Map<Location, List<E>>) repository.findAll()
+        Map<Location, List<E>> collect = (Map<Location, List<E>>) repository.findByPlaceArchivedFalse()
                 .stream()
                 .collect(Collectors
                         .groupingBy((E el) -> el.getPlace()
@@ -71,7 +71,7 @@ public abstract class SvtObjService <E extends ObjectBuingWithSerialAndInventary
         return collect;
     }
           public Map<Location, List<E>> getSvtObjectsByPlaceType(PlaceType placeType) {
-        Map<Location, List<E>> collect = (Map<Location, List<E>>) repository.findByPlacePlaceTypeLikeAndArchivedFalse(placeType)
+        Map<Location, List<E>> collect = (Map<Location, List<E>>) repository.findByPlacePlaceTypeLikeAndPlaceArchivedFalse(placeType)
                 .stream()
                 .collect(Collectors
                         .groupingBy((E el) -> el.getPlace()
@@ -87,7 +87,7 @@ public abstract class SvtObjService <E extends ObjectBuingWithSerialAndInventary
         }
         
         public Map<Location, List<E>> getSvtObjectsByName(String nameEmployee, PlaceType placeType) {
-             Map<Location, List<E>> collect = (Map<Location, List<E>>) repository.findByPlaceUsernameContainingAndPlacePlaceTypeLikeAndArchivedFalse(nameEmployee, placeType)
+             Map<Location, List<E>> collect = (Map<Location, List<E>>) repository.findByPlaceUsernameContainingAndPlacePlaceTypeLikeAndPlaceArchivedFalse(nameEmployee, placeType)
                 .stream()
                 .collect(Collectors
                         .groupingBy((E el) -> el.getPlace()

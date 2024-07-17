@@ -48,8 +48,13 @@ public class SystemBlock extends ObjectBuingWithSerialAndInventary implements Se
     private Cpu cpu;
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Ram ram;
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Hdd hdd;
+    @ManyToMany(cascade = { CascadeType.ALL })
+    @JoinTable(
+        name = "Systemblock_Hdd", 
+        joinColumns = { @JoinColumn(name = "SYSTEM_BLOCK_ID") }, 
+        inverseJoinColumns = { @JoinColumn(name = "HDD_ID") }
+    )
+    private Set<Hdd> hdd = new HashSet<>();
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private VideoCard videoCard;
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
@@ -78,7 +83,7 @@ public class SystemBlock extends ObjectBuingWithSerialAndInventary implements Se
     
     
 
-    public SystemBlock(SystemBlockModel systemBlockModel, Status status, String inventaryNumber, String serialNumber, int yearCreated, Date dateExploitationBegin, String nameFromOneC, Date dateUpgrade, String numberRoom, Motherboard motherBoard, Cpu cpu, Ram ram, Hdd hdd, VideoCard videoCard, CdDrive cdDrive, SoundCard soundCard, LanCard lanCard, Keyboard keyboard, Mouse mouse, Speakers speakers, Contract contract, boolean archived, String ipAdress, Set<OperationSystem> operationSystems) {
+    public SystemBlock(SystemBlockModel systemBlockModel, Status status, String inventaryNumber, String serialNumber, int yearCreated, Date dateExploitationBegin, String nameFromOneC, Date dateUpgrade, String numberRoom, Motherboard motherBoard, Cpu cpu, Ram ram, Set<Hdd> hdd, VideoCard videoCard, CdDrive cdDrive, SoundCard soundCard, LanCard lanCard, Keyboard keyboard, Mouse mouse, Speakers speakers, Contract contract, boolean archived, String ipAdress, Set<OperationSystem> operationSystems) {
         super(status, inventaryNumber, serialNumber, contract, archived);
         this.systemBlockModel = systemBlockModel;
         this.yearCreated = yearCreated;
@@ -205,11 +210,11 @@ public class SystemBlock extends ObjectBuingWithSerialAndInventary implements Se
         this.ram = ram;
     }
 
-    public Hdd getHdd() {
+    public Set<Hdd> getHdd() {
         return hdd;
     }
 
-    public void setHdd(Hdd hdd) {
+    public void setHdd(Set<Hdd> hdd) {
         this.hdd = hdd;
     }
 

@@ -193,9 +193,13 @@ public class SvtViewController {
 
  //   @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
     @GetMapping("/places")
-    public String getPlaces(Model model) {
-
-        List<PlaceDTO> places = placeService.getPlaces();
+    public String getPlaces(Model model, @RequestParam(value = "username", required = false) String username) {
+        List<PlaceDTO> places = null;
+        if(null != username) {
+            places = placeService.getPlaceByUsername(username);
+        } else {
+            places = placeService.getPlaces();
+        }
         model.addAttribute("dtoes", places);
         
         return "places";
@@ -203,12 +207,21 @@ public class SvtViewController {
     
  //   @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
     @PostMapping("/places")
-    public void addPlace(@RequestBody PlaceDTO dto) {
+    public String addPlace(@RequestBody PlaceDTO dto) {
 
-        placeService.createPlace(dto);
-        
+        if(null != dto.getPlaceId()) {
+            placeService.updatePlace(dto);
+        } else {
+            placeService.createPlace(dto);
+        }
+        return "redirect:/places";
     }
     
+    @PostMapping("/placetoarchive")
+    public String sendPlaceToArchived(@RequestBody PlaceDTO dto) {
+        placeService.sendPlaceToArchive(dto.getPlaceId());
+        return "redirect:/places";
+    }
 
     
  //   @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
