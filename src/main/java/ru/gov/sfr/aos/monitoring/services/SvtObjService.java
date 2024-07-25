@@ -71,7 +71,7 @@ public abstract class SvtObjService <E extends ObjectBuingWithSerialAndInventary
         return collect;
     }
           public Map<Location, List<E>> getSvtObjectsByPlaceType(PlaceType placeType) {
-        Map<Location, List<E>> collect = (Map<Location, List<E>>) repository.findByPlacePlaceTypeLikeAndPlaceArchivedFalse(placeType)
+        Map<Location, List<E>> collect = (Map<Location, List<E>>) repository.findByPlacePlaceTypeLikeAndArchivedFalse(placeType)
                 .stream()
                 .collect(Collectors
                         .groupingBy((E el) -> el.getPlace()
@@ -87,7 +87,7 @@ public abstract class SvtObjService <E extends ObjectBuingWithSerialAndInventary
         }
         
         public Map<Location, List<E>> getSvtObjectsByName(String nameEmployee, PlaceType placeType) {
-             Map<Location, List<E>> collect = (Map<Location, List<E>>) repository.findByPlaceUsernameContainingAndPlacePlaceTypeLikeAndPlaceArchivedFalse(nameEmployee, placeType)
+             Map<Location, List<E>> collect = (Map<Location, List<E>>) repository.findByPlaceUsernameContainingAndPlacePlaceTypeLikeAndArchivedFalse(nameEmployee, placeType)
                 .stream()
                 .collect(Collectors
                         .groupingBy((E el) -> el.getPlace()

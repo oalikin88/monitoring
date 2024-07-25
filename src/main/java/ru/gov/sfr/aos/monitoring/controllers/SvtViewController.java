@@ -33,8 +33,12 @@ import ru.gov.sfr.aos.monitoring.entities.PhoneModel;
 import ru.gov.sfr.aos.monitoring.entities.Ram;
 import ru.gov.sfr.aos.monitoring.entities.Scanner;
 import ru.gov.sfr.aos.monitoring.entities.ScannerModel;
+import ru.gov.sfr.aos.monitoring.entities.Server;
+import ru.gov.sfr.aos.monitoring.entities.ServerModel;
 import ru.gov.sfr.aos.monitoring.entities.SoundCard;
 import ru.gov.sfr.aos.monitoring.entities.Speakers;
+import ru.gov.sfr.aos.monitoring.entities.SwitchHub;
+import ru.gov.sfr.aos.monitoring.entities.SwitchHubModel;
 import ru.gov.sfr.aos.monitoring.entities.SystemBlock;
 import ru.gov.sfr.aos.monitoring.entities.SystemBlockModel;
 import ru.gov.sfr.aos.monitoring.entities.Ups;
@@ -46,7 +50,9 @@ import ru.gov.sfr.aos.monitoring.mappers.MonitorMapper;
 import ru.gov.sfr.aos.monitoring.mappers.OperationSystemMapper;
 import ru.gov.sfr.aos.monitoring.mappers.PhoneMapper;
 import ru.gov.sfr.aos.monitoring.mappers.ScannerMapper;
+import ru.gov.sfr.aos.monitoring.mappers.ServerMapper;
 import ru.gov.sfr.aos.monitoring.mappers.SvtModelMapper;
+import ru.gov.sfr.aos.monitoring.mappers.SwitchHubMapper;
 import ru.gov.sfr.aos.monitoring.mappers.SystemBlockMapper;
 import ru.gov.sfr.aos.monitoring.mappers.UpsMapper;
 import ru.gov.sfr.aos.monitoring.models.ArchivedDto;
@@ -61,6 +67,8 @@ import ru.gov.sfr.aos.monitoring.models.RamDto;
 import ru.gov.sfr.aos.monitoring.models.SvtDTO;
 import ru.gov.sfr.aos.monitoring.models.SvtModelDto;
 import ru.gov.sfr.aos.monitoring.models.SvtScannerDTO;
+import ru.gov.sfr.aos.monitoring.models.SvtServerDTO;
+import ru.gov.sfr.aos.monitoring.models.SvtSwitchHubDTO;
 import ru.gov.sfr.aos.monitoring.models.SvtSystemBlockDTO;
 import ru.gov.sfr.aos.monitoring.repositories.BatteryTypeRepo;
 import ru.gov.sfr.aos.monitoring.repositories.SystemBlockRepo;
@@ -85,8 +93,14 @@ import ru.gov.sfr.aos.monitoring.services.RamModelService;
 import ru.gov.sfr.aos.monitoring.services.ScannerModelService;
 import ru.gov.sfr.aos.monitoring.services.ScannerOutDtoTreeService;
 import ru.gov.sfr.aos.monitoring.services.ScannerService;
+import ru.gov.sfr.aos.monitoring.services.ServerModelService;
+import ru.gov.sfr.aos.monitoring.services.ServerOutDtoTreeService;
+import ru.gov.sfr.aos.monitoring.services.ServerService;
 import ru.gov.sfr.aos.monitoring.services.SoundCardModelService;
 import ru.gov.sfr.aos.monitoring.services.SpeakersModelService;
+import ru.gov.sfr.aos.monitoring.services.SwitchHubModelService;
+import ru.gov.sfr.aos.monitoring.services.SwitchHubOutDtoTreeService;
+import ru.gov.sfr.aos.monitoring.services.SwitchHubService;
 import ru.gov.sfr.aos.monitoring.services.SystemBlockModelService;
 import ru.gov.sfr.aos.monitoring.services.SystemBlockOutDtoTreeService;
 import ru.gov.sfr.aos.monitoring.services.SystemBlockService;
@@ -182,6 +196,22 @@ public class SvtViewController {
     private ScannerOutDtoTreeService scannerOutDtoTreeService;
     @Autowired
     private ScannerMapper scannerMapper;
+    @Autowired
+    private ServerModelService serverModelService;
+    @Autowired
+    private ServerService serverService;
+    @Autowired
+    private ServerOutDtoTreeService serverOutDtoTreeService;
+    @Autowired
+    private ServerMapper serverMapper;
+    @Autowired
+    private SwitchHubModelService switchHubModelService;
+    @Autowired
+    private SwitchHubService switchHubService;
+    @Autowired
+    private SwitchHubOutDtoTreeService switchHubOutDtoTreeService;
+    @Autowired
+    private SwitchHubMapper switchHubMapper;
     
     
 //  @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
@@ -350,6 +380,8 @@ public class SvtViewController {
         model.addAttribute("dtoes", treeSvtDtoByEmployee);
         model.addAttribute("dtoesStorage", treeSvtDtoByStorage);
         model.addAttribute("attribute", "phones");
+        model.addAttribute("placeAttribute", "employee");
+        model.addAttribute("namePage","Телефоны");
         
         return "svtobj";
     }
@@ -383,6 +415,8 @@ public class SvtViewController {
         model.addAttribute("dtoes", treeSvtDtoByEmployee);
         model.addAttribute("dtoesStorage", treeSvtDtoByStorage);
         model.addAttribute("attribute", "ups");
+        model.addAttribute("placeAttribute", "employee");
+        model.addAttribute("namePage","ИБП");
         
         return "svtobj";
     }
@@ -516,6 +550,8 @@ public class SvtViewController {
         model.addAttribute("dtoes", treeSvtDtoByEmployee);
         model.addAttribute("dtoesStorage", treeSvtDtoByStorage);
         model.addAttribute("attribute", "monitors");
+        model.addAttribute("placeAttribute", "employee");
+        model.addAttribute("namePage","Мониторы");
         return "svtobj";
     }
   
@@ -591,6 +627,8 @@ public class SvtViewController {
         model.addAttribute("dtoes", treeSvtDtoByEmployee);
         model.addAttribute("dtoesStorage", treeSvtDtoByStorage);
         model.addAttribute("attribute", "systemblock");
+        model.addAttribute("placeAttribute", "employee");
+        model.addAttribute("namePage","Системные блоки");
         
         return "svtobj";
     }
@@ -960,6 +998,8 @@ public class SvtViewController {
         model.addAttribute("dtoes", treeSvtDtoByEmployee);
         model.addAttribute("dtoesStorage", treeSvtDtoByStorage);
         model.addAttribute("attribute", "scanner");
+        model.addAttribute("placeAttribute", "employee");
+        model.addAttribute("namePage","Сканеры");
         
         return "svtobj";
     }
@@ -1004,6 +1044,198 @@ public class SvtViewController {
     public String sendScannerToArchive(@RequestBody ArchivedDto dto) throws ObjectAlreadyExists {
         scannerService.svtObjToArchive(dto);
         return "redirect:/scanner";
+    }
+    
+     //      @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
+    @GetMapping("/mserver")
+    public String getModelServer(Model model) {
+
+        List<ServerModel> serverModels = serverModelService.getAllModels();
+        List<SvtModelDto> getServerModelsDtoes = svtModelMapper.getModelServerDtoes(serverModels);
+        model.addAttribute("dtoes", getServerModelsDtoes);
+        model.addAttribute("namePage", "Модели серверов");
+        model.addAttribute("attribute", "mserver");
+        
+        return "models";
+    }
+    
+//    @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
+    @PostMapping("/mserver")
+    public String saveModelServer(@RequestBody SvtModelDto dto) throws ObjectAlreadyExists {
+        ServerModel serverModel = svtModelMapper.getModelServer(dto);
+        serverModelService.saveModel(serverModel);
+        return "redirect:/mserver";
+        
+    }
+    
+    
+    //  @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
+    @GetMapping("/server")
+    public String getServers(Model model, @RequestParam(value="username",required=false) String username) {
+        Map<Location, List<Server>> svtObjectsByEmployee = null;
+        if(null != username) {
+            svtObjectsByEmployee = serverService.getSvtObjectsByName(username, PlaceType.SERVERROOM);
+        } else {
+            svtObjectsByEmployee = serverService.getSvtObjectsByPlaceType(PlaceType.SERVERROOM);
+        }
+        List<LocationByTreeDto> treeSvtDtoByEmployee = serverOutDtoTreeService.getTreeSvtDtoByPlaceType(svtObjectsByEmployee)
+                .stream()
+                .sorted((o1, o2) -> o1.getLocationName().compareTo(o2.getLocationName()))
+                .collect(Collectors.toList());
+        Map<Location, List<Server>> svtObjectsByStorage = null;
+        
+        if(null != username) {
+            svtObjectsByStorage = serverService.getSvtObjectsByName(username, PlaceType.STORAGE);
+        } else {
+            svtObjectsByStorage = serverService.getSvtObjectsByPlaceType(PlaceType.STORAGE);
+        }
+        List<LocationByTreeDto> treeSvtDtoByStorage = serverOutDtoTreeService.getTreeSvtDtoByPlaceType(svtObjectsByStorage)
+                .stream()
+                .sorted((o1, o2) -> o1.getLocationName().compareTo(o2.getLocationName()))
+                .collect(Collectors.toList());
+        
+        model.addAttribute("dtoes", treeSvtDtoByEmployee);
+        model.addAttribute("dtoesStorage", treeSvtDtoByStorage);
+        model.addAttribute("attribute", "server");
+        model.addAttribute("placeAttribute", "serverroom");
+        model.addAttribute("namePage","Серверы");
+        
+        return "svtobj";
+    }
+    
+ 
+    
+ //   @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
+    @PostMapping("/server")
+    public String saveServer(@RequestBody SvtServerDTO dto) throws ObjectAlreadyExists {
+        serverService.createSvtObj(dto);
+        return "redirect:/server";
+    }
+    
+    
+        //      @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
+    @PostMapping("/servertostor")
+    public String sendToStorageServer (@RequestBody SvtServerDTO dto) throws ObjectAlreadyExists {
+            // SystemBlock findById = sysrepo.findById(dto.getId()).get();
+            Server server = serverMapper.getEntityFromDto(dto);
+        serverService.sendToStorage(server);
+        return "redirect:/server";
+        
+    }
+    
+     //   @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
+    @PostMapping("/serverbackstor")
+    public String backFromStorageServer (@RequestBody SvtServerDTO dto) throws ObjectAlreadyExists {
+            Server server = serverMapper.getEntityFromDto(dto);
+        serverService.backFromStorage(server, dto.getPlaceId());
+        return "redirect:/server";
+        
+    }
+    
+     @PostMapping("/updserver")
+    public String updateServer (@RequestBody SvtServerDTO dto) throws ObjectAlreadyExists {
+        serverService.updateSvtObj(dto);
+        return "redirect:/server";
+     
+    }
+    
+    
+    //   @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
+    @PostMapping("/serverarchived")
+    public String sendServerToArchive(@RequestBody ArchivedDto dto) throws ObjectAlreadyExists {
+        serverService.svtObjToArchive(dto);
+        return "redirect:/server";
+    }
+    
+    
+         //      @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
+    @GetMapping("/mswitch")
+    public String getModelSwitchHub(Model model) {
+
+        List<SwitchHubModel> switchHubModels = switchHubModelService.getAllModels();
+        List<SvtModelDto> getSwitchHubModelsDtoes = svtModelMapper.getModelSwitchHubDtoes(switchHubModels);
+        model.addAttribute("dtoes", getSwitchHubModelsDtoes);
+        model.addAttribute("namePage", "Модели коммутаторов/концентраторов");
+        model.addAttribute("attribute", "mswitch");
+        
+        return "models";
+    }
+    
+//    @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
+    @PostMapping("/mswitch")
+    public String saveModelSwitchHub(@RequestBody SvtModelDto dto) throws ObjectAlreadyExists {
+        SwitchHubModel switchHubModel = svtModelMapper.getModelSwitchHub(dto);
+        switchHubModelService.saveModel(switchHubModel);
+        return "redirect:/mswitch";
+        
+    }
+    
+    
+     //  @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
+    @GetMapping("/switch")
+    public String getSwitchHub(Model model, @RequestParam(value="username",required=false) String username) {
+        Map<Location, List<SwitchHub>> svtObjectsByEmployee = null;
+        if(null != username) {
+            svtObjectsByEmployee = switchHubService.getSvtObjectsByName(username, PlaceType.SERVERROOM);
+        } else {
+            svtObjectsByEmployee = switchHubService.getSvtObjectsByPlaceType(PlaceType.SERVERROOM);
+        }
+        List<LocationByTreeDto> treeSvtDtoByEmployee = switchHubOutDtoTreeService.getTreeSvtDtoByPlaceType(svtObjectsByEmployee)
+                .stream()
+                .sorted((o1, o2) -> o1.getLocationName().compareTo(o2.getLocationName()))
+                .collect(Collectors.toList());
+        Map<Location, List<SwitchHub>> svtObjectsByStorage = null;
+        
+        if(null != username) {
+            svtObjectsByStorage = switchHubService.getSvtObjectsByName(username, PlaceType.STORAGE);
+        } else {
+            svtObjectsByStorage = switchHubService.getSvtObjectsByPlaceType(PlaceType.STORAGE);
+        }
+        List<LocationByTreeDto> treeSvtDtoByStorage = switchHubOutDtoTreeService.getTreeSvtDtoByPlaceType(svtObjectsByStorage)
+                .stream()
+                .sorted((o1, o2) -> o1.getLocationName().compareTo(o2.getLocationName()))
+                .collect(Collectors.toList());
+        
+        model.addAttribute("dtoes", treeSvtDtoByEmployee);
+        model.addAttribute("dtoesStorage", treeSvtDtoByStorage);
+        model.addAttribute("attribute", "switch");
+        model.addAttribute("placeAttribute", "serverroom");
+        model.addAttribute("namePage","Коммутаторы/Концентраторы");
+        
+        return "svtobj";
+    }
+    
+ //   @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
+    @PostMapping("/switch")
+    public String saveSwitchHub(@RequestBody SvtSwitchHubDTO dto) throws ObjectAlreadyExists {
+        switchHubService.createSvtObj(dto);
+        return "redirect:/switch";
+    }
+    
+           //      @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
+    @PostMapping("/switchtostor")
+    public String sendToStorageSwitchHub (@RequestBody SvtSwitchHubDTO dto) throws ObjectAlreadyExists {
+            // SystemBlock findById = sysrepo.findById(dto.getId()).get();
+            SwitchHub switchHub = switchHubMapper.getEntityFromDto(dto);
+        switchHubService.sendToStorage(switchHub);
+        return "redirect:/switch";
+        
+    }
+    
+     //   @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
+    @PostMapping("/switchbackstor")
+    public String backFromStorageSwitchHub (@RequestBody SvtSwitchHubDTO dto) throws ObjectAlreadyExists {
+            SwitchHub switchHub = switchHubMapper.getEntityFromDto(dto);
+        switchHubService.backFromStorage(switchHub, dto.getPlaceId());
+        return "redirect:/switch";
+        
+    }
+    
+     @PostMapping("/updswitch")
+    public String updateSwitchHub (@RequestBody SvtSwitchHubDTO dto) throws ObjectAlreadyExists {
+        switchHubService.updateSvtObj(dto);
+        return "redirect:/switch";
+     
     }
     
 }

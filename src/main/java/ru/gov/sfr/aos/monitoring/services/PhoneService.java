@@ -104,7 +104,7 @@ public class PhoneService extends SvtObjService<Phone, PhoneRepo, SvtDTO>{
         phoneFromDB.setDateExploitationBegin(dto.getDateExploitationBegin());
         phoneFromDB.setInventaryNumber(dto.getInventaryNumber());
         phoneFromDB.setSerialNumber(dto.getSerialNumber());
-        
+        phoneFromDB.setPhoneNumber(dto.getPhoneNumber());
         phoneFromDB.setPlace(placeFromDto);
         switch (dto.getStatus()) {
             case "REPAIR":

@@ -71,28 +71,28 @@ btnSaveModelPhone.addEventListener('click', function() {
                 dto.name = document.querySelector('#modelNameInput').value;
                 dto.license = $("#licenseFlag")[0].checked;
                 break;
+            case "mserver":
+                link = "/mserver/";
+                break;
+            case "mswitch":
+                link = "/mswitch/";
+                break;
         } 
-         
                 $.ajax({
         type: "POST",
         url: link,
         data: JSON.stringify(dto),
         async: false,
         success: function () {
-            
             window.location.reload();
         },
         error: function(callback) {
             if($('#exceptionContainer').length == 0) {
              $('#modalBody').append(callback.responseText);
          } else {
-             
              $('#exceptionContainer').replaceWith(callback.responseText);
-            
          }
-
             new bootstrap.Modal(document.getElementById('modalError')).show();
-           // $('#resultInfo').append(callback.responseText);
   }, 
         processData: false,
         contentType: 'application/json'

@@ -20,7 +20,13 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
     </title>
     <title th:case="'scanner'">
         Сканеры
-    </title>        
+    </title> 
+    <title th:case="'server'">
+        Серверы
+    </title> 
+        <title th:case="'switch'">
+        Коммутаторы/Концентраторы
+    </title> 
 </th:block>
         
         <meta charset="UTF-8">
@@ -39,7 +45,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
             <aside th:insert="svt :: sidebar"></aside>
             <div class="main p-3">
                 <div class="row mb-2" id="top-panel">
-                <div class="col-1">
+                <div class="col-2">
                     <th:block th:switch="${attribute}">
                         <h1 class="ms-2 ps-2" th:case="'phones'">
                             Телефоны
@@ -56,6 +62,12 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                           <h1 class="ms-2 ps-2" th:case="'scanner'">
                             Сканеры
                         </h1>
+                        <h1 class="ms-2 ps-2" th:case="'server'">
+                            Серверы
+                        </h1>
+                        <h1 class="ms-2 ps-2" th:case="'switch'">
+                            Коммутаторы/Концентраторы
+                        </h1>
                     </th:block>
                 </div>
                 
@@ -63,7 +75,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                         <!-- Button trigger modal add place-->
                         <button type="button" class="btn btn-primary btn-sm addPlaceBtn" id="addPlaceBtn" data-bs-toggle="modal" data-bs-target="#addPlaceModal">Добавить</button>
                     </div>
-                    <div class="col-10">
+                    <div class="col-9">
                         <div class="input-group mb-3" id="searchSvtObjDiv">
                             <input type="text" class="form-control form-control-sm" placeholder="Поиск по ФИО" aria-label="searchModel" aria-describedby="basic-addon1" id="searchSvtObjInput">
                             <span class="input-group-text" id="searchSvtObjBtn">
@@ -83,7 +95,18 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                                 <li class="department">
                                     <details>
                                         <summary th:text="${innerDto.department}"></summary>
-                                         <div class="row fw-bold mt-3 mb-3">
+                                        <th:block th:switch="${attribute}">
+                                         
+                                            <div class="row fw-bold mt-3 mb-3" th:case="switch">
+                                                    <div class="col">Модель</div>
+                                                    <div class="col">ФИО</div>
+                                                    <div class="col">Серийный номер</div>
+                                                    <div class="col">Инвентарный номер</div>
+                                                    <div class="col">Тип</div>
+                                                    <div class="col">Кол-во портов</div>
+                                                    <div class="col">Состояние</div>
+                                                </div>
+                                            <div class="row fw-bold mt-3 mb-3" th:case="*">
                                                     <div class="col">Модель</div>
                                                     <div class="col">ФИО</div>
                                                     <div class="col">Серийный номер</div>
@@ -103,17 +126,43 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                                                         </div>
                                                     </th:block>
                                                 </div>
+                                            </th:block>
+                                        
                                         <ul th:each="inInnerDto, stat : ${innerDto.dtoes}">
                                            
                                             <li  class="element" th:attr="id=${inInnerDto.id}" data-bs-toggle="modal" data-bs-target="#addPlaceModal">
-                                                
-                                                <div class="row mb-2 d-flex align-items-center text-start phone">
+                                                 <th:block th:switch="${attribute}">
+                                                           <div class="row mb-2 d-flex align-items-center text-start phone" th:case="switch">
+                                                <div class="col" th:text="${stat.count} + '. ' + ${inInnerDto.model}"></div>
+                                                <div class="col" th:text="${inInnerDto.placeName}"></div>
+                                                <div class="col" th:text="${inInnerDto.serialNumber}"></div>
+                                                <div class="col" th:text="${inInnerDto.inventaryNumber}"></div>
+                                                <th:block th:switch="${inInnerDto.switchHubType}">
+                                                <div class="col" th:case="SWITCH" th:text="Коммутатор"></div>
+                                                <div class="col" th:case="HUB" th:text="Концентратор"></div>
+                                                </th:block>
+                                                <div class="col" th:text="${inInnerDto.portAmount}"></div>
+                                                <th:block th:switch="${inInnerDto.status}">
+                                                <div class="col" th:case="OK" th:text="Исправен"></div>
+                                                <div class="col" th:case="REPAIR" th:text="Ремонт"></div>
+                                                <div class="col" th:case="MONITORING" th:text="Списание"></div>
+                                                <div class="col" th:case="DEFECTIVE" th:text="Неисправен"></div>
+                                                <div class="col" th:case="UTILIZATION" th:text="Утилизирован"></div>
+                                                </th:block>
+                                             </div>
+                                                <div class="row mb-2 d-flex align-items-center text-start phone" th:case="*">
                                                 <div class="col" th:text="${stat.count} + '. ' + ${inInnerDto.model}"></div>
                                                 <div class="col" th:text="${inInnerDto.placeName}"></div>
                                                 <div class="col" th:text="${inInnerDto.serialNumber}"></div>
                                                 <div class="col" th:text="${inInnerDto.inventaryNumber}"></div>
                                                 <div class="col" th:text="${#dates.format(inInnerDto.dateExploitationBegin, 'dd.MM.yyyy')}"></div>
-                                                <div class="col" th:text="${inInnerDto.status}"></div>
+                                                <th:block th:switch="${inInnerDto.status}">
+                                                <div class="col" th:case="OK" th:text="Исправен"></div>
+                                                <div class="col" th:case="REPAIR" th:text="Ремонт"></div>
+                                                <div class="col" th:case="MONITORING" th:text="Списание"></div>
+                                                <div class="col" th:case="DEFECTIVE" th:text="Неисправен"></div>
+                                                <div class="col" th:case="UTILIZATION" th:text="Утилизирован"></div>
+                                                </th:block>
                                                 <div class="col" th:text="${inInnerDto.yearCreated}"></div>
                                                 <th:block th:switch="${attribute}">
                                                         <div class="col" th:text="${inInnerDto.phoneNumber}" th:case="'phones'">
@@ -133,13 +182,14 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                                                         <div class="col" th:case="'ups'">
                                                            <span th:text="${inInnerDto.yearReplacement}"></span>
                                                         </div>
-                                                    </th:block>
-                                                
-                                                </div>
-                                                
+                                                    </th:block> 
+                                             </div>
+                                               
+                                               </th:block>         
                                             </li>
+                                           
                                         </ul>
-
+                                                
                                     </details>
                                 </li>
                             </ul>
@@ -147,6 +197,9 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                         </details>
                     </li>
                 </ul>
+                    <div th:if="${dtoes.size} == 0">
+                    <h3 class="mt-5 pt-5 text-center">В базе данных отсутствуют [[${namePage.substring(0, 1).toLowerCase() + namePage.substring(1)}]]</h3>
+                </div>
                     </div>
             </div>
         </div>
@@ -157,307 +210,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
         <div class="modal fade" id="addPlaceModal" data-bs-backdrop="static" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-lg modal-dialog-centered">
                 <div class="modal-content" id="modalContent">
-<!--                    <div class="modal-header">
-                        
-                        <th:block th:switch="${attribute}">
-                        <h5 class="modal-title fs-5" id="exampleModalLabel" th:case="'phones'">
-                            Добавить телефон
-                        </h5>
-                        <h5 class="modal-title fs-5" id="exampleModalLabel" th:case="'monitors'">
-                            Добавить монитор
-                        </h5>
-                        <h5 class="modal-title fs-5" id="exampleModalLabel" th:case="'ups'">
-                            Добавить ИБП
-                        </h5>
-                            <h5 class="modal-title fs-5" id="exampleModalLabel" th:case="'systemblock'">
-                            Добавить системный блок
-                        </h5>
-                              <h5 class="modal-title fs-5" id="exampleModalLabel" th:case="'scanner'">
-                            Добавить сканер
-                        </h5>
-                    </th:block>
-                        
-                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close" id="closeBtn"></button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="container" id="modalContent">
-                           
-                            
-                            <div class="row mt-2">
-                                <div class="col">Район</div>
-                                <div class="col">
-                                    <select class="form-select form-select-sm" id="locationSelect" aria-label="Default select example" >
 
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="row mt-2">
-                                <div class="col">Отдел</div>
-                                <div class="col">
-                                    <select class="form-select form-select-sm" id="departmentSelect" aria-label="Default select example" >
-
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="row mt-2">
-                                <div class="col">ФИО</div>
-                                <div class="col">
-                                    <select class="form-select form-select-sm" id="placeSelect" aria-label="Default select example" >
-
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="row mt-2">
-                                <div class="col">Модель</div>
-                                <div class="col">
-                                    <select class="form-select form-select-sm" id="modelSelect" aria-label="Default select example" >
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="row mt-2">
-                                <div class="col">Состояние</div>
-                                <div class="col">
-                                    <select class="form-select form-select-sm" id="statusSelect" aria-label="Default select example" >
-                                        <option value="OK" selected="">Исправен</option>
-                                        <option value="REPAIR">Ремонт</option>
-                                        <option value="MONITORING">Списание</option>
-                                        <option value="DEFECTIVE">Неисправен</option>
-                                        <option value="UTILIZATION">Утилизирован</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="row mt-2">
-                                <div class="col">Инвентарный номер</div>
-                                <div class="col">
-                                    <input class="form-control form-control-sm" type="text" placeholder="введите инвентарный номер" aria-label="inventaryNumber" id="inventaryNumber">
-                                </div>
-                            </div>
-                            <div class="row mt-2">
-                                <div class="col">Серийный номер</div>
-                                <div class="col">
-                                    <input class="form-control form-control-sm" type="text" placeholder="введите серийный номер" aria-label="serialNumber" id="serialNumber">
-                                </div>
-                            </div>
-                            
-                            
-
-                            <div class="row mt-2">
-                                <div class="col">Год выпуска</div>
-                                <div class="col">
-                                    <select class="form-select form-select-sm" id="dateCreateSelect" aria-label="dateCreate">
-                                    </select>
-                                </div>
-                            </div>
-
-                            <div class="row mt-2">
-                                <div class="col">Дата ввода в эксплуатацию</div>
-                                <div class="col">
-                                    <input type="date" class="form-control form-control-sm" name="startExploitation" placeholder="date" id="startExploitation">
-                                </div>
-                            </div>
-                            
-                            <th:block th:switch="${attribute}">
-                          <div th:case="'phones'">
-                                <div class="row mt-2">
-                                <div class="col">Внутренний номер</div>
-                                <div class="col">
-                                    <input class="form-control form-control-sm" type="text" placeholder="введите внутренний номер" aria-label="innerCallNumber" id="innerCallNumber">
-                                </div>
-                            </div>
-                              </div>
-                        <div th:case="'monitors'">
-                            <div class="row mt-2">
-                                <div class="col">Наименование в ведомости ОС</div>
-                                <div class="col">
-                                    <input class="form-control form-control-sm" type="text" placeholder="введите наименование" aria-label="nameFromOneC" id="nameFromOneC">
-                                </div>
-                            </div>
-                            <div class="row mt-2">
-                                <div class="col">По ведомости ОС</div>
-                                <div class="col">
-                                    <select class="form-select form-select-sm" id="baseTypeSelect" aria-label="baseTypeSelect" >
-                                        <option value="ARM" selected="">В составе ПК, АРМ</option>
-                                        <option value="SINGLE">Отдельно</option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                        <div th:case="'ups'">
-                            <div class="row mt-2">
-                                <div class="col">Год замены батареи</div>
-                                <div class="col">
-                                    <select class="form-select form-select-sm" id="dateReplaceSelect" aria-label="date replace select">
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="row mt-2">
-                                <div class="col">Тип батареи</div>
-                                <div class="col">
-                                    <select class="form-select form-select-sm" id="batteryTypeSelect" aria-label="Default select example" >
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="row mt-2">
-                                <div class="col">Количество батарей</div>
-                                <div class="col">
-                                    <input class="form-control form-control-sm" type="number" min="1" max="100" value="1" aria-label="battery amount" id="batteryAmount">
-                                </div>
-                            </div>
-                        </div>
-                                <div th:case="'scanner'">
-                            <div class="row mt-2">
-                                <div class="col">ip адрес</div>
-                                <div class="col">
-                                    <input type="text" class="form-control form-select-sm" id="ipAdress" name="ipAdress" placeholder="xxx.xxx.xxx.xxx" pattern="^([0-9]{1,3}\.){3}[0-9]{1,3}$" >
-                                </div>
-                            </div>
-                            <div class="row mt-2">
-                                <div class="col">Кабинет</div>
-                                <div class="col">
-                                    <input type="text" class="form-control form-select-sm" id="numberRoom" name="numberRoom" placeholder="укажите расположение">
-                                </div>
-                            </div>
-                            <div class="row mt-2">
-                                <div class="col">Наименование по ведомости ОС</div>
-                                <div class="col">
-                                    <textarea class="form-control" id="nameFromOneC" name="nameFromOneC"  ></textarea>
-                                </div>
-                            </div>
-                        </div>
-                                <div th:case="'systemblock'">
-                                    
-                                <div class="row mt-2">
-                                <div class="col">Кабинет</div>
-                                <div class="col">
-                                     <input type="text" class="form-control form-select-sm" id="numberRoom" name="numberRoom" placeholder="укажите расположение">
-                                </div>
-                            </div>    
-                                    
-                                    <div class="row mt-2">
-                                <div class="col">Наименование по ведомости ОС</div>
-                                <div class="col">
-                                    <textarea class="form-control" id="nameFromOneC" name="nameFromOneC"  ></textarea>
-                                </div>
-                            </div>
-                                    
-                                    <div class="row mt-2">
-                                <div class="col">Операционная система</div>
-                                <div class="col">
-                                    <select class="form-select form-select-sm" id="osSelect" aria-label="os select" >
-                                    </select>
-                                </div>
-                            </div>
-                                    
-                                     <div class="row mt-2">
-                                <div class="col">ip адрес</div>
-                                <div class="col">
-                                     <input type="text" class="form-control form-select-sm" id="ipAdress" name="ipAdress" placeholder="xxx.xxx.xxx.xxx" pattern="^([0-9]{1,3}\.){3}[0-9]{1,3}$" >
-                                </div>
-                            </div>
-                                      <div class="row mt-2">
-                                <div class="col">Дата модернизации</div>
-                                <div class="col">
-                                    <input type="date" class="form-control form-control-sm" name="dateUpgrade" placeholder="дата модернизации" id="dateUpgrade">
-                                </div>
-                            </div>    
-                                    
-                                    <div class="row mt-2 ">
-                                        <div class="col text-center fw-bold">
-                                            <span>
-                                                Перечень комплектующих
-                                            </span>
-                                            </div>
-                                        
-                                    </div>
-                            <div class="row mt-2">
-                                <div class="col">Материнская плата</div>
-                                <div class="col">
-                                    <select class="form-select form-select-sm" id="motherboardSelect" aria-label="motherboard select">
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="row mt-2">
-                                <div class="col">Процессор</div>
-                                <div class="col">
-                                    <select class="form-select form-select-sm" id="cpuSelect" aria-label="cpu select" >
-                                    </select>
-                                </div>
-                            </div>
-                                    <div class="row mt-2">
-                                <div class="col">ОЗУ</div>
-                                <div class="col">
-                                    <select class="form-select form-select-sm" id="ramSelect" aria-label="ram select" >
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="row mt-2">
-                                <div class="col">НЖМД</div>
-                                <div class="col">
-                                    <select class="form-select form-select-sm" id="hddSelect" aria-label="hdd select" >
-                                    </select>
-                                </div>
-                            </div>
-                                    <div class="row mt-2">
-                                <div class="col">Видеоадаптер</div>
-                                <div class="col">
-                                    <select class="form-select form-select-sm" id="videoCardSelect" aria-label="video card select" >
-                                    </select>
-                                </div>
-                            </div>
-                                    <div class="row mt-2">
-                                <div class="col">Звуковая карта</div>
-                                <div class="col">
-                                    <select class="form-select form-select-sm" id="soundCardSelect" aria-label="sound card select" >
-                                    </select>
-                                </div>
-                            </div>
-                                 <div class="row mt-2">
-                                <div class="col">Сетевая карта</div>
-                                <div class="col">
-                                    <select class="form-select form-select-sm" id="lanCardSelect" aria-label="lan card select" >
-                                    </select>
-                                </div>
-                            </div>
-                                    <div class="row mt-2">
-                                <div class="col">Привод</div>
-                                <div class="col">
-                                    <select class="form-select form-select-sm" id="cdDriveSelect" aria-label="keyboard select">
-                                    </select>
-                                </div>
-                            </div>
-                                    <div class="row mt-2">
-                                <div class="col">Клавиатура</div>
-                                <div class="col">
-                                    <select class="form-select form-select-sm" id="keyboardSelect" aria-label="keyboard select">
-                                    </select>
-                                </div>
-                            </div>
-                                    
-                                    <div class="row mt-2">
-                                <div class="col">Мышь</div>
-                                <div class="col">
-                                    <select class="form-select form-select-sm" id="mouseSelect" aria-label="mouse select">
-                                    </select>
-                                </div>
-                            </div>
-                                    <div class="row mt-2">
-                                <div class="col">Колонки</div>
-                                <div class="col">
-                                    <select class="form-select form-select-sm" id="speakersSelect" aria-label="speakers select">
-                                    </select>
-                                </div>
-                            </div>
-                              
-                        </div>
-                    </th:block>
-
-                        </div>
-                    </div>
-
-                    <div class="modal-footer svtObjModalFooter">
-                        <button type="button" class="btn btn-secondary btn-sm"  data-bs-dismiss="modal">Отменить</button>
-                        <button type="button" class="btn btn-primary btn-sm" id="btnSave">Сохранить</button>
-                    </div>-->
 
                 </div>
 
@@ -503,6 +256,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                 <script th:inline="javascript">                
                                 let storageDtoes = [[${dtoesStorage}]];
                                 let attrib = [[${attribute}]];
+                                let placeAttrib = [[${placeAttribute}]];
                                 let dtoes = [[${dtoes}]];
                 </script>
         

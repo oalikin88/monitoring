@@ -52,7 +52,7 @@ import ru.gov.sfr.aos.monitoring.repositories.VideoCardRepo;
  */
 
 @Service
-public class SystemBlockService extends SvtObjService<SystemBlock, SystemBlockRepo, SvtSystemBlockDTO>{
+public class SystemBlockService extends SvtObjService <SystemBlock, SystemBlockRepo, SvtSystemBlockDTO> {
     @Autowired
     private SystemBlockRepo systemBlockRepo;
     @Autowired

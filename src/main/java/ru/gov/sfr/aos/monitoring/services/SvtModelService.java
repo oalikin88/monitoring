@@ -6,6 +6,7 @@ package ru.gov.sfr.aos.monitoring.services;
 
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import ru.gov.sfr.aos.monitoring.entities.Ram;
 import ru.gov.sfr.aos.monitoring.entities.SvtModel;
 import ru.gov.sfr.aos.monitoring.exceptions.ObjectAlreadyExists;
 import ru.gov.sfr.aos.monitoring.repositories.SvtModelsRepo;
@@ -29,12 +30,28 @@ public abstract class SvtModelService <E extends SvtModel, R extends SvtModelsRe
     }
 
     public void saveModel(SvtModel e) throws ObjectAlreadyExists {
-
+        
         List<? extends SvtModel> list = repository.findByModelIgnoreCase(e.getModel());
         if (list.isEmpty()) {
             repository.save(e);
         } else {
-            throw new ObjectAlreadyExists("такая модель уже есть в базе данных");
+            if(e instanceof Ram) {
+                boolean flag = false;
+                for(Ram ram : (List<Ram>)list) {
+                    if(((Ram) e).getCapacity() == ram.getCapacity()) {
+                        flag = true;
+                    }
+                    
+                }
+                if(!flag) {
+                    repository.save(e);
+                } else {
+                   throw new ObjectAlreadyExists("такая модель уже есть в базе данных"); 
+                }
+            } else {
+                throw new ObjectAlreadyExists("такая модель уже есть в базе данных");
+            }
+            
         }
     }
 

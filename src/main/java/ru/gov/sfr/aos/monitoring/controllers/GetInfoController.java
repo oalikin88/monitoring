@@ -31,8 +31,12 @@ import ru.gov.sfr.aos.monitoring.entities.PhoneModel;
 import ru.gov.sfr.aos.monitoring.entities.Ram;
 import ru.gov.sfr.aos.monitoring.entities.Scanner;
 import ru.gov.sfr.aos.monitoring.entities.ScannerModel;
+import ru.gov.sfr.aos.monitoring.entities.Server;
+import ru.gov.sfr.aos.monitoring.entities.ServerModel;
 import ru.gov.sfr.aos.monitoring.entities.SoundCard;
 import ru.gov.sfr.aos.monitoring.entities.Speakers;
+import ru.gov.sfr.aos.monitoring.entities.SwitchHub;
+import ru.gov.sfr.aos.monitoring.entities.SwitchHubModel;
 import ru.gov.sfr.aos.monitoring.entities.SystemBlock;
 import ru.gov.sfr.aos.monitoring.entities.SystemBlockModel;
 import ru.gov.sfr.aos.monitoring.entities.Ups;
@@ -58,14 +62,19 @@ import ru.gov.sfr.aos.monitoring.services.PhoneService;
 import ru.gov.sfr.aos.monitoring.services.PlaceService;
 import ru.gov.sfr.aos.monitoring.mappers.PhoneMapper;
 import ru.gov.sfr.aos.monitoring.mappers.ScannerMapper;
+import ru.gov.sfr.aos.monitoring.mappers.ServerMapper;
+import ru.gov.sfr.aos.monitoring.mappers.SwitchHubMapper;
 import ru.gov.sfr.aos.monitoring.mappers.SystemBlockMapper;
 import ru.gov.sfr.aos.monitoring.mappers.UpsMapper;
 import ru.gov.sfr.aos.monitoring.models.BatteryTypeDto;
 import ru.gov.sfr.aos.monitoring.models.CpuModelDto;
+import ru.gov.sfr.aos.monitoring.models.DepDto;
 import ru.gov.sfr.aos.monitoring.models.HddDto;
 import ru.gov.sfr.aos.monitoring.models.OperationSystemDto;
 import ru.gov.sfr.aos.monitoring.models.RamDto;
 import ru.gov.sfr.aos.monitoring.models.SvtScannerDTO;
+import ru.gov.sfr.aos.monitoring.models.SvtServerDTO;
+import ru.gov.sfr.aos.monitoring.models.SvtSwitchHubDTO;
 import ru.gov.sfr.aos.monitoring.models.SvtSystemBlockDTO;
 import ru.gov.sfr.aos.monitoring.repositories.BatteryTypeRepo;
 import ru.gov.sfr.aos.monitoring.services.BatteryTypeService;
@@ -81,8 +90,12 @@ import ru.gov.sfr.aos.monitoring.services.OperationSystemService;
 import ru.gov.sfr.aos.monitoring.services.RamModelService;
 import ru.gov.sfr.aos.monitoring.services.ScannerModelService;
 import ru.gov.sfr.aos.monitoring.services.ScannerService;
+import ru.gov.sfr.aos.monitoring.services.ServerModelService;
+import ru.gov.sfr.aos.monitoring.services.ServerService;
 import ru.gov.sfr.aos.monitoring.services.SoundCardModelService;
 import ru.gov.sfr.aos.monitoring.services.SpeakersModelService;
+import ru.gov.sfr.aos.monitoring.services.SwitchHubModelService;
+import ru.gov.sfr.aos.monitoring.services.SwitchHubService;
 import ru.gov.sfr.aos.monitoring.services.SystemBlockModelService;
 import ru.gov.sfr.aos.monitoring.services.SystemBlockService;
 import ru.gov.sfr.aos.monitoring.services.UpsModelService;
@@ -172,7 +185,18 @@ public class GetInfoController {
     private ScannerMapper scannerMapper;
     @Autowired
     private ScannerModelService scannerModelService;
-
+    @Autowired
+    private ServerModelService serverModelService;
+    @Autowired
+    private ServerMapper serverMapper;
+    @Autowired
+    private ServerService serverService;
+    @Autowired
+    private SwitchHubModelService switchHubModelService;
+    @Autowired
+    private SwitchHubService switchHubService;
+    @Autowired
+    private SwitchHubMapper switchHubMapper;
 
     @GetMapping("/getinfooo")
     public List<EmployeeDTO> getEmpl() {
@@ -203,9 +227,74 @@ public class GetInfoController {
         List<LocationDTO> locations = locationService.getAllLocations();
         return locations;
     }
+//
+    @GetMapping("/locplacetype")
+    public List<LocationDTO> getLocByPlaceType(String placeType) {
+        PlaceType currentPlaceType = null;
+        switch (placeType) {
+            case "EMPLOYEE":
+                currentPlaceType = PlaceType.EMPLOYEE;
+                break;
+            case "SERVERROOM":
+                currentPlaceType = PlaceType.SERVERROOM;
+                break;
+            case "STORAGE":
+                currentPlaceType = PlaceType.STORAGE;
+                break;
+            case "OFFICEEQUIPMENT":
+                currentPlaceType = PlaceType.OFFICEEQUIPMENT;
+                break;
 
+        }
+        List<LocationDTO> dtoes = placeService.getLocationByPlaceType(currentPlaceType);
+        return dtoes;
 
-
+    }
+    
+    @GetMapping("deplocplacetype")
+    public List<DepDto> getDepsByLocAndPlaceType(String placeType, Long idLocation) {
+         PlaceType currentPlaceType = null;
+        switch (placeType) {
+            case "EMPLOYEE":
+                currentPlaceType = PlaceType.EMPLOYEE;
+                break;
+            case "SERVERROOM":
+                currentPlaceType = PlaceType.SERVERROOM;
+                break;
+            case "STORAGE":
+                currentPlaceType = PlaceType.STORAGE;
+                break;
+            case "OFFICEEQUIPMENT":
+                currentPlaceType = PlaceType.OFFICEEQUIPMENT;
+                break;
+        
+    }
+        List<DepDto> dtoes = placeService.getDepartmentsByPlaceTypeAndLocation(currentPlaceType, idLocation);
+        return dtoes;
+    }
+    
+    @GetMapping("/placelocdepplacetype")
+    public List<PlaceDTO> getPlacesByPlaceTypeLocationDeps(String placeType, Long idLocation, String departmentCode) {
+         PlaceType currentPlaceType = null;
+        switch (placeType) {
+            case "EMPLOYEE":
+                currentPlaceType = PlaceType.EMPLOYEE;
+                break;
+            case "SERVERROOM":
+                currentPlaceType = PlaceType.SERVERROOM;
+                break;
+            case "STORAGE":
+                currentPlaceType = PlaceType.STORAGE;
+                break;
+            case "OFFICEEQUIPMENT":
+                currentPlaceType = PlaceType.OFFICEEQUIPMENT;
+                break;
+        
+    }
+        List<PlaceDTO> dtoes = placeService.getPlaceByPlaceTypeAndLocationAndDepartmentCode(currentPlaceType, idLocation, departmentCode);
+        return dtoes;
+    }
+    
 
     @PostMapping("/AJAXPing")
     public Integer getAllContracts() {
@@ -214,8 +303,14 @@ public class GetInfoController {
 
     
     @GetMapping("/placesel")
-    public List<PlaceDTO> getPlacesByLocationAndDepartment() {
+    public List<PlaceDTO> getPlacesEmployee() {
         List<PlaceDTO> places = placeService.getPlacesByPlaceType(PlaceType.EMPLOYEE);
+        return places;
+    }
+    
+    @GetMapping("/placeserver")
+    public List<PlaceDTO> getPlacesServer() {
+        List<PlaceDTO> places = placeService.getPlacesByPlaceType(PlaceType.SERVERROOM);
         return places;
     }
 
@@ -401,6 +496,13 @@ public class GetInfoController {
         List<PlaceDTO> dtoes = placeService.getPlacesByLocationAndDepartment(locationId, departmentCode);
         return dtoes;
     }
+    
+    @GetMapping("/placeserverbydepandloc")
+    public List<PlaceDTO> getplacesServerByLocationAndDepartments(Long locationId, String departmentCode) {
+
+        List<PlaceDTO> dtoes = placeService.getPlacesServerByLocationAndDepartment(locationId, departmentCode);
+        return dtoes;
+    }
 
     @GetMapping("/loc")
     public List<LocationDTO> getCurrentLocations() {
@@ -445,6 +547,15 @@ public class GetInfoController {
 
         return systemblockDto;
     }
+    
+    @GetMapping("/getserver")
+    public SvtServerDTO getServer(Long serverId) {
+
+        Server server = serverService.getById(serverId);
+        SvtServerDTO serverDto = serverMapper.getDto(server);
+
+        return serverDto;
+    }
 
     @GetMapping("/getplacesbystatus")
     public List<PlaceStatusDto> getplacesbystatus() {
@@ -485,5 +596,26 @@ public class GetInfoController {
         return scannerModelsDtoes;
     }
     
+    @GetMapping("/modserver")
+    public List<SvtModelDto> getModelServer() {
+        List<ServerModel> allModels = serverModelService.getAllModels();
+        List<SvtModelDto> serverDtoes = svtModelMapper.getModelServerDtoes(allModels);
+        return serverDtoes;
+    } 
     
+    @GetMapping("/modswitch")
+    public List<SvtModelDto> getModelSwitchHub() {
+        List<SwitchHubModel> allModels = switchHubModelService.getAllModels();
+        List<SvtModelDto> dtoes = svtModelMapper.getModelSwitchHubDtoes(allModels);
+        return dtoes;
+    }
+    
+    @GetMapping("/getswitch")
+    public SvtDTO getSwitchById(Long switchId) {
+
+        SwitchHub switchHub = switchHubService.getById(switchId);
+        SvtSwitchHubDTO switchHubDto = switchHubMapper.getDto(switchHub);
+
+        return switchHubDto;
+    }
 }

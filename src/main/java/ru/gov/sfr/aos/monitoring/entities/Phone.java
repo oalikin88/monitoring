@@ -98,11 +98,11 @@ public class Phone extends ObjectBuingWithSerialAndInventary implements Serializ
     public void setPlace(Place place) {
         this.place = place;
     }
-
+    @Override
     public Status getStatus() {
         return status;
     }
-
+    @Override
     public void setStatus(Status status) {
         this.status = status;
     }

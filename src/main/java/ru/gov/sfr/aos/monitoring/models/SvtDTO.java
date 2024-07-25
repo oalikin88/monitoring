@@ -34,12 +34,13 @@ public class SvtDTO {
     protected Long batteryTypeId;
     protected int batteryAmount;
     protected int yearReplacement;
+    protected String numberRoom;
     
 
     public SvtDTO() {
     }
 
-    public SvtDTO(Long id, Long modelId, String model, String status, String inventaryNumber, String serialNumber, int yearCreated, Date dateExploitationBegin, Long placeId, String placeName, String placeType, String departmentCode, Long locationId, String phoneNumber, String nameFromOneC, String typeDto, String baseType, String batteryType, Long batteryTypeId, int batteryAmount, int yearReplacement) {
+    public SvtDTO(Long id, Long modelId, String model, String status, String inventaryNumber, String serialNumber, int yearCreated, Date dateExploitationBegin, Long placeId, String placeName, String placeType, String departmentCode, Long locationId, String phoneNumber, String nameFromOneC, String typeDto, String baseType, String batteryType, Long batteryTypeId, int batteryAmount, int yearReplacement, String numberRoom) {
         this.id = id;
         this.modelId = modelId;
         this.model = model;
@@ -61,6 +62,7 @@ public class SvtDTO {
         this.batteryTypeId = batteryTypeId;
         this.batteryAmount = batteryAmount;
         this.yearReplacement = yearReplacement;
+        this.numberRoom = numberRoom;
     }
     
 
@@ -235,6 +237,14 @@ public class SvtDTO {
 
     public void setYearReplacement(int yearReplacement) {
         this.yearReplacement = yearReplacement;
+    }
+
+    public String getNumberRoom() {
+        return numberRoom;
+    }
+
+    public void setNumberRoom(String numberRoom) {
+        this.numberRoom = numberRoom;
     }
     
     

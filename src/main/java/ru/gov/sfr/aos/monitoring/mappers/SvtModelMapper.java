@@ -20,8 +20,10 @@ import ru.gov.sfr.aos.monitoring.entities.Mouse;
 import ru.gov.sfr.aos.monitoring.entities.PhoneModel;
 import ru.gov.sfr.aos.monitoring.entities.Ram;
 import ru.gov.sfr.aos.monitoring.entities.ScannerModel;
+import ru.gov.sfr.aos.monitoring.entities.ServerModel;
 import ru.gov.sfr.aos.monitoring.entities.SoundCard;
 import ru.gov.sfr.aos.monitoring.entities.Speakers;
+import ru.gov.sfr.aos.monitoring.entities.SwitchHubModel;
 import ru.gov.sfr.aos.monitoring.entities.SystemBlockModel;
 import ru.gov.sfr.aos.monitoring.entities.UpsModel;
 import ru.gov.sfr.aos.monitoring.entities.VideoCard;
@@ -122,4 +124,14 @@ public abstract class SvtModelMapper {
     public abstract SvtModelDto getModelScannerDto(ScannerModel scannerModel);
     public abstract List<ScannerModel> getModelScannerList(List<SvtModelDto> dtoes);
     public abstract List<SvtModelDto> getModelScannerDtoes (List<ScannerModel> modelScannerList);
+    
+    public abstract ServerModel getModelServer (SvtModelDto dto);
+    public abstract SvtModelDto getModelServerDto(ServerModel serverModel);
+    public abstract List<ServerModel> getModelServerList(List<SvtModelDto> dtoes);
+    public abstract List<SvtModelDto> getModelServerDtoes (List<ServerModel> modelServerList);
+    
+    public abstract SwitchHubModel getModelSwitchHub (SvtModelDto dto);
+    public abstract SvtModelDto getModelSwitchHubDto(SwitchHubModel switchHubModel);
+    public abstract List<SwitchHubModel> getModelSwitchHubList(List<SvtModelDto> dtoes);
+    public abstract List<SvtModelDto> getModelSwitchHubDtoes (List<SwitchHubModel> modelSwitchHubList);
 }
