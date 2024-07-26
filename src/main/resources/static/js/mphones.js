@@ -77,6 +77,9 @@ btnSaveModelPhone.addEventListener('click', function() {
             case "mswitch":
                 link = "/mswitch/";
                 break;
+            case "mrouter":
+                link = "/mrouter/";
+                break;
         } 
                 $.ajax({
         type: "POST",

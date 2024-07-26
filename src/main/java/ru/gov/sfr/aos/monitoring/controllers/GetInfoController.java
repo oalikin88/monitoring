@@ -29,6 +29,8 @@ import ru.gov.sfr.aos.monitoring.entities.OperationSystem;
 import ru.gov.sfr.aos.monitoring.entities.Phone;
 import ru.gov.sfr.aos.monitoring.entities.PhoneModel;
 import ru.gov.sfr.aos.monitoring.entities.Ram;
+import ru.gov.sfr.aos.monitoring.entities.Router;
+import ru.gov.sfr.aos.monitoring.entities.RouterModel;
 import ru.gov.sfr.aos.monitoring.entities.Scanner;
 import ru.gov.sfr.aos.monitoring.entities.ScannerModel;
 import ru.gov.sfr.aos.monitoring.entities.Server;
@@ -61,6 +63,7 @@ import ru.gov.sfr.aos.monitoring.services.PhoneModelService;
 import ru.gov.sfr.aos.monitoring.services.PhoneService;
 import ru.gov.sfr.aos.monitoring.services.PlaceService;
 import ru.gov.sfr.aos.monitoring.mappers.PhoneMapper;
+import ru.gov.sfr.aos.monitoring.mappers.RouterMapper;
 import ru.gov.sfr.aos.monitoring.mappers.ScannerMapper;
 import ru.gov.sfr.aos.monitoring.mappers.ServerMapper;
 import ru.gov.sfr.aos.monitoring.mappers.SwitchHubMapper;
@@ -88,6 +91,8 @@ import ru.gov.sfr.aos.monitoring.services.MotherboardModelService;
 import ru.gov.sfr.aos.monitoring.services.MouseModelService;
 import ru.gov.sfr.aos.monitoring.services.OperationSystemService;
 import ru.gov.sfr.aos.monitoring.services.RamModelService;
+import ru.gov.sfr.aos.monitoring.services.RouterModelService;
+import ru.gov.sfr.aos.monitoring.services.RouterService;
 import ru.gov.sfr.aos.monitoring.services.ScannerModelService;
 import ru.gov.sfr.aos.monitoring.services.ScannerService;
 import ru.gov.sfr.aos.monitoring.services.ServerModelService;
@@ -197,6 +202,12 @@ public class GetInfoController {
     private SwitchHubService switchHubService;
     @Autowired
     private SwitchHubMapper switchHubMapper;
+    @Autowired
+    private RouterModelService routerModelService;
+    @Autowired
+    private RouterService routerService;
+    @Autowired
+    private RouterMapper routerMapper;
 
     @GetMapping("/getinfooo")
     public List<EmployeeDTO> getEmpl() {
@@ -617,5 +628,21 @@ public class GetInfoController {
         SvtSwitchHubDTO switchHubDto = switchHubMapper.getDto(switchHub);
 
         return switchHubDto;
+    }
+    
+       @GetMapping("/modrouter")
+    public List<SvtModelDto> getModelRouter() {
+        List<RouterModel> allModels = routerModelService.getAllModels();
+        List<SvtModelDto> dtoes = svtModelMapper.getModelRouterDtoes(allModels);
+        return dtoes;
+    }
+    
+    @GetMapping("/getrouter")
+    public SvtDTO getRouterById(Long routerId) {
+
+        Router router = routerService.getById(routerId);
+        SvtSwitchHubDTO routerDto = routerMapper.getDto(router);
+
+        return routerDto;
     }
 }

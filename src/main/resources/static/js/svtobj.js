@@ -69,7 +69,7 @@ let getStatus = function(input) {
                 result = "Утилизирован";
                 break;
             case "OK":
-                result = "Исправен"
+                result = "Исправен";
                 break;
             case "DEFECTIVE":
                 result = "Неисправен";
@@ -106,6 +106,9 @@ let handleClickArchivedBtn = function () {
             break;
         case "switch":
             requestLink = "/switcharchived";
+            break;
+        case "router":
+            requestLink = "/routerarchived";
             break;
     }
     $.ajax({
@@ -211,6 +214,12 @@ let handleClickSendToStorageBtn = function () {
                 dto.switchHubType = "HUB";
             }
             break;
+        case "router":
+            requestLink = "/routertostor";
+            dto.portAmount = $("#portAmount")[0].value;
+            dto.nameFromOneC = $("#nameFromOneC")[0].value;
+            dto.numberRoom = $("#numberRoom")[0].value;
+            break;
     }
     $.ajax({
         type: "POST",
@@ -313,6 +322,12 @@ let handleClickBackToStorageBtn = function () {
             } else {
                 dto.switchHubType = "HUB";
             }
+            break;
+        case "router":
+            requestLink = "/routertostor";
+            dto.portAmount = $("#portAmount")[0].value;
+            dto.nameFromOneC = $("#nameFromOneC")[0].value;
+            dto.numberRoom = $("#numberRoom")[0].value;
             break;
     }
     $.ajax({
@@ -417,6 +432,12 @@ let handleClickUpdateBtn = function () {
                 dto.switchHubType = "HUB";
             }
             break;
+        case "router":
+            requestLink = "/updrouter";
+            dto.portAmount = $("#portAmount")[0].value;
+            dto.nameFromOneC = $("#nameFromOneC")[0].value;
+            dto.numberRoom = $("#numberRoom")[0].value;
+            break;
     }
     $.ajax({
         type: "POST",
@@ -463,11 +484,15 @@ let handleClickSearchSvtObject = function (input) {
         case "switch":
             request = "/switch?username=";
             break;
+        case "router":
+            request = "/router?username=";
+            break;
     }
     window.location.href = request + input;
 }
 let handleClickSavePhoneBtn = function () {
     let requestLink;
+
     let dto = {
         model: document.querySelector('#modelSelect').innerText,
         status: document.querySelector('#statusSelect').value,
@@ -547,6 +572,13 @@ let handleClickSavePhoneBtn = function () {
                 dto.switchHubType = "HUB";
             }
             break;
+        case "router":
+            requestLink = "/router";
+            dto.portAmount = $("#portAmount")[0].value;
+            dto.nameFromOneC = $("#nameFromOneC")[0].value;
+            dto.numberRoom = $("#numberRoom")[0].value;
+           
+            break;
     }
     $.ajax({
         type: "POST",
@@ -605,6 +637,7 @@ window.onload = function () {
     });
     let elem = document.querySelectorAll('.element');
     addPlaceBtn.addEventListener('click', function () {
+       
         modalContentLoad($(this)[0].className);
     });
     for (let i = 0; i < elem.length; i++) {
@@ -648,6 +681,9 @@ let modalContentLoad = function (eventReason, svtObjId) {
             break;
          case "switch":
             titleModal.innerText = titleAction + " коммутатор/концентратор";
+            break;
+        case "router":
+            titleModal.innerText = titleAction + " маршрутизатор";
             break;
     }
     divModalHeader.appendChild(titleModal);
@@ -709,6 +745,9 @@ let modalContentLoad = function (eventReason, svtObjId) {
         case "switch":
             
             break;
+        case "router":
+            
+        break;
             
         default:
             let divRowYearCreated = document.createElement("div");
@@ -788,7 +827,7 @@ let modalContentLoad = function (eventReason, svtObjId) {
             divRowBaseTypeSelect.className = "row mt-2";
             let divColLabelBaseTypeSelect = document.createElement("div");
             divColLabelBaseTypeSelect.className = "col";
-            divColLabelBaseTypeSelect.innerText = "Наименование в ведомости ОС";
+            divColLabelBaseTypeSelect.innerText = "По ведомости ОС";
             let divColBaseTypeSelect = document.createElement("div");
             divColBaseTypeSelect.className = "col";
             let selectBaseType = document.createElement("select");
@@ -1401,6 +1440,61 @@ let modalContentLoad = function (eventReason, svtObjId) {
             divRowNameFromOneCSwitch.appendChild(divColInputNameFromOneCSwitch);
             divContainerBody.appendChild(divRowNameFromOneCSwitch);
             break;
+        case "router":
+             let divRowNumberRoomRouter = document.createElement("div");
+            divRowNumberRoomRouter.className = "row mt-2";
+            let divColLabelNumberRoomRouter = document.createElement("div");
+            divColLabelNumberRoomRouter.className = "col";
+            divColLabelNumberRoomRouter.innerText = "Кабинет";
+            let divColInputNumberRoomRouter = document.createElement("div");
+            divColInputNumberRoomRouter.className = "col";
+            
+            let inputNumberRoomRouter = document.createElement("input");
+            inputNumberRoomRouter.className = "form-control form-control-sm";
+            inputNumberRoomRouter.type = "text";
+            inputNumberRoomRouter.placeholder = "укажите расположение";
+            inputNumberRoomRouter.id = "numberRoom";
+            inputNumberRoomRouter.name = "numberRoom";
+            divColInputNumberRoomRouter.appendChild(inputNumberRoomRouter);
+            divRowNumberRoomRouter.appendChild(divColLabelNumberRoomRouter);
+            divRowNumberRoomRouter.appendChild(divColInputNumberRoomRouter);
+            divContainerBody.appendChild(divRowNumberRoomRouter);
+            
+            let portAmountRouterRow = document.createElement("div");
+            portAmountRouterRow.className = "row mt-2";
+            let divColLabelRouterPortAmount = document.createElement("div");
+            divColLabelRouterPortAmount.className = "col";
+            divColLabelRouterPortAmount.innerText = "Количество портов";
+            let divColInputRouterPortAmount = document.createElement("div");
+            divColInputRouterPortAmount.className = "col";
+            let inputRouterPortAmount = document.createElement("input");
+            inputRouterPortAmount.className = "form-control form-control-sm";
+            inputRouterPortAmount.type = "number";
+            inputRouterPortAmount.min = 1;
+            inputRouterPortAmount.max = 99;
+            inputRouterPortAmount.value = 1;
+            inputRouterPortAmount.id = "portAmount";
+            divColInputRouterPortAmount.appendChild(inputRouterPortAmount);
+            portAmountRouterRow.appendChild(divColLabelRouterPortAmount);
+            portAmountRouterRow.appendChild(divColInputRouterPortAmount);
+            divContainerBody.appendChild(portAmountRouterRow);
+             let divRowNameFromOneCRouter = document.createElement("div");
+            divRowNameFromOneCRouter.className = "row mt-2";
+            let divColLabelNameFromOneCRouter = document.createElement("div");
+            divColLabelNameFromOneCRouter.className = "col";
+            divColLabelNameFromOneCRouter.innerText = "Наименование в ведомости ОС";
+            let divColInputNameFromOneCRouter = document.createElement("div");
+            divColInputNameFromOneCRouter.className = "col";
+            let inputNameFromOneCRouter = document.createElement("textarea");
+            inputNameFromOneCRouter.className = "form-control form-control-sm";
+            inputNameFromOneCRouter.placeholder = "введите наименование";
+            inputNameFromOneCRouter.id = "nameFromOneC";
+            inputNameFromOneCRouter.setAttribute("aria-label", "nameFromOneC");
+            divColInputNameFromOneCRouter.appendChild(inputNameFromOneCRouter);
+            divRowNameFromOneCRouter.appendChild(divColLabelNameFromOneCRouter);
+            divRowNameFromOneCRouter.appendChild(divColInputNameFromOneCRouter);
+            divContainerBody.appendChild(divRowNameFromOneCRouter);
+            break;
     }
     divModalBody.appendChild(divContainerBody);
     modalParent.appendChild(divModalBody);
@@ -1440,6 +1534,9 @@ let modalContentLoad = function (eventReason, svtObjId) {
             case "switch":
                 requestLink = "/getswitch?switchId=";
                 break;
+            case "router":
+                requestLink = "/getrouter?routerId=";
+                break;
         }
         $.ajax({
             url: requestLink + svtObjId,
@@ -1447,7 +1544,6 @@ let modalContentLoad = function (eventReason, svtObjId) {
             async: false,
             dataType: 'json',
             success: function (callback) {
-                console.log(callback);
                 idPlace = callback.placeId;
                 codeDepartment = callback.departmentCode;
                 modelId = callback.modelId;
@@ -1496,6 +1592,9 @@ let modalContentLoad = function (eventReason, svtObjId) {
                     portAmount = callback.portAmount;
                     numberRoom = callback.numberRoom;
                     switchHubType = callback.switchHubType;
+                } else if (attrib == "router") {
+                    portAmount = callback.portAmount;
+                    numberRoom = callback.numberRoom;
                 }
             }
         });
@@ -1581,6 +1680,11 @@ let modalContentLoad = function (eventReason, svtObjId) {
                         break;
                 }
                 break;
+            case "router":
+                $("#nameFromOneC")[0].value = nameFromOneC;
+                $("#numberRoom")[0].value = numberRoom;
+                $("#portAmount")[0].value = portAmount;
+                break;
         }
         if (eventReason.indexOf("storage") >= 0) {
             stor = true;
@@ -1628,6 +1732,11 @@ let modalContentLoad = function (eventReason, svtObjId) {
                         $("#hubRadio")[0].checked = true;
                         break;
                 }
+                break;
+                case "router":
+                $("#nameFromOneC")[0].value = nameFromOneC;
+                $("#numberRoom")[0].value = numberRoom;
+                $("#portAmount")[0].value = portAmount;
                 break;
             }
         }
@@ -2089,6 +2198,9 @@ let modalContentLoad = function (eventReason, svtObjId) {
                     break;
                 case "switch":
                     requestLink = "/modswitch";
+                    break;
+                case "router":
+                    requestLink = "/modrouter";
                     break;
             }
             $.ajax({
@@ -2868,6 +2980,17 @@ let modalContentLoad = function (eventReason, svtObjId) {
                 $("#switchRadio")[0].disabled = false;
             }
             break;
+          case "router":
+            if (eventReason.indexOf("storage") >= 0) {
+                $("#numberRoom")[0].disabled = true;
+                $("#portAmount")[0].disabled = true;
+                $("#nameFromOneC")[0].disabled = true;
+            } else {
+                $("#numberRoom")[0].disabled = false;
+                $("#portAmount")[0].disabled = false;
+                $("#nameFromOneC")[0].disabled = false;
+            }
+            break;
     }
     if(null != $("#dateCreateSelect")[0]) {
         var dateCreate = $("#dateCreateSelect")[0];
@@ -2978,6 +3101,40 @@ let modalContentLoad = function (eventReason, svtObjId) {
 
 
     modalAddPhone.addEventListener('hidden.bs.modal', function (event) {
+        idSvtObj = null;
+        innerCallNumber = null;
+        idPlace = null;
+        codeDepartment = null;
+        modelId = null;
+        status = null;
+        inventary = null;
+        serial = null;
+        yearCreated = null;
+        nameFromOneC = null;
+        baseType = null;
+        startExploitation = null;
+        parseStartDate = null;
+        dateReplaceBattery = null;
+        batteryAmount = null;
+        batteryTypeId = null;
+        operationSystemId = null;
+        cpuId = null;
+        ramId = null;
+        hddId = null;
+        hddListId = null;
+        videoCardId = null;
+        soundCardId = null;
+        lanCardId = null;
+        cdDriveId = null;
+        keyboardId = null;
+        mouseId = null;
+        speakersId = null;
+        ipAdress = null;
+        numberRoom = null;
+        dateUpgrade = null;
+        cpuAmount = null;
+        portAmount = null;
+        switchHubType = null;
         modalParent.innerHTML = "";
     });
     $('#btnSave')[0].addEventListener('click', handleClickSavePhoneBtn);
@@ -3006,6 +3163,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 liItem.innerHTML = "<details> <summary>Склад</summary>";
                 treeLocations[i].childNodes[1].childNodes[3].append(liItem);
                 headerElement = document.createElement('div');
+                headerElement.className = "row fw-bold mt-3 mb-3";
                 switch(attrib) {
                     case "switch":
                      headerElement.innerHTML = '<div class="col">Модель</div>' +
@@ -3013,6 +3171,15 @@ document.addEventListener("DOMContentLoaded", function () {
                             '<div class="col">Серийный номер</div>' +
                             '<div class="col">Инвентарный номер</div>' +
                             '<div class="col">Тип</div>' +
+                            '<div class="col">Кол-во портов</div>' +
+                            '<div class="col">Состояние</div>';
+                        break;
+                        case "router":
+                     headerElement.innerHTML = '<div class="col">Модель</div>' +
+                            '<div class="col">ФИО</div>' +
+                            '<div class="col">Серийный номер</div>' +
+                            '<div class="col">Инвентарный номер</div>' +
+                            '<div class="col">Расположение</div>' +
                             '<div class="col">Кол-во портов</div>' +
                             '<div class="col">Состояние</div>';
                         break;
@@ -3131,6 +3298,17 @@ document.addEventListener("DOMContentLoaded", function () {
                                     '<div class="col">' + getStatus(storageDtoes[j].departments[d].dtoes[t].status) + '</div>' +
                                     '</div>';
                                 break;
+                                case "router":
+                                elDepartment.innerHTML = '<div class="row mb-2 d-flex align-items-center text-start">' +
+                                    '<div class="col">' + count + '. ' + storageDtoes[j].departments[d].dtoes[t].model + '</div>' +
+                                    '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].placeName + '</div>' +
+                                    '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].serialNumber + '</div>' +
+                                    '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].inventaryNumber + '</div>' +
+                                    '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].numberRoom + '</div>' +
+                                    '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].portAmount + '</div>' +
+                                    '<div class="col">' + getStatus(storageDtoes[j].departments[d].dtoes[t].status) + '</div>' +
+                                    '</div>';
+                                break;
                                 
                         }
                         liItem.childNodes[0].append(elDepartment);
@@ -3169,6 +3347,15 @@ document.addEventListener("DOMContentLoaded", function () {
                             '<div class="col">Серийный номер</div>' +
                             '<div class="col">Инвентарный номер</div>' +
                             '<div class="col">Тип</div>' +
+                            '<div class="col">Кол-во портов</div>' +
+                            '<div class="col">Состояние</div>';
+                        break;
+                        case "router":
+                     headerElement.innerHTML = '<div class="col">Модель</div>' +
+                            '<div class="col">ФИО</div>' +
+                            '<div class="col">Серийный номер</div>' +
+                            '<div class="col">Инвентарный номер</div>' +
+                            '<div class="col">Расположение</div>' +
                             '<div class="col">Кол-во портов</div>' +
                             '<div class="col">Состояние</div>';
                         break;
@@ -3284,6 +3471,18 @@ document.addEventListener("DOMContentLoaded", function () {
                                     '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].serialNumber + '</div>' +
                                     '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].inventaryNumber + '</div>' +
                                     '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].switchHubType + '</div>' +
+                                    '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].portAmount + '</div>' +
+                                    '<div class="col">' + getStatus(storageDtoes[j].departments[d].dtoes[t].status) + '</div>' +
+                                    '</div>';
+                                break;
+                                case "router":
+                                
+                                elDepartment.innerHTML = '<div class="row mb-2 d-flex align-items-center text-start">' +
+                                    '<div class="col">' + count + '. ' + storageDtoes[j].departments[d].dtoes[t].model + '</div>' +
+                                    '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].placeName + '</div>' +
+                                    '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].serialNumber + '</div>' +
+                                    '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].inventaryNumber + '</div>' +
+                                    '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].numberRoom + '</div>' +
                                     '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].portAmount + '</div>' +
                                     '<div class="col">' + getStatus(storageDtoes[j].departments[d].dtoes[t].status) + '</div>' +
                                     '</div>';

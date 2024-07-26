@@ -19,6 +19,7 @@ import ru.gov.sfr.aos.monitoring.entities.Motherboard;
 import ru.gov.sfr.aos.monitoring.entities.Mouse;
 import ru.gov.sfr.aos.monitoring.entities.PhoneModel;
 import ru.gov.sfr.aos.monitoring.entities.Ram;
+import ru.gov.sfr.aos.monitoring.entities.RouterModel;
 import ru.gov.sfr.aos.monitoring.entities.ScannerModel;
 import ru.gov.sfr.aos.monitoring.entities.ServerModel;
 import ru.gov.sfr.aos.monitoring.entities.SoundCard;
@@ -134,4 +135,9 @@ public abstract class SvtModelMapper {
     public abstract SvtModelDto getModelSwitchHubDto(SwitchHubModel switchHubModel);
     public abstract List<SwitchHubModel> getModelSwitchHubList(List<SvtModelDto> dtoes);
     public abstract List<SvtModelDto> getModelSwitchHubDtoes (List<SwitchHubModel> modelSwitchHubList);
+    
+    public abstract RouterModel getModelRouter (SvtModelDto dto);
+    public abstract SvtModelDto getModelRouterDto(RouterModel routerModel);
+    public abstract List<RouterModel> getModelRouterList(List<SvtModelDto> dtoes);
+    public abstract List<SvtModelDto> getModelRouterDtoes (List<RouterModel> modelRouterList);
 }

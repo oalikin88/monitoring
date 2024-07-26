@@ -31,6 +31,8 @@ import ru.gov.sfr.aos.monitoring.entities.OperationSystem;
 import ru.gov.sfr.aos.monitoring.entities.Phone;
 import ru.gov.sfr.aos.monitoring.entities.PhoneModel;
 import ru.gov.sfr.aos.monitoring.entities.Ram;
+import ru.gov.sfr.aos.monitoring.entities.Router;
+import ru.gov.sfr.aos.monitoring.entities.RouterModel;
 import ru.gov.sfr.aos.monitoring.entities.Scanner;
 import ru.gov.sfr.aos.monitoring.entities.ScannerModel;
 import ru.gov.sfr.aos.monitoring.entities.Server;
@@ -49,6 +51,7 @@ import ru.gov.sfr.aos.monitoring.mappers.BatteryTypeMapper;
 import ru.gov.sfr.aos.monitoring.mappers.MonitorMapper;
 import ru.gov.sfr.aos.monitoring.mappers.OperationSystemMapper;
 import ru.gov.sfr.aos.monitoring.mappers.PhoneMapper;
+import ru.gov.sfr.aos.monitoring.mappers.RouterMapper;
 import ru.gov.sfr.aos.monitoring.mappers.ScannerMapper;
 import ru.gov.sfr.aos.monitoring.mappers.ServerMapper;
 import ru.gov.sfr.aos.monitoring.mappers.SvtModelMapper;
@@ -90,6 +93,9 @@ import ru.gov.sfr.aos.monitoring.services.PhoneOutDtoTreeService;
 import ru.gov.sfr.aos.monitoring.services.PhoneService;
 import ru.gov.sfr.aos.monitoring.services.PlaceService;
 import ru.gov.sfr.aos.monitoring.services.RamModelService;
+import ru.gov.sfr.aos.monitoring.services.RouterModelService;
+import ru.gov.sfr.aos.monitoring.services.RouterOutDtoTreeService;
+import ru.gov.sfr.aos.monitoring.services.RouterService;
 import ru.gov.sfr.aos.monitoring.services.ScannerModelService;
 import ru.gov.sfr.aos.monitoring.services.ScannerOutDtoTreeService;
 import ru.gov.sfr.aos.monitoring.services.ScannerService;
@@ -212,6 +218,14 @@ public class SvtViewController {
     private SwitchHubOutDtoTreeService switchHubOutDtoTreeService;
     @Autowired
     private SwitchHubMapper switchHubMapper;
+    @Autowired
+    private RouterModelService routerModelService;
+    @Autowired
+    private RouterService routerService;
+    @Autowired
+    private RouterMapper routerMapper;
+    @Autowired
+    private RouterOutDtoTreeService routerOutDtoTreeService;
     
     
 //  @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
@@ -1236,6 +1250,102 @@ public class SvtViewController {
         switchHubService.updateSvtObj(dto);
         return "redirect:/switch";
      
+    }
+    
+
+    
+            //      @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
+    @GetMapping("/mrouter")
+    public String getModelRouterb(Model model) {
+        List<RouterModel> routerModels = routerModelService.getAllModels();
+        List<SvtModelDto> getRouterModelsDtoes = svtModelMapper.getModelRouterDtoes(routerModels);
+        model.addAttribute("dtoes", getRouterModelsDtoes);
+        model.addAttribute("namePage", "Модели маршрутизаторов");
+        model.addAttribute("attribute", "mrouter");
+        return "models";
+    }
+    
+//    @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
+    @PostMapping("/mrouter")
+    public String saveModelRouter(@RequestBody SvtModelDto dto) throws ObjectAlreadyExists {
+        RouterModel routerModel = svtModelMapper.getModelRouter(dto);
+        routerModelService.saveModel(routerModel);
+        return "redirect:/mrouter";
+        
+    }
+    
+         //  @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
+    @GetMapping("/router")
+    public String getRouter(Model model, @RequestParam(value="username",required=false) String username) {
+        Map<Location, List<Router>> svtObjectsByEmployee = null;
+        if(null != username) {
+            svtObjectsByEmployee = routerService.getSvtObjectsByName(username, PlaceType.SERVERROOM);
+        } else {
+            svtObjectsByEmployee = routerService.getSvtObjectsByPlaceType(PlaceType.SERVERROOM);
+        }
+        List<LocationByTreeDto> treeSvtDtoByEmployee = routerOutDtoTreeService.getTreeSvtDtoByPlaceType(svtObjectsByEmployee)
+                .stream()
+                .sorted((o1, o2) -> o1.getLocationName().compareTo(o2.getLocationName()))
+                .collect(Collectors.toList());
+        Map<Location, List<Router>> svtObjectsByStorage = null;
+        
+        if(null != username) {
+            svtObjectsByStorage = routerService.getSvtObjectsByName(username, PlaceType.STORAGE);
+        } else {
+            svtObjectsByStorage = routerService.getSvtObjectsByPlaceType(PlaceType.STORAGE);
+        }
+        List<LocationByTreeDto> treeSvtDtoByStorage = routerOutDtoTreeService.getTreeSvtDtoByPlaceType(svtObjectsByStorage)
+                .stream()
+                .sorted((o1, o2) -> o1.getLocationName().compareTo(o2.getLocationName()))
+                .collect(Collectors.toList());
+        
+        model.addAttribute("dtoes", treeSvtDtoByEmployee);
+        model.addAttribute("dtoesStorage", treeSvtDtoByStorage);
+        model.addAttribute("attribute", "router");
+        model.addAttribute("placeAttribute", "serverroom");
+        model.addAttribute("namePage","Маршрутизаторы");
+        
+        return "svtobj";
+    }
+    
+ //   @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
+    @PostMapping("/router")
+    public String saveRouter(@RequestBody SvtSwitchHubDTO dto) throws ObjectAlreadyExists {
+        routerService.createSvtObj(dto);
+        return "redirect:/router";
+    }
+    
+           //      @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
+    @PostMapping("/routertostor")
+    public String sendToStorageRouter(@RequestBody SvtSwitchHubDTO dto) throws ObjectAlreadyExists {
+            // SystemBlock findById = sysrepo.findById(dto.getId()).get();
+            Router router = routerMapper.getEntityFromDto(dto);
+        routerService.sendToStorage(router);
+        return "redirect:/router";
+        
+    }
+    
+     //   @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
+    @PostMapping("/routerbackstor")
+    public String backFromStorageRouter (@RequestBody SvtSwitchHubDTO dto) throws ObjectAlreadyExists {
+            Router router = routerMapper.getEntityFromDto(dto);
+        routerService.backFromStorage(router, dto.getPlaceId());
+        return "redirect:/router";
+        
+    }
+    
+     @PostMapping("/updrouter")
+    public String updateRouter (@RequestBody SvtSwitchHubDTO dto) throws ObjectAlreadyExists {
+        routerService.updateSvtObj(dto);
+        return "redirect:/router";
+     
+    }
+    
+        //   @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
+    @PostMapping("/routerarchived")
+    public String sendRouterToArchive(@RequestBody ArchivedDto dto) throws ObjectAlreadyExists {
+        routerService.svtObjToArchive(dto);
+        return "redirect:/router";
     }
     
 }

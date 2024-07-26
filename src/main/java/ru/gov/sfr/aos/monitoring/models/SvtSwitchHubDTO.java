@@ -13,6 +13,10 @@ public class SvtSwitchHubDTO extends SvtDTO {
     public String switchHubType;
     public int portAmount;
 
+    public SvtSwitchHubDTO() {
+    }
+
+    
     public SvtSwitchHubDTO(String switchHubType, int portAmount) {
         this.switchHubType = switchHubType;
         this.portAmount = portAmount;

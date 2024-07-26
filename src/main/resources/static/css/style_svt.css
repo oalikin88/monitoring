@@ -117,6 +117,8 @@ a.sidebar-link:hover {
 
 .sidebar-item {
     position: relative;
+    background-color: #0e223e;
+
 }
 
 #sidebar:not(.expand) .sidebar-item .sidebar-dropdown {
