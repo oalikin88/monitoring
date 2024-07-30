@@ -30,6 +30,9 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
     <title th:case="'router'">
         Маршрутизаторы
     </title> 
+    <title th:case="'ats'">
+        АТС
+    </title> 
 </th:block>
         
         <meta charset="UTF-8">
@@ -73,6 +76,9 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                         </h1>
                         <h1 class="ms-2 ps-2" th:case="'router'">
                             Маршрутизаторы
+                        </h1>
+                        <h1 class="ms-2 ps-2" th:case="'ats'">
+                            АТС
                         </h1>
                     </th:block>
                 </div>
@@ -121,6 +127,15 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                                                     <div class="col">Кол-во портов</div>
                                                     <div class="col">Состояние</div>
                                                 </div>
+                                            <div class="row fw-bold mt-3 mb-3" th:case="ats">
+                                                    <div class="col">Модель</div>
+                                                    <div class="col">ФИО</div>
+                                                    <div class="col">Серийный номер</div>
+                                                    <div class="col">Инвентарный номер</div>
+                                                    <div class="col">Год ввода в экспл</div>
+                                                    <div class="col">Кол-во город. номеров</div>
+                                                    <div class="col">Состояние</div>
+                                                </div>
                                             <div class="row fw-bold mt-3 mb-3" th:case="*">
                                                     <div class="col">Модель</div>
                                                     <div class="col">ФИО</div>
@@ -165,13 +180,28 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                                                 <div class="col" th:case="UTILIZATION" th:text="Утилизирован"></div>
                                                 </th:block>
                                              </div>
-                                                     <div class="row mb-2 d-flex align-items-center text-start phone" th:case="router">
+                                                <div class="row mb-2 d-flex align-items-center text-start phone" th:case="router">
                                                 <div class="col" th:text="${stat.count} + '. ' + ${inInnerDto.model}"></div>
                                                 <div class="col" th:text="${inInnerDto.placeName}"></div>
                                                 <div class="col" th:text="${inInnerDto.serialNumber}"></div>
                                                 <div class="col" th:text="${inInnerDto.inventaryNumber}"></div>
                                                 <div class="col" th:text="${inInnerDto.numberRoom}"></div>
                                                 <div class="col" th:text="${inInnerDto.portAmount}"></div>
+                                                <th:block th:switch="${inInnerDto.status}">
+                                                <div class="col" th:case="OK" th:text="Исправен"></div>
+                                                <div class="col" th:case="REPAIR" th:text="Ремонт"></div>
+                                                <div class="col" th:case="MONITORING" th:text="Списание"></div>
+                                                <div class="col" th:case="DEFECTIVE" th:text="Неисправен"></div>
+                                                <div class="col" th:case="UTILIZATION" th:text="Утилизирован"></div>
+                                                </th:block>
+                                             </div>
+                                                <div class="row mb-2 d-flex align-items-center text-start phone" th:case="ats">
+                                                <div class="col" th:text="${stat.count} + '. ' + ${inInnerDto.model}"></div>
+                                                <div class="col" th:text="${inInnerDto.placeName}"></div>
+                                                <div class="col" th:text="${inInnerDto.serialNumber}"></div>
+                                                <div class="col" th:text="${inInnerDto.inventaryNumber}"></div>
+                                                <div class="col" th:text="${inInnerDto.yearCreated}"></div>
+                                                <div class="col" th:text="${inInnerDto.cityNumberAmount}"></div>
                                                 <th:block th:switch="${inInnerDto.status}">
                                                 <div class="col" th:case="OK" th:text="Исправен"></div>
                                                 <div class="col" th:case="REPAIR" th:text="Ремонт"></div>

@@ -55,6 +55,10 @@ let cpuAmount;
 let modalParent = document.querySelector("#modalContent");
 let portAmount;
 let switchHubType;
+let innerConnectionAnalog;
+let innerConnectionIp;
+let cityNumberAmount;
+let outerConnectionType;
 
 let getStatus = function(input) {
     var result;
@@ -109,6 +113,9 @@ let handleClickArchivedBtn = function () {
             break;
         case "router":
             requestLink = "/routerarchived";
+            break;
+        case "ats":
+            requestLink = "/atsarchived";
             break;
     }
     $.ajax({
@@ -220,6 +227,15 @@ let handleClickSendToStorageBtn = function () {
             dto.nameFromOneC = $("#nameFromOneC")[0].value;
             dto.numberRoom = $("#numberRoom")[0].value;
             break;
+        case "ats":
+            requestLink = "/atstostor";
+            dto.cityNumberAmount = $("#cityNumberAmount")[0].value;
+            dto.nameFromOneC = $("#nameFromOneC")[0].value;
+            dto.numberRoom = $("#numberRoom")[0].value;
+            dto.innerConnectionIp = $("#innerConnectionIp")[0].value;
+            dto.innerConnectionAnalog = $("#innerConnectionAnalog")[0].value;
+            dto.outerConnectionType = $("#outerConnectionType")[0].value;
+            break;
     }
     $.ajax({
         type: "POST",
@@ -313,7 +329,7 @@ let handleClickBackToStorageBtn = function () {
             dto.numberRoom = $("#numberRoom")[0].value;
             break;
         case "switch":
-            requestLink = "/switchtostor";
+            requestLink = "/switchbackstor";
             dto.portAmount = $("#portAmount")[0].value;
             dto.nameFromOneC = $("#nameFromOneC")[0].value;
             dto.numberRoom = $("#numberRoom")[0].value;
@@ -324,10 +340,19 @@ let handleClickBackToStorageBtn = function () {
             }
             break;
         case "router":
-            requestLink = "/routertostor";
+            requestLink = "/routerbackstor";
             dto.portAmount = $("#portAmount")[0].value;
             dto.nameFromOneC = $("#nameFromOneC")[0].value;
             dto.numberRoom = $("#numberRoom")[0].value;
+            break;
+        case "ats":
+            requestLink = "/atsbackstor";
+            dto.cityNumberAmount = $("#cityNumberAmount")[0].value;
+            dto.nameFromOneC = $("#nameFromOneC")[0].value;
+            dto.numberRoom = $("#numberRoom")[0].value;
+            dto.innerConnectionIp = $("#innerConnectionIp")[0].value;
+            dto.innerConnectionAnalog = $("#innerConnectionAnalog")[0].value;
+            dto.outerConnectionType = $("#outerConnectionType")[0].value;
             break;
     }
     $.ajax({
@@ -438,6 +463,15 @@ let handleClickUpdateBtn = function () {
             dto.nameFromOneC = $("#nameFromOneC")[0].value;
             dto.numberRoom = $("#numberRoom")[0].value;
             break;
+        case "ats":
+            requestLink = "/updats";
+            dto.cityNumberAmount = $("#cityNumberAmount")[0].value;
+            dto.nameFromOneC = $("#nameFromOneC")[0].value;
+            dto.numberRoom = $("#numberRoom")[0].value;
+            dto.innerConnectionIp = $("#innerConnectionIp")[0].value;
+            dto.innerConnectionAnalog = $("#innerConnectionAnalog")[0].value;
+            dto.outerConnectionType = $("#outerConnectionType")[0].value;
+            break;
     }
     $.ajax({
         type: "POST",
@@ -486,6 +520,9 @@ let handleClickSearchSvtObject = function (input) {
             break;
         case "router":
             request = "/router?username=";
+            break;
+        case "ats":
+            request = "/ats?username=";
             break;
     }
     window.location.href = request + input;
@@ -578,6 +615,15 @@ let handleClickSavePhoneBtn = function () {
             dto.nameFromOneC = $("#nameFromOneC")[0].value;
             dto.numberRoom = $("#numberRoom")[0].value;
            
+            break;
+        case "ats":
+            requestLink = "/ats";
+            dto.cityNumberAmount = $("#cityNumberAmount")[0].value;
+            dto.nameFromOneC = $("#nameFromOneC")[0].value;
+            dto.numberRoom = $("#numberRoom")[0].value;
+            dto.innerConnectionIp = $("#innerConnectionIp")[0].value;
+            dto.innerConnectionAnalog = $("#innerConnectionAnalog")[0].value;
+            dto.outerConnectionType = $("#outerConnectionType")[0].value;
             break;
     }
     $.ajax({
@@ -685,6 +731,9 @@ let modalContentLoad = function (eventReason, svtObjId) {
         case "router":
             titleModal.innerText = titleAction + " маршрутизатор";
             break;
+        case "ats":
+            titleModal.innerText = titleAction + " АТС";
+            break;
     }
     divModalHeader.appendChild(titleModal);
     let headerCloseBtn = document.createElement("button");
@@ -748,6 +797,24 @@ let modalContentLoad = function (eventReason, svtObjId) {
         case "router":
             
         break;
+        
+        case "ats":
+            let divRowYearExplAts = document.createElement("div");
+            divRowYearExplAts.className = "row mt-2";
+            let divColLabelYearExplAts = document.createElement("div");
+            divColLabelYearExplAts.className = "col";
+            divColLabelYearExplAts.innerText = "Год ввода в эксплуатацию";
+            let divColSelectYearExplAts = document.createElement("div");
+            divColSelectYearExplAts.className = "col";
+            let selectYearExplAts = document.createElement("select");
+            selectYearExplAts.className = "form-select form-select-sm";
+            selectYearExplAts.id = "dateCreateSelect";
+            selectYearExplAts.setAttribute("aria-label", "dateCreate");
+            divColSelectYearExplAts.appendChild(selectYearExplAts);
+            divRowYearExplAts.appendChild(divColLabelYearExplAts);
+            divRowYearExplAts.appendChild(divColSelectYearExplAts);
+            divContainerBody.appendChild(divRowYearExplAts);
+            break;
             
         default:
             let divRowYearCreated = document.createElement("div");
@@ -1495,6 +1562,152 @@ let modalContentLoad = function (eventReason, svtObjId) {
             divRowNameFromOneCRouter.appendChild(divColInputNameFromOneCRouter);
             divContainerBody.appendChild(divRowNameFromOneCRouter);
             break;
+            case "ats":
+             let divRowNumberRoomAts = document.createElement("div");
+            divRowNumberRoomAts.className = "row mt-2";
+            let divColLabelNumberRoomAts = document.createElement("div");
+            divColLabelNumberRoomAts.className = "col";
+            divColLabelNumberRoomAts.innerText = "Кабинет";
+            let divColInputNumberRoomAts = document.createElement("div");
+            divColInputNumberRoomAts.className = "col";
+            
+            let inputNumberRoomAts = document.createElement("input");
+            inputNumberRoomAts.className = "form-control form-control-sm";
+            inputNumberRoomAts.type = "text";
+            inputNumberRoomAts.placeholder = "укажите расположение";
+            inputNumberRoomAts.id = "numberRoom";
+            inputNumberRoomAts.name = "numberRoom";
+            divColInputNumberRoomAts.appendChild(inputNumberRoomAts);
+            divRowNumberRoomAts.appendChild(divColLabelNumberRoomAts);
+            divRowNumberRoomAts.appendChild(divColInputNumberRoomAts);
+            divContainerBody.appendChild(divRowNumberRoomAts);
+            
+              let divRowNameFromOneCAts = document.createElement("div");
+            divRowNameFromOneCAts.className = "row mt-2";
+            let divColLabelNameFromOneCAts = document.createElement("div");
+            divColLabelNameFromOneCAts.className = "col";
+            divColLabelNameFromOneCAts.innerText = "Наименование в ведомости ОС";
+            let divColInputNameFromOneCAts = document.createElement("div");
+            divColInputNameFromOneCAts.className = "col";
+            let inputNameFromOneCAts = document.createElement("textarea");
+            inputNameFromOneCAts.className = "form-control form-control-sm";
+            inputNameFromOneCAts.placeholder = "введите наименование";
+            inputNameFromOneCAts.id = "nameFromOneC";
+            inputNameFromOneCAts.setAttribute("aria-label", "nameFromOneC");
+            divColInputNameFromOneCAts.appendChild(inputNameFromOneCAts);
+            divRowNameFromOneCAts.appendChild(divColLabelNameFromOneCAts);
+            divRowNameFromOneCAts.appendChild(divColInputNameFromOneCAts);
+            divContainerBody.appendChild(divRowNameFromOneCAts);
+            
+            let divRowAtsOuterTypeConnectionsSelect = document.createElement("div");
+            divRowAtsOuterTypeConnectionsSelect.className = "row mt-2";
+            let divColLabelAtsOuterTypeConnectionsSelect = document.createElement("div");
+            divColLabelAtsOuterTypeConnectionsSelect.className = "col";
+            divColLabelAtsOuterTypeConnectionsSelect.innerText = "Внешние подключения (тип)";
+            let divColAtsOuterTypeConnectionsSelect = document.createElement("div");
+            divColAtsOuterTypeConnectionsSelect.className = "col";
+            let selectAtsOuterTypeConnections = document.createElement("select");
+            selectAtsOuterTypeConnections.className = "form-select form-select-sm";
+            selectAtsOuterTypeConnections.id = "outerConnectionType";
+            selectAtsOuterTypeConnections.setAttribute("aria-label", "outerConnectionType");
+            
+            let optionSipOuterTypeConnection = document.createElement("option");
+            optionSipOuterTypeConnection.value = "SIP";
+            optionSipOuterTypeConnection.innerText = "SIP";
+            
+            let optionE1OuterTypeConnection = document.createElement("option");
+            optionE1OuterTypeConnection.value = "E1";
+            optionE1OuterTypeConnection.innerText = "E1";
+            
+            selectAtsOuterTypeConnections.appendChild(optionSipOuterTypeConnection);
+            selectAtsOuterTypeConnections.appendChild(optionE1OuterTypeConnection);
+            
+            divColAtsOuterTypeConnectionsSelect.appendChild(selectAtsOuterTypeConnections);
+            divRowAtsOuterTypeConnectionsSelect.appendChild(divColLabelAtsOuterTypeConnectionsSelect);
+            divRowAtsOuterTypeConnectionsSelect.appendChild(divColAtsOuterTypeConnectionsSelect);
+            divContainerBody.appendChild(divRowAtsOuterTypeConnectionsSelect);
+            
+            let cityNumbersAmountAtsRow = document.createElement("div");
+            cityNumbersAmountAtsRow.className = "row mt-2";
+            let divColLabelCityNumbersAmountAts = document.createElement("div");
+            divColLabelCityNumbersAmountAts.className = "col";
+            divColLabelCityNumbersAmountAts.innerText = "Количество городских номеров";
+            let divColInputCityNumbersAmountAts = document.createElement("div");
+            divColInputCityNumbersAmountAts.className = "col";
+            let inputCityNumbersAmountAts = document.createElement("input");
+            inputCityNumbersAmountAts.className = "form-control form-control-sm";
+            inputCityNumbersAmountAts.type = "number";
+            inputCityNumbersAmountAts.min = 1;
+            inputCityNumbersAmountAts.max = 99;
+            inputCityNumbersAmountAts.value = 1;
+            inputCityNumbersAmountAts.id = "cityNumberAmount";
+            divColInputCityNumbersAmountAts.appendChild(inputCityNumbersAmountAts);
+            cityNumbersAmountAtsRow.appendChild(divColLabelCityNumbersAmountAts);
+            cityNumbersAmountAtsRow.appendChild(divColInputCityNumbersAmountAts);
+            divContainerBody.appendChild(cityNumbersAmountAtsRow);
+            
+            let innerConnectionsAmountRow = document.createElement("div");
+            innerConnectionsAmountRow.className = "row mt-2";
+            
+            let divColLabelConnectionsAmount = document.createElement("div")
+            divColLabelConnectionsAmount.className = "col-3";
+            divColLabelConnectionsAmount.innerText = "Внутренние подключения";
+            
+            
+            let divColConteinerForRowsInputs = document.createElement("div");
+            divColConteinerForRowsInputs.className = "col-9";
+            
+            
+            let innerConnectionsIpAmountRow = document.createElement("div");
+            innerConnectionsIpAmountRow.className = "row";
+            
+            let divColLabelInnerConnectionsIpAmount = document.createElement("div");
+            divColLabelInnerConnectionsIpAmount.className = "col-4";
+            divColLabelInnerConnectionsIpAmount.innerText = "ip";
+            
+            let divColInputInnerConnectionsIpAmount = document.createElement("div");
+            divColInputInnerConnectionsIpAmount.className = "col-8";
+            
+            let inputInnerConnectionsIpAmount = document.createElement("input");
+            inputInnerConnectionsIpAmount.className = "form-control form-control-sm";
+            inputInnerConnectionsIpAmount.type = "number";
+            inputInnerConnectionsIpAmount.min = 1;
+            inputInnerConnectionsIpAmount.max = 999;
+            inputInnerConnectionsIpAmount.value = 1;
+            inputInnerConnectionsIpAmount.id = "innerConnectionIp";
+            
+            let innerConnectionsAnalogAmountRow = document.createElement("div");
+            innerConnectionsAnalogAmountRow.className = "row mt-2";
+            
+            let divColLabelInnerConnectionsAnalogAmount = document.createElement("div");
+            divColLabelInnerConnectionsAnalogAmount.className = "col-4";
+            divColLabelInnerConnectionsAnalogAmount.innerText = "аналоговые";
+            
+            let divColInputInnerConnectionsAnalogAmount = document.createElement("div");
+            divColInputInnerConnectionsAnalogAmount.className = "col-8";
+            
+            let inputInnerConnectionsAnalogAmount = document.createElement("input");
+            inputInnerConnectionsAnalogAmount.className = "form-control form-control-sm";
+            inputInnerConnectionsAnalogAmount.type = "number";
+            inputInnerConnectionsAnalogAmount.id = "innerConnectionAnalog";
+            inputInnerConnectionsAnalogAmount.min = 1;
+            inputInnerConnectionsAnalogAmount.max = 999;
+            inputInnerConnectionsAnalogAmount.value = 1;
+            
+            
+            
+            divColInputInnerConnectionsIpAmount.appendChild(inputInnerConnectionsIpAmount);
+            divColInputInnerConnectionsAnalogAmount.appendChild(inputInnerConnectionsAnalogAmount);
+            innerConnectionsAnalogAmountRow.appendChild(divColLabelInnerConnectionsAnalogAmount);
+            innerConnectionsAnalogAmountRow.appendChild(divColInputInnerConnectionsAnalogAmount);
+            innerConnectionsIpAmountRow.appendChild(divColLabelInnerConnectionsIpAmount);
+            innerConnectionsIpAmountRow.appendChild(divColInputInnerConnectionsIpAmount);
+            divColConteinerForRowsInputs.appendChild(innerConnectionsIpAmountRow);
+            divColConteinerForRowsInputs.appendChild(innerConnectionsAnalogAmountRow)
+            innerConnectionsAmountRow.appendChild(divColLabelConnectionsAmount);
+            innerConnectionsAmountRow.appendChild(divColConteinerForRowsInputs);
+            divContainerBody.appendChild(innerConnectionsAmountRow);
+            break;
     }
     divModalBody.appendChild(divContainerBody);
     modalParent.appendChild(divModalBody);
@@ -1536,6 +1749,9 @@ let modalContentLoad = function (eventReason, svtObjId) {
                 break;
             case "router":
                 requestLink = "/getrouter?routerId=";
+                break;
+            case "ats":
+                requestLink = "/getats?atsId=";
                 break;
         }
         $.ajax({
@@ -1595,6 +1811,12 @@ let modalContentLoad = function (eventReason, svtObjId) {
                 } else if (attrib == "router") {
                     portAmount = callback.portAmount;
                     numberRoom = callback.numberRoom;
+                } else if (attrib == "ats") {
+                    innerConnectionAnalog = callback.innerConnectionAnalog;
+                    innerConnectionIp = callback.innerConnectionIp;
+                    cityNumberAmount = callback.cityNumberAmount;
+                    numberRoom = callback.numberRoom;
+                    outerConnectionType = callback.outerConnectionType;
                 }
             }
         });
@@ -1685,6 +1907,14 @@ let modalContentLoad = function (eventReason, svtObjId) {
                 $("#numberRoom")[0].value = numberRoom;
                 $("#portAmount")[0].value = portAmount;
                 break;
+            case "ats":
+                $("#nameFromOneC")[0].value = nameFromOneC;
+                $("#numberRoom")[0].value = numberRoom;
+                $("#innerConnectionAnalog")[0].value = innerConnectionAnalog;
+                $("#innerConnectionIp")[0].value = innerConnectionIp;
+                $("#cityNumberAmount")[0].value = cityNumberAmount;
+                $("#outerConnectionType")[0].value = outerConnectionType;
+                break;
         }
         if (eventReason.indexOf("storage") >= 0) {
             stor = true;
@@ -1737,6 +1967,14 @@ let modalContentLoad = function (eventReason, svtObjId) {
                 $("#nameFromOneC")[0].value = nameFromOneC;
                 $("#numberRoom")[0].value = numberRoom;
                 $("#portAmount")[0].value = portAmount;
+                break;
+                case "ats":
+                $("#nameFromOneC")[0].value = nameFromOneC;
+                $("#numberRoom")[0].value = numberRoom;
+                $("#innerConnectionAnalog")[0].value = innerConnectionAnalog;
+                $("#innerConnectionIp")[0].value = innerConnectionIp;
+                $("#cityNumberAmount")[0].value = cityNumberAmount;
+                $("#outerConnectionType")[0].value = outerConnectionType;
                 break;
             }
         }
@@ -1959,6 +2197,9 @@ let modalContentLoad = function (eventReason, svtObjId) {
                         $('#departmentSelect')[0].selectize.disable();
                     } else {
                         $('#departmentSelect')[0].selectize.enable();
+                    }
+                    if (eventReason.indexOf("element") >= 0 || eventReason.indexOf("storage") >= 0) {
+                        $('#departmentSelect')[0].selectize.setValue($('#departmentSelect')[0].selectize.search(codeDepartment).items[0].id);
                     }
                     break;
                 default:
@@ -2201,6 +2442,9 @@ let modalContentLoad = function (eventReason, svtObjId) {
                     break;
                 case "router":
                     requestLink = "/modrouter";
+                    break;
+                case "ats":
+                    requestLink = "/modats";
                     break;
             }
             $.ajax({
@@ -2991,6 +3235,23 @@ let modalContentLoad = function (eventReason, svtObjId) {
                 $("#nameFromOneC")[0].disabled = false;
             }
             break;
+        case "ats":
+            if (eventReason.indexOf("storage") >= 0) {
+                $("#numberRoom")[0].disabled = true;
+                $("#cityNumberAmount")[0].disabled = true;
+                $("#nameFromOneC")[0].disabled = true;
+                $("#innerConnectionIp")[0].disabled = true;
+                $("#innerConnectionAnalog")[0].disabled = true;
+                $("#outerConnectionType")[0].disabled = true;
+            } else {
+                $("#numberRoom")[0].disabled = false;
+                $("#cityNumberAmount")[0].disabled = false;
+                $("#nameFromOneC")[0].disabled = false;
+                $("#innerConnectionIp")[0].disabled = false;
+                $("#innerConnectionAnalog")[0].disabled = false;
+                $("#outerConnectionType")[0].disabled = false;
+            }
+            break;
     }
     if(null != $("#dateCreateSelect")[0]) {
         var dateCreate = $("#dateCreateSelect")[0];
@@ -3183,6 +3444,15 @@ document.addEventListener("DOMContentLoaded", function () {
                             '<div class="col">Кол-во портов</div>' +
                             '<div class="col">Состояние</div>';
                         break;
+                           case "ats":
+                     headerElement.innerHTML = '<div class="col">Модель</div>' +
+                            '<div class="col">ФИО</div>' +
+                            '<div class="col">Серийный номер</div>' +
+                            '<div class="col">Инвентарный номер</div>' +
+                            '<div class="col">Год ввода в экспл</div>' +
+                            '<div class="col">Кол-во город. номеров</div>' +
+                            '<div class="col">Состояние</div>';
+                        break;
                     case "*":
                        headerElement.className = "row fw-bold mt-3 mb-3";
                 if (dynamicLabel != null) {
@@ -3309,6 +3579,17 @@ document.addEventListener("DOMContentLoaded", function () {
                                     '<div class="col">' + getStatus(storageDtoes[j].departments[d].dtoes[t].status) + '</div>' +
                                     '</div>';
                                 break;
+                                case "ats":
+                                elDepartment.innerHTML = '<div class="row mb-2 d-flex align-items-center text-start">' +
+                                    '<div class="col">' + count + '. ' + storageDtoes[j].departments[d].dtoes[t].model + '</div>' +
+                                    '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].placeName + '</div>' +
+                                    '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].serialNumber + '</div>' +
+                                    '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].inventaryNumber + '</div>' +
+                                    '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].yearCreated + '</div>' +
+                                    '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].cityNumberAmount + '</div>' +
+                                    '<div class="col">' + getStatus(storageDtoes[j].departments[d].dtoes[t].status) + '</div>' +
+                                    '</div>';
+                                break;
                                 
                         }
                         liItem.childNodes[0].append(elDepartment);
@@ -3340,47 +3621,56 @@ document.addEventListener("DOMContentLoaded", function () {
             liLocation.childNodes[0].childNodes[2].append(liItem);
             headerElement = document.createElement('div');
             headerElement.className = "row fw-bold mt-3 mb-3";
-            switch(attrib) {
-                    case "switch":
-                     headerElement.innerHTML = '<div class="col">Модель</div>' +
+            switch (attrib) {
+                case "switch":
+                    headerElement.innerHTML = '<div class="col">Модель</div>' +
                             '<div class="col">ФИО</div>' +
                             '<div class="col">Серийный номер</div>' +
                             '<div class="col">Инвентарный номер</div>' +
                             '<div class="col">Тип</div>' +
                             '<div class="col">Кол-во портов</div>' +
                             '<div class="col">Состояние</div>';
-                        break;
-                        case "router":
-                     headerElement.innerHTML = '<div class="col">Модель</div>' +
+                    break;
+                case "router":
+                    headerElement.innerHTML = '<div class="col">Модель</div>' +
                             '<div class="col">ФИО</div>' +
                             '<div class="col">Серийный номер</div>' +
                             '<div class="col">Инвентарный номер</div>' +
                             '<div class="col">Расположение</div>' +
                             '<div class="col">Кол-во портов</div>' +
                             '<div class="col">Состояние</div>';
-                        break;
-                    case "*":
-                       headerElement.className = "row fw-bold mt-3 mb-3";
-                if (dynamicLabel != null) {
+                    break;
+                case "ats":
                     headerElement.innerHTML = '<div class="col">Модель</div>' +
                             '<div class="col">ФИО</div>' +
                             '<div class="col">Серийный номер</div>' +
                             '<div class="col">Инвентарный номер</div>' +
-                            '<div class="col">Дата ввода в экспл</div>' +
-                            '<div class="col">Состояние</div>' +
-                            '<div class="col">Дата выпуска</div>' +
-                            '<div class="col">' + dynamicLabel + '</div>';
-                } else {
-                    headerElement.innerHTML = '<div class="col">Модель</div>' +
-                            '<div class="col">ФИО</div>' +
-                            '<div class="col">Серийный номер</div>' +
-                            '<div class="col">Инвентарный номер</div>' +
-                            '<div class="col">Дата ввода в экспл</div>' +
-                            '<div class="col">Состояние</div>' +
-                            '<div class="col">Дата выпуска</div>';
-                }
-                        break;
-                }
+                            '<div class="col">Год ввода в экспл</div>' +
+                            '<div class="col">Кол-во город. номеров</div>' +
+                            '<div class="col">Состояние</div>';
+                    break;
+                case "*":
+                    headerElement.className = "row fw-bold mt-3 mb-3";
+                    if (dynamicLabel != null) {
+                        headerElement.innerHTML = '<div class="col">Модель</div>' +
+                                '<div class="col">ФИО</div>' +
+                                '<div class="col">Серийный номер</div>' +
+                                '<div class="col">Инвентарный номер</div>' +
+                                '<div class="col">Дата ввода в экспл</div>' +
+                                '<div class="col">Состояние</div>' +
+                                '<div class="col">Дата выпуска</div>' +
+                                '<div class="col">' + dynamicLabel + '</div>';
+                    } else {
+                        headerElement.innerHTML = '<div class="col">Модель</div>' +
+                                '<div class="col">ФИО</div>' +
+                                '<div class="col">Серийный номер</div>' +
+                                '<div class="col">Инвентарный номер</div>' +
+                                '<div class="col">Дата ввода в экспл</div>' +
+                                '<div class="col">Состояние</div>' +
+                                '<div class="col">Дата выпуска</div>';
+                    }
+                    break;
+            }
             liItem.childNodes[0].append(headerElement);
             for (d = 0; d < storageDtoes[j].departments.length; d++) {
                 for (t = 0; t < storageDtoes[j].departments[d].dtoes.length; t++) {
@@ -3484,6 +3774,17 @@ document.addEventListener("DOMContentLoaded", function () {
                                     '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].inventaryNumber + '</div>' +
                                     '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].numberRoom + '</div>' +
                                     '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].portAmount + '</div>' +
+                                    '<div class="col">' + getStatus(storageDtoes[j].departments[d].dtoes[t].status) + '</div>' +
+                                    '</div>';
+                                break;
+                                case "ats":
+                                elDepartment.innerHTML = '<div class="row mb-2 d-flex align-items-center text-start">' +
+                                    '<div class="col">' + count + '. ' + storageDtoes[j].departments[d].dtoes[t].model + '</div>' +
+                                    '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].placeName + '</div>' +
+                                    '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].serialNumber + '</div>' +
+                                    '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].inventaryNumber + '</div>' +
+                                    '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].yearCreated + '</div>' +
+                                    '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].cityNumberAmount + '</div>' +
                                     '<div class="col">' + getStatus(storageDtoes[j].departments[d].dtoes[t].status) + '</div>' +
                                     '</div>';
                                 break;

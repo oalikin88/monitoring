@@ -9,6 +9,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.MappingConstants;
 import org.mapstruct.NullValuePropertyMappingStrategy;
 import org.mapstruct.ReportingPolicy;
+import ru.gov.sfr.aos.monitoring.entities.AtsModel;
 import ru.gov.sfr.aos.monitoring.entities.CdDrive;
 import ru.gov.sfr.aos.monitoring.entities.Cpu;
 import ru.gov.sfr.aos.monitoring.entities.Hdd;
@@ -140,4 +141,9 @@ public abstract class SvtModelMapper {
     public abstract SvtModelDto getModelRouterDto(RouterModel routerModel);
     public abstract List<RouterModel> getModelRouterList(List<SvtModelDto> dtoes);
     public abstract List<SvtModelDto> getModelRouterDtoes (List<RouterModel> modelRouterList);
+    
+    public abstract AtsModel getModelAts (SvtModelDto dto);
+    public abstract SvtModelDto getModelAtsDto(AtsModel atsModel);
+    public abstract List<AtsModel> getModelAtsList(List<SvtModelDto> dtoes);
+    public abstract List<SvtModelDto> getModelAtsDtoes (List<AtsModel> modelAtsList);
 }

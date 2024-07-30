@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ru.gov.sfr.aos.monitoring.dictionaries.PlaceType;
+import ru.gov.sfr.aos.monitoring.entities.Ats;
+import ru.gov.sfr.aos.monitoring.entities.AtsModel;
 import ru.gov.sfr.aos.monitoring.entities.BatteryType;
 import ru.gov.sfr.aos.monitoring.entities.CdDrive;
 import ru.gov.sfr.aos.monitoring.entities.Cpu;
@@ -44,6 +46,7 @@ import ru.gov.sfr.aos.monitoring.entities.SystemBlockModel;
 import ru.gov.sfr.aos.monitoring.entities.Ups;
 import ru.gov.sfr.aos.monitoring.entities.UpsModel;
 import ru.gov.sfr.aos.monitoring.entities.VideoCard;
+import ru.gov.sfr.aos.monitoring.mappers.AtsMapper;
 import ru.gov.sfr.aos.monitoring.mappers.BatteryTypeMapper;
 import ru.gov.sfr.aos.monitoring.mappers.MonitorMapper;
 import ru.gov.sfr.aos.monitoring.mappers.OperationSystemMapper;
@@ -75,11 +78,14 @@ import ru.gov.sfr.aos.monitoring.models.DepDto;
 import ru.gov.sfr.aos.monitoring.models.HddDto;
 import ru.gov.sfr.aos.monitoring.models.OperationSystemDto;
 import ru.gov.sfr.aos.monitoring.models.RamDto;
+import ru.gov.sfr.aos.monitoring.models.SvtAtsDTO;
 import ru.gov.sfr.aos.monitoring.models.SvtScannerDTO;
 import ru.gov.sfr.aos.monitoring.models.SvtServerDTO;
 import ru.gov.sfr.aos.monitoring.models.SvtSwitchHubDTO;
 import ru.gov.sfr.aos.monitoring.models.SvtSystemBlockDTO;
 import ru.gov.sfr.aos.monitoring.repositories.BatteryTypeRepo;
+import ru.gov.sfr.aos.monitoring.services.AtsModelService;
+import ru.gov.sfr.aos.monitoring.services.AtsService;
 import ru.gov.sfr.aos.monitoring.services.BatteryTypeService;
 import ru.gov.sfr.aos.monitoring.services.CdDriveModelService;
 import ru.gov.sfr.aos.monitoring.services.CpuModelService;
@@ -208,6 +214,13 @@ public class GetInfoController {
     private RouterService routerService;
     @Autowired
     private RouterMapper routerMapper;
+    @Autowired
+    private AtsModelService atsModelService;
+    @Autowired
+    private AtsService atsService;
+    @Autowired
+    private AtsMapper atsMapper;
+    
 
     @GetMapping("/getinfooo")
     public List<EmployeeDTO> getEmpl() {
@@ -644,5 +657,21 @@ public class GetInfoController {
         SvtSwitchHubDTO routerDto = routerMapper.getDto(router);
 
         return routerDto;
+    }
+    
+    @GetMapping("/modats")
+    public List<SvtModelDto> getModelAts() {
+        List<AtsModel> allModels = atsModelService.getAllModels();
+        List<SvtModelDto> dtoes = svtModelMapper.getModelAtsDtoes(allModels);
+        return dtoes;
+    }
+    
+    @GetMapping("/getats")
+    public SvtDTO getAtsById(Long atsId) {
+
+        Ats ats = atsService.getById(atsId);
+        SvtAtsDTO atsDto = atsMapper.getDto(ats);
+
+        return atsDto;
     }
 }

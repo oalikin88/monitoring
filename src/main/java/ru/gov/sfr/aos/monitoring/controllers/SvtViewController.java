@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import ru.gov.sfr.aos.monitoring.dictionaries.PlaceType;
+import ru.gov.sfr.aos.monitoring.entities.Ats;
+import ru.gov.sfr.aos.monitoring.entities.AtsModel;
 import ru.gov.sfr.aos.monitoring.entities.BatteryType;
 import ru.gov.sfr.aos.monitoring.entities.CdDrive;
 import ru.gov.sfr.aos.monitoring.entities.Cpu;
@@ -47,6 +49,7 @@ import ru.gov.sfr.aos.monitoring.entities.Ups;
 import ru.gov.sfr.aos.monitoring.entities.UpsModel;
 import ru.gov.sfr.aos.monitoring.entities.VideoCard;
 import ru.gov.sfr.aos.monitoring.exceptions.ObjectAlreadyExists;
+import ru.gov.sfr.aos.monitoring.mappers.AtsMapper;
 import ru.gov.sfr.aos.monitoring.mappers.BatteryTypeMapper;
 import ru.gov.sfr.aos.monitoring.mappers.MonitorMapper;
 import ru.gov.sfr.aos.monitoring.mappers.OperationSystemMapper;
@@ -67,6 +70,7 @@ import ru.gov.sfr.aos.monitoring.models.LocationByTreeDto;
 import ru.gov.sfr.aos.monitoring.models.OperationSystemDto;
 import ru.gov.sfr.aos.monitoring.models.PlaceDTO;
 import ru.gov.sfr.aos.monitoring.models.RamDto;
+import ru.gov.sfr.aos.monitoring.models.SvtAtsDTO;
 import ru.gov.sfr.aos.monitoring.models.SvtDTO;
 import ru.gov.sfr.aos.monitoring.models.SvtModelDto;
 import ru.gov.sfr.aos.monitoring.models.SvtScannerDTO;
@@ -75,6 +79,9 @@ import ru.gov.sfr.aos.monitoring.models.SvtSwitchHubDTO;
 import ru.gov.sfr.aos.monitoring.models.SvtSystemBlockDTO;
 import ru.gov.sfr.aos.monitoring.repositories.BatteryTypeRepo;
 import ru.gov.sfr.aos.monitoring.repositories.SystemBlockRepo;
+import ru.gov.sfr.aos.monitoring.services.AtsModelService;
+import ru.gov.sfr.aos.monitoring.services.AtsOutDtoTreeService;
+import ru.gov.sfr.aos.monitoring.services.AtsService;
 import ru.gov.sfr.aos.monitoring.services.BatteryTypeService;
 import ru.gov.sfr.aos.monitoring.services.CdDriveModelService;
 import ru.gov.sfr.aos.monitoring.services.CpuModelService;
@@ -226,6 +233,14 @@ public class SvtViewController {
     private RouterMapper routerMapper;
     @Autowired
     private RouterOutDtoTreeService routerOutDtoTreeService;
+    @Autowired
+    private AtsModelService atsModelService;
+    @Autowired
+    private AtsService atsService;
+    @Autowired
+    private AtsOutDtoTreeService atsOutDtoTreeService;
+    @Autowired
+    private AtsMapper atsMapper;
     
     
 //  @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
@@ -1348,4 +1363,99 @@ public class SvtViewController {
         return "redirect:/router";
     }
     
+    
+                //      @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
+    @GetMapping("/mats")
+    public String getModelAts(Model model) {
+        List<AtsModel> atsModels = atsModelService.getAllModels();
+        List<SvtModelDto> getAtsModelsDtoes = svtModelMapper.getModelAtsDtoes(atsModels);
+        model.addAttribute("dtoes", getAtsModelsDtoes);
+        model.addAttribute("namePage", "Модели АТС");
+        model.addAttribute("attribute", "mats");
+        return "models";
+    }
+    
+//    @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
+    @PostMapping("/mats")
+    public String saveModelAts(@RequestBody SvtModelDto dto) throws ObjectAlreadyExists {
+        AtsModel atsModel = svtModelMapper.getModelAts(dto);
+        atsModelService.saveModel(atsModel);
+        return "redirect:/mats";
+        
+    }
+    
+             //  @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
+    @GetMapping("/ats")
+    public String getAts(Model model, @RequestParam(value="username",required=false) String username) {
+        Map<Location, List<Ats>> svtObjectsByEmployee = null;
+        if(null != username) {
+            svtObjectsByEmployee = atsService.getSvtObjectsByName(username, PlaceType.SERVERROOM);
+        } else {
+            svtObjectsByEmployee = atsService.getSvtObjectsByPlaceType(PlaceType.SERVERROOM);
+        }
+        List<LocationByTreeDto> treeSvtDtoByEmployee = atsOutDtoTreeService.getTreeSvtDtoByPlaceType(svtObjectsByEmployee)
+                .stream()
+                .sorted((o1, o2) -> o1.getLocationName().compareTo(o2.getLocationName()))
+                .collect(Collectors.toList());
+        Map<Location, List<Ats>> svtObjectsByStorage = null;
+        
+        if(null != username) {
+            svtObjectsByStorage = atsService.getSvtObjectsByName(username, PlaceType.STORAGE);
+        } else {
+            svtObjectsByStorage = atsService.getSvtObjectsByPlaceType(PlaceType.STORAGE);
+        }
+        List<LocationByTreeDto> treeSvtDtoByStorage = atsOutDtoTreeService.getTreeSvtDtoByPlaceType(svtObjectsByStorage)
+                .stream()
+                .sorted((o1, o2) -> o1.getLocationName().compareTo(o2.getLocationName()))
+                .collect(Collectors.toList());
+        
+        model.addAttribute("dtoes", treeSvtDtoByEmployee);
+        model.addAttribute("dtoesStorage", treeSvtDtoByStorage);
+        model.addAttribute("attribute", "ats");
+        model.addAttribute("placeAttribute", "serverroom");
+        model.addAttribute("namePage","АТС");
+        
+        return "svtobj";
+    }
+    
+ //   @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
+    @PostMapping("/ats")
+    public String saveAts(@RequestBody SvtAtsDTO dto) throws ObjectAlreadyExists {
+        atsService.createSvtObj(dto);
+        return "redirect:/ats";
+    }
+    
+    
+        @PostMapping("/updats")
+    public String updateAts (@RequestBody SvtAtsDTO dto) throws ObjectAlreadyExists {
+        atsService.updateSvtObj(dto);
+        return "redirect:/ats";
+     
+    }
+    
+              //      @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
+    @PostMapping("/atstostor")
+    public String sendToStorageAts(@RequestBody SvtAtsDTO dto) throws ObjectAlreadyExists {
+            // SystemBlock findById = sysrepo.findById(dto.getId()).get();
+            Ats ats = atsMapper.getEntityFromDto(dto);
+        atsService.sendToStorage(ats);
+        return "redirect:/ats";
+        
+    }
+    
+       //   @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
+    @PostMapping("/atsbackstor")
+    public String backFromStorageAts (@RequestBody SvtAtsDTO dto) throws ObjectAlreadyExists {
+            Ats ats = atsMapper.getEntityFromDto(dto);
+        atsService.backFromStorage(ats, dto.getPlaceId());
+        return "redirect:/ats";
+        
+    }
+    
+          //   @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
+    @PostMapping("/atsarchived")
+    public String sendAtsToArchive(@RequestBody ArchivedDto dto) throws ObjectAlreadyExists {
+        atsService.svtObjToArchive(dto);
+        return "redirect:/ats";
+    }
 }
