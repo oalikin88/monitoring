@@ -19,19 +19,18 @@ import javax.persistence.OneToMany;
  * @author 041AlikinOS
  */
 @Entity
-public class SystemBlockModel extends SvtModel {
+public class ConditionerModel extends SvtModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String model;
-    @OneToMany(targetEntity = SystemBlock.class, mappedBy = "systemBlockModel", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Set<SystemBlock> systemBlocks = new HashSet<>();
+    @OneToMany(targetEntity = Conditioner.class, mappedBy = "conditionerModel", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Set<Conditioner> conditioners = new HashSet<>();
 
-    public SystemBlockModel() {
+    public ConditionerModel() {
     }
 
-    
-    public SystemBlockModel(String model) {
+    public ConditionerModel(String model) {
         this.model = model;
     }
 
@@ -51,12 +50,12 @@ public class SystemBlockModel extends SvtModel {
         this.model = model;
     }
 
-    public Set<SystemBlock> getSystemBlocks() {
-        return systemBlocks;
+    public Set<Conditioner> getConditioners() {
+        return conditioners;
     }
 
-    public void setSystemBlocks(Set<SystemBlock> systemBlocks) {
-        this.systemBlocks = systemBlocks;
+    public void setConditioners(Set<Conditioner> conditioners) {
+        this.conditioners = conditioners;
     }
     
     

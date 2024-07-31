@@ -20,6 +20,8 @@ import ru.gov.sfr.aos.monitoring.entities.Ats;
 import ru.gov.sfr.aos.monitoring.entities.AtsModel;
 import ru.gov.sfr.aos.monitoring.entities.BatteryType;
 import ru.gov.sfr.aos.monitoring.entities.CdDrive;
+import ru.gov.sfr.aos.monitoring.entities.Conditioner;
+import ru.gov.sfr.aos.monitoring.entities.ConditionerModel;
 import ru.gov.sfr.aos.monitoring.entities.Cpu;
 import ru.gov.sfr.aos.monitoring.entities.Hdd;
 import ru.gov.sfr.aos.monitoring.entities.Keyboard;
@@ -51,6 +53,7 @@ import ru.gov.sfr.aos.monitoring.entities.VideoCard;
 import ru.gov.sfr.aos.monitoring.exceptions.ObjectAlreadyExists;
 import ru.gov.sfr.aos.monitoring.mappers.AtsMapper;
 import ru.gov.sfr.aos.monitoring.mappers.BatteryTypeMapper;
+import ru.gov.sfr.aos.monitoring.mappers.ConditionerMapper;
 import ru.gov.sfr.aos.monitoring.mappers.MonitorMapper;
 import ru.gov.sfr.aos.monitoring.mappers.OperationSystemMapper;
 import ru.gov.sfr.aos.monitoring.mappers.PhoneMapper;
@@ -71,6 +74,7 @@ import ru.gov.sfr.aos.monitoring.models.OperationSystemDto;
 import ru.gov.sfr.aos.monitoring.models.PlaceDTO;
 import ru.gov.sfr.aos.monitoring.models.RamDto;
 import ru.gov.sfr.aos.monitoring.models.SvtAtsDTO;
+import ru.gov.sfr.aos.monitoring.models.SvtConditionerDTO;
 import ru.gov.sfr.aos.monitoring.models.SvtDTO;
 import ru.gov.sfr.aos.monitoring.models.SvtModelDto;
 import ru.gov.sfr.aos.monitoring.models.SvtScannerDTO;
@@ -78,12 +82,14 @@ import ru.gov.sfr.aos.monitoring.models.SvtServerDTO;
 import ru.gov.sfr.aos.monitoring.models.SvtSwitchHubDTO;
 import ru.gov.sfr.aos.monitoring.models.SvtSystemBlockDTO;
 import ru.gov.sfr.aos.monitoring.repositories.BatteryTypeRepo;
-import ru.gov.sfr.aos.monitoring.repositories.SystemBlockRepo;
 import ru.gov.sfr.aos.monitoring.services.AtsModelService;
 import ru.gov.sfr.aos.monitoring.services.AtsOutDtoTreeService;
 import ru.gov.sfr.aos.monitoring.services.AtsService;
 import ru.gov.sfr.aos.monitoring.services.BatteryTypeService;
 import ru.gov.sfr.aos.monitoring.services.CdDriveModelService;
+import ru.gov.sfr.aos.monitoring.services.ConditionerModelService;
+import ru.gov.sfr.aos.monitoring.services.ConditionerOutDtoTreeService;
+import ru.gov.sfr.aos.monitoring.services.ConditionerService;
 import ru.gov.sfr.aos.monitoring.services.CpuModelService;
 import ru.gov.sfr.aos.monitoring.services.DepartmentService;
 import ru.gov.sfr.aos.monitoring.services.HddModelService;
@@ -200,8 +206,6 @@ public class SvtViewController {
     @Autowired
     private OperationSystemMapper operationSystemMapper;
     @Autowired
-    private SystemBlockRepo sysrepo;
-    @Autowired
     private ScannerModelService scannerModelService;
     @Autowired
     private ScannerService scannerService;
@@ -241,6 +245,14 @@ public class SvtViewController {
     private AtsOutDtoTreeService atsOutDtoTreeService;
     @Autowired
     private AtsMapper atsMapper;
+    @Autowired
+    private ConditionerModelService conditionerModelService;
+    @Autowired
+    private ConditionerService conditionerService;
+    @Autowired
+    private ConditionerOutDtoTreeService conditionerOutDtoTreeService;
+    @Autowired
+    private ConditionerMapper conditionerMapper;
     
     
 //  @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
@@ -1458,4 +1470,100 @@ public class SvtViewController {
         atsService.svtObjToArchive(dto);
         return "redirect:/ats";
     }
+    
+    
+                   //      @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
+    @GetMapping("/mconditioner")
+    public String getModelConditioner(Model model) {
+        List<ConditionerModel> conditionerModels = conditionerModelService.getAllModels();
+        List<SvtModelDto> getAtsModelsDtoes = svtModelMapper.getModelConditionerDtoes(conditionerModels);
+        model.addAttribute("dtoes", getAtsModelsDtoes);
+        model.addAttribute("namePage", "Модели кондиционеров");
+        model.addAttribute("attribute", "mconditioner");
+        return "models";
+    }
+    
+//    @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
+    @PostMapping("/mconditioner")
+    public String saveModelConditioner(@RequestBody SvtModelDto dto) throws ObjectAlreadyExists {
+        ConditionerModel conditionerModel = svtModelMapper.getModelConditioner(dto);
+        conditionerModelService.saveModel(conditionerModel);
+        return "redirect:/mconditioner";
+        
+    }
+    
+                 //  @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
+    @GetMapping("/conditioner")
+    public String getConditioner(Model model, @RequestParam(value="username", required=false) String username) {
+        Map<Location, List<Conditioner>> svtObjectsByEmployee = null;
+        if(null != username) {
+            svtObjectsByEmployee = conditionerService.getSvtObjectsByName(username, PlaceType.SERVERROOM);
+        } else {
+            svtObjectsByEmployee = conditionerService.getSvtObjectsByPlaceType(PlaceType.SERVERROOM);
+        }
+        List<LocationByTreeDto> treeSvtDtoByEmployee = conditionerOutDtoTreeService.getTreeSvtDtoByPlaceType(svtObjectsByEmployee)
+                .stream()
+                .sorted((o1, o2) -> o1.getLocationName().compareTo(o2.getLocationName()))
+                .collect(Collectors.toList());
+        Map<Location, List<Conditioner>> svtObjectsByStorage = null;
+        
+        if(null != username) {
+            svtObjectsByStorage = conditionerService.getSvtObjectsByName(username, PlaceType.STORAGE);
+        } else {
+            svtObjectsByStorage = conditionerService.getSvtObjectsByPlaceType(PlaceType.STORAGE);
+        }
+        List<LocationByTreeDto> treeSvtDtoByStorage = conditionerOutDtoTreeService.getTreeSvtDtoByPlaceType(svtObjectsByStorage)
+                .stream()
+                .sorted((o1, o2) -> o1.getLocationName().compareTo(o2.getLocationName()))
+                .collect(Collectors.toList());
+        
+        model.addAttribute("dtoes", treeSvtDtoByEmployee);
+        model.addAttribute("dtoesStorage", treeSvtDtoByStorage);
+        model.addAttribute("attribute", "conditioner");
+        model.addAttribute("placeAttribute", "serverroom");
+        model.addAttribute("namePage","Кондиционеры");
+        
+        return "svtobj";
+    }
+    
+ //   @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
+    @PostMapping("/conditioner")
+    public String saveConditioner(@RequestBody SvtConditionerDTO dto) throws ObjectAlreadyExists {
+        conditionerService.createSvtObj(dto);
+        return "redirect:/conditioner";
+    }
+    
+          @PostMapping("/updconditioner")
+    public String updateConditioner (@RequestBody SvtConditionerDTO dto) throws ObjectAlreadyExists {
+        conditionerService.updateSvtObj(dto);
+        return "redirect:/conditioner";
+     
+    }
+    
+              //      @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
+    @PostMapping("/conditionertostor")
+    public String sendToStorageConditioner(@RequestBody SvtConditionerDTO dto) throws ObjectAlreadyExists {
+            // SystemBlock findById = sysrepo.findById(dto.getId()).get();
+            Conditioner conditioner = conditionerMapper.getEntityFromDto(dto);
+        conditionerService.sendToStorage(conditioner);
+        return "redirect:/conditioner";
+        
+    }
+    
+       //   @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
+    @PostMapping("/conditionerbackstor")
+    public String backFromStorageConditioner (@RequestBody SvtConditionerDTO dto) throws ObjectAlreadyExists {
+            Conditioner conditioner = conditionerMapper.getEntityFromDto(dto);
+        conditionerService.backFromStorage(conditioner, dto.getPlaceId());
+        return "redirect:/conditioner";
+        
+    }
+    
+          //   @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
+    @PostMapping("/conditionerarchived")
+    public String sendConditionerToArchive(@RequestBody ArchivedDto dto) throws ObjectAlreadyExists {
+        conditionerService.svtObjToArchive(dto);
+        return "redirect:/conditioner";
+    }
+    
 }

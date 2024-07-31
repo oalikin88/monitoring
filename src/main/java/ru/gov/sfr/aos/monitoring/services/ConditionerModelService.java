@@ -5,15 +5,14 @@
 package ru.gov.sfr.aos.monitoring.services;
 
 import org.springframework.stereotype.Service;
-import ru.gov.sfr.aos.monitoring.entities.Ats;
-import ru.gov.sfr.aos.monitoring.mappers.AtsMapper;
-import ru.gov.sfr.aos.monitoring.models.SvtAtsDTO;
+import ru.gov.sfr.aos.monitoring.entities.ConditionerModel;
+import ru.gov.sfr.aos.monitoring.repositories.ConditionerModelRepo;
 
 /**
  *
  * @author 041AlikinOS
  */
 @Service
-public class AtsOutDtoTreeService extends SvtOutDtoTreeService<Ats, AtsMapper, SvtAtsDTO> {
+public class ConditionerModelService extends SvtModelService<ConditionerModel, ConditionerModelRepo> {
     
 }

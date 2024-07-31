@@ -19,7 +19,6 @@ import ru.gov.sfr.aos.monitoring.entities.Contract;
 import ru.gov.sfr.aos.monitoring.entities.ObjectBuing;
 import ru.gov.sfr.aos.monitoring.entities.Place;
 import ru.gov.sfr.aos.monitoring.models.SvtAtsDTO;
-import ru.gov.sfr.aos.monitoring.models.SvtDTO;
 import ru.gov.sfr.aos.monitoring.repositories.AtsModelRepo;
 import ru.gov.sfr.aos.monitoring.repositories.AtsRepo;
 import ru.gov.sfr.aos.monitoring.repositories.ContractRepo;
@@ -30,7 +29,7 @@ import ru.gov.sfr.aos.monitoring.repositories.PlaceRepo;
  * @author 041AlikinOS
  */
 @Service
-public class AtsService extends SvtObjService <Ats, AtsRepo, SvtAtsDTO>{
+public class AtsService extends SvtObjService <Ats, AtsRepo, SvtAtsDTO> {
     @Autowired
     private AtsRepo atsRepo;
     @Autowired

@@ -19,6 +19,8 @@ import ru.gov.sfr.aos.monitoring.entities.Ats;
 import ru.gov.sfr.aos.monitoring.entities.AtsModel;
 import ru.gov.sfr.aos.monitoring.entities.BatteryType;
 import ru.gov.sfr.aos.monitoring.entities.CdDrive;
+import ru.gov.sfr.aos.monitoring.entities.Conditioner;
+import ru.gov.sfr.aos.monitoring.entities.ConditionerModel;
 import ru.gov.sfr.aos.monitoring.entities.Cpu;
 import ru.gov.sfr.aos.monitoring.entities.Hdd;
 import ru.gov.sfr.aos.monitoring.entities.Keyboard;
@@ -48,6 +50,7 @@ import ru.gov.sfr.aos.monitoring.entities.UpsModel;
 import ru.gov.sfr.aos.monitoring.entities.VideoCard;
 import ru.gov.sfr.aos.monitoring.mappers.AtsMapper;
 import ru.gov.sfr.aos.monitoring.mappers.BatteryTypeMapper;
+import ru.gov.sfr.aos.monitoring.mappers.ConditionerMapper;
 import ru.gov.sfr.aos.monitoring.mappers.MonitorMapper;
 import ru.gov.sfr.aos.monitoring.mappers.OperationSystemMapper;
 import ru.gov.sfr.aos.monitoring.mappers.SvtModelMapper;
@@ -79,6 +82,7 @@ import ru.gov.sfr.aos.monitoring.models.HddDto;
 import ru.gov.sfr.aos.monitoring.models.OperationSystemDto;
 import ru.gov.sfr.aos.monitoring.models.RamDto;
 import ru.gov.sfr.aos.monitoring.models.SvtAtsDTO;
+import ru.gov.sfr.aos.monitoring.models.SvtConditionerDTO;
 import ru.gov.sfr.aos.monitoring.models.SvtScannerDTO;
 import ru.gov.sfr.aos.monitoring.models.SvtServerDTO;
 import ru.gov.sfr.aos.monitoring.models.SvtSwitchHubDTO;
@@ -88,6 +92,8 @@ import ru.gov.sfr.aos.monitoring.services.AtsModelService;
 import ru.gov.sfr.aos.monitoring.services.AtsService;
 import ru.gov.sfr.aos.monitoring.services.BatteryTypeService;
 import ru.gov.sfr.aos.monitoring.services.CdDriveModelService;
+import ru.gov.sfr.aos.monitoring.services.ConditionerModelService;
+import ru.gov.sfr.aos.monitoring.services.ConditionerService;
 import ru.gov.sfr.aos.monitoring.services.CpuModelService;
 import ru.gov.sfr.aos.monitoring.services.HddModelService;
 import ru.gov.sfr.aos.monitoring.services.KeyboardModelService;
@@ -220,6 +226,12 @@ public class GetInfoController {
     private AtsService atsService;
     @Autowired
     private AtsMapper atsMapper;
+    @Autowired
+    private ConditionerModelService conditionerModelService;
+    @Autowired
+    private ConditionerService conditionerService;
+    @Autowired
+    private ConditionerMapper conditionerMapper;
     
 
     @GetMapping("/getinfooo")
@@ -673,5 +685,21 @@ public class GetInfoController {
         SvtAtsDTO atsDto = atsMapper.getDto(ats);
 
         return atsDto;
+    }
+    
+       @GetMapping("/modconditioner")
+    public List<SvtModelDto> getModelConditioner() {
+        List<ConditionerModel> allModels = conditionerModelService.getAllModels();
+        List<SvtModelDto> dtoes = svtModelMapper.getModelConditionerDtoes(allModels);
+        return dtoes;
+    }
+    
+    @GetMapping("/getconditioner")
+    public SvtDTO getConditionerById(Long conditionerId) {
+
+        Conditioner conditioner = conditionerService.getById(conditionerId);
+        SvtConditionerDTO conditionerDto = conditionerMapper.getDto(conditioner);
+
+        return conditionerDto;
     }
 }

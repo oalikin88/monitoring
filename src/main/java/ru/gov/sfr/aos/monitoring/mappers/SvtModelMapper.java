@@ -11,6 +11,7 @@ import org.mapstruct.NullValuePropertyMappingStrategy;
 import org.mapstruct.ReportingPolicy;
 import ru.gov.sfr.aos.monitoring.entities.AtsModel;
 import ru.gov.sfr.aos.monitoring.entities.CdDrive;
+import ru.gov.sfr.aos.monitoring.entities.ConditionerModel;
 import ru.gov.sfr.aos.monitoring.entities.Cpu;
 import ru.gov.sfr.aos.monitoring.entities.Hdd;
 import ru.gov.sfr.aos.monitoring.entities.Keyboard;
@@ -146,4 +147,9 @@ public abstract class SvtModelMapper {
     public abstract SvtModelDto getModelAtsDto(AtsModel atsModel);
     public abstract List<AtsModel> getModelAtsList(List<SvtModelDto> dtoes);
     public abstract List<SvtModelDto> getModelAtsDtoes (List<AtsModel> modelAtsList);
+    
+    public abstract ConditionerModel getModelConditioner (SvtModelDto dto);
+    public abstract SvtModelDto getModelConditionerDto(ConditionerModel conditionerModel);
+    public abstract List<ConditionerModel> getModelConditionerList(List<SvtModelDto> dtoes);
+    public abstract List<SvtModelDto> getModelConditionerDtoes (List<ConditionerModel> modelConditionerList);
 }

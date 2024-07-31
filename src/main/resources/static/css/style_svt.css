@@ -174,4 +174,8 @@ a.sidebar-link:hover {
 .selectize-dropdown .selected {
     border-radius: 5px;
 }
-
+.checkRadio {
+    margin-left: auto;
+    margin-right: auto;
+    width: 100px;
+}

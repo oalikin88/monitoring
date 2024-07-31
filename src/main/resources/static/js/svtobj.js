@@ -59,6 +59,12 @@ let innerConnectionAnalog;
 let innerConnectionIp;
 let cityNumberAmount;
 let outerConnectionType;
+let conditionerTypeSelect;
+let splitSystem;
+let winterKit;
+let havePomp;
+let price;
+let description;
 
 let getStatus = function(input) {
     var result;
@@ -81,6 +87,25 @@ let getStatus = function(input) {
         }
         return result;
 } 
+
+let getConditionerType = function(input) {
+    var result;
+    switch (input) {
+        case "WINDOW":
+            result = "Оконный";
+            break;
+        case "WALL":
+            result = "Настенный";
+            break;
+        case "CEILING":
+            result = "Потолочный";
+            break;
+        case "FLOOR":
+            result = "Напольный";
+            break;
+    }
+    return result;
+}
 
 
 let handleClickArchivedBtn = function () {
@@ -116,6 +141,9 @@ let handleClickArchivedBtn = function () {
             break;
         case "ats":
             requestLink = "/atsarchived";
+            break;
+        case "conditioner":
+            requestLink = "/conditionerarchived";
             break;
     }
     $.ajax({
@@ -236,6 +264,17 @@ let handleClickSendToStorageBtn = function () {
             dto.innerConnectionAnalog = $("#innerConnectionAnalog")[0].value;
             dto.outerConnectionType = $("#outerConnectionType")[0].value;
             break;
+        case "conditioner":
+            requestLink = "/conditionertostor";
+            dto.conditionerType = $("#conditionerTypeSelect")[0].value;
+            dto.splitSystem = $("#splitSystemTrue")[0].checked;
+            dto.numberRoom = $("#numberRoom")[0].value;
+            dto.description = $("#descriptionInput")[0].value;
+            dto.winterKit = $("#winterKitTrue")[0].checked;
+            dto.havePomp = $("#pompTrue")[0].checked;
+            dto.price = $("#price")[0].value;
+            dto.nameFromOneC = $("#nameFromOneC")[0].value;
+            break;
     }
     $.ajax({
         type: "POST",
@@ -353,6 +392,17 @@ let handleClickBackToStorageBtn = function () {
             dto.innerConnectionIp = $("#innerConnectionIp")[0].value;
             dto.innerConnectionAnalog = $("#innerConnectionAnalog")[0].value;
             dto.outerConnectionType = $("#outerConnectionType")[0].value;
+            break;
+        case "conditioner":
+            requestLink = "/conditionerbackstor";
+            dto.conditionerType = $("#conditionerTypeSelect")[0].value;
+            dto.splitSystem = $("#splitSystemTrue")[0].checked;
+            dto.numberRoom = $("#numberRoom")[0].value;
+            dto.description = $("#descriptionInput")[0].value;
+            dto.winterKit = $("#winterKitTrue")[0].checked;
+            dto.havePomp = $("#pompTrue")[0].checked;
+            dto.price = $("#price")[0].value;
+            dto.nameFromOneC = $("#nameFromOneC")[0].value;
             break;
     }
     $.ajax({
@@ -472,6 +522,17 @@ let handleClickUpdateBtn = function () {
             dto.innerConnectionAnalog = $("#innerConnectionAnalog")[0].value;
             dto.outerConnectionType = $("#outerConnectionType")[0].value;
             break;
+        case "conditioner":
+            requestLink = "/updconditioner";
+            dto.conditionerType = $("#conditionerTypeSelect")[0].value;
+            dto.splitSystem = $("#splitSystemTrue")[0].checked;
+            dto.numberRoom = $("#numberRoom")[0].value;
+            dto.description = $("#descriptionInput")[0].value;
+            dto.winterKit = $("#winterKitTrue")[0].checked;
+            dto.havePomp = $("#pompTrue")[0].checked;
+            dto.price = $("#price")[0].value;
+            dto.nameFromOneC = $("#nameFromOneC")[0].value;
+            break;
     }
     $.ajax({
         type: "POST",
@@ -523,6 +584,9 @@ let handleClickSearchSvtObject = function (input) {
             break;
         case "ats":
             request = "/ats?username=";
+            break;
+        case "conditioner":
+            request = "/conditioner?username=";
             break;
     }
     window.location.href = request + input;
@@ -624,6 +688,17 @@ let handleClickSavePhoneBtn = function () {
             dto.innerConnectionIp = $("#innerConnectionIp")[0].value;
             dto.innerConnectionAnalog = $("#innerConnectionAnalog")[0].value;
             dto.outerConnectionType = $("#outerConnectionType")[0].value;
+            break;
+        case "conditioner":
+            requestLink = "/conditioner";
+            dto.conditionerType = $("#conditionerTypeSelect")[0].value;
+            dto.splitSystem = $("#splitSystemTrue")[0].checked;
+            dto.numberRoom = $("#numberRoom")[0].value;
+            dto.description = $("#descriptionInput")[0].value;
+            dto.winterKit = $("#winterKitTrue")[0].checked;
+            dto.havePomp = $("#pompTrue")[0].checked;
+            dto.price = $("#price")[0].value;
+            dto.nameFromOneC = $("#nameFromOneC")[0].value;
             break;
     }
     $.ajax({
@@ -734,6 +809,9 @@ let modalContentLoad = function (eventReason, svtObjId) {
         case "ats":
             titleModal.innerText = titleAction + " АТС";
             break;
+        case "conditioner":
+            titleModal.innerText = titleAction + " кондиционер";
+            break;
     }
     divModalHeader.appendChild(titleModal);
     let headerCloseBtn = document.createElement("button");
@@ -814,6 +892,23 @@ let modalContentLoad = function (eventReason, svtObjId) {
             divRowYearExplAts.appendChild(divColLabelYearExplAts);
             divRowYearExplAts.appendChild(divColSelectYearExplAts);
             divContainerBody.appendChild(divRowYearExplAts);
+            break;
+             case "conditioner":
+            let divRowYearExplConditioner = document.createElement("div");
+            divRowYearExplConditioner.className = "row mt-2";
+            let divColLabelYearExplConditioner = document.createElement("div");
+            divColLabelYearExplConditioner.className = "col";
+            divColLabelYearExplConditioner.innerText = "Год ввода в эксплуатацию";
+            let divColSelectYearExplConditioner = document.createElement("div");
+            divColSelectYearExplConditioner.className = "col";
+            let selectYearExplConditioner = document.createElement("select");
+            selectYearExplConditioner.className = "form-select form-select-sm";
+            selectYearExplConditioner.id = "dateCreateSelect";
+            selectYearExplConditioner.setAttribute("aria-label", "dateCreate");
+            divColSelectYearExplConditioner.appendChild(selectYearExplConditioner);
+            divRowYearExplConditioner.appendChild(divColLabelYearExplConditioner);
+            divRowYearExplConditioner.appendChild(divColSelectYearExplConditioner);
+            divContainerBody.appendChild(divRowYearExplConditioner);
             break;
             
         default:
@@ -1707,6 +1802,195 @@ let modalContentLoad = function (eventReason, svtObjId) {
             innerConnectionsAmountRow.appendChild(divColLabelConnectionsAmount);
             innerConnectionsAmountRow.appendChild(divColConteinerForRowsInputs);
             divContainerBody.appendChild(innerConnectionsAmountRow);
+            
+            
+            
+            break;
+        case "conditioner":
+            let divRowNameFromOneCConditioner = document.createElement("div");
+            divRowNameFromOneCConditioner.className = "row mt-2";
+            let divColLabelNameFromOneCConditioner = document.createElement("div");
+            divColLabelNameFromOneCConditioner.className = "col";
+            divColLabelNameFromOneCConditioner.innerText = "Наименование в ведомости ОС";
+            let divColInputNameFromOneCConditioner = document.createElement("div");
+            divColInputNameFromOneCConditioner.className = "col";
+            let inputNameFromOneCConditioner = document.createElement("input");
+            inputNameFromOneCConditioner.className = "form-control form-control-sm";
+            inputNameFromOneCConditioner.type = "text";
+            inputNameFromOneCConditioner.placeholder = "введите наименование";
+            inputNameFromOneCConditioner.id = "nameFromOneC";
+            inputNameFromOneCConditioner.setAttribute("aria-label", "nameFromOneC");
+            divColInputNameFromOneCConditioner.appendChild(inputNameFromOneCConditioner);
+            divRowNameFromOneCConditioner.appendChild(divColLabelNameFromOneCConditioner);
+            divRowNameFromOneCConditioner.appendChild(divColInputNameFromOneCConditioner);
+            divContainerBody.appendChild(divRowNameFromOneCConditioner);
+            
+             let divRowNumberRoomConditioner = document.createElement("div");
+            divRowNumberRoomConditioner.className = "row mt-2";
+            let divColLabelNumberRoomConditioner = document.createElement("div");
+            divColLabelNumberRoomConditioner.className = "col";
+            divColLabelNumberRoomConditioner.innerText = "Кабинет";
+            let divColInputNumberRoomConditioner = document.createElement("div");
+            divColInputNumberRoomConditioner.className = "col";
+            
+            let inputNumberRoomConditioner = document.createElement("input");
+            inputNumberRoomConditioner.className = "form-control form-control-sm";
+            inputNumberRoomConditioner.type = "text";
+            inputNumberRoomConditioner.placeholder = "укажите расположение";
+            inputNumberRoomConditioner.id = "numberRoom";
+            inputNumberRoomConditioner.name = "numberRoom";
+            divColInputNumberRoomConditioner.appendChild(inputNumberRoomConditioner);
+            divRowNumberRoomConditioner.appendChild(divColLabelNumberRoomConditioner);
+            divRowNumberRoomConditioner.appendChild(divColInputNumberRoomConditioner);
+            divContainerBody.appendChild(divRowNumberRoomConditioner);
+            
+            let divRowConditionerTypeSelect = document.createElement("div");
+            divRowConditionerTypeSelect.className = "row mt-2";
+            let divColLabelConditionerTypeSelect = document.createElement("div");
+            divColLabelConditionerTypeSelect.className = "col";
+            divColLabelConditionerTypeSelect.innerText = "Тип";
+            let divColConditionerTypeSelect = document.createElement("div");
+            divColConditionerTypeSelect.className = "col";
+            let selectConditionerType = document.createElement("select");
+            selectConditionerType.className = "form-select form-select-sm";
+            selectConditionerType.id = "conditionerTypeSelect";
+            selectConditionerType.setAttribute("aria-label", "conditionerType");
+            
+            let optionConditionerTypeWindow = document.createElement("option");
+            optionConditionerTypeWindow.value = "WINDOW";
+            optionConditionerTypeWindow.innerText = "Оконный";
+            
+            let optionConditionerTypeWall = document.createElement("option");
+            optionConditionerTypeWall.value = "WALL";
+            optionConditionerTypeWall.innerText = "Настенный";
+            
+            let optionConditionerTypeCeiling = document.createElement("option");
+            optionConditionerTypeCeiling.value = "CEILING";
+            optionConditionerTypeCeiling.innerText = "Потолочный";
+            
+            let optionConditionerTypeFloor = document.createElement("option");
+            optionConditionerTypeFloor.value = "FLOOR";
+            optionConditionerTypeFloor.innerText = "Напольный";
+            
+            selectConditionerType.appendChild(optionConditionerTypeWindow);
+            selectConditionerType.appendChild(optionConditionerTypeWall);
+            selectConditionerType.appendChild(optionConditionerTypeCeiling);
+            selectConditionerType.appendChild(optionConditionerTypeFloor);
+            
+            divColConditionerTypeSelect.appendChild(selectConditionerType);
+            divRowConditionerTypeSelect.appendChild(divColLabelConditionerTypeSelect);
+            divRowConditionerTypeSelect.appendChild(divColConditionerTypeSelect);
+            divContainerBody.appendChild(divRowConditionerTypeSelect);
+            
+            let divSplitSystemRow = document.createElement("div");
+            divSplitSystemRow.className = "row mt-2";
+            let divColLabelSplitSystem = document.createElement("div");
+            divColLabelSplitSystem.className = "col-6";
+            divColLabelSplitSystem.innerText = "Сплит система";
+            let divColSplitSystemTrue = document.createElement("div");
+            divColSplitSystemTrue.className = "col-3";
+            let divColSplitSystemFalse = document.createElement("div");
+            divColSplitSystemFalse.className = "col-3";
+            let radioSplitSystemTrue = document.createElement("div");
+            radioSplitSystemTrue.className = "form-check checkRadio";
+            radioSplitSystemTrue.innerHTML = '<input class="form-check-input" type="radio" name="splitSystemRadio" id="splitSystemTrue" >' +
+                                          '<label class="form-check-label" for="splitSystemTrue">Да</label></div>';
+            let radioSplitSystemFalse = document.createElement("div");
+            radioSplitSystemFalse.className = "form-check";
+            radioSplitSystemFalse.innerHTML = '<input class="form-check-input" type="radio" name="splitSystemRadio" id="splitSystemFalse" checked>' +
+                                          '<label class="form-check-label" for="splitSystemFalse">Нет</label></div>';
+            divColSplitSystemTrue.appendChild(radioSplitSystemTrue);
+            divColSplitSystemFalse.appendChild(radioSplitSystemFalse);
+            divSplitSystemRow.appendChild(divColLabelSplitSystem);
+            divSplitSystemRow.appendChild(divColSplitSystemTrue);
+            divSplitSystemRow.appendChild(divColSplitSystemFalse);
+            divContainerBody.appendChild(divSplitSystemRow);
+            
+             let divRowConditionerDescription = document.createElement("div");
+            divRowConditionerDescription.className = "row mt-2";
+            let divColLabelConditionerDescription = document.createElement("div");
+            divColLabelConditionerDescription.className = "col";
+            divColLabelConditionerDescription.innerText = "Описание";
+            let divColInputConditionerDescription = document.createElement("div");
+            divColInputConditionerDescription.className = "col";
+            let inputConditionerDescription = document.createElement("textarea");
+            inputConditionerDescription.className = "form-control form-control-sm";
+            inputConditionerDescription.placeholder = "поле для ввода описания";
+            inputConditionerDescription.id = "descriptionInput";
+            inputConditionerDescription.setAttribute("aria-label", "descriptionInput");
+            divColInputConditionerDescription.appendChild(inputConditionerDescription);
+            divRowConditionerDescription.appendChild(divColLabelConditionerDescription);
+            divRowConditionerDescription.appendChild(divColInputConditionerDescription);
+            divContainerBody.appendChild(divRowConditionerDescription);
+            
+             let divWinterKitRow = document.createElement("div");
+            divWinterKitRow.className = "row mt-2";
+            let divColLabelWinterKit = document.createElement("div");
+            divColLabelWinterKit.className = "col-6";
+            divColLabelWinterKit.innerText = "Зимний комплект";
+            let divColWinterKitTrue = document.createElement("div");
+            divColWinterKitTrue.className = "col-3";
+            let divColWinterKitFalse = document.createElement("div");
+            divColWinterKitFalse.className = "col-3";
+            let radioWinterKitTrue = document.createElement("div");
+            radioWinterKitTrue.className = "form-check checkRadio";
+            radioWinterKitTrue.innerHTML = '<input class="form-check-input" type="radio" name="winterKitRadio" id="winterKitTrue" >' +
+                                          '<label class="form-check-label" for="winterKitTrue">Да</label></div>';
+            let radioWinterKitFalse = document.createElement("div");
+            radioWinterKitFalse.className = "form-check";
+            radioWinterKitFalse.innerHTML = '<input class="form-check-input" type="radio" name="winterKitRadio" id="winterKitFalse" checked>' +
+                                          '<label class="form-check-label" for="winterKitFalse">Нет</label></div>';
+            divColWinterKitTrue.appendChild(radioWinterKitTrue);
+            divColWinterKitFalse.appendChild(radioWinterKitFalse);
+            divWinterKitRow.appendChild(divColLabelWinterKit);
+            divWinterKitRow.appendChild(divColWinterKitTrue);
+            divWinterKitRow.appendChild(divColWinterKitFalse);
+            divContainerBody.appendChild(divWinterKitRow);
+            
+             let divPompRow = document.createElement("div");
+            divPompRow.className = "row mt-2";
+            let divColLabelPomp = document.createElement("div");
+            divColLabelPomp.className = "col-6";
+            divColLabelPomp.innerText = "Помпа";
+            let divColPompTrue = document.createElement("div");
+            divColPompTrue.className = "col-3";
+            let divColPompFalse = document.createElement("div");
+            divColPompFalse.className = "col-3";
+            let radioPompTrue = document.createElement("div");
+            radioPompTrue.className = "form-check checkRadio";
+            radioPompTrue.innerHTML = '<input class="form-check-input" type="radio" name="pompRadio" id="pompTrue" >' +
+                                          '<label class="form-check-label" for="pompTrue">Да</label></div>';
+            let radioPompFalse = document.createElement("div");
+            radioPompFalse.className = "form-check";
+            radioPompFalse.innerHTML = '<input class="form-check-input" type="radio" name="pompRadio" id="pompFalse" checked>' +
+                                          '<label class="form-check-label" for="pompFalse">Нет</label></div>';
+            divColPompTrue.appendChild(radioPompTrue);
+            divColPompFalse.appendChild(radioPompFalse);
+            divPompRow.appendChild(divColLabelPomp);
+            divPompRow.appendChild(divColPompTrue);
+            divPompRow.appendChild(divColPompFalse);
+            divContainerBody.appendChild(divPompRow);
+            
+            
+            let conditionerPriceRow = document.createElement("div");
+            conditionerPriceRow.className = "row mt-2";
+            let divColLabelConditionerPrice = document.createElement("div");
+            divColLabelConditionerPrice.className = "col";
+            divColLabelConditionerPrice.innerText = "Балансовая стоимость";
+            let divColInputConditionerPrice = document.createElement("div");
+            divColInputConditionerPrice.className = "col";
+            let inputConditionerPrice = document.createElement("input");
+            inputConditionerPrice.className = "form-control form-control-sm";
+            inputConditionerPrice.type = "number";
+            inputConditionerPrice.min = 0.00;
+            inputConditionerPrice.max = 9999999.99;
+            inputConditionerPrice.step = 0.01;
+            inputConditionerPrice.value = 0.00;
+            inputConditionerPrice.id = "price";
+            divColInputConditionerPrice.appendChild(inputConditionerPrice);
+            conditionerPriceRow.appendChild(divColLabelConditionerPrice);
+            conditionerPriceRow.appendChild(divColInputConditionerPrice);
+            divContainerBody.appendChild(conditionerPriceRow);
             break;
     }
     divModalBody.appendChild(divContainerBody);
@@ -1752,6 +2036,9 @@ let modalContentLoad = function (eventReason, svtObjId) {
                 break;
             case "ats":
                 requestLink = "/getats?atsId=";
+                break;
+            case "conditioner":
+                requestLink = "/getconditioner?conditionerId=";
                 break;
         }
         $.ajax({
@@ -1817,6 +2104,14 @@ let modalContentLoad = function (eventReason, svtObjId) {
                     cityNumberAmount = callback.cityNumberAmount;
                     numberRoom = callback.numberRoom;
                     outerConnectionType = callback.outerConnectionType;
+                } else if (attrib == "conditioner") {
+                    conditionerTypeSelect = callback.conditionerType;
+                    description = callback.description;
+                    splitSystem = callback.splitSystem;
+                    winterKit = callback.winterKit;
+                    havePomp = callback.havePomp;
+                    numberRoom = callback.numberRoom;
+                    price = callback.price;
                 }
             }
         });
@@ -1915,6 +2210,22 @@ let modalContentLoad = function (eventReason, svtObjId) {
                 $("#cityNumberAmount")[0].value = cityNumberAmount;
                 $("#outerConnectionType")[0].value = outerConnectionType;
                 break;
+             case "conditioner":
+                $("#nameFromOneC")[0].value = nameFromOneC;
+                $("#numberRoom")[0].value = numberRoom;
+                $("#descriptionInput")[0].value = description;
+                $("#price")[0].value = price;
+                $("#conditionerTypeSelect")[0].value = conditionerTypeSelect;
+                if(splitSystem) {
+                    $("#splitSystemTrue")[0].checked = true;
+                }
+                if(winterKit) {
+                    $("#winterKitTrue")[0].checked = true;
+                }
+                if(havePomp) {
+                    $("#havePompTrue")[0].checked = true;
+                }
+                break;
         }
         if (eventReason.indexOf("storage") >= 0) {
             stor = true;
@@ -1975,6 +2286,22 @@ let modalContentLoad = function (eventReason, svtObjId) {
                 $("#innerConnectionIp")[0].value = innerConnectionIp;
                 $("#cityNumberAmount")[0].value = cityNumberAmount;
                 $("#outerConnectionType")[0].value = outerConnectionType;
+                break;
+                case "conditioner":
+                $("#nameFromOneC")[0].value = nameFromOneC;
+                $("#numberRoom")[0].value = numberRoom;
+                $("#descriptionInput")[0].value = description;
+                $("#price")[0].value = price;
+                $("#conditionerTypeSelect")[0].value = conditionerTypeSelect;
+                if(splitSystem) {
+                    $("#splitSystemTrue")[0].checked = true;
+                }
+                if(winterKit) {
+                    $("#winterKitTrue")[0].checked = true;
+                }
+                if(havePomp) {
+                    $("#havePompTrue")[0].checked = true;
+                }
                 break;
             }
         }
@@ -2445,6 +2772,9 @@ let modalContentLoad = function (eventReason, svtObjId) {
                     break;
                 case "ats":
                     requestLink = "/modats";
+                    break;
+                case "conditioner":
+                    requestLink = "/modconditioner";
                     break;
             }
             $.ajax({
@@ -3252,6 +3582,33 @@ let modalContentLoad = function (eventReason, svtObjId) {
                 $("#outerConnectionType")[0].disabled = false;
             }
             break;
+        case "conditioner":
+            if (eventReason.indexOf("storage") >= 0) {
+                $("#numberRoom")[0].disabled = true;
+                $("#conditionerTypeSelect")[0].disabled = true;
+                $("#nameFromOneC")[0].disabled = true;
+                $("#splitSystemTrue")[0].disabled = true;
+                $("#splitSystemFalse")[0].disabled = true;
+                $("#price")[0].disabled = true;
+                $("#descriptionInput")[0].disabled = true;
+                $("#winterKitTrue")[0].disabled = true;
+                $("#winterKitFalse")[0].disabled = true;
+                $("#pompTrue")[0].disabled = true;
+                $("#pompFalse")[0].disabled = true;
+            } else {
+                $("#numberRoom")[0].disabled = false;
+                $("#conditionerTypeSelect")[0].disabled = false;
+                $("#nameFromOneC")[0].disabled = false;
+                $("#splitSystemTrue")[0].disabled = false;
+                $("#splitSystemFalse")[0].disabled = false;
+                $("#price")[0].disabled = false;
+                $("#descriptionInput")[0].disabled = false;
+                $("#winterKitTrue")[0].disabled = false;
+                $("#winterKitFalse")[0].disabled = false;
+                $("#pompTrue")[0].disabled = false;
+                $("#pompFalse")[0].disabled = false;
+            }
+            break;
     }
     if(null != $("#dateCreateSelect")[0]) {
         var dateCreate = $("#dateCreateSelect")[0];
@@ -3396,6 +3753,16 @@ let modalContentLoad = function (eventReason, svtObjId) {
         cpuAmount = null;
         portAmount = null;
         switchHubType = null;
+        innerConnectionAnalog = null;
+        innerConnectionIp = null;
+        cityNumberAmount = null;
+        outerConnectionType = null;
+        conditionerTypeSelect = null;
+        splitSystem = null;
+        winterKit = null;
+        havePomp = null;
+        price = null;
+        description = null;
         modalParent.innerHTML = "";
     });
     $('#btnSave')[0].addEventListener('click', handleClickSavePhoneBtn);
@@ -3451,6 +3818,15 @@ document.addEventListener("DOMContentLoaded", function () {
                             '<div class="col">Инвентарный номер</div>' +
                             '<div class="col">Год ввода в экспл</div>' +
                             '<div class="col">Кол-во город. номеров</div>' +
+                            '<div class="col">Состояние</div>';
+                        break;
+                        case "conditioner":
+                     headerElement.innerHTML = '<div class="col">Модель</div>' +
+                            '<div class="col">ФИО</div>' +
+                            '<div class="col">Серийный номер</div>' +
+                            '<div class="col">Инвентарный номер</div>' +
+                            '<div class="col">Год ввода в экспл</div>' +
+                            '<div class="col">Тип</div>' +
                             '<div class="col">Состояние</div>';
                         break;
                     case "*":
@@ -3590,6 +3966,17 @@ document.addEventListener("DOMContentLoaded", function () {
                                     '<div class="col">' + getStatus(storageDtoes[j].departments[d].dtoes[t].status) + '</div>' +
                                     '</div>';
                                 break;
+                                case "conditioner":
+                                elDepartment.innerHTML = '<div class="row mb-2 d-flex align-items-center text-start">' +
+                                    '<div class="col">' + count + '. ' + storageDtoes[j].departments[d].dtoes[t].model + '</div>' +
+                                    '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].placeName + '</div>' +
+                                    '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].serialNumber + '</div>' +
+                                    '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].inventaryNumber + '</div>' +
+                                    '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].yearCreated + '</div>' +
+                                    '<div class="col">' + getConditionerType(storageDtoes[j].departments[d].dtoes[t].conditionerType) + '</div>' +
+                                    '<div class="col">' + getStatus(storageDtoes[j].departments[d].dtoes[t].status) + '</div>' +
+                                    '</div>';
+                                break;
                                 
                         }
                         liItem.childNodes[0].append(elDepartment);
@@ -3649,6 +4036,15 @@ document.addEventListener("DOMContentLoaded", function () {
                             '<div class="col">Кол-во город. номеров</div>' +
                             '<div class="col">Состояние</div>';
                     break;
+                    case "conditioner":
+                     headerElement.innerHTML = '<div class="col">Модель</div>' +
+                            '<div class="col">ФИО</div>' +
+                            '<div class="col">Серийный номер</div>' +
+                            '<div class="col">Инвентарный номер</div>' +
+                            '<div class="col">Год ввода в экспл</div>' +
+                            '<div class="col">Тип</div>' +
+                            '<div class="col">Состояние</div>';
+                        break;
                 case "*":
                     headerElement.className = "row fw-bold mt-3 mb-3";
                     if (dynamicLabel != null) {
@@ -3785,6 +4181,17 @@ document.addEventListener("DOMContentLoaded", function () {
                                     '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].inventaryNumber + '</div>' +
                                     '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].yearCreated + '</div>' +
                                     '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].cityNumberAmount + '</div>' +
+                                    '<div class="col">' + getStatus(storageDtoes[j].departments[d].dtoes[t].status) + '</div>' +
+                                    '</div>';
+                                break;
+                                case "conditioner":
+                                elDepartment.innerHTML = '<div class="row mb-2 d-flex align-items-center text-start">' +
+                                    '<div class="col">' + count + '. ' + storageDtoes[j].departments[d].dtoes[t].model + '</div>' +
+                                    '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].placeName + '</div>' +
+                                    '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].serialNumber + '</div>' +
+                                    '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].inventaryNumber + '</div>' +
+                                    '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].yearCreated + '</div>' +
+                                    '<div class="col">' + getConditionerType(storageDtoes[j].departments[d].dtoes[t].conditionerType) + '</div>' +
                                     '<div class="col">' + getStatus(storageDtoes[j].departments[d].dtoes[t].status) + '</div>' +
                                     '</div>';
                                 break;
