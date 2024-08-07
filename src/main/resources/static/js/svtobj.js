@@ -1,6 +1,8 @@
 
 
 const addPlaceBtn = document.querySelector('#addPlaceBtn');
+const modalError = document.getElementById('modalError');
+const modalErrorParent = document.getElementById('modalErrorContent');
 let parent = document.querySelector('.tree');
 const modalAddPhone = document.getElementById('addPlaceModal');
 var currentYear = new Date().getFullYear();
@@ -65,6 +67,57 @@ let winterKit;
 let havePomp;
 let price;
 let description;
+
+
+function beep() {
+   
+    var context = new AudioContext();
+    var oscillator = context.createOscillator();
+    oscillator.type = "sine";
+    oscillator.frequency.value = 600;
+    oscillator.connect(context.destination);
+    oscillator.start();
+    // Beep for 500 milliseconds
+    setTimeout(function () {
+        oscillator.stop();
+    }, 500); 
+};
+
+let getModalError = function(textError) {
+      
+            //if you have another AudioContext class use that one, as some browsers have a limit
+            modalHeader = document.createElement('div');
+            modalHeader.className = 'modal-header modalHeaderError';
+            titleModal = document.createElement('h1');
+            titleModal.className = 'modal-title fs-5';
+            titleModal.id = 'titleModal';
+            titleModal.innerText = 'Ошибка!';
+            closeHeaderButton = document.createElement('button');
+            closeHeaderButton.className = 'btn-close btn-close-white';
+            closeHeaderButton.setAttribute("data-bs-dismiss", "modal");
+            closeHeaderButton.setAttribute('aria-label', 'Закрыть');
+           
+            modalErrorParent.appendChild(modalHeader);
+            modalHeader.appendChild(titleModal);
+            modalHeader.appendChild(closeHeaderButton);
+            
+            modalBody = document.createElement('div');
+            modalBody.className = 'modal-body';
+            modalBody.id = 'modalBody';
+            
+            modalErrorParent.append(modalBody);
+            modalFooter = document.createElement('div');
+            modalFooter.className = 'modal-footer';
+            footerBtnClose = document.createElement('button');
+            footerBtnClose.className = 'btn btn-secondary btn-sm';
+            footerBtnClose.setAttribute('data-bs-dismiss', 'modal');
+            footerBtnClose.innerText = 'Закрыть';
+            
+            modalErrorParent.appendChild(modalFooter);
+            modalFooter.appendChild(footerBtnClose);
+            $("#modalBody").append(textError);
+            return new bootstrap.Modal(modalError).show();
+}
 
 let getStatus = function(input) {
     var result;
@@ -145,6 +198,9 @@ let handleClickArchivedBtn = function () {
         case "conditioner":
             requestLink = "/conditionerarchived";
             break;
+        case "infomat":
+            requestLink = "/infomatarchived";
+            break;
     }
     $.ajax({
         type: "POST",
@@ -155,13 +211,8 @@ let handleClickArchivedBtn = function () {
             window.location.reload();
         },
         error: function (callback) {
-            if ($('#exceptionContainer').length == 0) {
-                $('#modalBody').append(callback.responseText);
-            } else {
-                $('#exceptionContainer').replaceWith(callback.responseText);
-            }
-
-            new bootstrap.Modal(document.getElementById('modalError')).show();
+            beep();
+            getModalError(callback.responseText);
         },
         processData: false,
         contentType: 'application/json'
@@ -275,6 +326,11 @@ let handleClickSendToStorageBtn = function () {
             dto.price = $("#price")[0].value;
             dto.nameFromOneC = $("#nameFromOneC")[0].value;
             break;
+        case "infomat":
+            requestLink = "/infomattostor";
+            dto.nameFromOneC = $("#nameFromOneC")[0].value;
+            dto.numberRoom = $("#numberRoom")[0].value;
+            break;
     }
     $.ajax({
         type: "POST",
@@ -285,12 +341,8 @@ let handleClickSendToStorageBtn = function () {
             window.location.reload();
         },
         error: function (callback) {
-            if ($('#exceptionContainer').length == 0) {
-                $('#modalBody').append(callback.responseText);
-            } else {
-                $('#exceptionContainer').replaceWith(callback.responseText);
-            }
-            new bootstrap.Modal(document.getElementById('modalError')).show();
+            beep();
+            getModalError(callback.responseText);
         },
         processData: false,
         contentType: 'application/json'
@@ -404,6 +456,11 @@ let handleClickBackToStorageBtn = function () {
             dto.price = $("#price")[0].value;
             dto.nameFromOneC = $("#nameFromOneC")[0].value;
             break;
+            case "infomat":
+            requestLink = "/infomatbackstor";
+            dto.numberRoom = $("#numberRoom")[0].value;
+            dto.nameFromOneC = $("#nameFromOneC")[0].value;
+            break;
     }
     $.ajax({
         type: "POST",
@@ -414,13 +471,8 @@ let handleClickBackToStorageBtn = function () {
             window.location.reload();
         },
         error: function (callback) {
-            if ($('#exceptionContainer').length == 0) {
-                $('#modalBody').append(callback.responseText);
-            } else {
-
-                $('#exceptionContainer').replaceWith(callback.responseText);
-            }
-            new bootstrap.Modal(document.getElementById('modalError')).show();
+            beep();
+            getModalError(callback.responseText);
         },
         processData: false,
         contentType: 'application/json'
@@ -454,10 +506,16 @@ let handleClickUpdateBtn = function () {
             requestLink = "/updmonitor";
             break;
         case "ups":
-            requestLink = "/updups";
+            if(placeAttrib.indexOf("serverroom") >= 0) {
+                requestLink = "/updupsforserver";
+            } else {
+                requestLink = "/updups";
+            }
             dto.batteryTypeId = $("#batteryTypeSelect")[0].selectize.getValue();
             dto.batteryAmount = document.querySelector("#batteryAmount").value;
             dto.yearReplacement = document.querySelector("#dateReplaceSelect").value;
+            dto.nameFromOneC = $("#nameFromOneC")[0].value;
+            dto.numberRoom = $("#numberRoom")[0].value;
             break;
         case "systemblock":
             requestLink = "/updsysblocks";
@@ -533,6 +591,11 @@ let handleClickUpdateBtn = function () {
             dto.price = $("#price")[0].value;
             dto.nameFromOneC = $("#nameFromOneC")[0].value;
             break;
+        case "infomat":
+            requestLink = "/updinfomat";
+            dto.numberRoom = $("#numberRoom")[0].value;
+            dto.nameFromOneC = $("#nameFromOneC")[0].value;
+            break;
     }
     $.ajax({
         type: "POST",
@@ -544,12 +607,8 @@ let handleClickUpdateBtn = function () {
             window.location.reload();
         },
         error: function (callback) {
-            if ($('#exceptionContainer').length == 0) {
-                $('#modalBody').append(callback.responseText);
-            } else {
-                $('#exceptionContainer').replaceWith(callback.responseText);
-            }
-            new bootstrap.Modal(document.getElementById('modalError')).show();
+            beep();
+            getModalError(callback.responseText);
         },
         processData: false,
         contentType: 'application/json'
@@ -588,12 +647,14 @@ let handleClickSearchSvtObject = function (input) {
         case "conditioner":
             request = "/conditioner?username=";
             break;
+        case "infomat":
+            request = "/infomat?username=";
+            break;
     }
     window.location.href = request + input;
 }
 let handleClickSavePhoneBtn = function () {
     let requestLink;
-
     let dto = {
         model: document.querySelector('#modelSelect').innerText,
         status: document.querySelector('#statusSelect').value,
@@ -620,10 +681,16 @@ let handleClickSavePhoneBtn = function () {
             requestLink = "/monitors";
             break;
         case "ups":
-            requestLink = "/ups";
+            if(placeAttrib.indexOf("serverroom") >= 0) {
+                requestLink = "/upsforserver";
+            } else {
+                requestLink = "/ups";
+            }
             dto.batteryTypeId = $("#batteryTypeSelect")[0].selectize.getValue();
             dto.batteryAmount = document.querySelector("#batteryAmount").value;
             dto.yearReplacement = document.querySelector("#dateReplaceSelect").value;
+            dto.nameFromOneC = $("#nameFromOneC")[0].value;
+            dto.numberRoom = $("#numberRoom")[0].value;
             break;
         case "systemblock":
             requestLink = "/sysblocks";
@@ -700,6 +767,11 @@ let handleClickSavePhoneBtn = function () {
             dto.price = $("#price")[0].value;
             dto.nameFromOneC = $("#nameFromOneC")[0].value;
             break;
+        case "infomat":
+            requestLink = "/infomat";
+            dto.numberRoom = $("#numberRoom")[0].value;
+            dto.nameFromOneC = $("#nameFromOneC")[0].value;
+            break;
     }
     $.ajax({
         type: "POST",
@@ -710,13 +782,10 @@ let handleClickSavePhoneBtn = function () {
             window.location.reload();
         },
         error: function (callback) {
-            if ($('#exceptionContainer').length == 0) {
-                $('#modalBody').append(callback.responseText);
-            } else {
-                $('#exceptionContainer').replaceWith(callback.responseText);
-            }
-            new bootstrap.Modal(document.getElementById('modalError')).show();
+            beep();
+            getModalError(callback.responseText);
         },
+           
         processData: false,
         contentType: 'application/json'
     });
@@ -766,6 +835,11 @@ window.onload = function () {
             modalContentLoad($(this)[0].className, $(this)[0].id);
         });
     }
+    
+     modalError.addEventListener('hidden.bs.modal', function (event) {
+         modalErrorParent.innerHTML = "";
+     });      
+    
 };
 // Модальное окно добавления/редактирования телефона
 let modalContentLoad = function (eventReason, svtObjId) {
@@ -773,7 +847,7 @@ let modalContentLoad = function (eventReason, svtObjId) {
     let titleAction;
     // Сборка header
     let divModalHeader = document.createElement("div");
-    divModalHeader.className = "modal-header";
+    divModalHeader.className = "modal-header modalHeaderContent";
     let titleModal = document.createElement("h5");
     titleModal.className = "modal-title fs-5";
     if (null != svtObjId) {
@@ -811,6 +885,9 @@ let modalContentLoad = function (eventReason, svtObjId) {
             break;
         case "conditioner":
             titleModal.innerText = titleAction + " кондиционер";
+            break;
+        case "infomat":
+            titleModal.innerText = titleAction + " инфомат";
             break;
     }
     divModalHeader.appendChild(titleModal);
@@ -909,6 +986,56 @@ let modalContentLoad = function (eventReason, svtObjId) {
             divRowYearExplConditioner.appendChild(divColLabelYearExplConditioner);
             divRowYearExplConditioner.appendChild(divColSelectYearExplConditioner);
             divContainerBody.appendChild(divRowYearExplConditioner);
+            break;
+             case "infomat":
+            let divRowYearExplInfomat = document.createElement("div");
+            divRowYearExplInfomat.className = "row mt-2";
+            let divColLabelYearExplInfomat = document.createElement("div");
+            divColLabelYearExplInfomat.className = "col";
+            divColLabelYearExplInfomat.innerText = "Год выпуска";
+            let divColSelectYearExplInfomat = document.createElement("div");
+            divColSelectYearExplInfomat.className = "col";
+            let selectYearExplInfomat = document.createElement("select");
+            selectYearExplInfomat.className = "form-select form-select-sm";
+            selectYearExplInfomat.id = "dateCreateSelect";
+            selectYearExplInfomat.setAttribute("aria-label", "dateCreate");
+            divColSelectYearExplInfomat.appendChild(selectYearExplInfomat);
+            divRowYearExplInfomat.appendChild(divColLabelYearExplInfomat);
+            divRowYearExplInfomat.appendChild(divColSelectYearExplInfomat);
+            divContainerBody.appendChild(divRowYearExplInfomat);
+            let divRowNumberRoomInfomat = document.createElement("div");
+            divRowNumberRoomInfomat.className = "row mt-2";
+            let divColLabelNumberRoomInfomat = document.createElement("div");
+            divColLabelNumberRoomInfomat.className = "col";
+            divColLabelNumberRoomInfomat.innerText = "Кабинет";
+            let divColInputNumberRoomInfomat = document.createElement("div");
+            divColInputNumberRoomInfomat.className = "col";
+            let inputNumberRoomInfomat = document.createElement("input");
+            inputNumberRoomInfomat.className = "form-control form-control-sm";
+            inputNumberRoomInfomat.type = "text";
+            inputNumberRoomInfomat.placeholder = "укажите расположение";
+            inputNumberRoomInfomat.id = "numberRoom";
+            inputNumberRoomInfomat.name = "numberRoom";
+            divColInputNumberRoomInfomat.appendChild(inputNumberRoomInfomat);
+            divRowNumberRoomInfomat.appendChild(divColLabelNumberRoomInfomat);
+            divRowNumberRoomInfomat.appendChild(divColInputNumberRoomInfomat);
+            divContainerBody.appendChild(divRowNumberRoomInfomat);
+            let divRowNameFromOneCInfomat = document.createElement("div");
+            divRowNameFromOneCInfomat.className = "row mt-2";
+            let divColLabelNameFromOneCInfomat = document.createElement("div");
+            divColLabelNameFromOneCInfomat.className = "col";
+            divColLabelNameFromOneCInfomat.innerText = "Наименование в ведомости ОС";
+            let divColInputNameFromOneCInfomat = document.createElement("div");
+            divColInputNameFromOneCInfomat.className = "col";
+            let inputNameFromOneCInfomat = document.createElement("textarea");
+            inputNameFromOneCInfomat.className = "form-control form-control-sm";
+            inputNameFromOneCInfomat.placeholder = "введите наименование";
+            inputNameFromOneCInfomat.id = "nameFromOneC";
+            inputNameFromOneCInfomat.setAttribute("aria-label", "nameFromOneC");
+            divColInputNameFromOneCInfomat.appendChild(inputNameFromOneCInfomat);
+            divRowNameFromOneCInfomat.appendChild(divColLabelNameFromOneCInfomat);
+            divRowNameFromOneCInfomat.appendChild(divColInputNameFromOneCInfomat);
+            divContainerBody.appendChild(divRowNameFromOneCInfomat);
             break;
             
         default:
@@ -1011,6 +1138,39 @@ let modalContentLoad = function (eventReason, svtObjId) {
             divContainerBody.appendChild(divRowBaseTypeSelect);
             break;
         case "ups":
+            let divRowNumberRoomUps = document.createElement("div");
+            divRowNumberRoomUps.className = "row mt-2";
+            let divColLabelNumberRoomUps = document.createElement("div");
+            divColLabelNumberRoomUps.className = "col";
+            divColLabelNumberRoomUps.innerText = "Кабинет";
+            let divColInputNumberRoomUps = document.createElement("div");
+            divColInputNumberRoomUps.className = "col";
+            let inputNumberRoomUps = document.createElement("input");
+            inputNumberRoomUps.className = "form-control form-control-sm";
+            inputNumberRoomUps.type = "text";
+            inputNumberRoomUps.placeholder = "укажите расположение";
+            inputNumberRoomUps.id = "numberRoom";
+            inputNumberRoomUps.name = "numberRoom";
+            divColInputNumberRoomUps.appendChild(inputNumberRoomUps);
+            divRowNumberRoomUps.appendChild(divColLabelNumberRoomUps);
+            divRowNumberRoomUps.appendChild(divColInputNumberRoomUps);
+            divContainerBody.appendChild(divRowNumberRoomUps);
+            let divRowNameFromOneCUps = document.createElement("div");
+            divRowNameFromOneCUps.className = "row mt-2";
+            let divColLabelNameFromOneCUps = document.createElement("div");
+            divColLabelNameFromOneCUps.className = "col";
+            divColLabelNameFromOneCUps.innerText = "Наименование в ведомости ОС";
+            let divColInputNameFromOneCUps = document.createElement("div");
+            divColInputNameFromOneCUps.className = "col";
+            let inputNameFromOneCUps = document.createElement("textarea");
+            inputNameFromOneCUps.className = "form-control form-control-sm";
+            inputNameFromOneCUps.placeholder = "введите наименование";
+            inputNameFromOneCUps.id = "nameFromOneC";
+            inputNameFromOneCUps.setAttribute("aria-label", "nameFromOneC");
+            divColInputNameFromOneCUps.appendChild(inputNameFromOneCUps);
+            divRowNameFromOneCUps.appendChild(divColLabelNameFromOneCUps);
+            divRowNameFromOneCUps.appendChild(divColInputNameFromOneCUps);
+            divContainerBody.appendChild(divRowNameFromOneCUps);
             let divRowDateReplaceBattery = document.createElement("div");
             divRowDateReplaceBattery.className = "row mt-2";
             let divColLabelDateReplaceBattery = document.createElement("div");
@@ -2040,6 +2200,9 @@ let modalContentLoad = function (eventReason, svtObjId) {
             case "conditioner":
                 requestLink = "/getconditioner?conditionerId=";
                 break;
+            case "infomat":
+                requestLink = "/getinfomat?infomatId=";
+                break;
         }
         $.ajax({
             url: requestLink + svtObjId,
@@ -2063,6 +2226,7 @@ let modalContentLoad = function (eventReason, svtObjId) {
                 batteryAmount = callback.batteryAmount;
                 dateReplaceBattery = callback.yearReplacement;
                 batteryTypeId = callback.batteryTypeId;
+                numberRoom = callback.numberRoom;
                 if (attrib == "systemblock") {
                     operationSystemId = callback.operationSystemId;
                     motherboardId = callback.motherboardId;
@@ -2077,11 +2241,9 @@ let modalContentLoad = function (eventReason, svtObjId) {
                     mouseId = callback.mouseId;
                     speakersId = callback.speakersId;
                     ipAdress = callback.ipAdress;
-                    numberRoom = callback.numberRoom;
                     dateUpgrade = callback.dateUpgrade;
                 } else if (attrib == "scanner") {
                     ipAdress = callback.ipAdress;
-                    numberRoom = callback.numberRoom;
                 } else if (attrib == "server") {
                     operationSystemId = callback.operationSystemId;
                     cpuId = callback.cpuId;
@@ -2089,20 +2251,16 @@ let modalContentLoad = function (eventReason, svtObjId) {
                     ramId = callback.ramId;
                     hddListId = callback.hddIdList;
                     ipAdress = callback.ipAdress;
-                    numberRoom = callback.numberRoom;
                     dateUpgrade = callback.dateUpgrade;
                 }else if (attrib == "switch") {
                     portAmount = callback.portAmount;
-                    numberRoom = callback.numberRoom;
                     switchHubType = callback.switchHubType;
                 } else if (attrib == "router") {
                     portAmount = callback.portAmount;
-                    numberRoom = callback.numberRoom;
                 } else if (attrib == "ats") {
                     innerConnectionAnalog = callback.innerConnectionAnalog;
                     innerConnectionIp = callback.innerConnectionIp;
                     cityNumberAmount = callback.cityNumberAmount;
-                    numberRoom = callback.numberRoom;
                     outerConnectionType = callback.outerConnectionType;
                 } else if (attrib == "conditioner") {
                     conditionerTypeSelect = callback.conditionerType;
@@ -2110,7 +2268,6 @@ let modalContentLoad = function (eventReason, svtObjId) {
                     splitSystem = callback.splitSystem;
                     winterKit = callback.winterKit;
                     havePomp = callback.havePomp;
-                    numberRoom = callback.numberRoom;
                     price = callback.price;
                 }
             }
@@ -2156,7 +2313,8 @@ let modalContentLoad = function (eventReason, svtObjId) {
                 requestLink = "/getups?upsId=";
                 $("#dateReplaceSelect")[0].value = dateReplaceBattery;
                 $("#batteryAmount")[0].value = batteryAmount;
-                // тут поля для ИБП
+                $("#nameFromOneC")[0].value = nameFromOneC;
+                $("#numberRoom")[0].value = numberRoom;
                 break;
             case "systemblock":
                 $("#nameFromOneC")[0].value = nameFromOneC;
@@ -2225,6 +2383,11 @@ let modalContentLoad = function (eventReason, svtObjId) {
                 if(havePomp) {
                     $("#havePompTrue")[0].checked = true;
                 }
+                break;
+                case "infomat":
+                $("#nameFromOneC")[0].value = nameFromOneC;
+                $("#numberRoom")[0].value = numberRoom;
+               
                 break;
         }
         if (eventReason.indexOf("storage") >= 0) {
@@ -2332,6 +2495,24 @@ let modalContentLoad = function (eventReason, svtObjId) {
                     
                     break;
                     
+                    case "officeequipment":
+                    $.ajax({
+                        url: '/locplacetype?placeType=OFFICEEQUIPMENT',
+                        type: 'GET',
+                        async: false,
+                        dataType: 'json',
+                        error: callback,
+                        success: callback
+                    });
+                    if(null != locationId) {
+                        oldLocationId = $('#locationSelect')[0].selectize.search(locationId).items[0].id;
+                        $('#locationSelect')[0].selectize.setValue($('#locationSelect')[0].selectize.search(locationId).items[0].id);
+                    } else {
+                        oldLocationId = $('#locationSelect')[0].selectize.search(0).items[0].id;
+                        $('#locationSelect')[0].selectize.setValue($('#locationSelect')[0].selectize.search(0).items[0].id);
+                    }
+                    
+                    break;
                 default:
                     $.ajax({
                         url: '/loc',
@@ -2401,6 +2582,47 @@ let modalContentLoad = function (eventReason, svtObjId) {
                     
                             break;
                             
+                                case "officeequipment":
+                                   $.ajax({
+                    url: '/deplocplacetype?placeType=OFFICEEQUIPMENT&idLocation=' + $("#locationSelect")[0].selectize.getValue(),
+                    type: 'GET',
+                    async: false,
+                    dataType: 'json',
+                    success: function (res) {
+                            let keys = Object.keys($('#departmentSelect')[0].selectize.options);
+                            for (let i = 0; i < keys.length; i++) {
+                                $('#departmentSelect')[0].selectize.removeOption(keys[i]);
+                            }
+                            res.forEach(model => {
+                                $('#departmentSelect')[0].selectize.addOption(model);
+                                $('#departmentSelect')[0].selectize.addItem(model);
+                            });
+                            oldDepartment = $('#departmentSelect')[0].selectize.search(0).items[0].id;
+                            $('#departmentSelect')[0].selectize.setValue($('#departmentSelect')[0].selectize.search(0).items[0].id);
+                        }
+                    });
+                    
+                    $.ajax({
+                    url: '/placelocdepplacetype?placeType=OFFICEEQUIPMENT&idLocation=' + $("#locationSelect")[0].selectize.getValue() + '&departmentCode=' + $("#departmentSelect")[0].selectize.getValue(),
+                    type: 'GET',
+                    async: false,
+                    dataType: 'json',
+                    success: function(res) {
+                         let keys = Object.keys($('#placeSelect')[0].selectize.options);
+                            for (let i = 0; i < keys.length; i++) {
+                                $('#placeSelect')[0].selectize.removeOption(keys[i]);
+                            }
+                            res.forEach(model => {
+                                $('#placeSelect')[0].selectize.addOption(model);
+                                $('#placeSelect')[0].selectize.addItem(model);
+                            });
+                            oldPlaceId = $('#placeSelect')[0].selectize.search(0).items[0].id;
+                            $('#placeSelect')[0].selectize.setValue($('#placeSelect')[0].selectize.search(0).items[0].id);
+                    }
+                    
+                });
+                    
+                            break;
                         default:
                              $.ajax({
                         url: '/depbyloc?locationId=' + oldLocationId,
@@ -2421,11 +2643,18 @@ let modalContentLoad = function (eventReason, svtObjId) {
                         }
                     });
                     let urlReq = "placebydepandloc";
-                    if (placeAttrib == "serverroom") {
+                    let placetype = "EMPLOYEE";
+                    if (placeAttrib == "serverroom" || placeAttrib == "officeequipment") {
+                        
                         urlReq = "placeserverbydepandloc";
+                        if(placeAttrib == "serverroom") {
+                            placetype = "SERVERROOM";
+                        } else {
+                            placetype = "OFFICEEQUIPMENT";
+                        }
                     }
                     $.ajax({
-                        url: '/' + urlReq + '?locationId=' + oldLocationId + '&departmentCode=' + oldDepartment,
+                        url: '/' + urlReq + '?locationId=' + oldLocationId + '&departmentCode=' + oldDepartment + '&placetype=' + placetype,
                         type: 'GET',
                         async: false,
                         dataType: 'json',
@@ -2470,7 +2699,27 @@ let modalContentLoad = function (eventReason, svtObjId) {
                     });
  
                             break;
-                            
+                            //officeequipment
+                            case "officeequipment":
+                            $.ajax({
+                    url: '/deplocplacetype?placeType=OFFICEEQUIPMENT&idLocation=' + $("#locationSelect")[0].selectize.getValue(),
+                    type: 'GET',
+                    async: false,
+                    dataType: 'json',
+                    success: function (res) {
+                            let keys = Object.keys($('#departmentSelect')[0].selectize.options);
+                            for (let i = 0; i < keys.length; i++) {
+                                $('#departmentSelect')[0].selectize.removeOption(keys[i]);
+                            }
+                            res.forEach(model => {
+                                $('#departmentSelect')[0].selectize.addOption(model);
+                                $('#departmentSelect')[0].selectize.addItem(model);
+                            });
+                            oldDepartment = $('#departmentSelect')[0].selectize.search(0).items[0].id;
+                            $('#departmentSelect')[0].selectize.setValue($('#departmentSelect')[0].selectize.search(0).items[0].id);
+                        }
+                    });
+                            break;
                         default:
                             $.ajax({
                         url: '/depbyloc?locationId=' + $('#locationSelect')[0].selectize.getValue(),
@@ -2529,6 +2778,25 @@ let modalContentLoad = function (eventReason, svtObjId) {
                         $('#departmentSelect')[0].selectize.setValue($('#departmentSelect')[0].selectize.search(codeDepartment).items[0].id);
                     }
                     break;
+                     
+                     case "officeequipment":
+                    $.ajax({
+                    url: '/deplocplacetype?placeType=OFFICEEQUIPMENT&idLocation=' + $("#locationSelect")[0].selectize.getValue(),
+                    type: 'GET',
+                    async: false,
+                    dataType: 'json',
+                    error: callback,
+                    success: callback
+                    });
+                    if (eventReason.indexOf("storage") >= 0) {
+                        $('#departmentSelect')[0].selectize.disable();
+                    } else {
+                        $('#departmentSelect')[0].selectize.enable();
+                    }
+                    if (eventReason.indexOf("element") >= 0 || eventReason.indexOf("storage") >= 0) {
+                        $('#departmentSelect')[0].selectize.setValue($('#departmentSelect')[0].selectize.search(codeDepartment).items[0].id);
+                    }
+                    break;
                 default:
                     if (null != svtObjId && eventReason.indexOf("storage") < 0) {
                 $.ajax({
@@ -2569,11 +2837,16 @@ let modalContentLoad = function (eventReason, svtObjId) {
             if (value !== '') {
                 if (oldDepartment != value) {
                     let urlReq = "placebydepandloc";
+                    let placetype = "EMPLOYEE";
                     if (placeAttrib == "serverroom") {
                         urlReq = "placeserverbydepandloc";
+                        placetype = "SERVERROOM";
+                    } else if(placeAttrib == "officeequipment") {
+                        urlReq = "placeserverbydepandloc";
+                        placetype = "OFFICEEQUIPMENT";
                     }
                     $.ajax({
-                        url: '/' + urlReq + '?locationId=' + $("#locationSelect")[0].selectize.getValue() + '&departmentCode=' + value,
+                        url: '/' + urlReq + '?locationId=' + $("#locationSelect")[0].selectize.getValue() + '&departmentCode=' + value + '&placetype=' + placetype,
                         type: 'GET',
                         async: false,
                         dataType: 'json',
@@ -2658,7 +2931,49 @@ let modalContentLoad = function (eventReason, svtObjId) {
                 $('#placeSelect')[0].selectize.setValue($('#placeSelect')[0].selectize.search(0).items[0].id);
             }
                     break;
-                    
+                  //officeequipment
+                  case "officeequipment":
+                    $.ajax({
+                    url: '/placelocdepplacetype?placeType=OFFICEEQUIPMENT&idLocation=' + $("#locationSelect")[0].selectize.getValue() + '&departmentCode=' + $("#departmentSelect")[0].selectize.getValue(),
+                    type: 'GET',
+                    async: false,
+                    dataType: 'json',
+                    error: callback,
+                    success: callback
+                });
+                if (eventReason.indexOf("storage") >= 0) {
+                $.ajax({
+                    url: '/placebyid?placeId=' + idPlace,
+                    type: 'GET',
+                    async: false,
+                    dataType: 'json',
+                    error: function (callback) {
+                        console.log(callback);
+                    },
+                    success: function (callback) {
+                        console.log(callback);
+                        $('#placeSelect')[0].selectize.addOption(callback);
+                    }
+                });
+            }
+              if (eventReason.indexOf("element") >= 0 || eventReason.indexOf("storage") >= 0) {
+                if (eventReason.indexOf("backtostor") >= 0) {
+                    $('#placeSelect')[0].selectize.setValue($('#placeSelect')[0].selectize.search(0).items[0].id);
+                } else {
+                    oldPlaceId = $('#placeSelect')[0].selectize.search(idPlace).items[0].id;
+                    $('#placeSelect')[0].selectize.setValue($('#placeSelect')[0].selectize.search(idPlace).items[0].id);
+                }
+                if (eventReason.indexOf("storage") >= 0) {
+                    $('#placeSelect')[0].selectize.disable();
+                } else {
+                    $('#placeSelect')[0].selectize.enable();
+                }
+
+            }else {
+                oldPlaceId = $('#placeSelect')[0].selectize.search(0).items[0].id; 
+                $('#placeSelect')[0].selectize.setValue($('#placeSelect')[0].selectize.search(0).items[0].id);
+            }
+                    break;
                 default:
                     if (null != svtObjId && eventReason.indexOf("storage") < 0) {
                 let urlReq = "placebydepandloc";
@@ -2776,6 +3091,9 @@ let modalContentLoad = function (eventReason, svtObjId) {
                 case "conditioner":
                     requestLink = "/modconditioner";
                     break;
+                case "infomat":
+                    requestLink = "/modinfomat";
+                    break;
             }
             $.ajax({
                 url: requestLink,
@@ -2856,6 +3174,13 @@ let modalContentLoad = function (eventReason, svtObjId) {
             }
             if (dateReplaceBattery > 0) {
                 dateReplaceSelect.value = dateReplaceBattery;
+            }
+             if (eventReason.indexOf("storage") >= 0) {
+                $("#nameFromOneC")[0].disabled = true;
+                $("#numberRoom")[0].disabled = true;
+            } else {
+                $("#nameFromOneC")[0].disabled = false;
+                $("#numberRoom")[0].disabled = false;
             }
             break;
         case "monitors":
@@ -3609,6 +3934,16 @@ let modalContentLoad = function (eventReason, svtObjId) {
                 $("#pompFalse")[0].disabled = false;
             }
             break;
+            case "infomat":
+            if (eventReason.indexOf("storage") >= 0) {
+                $("#numberRoom")[0].disabled = true;
+                $("#nameFromOneC")[0].disabled = true;
+            } else {
+                $("#numberRoom")[0].disabled = false;
+                $("#nameFromOneC")[0].disabled = false;
+     
+            }
+            break;
     }
     if(null != $("#dateCreateSelect")[0]) {
         var dateCreate = $("#dateCreateSelect")[0];
@@ -3829,6 +4164,15 @@ document.addEventListener("DOMContentLoaded", function () {
                             '<div class="col">Тип</div>' +
                             '<div class="col">Состояние</div>';
                         break;
+                         case "infomat":
+                     headerElement.innerHTML = '<div class="col">Модель</div>' +
+                            '<div class="col">ФИО</div>' +
+                            '<div class="col">Серийный номер</div>' +
+                            '<div class="col">Инвентарный номер</div>' +
+                            '<div class="col">Кабинет</div>' +
+                            '<div class="col">Год выпуска</div>' +
+                            '<div class="col">Состояние</div>';
+                        break;
                     case "*":
                        headerElement.className = "row fw-bold mt-3 mb-3";
                 if (dynamicLabel != null) {
@@ -3977,7 +4321,17 @@ document.addEventListener("DOMContentLoaded", function () {
                                     '<div class="col">' + getStatus(storageDtoes[j].departments[d].dtoes[t].status) + '</div>' +
                                     '</div>';
                                 break;
-                                
+                                case "infomat":
+                                elDepartment.innerHTML = '<div class="row mb-2 d-flex align-items-center text-start">' +
+                                    '<div class="col">' + count + '. ' + storageDtoes[j].departments[d].dtoes[t].model + '</div>' +
+                                    '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].placeName + '</div>' +
+                                    '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].serialNumber + '</div>' +
+                                    '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].inventaryNumber + '</div>' +
+                                    '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].numberRoom + '</div>' +
+                                    '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].yearCreated + '</div>' +
+                                    '<div class="col">' + getStatus(storageDtoes[j].departments[d].dtoes[t].status) + '</div>' +
+                                    '</div>';
+                                break;
                         }
                         liItem.childNodes[0].append(elDepartment);
                     }
@@ -4045,6 +4399,16 @@ document.addEventListener("DOMContentLoaded", function () {
                             '<div class="col">Тип</div>' +
                             '<div class="col">Состояние</div>';
                         break;
+                        case "infomat":
+                     headerElement.innerHTML = '<div class="col">Модель</div>' +
+                            '<div class="col">ФИО</div>' +
+                            '<div class="col">Серийный номер</div>' +
+                            '<div class="col">Инвентарный номер</div>' +
+                            '<div class="col">Кабинет</div>' +
+                            '<div class="col">Год выпуска</div>' +
+                            '<div class="col">Состояние</div>';
+                        break;
+                        
                 case "*":
                     headerElement.className = "row fw-bold mt-3 mb-3";
                     if (dynamicLabel != null) {
@@ -4195,6 +4559,17 @@ document.addEventListener("DOMContentLoaded", function () {
                                     '<div class="col">' + getStatus(storageDtoes[j].departments[d].dtoes[t].status) + '</div>' +
                                     '</div>';
                                 break;
+                                case "infomat":
+                                elDepartment.innerHTML = '<div class="row mb-2 d-flex align-items-center text-start">' +
+                                    '<div class="col">' + count + '. ' + storageDtoes[j].departments[d].dtoes[t].model + '</div>' +
+                                    '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].placeName + '</div>' +
+                                    '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].serialNumber + '</div>' +
+                                    '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].inventaryNumber + '</div>' +
+                                    '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].numberRoom + '</div>' +
+                                    '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].yearCreated + '</div>' +
+                                    '<div class="col">' + getStatus(storageDtoes[j].departments[d].dtoes[t].status) + '</div>' +
+                                    '</div>';
+                                break;
                     }
                     liItem.childNodes[0].append(elDepartment);
                 }
@@ -4203,7 +4578,12 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
 
+
+
+
 });
+
+
 
 
 

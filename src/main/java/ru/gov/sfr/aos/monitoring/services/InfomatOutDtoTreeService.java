@@ -5,15 +5,15 @@
 package ru.gov.sfr.aos.monitoring.services;
 
 import org.springframework.stereotype.Service;
-import ru.gov.sfr.aos.monitoring.entities.ConditionerModel;
-import ru.gov.sfr.aos.monitoring.repositories.ConditionerModelRepo;
+import ru.gov.sfr.aos.monitoring.entities.Infomat;
+import ru.gov.sfr.aos.monitoring.mappers.InfomatMapper;
+import ru.gov.sfr.aos.monitoring.models.SvtDTO;
 
 /**
  *
  * @author 041AlikinOS
  */
-
 @Service
-public class ConditionerModelService extends SvtModelService<ConditionerModel, ConditionerModelRepo> {
+public class InfomatOutDtoTreeService extends SvtOutDtoTreeService<Infomat, InfomatMapper, SvtDTO>{
     
 }

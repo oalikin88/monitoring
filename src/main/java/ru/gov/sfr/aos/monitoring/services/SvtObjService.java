@@ -12,6 +12,7 @@ import ru.gov.sfr.aos.monitoring.dictionaries.PlaceType;
 import ru.gov.sfr.aos.monitoring.entities.Location;
 import ru.gov.sfr.aos.monitoring.entities.ObjectBuingWithSerialAndInventary;
 import ru.gov.sfr.aos.monitoring.entities.Place;
+import ru.gov.sfr.aos.monitoring.exceptions.ObjectAlreadyExists;
 import ru.gov.sfr.aos.monitoring.models.ArchivedDto;
 import ru.gov.sfr.aos.monitoring.models.SvtDTO;
 import ru.gov.sfr.aos.monitoring.repositories.ObjectBuingWithSerialAndInventaryRepo;
@@ -96,7 +97,7 @@ public abstract class SvtObjService <E extends ObjectBuingWithSerialAndInventary
         return collect;
 }
           
-        public abstract void createSvtObj(D dto);
+        public abstract void createSvtObj(D dto) throws ObjectAlreadyExists;
         
         public abstract void updateSvtObj(D dto);
     

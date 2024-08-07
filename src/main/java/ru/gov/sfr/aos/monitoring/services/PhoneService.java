@@ -17,6 +17,7 @@ import ru.gov.sfr.aos.monitoring.entities.ObjectBuing;
 import ru.gov.sfr.aos.monitoring.entities.Phone;
 import ru.gov.sfr.aos.monitoring.entities.PhoneModel;
 import ru.gov.sfr.aos.monitoring.entities.Place;
+import ru.gov.sfr.aos.monitoring.exceptions.ObjectAlreadyExists;
 import ru.gov.sfr.aos.monitoring.models.SvtDTO;
 import ru.gov.sfr.aos.monitoring.repositories.ContractRepo;
 import ru.gov.sfr.aos.monitoring.repositories.PhoneModelRepo;
@@ -41,12 +42,12 @@ public class PhoneService extends SvtObjService<Phone, PhoneRepo, SvtDTO>{
     
     
     @Override
-    public void createSvtObj(SvtDTO dto) {
+    public void createSvtObj(SvtDTO dto) throws ObjectAlreadyExists {
           
-            if(null != dto.getId()) {
-        if(phoneRepo.existsById(dto.getId())) {
-            System.out.println("такой телефон уже есть в базе данных");
-        }}else {
+            
+        if(phoneRepo.existsBySerialNumberIgnoreCase(dto.getSerialNumber())) {
+           throw new ObjectAlreadyExists("Телефон с таким серийным номером уже есть в базе данных");
+        }else {
             Phone phone = new Phone();
             Place place = null;
             PhoneModel phoneModel = null;

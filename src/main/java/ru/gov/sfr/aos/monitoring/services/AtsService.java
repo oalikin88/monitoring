@@ -18,6 +18,7 @@ import ru.gov.sfr.aos.monitoring.entities.AtsModel;
 import ru.gov.sfr.aos.monitoring.entities.Contract;
 import ru.gov.sfr.aos.monitoring.entities.ObjectBuing;
 import ru.gov.sfr.aos.monitoring.entities.Place;
+import ru.gov.sfr.aos.monitoring.exceptions.ObjectAlreadyExists;
 import ru.gov.sfr.aos.monitoring.models.SvtAtsDTO;
 import ru.gov.sfr.aos.monitoring.repositories.AtsModelRepo;
 import ru.gov.sfr.aos.monitoring.repositories.AtsRepo;
@@ -41,11 +42,11 @@ public class AtsService extends SvtObjService <Ats, AtsRepo, SvtAtsDTO> {
     
     
     @Override
-    public void createSvtObj(SvtAtsDTO dto) {
-         if(null != dto.getId()) {
+    public void createSvtObj(SvtAtsDTO dto) throws ObjectAlreadyExists {
+         
             if(atsRepo.existsBySerialNumberIgnoreCase(dto.getSerialNumber())) {
-                System.out.println("такой маршрутизатор уже есть в базе данных");
-            }
+                 throw new ObjectAlreadyExists("Маршрутизатор с таким серийным номером уже есть в базе данных");
+            
     } else {
             
             Ats ats = new Ats();

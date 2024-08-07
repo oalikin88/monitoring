@@ -24,6 +24,8 @@ import ru.gov.sfr.aos.monitoring.entities.Conditioner;
 import ru.gov.sfr.aos.monitoring.entities.ConditionerModel;
 import ru.gov.sfr.aos.monitoring.entities.Cpu;
 import ru.gov.sfr.aos.monitoring.entities.Hdd;
+import ru.gov.sfr.aos.monitoring.entities.Infomat;
+import ru.gov.sfr.aos.monitoring.entities.InfomatModel;
 import ru.gov.sfr.aos.monitoring.entities.Keyboard;
 import ru.gov.sfr.aos.monitoring.entities.LanCard;
 import ru.gov.sfr.aos.monitoring.entities.Location;
@@ -54,6 +56,7 @@ import ru.gov.sfr.aos.monitoring.exceptions.ObjectAlreadyExists;
 import ru.gov.sfr.aos.monitoring.mappers.AtsMapper;
 import ru.gov.sfr.aos.monitoring.mappers.BatteryTypeMapper;
 import ru.gov.sfr.aos.monitoring.mappers.ConditionerMapper;
+import ru.gov.sfr.aos.monitoring.mappers.InfomatMapper;
 import ru.gov.sfr.aos.monitoring.mappers.MonitorMapper;
 import ru.gov.sfr.aos.monitoring.mappers.OperationSystemMapper;
 import ru.gov.sfr.aos.monitoring.mappers.PhoneMapper;
@@ -93,6 +96,9 @@ import ru.gov.sfr.aos.monitoring.services.ConditionerService;
 import ru.gov.sfr.aos.monitoring.services.CpuModelService;
 import ru.gov.sfr.aos.monitoring.services.DepartmentService;
 import ru.gov.sfr.aos.monitoring.services.HddModelService;
+import ru.gov.sfr.aos.monitoring.services.InfomatModelService;
+import ru.gov.sfr.aos.monitoring.services.InfomatOutDtoTreeService;
+import ru.gov.sfr.aos.monitoring.services.InfomatService;
 import ru.gov.sfr.aos.monitoring.services.KeyboardModelService;
 import ru.gov.sfr.aos.monitoring.services.LanCardModelService;
 import ru.gov.sfr.aos.monitoring.services.MonitorModelService;
@@ -253,6 +259,14 @@ public class SvtViewController {
     private ConditionerOutDtoTreeService conditionerOutDtoTreeService;
     @Autowired
     private ConditionerMapper conditionerMapper;
+    @Autowired
+    private InfomatModelService infomatModelService;
+    @Autowired
+    private InfomatOutDtoTreeService infomatOutDtoTreeService;
+    @Autowired
+    private InfomatService infomatService;
+    @Autowired
+    private InfomatMapper infomatMapper;
     
     
 //  @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
@@ -469,6 +483,59 @@ public class SvtViewController {
         return "redirect:/ups";
      
     }
+    
+     //   @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
+    @GetMapping("/upsforserver")
+    public String getServerUps(Model model, @RequestParam(value="username", required=false) String username) {
+        Map<Location, List<Ups>> svtObjectsByEmployee = null;
+        if(null != username) {
+            svtObjectsByEmployee = upsService.getSvtObjectsByName(username, PlaceType.SERVERROOM);
+        } else {
+            svtObjectsByEmployee = upsService.getSvtObjectsByPlaceType(PlaceType.SERVERROOM);
+        }
+        List<LocationByTreeDto> treeSvtDtoByEmployee = upsOutDtoTreeService.getTreeSvtDtoByPlaceType(svtObjectsByEmployee)
+                .stream()
+                .sorted((o1, o2) -> o1.getLocationName().compareTo(o2.getLocationName()))
+                .collect(Collectors.toList());
+        
+        Map<Location, List<Ups>> svtObjectsByStorage = null;
+        if(null != username) {
+            svtObjectsByStorage = upsService.getSvtObjectsByName(username, PlaceType.STORAGE);
+        } else {
+           svtObjectsByStorage = upsService.getSvtObjectsByPlaceType(PlaceType.STORAGE); 
+        }
+        
+        List<LocationByTreeDto> treeSvtDtoByStorage = upsOutDtoTreeService.getTreeSvtDtoByPlaceType(svtObjectsByStorage)
+                .stream()
+                .sorted((o1, o2) -> o1.getLocationName().compareTo(o2.getLocationName()))
+                .collect(Collectors.toList());
+        
+        model.addAttribute("dtoes", treeSvtDtoByEmployee);
+        model.addAttribute("dtoesStorage", treeSvtDtoByStorage);
+        model.addAttribute("attribute", "ups");
+        model.addAttribute("placeAttribute", "serverroom");
+        model.addAttribute("namePage","ИБП");
+        
+        return "svtobj";
+    }
+    
+//    @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
+    @PostMapping("/upsforserver")
+    public String saveServerUps(@RequestBody SvtDTO dto) throws ObjectAlreadyExists {
+        upsService.createSvtObj(dto);
+        return "redirect:/upsforserver";
+     
+    }
+    
+    
+    //   @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
+    @PostMapping("/updupsforserver")
+    public String updateServerUps(@RequestBody SvtDTO dto) throws ObjectAlreadyExists {
+        upsService.updateSvtObj(dto);
+        return "redirect:/upsforserver";
+     
+    }
+    
     
   //  @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
     @PostMapping("/phones")
@@ -1564,6 +1631,100 @@ public class SvtViewController {
     public String sendConditionerToArchive(@RequestBody ArchivedDto dto) throws ObjectAlreadyExists {
         conditionerService.svtObjToArchive(dto);
         return "redirect:/conditioner";
+    }
+    
+     //      @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
+    @GetMapping("/minfomat")
+    public String getModelInfomat(Model model) {
+        List<InfomatModel> infomatModels = infomatModelService.getAllModels();
+        List<SvtModelDto> getInfomatModelsDtoes = svtModelMapper.getModelInfomatDtoes(infomatModels);
+        model.addAttribute("dtoes", getInfomatModelsDtoes);
+        model.addAttribute("namePage", "Модели инфоматов");
+        model.addAttribute("attribute", "minfomat");
+        return "models";
+    }
+    
+//    @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
+    @PostMapping("/minfomat")
+    public String saveModelInfomat(@RequestBody SvtModelDto dto) throws ObjectAlreadyExists {
+        InfomatModel infomatModel = svtModelMapper.getModelInfomat(dto);
+        infomatModelService.saveModel(infomatModel);
+        return "redirect:/minfomat";
+    }
+    
+    
+                  //  @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
+    @GetMapping("/infomat")
+    public String getInfomat(Model model, @RequestParam(value="username", required = false) String username) {
+        Map<Location, List<Infomat>> svtObjectsByEmployee = null;
+        if(null != username) {
+            svtObjectsByEmployee = infomatService.getSvtObjectsByName(username, PlaceType.OFFICEEQUIPMENT);
+        } else {
+            svtObjectsByEmployee = infomatService.getSvtObjectsByPlaceType(PlaceType.OFFICEEQUIPMENT);
+        }
+        List<LocationByTreeDto> treeSvtDtoByEmployee = infomatOutDtoTreeService.getTreeSvtDtoByPlaceType(svtObjectsByEmployee)
+                .stream()
+                .sorted((o1, o2) -> o1.getLocationName().compareTo(o2.getLocationName()))
+                .collect(Collectors.toList());
+        Map<Location, List<Infomat>> svtObjectsByStorage = null;
+        
+        if(null != username) {
+            svtObjectsByStorage = infomatService.getSvtObjectsByName(username, PlaceType.STORAGE);
+        } else {
+            svtObjectsByStorage = infomatService.getSvtObjectsByPlaceType(PlaceType.STORAGE);
+        }
+        List<LocationByTreeDto> treeSvtDtoByStorage = infomatOutDtoTreeService.getTreeSvtDtoByPlaceType(svtObjectsByStorage)
+                .stream()
+                .sorted((o1, o2) -> o1.getLocationName().compareTo(o2.getLocationName()))
+                .collect(Collectors.toList());
+        
+        model.addAttribute("dtoes", treeSvtDtoByEmployee);
+        model.addAttribute("dtoesStorage", treeSvtDtoByStorage);
+        model.addAttribute("attribute", "infomat");
+        model.addAttribute("placeAttribute", "officeequipment");
+        model.addAttribute("namePage","Инфоматы");
+        
+        return "svtobj";
+    }
+    
+ //   @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
+    @PostMapping("/infomat")
+    public String saveInfomat(@RequestBody SvtDTO dto) throws ObjectAlreadyExists {
+        infomatService.createSvtObj(dto);
+        return "redirect:/infomat";
+    }
+    
+          @PostMapping("/updinfomat")
+    public String updateInfomat (@RequestBody SvtDTO dto) throws ObjectAlreadyExists {
+        infomatService.updateSvtObj(dto);
+        return "redirect:/infomat";
+     
+    }
+    
+              //      @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
+    @PostMapping("/infomattostor")
+    public String sendToStorageInfomat(@RequestBody SvtDTO dto) throws ObjectAlreadyExists {
+            // SystemBlock findById = sysrepo.findById(dto.getId()).get();
+            Infomat infomat = infomatMapper.getEntityFromDto(dto);
+        infomatService.sendToStorage(infomat);
+        return "redirect:/infomat";
+        
+    }
+    
+       //   @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
+    @PostMapping("/infomatbackstor")
+    public String backFromStorageInfomat (@RequestBody SvtDTO dto) throws ObjectAlreadyExists {
+            Infomat infomat = infomatMapper.getEntityFromDto(dto);
+        infomatService.backFromStorage(infomat, dto.getPlaceId());
+        return "redirect:/infomat";
+        
+    }
+    
+          //   @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
+    @PostMapping("/infomatarchived")
+    public String sendInfomatToArchive(@RequestBody ArchivedDto dto) throws ObjectAlreadyExists {
+        infomatService.svtObjToArchive(dto);
+        return "redirect:/infomat";
     }
     
 }

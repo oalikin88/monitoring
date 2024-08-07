@@ -17,6 +17,7 @@ import ru.gov.sfr.aos.monitoring.entities.ObjectBuing;
 import ru.gov.sfr.aos.monitoring.entities.Place;
 import ru.gov.sfr.aos.monitoring.entities.Scanner;
 import ru.gov.sfr.aos.monitoring.entities.ScannerModel;
+import ru.gov.sfr.aos.monitoring.exceptions.ObjectAlreadyExists;
 import ru.gov.sfr.aos.monitoring.models.SvtScannerDTO;
 import ru.gov.sfr.aos.monitoring.repositories.ContractRepo;
 import ru.gov.sfr.aos.monitoring.repositories.PlaceRepo;
@@ -40,11 +41,11 @@ public class ScannerService extends SvtObjService<Scanner, ScannerRepo, SvtScann
     private ContractRepo contractRepo;
 
     @Override
-    public void createSvtObj(SvtScannerDTO dto) {
-        if (null != dto.getId()) {
-            if (scannerRepo.existsById(dto.getId())) {
-                System.out.println("такой сканер уже есть в базе данных");
-            }
+    public void createSvtObj(SvtScannerDTO dto) throws ObjectAlreadyExists {
+
+            if (scannerRepo.existsBySerialNumberIgnoreCase(dto.getSerialNumber())) {
+                throw new ObjectAlreadyExists("Сканер с таким серийным номером уже есть в базе данных");
+            
         } else {
             Scanner scanner = new Scanner();
             Place place = null;

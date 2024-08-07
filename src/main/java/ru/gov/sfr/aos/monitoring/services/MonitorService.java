@@ -19,6 +19,7 @@ import ru.gov.sfr.aos.monitoring.entities.MonitorModel;
 import ru.gov.sfr.aos.monitoring.entities.ObjectBuing;
 import ru.gov.sfr.aos.monitoring.entities.Place;
 import ru.gov.sfr.aos.monitoring.enums.BaseType;
+import ru.gov.sfr.aos.monitoring.exceptions.ObjectAlreadyExists;
 import ru.gov.sfr.aos.monitoring.models.SvtDTO;
 import ru.gov.sfr.aos.monitoring.repositories.ContractRepo;
 import ru.gov.sfr.aos.monitoring.repositories.MonitorModelRepo;
@@ -45,14 +46,11 @@ public class MonitorService extends SvtObjService <Monitor, MonitorRepo, SvtDTO>
     private MonitorRepo monitorRepo;
 
     @Override
-    public void createSvtObj(SvtDTO dto) {
-        
-        
-        
-         if(null != dto.getId()) {
-        if(monitorRepo.existsById(dto.getId())) {
-            System.out.println("такой телефон уже есть в базе данных");
-        }}else {
+    public void createSvtObj(SvtDTO dto) throws ObjectAlreadyExists {
+
+        if(monitorRepo.existsBySerialNumberIgnoreCase(dto.getSerialNumber())) {
+            throw new ObjectAlreadyExists("Монитор с таким серийным номером уже есть в базе данных");
+        }else {
             Monitor monitor = new Monitor();
             Place place = null;
              MonitorModel monitorModel = null;

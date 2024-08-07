@@ -23,6 +23,8 @@ import ru.gov.sfr.aos.monitoring.entities.Conditioner;
 import ru.gov.sfr.aos.monitoring.entities.ConditionerModel;
 import ru.gov.sfr.aos.monitoring.entities.Cpu;
 import ru.gov.sfr.aos.monitoring.entities.Hdd;
+import ru.gov.sfr.aos.monitoring.entities.Infomat;
+import ru.gov.sfr.aos.monitoring.entities.InfomatModel;
 import ru.gov.sfr.aos.monitoring.entities.Keyboard;
 import ru.gov.sfr.aos.monitoring.entities.LanCard;
 import ru.gov.sfr.aos.monitoring.entities.Monitor;
@@ -51,6 +53,7 @@ import ru.gov.sfr.aos.monitoring.entities.VideoCard;
 import ru.gov.sfr.aos.monitoring.mappers.AtsMapper;
 import ru.gov.sfr.aos.monitoring.mappers.BatteryTypeMapper;
 import ru.gov.sfr.aos.monitoring.mappers.ConditionerMapper;
+import ru.gov.sfr.aos.monitoring.mappers.InfomatMapper;
 import ru.gov.sfr.aos.monitoring.mappers.MonitorMapper;
 import ru.gov.sfr.aos.monitoring.mappers.OperationSystemMapper;
 import ru.gov.sfr.aos.monitoring.mappers.SvtModelMapper;
@@ -96,6 +99,8 @@ import ru.gov.sfr.aos.monitoring.services.ConditionerModelService;
 import ru.gov.sfr.aos.monitoring.services.ConditionerService;
 import ru.gov.sfr.aos.monitoring.services.CpuModelService;
 import ru.gov.sfr.aos.monitoring.services.HddModelService;
+import ru.gov.sfr.aos.monitoring.services.InfomatModelService;
+import ru.gov.sfr.aos.monitoring.services.InfomatService;
 import ru.gov.sfr.aos.monitoring.services.KeyboardModelService;
 import ru.gov.sfr.aos.monitoring.services.LanCardModelService;
 import ru.gov.sfr.aos.monitoring.services.MonitorService;
@@ -232,7 +237,12 @@ public class GetInfoController {
     private ConditionerService conditionerService;
     @Autowired
     private ConditionerMapper conditionerMapper;
-    
+    @Autowired
+    private InfomatModelService infomatModelService;
+    @Autowired
+    private InfomatMapper infomatMapper;
+    @Autowired
+    private InfomatService infomatService;
 
     @GetMapping("/getinfooo")
     public List<EmployeeDTO> getEmpl() {
@@ -534,9 +544,9 @@ public class GetInfoController {
     }
     
     @GetMapping("/placeserverbydepandloc")
-    public List<PlaceDTO> getplacesServerByLocationAndDepartments(Long locationId, String departmentCode) {
+    public List<PlaceDTO> getplacesServerByLocationAndDepartments(Long locationId, String departmentCode, PlaceType placetype) {
 
-        List<PlaceDTO> dtoes = placeService.getPlacesServerByLocationAndDepartment(locationId, departmentCode);
+        List<PlaceDTO> dtoes = placeService.getPlacesByLocationAndDepartmentAndPlaceType(locationId, departmentCode, placetype);
         return dtoes;
     }
 
@@ -680,7 +690,6 @@ public class GetInfoController {
     
     @GetMapping("/getats")
     public SvtDTO getAtsById(Long atsId) {
-
         Ats ats = atsService.getById(atsId);
         SvtAtsDTO atsDto = atsMapper.getDto(ats);
 
@@ -696,10 +705,23 @@ public class GetInfoController {
     
     @GetMapping("/getconditioner")
     public SvtDTO getConditionerById(Long conditionerId) {
-
         Conditioner conditioner = conditionerService.getById(conditionerId);
         SvtConditionerDTO conditionerDto = conditionerMapper.getDto(conditioner);
-
         return conditionerDto;
     }
+    
+         @GetMapping("/modinfomat")
+    public List<SvtModelDto> getModelInfomat() {
+        List<InfomatModel> allModels = infomatModelService.getAllModels();
+        List<SvtModelDto> dtoes = svtModelMapper.getModelInfomatDtoes(allModels);
+        return dtoes;
+    }
+    
+    @GetMapping("/getinfomat")
+    public SvtDTO getInfomatById(Long infomatId) {
+        Infomat infomat = infomatService.getById(infomatId);
+        SvtDTO dto = infomatMapper.getDto(infomat);
+        return dto;
+    }
+    
 }

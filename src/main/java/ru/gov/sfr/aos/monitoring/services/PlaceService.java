@@ -193,8 +193,8 @@ public class PlaceService {
         return dtoes;
     }
 
-    public List<PlaceDTO> getPlacesServerByLocationAndDepartment(Long locationId, String departmentCode) {
-        List<Place> places = placeRepo.findByLocationIdAndDepartmentCodeAndPlaceTypeAndArchivedFalse(locationId, departmentCode, PlaceType.SERVERROOM);
+    public List<PlaceDTO> getPlacesByLocationAndDepartmentAndPlaceType(Long locationId, String departmentCode, PlaceType placetype) {
+        List<Place> places = placeRepo.findByLocationIdAndDepartmentCodeAndPlaceTypeAndArchivedFalse(locationId, departmentCode, placetype);
         List<PlaceDTO> dtoes = placeMapper.listPlaceDtoFromListPlace(places);
         return dtoes;
     }

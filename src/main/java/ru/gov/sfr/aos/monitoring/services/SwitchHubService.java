@@ -18,6 +18,7 @@ import ru.gov.sfr.aos.monitoring.entities.ObjectBuing;
 import ru.gov.sfr.aos.monitoring.entities.Place;
 import ru.gov.sfr.aos.monitoring.entities.SwitchHub;
 import ru.gov.sfr.aos.monitoring.entities.SwitchHubModel;
+import ru.gov.sfr.aos.monitoring.exceptions.ObjectAlreadyExists;
 import ru.gov.sfr.aos.monitoring.models.SvtSwitchHubDTO;
 import ru.gov.sfr.aos.monitoring.repositories.ContractRepo;
 import ru.gov.sfr.aos.monitoring.repositories.PlaceRepo;
@@ -41,7 +42,7 @@ public class SwitchHubService extends SvtObjService<SwitchHub, SwitchHubRepo, Sv
     
 
     @Override
-    public void createSvtObj(SvtSwitchHubDTO dto) {
+    public void createSvtObj(SvtSwitchHubDTO dto) throws ObjectAlreadyExists {
         SwitchHubType switchHubType = null;
         String switchHubTypeRus = null;
         switch (dto.getSwitchHubType()) {
@@ -54,10 +55,10 @@ public class SwitchHubService extends SvtObjService<SwitchHub, SwitchHubRepo, Sv
                 switchHubType = SwitchHubType.HUB;
                 break;
         }
-        if(null != dto.getId()) {
-            if(switchHubRepo.existsById(dto.getId())) {
-                System.out.println("такой " + switchHubTypeRus + " уже есть в базе данных");
-            }
+        
+            if(switchHubRepo.existsBySerialNumberIgnoreCase(dto.getSerialNumber())) {
+                throw new ObjectAlreadyExists(switchHubTypeRus + " с таким серийным номером уже есть в базе данных");
+            
     } else {
             
             SwitchHub switchHub = new SwitchHub();

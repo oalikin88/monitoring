@@ -21,6 +21,7 @@ import ru.gov.sfr.aos.monitoring.entities.Place;
 import ru.gov.sfr.aos.monitoring.entities.Ram;
 import ru.gov.sfr.aos.monitoring.entities.Server;
 import ru.gov.sfr.aos.monitoring.entities.ServerModel;
+import ru.gov.sfr.aos.monitoring.exceptions.ObjectAlreadyExists;
 import ru.gov.sfr.aos.monitoring.models.SvtServerDTO;
 import ru.gov.sfr.aos.monitoring.repositories.ContractRepo;
 import ru.gov.sfr.aos.monitoring.repositories.CpuRepo;
@@ -56,11 +57,11 @@ public class ServerService extends SvtObjService <Server, ServerRepo, SvtServerD
     
     
     @Override
-    public void createSvtObj(SvtServerDTO dto) {
-        if(null != dto.getId()) {
-            if(serverRepo.existsById(dto.getId())) {
-                System.out.println("такой сервер уже есть в базе данных");
-            }
+    public void createSvtObj(SvtServerDTO dto) throws ObjectAlreadyExists {
+
+            if(serverRepo.existsBySerialNumberIgnoreCase(dto.getSerialNumber())) {
+                throw new ObjectAlreadyExists("Сервер с таким серийным номером уже есть в базе данных");
+            
         }else {
                 Server server = new Server();
                 Place place = null;

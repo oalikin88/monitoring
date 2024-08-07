@@ -29,6 +29,7 @@ import ru.gov.sfr.aos.monitoring.entities.Speakers;
 import ru.gov.sfr.aos.monitoring.entities.SystemBlock;
 import ru.gov.sfr.aos.monitoring.entities.SystemBlockModel;
 import ru.gov.sfr.aos.monitoring.entities.VideoCard;
+import ru.gov.sfr.aos.monitoring.exceptions.ObjectAlreadyExists;
 import ru.gov.sfr.aos.monitoring.models.SvtSystemBlockDTO;
 import ru.gov.sfr.aos.monitoring.repositories.CdDriveRepo;
 import ru.gov.sfr.aos.monitoring.repositories.ContractRepo;
@@ -93,11 +94,11 @@ public class SystemBlockService extends SvtObjService <SystemBlock, SystemBlockR
     
 
     @Override
-    public void createSvtObj(SvtSystemBlockDTO dto) {
-        if(null != dto.getId()) {
-            if(systemBlockRepo.existsById(dto.getId())) {
-                System.out.println("такой системный блок уже есть в базе данных");
-            }
+    public void createSvtObj(SvtSystemBlockDTO dto) throws ObjectAlreadyExists {
+
+            if(systemBlockRepo.existsBySerialNumberIgnoreCase(dto.getSerialNumber())) {
+                throw new ObjectAlreadyExists("Системный блок с таким серийным номером уже есть в базе данных");
+            
         } else {
             SystemBlock systemBlock = new SystemBlock();
             Place place = null;

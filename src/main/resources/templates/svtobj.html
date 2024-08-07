@@ -35,7 +35,10 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
     </title>
     <title th:case="'conditioner'">
         Кондиционеры
-    </title>        
+    </title>
+    <title th:case="'infomat'">
+        Инфоматы
+    </title>    
 </th:block>
         
         <meta charset="UTF-8">
@@ -85,6 +88,9 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                         </h1>
                         <h1 class="ms-2 ps-2" th:case="'conditioner'">
                             Кондиционеры
+                        </h1>
+                        <h1 class="ms-2 ps-2" th:case="'infomat'">
+                            Инфоматы
                         </h1>
                     </th:block>
                 </div>
@@ -149,6 +155,15 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                                                     <div class="col">Инвентарный номер</div>
                                                     <div class="col">Год ввода в экспл</div>
                                                     <div class="col">Тип</div>
+                                                    <div class="col">Состояние</div>
+                                                </div>
+                                            <div class="row fw-bold mt-3 mb-3" th:case="infomat">
+                                                    <div class="col">Модель</div>
+                                                    <div class="col">ФИО</div>
+                                                    <div class="col">Серийный номер</div>
+                                                    <div class="col">Инвентарный номер</div>
+                                                    <div class="col">Кабинет</div>
+                                                    <div class="col">Год выпуска</div>
                                                     <div class="col">Состояние</div>
                                                 </div>
                                             <div class="row fw-bold mt-3 mb-3" th:case="*">
@@ -217,6 +232,21 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                                                 <div class="col" th:text="${inInnerDto.inventaryNumber}"></div>
                                                 <div class="col" th:text="${inInnerDto.yearCreated}"></div>
                                                 <div class="col" th:text="${inInnerDto.cityNumberAmount}"></div>
+                                                <th:block th:switch="${inInnerDto.status}">
+                                                <div class="col" th:case="OK" th:text="Исправен"></div>
+                                                <div class="col" th:case="REPAIR" th:text="Ремонт"></div>
+                                                <div class="col" th:case="MONITORING" th:text="Списание"></div>
+                                                <div class="col" th:case="DEFECTIVE" th:text="Неисправен"></div>
+                                                <div class="col" th:case="UTILIZATION" th:text="Утилизирован"></div>
+                                                </th:block>
+                                             </div>
+                                                <div class="row mb-2 d-flex align-items-center text-start phone" th:case="infomat">
+                                                <div class="col" th:text="${stat.count} + '. ' + ${inInnerDto.model}"></div>
+                                                <div class="col" th:text="${inInnerDto.placeName}"></div>
+                                                <div class="col" th:text="${inInnerDto.serialNumber}"></div>
+                                                <div class="col" th:text="${inInnerDto.inventaryNumber}"></div>
+                                                <div class="col" th:text="${inInnerDto.numberRoom}"></div>
+                                                <div class="col" th:text="${inInnerDto.yearCreated}"></div>
                                                 <th:block th:switch="${inInnerDto.status}">
                                                 <div class="col" th:case="OK" th:text="Исправен"></div>
                                                 <div class="col" th:case="REPAIR" th:text="Ремонт"></div>
@@ -305,6 +335,18 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
         <div class="modal fade" id="addPlaceModal" data-bs-backdrop="static" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-lg modal-dialog-centered">
                 <div class="modal-content" id="modalContent">
+
+
+                </div>
+
+            </div>
+        </div>
+        
+        
+        <!-- Модальное окно error-->
+        <div class="modal fade" id="modalError" data-bs-backdrop="static" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-error">
+                <div class="modal-content" id="modalErrorContent">
 
 
                 </div>

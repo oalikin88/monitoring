@@ -17,6 +17,7 @@ import ru.gov.sfr.aos.monitoring.entities.ObjectBuing;
 import ru.gov.sfr.aos.monitoring.entities.Place;
 import ru.gov.sfr.aos.monitoring.entities.Router;
 import ru.gov.sfr.aos.monitoring.entities.RouterModel;
+import ru.gov.sfr.aos.monitoring.exceptions.ObjectAlreadyExists;
 import ru.gov.sfr.aos.monitoring.models.SvtSwitchHubDTO;
 import ru.gov.sfr.aos.monitoring.repositories.ContractRepo;
 import ru.gov.sfr.aos.monitoring.repositories.PlaceRepo;
@@ -28,7 +29,7 @@ import ru.gov.sfr.aos.monitoring.repositories.RouterRepo;
  * @author 041AlikinOS
  */
 @Service
-public class RouterService extends SvtObjService<Router, RouterRepo, SvtSwitchHubDTO>{
+public class RouterService extends SvtObjService<Router, RouterRepo, SvtSwitchHubDTO> {
     @Autowired
     private RouterRepo routerRepo;
     @Autowired
@@ -40,11 +41,9 @@ public class RouterService extends SvtObjService<Router, RouterRepo, SvtSwitchHu
     
     
     @Override
-    public void createSvtObj(SvtSwitchHubDTO dto) {
-        if(null != dto.getId()) {
+    public void createSvtObj(SvtSwitchHubDTO dto) throws ObjectAlreadyExists {
             if(routerRepo.existsBySerialNumberIgnoreCase(dto.getSerialNumber())) {
-                System.out.println("такой маршрутизатор уже есть в базе данных");
-            }
+                throw new ObjectAlreadyExists("АТС с таким серийным номером уже есть в базе данных");
     } else {
             
             Router router = new Router();

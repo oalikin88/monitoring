@@ -37,6 +37,8 @@ public class Ups extends ObjectBuingWithSerialAndInventary implements Serializab
     private BatteryType batteryType;
     private int batteryAmount;
     private Date dateExploitationBegin;
+    private String numberRoom;
+    private String nameFromOneC;
 
     public Ups() {
     }
@@ -51,6 +53,15 @@ public class Ups extends ObjectBuingWithSerialAndInventary implements Serializab
         this.dateExploitationBegin = dateExploitationBegin;
     }
 
+    public String getNameFromOneC() {
+        return nameFromOneC;
+    }
+
+    public void setNameFromOneC(String nameFromOneC) {
+        this.nameFromOneC = nameFromOneC;
+    }
+
+    
     public UpsModel getUpsModel() {
         return upsModel;
     }
@@ -129,6 +140,14 @@ public class Ups extends ObjectBuingWithSerialAndInventary implements Serializab
 
     public void setDateExploitationBegin(Date dateExploitationBegin) {
         this.dateExploitationBegin = dateExploitationBegin;
+    }
+
+    public String getNumberRoom() {
+        return numberRoom;
+    }
+
+    public void setNumberRoom(String numberRoom) {
+        this.numberRoom = numberRoom;
     }
     
     

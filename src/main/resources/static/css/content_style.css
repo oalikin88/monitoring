@@ -7,6 +7,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/CascadeStyleSheet.css to ed
     Author     : 041AlikinOS
 */
 
+
 .element:hover {
     background-color: rgba(14, 34, 62, 0.3);
     padding-left: 10px;
@@ -21,10 +22,20 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/CascadeStyleSheet.css to ed
 
 }
 
-.modal-header {
+.modalHeaderContent {
     background-color: #0e223e;
     padding: 5px 15px 5px 15px;
     user-select: none;
+}
+.modalHeaderError {
+    background-color: rgb(200,1,0);
+    padding: 5px 15px 5px 15px;
+    user-select: none;
+    
+}
+
+.modal-dialog-error {
+    max-width: calc(var(--bs-modal-width) - 10%);
 }
 
 .modal-title {
@@ -57,4 +68,9 @@ ul {
 
 #top-panel {
     user-select: none;
+}
+
+#exceptionMessage {
+    padding-bottom: 30px;
+    padding-top: 30px;
 }

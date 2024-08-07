@@ -14,6 +14,7 @@ import ru.gov.sfr.aos.monitoring.entities.CdDrive;
 import ru.gov.sfr.aos.monitoring.entities.ConditionerModel;
 import ru.gov.sfr.aos.monitoring.entities.Cpu;
 import ru.gov.sfr.aos.monitoring.entities.Hdd;
+import ru.gov.sfr.aos.monitoring.entities.InfomatModel;
 import ru.gov.sfr.aos.monitoring.entities.Keyboard;
 import ru.gov.sfr.aos.monitoring.entities.LanCard;
 import ru.gov.sfr.aos.monitoring.entities.MonitorModel;
@@ -152,4 +153,9 @@ public abstract class SvtModelMapper {
     public abstract SvtModelDto getModelConditionerDto(ConditionerModel conditionerModel);
     public abstract List<ConditionerModel> getModelConditionerList(List<SvtModelDto> dtoes);
     public abstract List<SvtModelDto> getModelConditionerDtoes (List<ConditionerModel> modelConditionerList);
+    
+    public abstract InfomatModel getModelInfomat (SvtModelDto dto);
+    public abstract SvtModelDto getModelInfomatDto(InfomatModel infomatModel);
+    public abstract List<InfomatModel> getModelInfomatList(List<SvtModelDto> dtoes);
+    public abstract List<SvtModelDto> getModelInfomatDtoes (List<InfomatModel> modelInfomatList);
 }

@@ -18,6 +18,7 @@ import ru.gov.sfr.aos.monitoring.entities.ObjectBuing;
 import ru.gov.sfr.aos.monitoring.entities.Place;
 import ru.gov.sfr.aos.monitoring.entities.Ups;
 import ru.gov.sfr.aos.monitoring.entities.UpsModel;
+import ru.gov.sfr.aos.monitoring.exceptions.ObjectAlreadyExists;
 import ru.gov.sfr.aos.monitoring.models.SvtDTO;
 import ru.gov.sfr.aos.monitoring.repositories.BatteryTypeRepo;
 import ru.gov.sfr.aos.monitoring.repositories.ContractRepo;
@@ -44,11 +45,11 @@ public class UpsService extends SvtObjService<Ups, UpsRepo, SvtDTO>{
     private BatteryTypeRepo batteryTypeRepo;
 
     @Override
-    public void createSvtObj(SvtDTO dto) {
-        if(null != dto.getId()) {
-        if(upsRepo.existsById(dto.getId())) {
-            System.out.println("такой ИБП уже есть в базе данных");
-        }
+    public void createSvtObj(SvtDTO dto) throws ObjectAlreadyExists {
+
+        if(upsRepo.existsBySerialNumberIgnoreCase(dto.getSerialNumber())) {
+            throw new ObjectAlreadyExists("ИБП с таким серийным номером уже есть в базе данных");
+        
         } else {
             Ups ups = new Ups();
             Place place = null;
@@ -84,6 +85,8 @@ public class UpsService extends SvtObjService<Ups, UpsRepo, SvtDTO>{
             ups.setBatteryType(batteryType);
             ups.setBatteryAmount(dto.getBatteryAmount());
             ups.setDateExploitationBegin(dto.getDateExploitationBegin());
+            ups.setNumberRoom(dto.getNumberRoom());
+            ups.setNameFromOneC(dto.getNameFromOneC());
             Contract contract = null;
             if(contractRepo.existsByContractNumberIgnoreCase("00000000")) {
                 contract = contractRepo.findByContractNumberIgnoreCase("00000000").get();
@@ -133,6 +136,8 @@ public class UpsService extends SvtObjService<Ups, UpsRepo, SvtDTO>{
         upsFromDB.setUpsModel(upsModelFromDto);
         upsFromDB.setBatteryType(batteryTypeFromDto);
         upsFromDB.setBatteryAmount(dto.getBatteryAmount());
+        upsFromDB.setNumberRoom(dto.getNumberRoom());
+        upsFromDB.setNameFromOneC(dto.getNameFromOneC());
         upsRepo.save(upsFromDB);
         
     }
