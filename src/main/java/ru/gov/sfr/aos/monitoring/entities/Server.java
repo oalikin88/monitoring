@@ -10,8 +10,6 @@ import java.util.HashSet;
 import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
@@ -19,7 +17,6 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.validation.constraints.NotNull;
-import ru.gov.sfr.aos.monitoring.dictionaries.Status;
 
 /**
  *
@@ -31,10 +28,6 @@ public class Server extends ObjectBuingWithSerialAndInventary implements Seriali
     @NotNull(message = "Поле \"Модель\" не должно быть пустым")
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private ServerModel serverModel;
-    @Enumerated(EnumType.STRING)
-    private Status status;
-    private String inventaryNumber;
-    private String serialNumber;
     private int yearCreated;
     private Date dateExploitationBegin;
     private String nameFromOneC;
@@ -71,30 +64,6 @@ public class Server extends ObjectBuingWithSerialAndInventary implements Seriali
 
     public void setServerModel(ServerModel serverModel) {
         this.serverModel = serverModel;
-    }
-
-    public Status getStatus() {
-        return status;
-    }
-
-    public void setStatus(Status status) {
-        this.status = status;
-    }
-
-    public String getInventaryNumber() {
-        return inventaryNumber;
-    }
-
-    public void setInventaryNumber(String inventaryNumber) {
-        this.inventaryNumber = inventaryNumber;
-    }
-
-    public String getSerialNumber() {
-        return serialNumber;
-    }
-
-    public void setSerialNumber(String serialNumber) {
-        this.serialNumber = serialNumber;
     }
 
     public int getYearCreated() {
@@ -185,14 +154,6 @@ public class Server extends ObjectBuingWithSerialAndInventary implements Seriali
         this.operationSystems = operationSystems;
     }
 
-
-    public boolean isArchived() {
-        return archived;
-    }
-
-    public void setArchived(boolean archived) {
-        this.archived = archived;
-    }
     
     
 }

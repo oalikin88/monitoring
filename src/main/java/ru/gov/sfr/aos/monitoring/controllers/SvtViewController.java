@@ -49,6 +49,10 @@ import ru.gov.sfr.aos.monitoring.entities.SwitchHub;
 import ru.gov.sfr.aos.monitoring.entities.SwitchHubModel;
 import ru.gov.sfr.aos.monitoring.entities.SystemBlock;
 import ru.gov.sfr.aos.monitoring.entities.SystemBlockModel;
+import ru.gov.sfr.aos.monitoring.entities.Terminal;
+import ru.gov.sfr.aos.monitoring.entities.TerminalModel;
+import ru.gov.sfr.aos.monitoring.entities.ThermoPrinter;
+import ru.gov.sfr.aos.monitoring.entities.ThermoPrinterModel;
 import ru.gov.sfr.aos.monitoring.entities.Ups;
 import ru.gov.sfr.aos.monitoring.entities.UpsModel;
 import ru.gov.sfr.aos.monitoring.entities.VideoCard;
@@ -66,6 +70,8 @@ import ru.gov.sfr.aos.monitoring.mappers.ServerMapper;
 import ru.gov.sfr.aos.monitoring.mappers.SvtModelMapper;
 import ru.gov.sfr.aos.monitoring.mappers.SwitchHubMapper;
 import ru.gov.sfr.aos.monitoring.mappers.SystemBlockMapper;
+import ru.gov.sfr.aos.monitoring.mappers.TerminalMapper;
+import ru.gov.sfr.aos.monitoring.mappers.ThermoprinterMapper;
 import ru.gov.sfr.aos.monitoring.mappers.UpsMapper;
 import ru.gov.sfr.aos.monitoring.models.ArchivedDto;
 import ru.gov.sfr.aos.monitoring.models.BatteryTypeDto;
@@ -129,6 +135,12 @@ import ru.gov.sfr.aos.monitoring.services.SwitchHubService;
 import ru.gov.sfr.aos.monitoring.services.SystemBlockModelService;
 import ru.gov.sfr.aos.monitoring.services.SystemBlockOutDtoTreeService;
 import ru.gov.sfr.aos.monitoring.services.SystemBlockService;
+import ru.gov.sfr.aos.monitoring.services.TerminalModelService;
+import ru.gov.sfr.aos.monitoring.services.TerminalOutDtoTreeService;
+import ru.gov.sfr.aos.monitoring.services.TerminalService;
+import ru.gov.sfr.aos.monitoring.services.ThermoprinterModelService;
+import ru.gov.sfr.aos.monitoring.services.ThermoprinterOutDtoTreeService;
+import ru.gov.sfr.aos.monitoring.services.ThermoprinterService;
 import ru.gov.sfr.aos.monitoring.services.UpsModelService;
 import ru.gov.sfr.aos.monitoring.services.UpsOutDtoTreeService;
 import ru.gov.sfr.aos.monitoring.services.UpsService;
@@ -267,7 +279,22 @@ public class SvtViewController {
     private InfomatService infomatService;
     @Autowired
     private InfomatMapper infomatMapper;
-    
+    @Autowired
+    private TerminalModelService terminalModelService;
+    @Autowired
+    private TerminalService terminalService;
+    @Autowired
+    private TerminalOutDtoTreeService terminalOutDtoTreeService;
+    @Autowired
+    private TerminalMapper terminalMapper;
+    @Autowired
+    private ThermoprinterModelService thermoprinterModelService;
+    @Autowired
+    private ThermoprinterService thermoprinterService;
+    @Autowired
+    private ThermoprinterOutDtoTreeService thermoprinterOutDtoTreeService;
+    @Autowired
+    private ThermoprinterMapper thermoprinterMapper;
     
 //  @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
     @GetMapping("/svt")
@@ -598,14 +625,7 @@ public class SvtViewController {
         
     }
     
- //   @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
-    @PostMapping("/monitorbackstor")
-    public String backFromStorageMonitor (@RequestBody SvtDTO dto) throws ObjectAlreadyExists {
-        Monitor monitor = monitorMapper.getEntityFromDto(dto);
-        monitorService.backFromStorage(monitor, dto.getPlaceId());
-        return "redirect:/monitors";
-        
-    }
+ 
     
   //  @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
     @PostMapping("/upsbackstor")
@@ -618,14 +638,7 @@ public class SvtViewController {
         
     }
     
-  //  @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
-    @PostMapping("/phonebackstor")
-    public String backFromStorage (@RequestBody SvtDTO dto) throws ObjectAlreadyExists {
-        Phone phone = phoneMapper.getEntityFromDto(dto);
-        phoneService.backFromStorage(phone, dto.getPlaceId());
-        return "redirect:/phones";
-        
-    }
+
     
     
   //  @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
@@ -761,14 +774,7 @@ public class SvtViewController {
         
     }
     
- //   @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
-    @PostMapping("/sysblocksbackstor")
-    public String backFromStorageSystemblock (@RequestBody SvtSystemBlockDTO dto) throws ObjectAlreadyExists {
-            SystemBlock systemblock = systemblockMapper.getEntityFromDto(dto);
-        systemblockService.backFromStorage(systemblock, dto.getPlaceId());
-        return "redirect:/sysblocks";
-        
-    }
+
     
         @PostMapping("/updsysblocks")
     public String updateSystemblock(@RequestBody SvtSystemBlockDTO dto) throws ObjectAlreadyExists {
@@ -1130,14 +1136,7 @@ public class SvtViewController {
         
     }
     
- //   @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
-    @PostMapping("/scannerbackstor")
-    public String backFromStorageScanner (@RequestBody SvtScannerDTO dto) throws ObjectAlreadyExists {
-            Scanner scanner = scannerMapper.getEntityFromDto(dto);
-        scannerService.backFromStorage(scanner, dto.getPlaceId());
-        return "redirect:/scanner";
-        
-    }
+
     
         @PostMapping("/updscanner")
     public String updateScanner(@RequestBody SvtScannerDTO dto) throws ObjectAlreadyExists {
@@ -1231,14 +1230,7 @@ public class SvtViewController {
         
     }
     
-     //   @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
-    @PostMapping("/serverbackstor")
-    public String backFromStorageServer (@RequestBody SvtServerDTO dto) throws ObjectAlreadyExists {
-            Server server = serverMapper.getEntityFromDto(dto);
-        serverService.backFromStorage(server, dto.getPlaceId());
-        return "redirect:/server";
-        
-    }
+
     
      @PostMapping("/updserver")
     public String updateServer (@RequestBody SvtServerDTO dto) throws ObjectAlreadyExists {
@@ -1330,14 +1322,7 @@ public class SvtViewController {
         
     }
     
-     //   @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
-    @PostMapping("/switchbackstor")
-    public String backFromStorageSwitchHub (@RequestBody SvtSwitchHubDTO dto) throws ObjectAlreadyExists {
-            SwitchHub switchHub = switchHubMapper.getEntityFromDto(dto);
-        switchHubService.backFromStorage(switchHub, dto.getPlaceId());
-        return "redirect:/switch";
-        
-    }
+
     
      @PostMapping("/updswitch")
     public String updateSwitchHub (@RequestBody SvtSwitchHubDTO dto) throws ObjectAlreadyExists {
@@ -1419,14 +1404,7 @@ public class SvtViewController {
         
     }
     
-     //   @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
-    @PostMapping("/routerbackstor")
-    public String backFromStorageRouter (@RequestBody SvtSwitchHubDTO dto) throws ObjectAlreadyExists {
-            Router router = routerMapper.getEntityFromDto(dto);
-        routerService.backFromStorage(router, dto.getPlaceId());
-        return "redirect:/router";
-        
-    }
+
     
      @PostMapping("/updrouter")
     public String updateRouter (@RequestBody SvtSwitchHubDTO dto) throws ObjectAlreadyExists {
@@ -1522,14 +1500,6 @@ public class SvtViewController {
         
     }
     
-       //   @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
-    @PostMapping("/atsbackstor")
-    public String backFromStorageAts (@RequestBody SvtAtsDTO dto) throws ObjectAlreadyExists {
-            Ats ats = atsMapper.getEntityFromDto(dto);
-        atsService.backFromStorage(ats, dto.getPlaceId());
-        return "redirect:/ats";
-        
-    }
     
           //   @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
     @PostMapping("/atsarchived")
@@ -1711,14 +1681,7 @@ public class SvtViewController {
         
     }
     
-       //   @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
-    @PostMapping("/infomatbackstor")
-    public String backFromStorageInfomat (@RequestBody SvtDTO dto) throws ObjectAlreadyExists {
-            Infomat infomat = infomatMapper.getEntityFromDto(dto);
-        infomatService.backFromStorage(infomat, dto.getPlaceId());
-        return "redirect:/infomat";
-        
-    }
+
     
           //   @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
     @PostMapping("/infomatarchived")
@@ -1726,5 +1689,175 @@ public class SvtViewController {
         infomatService.svtObjToArchive(dto);
         return "redirect:/infomat";
     }
+    
+
+         //      @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
+    @GetMapping("/mterminal")
+    public String getModelTerminal(Model model) {
+        List<TerminalModel> terminalModels = terminalModelService.getAllModels();
+        List<SvtModelDto> getTerminalModelsDtoes = svtModelMapper.getModelTerminalDtoes(terminalModels);
+        model.addAttribute("dtoes", getTerminalModelsDtoes);
+        model.addAttribute("namePage", "Модели терминалов");
+        model.addAttribute("attribute", "mterminal");
+        return "models";
+    }
+    
+//    @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
+    @PostMapping("/mterminal")
+    public String saveModelTerminal(@RequestBody SvtModelDto dto) throws ObjectAlreadyExists {
+        TerminalModel terminalModel = svtModelMapper.getModelTerminal(dto);
+        terminalModelService.saveModel(terminalModel);
+        return "redirect:/mterminal";
+    }
+    
+                      //  @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
+    @GetMapping("/terminal")
+    public String getTerminal(Model model, @RequestParam(value="username", required = false) String username) {
+        Map<Location, List<Terminal>> svtObjectsByEmployee = null;
+        if(null != username) {
+            svtObjectsByEmployee = terminalService.getSvtObjectsByName(username, PlaceType.OFFICEEQUIPMENT);
+        } else {
+            svtObjectsByEmployee = terminalService.getSvtObjectsByPlaceType(PlaceType.OFFICEEQUIPMENT);
+        }
+        List<LocationByTreeDto> treeSvtDtoByEmployee = terminalOutDtoTreeService.getTreeSvtDtoByPlaceType(svtObjectsByEmployee)
+                .stream()
+                .sorted((o1, o2) -> o1.getLocationName().compareTo(o2.getLocationName()))
+                .collect(Collectors.toList());
+        Map<Location, List<Terminal>> svtObjectsByStorage = null;
+        
+        if(null != username) {
+            svtObjectsByStorage = terminalService.getSvtObjectsByName(username, PlaceType.STORAGE);
+        } else {
+            svtObjectsByStorage = terminalService.getSvtObjectsByPlaceType(PlaceType.STORAGE);
+        }
+        List<LocationByTreeDto> treeSvtDtoByStorage = terminalOutDtoTreeService.getTreeSvtDtoByPlaceType(svtObjectsByStorage)
+                .stream()
+                .sorted((o1, o2) -> o1.getLocationName().compareTo(o2.getLocationName()))
+                .collect(Collectors.toList());
+        
+        model.addAttribute("dtoes", treeSvtDtoByEmployee);
+        model.addAttribute("dtoesStorage", treeSvtDtoByStorage);
+        model.addAttribute("attribute", "terminal");
+        model.addAttribute("placeAttribute", "officeequipment");
+        model.addAttribute("namePage","Терминалы");
+        
+        return "svtobj";
+    }
+    
+ //   @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
+    @PostMapping("/terminal")
+    public String saveTerminal(@RequestBody SvtDTO dto) throws ObjectAlreadyExists {
+        terminalService.createSvtObj(dto);
+        return "redirect:/terminal";
+    }
+    
+          @PostMapping("/updterminal")
+    public String updateTerminal (@RequestBody SvtDTO dto) throws ObjectAlreadyExists {
+        terminalService.updateSvtObj(dto);
+        return "redirect:/terminal";
+     
+    }
+    
+              //      @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
+    @PostMapping("/terminaltostor")
+    public String sendToStorageTerminal(@RequestBody SvtDTO dto) throws ObjectAlreadyExists {
+        Terminal terminal = terminalMapper.getEntityFromDto(dto);
+        terminalService.sendToStorage(terminal);
+        return "redirect:/terminal";
+        
+    }
+    
+    
+          //   @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
+    @PostMapping("/terminalarchived")
+    public String sendTerminalToArchive(@RequestBody ArchivedDto dto) throws ObjectAlreadyExists {
+        terminalService.svtObjToArchive(dto);
+        return "redirect:/terminal";
+    }
+    
+             //      @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
+    @GetMapping("/mthermoprinter")
+    public String getModelThermoprinter(Model model) {
+        List<ThermoPrinterModel> thermoprinterModels = thermoprinterModelService.getAllModels();
+        List<SvtModelDto> getThermoprinterModelsDtoes = svtModelMapper.getModelThermoprinterDtoes(thermoprinterModels);
+        model.addAttribute("dtoes", getThermoprinterModelsDtoes);
+        model.addAttribute("namePage", "Модели термопринтеров");
+        model.addAttribute("attribute", "mthermoprinter");
+        return "models";
+    }
+    
+//    @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
+    @PostMapping("/mthermoprinter")
+    public String saveModelThermoprinter(@RequestBody SvtModelDto dto) throws ObjectAlreadyExists {
+        ThermoPrinterModel thermoprinterModel = svtModelMapper.getModelThermoprinter(dto);
+        thermoprinterModelService.saveModel(thermoprinterModel);
+        return "redirect:/mthermoprinter";
+    }
+    
+                         //  @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
+    @GetMapping("/thermoprinter")
+    public String getThermoprinter(Model model, @RequestParam(value="username", required = false) String username) {
+        Map<Location, List<ThermoPrinter>> svtObjectsByEmployee = null;
+        if(null != username) {
+            svtObjectsByEmployee = thermoprinterService.getSvtObjectsByName(username, PlaceType.OFFICEEQUIPMENT);
+        } else {
+            svtObjectsByEmployee = thermoprinterService.getSvtObjectsByPlaceType(PlaceType.OFFICEEQUIPMENT);
+        }
+        List<LocationByTreeDto> treeSvtDtoByEmployee = thermoprinterOutDtoTreeService.getTreeSvtDtoByPlaceType(svtObjectsByEmployee)
+                .stream()
+                .sorted((o1, o2) -> o1.getLocationName().compareTo(o2.getLocationName()))
+                .collect(Collectors.toList());
+        Map<Location, List<ThermoPrinter>> svtObjectsByStorage = null;
+        
+        if(null != username) {
+            svtObjectsByStorage = thermoprinterService.getSvtObjectsByName(username, PlaceType.STORAGE);
+        } else {
+            svtObjectsByStorage = thermoprinterService.getSvtObjectsByPlaceType(PlaceType.STORAGE);
+        }
+        List<LocationByTreeDto> treeSvtDtoByStorage = thermoprinterOutDtoTreeService.getTreeSvtDtoByPlaceType(svtObjectsByStorage)
+                .stream()
+                .sorted((o1, o2) -> o1.getLocationName().compareTo(o2.getLocationName()))
+                .collect(Collectors.toList());
+        
+        model.addAttribute("dtoes", treeSvtDtoByEmployee);
+        model.addAttribute("dtoesStorage", treeSvtDtoByStorage);
+        model.addAttribute("attribute", "thermoprinter");
+        model.addAttribute("placeAttribute", "officeequipment");
+        model.addAttribute("namePage","Термопринтеры");
+        
+        return "svtobj";
+    }
+    
+ //   @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
+    @PostMapping("/thermoprinter")
+    public String saveThermoprinter(@RequestBody SvtDTO dto) throws ObjectAlreadyExists {
+        thermoprinterService.createSvtObj(dto);
+        return "redirect:/thermoprinter";
+    }
+    
+          @PostMapping("/updthermoprinter")
+    public String updateThermoprinter (@RequestBody SvtDTO dto) throws ObjectAlreadyExists {
+        thermoprinterService.updateSvtObj(dto);
+        return "redirect:/thermoprinter";
+     
+    }
+    
+              //      @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
+    @PostMapping("/thermoprintertostor")
+    public String sendToStorageThermoprinter(@RequestBody SvtDTO dto) throws ObjectAlreadyExists {
+            ThermoPrinter thermoprinter = thermoprinterMapper.getEntityFromDto(dto);
+        thermoprinterService.sendToStorage(thermoprinter);
+        return "redirect:/thermoprinter";
+        
+    }
+    
+    
+          //   @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
+    @PostMapping("/thermoprinterarchived")
+    public String sendThermoprinterToArchive(@RequestBody ArchivedDto dto) throws ObjectAlreadyExists {
+        thermoprinterService.svtObjToArchive(dto);
+        return "redirect:/thermoprinter";
+    }
+    
     
 }

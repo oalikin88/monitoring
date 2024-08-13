@@ -86,6 +86,12 @@ btnSaveModelPhone.addEventListener('click', function() {
             case "mconditioner":
                 link = "/mconditioner/";
                 break;
+            case "mterminal":
+                link = "/mterminal/";
+                break;
+            case "mthermoprinter":
+                link = "/mthermoprinter/";
+                break;
         } 
                 $.ajax({
         type: "POST",

@@ -29,6 +29,8 @@ import ru.gov.sfr.aos.monitoring.entities.SoundCard;
 import ru.gov.sfr.aos.monitoring.entities.Speakers;
 import ru.gov.sfr.aos.monitoring.entities.SwitchHubModel;
 import ru.gov.sfr.aos.monitoring.entities.SystemBlockModel;
+import ru.gov.sfr.aos.monitoring.entities.TerminalModel;
+import ru.gov.sfr.aos.monitoring.entities.ThermoPrinterModel;
 import ru.gov.sfr.aos.monitoring.entities.UpsModel;
 import ru.gov.sfr.aos.monitoring.entities.VideoCard;
 import ru.gov.sfr.aos.monitoring.models.CpuModelDto;
@@ -158,4 +160,15 @@ public abstract class SvtModelMapper {
     public abstract SvtModelDto getModelInfomatDto(InfomatModel infomatModel);
     public abstract List<InfomatModel> getModelInfomatList(List<SvtModelDto> dtoes);
     public abstract List<SvtModelDto> getModelInfomatDtoes (List<InfomatModel> modelInfomatList);
+    
+    public abstract TerminalModel getModelTerminal (SvtModelDto dto);
+    public abstract SvtModelDto getModelTerminalDto(TerminalModel terminalModel);
+    public abstract List<TerminalModel> getModelTerminalList(List<SvtModelDto> dtoes);
+    public abstract List<SvtModelDto> getModelTerminalDtoes (List<TerminalModel> modelTerminalList);
+    
+    public abstract ThermoPrinterModel getModelThermoprinter (SvtModelDto dto);
+    public abstract SvtModelDto getModelThermoprinterDto(ThermoPrinterModel thermoprinterModel);
+    public abstract List<ThermoPrinterModel> getModelThermoprinterList(List<SvtModelDto> dtoes);
+    public abstract List<SvtModelDto> getModelThermoprinterDtoes (List<ThermoPrinterModel> modelThermoprinterList);
+
 }

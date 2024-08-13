@@ -201,6 +201,12 @@ let handleClickArchivedBtn = function () {
         case "infomat":
             requestLink = "/infomatarchived";
             break;
+        case "terminal":
+            requestLink = "/terminalarchived";
+            break;
+        case "thermoprinter":
+            requestLink = "/thermoprinterarchived";
+            break;
     }
     $.ajax({
         type: "POST",
@@ -331,135 +337,8 @@ let handleClickSendToStorageBtn = function () {
             dto.nameFromOneC = $("#nameFromOneC")[0].value;
             dto.numberRoom = $("#numberRoom")[0].value;
             break;
-    }
-    $.ajax({
-        type: "POST",
-        url: requestLink,
-        data: JSON.stringify(dto),
-        async: false,
-        success: function () {
-            window.location.reload();
-        },
-        error: function (callback) {
-            beep();
-            getModalError(callback.responseText);
-        },
-        processData: false,
-        contentType: 'application/json'
-    });
-};
-let handleClickBackToStorageBtn = function () {
-    let requestLink;
-    let dto = {
-        model: document.querySelector('#modelSelect').innerText,
-        status: document.querySelector('#statusSelect').value,
-        inventaryNumber: document.querySelector('#inventaryNumber').value,
-        serialNumber: document.querySelector('#serialNumber').value,
-        placeId: document.querySelector('#placeSelect').value,
-        id: idSvtObj,
-        modelId: document.querySelector('#modelSelect').value,
-        locationId: locationId,
-    };
-     if(null != $('#startExploitation')[0]) {
-        dto.dateExploitationBegin = document.querySelector('#startExploitation').value;
-    }
-    if(null != $('#dateCreateSelect')[0]) {
-        dto.yearCreated = document.querySelector('#dateCreateSelect').value;
-    }
-    switch (attrib) {
-        case "phones":
-            dto.phoneNumber = $("#innerCallNumber")[0].value;
-            requestLink = "/phonebackstor";
-            break;
-        case "monitors":
-            dto.nameFromOneC = document.querySelector('#nameFromOneC').value;
-            dto.baseType = document.querySelector('#baseTypeSelect').value;
-            requestLink = "/monitorbackstor";
-            break;
-        case "ups":
-            requestLink = "/upsbackstor";
-            dto.batteryTypeId = $("#batteryTypeSelect")[0].selectize.getValue();
-            dto.batteryAmount = document.querySelector("#batteryAmount").value;
-            dto.yearReplacement = document.querySelector("#dateReplaceSelect").value;
-            break;
-        case "systemblock":
-            requestLink = "/sysblocksbackstor";
-            dto.motherboardId = $("#motherboardSelect")[0].selectize.getValue();
-            dto.cpuId = $("#cpuSelect")[0].selectize.getValue();
-            dto.hddIdList = $("#hddSelect")[0].selectize.getValue();
-            dto.ramId = $("#ramSelect")[0].selectize.getValue();
-            dto.cdDriveId = $("#cdDriveSelect")[0].selectize.getValue();
-            dto.soundCardId = $("#soundCardSelect")[0].selectize.getValue();
-            dto.videoCardId = $("#videoCardSelect")[0].selectize.getValue();
-            dto.lanCardId = $("#lanCardSelect")[0].selectize.getValue();
-            dto.keyboardId = $("#keyboardSelect")[0].selectize.getValue();
-            dto.mouseId = $("#mouseSelect")[0].selectize.getValue();
-            dto.speakersId = $("#speakersSelect")[0].selectize.getValue();
-            dto.operationSystemId = $("#osSelect")[0].selectize.getValue();
-            dto.ipAdress = $("#ipAdress")[0].value;
-            dto.nameFromOneC = $("#nameFromOneC")[0].value;
-            dto.numberRoom = $("#numberRoom")[0].value;
-            dto.dateUpgrade = $("#dateUpgrade")[0].value;
-            break;
-        case "server":
-            requestLink = "/serverbackstor";
-            dto.cpuId = $("#cpuSelect")[0].selectize.getValue();
-            dto.cpuAmount = $("#cpuAmount")[0].value;
-            dto.hddIdList = $("#hddSelect")[0].selectize.getValue();
-            dto.ramId = $("#ramSelect")[0].selectize.getValue();
-            dto.operationSystemId = $("#osSelect")[0].selectize.getValue();
-            dto.ipAdress = $("#ipAdress")[0].value;
-            dto.nameFromOneC = $("#nameFromOneC")[0].value;
-            dto.numberRoom = $("#numberRoom")[0].value;
-            dto.dateUpgrade = $("#dateUpgrade")[0].value;
-            break;
-        case "scanner":
-            requestLink = "/scannerbackstor";
-            dto.ipAdress = $("#ipAdress")[0].value;
-            dto.nameFromOneC = $("#nameFromOneC")[0].value;
-            dto.numberRoom = $("#numberRoom")[0].value;
-            break;
-        case "switch":
-            requestLink = "/switchbackstor";
-            dto.portAmount = $("#portAmount")[0].value;
-            dto.nameFromOneC = $("#nameFromOneC")[0].value;
-            dto.numberRoom = $("#numberRoom")[0].value;
-            if($("#switchRadio")[0].checked) {
-               dto.switchHubType = "SWITCH";
-            } else {
-                dto.switchHubType = "HUB";
-            }
-            break;
-        case "router":
-            requestLink = "/routerbackstor";
-            dto.portAmount = $("#portAmount")[0].value;
-            dto.nameFromOneC = $("#nameFromOneC")[0].value;
-            dto.numberRoom = $("#numberRoom")[0].value;
-            break;
-        case "ats":
-            requestLink = "/atsbackstor";
-            dto.cityNumberAmount = $("#cityNumberAmount")[0].value;
-            dto.nameFromOneC = $("#nameFromOneC")[0].value;
-            dto.numberRoom = $("#numberRoom")[0].value;
-            dto.innerConnectionIp = $("#innerConnectionIp")[0].value;
-            dto.innerConnectionAnalog = $("#innerConnectionAnalog")[0].value;
-            dto.outerConnectionType = $("#outerConnectionType")[0].value;
-            break;
-        case "conditioner":
-            requestLink = "/conditionerbackstor";
-            dto.conditionerType = $("#conditionerTypeSelect")[0].value;
-            dto.splitSystem = $("#splitSystemTrue")[0].checked;
-            dto.numberRoom = $("#numberRoom")[0].value;
-            dto.description = $("#descriptionInput")[0].value;
-            dto.winterKit = $("#winterKitTrue")[0].checked;
-            dto.havePomp = $("#pompTrue")[0].checked;
-            dto.price = $("#price")[0].value;
-            dto.nameFromOneC = $("#nameFromOneC")[0].value;
-            break;
-            case "infomat":
-            requestLink = "/infomatbackstor";
-            dto.numberRoom = $("#numberRoom")[0].value;
-            dto.nameFromOneC = $("#nameFromOneC")[0].value;
+        case "terminal":
+            requestLink = "/terminaltostor";
             break;
     }
     $.ajax({
@@ -478,6 +357,7 @@ let handleClickBackToStorageBtn = function () {
         contentType: 'application/json'
     });
 };
+
 let handleClickUpdateBtn = function () {
     let requestLink;
     let dto = {
@@ -596,6 +476,12 @@ let handleClickUpdateBtn = function () {
             dto.numberRoom = $("#numberRoom")[0].value;
             dto.nameFromOneC = $("#nameFromOneC")[0].value;
             break;
+        case "terminal":
+            requestLink = "/updterminal";
+            break;
+        case "thermoprinter":
+            requestLink = "/updthermoprinter";
+            break;
     }
     $.ajax({
         type: "POST",
@@ -649,6 +535,12 @@ let handleClickSearchSvtObject = function (input) {
             break;
         case "infomat":
             request = "/infomat?username=";
+            break;
+        case "terminal":
+            request = "/terminal?username=";
+            break;
+        case "thermoprinter":
+            request = "/thermoprinter?username=";
             break;
     }
     window.location.href = request + input;
@@ -772,6 +664,12 @@ let handleClickSavePhoneBtn = function () {
             dto.numberRoom = $("#numberRoom")[0].value;
             dto.nameFromOneC = $("#nameFromOneC")[0].value;
             break;
+        case "terminal":
+            requestLink = "/terminal";
+            break;
+        case "thermoprinter":
+            requestLink = "/thermoprinter";
+            break;
     }
     $.ajax({
         type: "POST",
@@ -785,7 +683,6 @@ let handleClickSavePhoneBtn = function () {
             beep();
             getModalError(callback.responseText);
         },
-           
         processData: false,
         contentType: 'application/json'
     });
@@ -889,6 +786,12 @@ let modalContentLoad = function (eventReason, svtObjId) {
         case "infomat":
             titleModal.innerText = titleAction + " инфомат";
             break;
+        case "terminal":
+            titleModal.innerText = titleAction + " терминал";
+            break;
+         case "thermoprinter":
+            titleModal.innerText = titleAction + " термопринтер";
+            break;
     }
     divModalHeader.appendChild(titleModal);
     let headerCloseBtn = document.createElement("button");
@@ -950,6 +853,13 @@ let modalContentLoad = function (eventReason, svtObjId) {
             
             break;
         case "router":
+            
+        break;
+        break;
+        case "terminal":
+            
+        break;
+        case "thermoprinter":
             
         break;
         
@@ -1962,9 +1872,6 @@ let modalContentLoad = function (eventReason, svtObjId) {
             innerConnectionsAmountRow.appendChild(divColLabelConnectionsAmount);
             innerConnectionsAmountRow.appendChild(divColConteinerForRowsInputs);
             divContainerBody.appendChild(innerConnectionsAmountRow);
-            
-            
-            
             break;
         case "conditioner":
             let divRowNameFromOneCConditioner = document.createElement("div");
@@ -2202,6 +2109,12 @@ let modalContentLoad = function (eventReason, svtObjId) {
                 break;
             case "infomat":
                 requestLink = "/getinfomat?infomatId=";
+                break;
+            case "terminal":
+                requestLink = "/getterminal?terminalId=";
+                break;
+            case "thermoprinter":
+                requestLink = "/getthermoprinter?thermoprinterId=";
                 break;
         }
         $.ajax({
@@ -3093,6 +3006,12 @@ let modalContentLoad = function (eventReason, svtObjId) {
                     break;
                 case "infomat":
                     requestLink = "/modinfomat";
+                    break;
+                case "terminal":
+                    requestLink = "/modterminal";
+                    break;
+                case "thermoprinter":
+                    requestLink = "/modthermoprinter";
                     break;
             }
             $.ajax({
@@ -4173,6 +4092,13 @@ document.addEventListener("DOMContentLoaded", function () {
                             '<div class="col">Год выпуска</div>' +
                             '<div class="col">Состояние</div>';
                         break;
+                        case "terminal":
+                     headerElement.innerHTML = '<div class="col">Модель</div>' +
+                            '<div class="col">ФИО</div>' +
+                            '<div class="col">Серийный номер</div>' +
+                            '<div class="col">Инвентарный номер</div>' +
+                            '<div class="col">Состояние</div>';
+                        break;
                     case "*":
                        headerElement.className = "row fw-bold mt-3 mb-3";
                 if (dynamicLabel != null) {
@@ -4332,6 +4258,15 @@ document.addEventListener("DOMContentLoaded", function () {
                                     '<div class="col">' + getStatus(storageDtoes[j].departments[d].dtoes[t].status) + '</div>' +
                                     '</div>';
                                 break;
+                                case "terminal":
+                                elDepartment.innerHTML = '<div class="row mb-2 d-flex align-items-center text-start">' +
+                                    '<div class="col">' + count + '. ' + storageDtoes[j].departments[d].dtoes[t].model + '</div>' +
+                                    '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].placeName + '</div>' +
+                                    '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].serialNumber + '</div>' +
+                                    '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].inventaryNumber + '</div>' +
+                                    '<div class="col">' + getStatus(storageDtoes[j].departments[d].dtoes[t].status) + '</div>' +
+                                    '</div>';
+                                break;
                         }
                         liItem.childNodes[0].append(elDepartment);
                     }
@@ -4408,7 +4343,13 @@ document.addEventListener("DOMContentLoaded", function () {
                             '<div class="col">Год выпуска</div>' +
                             '<div class="col">Состояние</div>';
                         break;
-                        
+                                                case "terminal":
+                     headerElement.innerHTML = '<div class="col">Модель</div>' +
+                            '<div class="col">ФИО</div>' +
+                            '<div class="col">Серийный номер</div>' +
+                            '<div class="col">Инвентарный номер</div>' +
+                            '<div class="col">Состояние</div>';
+                        break;
                 case "*":
                     headerElement.className = "row fw-bold mt-3 mb-3";
                     if (dynamicLabel != null) {
@@ -4567,6 +4508,15 @@ document.addEventListener("DOMContentLoaded", function () {
                                     '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].inventaryNumber + '</div>' +
                                     '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].numberRoom + '</div>' +
                                     '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].yearCreated + '</div>' +
+                                    '<div class="col">' + getStatus(storageDtoes[j].departments[d].dtoes[t].status) + '</div>' +
+                                    '</div>';
+                                break;
+                                   case "terminal":
+                                elDepartment.innerHTML = '<div class="row mb-2 d-flex align-items-center text-start">' +
+                                    '<div class="col">' + count + '. ' + storageDtoes[j].departments[d].dtoes[t].model + '</div>' +
+                                    '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].placeName + '</div>' +
+                                    '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].serialNumber + '</div>' +
+                                    '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].inventaryNumber + '</div>' +
                                     '<div class="col">' + getStatus(storageDtoes[j].departments[d].dtoes[t].status) + '</div>' +
                                     '</div>';
                                 break;

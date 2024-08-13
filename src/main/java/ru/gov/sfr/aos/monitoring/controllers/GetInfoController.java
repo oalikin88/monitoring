@@ -47,6 +47,10 @@ import ru.gov.sfr.aos.monitoring.entities.SwitchHub;
 import ru.gov.sfr.aos.monitoring.entities.SwitchHubModel;
 import ru.gov.sfr.aos.monitoring.entities.SystemBlock;
 import ru.gov.sfr.aos.monitoring.entities.SystemBlockModel;
+import ru.gov.sfr.aos.monitoring.entities.Terminal;
+import ru.gov.sfr.aos.monitoring.entities.TerminalModel;
+import ru.gov.sfr.aos.monitoring.entities.ThermoPrinter;
+import ru.gov.sfr.aos.monitoring.entities.ThermoPrinterModel;
 import ru.gov.sfr.aos.monitoring.entities.Ups;
 import ru.gov.sfr.aos.monitoring.entities.UpsModel;
 import ru.gov.sfr.aos.monitoring.entities.VideoCard;
@@ -77,6 +81,8 @@ import ru.gov.sfr.aos.monitoring.mappers.ScannerMapper;
 import ru.gov.sfr.aos.monitoring.mappers.ServerMapper;
 import ru.gov.sfr.aos.monitoring.mappers.SwitchHubMapper;
 import ru.gov.sfr.aos.monitoring.mappers.SystemBlockMapper;
+import ru.gov.sfr.aos.monitoring.mappers.TerminalMapper;
+import ru.gov.sfr.aos.monitoring.mappers.ThermoprinterMapper;
 import ru.gov.sfr.aos.monitoring.mappers.UpsMapper;
 import ru.gov.sfr.aos.monitoring.models.BatteryTypeDto;
 import ru.gov.sfr.aos.monitoring.models.CpuModelDto;
@@ -120,6 +126,10 @@ import ru.gov.sfr.aos.monitoring.services.SwitchHubModelService;
 import ru.gov.sfr.aos.monitoring.services.SwitchHubService;
 import ru.gov.sfr.aos.monitoring.services.SystemBlockModelService;
 import ru.gov.sfr.aos.monitoring.services.SystemBlockService;
+import ru.gov.sfr.aos.monitoring.services.TerminalModelService;
+import ru.gov.sfr.aos.monitoring.services.TerminalService;
+import ru.gov.sfr.aos.monitoring.services.ThermoprinterModelService;
+import ru.gov.sfr.aos.monitoring.services.ThermoprinterService;
 import ru.gov.sfr.aos.monitoring.services.UpsModelService;
 import ru.gov.sfr.aos.monitoring.services.UpsService;
 import ru.gov.sfr.aos.monitoring.services.VideoCardModelService;
@@ -243,6 +253,18 @@ public class GetInfoController {
     private InfomatMapper infomatMapper;
     @Autowired
     private InfomatService infomatService;
+    @Autowired
+    private TerminalModelService terminalModelService;
+    @Autowired
+    private TerminalMapper terminalMapper;
+    @Autowired
+    private TerminalService terminalService;
+    @Autowired
+    private ThermoprinterModelService thermoprinterModelService;
+    @Autowired
+    private ThermoprinterMapper thermoprinterMapper;
+    @Autowired
+    private ThermoprinterService thermoprinterService;
 
     @GetMapping("/getinfooo")
     public List<EmployeeDTO> getEmpl() {
@@ -724,4 +746,31 @@ public class GetInfoController {
         return dto;
     }
     
+    @GetMapping("/modterminal")
+    public List<SvtModelDto> getModelTermial() {
+        List<TerminalModel> allModels = terminalModelService.getAllModels();
+        List<SvtModelDto> dtoes = svtModelMapper.getModelTerminalDtoes(allModels);
+        return dtoes;
+    }
+    
+    @GetMapping("/getterminal")
+    public SvtDTO getTerminalById(Long terminalId) {
+        Terminal terminal = terminalService.getById(terminalId);
+        SvtDTO dto = terminalMapper.getDto(terminal);
+        return dto;
+    }
+    
+        @GetMapping("/modthermoprinter")
+    public List<SvtModelDto> getModelThermoprinter() {
+        List<ThermoPrinterModel> allModels = thermoprinterModelService.getAllModels();
+        List<SvtModelDto> dtoes = svtModelMapper.getModelThermoprinterDtoes(allModels);
+        return dtoes;
+    }
+    
+    @GetMapping("/getthermoprinter")
+    public SvtDTO getThermoprinterById(Long thermoprinterId) {
+        ThermoPrinter thermoprinter = thermoprinterService.getById(thermoprinterId);
+        SvtDTO dto = thermoprinterMapper.getDto(thermoprinter);
+        return dto;
+    }
 }

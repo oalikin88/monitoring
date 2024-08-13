@@ -5,41 +5,11 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
 -->
 <html>
     <head>
-        <th:block th:switch="${attribute}">
-    <title th:case="'phones'">
-        Телефоны
-    </title>
-    <title th:case="'monitors'">
-        Мониторы
-    </title>
-    <title th:case="'ups'">
-        ИБП
-    </title>
-    <title th:case="'systemblock'">
-        Системные блоки
-    </title>
-    <title th:case="'scanner'">
-        Сканеры
+   
+    <title th:text="${namePage}">
+     
     </title> 
-    <title th:case="'server'">
-        Серверы
-    </title> 
-        <title th:case="'switch'">
-        Коммутаторы/Концентраторы
-    </title> 
-    <title th:case="'router'">
-        Маршрутизаторы
-    </title> 
-    <title th:case="'ats'">
-        АТС
-    </title>
-    <title th:case="'conditioner'">
-        Кондиционеры
-    </title>
-    <title th:case="'infomat'">
-        Инфоматы
-    </title>    
-</th:block>
+
         
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -58,41 +28,11 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
             <div class="main p-3">
                 <div class="row mb-2" id="top-panel">
                 <div class="col-2">
-                    <th:block th:switch="${attribute}">
-                        <h1 class="ms-2 ps-2" th:case="'phones'">
-                            Телефоны
+                    
+                        <h1 class="ms-2 ps-2" th:text="${namePage}">
+                            
                         </h1>
-                        <h1 class="ms-2 ps-2" th:case="'monitors'">
-                            Мониторы
-                        </h1>
-                        <h1 class="ms-2 ps-2" th:case="'ups'">
-                            ИБП
-                        </h1>
-                        <h1 class="ms-2 ps-2" th:case="'systemblock'">
-                            Системные блоки
-                        </h1>
-                          <h1 class="ms-2 ps-2" th:case="'scanner'">
-                            Сканеры
-                        </h1>
-                        <h1 class="ms-2 ps-2" th:case="'server'">
-                            Серверы
-                        </h1>
-                        <h1 class="ms-2 ps-2" th:case="'switch'">
-                            Коммутаторы/Концентраторы
-                        </h1>
-                        <h1 class="ms-2 ps-2" th:case="'router'">
-                            Маршрутизаторы
-                        </h1>
-                        <h1 class="ms-2 ps-2" th:case="'ats'">
-                            АТС
-                        </h1>
-                        <h1 class="ms-2 ps-2" th:case="'conditioner'">
-                            Кондиционеры
-                        </h1>
-                        <h1 class="ms-2 ps-2" th:case="'infomat'">
-                            Инфоматы
-                        </h1>
-                    </th:block>
+                   
                 </div>
                 
                     <div class="col-1 text-end">
@@ -164,6 +104,20 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                                                     <div class="col">Инвентарный номер</div>
                                                     <div class="col">Кабинет</div>
                                                     <div class="col">Год выпуска</div>
+                                                    <div class="col">Состояние</div>
+                                                </div>
+                                            <div class="row fw-bold mt-3 mb-3" th:case="terminal">
+                                                    <div class="col">Модель</div>
+                                                    <div class="col">ФИО</div>
+                                                    <div class="col">Серийный номер</div>
+                                                    <div class="col">Инвентарный номер</div>
+                                                    <div class="col">Состояние</div>
+                                                </div>
+                                            <div class="row fw-bold mt-3 mb-3" th:case="thermoprinter">
+                                                    <div class="col">Модель</div>
+                                                    <div class="col">ФИО</div>
+                                                    <div class="col">Серийный номер</div>
+                                                    <div class="col">Инвентарный номер</div>
                                                     <div class="col">Состояние</div>
                                                 </div>
                                             <div class="row fw-bold mt-3 mb-3" th:case="*">
@@ -267,6 +221,32 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                                                 <div class="col" th:case="CEILING" th:text="Потолочный"></div>
                                                 <div class="col" th:case="FLOOR" th:text="Напольный"></div>
                                                 </th:block>
+                                                <th:block th:switch="${inInnerDto.status}">
+                                                <div class="col" th:case="OK" th:text="Исправен"></div>
+                                                <div class="col" th:case="REPAIR" th:text="Ремонт"></div>
+                                                <div class="col" th:case="MONITORING" th:text="Списание"></div>
+                                                <div class="col" th:case="DEFECTIVE" th:text="Неисправен"></div>
+                                                <div class="col" th:case="UTILIZATION" th:text="Утилизирован"></div>
+                                                </th:block>
+                                             </div>
+                                                 <div class="row mb-2 d-flex align-items-center text-start phone" th:case="terminal">
+                                                <div class="col" th:text="${stat.count} + '. ' + ${inInnerDto.model}"></div>
+                                                <div class="col" th:text="${inInnerDto.placeName}"></div>
+                                                <div class="col" th:text="${inInnerDto.serialNumber}"></div>
+                                                <div class="col" th:text="${inInnerDto.inventaryNumber}"></div>
+                                                <th:block th:switch="${inInnerDto.status}">
+                                                <div class="col" th:case="OK" th:text="Исправен"></div>
+                                                <div class="col" th:case="REPAIR" th:text="Ремонт"></div>
+                                                <div class="col" th:case="MONITORING" th:text="Списание"></div>
+                                                <div class="col" th:case="DEFECTIVE" th:text="Неисправен"></div>
+                                                <div class="col" th:case="UTILIZATION" th:text="Утилизирован"></div>
+                                                </th:block>
+                                             </div>
+                                                <div class="row mb-2 d-flex align-items-center text-start phone" th:case="thermoprinter">
+                                                <div class="col" th:text="${stat.count} + '. ' + ${inInnerDto.model}"></div>
+                                                <div class="col" th:text="${inInnerDto.placeName}"></div>
+                                                <div class="col" th:text="${inInnerDto.serialNumber}"></div>
+                                                <div class="col" th:text="${inInnerDto.inventaryNumber}"></div>
                                                 <th:block th:switch="${inInnerDto.status}">
                                                 <div class="col" th:case="OK" th:text="Исправен"></div>
                                                 <div class="col" th:case="REPAIR" th:text="Ремонт"></div>
