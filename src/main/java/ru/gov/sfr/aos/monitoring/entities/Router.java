@@ -31,7 +31,7 @@ public class Router extends ObjectBuingWithSerialAndInventary implements Seriali
     }
 
     public Router(RouterModel routerModel, String nameFromOneC, int portAmount, String numberRoom, Status status, String inventaryNumber, String serialNumber, Contract contract, boolean archived) {
-        super(status, inventaryNumber, serialNumber, contract, archived);
+        super(status, inventaryNumber, serialNumber, contract);
         this.routerModel = routerModel;
         this.nameFromOneC = nameFromOneC;
         this.portAmount = portAmount;

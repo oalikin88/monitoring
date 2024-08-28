@@ -7,6 +7,7 @@ package ru.gov.sfr.aos.monitoring.repositories;
 import java.util.List;
 import org.springframework.stereotype.Repository;
 import ru.gov.sfr.aos.monitoring.dictionaries.PlaceType;
+import ru.gov.sfr.aos.monitoring.dictionaries.SwitchHubType;
 import ru.gov.sfr.aos.monitoring.entities.SwitchHub;
 
 /**
@@ -17,5 +18,6 @@ import ru.gov.sfr.aos.monitoring.entities.SwitchHub;
 public interface SwitchHubRepo extends ObjectBuingWithSerialAndInventaryRepo<SwitchHub>{
     boolean existsBySerialNumberIgnoreCase(String serialNumber);
     List<SwitchHub> findByPlacePlaceTypeLikeAndArchivedFalse(PlaceType placetype);
+    List<SwitchHub> findBySwitchHubType(SwitchHubType switchHubType);
     
 }

@@ -30,6 +30,7 @@ h1 {
 }
 
 .wrapper {
+
     display: flex;
 }
 
@@ -115,6 +116,11 @@ a.sidebar-link:hover {
     border-left: 3px solid #3b7ddd;
 }
 
+li > .active {
+   border-left: 3px solid #F85541!important;
+    background-color: #3b7ddd!important;
+}
+
 .sidebar-item {
     position: relative;
     background-color: #0e223e;
@@ -161,6 +167,9 @@ a.sidebar-link:hover {
 }
 
 #content {
+    font-family: "Segoe UI";
+    font-size: 14px;
+    font-weight: 600;
     margin-top: 15px;
     padding-top: 25px;
 }
@@ -178,4 +187,12 @@ a.sidebar-link:hover {
     margin-left: auto;
     margin-right: auto;
     width: 100px;
+}
+.modal-title {
+    font-size: 17px;
+}
+
+.modal-body {
+    font-size: 15px;
+    
 }

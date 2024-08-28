@@ -24,10 +24,13 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/CascadeStyleSheet.css to ed
 
 
 body, html {
+
     height: 100%;
     overflow: auto;
     
+    
 }
+
 #inventoriesTable > .inventoriesTbody > th:nth-child(2), td:nth-child(2)
 {
   position:sticky;

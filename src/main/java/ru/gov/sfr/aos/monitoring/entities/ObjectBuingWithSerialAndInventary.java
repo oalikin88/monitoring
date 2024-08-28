@@ -19,26 +19,25 @@ public abstract class ObjectBuingWithSerialAndInventary extends ObjectBuing {
     protected Status status;
     protected String inventaryNumber;
     protected String serialNumber;
-    protected boolean archived;
 
     protected ObjectBuingWithSerialAndInventary() {
         super();
     }
     
 
-    protected ObjectBuingWithSerialAndInventary(Status status, String inventaryNumber, String serialNumber, boolean archived) {
+    protected ObjectBuingWithSerialAndInventary(Status status, String inventaryNumber, String serialNumber) {
         this.status = status;
         this.inventaryNumber = inventaryNumber;
         this.serialNumber = serialNumber;
-        this.archived = archived;
+
     }
 
-    protected ObjectBuingWithSerialAndInventary(Status status, String inventaryNumber, String serialNumber, Contract contract, boolean archived) {
+    protected ObjectBuingWithSerialAndInventary(Status status, String inventaryNumber, String serialNumber, Contract contract) {
         super(contract);
         this.status = status;
         this.inventaryNumber = inventaryNumber;
         this.serialNumber = serialNumber;
-        this.archived = archived;
+
     }
 
     public Status getStatus() {
@@ -65,37 +64,9 @@ public abstract class ObjectBuingWithSerialAndInventary extends ObjectBuing {
         this.serialNumber = serialNumber;
     }
 
-    public Long getId() {
-        return id;
-    }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
 
-    public Contract getContract() {
-        return contract;
-    }
 
-    public void setContract(Contract contract) {
-        this.contract = contract;
-    }
-
-    public Place getPlace() {
-        return place;
-    }
-
-    public void setPlace(Place place) {
-        this.place = place;
-    }
-
-    public boolean isArchived() {
-        return archived;
-    }
-
-    public void setArchived(boolean archived) {
-        this.archived = archived;
-    }
     
     
 }

@@ -6,9 +6,12 @@ package ru.gov.sfr.aos.monitoring.entities;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.PrimaryKeyJoinColumn;
 
@@ -19,7 +22,7 @@ import javax.persistence.PrimaryKeyJoinColumn;
  */
 @Entity
 @PrimaryKeyJoinColumn(name = "ASUO_ID")
-public class Asuo extends ObjectBuingWithSerialAndInventary implements Serializable {
+public class Asuo extends ObjectBuing implements Serializable {
 
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Terminal terminal;
@@ -30,13 +33,14 @@ public class Asuo extends ObjectBuingWithSerialAndInventary implements Serializa
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Display display;
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private MainDisplay mainDisplay;
-    private int displayAmount;
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private SwitchHub switchHub;
+    private SubDisplayModel subDisplayModel;
+    private int subDisplayAmount;
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    private Set<SwitchHub> switchHubSet = new HashSet<>();
     private String nameFromOneC;
     private Date dateExploitationBegin;
     private int yearCreated;
+    private String numberRoom;
 
     public Asuo() {
     }
@@ -74,28 +78,12 @@ public class Asuo extends ObjectBuingWithSerialAndInventary implements Serializa
         this.display = display;
     }
 
-    public MainDisplay getMainDisplay() {
-        return mainDisplay;
+    public Set<SwitchHub> getSwitchHubSet() {
+        return switchHubSet;
     }
 
-    public void setMainDisplay(MainDisplay mainDisplay) {
-        this.mainDisplay = mainDisplay;
-    }
-
-    public int getDisplayAmount() {
-        return displayAmount;
-    }
-
-    public void setDisplayAmount(int displayAmount) {
-        this.displayAmount = displayAmount;
-    }
-
-    public SwitchHub getSwitchHub() {
-        return switchHub;
-    }
-
-    public void setSwitchHub(SwitchHub switchHub) {
-        this.switchHub = switchHub;
+    public void setSwitchHubSet(Set<SwitchHub> switchHubSet) {
+        this.switchHubSet = switchHubSet;
     }
 
     public String getNameFromOneC() {
@@ -120,6 +108,30 @@ public class Asuo extends ObjectBuingWithSerialAndInventary implements Serializa
 
     public void setYearCreated(int yearCreated) {
         this.yearCreated = yearCreated;
+    }
+
+    public SubDisplayModel getSubDisplayModel() {
+        return subDisplayModel;
+    }
+
+    public void setSubDisplayModel(SubDisplayModel subDisplayModel) {
+        this.subDisplayModel = subDisplayModel;
+    }
+
+    public int getSubDisplayAmount() {
+        return subDisplayAmount;
+    }
+
+    public void setSubDisplayAmount(int subDisplayAmount) {
+        this.subDisplayAmount = subDisplayAmount;
+    }
+
+    public String getNumberRoom() {
+        return numberRoom;
+    }
+
+    public void setNumberRoom(String numberRoom) {
+        this.numberRoom = numberRoom;
     }
     
     

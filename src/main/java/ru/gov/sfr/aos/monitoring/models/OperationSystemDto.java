@@ -11,7 +11,7 @@ package ru.gov.sfr.aos.monitoring.models;
 
 public class OperationSystemDto {
     private Long id;
-    private String name;
+    private String model;
     private boolean license;
 
 
@@ -23,12 +23,12 @@ public class OperationSystemDto {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public String getModel() {
+        return model;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setModel(String model) {
+        this.model = model;
     }
 
     public boolean isLicense() {

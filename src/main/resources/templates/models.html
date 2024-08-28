@@ -15,13 +15,14 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
         <link href="/css/style_svt.css" rel="stylesheet">
         <link href="/css/lineicons.css" rel="stylesheet">
         <link href="/css/icons.css" rel="stylesheet">
+        <link href="/css/content_style.css" rel="stylesheet">
     </head>
     <body>
         <div class="wrapper">
             <aside th:insert="svt :: sidebar"></aside>
             <div class="main p-3">
                 <div class="row mb-2" id="top-panel">
-                    <div class="col-6">
+                    <div class="col-2">
                         <th:block th:switch="${attribute}">
                             <h1 th:case="'mphones'">Справочник моделей телефонов</h1>
                             <h1 th:case="'mmonitors'">Справочник моделей мониторов</h1>
@@ -49,12 +50,24 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                             <h1 th:case="'minfomat'">Справочник моделей инфоматов</h1>
                             <h1 th:case="'mterminal'">Справочник моделей терминалов</h1>
                             <h1 th:case="'mthermoprinter'">Справочник моделей термопринтеров</h1>
+                            <h1 th:case="'mdisplay'">Справочник моделей главного табло</h1>
+                            <h1 th:case="'mswunit'">Справочник моделей блоков коммутации</h1>
+                            <h1 th:case="'msubdisplay'">Справочник моделей электронного табло</h1>
 
                         </th:block>
                     </div>
-                    <div class="col-6 text-end">
+                    <div class="col-1 text-end">
                         <!-- Button trigger modal add place-->
-                        <button type="button" class="btn btn-primary btn-sm" id="addPlaceBtn" data-bs-toggle="modal" data-bs-target="#addPlaceModal">Добавить</button>
+                        <button type="button" class="btn btn-primary btn-sm" id="addBtn" data-bs-toggle="modal" data-bs-target="#addBtnModal">Добавить</button>
+                    </div>
+                    <div class="col-9">
+                        <div class="input-group mb-3" id="searchModelDiv">
+                            <input type="text" class="form-control form-control-sm" placeholder="поиск" aria-label="searchModel" aria-describedby="basic-addon1" id="searchModelInput">
+                            <span class="input-group-text" id="searchSvtObjBtn">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16"><path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"></path>
+                                </svg>
+                            </span>
+                        </div>
                     </div>
                 </div>
                 <div class="content" id="content"  th:if="${dtoes.size}> 0"> 
@@ -93,8 +106,25 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                             <div class="col-11 text-start">Наименование модели</div>
                         </div>
                             </th:block>
-                        <div class="row pb-2 mb-2 mt-2 pt-2" th:each="dto, stat : ${dtoes}">
-                            <th:block th:switch="${attribute}">
+                        <th:block th:switch="${attribute}" th:each="dto, stat : ${dtoes}">
+                            <div class = "row element pb-2 mb-2 mt-2 pt-2" th:attr="id = ${dto.id}" data-bs-toggle="modal" data-bs-target="#addBtnModal" th:case="os">
+                             <div class="col-1" th:text="${stat.count}"></div>
+                                    <div class="col-7 text-start">
+                                        <span th:text="${dto.model}"></span>
+                                      </div>
+                             <div class="col-4" th:switch="${dto.license}">
+                                        <span th:case="true">Есть</span>
+                                        <span th:case="false">Нет</span>
+                                      
+                                      </div>
+                    </div>
+                        <div class = "row element pb-2 mb-2 mt-2 pt-2" th:attr="id = ${dto.id}" data-bs-toggle="modal" data-bs-target="#addBtnModal" th:case="*">
+                             <div class="col-1" th:text="${stat.count}"></div>
+                                    <div class="col-11 text-start">
+                                        <span th:text="${dto.model}"></span>
+                                      </div>
+                    </div>
+<!--                            <th:block th:switch="${attribute}">
                                 <div class="row" th:case="'mupsbat'">
                                     <div class="col-1" th:text="${stat.count}"></div>
                                     <div class="col-11 text-start" >
@@ -150,7 +180,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                                       </div>
                                       
                                 </div>
-                                 <div class="row" th:case="*">
+                                 <div class="row" th:attr=="id = ${dto.id}" th:case="*">
                                     <div class="col-1" th:text="${stat.count}"></div>
                                     <div class="col-11 text-start">
                                         <span th:text="${dto.model}"></span>
@@ -160,10 +190,9 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                                         
                                         
                                     
-                           </th:block>
-                        </div>
-                    </div>
-
+                           </th:block>-->
+                      
+                </th:block>
 
                 </div>
                 <div th:if="${dtoes.size} == 0">
@@ -175,10 +204,10 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
 
 
         <!-- Modal add place -->
-        <div class="modal fade" id="addPlaceModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
+        <div class="modal fade" id="addBtnModal" tabindex="-1" aria-labelledby="exampleModalLabel" data-bs-backdrop="static" data-bs-keyboard="false"  aria-hidden="true">
+            <div class="modal-dialog modal-lg modal-dialog-centered">
+                <div class="modal-content" id="modalContent-model">
+<!--                    <div class="modal-header">
                         <th:block th:switch="${attribute}">
                          <h1 th:case="'os'" class="modal-title fs-5" id="exampleModalLabel">Добавление операционной системы</h1>   
                         <h1 th:case="'*'" class="modal-title fs-5" id="exampleModalLabel">Добавление [[${namePage.substring(0, 1).toLowerCase() + namePage.substring(1)}]]</h1>
@@ -297,18 +326,32 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary btn-sm"  data-bs-dismiss="modal">Отменить</button>
                         <button type="button" class="btn btn-primary btn-sm" id="btnSaveModelPhone" >Сохранить</button>
-                    </div>
+                    </div>-->
 
                 </div>
 
             </div>
         </div>
+        
+         <!-- Модальное окно error-->
+        <div class="modal fade" id="modalError" data-bs-backdrop="static" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-error">
+                <div class="modal-content" id="modalErrorContent">
+
+
+                </div>
+
+            </div>
+        </div>
+        
         <script th:inline="javascript">
             let attribute = [[${attribute}]];
             let dtoes = [[${dtoes}]];
+            const namePage = [[${namePage}]];
         </script>
         <script src="/js/bootstrap.bundle.min.js"></script>
         <script src="/js/main_svt.js"></script>
         <script src="/js/mphones.js"></script>
+        <script src="/js/highlight-sidebar.js"></script>
     </body>
 </html>

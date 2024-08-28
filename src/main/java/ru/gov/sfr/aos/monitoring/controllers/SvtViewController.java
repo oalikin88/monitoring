@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import ru.gov.sfr.aos.monitoring.dictionaries.PlaceType;
+import ru.gov.sfr.aos.monitoring.entities.Asuo;
 import ru.gov.sfr.aos.monitoring.entities.Ats;
 import ru.gov.sfr.aos.monitoring.entities.AtsModel;
 import ru.gov.sfr.aos.monitoring.entities.BatteryType;
@@ -23,6 +24,8 @@ import ru.gov.sfr.aos.monitoring.entities.CdDrive;
 import ru.gov.sfr.aos.monitoring.entities.Conditioner;
 import ru.gov.sfr.aos.monitoring.entities.ConditionerModel;
 import ru.gov.sfr.aos.monitoring.entities.Cpu;
+import ru.gov.sfr.aos.monitoring.entities.Display;
+import ru.gov.sfr.aos.monitoring.entities.DisplayModel;
 import ru.gov.sfr.aos.monitoring.entities.Hdd;
 import ru.gov.sfr.aos.monitoring.entities.Infomat;
 import ru.gov.sfr.aos.monitoring.entities.InfomatModel;
@@ -45,8 +48,11 @@ import ru.gov.sfr.aos.monitoring.entities.Server;
 import ru.gov.sfr.aos.monitoring.entities.ServerModel;
 import ru.gov.sfr.aos.monitoring.entities.SoundCard;
 import ru.gov.sfr.aos.monitoring.entities.Speakers;
+import ru.gov.sfr.aos.monitoring.entities.SubDisplayModel;
 import ru.gov.sfr.aos.monitoring.entities.SwitchHub;
 import ru.gov.sfr.aos.monitoring.entities.SwitchHubModel;
+import ru.gov.sfr.aos.monitoring.entities.SwitchingUnit;
+import ru.gov.sfr.aos.monitoring.entities.SwitchingUnitModel;
 import ru.gov.sfr.aos.monitoring.entities.SystemBlock;
 import ru.gov.sfr.aos.monitoring.entities.SystemBlockModel;
 import ru.gov.sfr.aos.monitoring.entities.Terminal;
@@ -57,9 +63,11 @@ import ru.gov.sfr.aos.monitoring.entities.Ups;
 import ru.gov.sfr.aos.monitoring.entities.UpsModel;
 import ru.gov.sfr.aos.monitoring.entities.VideoCard;
 import ru.gov.sfr.aos.monitoring.exceptions.ObjectAlreadyExists;
+import ru.gov.sfr.aos.monitoring.mappers.AsuoMapper;
 import ru.gov.sfr.aos.monitoring.mappers.AtsMapper;
 import ru.gov.sfr.aos.monitoring.mappers.BatteryTypeMapper;
 import ru.gov.sfr.aos.monitoring.mappers.ConditionerMapper;
+import ru.gov.sfr.aos.monitoring.mappers.DisplayMapper;
 import ru.gov.sfr.aos.monitoring.mappers.InfomatMapper;
 import ru.gov.sfr.aos.monitoring.mappers.MonitorMapper;
 import ru.gov.sfr.aos.monitoring.mappers.OperationSystemMapper;
@@ -69,11 +77,13 @@ import ru.gov.sfr.aos.monitoring.mappers.ScannerMapper;
 import ru.gov.sfr.aos.monitoring.mappers.ServerMapper;
 import ru.gov.sfr.aos.monitoring.mappers.SvtModelMapper;
 import ru.gov.sfr.aos.monitoring.mappers.SwitchHubMapper;
+import ru.gov.sfr.aos.monitoring.mappers.SwitchingUnitMapper;
 import ru.gov.sfr.aos.monitoring.mappers.SystemBlockMapper;
 import ru.gov.sfr.aos.monitoring.mappers.TerminalMapper;
 import ru.gov.sfr.aos.monitoring.mappers.ThermoprinterMapper;
 import ru.gov.sfr.aos.monitoring.mappers.UpsMapper;
 import ru.gov.sfr.aos.monitoring.models.ArchivedDto;
+import ru.gov.sfr.aos.monitoring.models.AsuoDTO;
 import ru.gov.sfr.aos.monitoring.models.BatteryTypeDto;
 import ru.gov.sfr.aos.monitoring.models.CpuModelDto;
 import ru.gov.sfr.aos.monitoring.models.DepartmentDTO;
@@ -91,6 +101,8 @@ import ru.gov.sfr.aos.monitoring.models.SvtServerDTO;
 import ru.gov.sfr.aos.monitoring.models.SvtSwitchHubDTO;
 import ru.gov.sfr.aos.monitoring.models.SvtSystemBlockDTO;
 import ru.gov.sfr.aos.monitoring.repositories.BatteryTypeRepo;
+import ru.gov.sfr.aos.monitoring.services.AsuoOutDtoTreeService;
+import ru.gov.sfr.aos.monitoring.services.AsuoService;
 import ru.gov.sfr.aos.monitoring.services.AtsModelService;
 import ru.gov.sfr.aos.monitoring.services.AtsOutDtoTreeService;
 import ru.gov.sfr.aos.monitoring.services.AtsService;
@@ -101,6 +113,9 @@ import ru.gov.sfr.aos.monitoring.services.ConditionerOutDtoTreeService;
 import ru.gov.sfr.aos.monitoring.services.ConditionerService;
 import ru.gov.sfr.aos.monitoring.services.CpuModelService;
 import ru.gov.sfr.aos.monitoring.services.DepartmentService;
+import ru.gov.sfr.aos.monitoring.services.DisplayModelService;
+import ru.gov.sfr.aos.monitoring.services.DisplayOutDtoTreeService;
+import ru.gov.sfr.aos.monitoring.services.DisplayService;
 import ru.gov.sfr.aos.monitoring.services.HddModelService;
 import ru.gov.sfr.aos.monitoring.services.InfomatModelService;
 import ru.gov.sfr.aos.monitoring.services.InfomatOutDtoTreeService;
@@ -129,9 +144,13 @@ import ru.gov.sfr.aos.monitoring.services.ServerOutDtoTreeService;
 import ru.gov.sfr.aos.monitoring.services.ServerService;
 import ru.gov.sfr.aos.monitoring.services.SoundCardModelService;
 import ru.gov.sfr.aos.monitoring.services.SpeakersModelService;
+import ru.gov.sfr.aos.monitoring.services.SubDisplayModelService;
 import ru.gov.sfr.aos.monitoring.services.SwitchHubModelService;
 import ru.gov.sfr.aos.monitoring.services.SwitchHubOutDtoTreeService;
 import ru.gov.sfr.aos.monitoring.services.SwitchHubService;
+import ru.gov.sfr.aos.monitoring.services.SwitchingUnitModelService;
+import ru.gov.sfr.aos.monitoring.services.SwitchingUnitOutDtoTreeService;
+import ru.gov.sfr.aos.monitoring.services.SwitchingUnitService;
 import ru.gov.sfr.aos.monitoring.services.SystemBlockModelService;
 import ru.gov.sfr.aos.monitoring.services.SystemBlockOutDtoTreeService;
 import ru.gov.sfr.aos.monitoring.services.SystemBlockService;
@@ -295,6 +314,31 @@ public class SvtViewController {
     private ThermoprinterOutDtoTreeService thermoprinterOutDtoTreeService;
     @Autowired
     private ThermoprinterMapper thermoprinterMapper;
+    @Autowired
+    private DisplayModelService displayModelService;
+    @Autowired
+    private DisplayService displayService;
+    @Autowired
+    private DisplayOutDtoTreeService displayOutDtoTreeService;
+    @Autowired
+    private DisplayMapper displayMapper;
+    @Autowired
+    private SwitchingUnitModelService swunitModelService;
+    @Autowired
+    private SwitchingUnitService swunitService;
+    @Autowired
+    private SwitchingUnitOutDtoTreeService swunitOutDtoTreeService;
+    @Autowired
+    private SwitchingUnitMapper swunitMapper;
+    @Autowired
+    private SubDisplayModelService subDisplayModelService;
+    @Autowired
+    private AsuoService asuoService;
+    @Autowired
+    private AsuoOutDtoTreeService asuoOutDtoTreeService;
+    @Autowired
+    private AsuoMapper asuoMapper;
+
     
 //  @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
     @GetMapping("/svt")
@@ -362,7 +406,7 @@ public class SvtViewController {
     @GetMapping("/mmonitors")
     public String getModelMonitors(Model model) {
 
-        List<MonitorModel> monitorModels = monitorModelService.getAllModels();
+        List<MonitorModel> monitorModels = monitorModelService.getAllActualModels();
         List<SvtModelDto> monitorModelsDtoes = svtModelMapper.getMonitorModelsDtoes(monitorModels);
         model.addAttribute("dtoes", monitorModelsDtoes);
         model.addAttribute("namePage", "Модели мониторов");
@@ -371,11 +415,28 @@ public class SvtViewController {
         return "models";
     }
     
+    //   @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
+    @PostMapping("/mmonitorsarchived")
+    public String sendModelMonitorToArchive(@RequestBody ArchivedDto dto) {
+        monitorModelService.sendModelToArchive(dto.getId());
+        return "redirect:/mmonitors";
+    }
+    
+    
  //   @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
     @PostMapping("/mmonitors")
     public String saveModelMonitor(@RequestBody SvtModelDto dto) throws ObjectAlreadyExists {
         MonitorModel monitorModel = svtModelMapper.getMonitorModel(dto);
         monitorModelService.saveModel(monitorModel);
+        return "redirect:/mmonitors";
+        
+    }
+    
+    //   @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
+    @PostMapping("/mmonitorsupd")
+    public String updateModelMonitor(@RequestBody SvtModelDto dto) throws ObjectAlreadyExists {
+        MonitorModel monitorModel = svtModelMapper.getMonitorModel(dto);
+        monitorModelService.update(monitorModel);
         return "redirect:/mmonitors";
         
     }
@@ -1060,6 +1121,15 @@ public class SvtViewController {
         
     }
     
+    //    @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
+    @PostMapping("/osupd")
+    public String updateOperationSystem(@RequestBody OperationSystemDto dto) throws ObjectAlreadyExists {
+            OperationSystem operationSystem = operationSystemMapper.getOperationSystem(dto);
+            operationSystemService.updateOperationSystem(operationSystem);
+        return "redirect:/os";
+        
+    }
+    
      //   @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
     @GetMapping("/mscanner")
     public String getModelScanner(Model model) {
@@ -1331,7 +1401,12 @@ public class SvtViewController {
      
     }
     
-
+    //   @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
+    @PostMapping("/switcharchived")
+    public String sendSwitchHubToArchive(@RequestBody ArchivedDto dto) throws ObjectAlreadyExists {
+        switchHubService.svtObjToArchive(dto);
+        return "redirect:/switch";
+    }
     
             //      @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
     @GetMapping("/mrouter")
@@ -1859,5 +1934,260 @@ public class SvtViewController {
         return "redirect:/thermoprinter";
     }
     
+    //      @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
+    @GetMapping("/mdisplay")
+    public String getModelDisplay(Model model) {
+        List<DisplayModel> displayModels = displayModelService.getAllModels();
+        List<SvtModelDto> getDisplayModelsDtoes = svtModelMapper.getModelDisplayDtoes(displayModels);
+        model.addAttribute("dtoes", getDisplayModelsDtoes);
+        model.addAttribute("namePage", "Модели главного табло");
+        model.addAttribute("attribute", "mdisplay");
+        return "models";
+    }
+    
+//    @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
+    @PostMapping("/mdisplay")
+    public String saveModelDisplay(@RequestBody SvtModelDto dto) throws ObjectAlreadyExists {
+        DisplayModel displayModel = svtModelMapper.getModelDisplay(dto);
+        displayModelService.saveModel(displayModel);
+        return "redirect:/mdisplay";
+    }
+    
+                         //  @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
+    @GetMapping("/display")
+    public String getDisplay(Model model, @RequestParam(value="username", required = false) String username) {
+        Map<Location, List<Display>> svtObjectsByEmployee = null;
+        if(null != username) {
+            svtObjectsByEmployee = displayService.getSvtObjectsByName(username, PlaceType.OFFICEEQUIPMENT);
+        } else {
+            svtObjectsByEmployee = displayService.getSvtObjectsByPlaceType(PlaceType.OFFICEEQUIPMENT);
+        }
+        List<LocationByTreeDto> treeSvtDtoByEmployee = displayOutDtoTreeService.getTreeSvtDtoByPlaceType(svtObjectsByEmployee)
+                .stream()
+                .sorted((o1, o2) -> o1.getLocationName().compareTo(o2.getLocationName()))
+                .collect(Collectors.toList());
+        Map<Location, List<Display>> svtObjectsByStorage = null;
+        
+        if(null != username) {
+            svtObjectsByStorage = displayService.getSvtObjectsByName(username, PlaceType.STORAGE);
+        } else {
+            svtObjectsByStorage = displayService.getSvtObjectsByPlaceType(PlaceType.STORAGE);
+        }
+        List<LocationByTreeDto> treeSvtDtoByStorage = displayOutDtoTreeService.getTreeSvtDtoByPlaceType(svtObjectsByStorage)
+                .stream()
+                .sorted((o1, o2) -> o1.getLocationName().compareTo(o2.getLocationName()))
+                .collect(Collectors.toList());
+        
+        model.addAttribute("dtoes", treeSvtDtoByEmployee);
+        model.addAttribute("dtoesStorage", treeSvtDtoByStorage);
+        model.addAttribute("attribute", "display");
+        model.addAttribute("placeAttribute", "officeequipment");
+        model.addAttribute("namePage","Главное табло");
+        
+        return "svtobj";
+    }
+    
+ //   @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
+    @PostMapping("/display")
+    public String saveDisplay(@RequestBody SvtDTO dto) throws ObjectAlreadyExists {
+        displayService.createSvtObj(dto);
+        return "redirect:/display";
+    }
+    
+          @PostMapping("/upddisplay")
+    public String updateDisplay (@RequestBody SvtDTO dto) throws ObjectAlreadyExists {
+        displayService.updateSvtObj(dto);
+        return "redirect:/display";
+     
+    }
+    
+              //      @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
+    @PostMapping("/displaytostor")
+    public String sendToStorageDisplay(@RequestBody SvtDTO dto) throws ObjectAlreadyExists {
+            Display display = displayMapper.getEntityFromDto(dto);
+        displayService.sendToStorage(display);
+        return "redirect:/display";
+        
+    }
+    
+    
+          //   @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
+    @PostMapping("/displayarchived")
+    public String sendDisplayToArchive(@RequestBody ArchivedDto dto) throws ObjectAlreadyExists {
+        displayService.svtObjToArchive(dto);
+        return "redirect:/display";
+    }
+    
+    
+    //      @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
+    @GetMapping("/mswunit")
+    public String getModelSwunit(Model model) {
+        List<SwitchingUnitModel> swunitModels = swunitModelService.getAllModels();
+        List<SvtModelDto> getDisplayModelsDtoes = svtModelMapper.getModelSwunitDtoes(swunitModels);
+        model.addAttribute("dtoes", getDisplayModelsDtoes);
+        model.addAttribute("namePage", "Модели блоков коммутации");
+        model.addAttribute("attribute", "mswunit");
+        return "models";
+    }
+    
+//    @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
+    @PostMapping("/mswunit")
+    public String saveModelSwunit(@RequestBody SvtModelDto dto) throws ObjectAlreadyExists {
+        SwitchingUnitModel swunitModel = svtModelMapper.getModelSwunit(dto);
+        swunitModelService.saveModel(swunitModel);
+        return "redirect:/mswunit";
+    }
+    
+              //  @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
+    @GetMapping("/swunit")
+    public String getSwunit(Model model, @RequestParam(value="username", required = false) String username) {
+        Map<Location, List<SwitchingUnit>> svtObjectsByEmployee = null;
+        if(null != username) {
+            svtObjectsByEmployee = swunitService.getSvtObjectsByName(username, PlaceType.OFFICEEQUIPMENT);
+        } else {
+            svtObjectsByEmployee = swunitService.getSvtObjectsByPlaceType(PlaceType.OFFICEEQUIPMENT);
+        }
+        List<LocationByTreeDto> treeSvtDtoByEmployee = swunitOutDtoTreeService.getTreeSvtDtoByPlaceType(svtObjectsByEmployee)
+                .stream()
+                .sorted((o1, o2) -> o1.getLocationName().compareTo(o2.getLocationName()))
+                .collect(Collectors.toList());
+        Map<Location, List<SwitchingUnit>> svtObjectsByStorage = null;
+        
+        if(null != username) {
+            svtObjectsByStorage = swunitService.getSvtObjectsByName(username, PlaceType.STORAGE);
+        } else {
+            svtObjectsByStorage = swunitService.getSvtObjectsByPlaceType(PlaceType.STORAGE);
+        }
+        List<LocationByTreeDto> treeSvtDtoByStorage = swunitOutDtoTreeService.getTreeSvtDtoByPlaceType(svtObjectsByStorage)
+                .stream()
+                .sorted((o1, o2) -> o1.getLocationName().compareTo(o2.getLocationName()))
+                .collect(Collectors.toList());
+        
+        model.addAttribute("dtoes", treeSvtDtoByEmployee);
+        model.addAttribute("dtoesStorage", treeSvtDtoByStorage);
+        model.addAttribute("placeAttribute", "officeequipment");
+        model.addAttribute("attribute", "swunit");
+        model.addAttribute("namePage","Блок коммутации");
+        
+        return "svtobj";
+    }
+    
+ //   @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
+    @PostMapping("/swunit")
+    public String saveSwunit(@RequestBody SvtDTO dto) throws ObjectAlreadyExists {
+        swunitService.createSvtObj(dto);
+        return "redirect:/swunit";
+    }
+    
+          @PostMapping("/updswunit")
+    public String updateSwunit (@RequestBody SvtDTO dto) throws ObjectAlreadyExists {
+        swunitService.updateSvtObj(dto);
+        return "redirect:/swunit";
+     
+    }
+    
+              //      @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
+    @PostMapping("/swunittostor")
+    public String sendToStorageSwunit(@RequestBody SvtDTO dto) throws ObjectAlreadyExists {
+            SwitchingUnit swunit = swunitMapper.getEntityFromDto(dto);
+        swunitService.sendToStorage(swunit);
+        return "redirect:/swunit";
+        
+    }
+    
+    
+          //   @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
+    @PostMapping("/swunitarchived")
+    public String sendSwunitToArchive(@RequestBody ArchivedDto dto) throws ObjectAlreadyExists {
+        swunitService.svtObjToArchive(dto);
+        return "redirect:/swunit";
+    }
+
+      //      @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
+    @GetMapping("/msubdisplay")
+    public String getModelSubDisplay(Model model) {
+        List<SubDisplayModel> subDisplayModels = subDisplayModelService.getAllModels();
+        List<SvtModelDto> getSubDisplayModelsDtoes = svtModelMapper.getModelSubDisplayDtoes(subDisplayModels);
+        model.addAttribute("dtoes", getSubDisplayModelsDtoes);
+        model.addAttribute("namePage", "Модели электронных табло");
+        model.addAttribute("attribute", "msubdisplay");
+        return "models";
+    }
+    
+//    @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
+    @PostMapping("/msubdisplay")
+    public String saveModelSubDisplay(@RequestBody SvtModelDto dto) throws ObjectAlreadyExists {
+        SubDisplayModel subDisplayModel = svtModelMapper.getModelSubDisplay(dto);
+        subDisplayModelService.saveModel(subDisplayModel);
+        return "redirect:/msubdisplay";
+    }
+    
+
+            //  @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
+    @GetMapping("/asuo")
+    public String getAsuo(Model model, @RequestParam(value="username", required = false) String username) {
+        Map<Location, List<Asuo>> svtObjectsByEmployee = null;
+        if(null != username) {
+            svtObjectsByEmployee = asuoService.getSvtObjectsByName(username, PlaceType.OFFICEEQUIPMENT);
+        } else {
+            svtObjectsByEmployee = asuoService.getSvtObjectsByPlaceType(PlaceType.OFFICEEQUIPMENT);
+        }
+        List<LocationByTreeDto> treeSvtDtoByEmployee = asuoOutDtoTreeService.getTreeSvtDtoByPlaceType(svtObjectsByEmployee)
+                .stream()
+                .sorted((o1, o2) -> o1.getLocationName().compareTo(o2.getLocationName()))
+                .collect(Collectors.toList());
+        Map<Location, List<Asuo>> svtObjectsByStorage = null;
+        
+        if(null != username) {
+            svtObjectsByStorage = asuoService.getSvtObjectsByName(username, PlaceType.STORAGE);
+        } else {
+            svtObjectsByStorage = asuoService.getSvtObjectsByPlaceType(PlaceType.STORAGE);
+        }
+        List<LocationByTreeDto> treeSvtDtoByStorage = asuoOutDtoTreeService.getTreeSvtDtoByPlaceType(svtObjectsByStorage)
+                .stream()
+                .sorted((o1, o2) -> o1.getLocationName().compareTo(o2.getLocationName()))
+                .collect(Collectors.toList());
+        
+        model.addAttribute("dtoes", treeSvtDtoByEmployee);
+        model.addAttribute("dtoesStorage", treeSvtDtoByStorage);
+        model.addAttribute("placeAttribute", "officeequipment");
+        model.addAttribute("attribute", "asuo");
+        model.addAttribute("namePage","Электронные очереди");
+        
+        return "svtobj";
+    }
+    
+ //   @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
+    @PostMapping("/asuo")
+    public String saveAsuo(@RequestBody AsuoDTO dto) throws ObjectAlreadyExists {
+        asuoService.createSvtObj(dto);
+        return "redirect:/asuo";
+    }
+    
+          @PostMapping("/updasuo")
+    public String updateAsuo (@RequestBody AsuoDTO dto) throws ObjectAlreadyExists {
+        Asuo asuo = asuoMapper.getEntityFromDto(dto);
+        asuoService.updateSvtObj(dto);
+        return "redirect:/asuo";
+     
+    }
+    
+              //      @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
+    @PostMapping("/asuotostor")
+    public String sendToStorageAsuo(@RequestBody AsuoDTO dto) throws ObjectAlreadyExists {
+            Asuo asuo = asuoMapper.getEntityFromDto(dto);
+        asuoService.sendToStorage(asuo);
+        return "redirect:/asuo";
+        
+    }
+    
+    
+          //   @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
+    @PostMapping("/asuoarchived")
+    public String sendAsuoToArchive(@RequestBody ArchivedDto dto) throws ObjectAlreadyExists {
+        asuoService.svtObjToArchive(dto);
+        return "redirect:/asuo";
+    }
     
 }
+

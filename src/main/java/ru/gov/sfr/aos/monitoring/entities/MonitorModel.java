@@ -20,10 +20,7 @@ import javax.persistence.OneToMany;
  */
 @Entity
 public class MonitorModel extends SvtModel {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    private String model;
+
     @OneToMany(targetEntity = Monitor.class, mappedBy = "monitorModel", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<Monitor> monitors = new HashSet<>();
 
@@ -34,21 +31,6 @@ public class MonitorModel extends SvtModel {
         this.model = model;
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getModel() {
-        return model;
-    }
-
-    public void setModel(String model) {
-        this.model = model;
-    }
 
     public Set<Monitor> getMonitors() {
         return monitors;
@@ -57,6 +39,8 @@ public class MonitorModel extends SvtModel {
     public void setMonitors(Set<Monitor> monitors) {
         this.monitors = monitors;
     }
+
+
     
     
 }

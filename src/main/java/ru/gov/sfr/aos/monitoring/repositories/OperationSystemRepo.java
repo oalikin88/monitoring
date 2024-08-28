@@ -14,5 +14,5 @@ import ru.gov.sfr.aos.monitoring.entities.OperationSystem;
  */
 @Repository
 public interface OperationSystemRepo extends JpaRepository<OperationSystem, Long> {
-    boolean existsByNameIgnoreCase(String name);
+    boolean existsByModelIgnoreCase(String name);
 }

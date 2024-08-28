@@ -34,10 +34,21 @@ public class OperationSystemService {
     }
     
     public void saveOperationSystem(OperationSystem operationSystem) throws ObjectAlreadyExists {
-        if(operationSystemRepo.existsByNameIgnoreCase(operationSystem.getName())) {
-            throw new ObjectAlreadyExists("Операционная система с названием " + operationSystem.getName() + " уже есть в базе данных");
+        if(operationSystemRepo.existsByModelIgnoreCase(operationSystem.getModel())) {
+            throw new ObjectAlreadyExists("Операционная система с названием " + operationSystem.getModel() + " уже есть в базе данных");
         } else {
             operationSystemRepo.save(operationSystem);
         }
+    }
+    
+    public void updateOperationSystem(OperationSystem operationSystem) throws ObjectAlreadyExists {
+        OperationSystem osFromDB = operationSystemRepo.findById(operationSystem.getId()).get();
+        if (operationSystemRepo.existsByModelIgnoreCase(operationSystem.getModel()) && !operationSystem.getModel().equals(osFromDB.getModel())) {
+          throw new ObjectAlreadyExists("Операционная система с названием " + operationSystem.getModel() + " уже есть в базе данных");
+        }
+        osFromDB.setModel(operationSystem.getModel());
+        osFromDB.setLicense(operationSystem.isLicense());
+        operationSystemRepo.save(osFromDB);
+
     }
 }

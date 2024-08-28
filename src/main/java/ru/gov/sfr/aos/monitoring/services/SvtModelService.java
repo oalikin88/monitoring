@@ -28,6 +28,12 @@ public abstract class SvtModelService <E extends SvtModel, R extends SvtModelsRe
         List<E> models = repository.findAll();
         return models;
     }
+    
+    public <E> List<E> getAllActualModels() {
+
+        List<E> models = repository.findByArchivedFalse();
+        return models;
+    }
 
     public void saveModel(SvtModel e) throws ObjectAlreadyExists {
         
@@ -53,6 +59,36 @@ public abstract class SvtModelService <E extends SvtModel, R extends SvtModelsRe
             }
             
         }
+    }
+    
+    public void update(SvtModel e) throws ObjectAlreadyExists {
+        String newModel = e.getModel();
+        E model = (E) repository.findById(e.getId()).get();
+         List<? extends SvtModel> list = repository.findByModelIgnoreCase(newModel);
+         
+        if (list.isEmpty()) {
+            model.setModel(newModel);
+            repository.save(model);
+        } else {
+           
+                
+                    throw new ObjectAlreadyExists(newModel + " уже есть в базе данных");
+                
+            }
+           
+    }
+    
+    
+    public void sendModelToArchive(Long id) {
+        E model = (E) repository.findById(id).get();
+        model.setArchived(true);
+        repository.save(model);
+    }
+    
+    public void backModelFromArchive(Long id) {
+        E model = (E) repository.findById(id).get();
+        model.setArchived(false);
+        repository.save(model);
     }
 
 }

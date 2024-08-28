@@ -36,7 +36,7 @@ public class Ats extends ObjectBuingWithSerialAndInventary implements Serializab
     }
 
     public Ats(AtsModel atsModel, String nameFromOneC, String numberRoom, int cityNumberAmount, OuterConnectionType outerConnectionType, int innerConnectionIp, int innerConnectionAnalog, int yearCreated, Status status, String inventaryNumber, String serialNumber, Contract contract, boolean archived) {
-        super(status, inventaryNumber, serialNumber, contract, archived);
+        super(status, inventaryNumber, serialNumber, contract);
         this.atsModel = atsModel;
         this.nameFromOneC = nameFromOneC;
         this.numberRoom = numberRoom;

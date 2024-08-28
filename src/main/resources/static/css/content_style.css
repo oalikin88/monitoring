@@ -19,7 +19,16 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/CascadeStyleSheet.css to ed
 .element {
     padding-left: 10px;
     padding-right: 10px;
+    min-height: 42px;
+    align-items:center;
+    justify-content: center;
 
+}
+
+.phone {
+    min-height: 42px;
+     align-items:center;
+    justify-content: center;
 }
 
 .modalHeaderContent {

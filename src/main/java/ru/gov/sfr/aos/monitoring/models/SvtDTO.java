@@ -11,7 +11,7 @@ import java.util.Date;
  * @author 041AlikinOS
  */
 
-public class SvtDTO {
+public class SvtDTO extends MainSvtDto {
     
     protected Long id;
     protected Long modelId;

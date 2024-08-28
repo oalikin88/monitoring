@@ -14,7 +14,7 @@ import ru.gov.sfr.aos.monitoring.entities.ObjectBuingWithSerialAndInventary;
 import ru.gov.sfr.aos.monitoring.entities.Place;
 import ru.gov.sfr.aos.monitoring.exceptions.ObjectAlreadyExists;
 import ru.gov.sfr.aos.monitoring.models.ArchivedDto;
-import ru.gov.sfr.aos.monitoring.models.SvtDTO;
+import ru.gov.sfr.aos.monitoring.models.MainSvtDto;
 import ru.gov.sfr.aos.monitoring.repositories.ObjectBuingWithSerialAndInventaryRepo;
 import ru.gov.sfr.aos.monitoring.repositories.PlaceRepo;
 
@@ -26,7 +26,7 @@ import ru.gov.sfr.aos.monitoring.repositories.PlaceRepo;
  */
 
 
-public abstract class SvtObjService <E extends ObjectBuingWithSerialAndInventary, T extends ObjectBuingWithSerialAndInventaryRepo, D extends SvtDTO> {
+public abstract class SvtObjService <E extends ObjectBuingWithSerialAndInventary, T extends ObjectBuingWithSerialAndInventaryRepo, D extends MainSvtDto> {
     
     @Autowired
     private T repository;

@@ -36,7 +36,7 @@ public class Scanner extends ObjectBuingWithSerialAndInventary implements Serial
     
 
     public Scanner(ScannerModel scannerModel, int yearCreated, String ipAdress, String numberRoom, String nameFromOneC, Date dateExploitationBegin, Status status, String inventaryNumber, String serialNumber, Contract contract, boolean archived) {
-        super(status, inventaryNumber, serialNumber, contract, archived);
+        super(status, inventaryNumber, serialNumber, contract);
         this.scannerModel = scannerModel;
         this.yearCreated = yearCreated;
         this.ipAdress = ipAdress;

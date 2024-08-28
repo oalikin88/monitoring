@@ -16,7 +16,7 @@ let handleClickSearchSvtObject = function(input) {
         window.location.href = request + input;
 }
 
-let modalContentLoad = function (idPlace) {
+let modalContentLoad = function (idPlace, placeName) {
     
     
     if(null != idPlace) {
@@ -39,13 +39,13 @@ let modalContentLoad = function (idPlace) {
     
     //сборка хеадер
     let divModalHeader = document.createElement("div");
-    divModalHeader.className = "modal-header";
+    divModalHeader.className = "modal-header modalHeaderContent";
     
     let titleModalHeader = document.createElement("h5");
-    titleModalHeader.className = "modal-title fs-5";
+    titleModalHeader.className = "modal-title";
     titleModalHeader.id = "exampleModalLabel";
     if (null != idPlace) {
-    titleModalHeader.innerText = "Редактирование рабочего места";
+    titleModalHeader.innerText = "Редактирование рабочего места: " + placeName;
     } else {
         titleModalHeader.innerText = "Добавление рабочего места";
     }
@@ -543,7 +543,7 @@ window.onload = function() {
     
     for (let i = 0; i < elem.length; i++) {
         elem[i].addEventListener("click", function (event) {
-            modalContentLoad($(this)[0].id);
+            modalContentLoad($(this)[0].id, $(this).find('.fio')[0].innerText);
 
         });
     }

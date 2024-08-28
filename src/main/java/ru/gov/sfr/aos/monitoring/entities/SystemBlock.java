@@ -84,7 +84,7 @@ public class SystemBlock extends ObjectBuingWithSerialAndInventary implements Se
     
 
     public SystemBlock(SystemBlockModel systemBlockModel, Status status, String inventaryNumber, String serialNumber, int yearCreated, Date dateExploitationBegin, String nameFromOneC, Date dateUpgrade, String numberRoom, Motherboard motherBoard, Cpu cpu, Ram ram, Set<Hdd> hdd, VideoCard videoCard, CdDrive cdDrive, SoundCard soundCard, LanCard lanCard, Keyboard keyboard, Mouse mouse, Speakers speakers, Contract contract, boolean archived, String ipAdress, Set<OperationSystem> operationSystems) {
-        super(status, inventaryNumber, serialNumber, contract, archived);
+        super(status, inventaryNumber, serialNumber, contract);
         this.systemBlockModel = systemBlockModel;
         this.yearCreated = yearCreated;
         this.dateExploitationBegin = dateExploitationBegin;

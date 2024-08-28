@@ -15,7 +15,7 @@ import ru.gov.sfr.aos.monitoring.entities.Phone;
  */
 
 @Repository
-public interface PhoneRepo extends ObjectBuingWithSerialAndInventaryRepo<Phone> {
+public interface PhoneRepo extends ObjectBuingWithSerialAndInventaryRepo <Phone> {
     boolean existsBySerialNumberIgnoreCase(String serialNumber);
     List<Phone> findByPlacePlaceTypeLikeAndArchivedFalse(PlaceType placetype);
 }

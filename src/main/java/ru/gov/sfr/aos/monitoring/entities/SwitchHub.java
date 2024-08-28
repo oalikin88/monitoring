@@ -34,7 +34,7 @@ public class SwitchHub extends ObjectBuingWithSerialAndInventary implements Seri
 
     public SwitchHub(SwitchHubModel switchHubModel, SwitchHubType switchHubType, int portAmount, String numberRoom, String nameFromOneC, Status status,
             String inventaryNumber, String serialNumber, Contract contract, boolean archived) {
-        super(status, inventaryNumber, serialNumber, contract, archived);
+        super(status, inventaryNumber, serialNumber, contract);
         this.switchHubModel = switchHubModel;
         this.switchHubType = switchHubType;
         this.portAmount = portAmount;

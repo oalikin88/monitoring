@@ -9,8 +9,6 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
     <title th:text="${namePage}">
      
     </title> 
-
-        
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <script src="/js/jquery-3.6.4.min.js"></script>
@@ -27,14 +25,10 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
             <aside th:insert="svt :: sidebar"></aside>
             <div class="main p-3">
                 <div class="row mb-2" id="top-panel">
-                <div class="col-2">
-                    
+                <div class="col-2 d-flex align-items-center justify-content-center">
                         <h1 class="ms-2 ps-2" th:text="${namePage}">
-                            
                         </h1>
-                   
                 </div>
-                
                     <div class="col-1 text-end">
                         <!-- Button trigger modal add place-->
                         <button type="button" class="btn btn-primary btn-sm addPlaceBtn" id="addPlaceBtn" data-bs-toggle="modal" data-bs-target="#addPlaceModal">Добавить</button>
@@ -119,6 +113,30 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                                                     <div class="col">Серийный номер</div>
                                                     <div class="col">Инвентарный номер</div>
                                                     <div class="col">Состояние</div>
+                                                </div>
+                                            <div class="row fw-bold mt-3 mb-3" th:case="display">
+                                                    <div class="col">Модель</div>
+                                                    <div class="col">ФИО</div>
+                                                    <div class="col">Серийный номер</div>
+                                                    <div class="col">Инвентарный номер</div>
+                                                    <div class="col">Состояние</div>
+                                                </div>
+                                            <div class="row fw-bold mt-3 mb-3" th:case="swunit">
+                                                    <div class="col">Модель</div>
+                                                    <div class="col">ФИО</div>
+                                                    <div class="col">Серийный номер</div>
+                                                    <div class="col">Инвентарный номер</div>
+                                                    <div class="col">Состояние</div>
+                                                </div>
+                                            <div class="row fw-bold mt-3 mb-3" th:case="asuo">
+                                                    <div class="col">Наименование в ведомости ОС</div>
+                                                    <div class="col">ФИО</div>
+                                                    <div class="col">Главное табло</div>
+                                                    <div class="col">Терминал</div>
+                                                    <div class="col">Термопринтер</div>
+                                                    <div class="col">Блок коммутации</div>
+                                                    <div class="col">Свитч</div>
+                                                    <div class="col">Электронное табло на кабинки и кабинеты</div>
                                                 </div>
                                             <div class="row fw-bold mt-3 mb-3" th:case="*">
                                                     <div class="col">Модель</div>
@@ -255,6 +273,43 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                                                 <div class="col" th:case="UTILIZATION" th:text="Утилизирован"></div>
                                                 </th:block>
                                              </div>
+                                                <div class="row mb-2 d-flex align-items-center text-start phone" th:case="display">
+                                                <div class="col" th:text="${stat.count} + '. ' + ${inInnerDto.model}"></div>
+                                                <div class="col" th:text="${inInnerDto.placeName}"></div>
+                                                <div class="col" th:text="${inInnerDto.serialNumber}"></div>
+                                                <div class="col" th:text="${inInnerDto.inventaryNumber}"></div>
+                                                <th:block th:switch="${inInnerDto.status}">
+                                                <div class="col" th:case="OK" th:text="Исправен"></div>
+                                                <div class="col" th:case="REPAIR" th:text="Ремонт"></div>
+                                                <div class="col" th:case="MONITORING" th:text="Списание"></div>
+                                                <div class="col" th:case="DEFECTIVE" th:text="Неисправен"></div>
+                                                <div class="col" th:case="UTILIZATION" th:text="Утилизирован"></div>
+                                                </th:block>
+                                             </div>
+                                                 <div class="row mb-2 d-flex align-items-center text-start phone" th:case="swunit">
+                                                <div class="col" th:text="${stat.count} + '. ' + ${inInnerDto.model}"></div>
+                                                <div class="col" th:text="${inInnerDto.placeName}"></div>
+                                                <div class="col" th:text="${inInnerDto.serialNumber}"></div>
+                                                <div class="col" th:text="${inInnerDto.inventaryNumber}"></div>
+                                                <th:block th:switch="${inInnerDto.status}">
+                                                <div class="col" th:case="OK" th:text="Исправен"></div>
+                                                <div class="col" th:case="REPAIR" th:text="Ремонт"></div>
+                                                <div class="col" th:case="MONITORING" th:text="Списание"></div>
+                                                <div class="col" th:case="DEFECTIVE" th:text="Неисправен"></div>
+                                                <div class="col" th:case="UTILIZATION" th:text="Утилизирован"></div>
+                                                </th:block>
+                                             </div>
+                                                 <div class="row mb-2 d-flex align-items-center text-start phone" th:case="asuo">
+                                                <div class="col" th:text="${stat.count} + '. ' + ${inInnerDto.nameFromOneC}"></div>
+                                                <div class="col" th:text="${inInnerDto.placeName}"></div>
+                                                <div class="col" th:text="${inInnerDto.displayModel}"></div>
+                                                <div class="col" th:text="${inInnerDto.terminalModel}"></div>
+                                                <div class="col" th:text="${inInnerDto.thermoprinterModel}"></div>
+                                                <div class="col" th:text="${inInnerDto.switchingUnitModel}"></div>
+                                                <div class="col" th:text="${inInnerDto.switches.size + ' ед.'}"></div>
+                                                <div class="col" th:text="${inInnerDto.subDisplayModel}"></div>
+                                                
+                                             </div>
                                                 <div class="row mb-2 d-flex align-items-center text-start phone" th:case="*">
                                                 <div class="col" th:text="${stat.count} + '. ' + ${inInnerDto.model}"></div>
                                                 <div class="col" th:text="${inInnerDto.placeName}"></div>
@@ -271,7 +326,6 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                                                 <div class="col" th:text="${inInnerDto.yearCreated}"></div>
                                                 <th:block th:switch="${attribute}">
                                                         <div class="col" th:text="${inInnerDto.phoneNumber}" th:case="'phones'">
-                                                           
                                                         </div>
                                                         <div class="col" th:case="'monitors'">
                                                             <th:block th:switch="${inInnerDto.baseType}">
@@ -282,19 +336,16 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                                                                     отдельно
                                                                 </span>
                                                         </th:block>
-                                                        
                                                         </div>
                                                         <div class="col" th:case="'ups'">
                                                            <span th:text="${inInnerDto.yearReplacement}"></span>
                                                         </div>
                                                     </th:block> 
                                              </div>
-                                               
                                                </th:block>         
                                             </li>
                                            
                                         </ul>
-                                                
                                     </details>
                                 </li>
                             </ul>
@@ -367,7 +418,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                   </div>
                 </div>
 
-                
+             
                 <!--объявление переменных из данных приходящих с бэка-->
                 
                 <script th:inline="javascript">                
@@ -384,5 +435,6 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
         <script src="/js/jquery.mask.min.js"></script>
         <script src="/js/main_svt.js"></script>
         <script src="/js/svtobj.js"></script>
+        <script src="/js/highlight-sidebar.js"></script>
     </body>
 </html>

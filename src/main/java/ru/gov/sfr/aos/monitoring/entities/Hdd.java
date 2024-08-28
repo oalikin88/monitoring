@@ -9,9 +9,6 @@ import java.util.Set;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import ru.gov.sfr.aos.monitoring.enums.UnitHdd;
 
@@ -21,10 +18,7 @@ import ru.gov.sfr.aos.monitoring.enums.UnitHdd;
  */
 @Entity
 public class Hdd extends SvtModel {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    private String model;
+
     private int capacity;
     @Enumerated(EnumType.STRING)
     private UnitHdd unit;
@@ -35,21 +29,7 @@ public class Hdd extends SvtModel {
  
     
 
-    public Long getId() {
-        return id;
-    }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getModel() {
-        return model;
-    }
-
-    public void setModel(String model) {
-        this.model = model;
-    }
 
     public int getCapacity() {
         return capacity;

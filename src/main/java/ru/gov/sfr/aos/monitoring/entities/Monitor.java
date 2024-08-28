@@ -46,7 +46,7 @@ public class Monitor extends ObjectBuingWithSerialAndInventary implements Serial
 
     public Monitor(MonitorModel monitorModel, Status status, String inventaryNumber, String serialNumber, 
             int yearCreated, Date dateExploitationBegin, String nameFromeOneC, BaseType baseType, Contract contract, boolean archived) {
-        super(status, inventaryNumber, serialNumber, contract, archived);
+        super(status, inventaryNumber, serialNumber, contract);
         this.monitorModel = monitorModel;
         this.dateExploitationBegin = dateExploitationBegin;
         this.nameFromeOneC = nameFromeOneC;

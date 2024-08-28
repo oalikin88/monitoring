@@ -18,7 +18,7 @@ import javax.validation.constraints.NotNull;
  */
 @Entity
 @PrimaryKeyJoinColumn(name = "DISPLAY_ID")
-public class Display extends ObjectBuing implements Serializable {
+public class Display extends ObjectBuingWithSerialAndInventary implements Serializable {
     @NotNull(message = "Поле \"Модель\" не должно быть пустым")
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private DisplayModel displayModel;

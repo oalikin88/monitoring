@@ -8,6 +8,7 @@ import java.time.Instant;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -148,6 +149,11 @@ public class SwitchHubService extends SvtObjService<SwitchHub, SwitchHubRepo, Sv
              switchHub.setNumberRoom(dto.getNumberRoom());
              switchHub.setNameFromOneC(dto.getNameFromOneC());
              switchHubRepo.save(switchHub);
+    }
+    
+    public List<SwitchHub> getAllSwitch() {
+        List<SwitchHub> switches = switchHubRepo.findBySwitchHubType(SwitchHubType.SWITCH);
+        return switches;
     }
     
 }

@@ -21,7 +21,7 @@ public class OperationSystem {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String name;
+    private String model;
     private boolean license;
     @ManyToMany(mappedBy = "operationSystems")
     private Set<SystemBlock> systemBlocks = new HashSet<>();
@@ -32,7 +32,7 @@ public class OperationSystem {
     
     
     public OperationSystem(String name, boolean license) {
-        this.name = name;
+        this.model = name;
         this.license = license;
     }
 
@@ -44,12 +44,12 @@ public class OperationSystem {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public String getModel() {
+        return model;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setModel(String model) {
+        this.model = model;
     }
 
     public boolean isLicense() {

@@ -67,6 +67,14 @@ let winterKit;
 let havePomp;
 let price;
 let description;
+let switchListId;
+let switchList;
+let terminalId;
+let thermoprinterId;
+let subDisplayModelId;
+let switchingUnitId;
+let subDisplayAmount;
+let displayId;
 
 
 function beep() {
@@ -83,41 +91,48 @@ function beep() {
     }, 500); 
 };
 
+let linkCreate = function(attribute, toLink) {
+    var result = '/';
+    result = result + attribute + toLink;
+    return result;
+    
+}
+
 let getModalError = function(textError) {
       
-            //if you have another AudioContext class use that one, as some browsers have a limit
-            modalHeader = document.createElement('div');
-            modalHeader.className = 'modal-header modalHeaderError';
-            titleModal = document.createElement('h1');
-            titleModal.className = 'modal-title fs-5';
-            titleModal.id = 'titleModal';
-            titleModal.innerText = 'Ошибка!';
-            closeHeaderButton = document.createElement('button');
-            closeHeaderButton.className = 'btn-close btn-close-white';
-            closeHeaderButton.setAttribute("data-bs-dismiss", "modal");
-            closeHeaderButton.setAttribute('aria-label', 'Закрыть');
-           
-            modalErrorParent.appendChild(modalHeader);
-            modalHeader.appendChild(titleModal);
-            modalHeader.appendChild(closeHeaderButton);
-            
-            modalBody = document.createElement('div');
-            modalBody.className = 'modal-body';
-            modalBody.id = 'modalBody';
-            
-            modalErrorParent.append(modalBody);
-            modalFooter = document.createElement('div');
-            modalFooter.className = 'modal-footer';
-            footerBtnClose = document.createElement('button');
-            footerBtnClose.className = 'btn btn-secondary btn-sm';
-            footerBtnClose.setAttribute('data-bs-dismiss', 'modal');
-            footerBtnClose.innerText = 'Закрыть';
-            
-            modalErrorParent.appendChild(modalFooter);
-            modalFooter.appendChild(footerBtnClose);
-            $("#modalBody").append(textError);
-            return new bootstrap.Modal(modalError).show();
-}
+    //if you have another AudioContext class use that one, as some browsers have a limit
+    modalHeader = document.createElement('div');
+    modalHeader.className = 'modal-header modalHeaderError';
+    titleModal = document.createElement('h1');
+    titleModal.className = 'modal-title fs-5';
+    titleModal.id = 'titleModal';
+    titleModal.innerText = 'Ошибка!';
+    closeHeaderButton = document.createElement('button');
+    closeHeaderButton.className = 'btn-close btn-close-white';
+    closeHeaderButton.setAttribute("data-bs-dismiss", "modal");
+    closeHeaderButton.setAttribute('aria-label', 'Закрыть');
+
+    modalErrorParent.appendChild(modalHeader);
+    modalHeader.appendChild(titleModal);
+    modalHeader.appendChild(closeHeaderButton);
+
+    modalBody = document.createElement('div');
+    modalBody.className = 'modal-body';
+    modalBody.id = 'modalBody';
+
+    modalErrorParent.append(modalBody);
+    modalFooter = document.createElement('div');
+    modalFooter.className = 'modal-footer';
+    footerBtnClose = document.createElement('button');
+    footerBtnClose.className = 'btn btn-secondary btn-sm';
+    footerBtnClose.setAttribute('data-bs-dismiss', 'modal');
+    footerBtnClose.innerText = 'Закрыть';
+
+    modalErrorParent.appendChild(modalFooter);
+    modalFooter.appendChild(footerBtnClose);
+    $("#modalBody").append(textError);
+    return new bootstrap.Modal(modalError).show();
+};
 
 let getStatus = function(input) {
     var result;
@@ -158,56 +173,16 @@ let getConditionerType = function(input) {
             break;
     }
     return result;
-}
+};
 
 
 let handleClickArchivedBtn = function () {
-    let requestLink;
+    let requestLink = linkCreate(attrib, "archived");
     let dto = {
         archived: true,
         id: idSvtObj,
     };
-    switch (attrib) {
-        case "phones":
-            requestLink = "/phonearchived";
-            break;
-        case "monitors":
-            requestLink = "/monitorarchived";
-            break;
-        case "ups":
-            requestLink = "/upsarchived";
-            break;
-        case "systemblock":
-            requestLink = "/sysblocksarchived";
-            break;
-        case "scanner":
-            requestLink = "/scannerarchived";
-            break;
-        case "server":
-            requestLink = "/serverarchived";
-            break;
-        case "switch":
-            requestLink = "/switcharchived";
-            break;
-        case "router":
-            requestLink = "/routerarchived";
-            break;
-        case "ats":
-            requestLink = "/atsarchived";
-            break;
-        case "conditioner":
-            requestLink = "/conditionerarchived";
-            break;
-        case "infomat":
-            requestLink = "/infomatarchived";
-            break;
-        case "terminal":
-            requestLink = "/terminalarchived";
-            break;
-        case "thermoprinter":
-            requestLink = "/thermoprinterarchived";
-            break;
-    }
+    
     $.ajax({
         type: "POST",
         url: requestLink,
@@ -223,19 +198,23 @@ let handleClickArchivedBtn = function () {
         processData: false,
         contentType: 'application/json'
     });
-}
+};
+
 let handleClickSendToStorageBtn = function () {
     let requestLink;
     let dto = {
-        model: document.querySelector('#modelSelect').innerText,
-        status: document.querySelector('#statusSelect').value,
-        inventaryNumber: document.querySelector('#inventaryNumber').value,
-        serialNumber: document.querySelector('#serialNumber').value,
         placeId: document.querySelector('#placeSelect').value,
         id: idSvtObj,
-        modelId: document.querySelector('#modelSelect').value,
         locationId: locationId,
     };
+        if(attrib != "asuo") {
+        dto.model = document.querySelector('#modelSelect').innerText;
+        dto.modelId = document.querySelector('#modelSelect').value;
+        dto.status = document.querySelector('#statusSelect').value;
+        dto.inventaryNumber = document.querySelector('#inventaryNumber').value;
+        dto.serialNumber = document.querySelector('#serialNumber').value;
+        
+    }
      if(null != $('#startExploitation')[0]) {
         dto.dateExploitationBegin = document.querySelector('#startExploitation').value;
     }
@@ -340,6 +319,27 @@ let handleClickSendToStorageBtn = function () {
         case "terminal":
             requestLink = "/terminaltostor";
             break;
+        case "thermoprinter":
+            requestLink = "/thermoprintertostor";
+            break;
+        case "display":
+            requestLink = "/displaytostor";
+            break;
+        case "swunit":
+            requestLink = "/swunittostor";
+            break;
+        case "asuo":
+            requestLink = "/asuotostor";
+            dto.displayId = $("#displaySelect")[0].selectize.getValue();
+            dto.terminalId = $("#terminalSelect")[0].selectize.getValue();
+            dto.thermoprinterId = $("#thermoprinterSelect")[0].selectize.getValue();
+            dto.subDisplayModelId = $("#subDisplaySelect")[0].selectize.getValue();
+            dto.switchingUnitId = $("#switchingUnitSelect")[0].selectize.getValue();
+            dto.switchId = $("#switchSelect")[0].selectize.getValue();
+            dto.subDisplayAmount = $("#subDisplayAmount")[0].value;
+            dto.nameFromOneC = $("#nameFromOneC")[0].value;
+            dto.numberRoom = $("#numberRoom")[0].value;
+            break;
     }
     $.ajax({
         type: "POST",
@@ -361,14 +361,16 @@ let handleClickSendToStorageBtn = function () {
 let handleClickUpdateBtn = function () {
     let requestLink;
     let dto = {
-        model: document.querySelector('#modelSelect').innerText,
-        status: document.querySelector('#statusSelect').value,
-        inventaryNumber: document.querySelector('#inventaryNumber').value,
-        serialNumber: document.querySelector('#serialNumber').value,
         placeId: document.querySelector('#placeSelect').value,
         id: idSvtObj,
-        modelId: document.querySelector('#modelSelect').value,
     };
+        if(attrib != "asuo") {
+        dto.model = document.querySelector('#modelSelect').innerText;
+        dto.modelId = document.querySelector('#modelSelect').value;
+        dto.status = document.querySelector('#statusSelect').value;
+        dto.inventaryNumber = document.querySelector('#inventaryNumber').value;
+        dto.serialNumber = document.querySelector('#serialNumber').value;
+    }
     if(null != $('#startExploitation')[0]) {
         dto.dateExploitationBegin = document.querySelector('#startExploitation').value;
     }
@@ -482,6 +484,24 @@ let handleClickUpdateBtn = function () {
         case "thermoprinter":
             requestLink = "/updthermoprinter";
             break;
+        case "display":
+            requestLink = "/upddisplay";
+            break;
+        case "swunit":
+            requestLink = "/updswunit";
+            break;
+        case "asuo":
+            requestLink = "/updasuo";
+            dto.displayId = $("#displaySelect")[0].selectize.getValue();
+            dto.terminalId = $("#terminalSelect")[0].selectize.getValue();
+            dto.thermoprinterId = $("#thermoprinterSelect")[0].selectize.getValue();
+            dto.subDisplayModelId = $("#subDisplaySelect")[0].selectize.getValue();
+            dto.switchingUnitId = $("#switchingUnitSelect")[0].selectize.getValue();
+            dto.switchId = $("#switchSelect")[0].selectize.getValue();
+            dto.subDisplayAmount = $("#subDisplayAmount")[0].value;
+            dto.nameFromOneC = $("#nameFromOneC")[0].value;
+            dto.numberRoom = $("#numberRoom")[0].value;
+            break;
     }
     $.ajax({
         type: "POST",
@@ -542,20 +562,33 @@ let handleClickSearchSvtObject = function (input) {
         case "thermoprinter":
             request = "/thermoprinter?username=";
             break;
+        case "display":
+            request = "/display?username=";
+            break;
+        case "swunit":
+            request = "/swunit?username=";
+            break;
+        case "asuo":
+            request = "/asuo?username=";
+            break;
     }
     window.location.href = request + input;
-}
+};
+
 let handleClickSavePhoneBtn = function () {
     let requestLink;
     let dto = {
-        model: document.querySelector('#modelSelect').innerText,
-        status: document.querySelector('#statusSelect').value,
-        inventaryNumber: document.querySelector('#inventaryNumber').value,
-        serialNumber: document.querySelector('#serialNumber').value,
         placeId: document.querySelector('#placeSelect').value,
         id: idSvtObj,
-        modelId: document.querySelector('#modelSelect').value,
     };
+    if(attrib != "asuo") {
+        dto.model = document.querySelector('#modelSelect').innerText;
+        dto.modelId = document.querySelector('#modelSelect').value;
+        dto.status = document.querySelector('#statusSelect').value;
+        dto.inventaryNumber = document.querySelector('#inventaryNumber').value;
+        dto.serialNumber = document.querySelector('#serialNumber').value;
+    }
+    
     if(null != $('#startExploitation')[0]) {
         dto.dateExploitationBegin = document.querySelector('#startExploitation').value;
     }
@@ -566,6 +599,18 @@ let handleClickSavePhoneBtn = function () {
         case "phones":
             dto.phoneNumber = $("#innerCallNumber")[0].value;
             requestLink = "/phones";
+            break;
+        case "asuo":
+            requestLink = "/asuo";
+            dto.displayId = $("#displaySelect")[0].selectize.getValue();
+            dto.terminalId = $("#terminalSelect")[0].selectize.getValue();
+            dto.thermoprinterId = $("#thermoprinterSelect")[0].selectize.getValue();
+            dto.subDisplayModelId = $("#subDisplaySelect")[0].selectize.getValue();
+            dto.switchingUnitId = $("#switchingUnitSelect")[0].selectize.getValue();
+            dto.switchId = $("#switchSelect")[0].selectize.getValue();
+            dto.subDisplayAmount = $("#subDisplayAmount")[0].value;
+            dto.nameFromOneC = $("#nameFromOneC")[0].value;
+            dto.numberRoom = $("#numberRoom")[0].value;
             break;
         case "monitors":
             dto.nameFromOneC = document.querySelector('#nameFromOneC').value;
@@ -670,6 +715,12 @@ let handleClickSavePhoneBtn = function () {
         case "thermoprinter":
             requestLink = "/thermoprinter";
             break;
+        case "display":
+            requestLink = "/display";
+            break;
+        case "swunit":
+            requestLink = "/swunit";
+            break;
     }
     $.ajax({
         type: "POST",
@@ -687,6 +738,7 @@ let handleClickSavePhoneBtn = function () {
         contentType: 'application/json'
     });
 };
+
 // Запрос на активацию/деактивацию кнопки "Отправить на склад"
 let requestToEnableStorage = function () {
     $('.svtObjModalFooter')[0].innerHTML = "";
@@ -726,10 +778,26 @@ window.onload = function () {
     addPlaceBtn.addEventListener('click', function () {
        
         modalContentLoad($(this)[0].className);
+        if(attrib == "asuo") {
+            if($("#modelRow")[0] != null) {
+                $("#modelRow")[0].remove();
+                $("#inventaryNumberRow")[0].remove();
+                $("#serialNumberRow")[0].remove();
+                $("#statusRow")[0].remove();
+            }
+        }
     });
     for (let i = 0; i < elem.length; i++) {
         elem[i].addEventListener("click", function (event) {
             modalContentLoad($(this)[0].className, $(this)[0].id);
+            if(attrib == "asuo") {
+            if($("#modelRow")[0] != null) {
+                $("#modelRow")[0].remove();
+                $("#inventaryNumberRow")[0].remove();
+                $("#serialNumberRow")[0].remove();
+                $("#statusRow")[0].remove();
+            }
+        }
         });
     }
     
@@ -746,7 +814,7 @@ let modalContentLoad = function (eventReason, svtObjId) {
     let divModalHeader = document.createElement("div");
     divModalHeader.className = "modal-header modalHeaderContent";
     let titleModal = document.createElement("h5");
-    titleModal.className = "modal-title fs-5";
+    titleModal.className = "modal-title";
     if (null != svtObjId) {
         titleAction = "Редактировать";
     } else {
@@ -792,6 +860,15 @@ let modalContentLoad = function (eventReason, svtObjId) {
          case "thermoprinter":
             titleModal.innerText = titleAction + " термопринтер";
             break;
+        case "display":
+            titleModal.innerText = titleAction + " главное табло";
+            break;
+        case "swunit":
+            titleModal.innerText = titleAction + " блок коммутации";
+            break;
+        case "asuo":
+            titleModal.innerText = titleAction + " электронная очередь";
+            break;
     }
     divModalHeader.appendChild(titleModal);
     let headerCloseBtn = document.createElement("button");
@@ -822,12 +899,12 @@ let modalContentLoad = function (eventReason, svtObjId) {
             '<div class="col">' +
             '<select class="form-select form-select-sm" id="placeSelect" aria-label="Default select example" ></select>' +
             '</div></div>' +
-            '<div class="row mt-2">' +
+            '<div class="row mt-2" id="modelRow">' +
             '<div class="col">Модель</div>' +
             '<div class="col">' +
             '<select class="form-select form-select-sm" id="modelSelect" aria-label="Default select example" ></select>' +
             '</div></div>' +
-            '<div class="row mt-2">' +
+            '<div class="row mt-2" id="statusRow">' +
             '<div class="col">Состояние</div>' +
             '<div class="col">' +
             '<select class="form-select form-select-sm" id="statusSelect" aria-label="Default select example" >' +
@@ -838,12 +915,12 @@ let modalContentLoad = function (eventReason, svtObjId) {
             '<option value="UTILIZATION">Утилизирован</option>' +
             '</select>' +
             '</div></div>' +
-            '<div class="row mt-2">' +
+            '<div class="row mt-2" id="inventaryNumberRow">' +
             '<div class="col">Инвентарный номер</div>' +
             '<div class="col">' +
             '<input class="form-control form-control-sm" type="text" placeholder="введите инвентарный номер" aria-label="inventaryNumber" id="inventaryNumber">' +
             '</div></div>' +
-            '<div class="row mt-2">' +
+            '<div class="row mt-2" id="serialNumberRow">' +
             '<div class="col">Серийный номер</div>' +
             '<div class="col">' +
             '<input class="form-control form-control-sm" type="text" placeholder="введите серийный номер" aria-label="serialNumber" id="serialNumber">' +
@@ -860,6 +937,12 @@ let modalContentLoad = function (eventReason, svtObjId) {
             
         break;
         case "thermoprinter":
+            
+        break;
+        case "display":
+            
+        break;
+        case "swunit":
             
         break;
         
@@ -1859,8 +1942,6 @@ let modalContentLoad = function (eventReason, svtObjId) {
             inputInnerConnectionsAnalogAmount.max = 999;
             inputInnerConnectionsAnalogAmount.value = 1;
             
-            
-            
             divColInputInnerConnectionsIpAmount.appendChild(inputInnerConnectionsIpAmount);
             divColInputInnerConnectionsAnalogAmount.appendChild(inputInnerConnectionsAnalogAmount);
             innerConnectionsAnalogAmountRow.appendChild(divColLabelInnerConnectionsAnalogAmount);
@@ -1872,6 +1953,154 @@ let modalContentLoad = function (eventReason, svtObjId) {
             innerConnectionsAmountRow.appendChild(divColLabelConnectionsAmount);
             innerConnectionsAmountRow.appendChild(divColConteinerForRowsInputs);
             divContainerBody.appendChild(innerConnectionsAmountRow);
+            break;
+        case "asuo":
+            
+            let divRowNumberRoomAsuo = document.createElement("div");
+            divRowNumberRoomAsuo.className = "row mt-2";
+            let divColLabelNumberRoomAsuo = document.createElement("div");
+            divColLabelNumberRoomAsuo.className = "col";
+            divColLabelNumberRoomAsuo.innerText = "Кабинет";
+            let divColInputNumberRoomAsuo = document.createElement("div");
+            divColInputNumberRoomAsuo.className = "col";
+            let inputNumberRoomAsuo = document.createElement("input");
+            inputNumberRoomAsuo.className = "form-control form-control-sm";
+            inputNumberRoomAsuo.type = "text";
+            inputNumberRoomAsuo.placeholder = "укажите расположение";
+            inputNumberRoomAsuo.id = "numberRoom";
+            inputNumberRoomAsuo.name = "numberRoom";
+            divColInputNumberRoomAsuo.appendChild(inputNumberRoomAsuo);
+            divRowNumberRoomAsuo.appendChild(divColLabelNumberRoomAsuo);
+            divRowNumberRoomAsuo.appendChild(divColInputNumberRoomAsuo);
+            divContainerBody.appendChild(divRowNumberRoomAsuo);
+            let divRowNameFromOneCAsuo = document.createElement("div");
+            divRowNameFromOneCAsuo.className = "row mt-2";
+            let divColLabelNameFromOneCAsuo = document.createElement("div");
+            divColLabelNameFromOneCAsuo.className = "col";
+            divColLabelNameFromOneCAsuo.innerText = "Наименование в ведомости ОС";
+            let divColInputNameFromOneCAsuo = document.createElement("div");
+            divColInputNameFromOneCAsuo.className = "col";
+            let inputNameFromOneCAsuo = document.createElement("textarea");
+            inputNameFromOneCAsuo.className = "form-control form-control-sm";
+            inputNameFromOneCAsuo.placeholder = "введите наименование";
+            inputNameFromOneCAsuo.id = "nameFromOneC";
+            inputNameFromOneCAsuo.setAttribute("aria-label", "nameFromOneC");
+            divColInputNameFromOneCAsuo.appendChild(inputNameFromOneCAsuo);
+            divRowNameFromOneCAsuo.appendChild(divColLabelNameFromOneCAsuo);
+            divRowNameFromOneCAsuo.appendChild(divColInputNameFromOneCAsuo);
+            divContainerBody.appendChild(divRowNameFromOneCAsuo);
+            
+            let divRowDisplaySelect = document.createElement("div");
+            divRowDisplaySelect.className = "row mt-2";
+            let divColLabelDisplaySelect = document.createElement("div");
+            divColLabelDisplaySelect.className = "col";
+            divColLabelDisplaySelect.innerText = "Главное табло";
+            let divColDisplaySelect = document.createElement("div");
+            divColDisplaySelect.className = "col";
+            let selectDisplay = document.createElement("select");
+            selectDisplay.className = "form-select form-select-sm";
+            selectDisplay.id = "displaySelect";
+            selectDisplay.setAttribute("aria-label", "displaySelect");
+            divColDisplaySelect.appendChild(selectDisplay);
+            divRowDisplaySelect.appendChild(divColLabelDisplaySelect);
+            divRowDisplaySelect.appendChild(divColDisplaySelect);
+            divContainerBody.appendChild(divRowDisplaySelect);
+            
+            let divRowTerminalSelect = document.createElement("div");
+            divRowTerminalSelect.className = "row mt-2";
+            let divColLabelTerminalSelect = document.createElement("div");
+            divColLabelTerminalSelect.className = "col";
+            divColLabelTerminalSelect.innerText = "Терминал";
+            let divColTerminalSelect = document.createElement("div");
+            divColTerminalSelect.className = "col";
+            let selectTerminal = document.createElement("select");
+            selectTerminal.className = "form-select form-select-sm";
+            selectTerminal.id = "terminalSelect";
+            selectTerminal.setAttribute("aria-label", "terminalSelect");
+            divColTerminalSelect.appendChild(selectTerminal);
+            divRowTerminalSelect.appendChild(divColLabelTerminalSelect);
+            divRowTerminalSelect.appendChild(divColTerminalSelect);
+            divContainerBody.appendChild(divRowTerminalSelect);
+            
+            let divRowThermoprinterSelect = document.createElement("div");
+            divRowThermoprinterSelect.className = "row mt-2";
+            let divColLabelThermoprinterSelect = document.createElement("div");
+            divColLabelThermoprinterSelect.className = "col";
+            divColLabelThermoprinterSelect.innerText = "Термопринтер";
+            let divColThermoprinterSelect = document.createElement("div");
+            divColThermoprinterSelect.className = "col";
+            let selectThermoprinter = document.createElement("select");
+            selectThermoprinter.className = "form-select form-select-sm";
+            selectThermoprinter.id = "thermoprinterSelect";
+            selectThermoprinter.setAttribute("aria-label", "thermoprinterSelect");
+            divColThermoprinterSelect.appendChild(selectThermoprinter);
+            divRowThermoprinterSelect.appendChild(divColLabelThermoprinterSelect);
+            divRowThermoprinterSelect.appendChild(divColThermoprinterSelect);
+            divContainerBody.appendChild(divRowThermoprinterSelect);
+            
+            
+            let divRowSwitchSelect = document.createElement("div");
+            divRowSwitchSelect.className = "row mt-2";
+            let divColLabelSwitchSelect = document.createElement("div");
+            divColLabelSwitchSelect.className = "col";
+            divColLabelSwitchSelect.innerText = "Свитч";
+            let divColSwitchSelect = document.createElement("div");
+            divColSwitchSelect.className = "col";
+            let selectSwitch = document.createElement("select");
+            selectSwitch.className = "form-select form-select-sm";
+            selectSwitch.id = "switchSelect";
+            selectSwitch.setAttribute("aria-label", "switchSelect");
+            divColSwitchSelect.appendChild(selectSwitch);
+            divRowSwitchSelect.appendChild(divColLabelSwitchSelect);
+            divRowSwitchSelect.appendChild(divColSwitchSelect);
+            divContainerBody.appendChild(divRowSwitchSelect);
+            
+            let divRowSwitchingUnitSelect = document.createElement("div");
+            divRowSwitchingUnitSelect.className = "row mt-2";
+            let divColLabelSwitchingUnitSelect = document.createElement("div");
+            divColLabelSwitchingUnitSelect.className = "col";
+            divColLabelSwitchingUnitSelect.innerText = "Блок коммутации";
+            let divColSwitchingUnitSelect = document.createElement("div");
+            divColSwitchingUnitSelect.className = "col";
+            let selectSwitchingUnit = document.createElement("select");
+            selectSwitchingUnit.className = "form-select form-select-sm";
+            selectSwitchingUnit.id = "switchingUnitSelect";
+            selectSwitchingUnit.setAttribute("aria-label", "switchingUnitSelect");
+            divColSwitchingUnitSelect.appendChild(selectSwitchingUnit);
+            divRowSwitchingUnitSelect.appendChild(divColLabelSwitchingUnitSelect);
+            divRowSwitchingUnitSelect.appendChild(divColSwitchingUnitSelect);
+            divContainerBody.appendChild(divRowSwitchingUnitSelect);
+            
+            let divRowSubDisplaySelect = document.createElement("div");
+            divRowSubDisplaySelect.className = "row mt-2";
+            let divColLabelSubDisplaySelect = document.createElement("div");
+            divColLabelSubDisplaySelect.className = "col-6";
+            divColLabelSubDisplaySelect.innerText = "Электронное табло на кабинки и кабинеты";
+            let divColSubDisplaySelect = document.createElement("div");
+            divColSubDisplaySelect.className = "col-4";
+            let selectSubDisplay = document.createElement("select");
+            selectSubDisplay.className = "form-select form-select-sm";
+            selectSubDisplay.id = "subDisplaySelect";
+            selectSubDisplay.setAttribute("aria-label", "subDisplaySelect");
+            let divColSubDisplayAmount = document.createElement('div');
+            divColSubDisplayAmount.className = 'col-2';
+            let inputSubDisplayAmount = document.createElement("input");
+            inputSubDisplayAmount.className = "form-control form-control-sm";
+            inputSubDisplayAmount.type = "number";
+            inputSubDisplayAmount.min = 1;
+            inputSubDisplayAmount.max = 99;
+            inputSubDisplayAmount.step = 1;
+            inputSubDisplayAmount.value = 1;
+            inputSubDisplayAmount.id = "subDisplayAmount";
+            divColSubDisplayAmount.appendChild(inputSubDisplayAmount);
+            
+            divColSubDisplaySelect.appendChild(selectSubDisplay);
+            divRowSubDisplaySelect.appendChild(divColLabelSubDisplaySelect);
+            divRowSubDisplaySelect.appendChild(divColSubDisplaySelect);
+            divRowSubDisplaySelect.appendChild(divColSubDisplayAmount);
+            divContainerBody.appendChild(divRowSubDisplaySelect);
+            
+          
             break;
         case "conditioner":
             let divRowNameFromOneCConditioner = document.createElement("div");
@@ -2116,6 +2345,15 @@ let modalContentLoad = function (eventReason, svtObjId) {
             case "thermoprinter":
                 requestLink = "/getthermoprinter?thermoprinterId=";
                 break;
+            case "display":
+                requestLink = "/getdisplay?displayId=";
+                break;
+            case "swunit":
+                requestLink = "/getswunit?swunitId=";
+                break;
+            case "asuo":
+                requestLink = "/getasuo?asuoId=";
+                break;
         }
         $.ajax({
             url: requestLink + svtObjId,
@@ -2157,6 +2395,16 @@ let modalContentLoad = function (eventReason, svtObjId) {
                     dateUpgrade = callback.dateUpgrade;
                 } else if (attrib == "scanner") {
                     ipAdress = callback.ipAdress;
+                } else if(attrib == "asuo") {
+                  
+                    switchList = callback.switches;
+                    terminalId = callback.terminalId;
+                    displayId = callback.displayId;
+                    thermoprinterId = callback.thermoprinterId;
+                    subDisplayModelId = callback.subDisplayModelId;
+                    subDisplayAmount = callback.subDisplayAmount;
+                    switchingUnitId = callback.switchingUnitId;
+                    
                 } else if (attrib == "server") {
                     operationSystemId = callback.operationSystemId;
                     cpuId = callback.cpuId;
@@ -2302,6 +2550,11 @@ let modalContentLoad = function (eventReason, svtObjId) {
                 $("#numberRoom")[0].value = numberRoom;
                
                 break;
+            case "asuo":
+                $("#nameFromOneC")[0].value = nameFromOneC;
+                $("#numberRoom")[0].value = numberRoom;
+                $("#subDisplayAmount")[0].value = subDisplayAmount;
+                break;
         }
         if (eventReason.indexOf("storage") >= 0) {
             stor = true;
@@ -2320,6 +2573,13 @@ let modalContentLoad = function (eventReason, svtObjId) {
                     $("#nameFromOneC")[0].disabled = true;
                     $("#baseTypeSelect")[0].disabled = true;
                     break;
+                     case "asuo":
+               
+                $("#numberRoom")[0].disabled = true;
+                $("#nameFromOneC")[0].disabled = true;
+                $("#subDisplayAmount")[0].disabled = true;
+            
+            break;
                 case "ups":
                     $("#dateReplaceSelect")[0].disabled = true;
                     $("#batteryAmount")[0].disabled = true;
@@ -2966,6 +3226,7 @@ let modalContentLoad = function (eventReason, svtObjId) {
             $('#placeSelect')[0].selectize.enable();
         }
     }
+    if(attrib != "asuo") {
     $('#modelSelect').selectize({
         preload: true,
         valueField: 'id',
@@ -3013,6 +3274,12 @@ let modalContentLoad = function (eventReason, svtObjId) {
                 case "thermoprinter":
                     requestLink = "/modthermoprinter";
                     break;
+                case "display":
+                    requestLink = "/moddisplay";
+                    break;
+                case "swunit":
+                    requestLink = "/modswunit";
+                    break;
             }
             $.ajax({
                 url: requestLink,
@@ -3034,6 +3301,8 @@ let modalContentLoad = function (eventReason, svtObjId) {
             }
         }
     });
+    
+    
 
 
     if ($('#modelSelect')[0].selectize.getValue() == "" && $('#modelSelect')[0].selectize.order > 0) {
@@ -3044,7 +3313,348 @@ let modalContentLoad = function (eventReason, svtObjId) {
             $('#modelSelect')[0].selectize.enable();
         }
     }
+    
+}
     switch (attrib) {
+        case "asuo":
+            let displayLink = "/getalldisplay";
+            let terminalLink = "/getallterminal";
+            let thermoprinterLink = "/getallthermoprinter";
+            let swunitLink = "/getallswunit";
+            let switchLink = "/getallswitch";
+            if (eventReason.indexOf("element") >= 0 || eventReason.indexOf("storage") >= 0) {
+                displayLink = "/getdisplays";
+                terminalLink = "/getterminals";
+                thermoprinterLink = "/getthermoprinters";
+                swunitLink = "/getswunits";
+                switchLink = "/getswitches";
+                
+                
+                switchListId = new Array();
+                switchList.forEach(item => {
+                switchListId.push(item.id);
+            });
+                
+            }
+            
+            
+            
+            
+            $("#displaySelect").selectize({
+                placeholder: "Выберите из списка",
+                preload: true,
+                valueField: 'id',
+                labelField: "model",
+                searchField: ["id", "model"],
+                load: function (query, callback) {
+                    $.ajax({
+                        url: displayLink,
+                        type: 'GET',
+                        async: false,
+                        dataType: 'json',
+                        error: callback,
+                        success: callback
+                    });
+                       if (eventReason.indexOf("element") >= 0 || eventReason.indexOf("storage") >= 0) {
+                        $('#displaySelect')[0].selectize.setValue($('#displaySelect')[0].selectize.search(displayId).items[0].id);
+                        if (eventReason.indexOf("storage") >= 0) {
+                            $('#displaySelect')[0].selectize.disable();
+                        } else {
+                            $('#displaySelect')[0].selectize.enable();
+                        }
+                    }
+                },
+                render: {
+                    option: function (item, escape) {
+                        return '<div style="margin-left:2px; padding-left:10px; margin-right:2px;padding-right:10px; border-radius:5px;">'
+                                + '<strong>'
+                                + escape(item.model) + ' - '
+                                + '</strong>'
+                                + ' инв №: '
+                                + escape(item.serialNumber) + ', сер №: '
+                                + escape(item.inventaryNumber)
+                                + '</div>';
+                    },
+                    item: function (item, escape) {
+                        return '<div>'
+                                + escape(item.model) + ', инв №:'
+                                + escape(item.serialNumber) + ', сер №:'
+                                + escape(item.inventaryNumber)
+                                + '</div>';
+                    }
+                }
+    
+            });
+       
+       if ($('#displaySelect')[0].selectize.getValue() == "" && $('#displaySelect')[0].selectize.order > 0) {
+                $('#displaySelect')[0].selectize.setValue($('#displaySelect')[0].selectize.search(displayId).items[0].id);
+                if (eventReason.indexOf("storage") >= 0) {
+                    $('#displaySelect')[0].selectize.disable();
+                } else {
+                    $('#displaySelect')[0].selectize.enable();
+                }
+            }
+            
+            $("#terminalSelect").selectize({
+                placeholder: "Выберите из списка",
+                preload: true,
+                valueField: 'id',
+                labelField: "model",
+                searchField: ["id", "model"],
+                load: function (query, callback) {
+                    $.ajax({
+                        url: terminalLink,
+                        type: 'GET',
+                        async: false,
+                        dataType: 'json',
+                        error: callback,
+                        success: callback
+                    });
+                         if (eventReason.indexOf("element") >= 0 || eventReason.indexOf("storage") >= 0) {
+                        $('#terminalSelect')[0].selectize.setValue($('#terminalSelect')[0].selectize.search(terminalId).items[0].id);
+                        if (eventReason.indexOf("storage") >= 0) {
+                            $('#terminalSelect')[0].selectize.disable();
+                        } else {
+                            $('#terminalSelect')[0].selectize.enable();
+                        }
+                    }
+                },
+                render: {
+                    option: function (item, escape) {
+                        return '<div style="margin-left:2px; padding-left:10px; margin-right:2px;padding-right:10px; border-radius:5px;">'
+                                + '<strong>'
+                                + escape(item.model) + ' - '
+                                + '</strong>'
+                                + ' инв №: '
+                                + escape(item.serialNumber) + ', сер №: '
+                                + escape(item.inventaryNumber)
+                                + '</div>';
+                    },
+                    item: function (item, escape) {
+                        return '<div>'
+                                + escape(item.model) + ', инв №:'
+                                + escape(item.serialNumber) + ', сер №:'
+                                + escape(item.inventaryNumber)
+                                + '</div>';
+                    }
+                }
+            });
+            
+            if ($('#terminalSelect')[0].selectize.getValue() == "" && $('#terminalSelect')[0].selectize.order > 0) {
+                $('#terminalSelect')[0].selectize.setValue($('#terminalSelect')[0].selectize.search(terminalId).items[0].id);
+                if (eventReason.indexOf("storage") >= 0) {
+                    $('#terminalSelect')[0].selectize.disable();
+                } else {
+                    $('#terminalSelect')[0].selectize.enable();
+                }
+            }
+            
+            $("#thermoprinterSelect").selectize({
+                placeholder: "Выберите из списка",
+                preload: true,
+                valueField: 'id',
+                labelField: "model",
+                searchField: ["id", "model"],
+                load: function (query, callback) {
+                    $.ajax({
+                        url: thermoprinterLink,
+                        type: 'GET',
+                        async: false,
+                        dataType: 'json',
+                        error: callback,
+                        success: callback
+                    });
+                          if (eventReason.indexOf("element") >= 0 || eventReason.indexOf("storage") >= 0) {
+                        $('#thermoprinterSelect')[0].selectize.setValue($('#thermoprinterSelect')[0].selectize.search(thermoprinterId).items[0].id);
+                        if (eventReason.indexOf("storage") >= 0) {
+                            $('#thermoprinterSelect')[0].selectize.disable();
+                        } else {
+                            $('#thermoprinterSelect')[0].selectize.enable();
+                        }
+                    }
+                },
+                render: {
+                    option: function (item, escape) {
+                        return '<div style="margin-left:2px; padding-left:10px; margin-right:2px;padding-right:10px; border-radius:5px;">'
+                                + '<strong>'
+                                + escape(item.model) + ' - '
+                                + '</strong>'
+                                + ' инв №: '
+                                + escape(item.serialNumber) + ', сер №: '
+                                + escape(item.inventaryNumber)
+                                + '</div>';
+                    },
+                    item: function (item, escape) {
+                        return '<div>'
+                                + escape(item.model) + ', инв №:'
+                                + escape(item.serialNumber) + ', сер №:'
+                                + escape(item.inventaryNumber)
+                                + '</div>';
+                    }
+                }
+            });
+            
+            
+             if ($('#thermoprinterSelect')[0].selectize.getValue() == "" && $('#thermoprinterSelect')[0].selectize.order > 0) {
+                $('#thermoprinterSelect')[0].selectize.setValue($('#thermoprinterSelect')[0].selectize.search(thermoprinterId).items[0].id);
+                if (eventReason.indexOf("storage") >= 0) {
+                    $('#thermoprinterSelect')[0].selectize.disable();
+                } else {
+                    $('#thermoprinterSelect')[0].selectize.enable();
+                }
+            }
+            $("#switchingUnitSelect").selectize({
+                placeholder: "Выберите из списка",
+                preload: true,
+                valueField: 'id',
+                labelField: "model",
+                searchField: ["id", "model"],
+                load: function (query, callback) {
+                    $.ajax({
+                        url: swunitLink,
+                        type: 'GET',
+                        async: false,
+                        dataType: 'json',
+                        error: callback,
+                        success: callback
+                    });
+                            if (eventReason.indexOf("element") >= 0 || eventReason.indexOf("storage") >= 0) {
+                        $('#switchingUnitSelect')[0].selectize.setValue($('#switchingUnitSelect')[0].selectize.search(switchingUnitId).items[0].id);
+                        if (eventReason.indexOf("storage") >= 0) {
+                            $('#switchingUnitSelect')[0].selectize.disable();
+                        } else {
+                            $('#switchingUnitSelect')[0].selectize.enable();
+                        }
+                    }
+                },
+                render: {
+                    option: function (item, escape) {
+                        return '<div style="margin-left:2px; padding-left:10px; margin-right:2px;padding-right:10px; border-radius:5px;">'
+                                + '<strong>'
+                                + escape(item.model) + ' - '
+                                + '</strong>'
+                                + ' инв №: '
+                                + escape(item.serialNumber) + ', сер №: '
+                                + escape(item.inventaryNumber)
+                                + '</div>';
+                    },
+                    item: function (item, escape) {
+                        return '<div>'
+                                + escape(item.model) + ', инв №:'
+                                + escape(item.serialNumber) + ', сер №:'
+                                + escape(item.inventaryNumber)
+                                + '</div>';
+                    }
+                }
+            });
+            if ($('#switchingUnitSelect')[0].selectize.getValue() == "" && $('#switchingUnitSelect')[0].selectize.order > 0) {
+                $('#switchingUnitSelect')[0].selectize.setValue($('#switchingUnitSelect')[0].selectize.search(switchingUnitId).items[0].id);
+                if (eventReason.indexOf("storage") >= 0) {
+                    $('#switchingUnitSelect')[0].selectize.disable();
+                } else {
+                    $('#switchingUnitSelect')[0].selectize.enable();
+                }
+            }
+            $("#subDisplaySelect").selectize({
+                placeholder: "Выберите из списка",
+                preload: true,
+                valueField: 'id',
+                labelField: "model",
+                searchField: ["id", "model"],
+                load: function (query, callback) {
+                    $.ajax({
+                        url: "/modsubdisplay",
+                        type: 'GET',
+                        async: false,
+                        dataType: 'json',
+                        error: callback,
+                        success: callback
+                    });
+                         if (eventReason.indexOf("element") >= 0 || eventReason.indexOf("storage") >= 0) {
+                        $('#subDisplaySelect')[0].selectize.setValue($('#subDisplaySelect')[0].selectize.search(subDisplayModelId).items[0].id);
+                        if (eventReason.indexOf("storage") >= 0) {
+                            $('#subDisplaySelect')[0].selectize.disable();
+                        } else {
+                            $('#subDisplaySelect')[0].selectize.enable();
+                        }
+                    }
+                }
+                
+            });
+            if ($('#subDisplaySelect')[0].selectize.getValue() == "" && $('#subDisplaySelect')[0].selectize.order > 0) {
+                $('#subDisplaySelect')[0].selectize.setValue($('#subDisplaySelect')[0].selectize.search(subDisplayModelId).items[0].id);
+                if (eventReason.indexOf("storage") >= 0) {
+                    $('#subDisplaySelect')[0].selectize.disable();
+                } else {
+                    $('#subDisplaySelect')[0].selectize.enable();
+                }
+            }
+            $("#switchSelect").selectize({
+                plugins: ["remove_button"],
+                delimiter: ",",
+                persist: false,
+                maxItems: null,
+                placeholder: "Выберите из списка",
+                preload: true,
+                valueField: 'id',
+                labelField: "model",
+                searchField: ["id", "model"],
+                load: function (query, callback) {
+                    $.ajax({
+                        url: switchLink,
+                        type: 'GET',
+                        async: false,
+                        dataType: 'json',
+                        error: callback,
+                        success: callback
+                    });
+                  if (eventReason.indexOf("element") >= 0 || eventReason.indexOf("storage") >= 0) {
+                        forSwitchArray = new Array();
+                        for (let r = 0; r < switchListId.length; r++) {
+                            forSwitchArray.push($('#switchSelect')[0].selectize.search(switchListId[r]).items[0].id);
+                        }
+                        $('#switchSelect')[0].selectize.setValue(forSwitchArray);
+                        if (eventReason.indexOf("storage") >= 0) {
+                            $('#switchSelect')[0].selectize.disable();
+                        } else {
+                            $('#switchSelect')[0].selectize.enable();
+                        }
+                    }
+                },
+                render: {
+                    option: function (item, escape) {
+                        return '<div style="margin-left:3px; padding-left:10px; margin-right:3px;padding-right:10px; border-radius:5px;">'
+                                + '<strong>'
+                                + escape(item.model) + '- '
+                                + '</strong>' + ' инв: ' +
+                                + escape(item.inventaryNumber) + ', сер: '
+                                + escape(item.serialNumber) 
+                                + '</div>';
+                    },
+                    item: function (item, escape) {
+                        return '<div>'
+                                + escape(item.model) + ', инв:'
+                                + escape(item.inventaryNumber) + ', сер: '
+                                + escape(item.serialNumber)
+                                + '</div>';
+                    }
+                }
+            });
+            
+            if ($('#switchSelect')[0].selectize.getValue() == "" && $('#switchSelect')[0].selectize.order > 0) {
+                forSwitchArray = new Array();
+                for (let r = 0; r < switchListId.length; r++) {
+                    forSwitchArray.push($('#switchSelect')[0].selectize.search(switchListId[r]).items[0].id);
+                }
+                if (eventReason.indexOf("storage") >= 0) {
+                    $('#switchSelect')[0].selectize.disable();
+                } else {
+                    $('#switchSelect')[0].selectize.enable();
+                }
+            }
+            
+            break;
+            
         case "ups":
             $('#batteryTypeSelect').selectize({
                 preload: true,
@@ -3863,6 +4473,7 @@ let modalContentLoad = function (eventReason, svtObjId) {
      
             }
             break;
+   
     }
     if(null != $("#dateCreateSelect")[0]) {
         var dateCreate = $("#dateCreateSelect")[0];
@@ -3906,6 +4517,14 @@ let modalContentLoad = function (eventReason, svtObjId) {
                         modalParent.innerHTML = '';
                     }
                     modalContentLoad("element backtostor", svtObjId);
+                    if(attrib == "asuo") {
+                    if($("#modelRow")[0] != null) {
+                        $("#modelRow")[0].remove();
+                        $("#inventaryNumberRow")[0].remove();
+                        $("#serialNumberRow")[0].remove();
+                        $("#statusRow")[0].remove();
+                        }
+                    }
                     $('#placeSelect')[0].selectize.enable();
                     $('#modelSelect')[0].selectize.enable();
                     $('#locationSelect')[0].selectize.enable();
@@ -4099,6 +4718,37 @@ document.addEventListener("DOMContentLoaded", function () {
                             '<div class="col">Инвентарный номер</div>' +
                             '<div class="col">Состояние</div>';
                         break;
+                        case "thermoprinter":
+                     headerElement.innerHTML = '<div class="col">Модель</div>' +
+                            '<div class="col">ФИО</div>' +
+                            '<div class="col">Серийный номер</div>' +
+                            '<div class="col">Инвентарный номер</div>' +
+                            '<div class="col">Состояние</div>';
+                        break;
+                        case "display":
+                     headerElement.innerHTML = '<div class="col">Модель</div>' +
+                            '<div class="col">ФИО</div>' +
+                            '<div class="col">Серийный номер</div>' +
+                            '<div class="col">Инвентарный номер</div>' +
+                            '<div class="col">Состояние</div>';
+                        break;
+                           case "swunit":
+                     headerElement.innerHTML = '<div class="col">Модель</div>' +
+                            '<div class="col">ФИО</div>' +
+                            '<div class="col">Серийный номер</div>' +
+                            '<div class="col">Инвентарный номер</div>' +
+                            '<div class="col">Состояние</div>';
+                        break;
+                    case "asuo":
+                        headerElement.innerHTML = '<div class="col">Наименование в ведомости ОС</div>' +
+                            '<div class="col">ФИО</div>' +
+                            '<div class="col">Главное табло</div>' +
+                            '<div class="col">Терминал</div>' +
+                            '<div class="col">Термопринтер</div>' +
+                            '<div class="col">Блок коммутации</div>' +
+                            '<div class="col">Свитч</div>' +
+                            '<div class="col">Электронное табло на кабинки и кабинеты</div>';
+                    break;
                     case "*":
                        headerElement.className = "row fw-bold mt-3 mb-3";
                 if (dynamicLabel != null) {
@@ -4267,6 +4917,45 @@ document.addEventListener("DOMContentLoaded", function () {
                                     '<div class="col">' + getStatus(storageDtoes[j].departments[d].dtoes[t].status) + '</div>' +
                                     '</div>';
                                 break;
+                                case "thermoprinter":
+                                elDepartment.innerHTML = '<div class="row mb-2 d-flex align-items-center text-start">' +
+                                    '<div class="col">' + count + '. ' + storageDtoes[j].departments[d].dtoes[t].model + '</div>' +
+                                    '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].placeName + '</div>' +
+                                    '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].serialNumber + '</div>' +
+                                    '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].inventaryNumber + '</div>' +
+                                    '<div class="col">' + getStatus(storageDtoes[j].departments[d].dtoes[t].status) + '</div>' +
+                                    '</div>';
+                                break;
+                                case "display":
+                                elDepartment.innerHTML = '<div class="row mb-2 d-flex align-items-center text-start">' +
+                                    '<div class="col">' + count + '. ' + storageDtoes[j].departments[d].dtoes[t].model + '</div>' +
+                                    '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].placeName + '</div>' +
+                                    '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].serialNumber + '</div>' +
+                                    '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].inventaryNumber + '</div>' +
+                                    '<div class="col">' + getStatus(storageDtoes[j].departments[d].dtoes[t].status) + '</div>' +
+                                    '</div>';
+                                break;
+                                case "swunit":
+                                elDepartment.innerHTML = '<div class="row mb-2 d-flex align-items-center text-start">' +
+                                    '<div class="col">' + count + '. ' + storageDtoes[j].departments[d].dtoes[t].model + '</div>' +
+                                    '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].placeName + '</div>' +
+                                    '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].serialNumber + '</div>' +
+                                    '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].inventaryNumber + '</div>' +
+                                    '<div class="col">' + getStatus(storageDtoes[j].departments[d].dtoes[t].status) + '</div>' +
+                                    '</div>';
+                                break;
+                                 case "asuo":
+                                elDepartment.innerHTML = '<div class="row mb-2 d-flex align-items-center text-start">' +
+                                    '<div class="col">' + count + '. ' + storageDtoes[j].departments[d].dtoes[t].nameFromOneC + '</div>' +
+                                    '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].placeName + '</div>' +
+                                    '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].displayModel + '</div>' +
+                                    '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].terminalModel + '</div>' +
+                                    '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].thermoprinterModel + '</div>' +
+                                    '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].switchingUnitModel + '</div>' +
+                                    '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].switches.length + ' ед.' + '</div>' +
+                                    '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].subDisplayModel + '</div>' +
+                                    '</div>';
+                                break;
                         }
                         liItem.childNodes[0].append(elDepartment);
                     }
@@ -4343,13 +5032,44 @@ document.addEventListener("DOMContentLoaded", function () {
                             '<div class="col">Год выпуска</div>' +
                             '<div class="col">Состояние</div>';
                         break;
-                                                case "terminal":
+                         case "terminal":
                      headerElement.innerHTML = '<div class="col">Модель</div>' +
                             '<div class="col">ФИО</div>' +
                             '<div class="col">Серийный номер</div>' +
                             '<div class="col">Инвентарный номер</div>' +
                             '<div class="col">Состояние</div>';
                         break;
+                        case "thermoprinter":
+                     headerElement.innerHTML = '<div class="col">Модель</div>' +
+                            '<div class="col">ФИО</div>' +
+                            '<div class="col">Серийный номер</div>' +
+                            '<div class="col">Инвентарный номер</div>' +
+                            '<div class="col">Состояние</div>';
+                        break;
+                        case "display":
+                     headerElement.innerHTML = '<div class="col">Модель</div>' +
+                            '<div class="col">ФИО</div>' +
+                            '<div class="col">Серийный номер</div>' +
+                            '<div class="col">Инвентарный номер</div>' +
+                            '<div class="col">Состояние</div>';
+                        break;
+                         case "swunit":
+                     headerElement.innerHTML = '<div class="col">Модель</div>' +
+                            '<div class="col">ФИО</div>' +
+                            '<div class="col">Серийный номер</div>' +
+                            '<div class="col">Инвентарный номер</div>' +
+                            '<div class="col">Состояние</div>';
+                        break;
+                        case "asuo":
+                        headerElement.innerHTML = '<div class="col">Наименование в ведомости ОС</div>' +
+                            '<div class="col">ФИО</div>' +
+                            '<div class="col">Главное табло</div>' +
+                            '<div class="col">Терминал</div>' +
+                            '<div class="col">Термопринтер</div>' +
+                            '<div class="col">Блок коммутации</div>' +
+                            '<div class="col">Свитч</div>' +
+                            '<div class="col">Электронное табло на кабинки и кабинеты</div>';
+                    break;
                 case "*":
                     headerElement.className = "row fw-bold mt-3 mb-3";
                     if (dynamicLabel != null) {
@@ -4518,6 +5238,45 @@ document.addEventListener("DOMContentLoaded", function () {
                                     '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].serialNumber + '</div>' +
                                     '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].inventaryNumber + '</div>' +
                                     '<div class="col">' + getStatus(storageDtoes[j].departments[d].dtoes[t].status) + '</div>' +
+                                    '</div>';
+                                break;
+                                case "thermoprinter":
+                                elDepartment.innerHTML = '<div class="row mb-2 d-flex align-items-center text-start">' +
+                                    '<div class="col">' + count + '. ' + storageDtoes[j].departments[d].dtoes[t].model + '</div>' +
+                                    '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].placeName + '</div>' +
+                                    '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].serialNumber + '</div>' +
+                                    '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].inventaryNumber + '</div>' +
+                                    '<div class="col">' + getStatus(storageDtoes[j].departments[d].dtoes[t].status) + '</div>' +
+                                    '</div>';
+                                break;
+                                case "display":
+                                elDepartment.innerHTML = '<div class="row mb-2 d-flex align-items-center text-start">' +
+                                    '<div class="col">' + count + '. ' + storageDtoes[j].departments[d].dtoes[t].model + '</div>' +
+                                    '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].placeName + '</div>' +
+                                    '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].serialNumber + '</div>' +
+                                    '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].inventaryNumber + '</div>' +
+                                    '<div class="col">' + getStatus(storageDtoes[j].departments[d].dtoes[t].status) + '</div>' +
+                                    '</div>';
+                                break;
+                                case "swunit":
+                                elDepartment.innerHTML = '<div class="row mb-2 d-flex align-items-center text-start">' +
+                                    '<div class="col">' + count + '. ' + storageDtoes[j].departments[d].dtoes[t].model + '</div>' +
+                                    '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].placeName + '</div>' +
+                                    '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].serialNumber + '</div>' +
+                                    '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].inventaryNumber + '</div>' +
+                                    '<div class="col">' + getStatus(storageDtoes[j].departments[d].dtoes[t].status) + '</div>' +
+                                    '</div>';
+                                break;
+                                 case "asuo":
+                                elDepartment.innerHTML = '<div class="row mb-2 d-flex align-items-center text-start">' +
+                                    '<div class="col">' + count + '. ' + storageDtoes[j].departments[d].dtoes[t].nameFromOneC + '</div>' +
+                                    '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].placeName + '</div>' +
+                                    '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].displayModel + '</div>' +
+                                    '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].terminalModel + '</div>' +
+                                    '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].thermoprinterModel + '</div>' +
+                                    '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].switchingUnitModel + '</div>' +
+                                    '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].switches.length + ' ед.' + '</div>' +
+                                    '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].subDisplayModel + '</div>' +
                                     '</div>';
                                 break;
                     }

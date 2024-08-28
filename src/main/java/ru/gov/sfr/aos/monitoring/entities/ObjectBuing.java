@@ -37,6 +37,8 @@ public abstract class ObjectBuing {
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     protected Place place;
     
+    protected boolean archived;
+    
     
     protected ObjectBuing() {
     }
@@ -68,7 +70,15 @@ public abstract class ObjectBuing {
     public void setPlace(Place place) {
         this.place = place;
     }
+
+    public boolean isArchived() {
+        return archived;
+    }
+
+    public void setArchived(boolean archived) {
+        this.archived = archived;
+    }
     
-  
+    
     
 }

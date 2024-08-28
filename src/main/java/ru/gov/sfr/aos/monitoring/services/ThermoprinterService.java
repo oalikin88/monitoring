@@ -8,6 +8,7 @@ import java.time.Instant;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -116,6 +117,11 @@ public class ThermoprinterService extends SvtObjService<ThermoPrinter, Thermopri
                     break;
             }
             thermoprinterRepo.save(thermoprinter);
+    }
+    
+    public List<ThermoPrinter> getAllThermoprinter() {
+        List<ThermoPrinter> thermoprinters = thermoprinterRepo.findAll();
+        return thermoprinters;
     }
     
 }
