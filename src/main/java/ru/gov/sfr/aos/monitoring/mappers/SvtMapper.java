@@ -5,7 +5,7 @@
 package ru.gov.sfr.aos.monitoring.mappers;
 
 import ru.gov.sfr.aos.monitoring.entities.ObjectBuingWithSerialAndInventary;
-import ru.gov.sfr.aos.monitoring.models.SvtDTO;
+import ru.gov.sfr.aos.monitoring.models.MainSvtDto;
 
 /**
  *
@@ -13,7 +13,7 @@ import ru.gov.sfr.aos.monitoring.models.SvtDTO;
  * @param <E>
  * @param <T>
  */
-public interface SvtMapper<E extends ObjectBuingWithSerialAndInventary, T extends SvtDTO> {
+public interface SvtMapper<E extends ObjectBuingWithSerialAndInventary, T extends MainSvtDto> {
     
     public T getDto(E entity);
     public E getEntityFromDto(T dto);

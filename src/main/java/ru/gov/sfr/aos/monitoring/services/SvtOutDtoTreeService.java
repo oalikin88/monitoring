@@ -15,7 +15,7 @@ import ru.gov.sfr.aos.monitoring.entities.ObjectBuingWithSerialAndInventary;
 import ru.gov.sfr.aos.monitoring.mappers.SvtMapper;
 import ru.gov.sfr.aos.monitoring.models.DepartmentTreeDto;
 import ru.gov.sfr.aos.monitoring.models.LocationByTreeDto;
-import ru.gov.sfr.aos.monitoring.models.SvtDTO;
+import ru.gov.sfr.aos.monitoring.models.MainSvtDto;
 
 /**
  *
@@ -26,7 +26,7 @@ import ru.gov.sfr.aos.monitoring.models.SvtDTO;
  */
 
 
-public abstract class SvtOutDtoTreeService <E extends ObjectBuingWithSerialAndInventary, T extends SvtMapper, D extends SvtDTO> {
+public abstract class SvtOutDtoTreeService <E extends ObjectBuingWithSerialAndInventary, T extends SvtMapper, D extends MainSvtDto> {
     
     @Autowired
     T mapper;

@@ -4,6 +4,8 @@
  */
 package ru.gov.sfr.aos.monitoring.entities;
 
+import java.util.ArrayList;
+import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -15,6 +17,7 @@ import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.validation.constraints.NotNull;
 
 /**
@@ -38,7 +41,10 @@ public abstract class ObjectBuing {
     protected Place place;
     
     protected boolean archived;
-    
+     @OneToMany(targetEntity = Repair.class, mappedBy = "objectBuing", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    protected List<Repair> repairs = new ArrayList<>();
+     @OneToMany(targetEntity = Transfer.class, mappedBy = "objectBuing", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    protected List<Transfer> transfers = new ArrayList<>();
     
     protected ObjectBuing() {
     }
@@ -77,6 +83,22 @@ public abstract class ObjectBuing {
 
     public void setArchived(boolean archived) {
         this.archived = archived;
+    }
+
+    public List<Repair> getRepairs() {
+        return repairs;
+    }
+
+    public void setRepairs(List<Repair> repairs) {
+        this.repairs = repairs;
+    }
+
+    public List<Transfer> getTransfers() {
+        return transfers;
+    }
+
+    public void setTransfers(List<Transfer> transfers) {
+        this.transfers = transfers;
     }
     
     

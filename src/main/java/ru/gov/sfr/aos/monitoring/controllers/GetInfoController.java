@@ -4,15 +4,22 @@
  */
 package ru.gov.sfr.aos.monitoring.controllers;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import org.hibernate.annotations.UpdateTimestamp;
 import org.opfr.springBootStarterDictionary.fallback.FallbackOrganizationClient;
 import org.opfr.springBootStarterDictionary.models.DictionaryEmployee;
 import org.opfr.springBootStarterDictionary.models.DictionaryOrganization;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import ru.gov.sfr.aos.monitoring.dictionaries.PlaceType;
 import ru.gov.sfr.aos.monitoring.entities.Asuo;
@@ -25,6 +32,8 @@ import ru.gov.sfr.aos.monitoring.entities.ConditionerModel;
 import ru.gov.sfr.aos.monitoring.entities.Cpu;
 import ru.gov.sfr.aos.monitoring.entities.Display;
 import ru.gov.sfr.aos.monitoring.entities.DisplayModel;
+import ru.gov.sfr.aos.monitoring.entities.Fax;
+import ru.gov.sfr.aos.monitoring.entities.FaxModel;
 import ru.gov.sfr.aos.monitoring.entities.Hdd;
 import ru.gov.sfr.aos.monitoring.entities.Infomat;
 import ru.gov.sfr.aos.monitoring.entities.InfomatModel;
@@ -65,6 +74,7 @@ import ru.gov.sfr.aos.monitoring.mappers.AtsMapper;
 import ru.gov.sfr.aos.monitoring.mappers.BatteryTypeMapper;
 import ru.gov.sfr.aos.monitoring.mappers.ConditionerMapper;
 import ru.gov.sfr.aos.monitoring.mappers.DisplayMapper;
+import ru.gov.sfr.aos.monitoring.mappers.FaxMapper;
 import ru.gov.sfr.aos.monitoring.mappers.InfomatMapper;
 import ru.gov.sfr.aos.monitoring.mappers.MonitorMapper;
 import ru.gov.sfr.aos.monitoring.mappers.OperationSystemMapper;
@@ -97,15 +107,18 @@ import ru.gov.sfr.aos.monitoring.models.AsuoDTO;
 import ru.gov.sfr.aos.monitoring.models.BatteryTypeDto;
 import ru.gov.sfr.aos.monitoring.models.CpuModelDto;
 import ru.gov.sfr.aos.monitoring.models.DepDto;
+import ru.gov.sfr.aos.monitoring.models.FaxDto;
 import ru.gov.sfr.aos.monitoring.models.HddDto;
 import ru.gov.sfr.aos.monitoring.models.OperationSystemDto;
 import ru.gov.sfr.aos.monitoring.models.RamDto;
+import ru.gov.sfr.aos.monitoring.models.RepairDto;
 import ru.gov.sfr.aos.monitoring.models.SvtAtsDTO;
 import ru.gov.sfr.aos.monitoring.models.SvtConditionerDTO;
 import ru.gov.sfr.aos.monitoring.models.SvtScannerDTO;
 import ru.gov.sfr.aos.monitoring.models.SvtServerDTO;
 import ru.gov.sfr.aos.monitoring.models.SvtSwitchHubDTO;
 import ru.gov.sfr.aos.monitoring.models.SvtSystemBlockDTO;
+import ru.gov.sfr.aos.monitoring.models.TransferDto;
 import ru.gov.sfr.aos.monitoring.repositories.AsuoRepo;
 import ru.gov.sfr.aos.monitoring.repositories.BatteryTypeRepo;
 import ru.gov.sfr.aos.monitoring.services.AsuoService;
@@ -113,11 +126,14 @@ import ru.gov.sfr.aos.monitoring.services.AtsModelService;
 import ru.gov.sfr.aos.monitoring.services.AtsService;
 import ru.gov.sfr.aos.monitoring.services.BatteryTypeService;
 import ru.gov.sfr.aos.monitoring.services.CdDriveModelService;
+import ru.gov.sfr.aos.monitoring.services.ClientDAO;
 import ru.gov.sfr.aos.monitoring.services.ConditionerModelService;
 import ru.gov.sfr.aos.monitoring.services.ConditionerService;
 import ru.gov.sfr.aos.monitoring.services.CpuModelService;
 import ru.gov.sfr.aos.monitoring.services.DisplayModelService;
 import ru.gov.sfr.aos.monitoring.services.DisplayService;
+import ru.gov.sfr.aos.monitoring.services.FaxModelService;
+import ru.gov.sfr.aos.monitoring.services.FaxService;
 import ru.gov.sfr.aos.monitoring.services.HddModelService;
 import ru.gov.sfr.aos.monitoring.services.InfomatModelService;
 import ru.gov.sfr.aos.monitoring.services.InfomatService;
@@ -128,6 +144,7 @@ import ru.gov.sfr.aos.monitoring.services.MotherboardModelService;
 import ru.gov.sfr.aos.monitoring.services.MouseModelService;
 import ru.gov.sfr.aos.monitoring.services.OperationSystemService;
 import ru.gov.sfr.aos.monitoring.services.RamModelService;
+import ru.gov.sfr.aos.monitoring.services.RepairInfoService;
 import ru.gov.sfr.aos.monitoring.services.RouterModelService;
 import ru.gov.sfr.aos.monitoring.services.RouterService;
 import ru.gov.sfr.aos.monitoring.services.ScannerModelService;
@@ -147,6 +164,7 @@ import ru.gov.sfr.aos.monitoring.services.TerminalModelService;
 import ru.gov.sfr.aos.monitoring.services.TerminalService;
 import ru.gov.sfr.aos.monitoring.services.ThermoprinterModelService;
 import ru.gov.sfr.aos.monitoring.services.ThermoprinterService;
+import ru.gov.sfr.aos.monitoring.services.TransferInfoService;
 import ru.gov.sfr.aos.monitoring.services.UpsModelService;
 import ru.gov.sfr.aos.monitoring.services.UpsService;
 import ru.gov.sfr.aos.monitoring.services.VideoCardModelService;
@@ -302,7 +320,19 @@ public class GetInfoController {
     private AsuoService asuoService;
     @Autowired
     private AsuoMapper asuoMapper;
-
+    @Autowired
+    private FaxModelService faxModelService;
+    @Autowired
+    private FaxMapper faxMapper;
+    @Autowired
+    private FaxService faxService;
+    @Autowired
+    private RepairInfoService repairInfoService;
+    @Autowired
+    private ClientDAO clientDao;
+    @Autowired
+    private TransferInfoService transferInfoService;
+    
     @GetMapping("/getinfooo")
     public List<EmployeeDTO> getEmpl() {
         List<DictionaryEmployee> employees = dictionaryEmployeeHolder.getEmployees();
@@ -988,5 +1018,69 @@ public class GetInfoController {
         Asuo asuo = asuoService.getById(asuoId);
         AsuoDTO dto = asuoMapper.getDto(asuo);
         return dto;
+    }
+    
+          @GetMapping("/modfax")
+    public List<SvtModelDto> getModelFax() {
+        List<FaxModel> allModels = faxModelService.getAllModels();
+        List<SvtModelDto> dtoes = svtModelMapper.getModelFaxDtoes(allModels);
+        return dtoes;
+    }
+    
+    @GetMapping("/getfax")
+    public FaxDto getFaxById(Long faxId) {
+
+        Fax fax = faxService.getById(faxId);
+        FaxDto faxDto = faxMapper.getDto(fax);
+
+        return faxDto;
+    }
+    
+    @GetMapping("/repairs")
+    public List<RepairDto> getRepairs(Long id) {
+        List<RepairDto> repairs = repairInfoService.getRepairs(id);
+        return repairs;
+    }
+    
+    @PostMapping("/repairs")
+    public ResponseEntity<String> sendRepair(@RequestBody RepairDto dto) throws IOException {
+        clientDao.addRepair(dto);
+        return ResponseEntity.ok("Запись сохранена");
+    }
+    
+    @DeleteMapping("/repairs")
+    public ResponseEntity<String> deleteRepair(Long id) throws IOException {
+        clientDao.deleteRepair(id);
+        return ResponseEntity.ok("Запись удалена");
+    }
+    
+    @PutMapping("/repairs")
+    public ResponseEntity<String> updateRepair(@RequestBody RepairDto dto) throws IOException {
+        clientDao.editRepair(dto);
+        return ResponseEntity.ok("Запись обновлена");
+    }
+    
+    @GetMapping("/transfers")
+    public List<TransferDto> getTransfers(Long id) {
+        List <TransferDto> transfers = transferInfoService.getTransfers(id);
+        return transfers;
+    }
+    
+      @PostMapping("/transfers")
+    public ResponseEntity<String> sendTransfer(@RequestBody TransferDto dto) throws IOException {
+        clientDao.addTransfer(dto);
+        return ResponseEntity.ok("Запись сохранена");
+    }
+    
+        @DeleteMapping("/transfers")
+    public ResponseEntity<String> deleteTransfer(Long id) throws IOException {
+        clientDao.deleteTransfer(id);
+        return ResponseEntity.ok("Запись удалена");
+    }
+    
+    @PutMapping("/transfers")
+    public ResponseEntity<String> updateTransfer(@RequestBody TransferDto dto) throws IOException {
+        clientDao.editTransfer(dto);
+        return ResponseEntity.ok("Запись обновлена");
     }
 }

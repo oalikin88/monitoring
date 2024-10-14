@@ -25,6 +25,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                     <div class="col-2">
                         <th:block th:switch="${attribute}">
                             <h1 th:case="'mphones'">Справочник моделей телефонов</h1>
+                            <h1 th:case="'mfax'">Справочник моделей факсов</h1>
                             <h1 th:case="'mmonitors'">Справочник моделей мониторов</h1>
                             <h1 th:case="'mups'">Справочник моделей ИБП</h1>
                             <h1 th:case="'mupsbat'">Справочник типов батарей для ИБП</h1>
@@ -124,82 +125,17 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                                         <span th:text="${dto.model}"></span>
                                       </div>
                     </div>
-<!--                            <th:block th:switch="${attribute}">
-                                <div class="row" th:case="'mupsbat'">
-                                    <div class="col-1" th:text="${stat.count}"></div>
-                                    <div class="col-11 text-start" >
-                                        <span th:text="${dto.type}"></span>
-                                      </div>
-                                </div> 
-                                <div class="row" th:case="'mcpu'">
-                                    <div class="col-1" th:text="${stat.count}"></div>
-                                    <div class="col-5 text-start" >
-                                        <span th:text="${dto.model}"></span>
-                                      </div>
-                                    <div class="col-3 text-start" >
-                                        <span th:text="${dto.core}"></span>
-                                      </div>
-                                    <div class="col-3 text-start" >
-                                        <span th:text="${dto.freq}"></span>
-                                      </div>
-                                </div>
-                                <div class="row" th:case="'mram'">
-                                    <div class="col-1" th:text="${stat.count}"></div>
-                                    <div class="col-6 text-start" >
-                                        <span th:text="${dto.model}"></span>
-                                      </div>
-                                    <div class="col-5 text-start" >
-                                        <span th:text="${dto.capacity}"></span>
-                                      </div>
-                                </div>
-                                <div class="row" th:case="'mhdd'">
-                                    <div class="col-1" th:text="${stat.count}"></div>
-                                    <div class="col-4 text-start">
-                                        <span th:text="${dto.model}"></span>
-                                      </div>
-                                    <div class="col-1">
-                                        <span th:text="${dto.capacity + ' ' + dto.unit}"></span>
-                                      
-                                      </div>
-                                      <div class="col-3 text-start" >
-                                        <span th:text="${dto.serialNumber}"></span>
-                                      </div>
-                                    <div class="col-3 text-start" >
-                                        <span th:text="${dto.inventaryNumber}"></span>
-                                      </div>
-                                </div>
-                                <div class="row" th:case="'os'">
-                                    <div class="col-1" th:text="${stat.count}"></div>
-                                    <div class="col-7 text-start">
-                                        <span th:text="${dto.name}"></span>
-                                      </div>
-                                    <div class="col-4" th:switch="${dto.license}">
-                                        <span th:case="true">Есть</span>
-                                        <span th:case="false">Нет</span>
-                                      
-                                      </div>
-                                      
-                                </div>
-                                 <div class="row" th:attr=="id = ${dto.id}" th:case="*">
-                                    <div class="col-1" th:text="${stat.count}"></div>
-                                    <div class="col-11 text-start">
-                                        <span th:text="${dto.model}"></span>
-                                      </div>
 
-                                </div>         
-                                        
-                                        
-                                    
-                           </th:block>-->
                       
                 </th:block>
 
                 </div>
+                    </div>
                 <div th:if="${dtoes.size} == 0">
                     <h3 class="mt-5 pt-5 text-center">В базе данных отсутствуют [[${namePage.substring(0, 1).toLowerCase() + namePage.substring(1)}]]</h3>
                 </div>
 
-            </div>
+            
         </div>
 
 

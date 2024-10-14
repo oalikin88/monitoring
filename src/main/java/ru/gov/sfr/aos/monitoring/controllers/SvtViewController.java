@@ -26,6 +26,8 @@ import ru.gov.sfr.aos.monitoring.entities.ConditionerModel;
 import ru.gov.sfr.aos.monitoring.entities.Cpu;
 import ru.gov.sfr.aos.monitoring.entities.Display;
 import ru.gov.sfr.aos.monitoring.entities.DisplayModel;
+import ru.gov.sfr.aos.monitoring.entities.Fax;
+import ru.gov.sfr.aos.monitoring.entities.FaxModel;
 import ru.gov.sfr.aos.monitoring.entities.Hdd;
 import ru.gov.sfr.aos.monitoring.entities.Infomat;
 import ru.gov.sfr.aos.monitoring.entities.InfomatModel;
@@ -68,6 +70,7 @@ import ru.gov.sfr.aos.monitoring.mappers.AtsMapper;
 import ru.gov.sfr.aos.monitoring.mappers.BatteryTypeMapper;
 import ru.gov.sfr.aos.monitoring.mappers.ConditionerMapper;
 import ru.gov.sfr.aos.monitoring.mappers.DisplayMapper;
+import ru.gov.sfr.aos.monitoring.mappers.FaxMapper;
 import ru.gov.sfr.aos.monitoring.mappers.InfomatMapper;
 import ru.gov.sfr.aos.monitoring.mappers.MonitorMapper;
 import ru.gov.sfr.aos.monitoring.mappers.OperationSystemMapper;
@@ -87,6 +90,7 @@ import ru.gov.sfr.aos.monitoring.models.AsuoDTO;
 import ru.gov.sfr.aos.monitoring.models.BatteryTypeDto;
 import ru.gov.sfr.aos.monitoring.models.CpuModelDto;
 import ru.gov.sfr.aos.monitoring.models.DepartmentDTO;
+import ru.gov.sfr.aos.monitoring.models.FaxDto;
 import ru.gov.sfr.aos.monitoring.models.HddDto;
 import ru.gov.sfr.aos.monitoring.models.LocationByTreeDto;
 import ru.gov.sfr.aos.monitoring.models.OperationSystemDto;
@@ -116,6 +120,9 @@ import ru.gov.sfr.aos.monitoring.services.DepartmentService;
 import ru.gov.sfr.aos.monitoring.services.DisplayModelService;
 import ru.gov.sfr.aos.monitoring.services.DisplayOutDtoTreeService;
 import ru.gov.sfr.aos.monitoring.services.DisplayService;
+import ru.gov.sfr.aos.monitoring.services.FaxModelService;
+import ru.gov.sfr.aos.monitoring.services.FaxOutDtoTreeService;
+import ru.gov.sfr.aos.monitoring.services.FaxService;
 import ru.gov.sfr.aos.monitoring.services.HddModelService;
 import ru.gov.sfr.aos.monitoring.services.InfomatModelService;
 import ru.gov.sfr.aos.monitoring.services.InfomatOutDtoTreeService;
@@ -338,7 +345,14 @@ public class SvtViewController {
     private AsuoOutDtoTreeService asuoOutDtoTreeService;
     @Autowired
     private AsuoMapper asuoMapper;
-
+    @Autowired
+    private FaxModelService faxModelService;
+    @Autowired
+    private FaxService faxService;
+    @Autowired
+    private FaxOutDtoTreeService faxOutDtoTreeService;
+    @Autowired
+    private FaxMapper faxMapper;
     
 //  @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
     @GetMapping("/svt")
@@ -1676,6 +1690,110 @@ public class SvtViewController {
     public String sendConditionerToArchive(@RequestBody ArchivedDto dto) throws ObjectAlreadyExists {
         conditionerService.svtObjToArchive(dto);
         return "redirect:/conditioner";
+    }
+    
+                       //      @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
+    @GetMapping("/mfax")
+    public String getModelFax(Model model) {
+        List<FaxModel> faxModels = faxModelService.getAllModels();
+        List<SvtModelDto> getFaxModelsDtoes = svtModelMapper.getModelFaxDtoes(faxModels);
+        model.addAttribute("dtoes", getFaxModelsDtoes);
+        model.addAttribute("namePage", "Модели факсов");
+        model.addAttribute("attribute", "mfax");
+        return "models";
+    }
+    
+    //   @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
+    @PostMapping("/mfaxupd")
+    public String updateModelFax(@RequestBody SvtModelDto dto) throws ObjectAlreadyExists {
+        FaxModel faxModel = svtModelMapper.getModelFax(dto);
+        faxModelService.update(faxModel);
+        return "redirect:/mfax";
+        
+    }
+    
+//    @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
+    @PostMapping("/mfax")
+    public String saveModelFax(@RequestBody SvtModelDto dto) throws ObjectAlreadyExists {
+        FaxModel faxModel = svtModelMapper.getModelFax(dto);
+        faxModelService.saveModel(faxModel);
+        return "redirect:/mfax";
+        
+    }
+    
+    
+                     //  @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
+    @GetMapping("/fax")
+    public String getFax(Model model, @RequestParam(value="username", required=false) String username) {
+        Map<Location, List<Fax>> svtObjectsByEmployee = null;
+        if(null != username) {
+            svtObjectsByEmployee = faxService.getSvtObjectsByName(username, PlaceType.OFFICEEQUIPMENT);
+        } else {
+            svtObjectsByEmployee = faxService.getSvtObjectsByPlaceType(PlaceType.OFFICEEQUIPMENT);
+        }
+        List<LocationByTreeDto> treeSvtDtoByEmployee = faxOutDtoTreeService.getTreeSvtDtoByPlaceType(svtObjectsByEmployee)
+                .stream()
+                .sorted((o1, o2) -> o1.getLocationName().compareTo(o2.getLocationName()))
+                .collect(Collectors.toList());
+        Map<Location, List<Fax>> svtObjectsByStorage = null;
+        
+        if(null != username) {
+            svtObjectsByStorage = faxService.getSvtObjectsByName(username, PlaceType.STORAGE);
+        } else {
+            svtObjectsByStorage = faxService.getSvtObjectsByPlaceType(PlaceType.STORAGE);
+        }
+        List<LocationByTreeDto> treeSvtDtoByStorage = faxOutDtoTreeService.getTreeSvtDtoByPlaceType(svtObjectsByStorage)
+                .stream()
+                .sorted((o1, o2) -> o1.getLocationName().compareTo(o2.getLocationName()))
+                .collect(Collectors.toList());
+        
+        model.addAttribute("dtoes", treeSvtDtoByEmployee);
+        model.addAttribute("dtoesStorage", treeSvtDtoByStorage);
+        model.addAttribute("attribute", "fax");
+        model.addAttribute("placeAttribute", "officeequipment");
+        model.addAttribute("namePage","Факсы");
+        
+        return "svtobj";
+    }
+    
+ //   @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
+    @PostMapping("/fax")
+    public String saveFax(@RequestBody FaxDto dto) throws ObjectAlreadyExists {
+        faxService.createSvtObj(dto);
+        return "redirect:/fax";
+    }
+    
+     @PostMapping("/updfax")
+    public String updateFax (@RequestBody FaxDto dto) throws ObjectAlreadyExists {
+        faxService.updateSvtObj(dto);
+        return "redirect:/fax";
+     
+    }
+    
+              //      @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
+    @PostMapping("/faxtostor")
+    public String sendToStorageFax(@RequestBody FaxDto dto) throws ObjectAlreadyExists {
+            // SystemBlock findById = sysrepo.findById(dto.getId()).get();
+            Fax fax = faxMapper.getEntityFromDto(dto);
+        faxService.sendToStorage(fax);
+        return "redirect:/fax";
+        
+    }
+    
+       //   @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
+    @PostMapping("/faxbackstor")
+    public String backFromStorageFax (@RequestBody FaxDto dto) throws ObjectAlreadyExists {
+            Fax fax = faxMapper.getEntityFromDto(dto);
+        faxService.backFromStorage(fax, dto.getPlaceId());
+        return "redirect:/fax";
+        
+    }
+    
+          //   @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
+    @PostMapping("/faxarchived")
+    public String sendFaxToArchive(@RequestBody ArchivedDto dto) throws ObjectAlreadyExists {
+        faxService.svtObjToArchive(dto);
+        return "redirect:/fax";
     }
     
      //      @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")

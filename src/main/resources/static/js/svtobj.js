@@ -3,8 +3,13 @@
 const addPlaceBtn = document.querySelector('#addPlaceBtn');
 const modalError = document.getElementById('modalError');
 const modalErrorParent = document.getElementById('modalErrorContent');
+const pathSvg = document.createElementNS('http://www.w3.org/2000/svg',  'path');
 let parent = document.querySelector('.tree');
 const modalAddPhone = document.getElementById('addPlaceModal');
+const modalRepair = document.getElementById('repairModal');
+const modalTransfer = document.getElementById('transferModal');
+//const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
+//const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl));
 var currentYear = new Date().getFullYear();
 var departmentSelect;
 var locationId;
@@ -55,6 +60,8 @@ let numberRoom;
 let dateUpgrade;
 let cpuAmount;
 let modalParent = document.querySelector("#modalContent");
+let modalRepairParent = document.querySelector("#modalRepairContent");
+let modalTransferParent = document.querySelector("#modalTransferContent");
 let portAmount;
 let switchHubType;
 let innerConnectionAnalog;
@@ -76,6 +83,812 @@ let switchingUnitId;
 let subDisplayAmount;
 let displayId;
 
+let handleDeleteRepair = function (svtObjId) {
+    let deleteRequest = new XMLHttpRequest();
+    deleteRequest.open('DELETE', '/repairs?id=' +  $(event.target).closest('.row').attr("repairId"), false);
+    deleteRequest.send();
+    if (deleteRequest.status != 200) {
+        alert(deleteRequest.status + ': ' + deleteRequest.statusText);
+    } else {
+        console.log(deleteRequest.response);
+
+    }
+    reloadModalRepair(svtObjId);
+};
+
+
+let handleDeleteTransfer = function (svtObjId) {
+    let deleteRequest = new XMLHttpRequest();
+    deleteRequest.open('DELETE', '/transfers?id=' +  $(event.target).closest('.row').attr("transferId"), false);
+    deleteRequest.send();
+    if (deleteRequest.status != 200) {
+        alert(deleteRequest.status + ': ' + deleteRequest.statusText);
+    } else {
+        console.log(deleteRequest.response);
+
+    }
+    reloadModalTransfer(svtObjId);
+};
+
+
+let handleEditRepair = function (svtObjId) {
+    console.log(this);
+
+
+
+    let datepick = document.createElement("input");
+    datepick.className = "form-control form-control-sm";
+    datepick.type = "date";
+    datepick.id = "dateEdit";
+    let getDate = $(event.target).closest('.repairRow').find('.col')[1].innerHTML.split(".");
+    datepick.value = getDate[2] + "-" + getDate[1] + "-" + getDate[0];
+    $(event.target).closest('.repairRow').find('.col')[1].innerHTML = "";
+    $(event.target).closest('.repairRow').find('.col')[1].appendChild(datepick);
+
+    let docNumberEdit = document.createElement("input");
+    docNumberEdit.className = "form-control form-control-sm";
+    docNumberEdit.type = "text";
+    docNumberEdit.id = "docNumberEdit";
+    docNumberEdit.value = $(event.target).closest('.repairRow').find('.col')[2].innerHTML;
+    $(event.target).closest('.repairRow').find('.col')[2].innerHTML = "";
+    $(event.target).closest('.repairRow').find('.col')[2].appendChild(docNumberEdit);
+
+    let definitionEdit = document.createElement("textarea");
+    definitionEdit.className = "form-control form-control-sm";
+    definitionEdit.id = "definitionEdit";
+    definitionEdit.value = $(event.target).closest('.repairRow').find('.col')[3].innerHTML;
+    $(event.target).closest('.repairRow').find('.col')[3].innerHTML = "";
+    $(event.target).closest('.repairRow').find('.col')[3].appendChild(definitionEdit);
+
+    let saveResultLink = document.createElement("button");
+    saveResultLink.style = "border: none; background: transparent;";
+    saveResultLink.className = "px-1";
+    saveResultLink.id = "saveEdit-repair-btn";
+    saveResultLink.setAttribute("data-tooltip", "Сохранить внесённые изменения");
+
+
+    let saveResultIcon = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    saveResultIcon.setAttribute("class", "bi bi-check-lg saveEdit-icon");
+    saveResultIcon.setAttribute("width", "16");
+    saveResultIcon.setAttribute("height", "16");
+    saveResultIcon.setAttribute("viewbox", "0 0 16 16");
+
+    let iconSaveEditPath1 = document.createElementNS("http://www.w3.org/2000/svg", "path");
+    iconSaveEditPath1.setAttribute("d", "M12.736 3.97a.733.733 0 0 1 1.047 0c.286.289.29.756.01 1.05L7.88 12.01a.733.733 0 0 1-1.065.02L3.217 8.384a.757.757 0 0 1 0-1.06.733.733 0 0 1 1.047 0l3.052 3.093 5.4-6.425z");
+
+    saveResultIcon.appendChild(iconSaveEditPath1);
+
+
+    saveResultLink.appendChild(saveResultIcon);
+    $(event.target).closest('.repairRow').find('.col')[4].appendChild(saveResultLink);
+
+
+    let addBut = document.getElementById("add-repair-btn");
+    addBut.parentNode.removeChild(addBut);
+    let delBtns = document.getElementsByClassName('deleteLink');
+    let editBtns = document.getElementsByClassName('editLink');
+    for (i = delBtns.length - 1; i >= 0; i--) {
+        delBtns[i].parentNode.removeChild(delBtns[i]);
+    }
+    for (i = editBtns.length - 1; i >= 0; i--) {
+        editBtns[i].parentNode.removeChild(editBtns[i]);
+    }
+
+
+    $("#saveEdit-repair-btn")[0].addEventListener("click", function () {
+        handleSaveEditRepair(svtObjId);
+    });
+
+};
+
+
+let handleEditTransfer = function (svtObjId) {
+    console.log(this);
+
+    let datepick = document.createElement("input");
+    datepick.className = "form-control form-control-sm";
+    datepick.type = "date";
+    datepick.id = "dateEdit";
+    let getDate = $(event.target).closest('.transferRow').find('.col')[1].innerHTML.split(".");
+    datepick.value = getDate[2] + "-" + getDate[1] + "-" + getDate[0];
+    $(event.target).closest('.transferRow').find('.col')[1].innerHTML = "";
+    $(event.target).closest('.transferRow').find('.col')[1].appendChild(datepick);
+
+
+    let transferInventaryNumberOldInput = document.createElement("input");
+    transferInventaryNumberOldInput.className = "form-control form-control-sm";
+    transferInventaryNumberOldInput.type = "text";
+    transferInventaryNumberOldInput.id = "transferInventaryNumberOldInput";
+    transferInventaryNumberOldInput.value = $(event.target).closest('.transferRow').find('.col')[2].innerHTML;
+    $(event.target).closest('.transferRow').find('.col')[2].innerHTML = "";
+    $(event.target).closest('.transferRow').find('.col')[2].appendChild(transferInventaryNumberOldInput);
+    
+    let transferInventaryNumberNewInput = document.createElement("input");
+    transferInventaryNumberNewInput.className = "form-control form-control-sm";
+    transferInventaryNumberNewInput.type = "text";
+    transferInventaryNumberNewInput.id = "transferInventaryNumberNewInput";
+    transferInventaryNumberNewInput.value = $(event.target).closest('.transferRow').find('.col')[3].innerHTML;
+    $(event.target).closest('.transferRow').find('.col')[3].innerHTML = "";
+    $(event.target).closest('.transferRow').find('.col')[3].appendChild(transferInventaryNumberNewInput);
+    
+    let transferFromInput = document.createElement("input");
+    transferFromInput.className = "form-control form-control-sm";
+    transferFromInput.type = "text";
+    transferFromInput.id = "transferFromInput";
+    transferFromInput.value = $(event.target).closest('.transferRow').find('.col')[4].innerHTML;
+    $(event.target).closest('.transferRow').find('.col')[4].innerHTML = "";
+    $(event.target).closest('.transferRow').find('.col')[4].appendChild(transferFromInput);
+    
+    let transferToInput = document.createElement("input");
+    transferToInput.className = "form-control form-control-sm";
+    transferToInput.type = "text";
+    transferToInput.id = "transferToInput";
+    transferToInput.value = $(event.target).closest('.transferRow').find('.col')[5].innerHTML;
+    $(event.target).closest('.transferRow').find('.col')[5].innerHTML = "";
+    $(event.target).closest('.transferRow').find('.col')[5].appendChild(transferToInput);
+
+    let docNumberEdit = document.createElement("input");
+    docNumberEdit.className = "form-control form-control-sm";
+    docNumberEdit.type = "text";
+    docNumberEdit.id = "docNumberEdit";
+    docNumberEdit.value = $(event.target).closest('.transferRow').find('.col')[6].innerHTML;
+    $(event.target).closest('.transferRow').find('.col')[6].innerHTML = "";
+    $(event.target).closest('.transferRow').find('.col')[6].appendChild(docNumberEdit);
+
+ 
+
+    let saveResultLink = document.createElement("button");
+    saveResultLink.style = "border: none; background: transparent;";
+    saveResultLink.className = "px-1";
+    saveResultLink.id = "saveEdit-transfer-btn";
+    saveResultLink.setAttribute("data-tooltip", "Сохранить внесённые изменения");
+
+
+    let saveResultIcon = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    saveResultIcon.setAttribute("class", "bi bi-check-lg saveEdit-icon");
+    saveResultIcon.setAttribute("width", "16");
+    saveResultIcon.setAttribute("height", "16");
+    saveResultIcon.setAttribute("viewbox", "0 0 16 16");
+
+    let iconSaveEditPath1 = document.createElementNS("http://www.w3.org/2000/svg", "path");
+    iconSaveEditPath1.setAttribute("d", "M12.736 3.97a.733.733 0 0 1 1.047 0c.286.289.29.756.01 1.05L7.88 12.01a.733.733 0 0 1-1.065.02L3.217 8.384a.757.757 0 0 1 0-1.06.733.733 0 0 1 1.047 0l3.052 3.093 5.4-6.425z");
+
+    saveResultIcon.appendChild(iconSaveEditPath1);
+
+
+    saveResultLink.appendChild(saveResultIcon);
+    $(event.target).closest('.transferRow').find('.col')[7].appendChild(saveResultLink);
+
+
+    let addBut = document.getElementById("add-transfer-btn");
+    addBut.parentNode.removeChild(addBut);
+    let delBtns = document.getElementsByClassName('deleteLink');
+    let editBtns = document.getElementsByClassName('editLink');
+    for (i = delBtns.length - 1; i >= 0; i--) {
+        delBtns[i].parentNode.removeChild(delBtns[i]);
+    }
+    for (i = editBtns.length - 1; i >= 0; i--) {
+        editBtns[i].parentNode.removeChild(editBtns[i]);
+    }
+
+
+    $("#saveEdit-transfer-btn")[0].addEventListener("click", function () {
+        handleSaveEditTransfer(svtObjId);
+    });
+
+};
+
+let handleSaveEditTransfer = function (svtObjId) {
+    console.log("click");
+    var xhr = new XMLHttpRequest();
+
+    var json = JSON.stringify({
+        id: $(event.target).closest('.row').attr("transferid"),
+        dateTransfer: $("#dateEdit")[0].value,
+        inventaryNumberOld: $("#transferInventaryNumberOldInput")[0].value,
+        inventaryNumberNew: $("#transferInventaryNumberNewInput")[0].value,
+        transferFrom: $("#transferFromInput")[0].value,
+        transferTo: $("#transferToInput")[0].value,
+        documentNumber: $("#docNumberEdit")[0].value,
+        idObjectBuing: svtObjId
+    });
+
+    xhr.open("PUT", '/transfers', false);
+    xhr.setRequestHeader('Content-type', 'application/json; charset=utf-8');
+
+    xhr.onreadystatechange = () => {
+        if (xhr.readyState == 4) {                  // если запрос завершен
+            if (xhr.status == 200) {                // если код ответа 200
+                console.log(xhr.statusText);
+               
+            }
+            
+        }
+    };
+     xhr.send(json);
+    reloadModalTransfer(svtObjId);
+};
+
+let handleSaveEditRepair = function (svtObjId) {
+    console.log("click");
+    var xhr = new XMLHttpRequest();
+
+    var json = JSON.stringify({
+        id: $(event.target).closest('.row').attr("repairId"),
+        dateRepair: $("#dateEdit")[0].value,
+        documentNumber: $("#docNumberEdit")[0].value,
+        definition: $("#definitionEdit")[0].value,
+        idObjectBuing: svtObjId
+    });
+
+    xhr.open("PUT", '/repairs', false);
+    xhr.setRequestHeader('Content-type', 'application/json; charset=utf-8');
+
+    xhr.onreadystatechange = () => {
+        if (xhr.readyState == 4) {                  // если запрос завершен
+            if (xhr.status == 200) {                // если код ответа 200
+                console.log(xhr.statusText);
+               
+            }
+            
+        }
+    };
+     xhr.send(json);
+    reloadModalRepair(svtObjId);
+};
+
+
+let reloadModalTransfer = function(svtObjId) {
+    
+     $("#containerTransferContent")[0].innerHTML = "";
+            
+            //перерисовка модального окна 
+            
+            let getTransfers = new XMLHttpRequest();
+            getTransfers.open('GET', '/transfers?id=' + svtObjId, false);
+            getTransfers.send();
+            let transfersResult;
+            if(getTransfers.status != 200) {
+                alert(getTransfers.status + ': ' + getTransfers.statusText);
+            } else {
+                console.log(getTransfers.response);
+                transfersResult = JSON.parse(getTransfers.response);
+            }
+            
+             if(transfersResult.length > 0) {
+            let transferLabelRow = document.createElement("div");
+            transferLabelRow.className = "row fw-bold mb-3";
+           
+            let transferLabelNum = document.createElement("div");
+            transferLabelNum.className = "col col-1";
+            transferLabelNum.innerText = "№";
+           
+            let transferLabelDate = document.createElement("div");
+            transferLabelDate.className = "col col-2";
+            transferLabelDate.innerText = "Дата";
+            
+            
+            let transferLabelInventaryOld = document.createElement("div");
+            transferLabelInventaryOld.className = "col col-2";
+            transferLabelInventaryOld.innerText = "Инвентарный №, старый";
+            
+            let transferLabelInventaryNew = document.createElement("div");
+            transferLabelInventaryNew.className = "col col-2";
+            transferLabelInventaryNew.innerText = "Инвентарный №, новый";
+            
+            let transferLabelFrom = document.createElement("div");
+            transferLabelFrom.className = "col col-1";
+            transferLabelFrom.innerText = "Откуда";
+            
+            let transferLabelTo = document.createElement("div");
+            transferLabelTo.className = "col col-1";
+            transferLabelTo.innerText = "Куда";
+            
+            let transferLabelDocumentNumber = document.createElement("div");
+            transferLabelDocumentNumber.className = "col col-2";
+            transferLabelDocumentNumber.innerText = "№ док-та";
+            
+            let transferLabelBtn = document.createElement("div");
+            transferLabelBtn.className = "col col-1";
+            
+            transferLabelRow.appendChild(transferLabelNum);
+            transferLabelRow.appendChild(transferLabelDate);
+            transferLabelRow.appendChild(transferLabelInventaryOld);
+            transferLabelRow.appendChild(transferLabelInventaryNew);
+            transferLabelRow.appendChild(transferLabelFrom);
+            transferLabelRow.appendChild(transferLabelTo);
+            transferLabelRow.appendChild(transferLabelDocumentNumber);
+            transferLabelRow.appendChild(transferLabelBtn);
+            
+
+            $("#containerTransferContent")[0].appendChild(transferLabelRow);
+        
+        for(i = 0; i < transfersResult.length; i++) {
+//            let getDate = this.parentNode.parentNode.childNodes[1].innerHTML.split(".");
+//                    datepick.value = getDate[2] + "-" + getDate[1] + "-" + getDate[0];
+            let parseDate = Date.parse(transfersResult[i].dateTransfer);
+            let dateTransferParsed = new Date(parseDate);
+            let dateTransferFormat = dateTransferParsed.toLocaleDateString('ru');
+            
+            
+             let transferRow = document.createElement("div");
+            transferRow.className = "row transferRow mt-3";
+            transferRow.setAttribute("transferId", transfersResult[i].id);
+            let transferNum = document.createElement("div");
+            transferNum.className = "col col-1";
+            transferNum.innerText = i + 1;
+            
+            let transferDate = document.createElement("div");
+            transferDate.className = "col col-2";
+            transferDate.innerText = dateTransferFormat;
+            
+            let transferInventaryNumberOld = document.createElement("div");
+            transferInventaryNumberOld.className = "col col-2";
+            transferInventaryNumberOld.innerText = transfersResult[i].inventaryNumberOld;
+            
+            let transferInventaryNumberNew = document.createElement("div");
+            transferInventaryNumberNew.className = "col col-2";
+            transferInventaryNumberNew.innerText = transfersResult[i].inventaryNumberNew;
+            
+            let transferFrom = document.createElement("div");
+            transferFrom.className = "col col-1";
+            transferFrom.innerText = transfersResult[i].transferFrom;
+            
+            let transferTo = document.createElement("div");
+            transferTo.className = "col col-1";
+            transferTo.innerText = transfersResult[i].transferTo;
+            
+            let transferDocumentNumber = document.createElement("div");
+            transferDocumentNumber.className = "col col-2";
+            transferDocumentNumber.innerText = transfersResult[i].documentNumber;
+            
+            transferRow.appendChild(transferNum);
+            transferRow.appendChild(transferDate);
+            transferRow.appendChild(transferInventaryNumberOld);
+            transferRow.appendChild(transferInventaryNumberNew);
+            transferRow.appendChild(transferFrom);
+            transferRow.appendChild(transferTo);
+            transferRow.appendChild(transferDocumentNumber);
+
+            
+            let deleteBtnLink = document.createElement("button");
+            deleteBtnLink.className = "deleteLink px-1";
+            deleteBtnLink.style = "border: none; background: transparent;";
+            deleteBtnLink.setAttribute("data-tooltip", "Удалить сведения о перемещении");
+            
+            let deleteTransferIcon = document.createElementNS("http://www.w3.org/2000/svg","svg");
+            deleteTransferIcon.setAttribute("class","bi bi-trash delete-icon");
+            deleteTransferIcon.setAttribute("width", "16");
+            deleteTransferIcon.setAttribute("height", "16");
+            deleteTransferIcon.setAttribute("viewbox", "0 0 16 16");
+
+            let iconDeletePath1 = document.createElementNS("http://www.w3.org/2000/svg","path");
+            iconDeletePath1.setAttribute("d", "M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z");
+            let iconDeletePath2 = document.createElementNS("http://www.w3.org/2000/svg","path");
+            iconDeletePath2.setAttribute("fill-rule","evenodd");
+            iconDeletePath2.setAttribute("d", "M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z");
+            deleteTransferIcon.appendChild(iconDeletePath1);
+            deleteTransferIcon.appendChild(iconDeletePath2);
+            deleteBtnLink.appendChild(deleteTransferIcon);
+            
+            
+            
+            let editBtnLink = document.createElement("button");
+            editBtnLink.className = "editLink px-1";
+            editBtnLink.style = "border: none; background: transparent;";
+            editBtnLink.setAttribute("data-tooltip", "Редактировать запись о перемещении");
+            
+            let editBtnIcon = document.createElementNS("http://www.w3.org/2000/svg","svg");
+            editBtnIcon.setAttribute("class", "bi bi-pencil-square edit-icon");
+            editBtnIcon.setAttribute("width", "16");
+            editBtnIcon.setAttribute("height", "16");
+            editBtnIcon.setAttribute("viewbox", "0 0 16 16");
+            
+            let iconEditPath1 = document.createElementNS("http://www.w3.org/2000/svg","path");
+            iconEditPath1.setAttribute("d", "M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z");
+            let iconEditPath2 = document.createElementNS("http://www.w3.org/2000/svg","path");
+            iconEditPath2.setAttribute("fill-rule","evenodd");
+            iconEditPath2.setAttribute("d", "M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z");
+            
+            let transferBtnsCol = document.createElement("div");
+            transferBtnsCol.className = "col col-1";
+            
+            editBtnIcon.appendChild(iconEditPath1);
+            editBtnIcon.appendChild(iconEditPath2);
+            editBtnLink.appendChild(editBtnIcon);
+           transferBtnsCol.appendChild(deleteBtnLink);
+            transferBtnsCol.appendChild(editBtnLink);
+            
+            
+     
+            transferRow.appendChild(transferBtnsCol);
+            editBtnLink.addEventListener("click", function(){
+             handleEditTransfer(svtObjId);
+         });
+         deleteBtnLink.addEventListener("click", function() {
+                handleDeleteTransfer(svtObjId);
+         });
+            if(i == transfersResult.length - 1) {
+               
+                let addNewTransferLink = document.createElement("button");
+                addNewTransferLink.style = "border: none; background: transparent;";
+                addNewTransferLink.setAttribute("data-tooltip", "Внести сведения о перемещении");
+                addNewTransferLink.id = "add-transfer-btn";
+                addNewTransferLink.className = " px-1";
+                let addNewTransferIcon = document.createElementNS("http://www.w3.org/2000/svg","svg");
+                addNewTransferIcon.id="add-icon";
+                addNewTransferIcon.className = "bi bi-plus-circle";
+                addNewTransferIcon.setAttribute("width", "16");
+                addNewTransferIcon.setAttribute("height", "16");
+                addNewTransferIcon.setAttribute("viewbox", "0 0 16 16");
+                let iconPath1 = document.createElementNS("http://www.w3.org/2000/svg","path");
+                iconPath1.setAttribute("d", "M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z");
+                let iconPath2 = document.createElementNS("http://www.w3.org/2000/svg","path");
+                iconPath2.setAttribute("d", "M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z");
+                addNewTransferIcon.appendChild(iconPath1);
+                addNewTransferIcon.appendChild(iconPath2);
+                addNewTransferLink.appendChild(addNewTransferIcon);
+                transferBtnsCol.appendChild(addNewTransferLink);
+            }
+            $("#containerTransferContent")[0].appendChild(transferRow);
+        }
+        
+    } else {
+      
+            $("#containerTransferContent")[0].innerHTML = ' <div class="row mt-2"><div class="col"><div>Перемещений не было.</div></div><div class="row mt-3 text-center"><div class="col"><button data-tooltip="Внести сведения о ремонте" id="add-transfer-btn" style = "border: none; background: transparent;">' +
+       ' <svg id="add-icon" class="bi bi-plus-circle" width="42" height="42" viewBox="0 0 16 16">' +
+          '  <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>' +
+           ' <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>' +
+       ' </svg>' +
+    ' </button></div></div></div>';
+
+        }
+        
+        
+         $("#add-transfer-btn")[0].addEventListener("click",  function(){
+             handleAddTransferBtn(svtObjId);
+         });
+ 
+};
+
+let reloadModalRepair = function(svtObjId) {
+    
+     $("#containerRepairContent")[0].innerHTML = "";
+            
+            //перерисовка модального окна 
+            
+            let getRepairs = new XMLHttpRequest();
+            getRepairs.open('GET', '/repairs?id=' + svtObjId, false);
+            getRepairs.send();
+            let repairsResult;
+            if(getRepairs.status != 200) {
+                alert(getRepairs.status + ': ' + getRepairs.statusText);
+            } else {
+                console.log(getRepairs.response);
+                repairsResult = JSON.parse(getRepairs.response);
+            }
+            
+             if(repairsResult.length > 0) {
+            let repairLabelRow = document.createElement("div");
+            repairLabelRow.className = "row fw-bold mb-3";
+           
+            let repairLabelNum = document.createElement("div");
+            repairLabelNum.className = "col col-1";
+            repairLabelNum.innerText = "№";
+           
+            let repairLabelDate = document.createElement("div");
+            repairLabelDate.className = "col col-3";
+            repairLabelDate.innerText = "Дата";
+            
+            let repairLabelDocumentNumber = document.createElement("div");
+            repairLabelDocumentNumber.className = "col col-3";
+            repairLabelDocumentNumber.innerText = "№ док-та";
+            
+            
+            let repairLabelDefinition = document.createElement("div");
+            repairLabelDefinition.className = "col col-4";
+            repairLabelDefinition.innerText = "Перечень работ";
+            repairLabelRow.appendChild(repairLabelNum);
+            repairLabelRow.appendChild(repairLabelDate);
+            repairLabelRow.appendChild(repairLabelDocumentNumber);
+            repairLabelRow.appendChild(repairLabelDefinition);
+            $("#containerRepairContent")[0].appendChild(repairLabelRow);
+        
+        for(i = 0; i < repairsResult.length; i++) {
+//            let getDate = this.parentNode.parentNode.childNodes[1].innerHTML.split(".");
+//                    datepick.value = getDate[2] + "-" + getDate[1] + "-" + getDate[0];
+            let parseDate = Date.parse(repairsResult[i].dateRepair);
+            let dateRepairParsed = new Date(parseDate);
+            let dateRepairFormat = dateRepairParsed.toLocaleDateString('ru');
+            
+            let repairRow = document.createElement("div");
+            repairRow.className = "row repairRow mt-3";
+            repairRow.setAttribute("repairId", repairsResult[i].id);
+            let repairNum = document.createElement("div");
+            repairNum.className = "col col-1";
+            repairNum.innerText = i + 1;
+            
+            let repairDate = document.createElement("div");
+            repairDate.className = "col col-3";
+            repairDate.innerText = dateRepairFormat;
+            let repairDocumentNumber = document.createElement("div");
+            repairDocumentNumber.className = "col col-3";
+            repairDocumentNumber.innerText = repairsResult[i].documentNumber;
+            let repairDefinition = document.createElement("div");
+            repairDefinition.className = "col col-4";
+            repairDefinition.innerText = repairsResult[i].definition;
+            
+            
+            let deleteBtnLink = document.createElement("button");
+            deleteBtnLink.className = "deleteLink px-1";
+            deleteBtnLink.style = "border: none; background: transparent;";
+            deleteBtnLink.setAttribute("data-tooltip", "Удалить сведения о ремонте");
+            
+            let deleteRepairIcon = document.createElementNS("http://www.w3.org/2000/svg","svg");
+            deleteRepairIcon.setAttribute("class","bi bi-trash delete-icon");
+            deleteRepairIcon.setAttribute("width", "16");
+            deleteRepairIcon.setAttribute("height", "16");
+            deleteRepairIcon.setAttribute("viewbox", "0 0 16 16");
+
+            let iconDeletePath1 = document.createElementNS("http://www.w3.org/2000/svg","path");
+            iconDeletePath1.setAttribute("d", "M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z");
+            let iconDeletePath2 = document.createElementNS("http://www.w3.org/2000/svg","path");
+            iconDeletePath2.setAttribute("fill-rule","evenodd");
+            iconDeletePath2.setAttribute("d", "M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z");
+            deleteRepairIcon.appendChild(iconDeletePath1);
+            deleteRepairIcon.appendChild(iconDeletePath2);
+            deleteBtnLink.appendChild(deleteRepairIcon);
+            
+            
+            
+            let editBtnLink = document.createElement("button");
+            editBtnLink.className = "editLink px-1";
+            editBtnLink.style = "border: none; background: transparent;";
+            editBtnLink.setAttribute("data-tooltip", "Редактировать запись о ремонте");
+            
+            let editBtnIcon = document.createElementNS("http://www.w3.org/2000/svg","svg");
+            editBtnIcon.setAttribute("class", "bi bi-pencil-square edit-icon");
+            editBtnIcon.setAttribute("width", "16");
+            editBtnIcon.setAttribute("height", "16");
+            editBtnIcon.setAttribute("viewbox", "0 0 16 16");
+            
+            let iconEditPath1 = document.createElementNS("http://www.w3.org/2000/svg","path");
+            iconEditPath1.setAttribute("d", "M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z");
+            let iconEditPath2 = document.createElementNS("http://www.w3.org/2000/svg","path");
+            iconEditPath2.setAttribute("fill-rule","evenodd");
+            iconEditPath2.setAttribute("d", "M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z");
+            
+            let repairBtnsCol = document.createElement("div");
+            repairBtnsCol.className = "col col-1";
+            
+            editBtnIcon.appendChild(iconEditPath1);
+            editBtnIcon.appendChild(iconEditPath2);
+            editBtnLink.appendChild(editBtnIcon);
+           repairBtnsCol.appendChild(deleteBtnLink);
+            repairBtnsCol.appendChild(editBtnLink);
+            
+            
+            repairRow.appendChild(repairNum);
+            repairRow.appendChild(repairDate);
+            repairRow.appendChild(repairDocumentNumber);
+            repairRow.appendChild(repairDefinition);
+            repairRow.appendChild(repairBtnsCol);
+            editBtnLink.addEventListener("click", function(){
+             handleEditRepair(svtObjId);
+         });
+         deleteBtnLink.addEventListener("click", function() {
+                handleDeleteRepair(svtObjId);
+         });
+            if(i == repairsResult.length - 1) {
+               
+                let addNewRepairLink = document.createElement("button");
+                addNewRepairLink.style = "border: none; background: transparent;";
+                addNewRepairLink.setAttribute("data-tooltip", "Внести сведения о ремонте");
+                addNewRepairLink.id = "add-repair-btn";
+                addNewRepairLink.className = " px-1";
+                let addNewRepairIcon = document.createElementNS("http://www.w3.org/2000/svg","svg");
+                addNewRepairIcon.id="add-icon";
+                addNewRepairIcon.className = "bi bi-plus-circle";
+                addNewRepairIcon.setAttribute("width", "16");
+                addNewRepairIcon.setAttribute("height", "16");
+                addNewRepairIcon.setAttribute("viewbox", "0 0 16 16");
+                let iconPath1 = document.createElementNS("http://www.w3.org/2000/svg","path");
+                iconPath1.setAttribute("d", "M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z");
+                let iconPath2 = document.createElementNS("http://www.w3.org/2000/svg","path");
+                iconPath2.setAttribute("d", "M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z");
+                addNewRepairIcon.appendChild(iconPath1);
+                addNewRepairIcon.appendChild(iconPath2);
+                addNewRepairLink.appendChild(addNewRepairIcon);
+                repairBtnsCol.appendChild(addNewRepairLink);
+            }
+            $("#containerRepairContent")[0].appendChild(repairRow);
+        }
+        
+    } else {
+      
+            $("#containerRepairContent")[0].innerHTML = ' <div class="row mt-2"><div class="col"><div>В ремонте не был.</div></div><div class="row mt-3 text-center"><div class="col"><button  data-tooltip="Внести сведения о ремонте" id="add-repair-btn" style = "border: none; background: transparent;">' +
+       ' <svg id="add-icon" class="bi bi-plus-circle" width="42" height="42" viewBox="0 0 16 16">' +
+          '  <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>' +
+           ' <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>' +
+       ' </svg>' +
+    ' </button></div></div></div>';
+
+        }
+        
+        
+         $("#add-repair-btn")[0].addEventListener("click",  function(){
+             handleAddBtn(svtObjId);
+         });
+         
+      
+         
+};
+
+
+let handleAddTransferBtn = function (svtObjId) {
+
+    console.log("click");
+
+    //$('[data-bs-toggle="tooltip"]').tooltip('hide');
+
+    if ($(".transferRow").length == 0) {
+        $("#containerTransferContent")[0].innerHTML = "";
+        $("#containerTransferContent").append('<div class="row fw-bold mb-3">' +
+                '<div class="col col-1">№</div>' +
+                '<div class="col col-2">Дата</div>' +
+                '<div class="col col-2">Инвентарный номер, старый</div>' +
+                '<div class="col col-2">Инвентарный номер, новый</div>' +
+                '<div class="col col-1">Откуда</div>' +
+                '<div class="col col-1">Куда</div>' +
+                '<div class="col col-2">№ док-та</div>');
+    }
+    
+    $("#containerTransferContent").append('</div><div class="row mt-3 inputRow">' +
+            '<div class="col col-1">' + ($('.transferRow').length + 1) + '</div>' +
+            '<div class="col col-2"><input type="date" class="form-control form-control-sm" name="transfer-date" id="transfer-date"></div>' +
+            '<div class="col col-2"><input type="text" class="form-control form-control-sm" name = "transfer-inventaryNumberOld" id="transfer-inventaryNumberOld"></div>' +
+            '<div class="col col-2"><input type="text" class="form-control form-control-sm" name="transfer-inventaryNumberNew" id="transfer-inventaryNumberNew"></div>' +
+            '<div class="col col-1"><input type="text" class="form-control form-control-sm" name="transfer-from" id="transfer-from"></div>' +
+            '<div class="col col-1"><input type="text" class="form-control form-control-sm" name ="transfer-to" id="transfer-to"></div>' +
+            '<div class="col col-2"><input type="text" class="form-control form-control-sm" name="transfer-document" id="transfer-document"></div>' +
+            '</div>');
+
+    if ($(".inputRow").length > 1) {
+        let addBut = document.getElementById("add-transfer-btn");
+        addBut.parentNode.removeChild(addBut);
+        let delBtns = document.getElementsByClassName('deleteLink');
+        let editBtns = document.getElementsByClassName('editLink');
+        for (i = delBtns.length - 1; i >= 0; i--) {
+            delBtns[i].parentNode.removeChild(delBtns[i]);
+        }
+        for (i = editBtns.length - 1; i >= 0; i--) {
+            editBtns[i].parentNode.removeChild(editBtns[i]);
+        }
+       
+    }
+     $("#transferFooter").append('<button class="btn btn-primary btn-sm" id="btnTransferSave">Сохранить</button>');
+    $("#btnTransferSave")[0].addEventListener("click", function (event) {
+        console.log("send");
+        var xhr = new XMLHttpRequest();
+
+        var json = JSON.stringify({
+            id: null,
+            dateTransfer: $("#transfer-date")[0].value,
+            inventaryNumberOld: $("#transfer-inventaryNumberOld")[0].value,
+            inventaryNumberNew: $("#transfer-inventaryNumberNew")[0].value,
+            transferFrom: $("#transfer-from")[0].value,
+            transferTo: $("#transfer-to")[0].value,
+            documentNumber: $("#transfer-document")[0].value,
+            idObjectBuing: svtObjId
+        });
+
+        xhr.open("POST", '/transfers', false);
+        xhr.setRequestHeader('Content-type', 'application/json; charset=utf-8');
+
+        xhr.onreadystatechange = () => {
+            if (xhr.readyState == 4) {                  // если запрос завершен
+                if (xhr.status == 200) {                // если код ответа 200
+                    console.log(xhr.responseText);      // выводим полученный ответ на консоль браузера
+                    $("#containerTransferContent")[0].innerHTML = "";
+
+                    //перерисовка модального окна 
+
+                    reloadModalTransfer(svtObjId);
+
+
+                } else {                                // иначе выводим текст статуса
+                    console.log("Server response: ", xhr.statusText);
+                    alert("Упс, что-то пошло не так..");
+                }
+
+            }
+        };
+
+        xhr.send(json);
+        let btnSave = $("#btnTransferSave")[0];
+        btnSave.parentNode.removeChild(btnSave);
+    });
+
+
+};
+
+
+let handleAddBtn = function(svtObjId) {
+             
+        console.log("click");
+        
+          //$('[data-bs-toggle="tooltip"]').tooltip('hide');
+          
+        if($(".repairRow").length == 0) {
+        $("#containerRepairContent")[0].innerHTML = "";
+        $("#containerRepairContent").append('<div class="row fw-bold mb-3">' +
+                '<div class="col col-1">№</div>' + 
+                '<div class="col col-3">Дата</div>' +
+                '<div class="col col-3">№ док-та</div>' +
+                '<div class="col col-4">Перечень работ</div>');
+    }
+        $("#containerRepairContent").append('</div><div class="row mt-3 inputRow" id="inputRow">' +
+                '<div class="col col-1">'+ ($('.repairRow').length + 1) +'</div>' +
+                '<div class="col col-3"><input type="date" class="form-control form-control-sm" id="repair-date"></div>' +
+                '<div class="col col-3"><input type="text" class="form-control form-control-sm" id="repair-document"></div>' +
+                '<div class="col col-4"><textarea class="form-control form-control-sm" rows="3" id="repair-definition"></textarea></div>' +
+                '</div>');
+        
+        if($(".inputRow").length > 1) {
+          let addBut = document.getElementById("add-repair-btn");
+          addBut.parentNode.removeChild(addBut);
+          let delBtns = document.getElementsByClassName('deleteLink');
+          let editBtns = document.getElementsByClassName('editLink');
+          for(i = delBtns.length - 1; i >= 0; i--) {
+              delBtns[i].parentNode.removeChild(delBtns[i]);
+          }
+          for(i = editBtns.length - 1; i >= 0; i--) {
+              editBtns[i].parentNode.removeChild(editBtns[i]);
+          }
+          
+        }
+        $("#repairFooter").append('<button class="btn btn-primary btn-sm" id="btnRepairSave">Сохранить</button>');
+        $("#btnRepairSave")[0].addEventListener("click", function(event) {
+            console.log("send");
+            var xhr = new XMLHttpRequest();
+
+            var json = JSON.stringify({
+              id: null,
+              dateRepair: $("#repair-date")[0].value,
+              documentNumber: $("#repair-document")[0].value,
+              definition: $("#repair-definition")[0].value,
+              idObjectBuing: svtObjId
+            });
+
+            xhr.open("POST", '/repairs', false);
+            xhr.setRequestHeader('Content-type', 'application/json; charset=utf-8');
+
+            xhr.onreadystatechange = () => {
+    if (xhr.readyState == 4) {                  // если запрос завершен
+        if (xhr.status == 200) {                // если код ответа 200
+            console.log(xhr.responseText);      // выводим полученный ответ на консоль браузера
+            $("#containerRepairContent")[0].innerHTML = "";
+            
+            //перерисовка модального окна 
+            
+        reloadModalRepair(svtObjId);
+
+            
+        } else {                                // иначе выводим текст статуса
+            console.log("Server response: ", xhr.statusText);
+            alert("Упс, что-то пошло не так..");
+        }
+        
+                }
+            };
+
+            xhr.send(json);
+            let btnSave = $("#btnRepairSave")[0];
+            btnSave.parentNode.removeChild(btnSave);
+        });
+        
+        
+    };
 
 function beep() {
    
@@ -382,6 +1195,12 @@ let handleClickUpdateBtn = function () {
             dto.phoneNumber = $("#innerCallNumber")[0].value;
             requestLink = "/updphone";
             break;
+        case "fax":
+            dto.ipAdress = $("#ipAdress")[0].value;
+            dto.nameFromOneC = $("#nameFromOneC")[0].value;
+            dto.numberRoom = $("#numberRoom")[0].value;
+            requestLink = "/updfax";
+            break;
         case "monitors":
             dto.nameFromOneC = document.querySelector('#nameFromOneC').value;
             dto.baseType = document.querySelector('#baseTypeSelect').value;
@@ -526,6 +1345,9 @@ let handleClickSearchSvtObject = function (input) {
         case "phones":
             request = "/phones?username=";
             break;
+        case "fax":
+            requestLink = "/fax?username=";
+            break;
         case "systemblock":
             request = "/sysblocks?username=";
             break;
@@ -599,6 +1421,12 @@ let handleClickSavePhoneBtn = function () {
         case "phones":
             dto.phoneNumber = $("#innerCallNumber")[0].value;
             requestLink = "/phones";
+            break;
+        case "fax":
+            dto.ipAdress = $("#ipAdress")[0].value;
+            dto.nameFromOneC = $("#nameFromOneC")[0].value;
+            dto.numberRoom = $("#numberRoom")[0].value;
+            requestLink = "/fax";
             break;
         case "asuo":
             requestLink = "/asuo";
@@ -750,12 +1578,12 @@ let requestToEnableStorage = function () {
         error: function (callback) {
             console.log(callback);
             $('.svtObjModalFooter').append('<button type="button" class="btn btn-danger btn-sm" id="archivedBtn"  data-bs-dismiss="modal">Удалить</button> ' +
-                    '<span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" title="У вас нет склада в этом районе"><button type="button" class="btn btn-warning btn-sm" id="sendToStorageBtn">Отправить на склад</button></span>' +
+                    '<span  data-tooltip="У вас нет склада в этом районе"><button type="button" class="btn btn-warning btn-sm" id="sendToStorageBtn">Отправить на склад</button></span>' +
                     '<button type="button" class="btn btn-secondary btn-sm"  data-bs-dismiss="modal">Отменить</button>' +
                     '<button type="button" class="btn btn-primary btn-sm" id="btnSave" >Применить</button>');
             $('#sendToStorageBtn').addClass("disabled");
-            tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
-            tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl));
+//            tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
+//            tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl));
             $('#btnSave')[0].removeEventListener('click', handleClickUpdateBtn);
             $('#archivedBtn')[0].removeEventListener('click', handleClickArchivedBtn);
         },
@@ -771,6 +1599,7 @@ let requestToEnableStorage = function () {
     $('#archivedBtn')[0].addEventListener('click', handleClickArchivedBtn);
 };
 window.onload = function () {
+   
     $("#searchSvtObjBtn")[0].addEventListener("click", function () {
         handleClickSearchSvtObject($("#searchSvtObjInput")[0].value);
     });
@@ -798,6 +1627,7 @@ window.onload = function () {
                 $("#statusRow")[0].remove();
             }
         }
+         
         });
     }
     
@@ -806,8 +1636,472 @@ window.onload = function () {
      });      
     
 };
+let modalTransferContentLoad = function(svtObjId, title) {
+    if(modalTransferParent.childNodes.length > 1) {
+        modalTransferParent.innerHTML = "";
+    }
+    let xhr = new XMLHttpRequest();
+    xhr.open('GET', '/transfers?id=' + svtObjId, false);
+    xhr.send();
+    let requestResult;
+    if(xhr.status != 200) {
+        alert(xhr.status + ': ' + xhr.statusText);
+    } else {
+        console.log(xhr.response);
+        requestResult = JSON.parse(xhr.response);
+    }
+    let divModalHeader = document.createElement("div");
+    divModalHeader.className = "modal-header modalHeaderContent";
+    let titleModal = document.createElement("h5");
+    titleModal.className = "modal-title";
+    titleModal.id = "modalTransferTitle";
+    titleModal.innerText = "Перемещения " + title;
+    divModalHeader.appendChild(titleModal);
+    let headerCloseBtn = document.createElement("button");
+    headerCloseBtn.className = "btn-close btn-close-white";
+    headerCloseBtn.setAttribute("data-bs-dismiss", "modal");
+    headerCloseBtn.setAttribute("aria-label", "Close");
+    headerCloseBtn.id = "closeTransferBtn";
+    divModalHeader.appendChild(headerCloseBtn);
+    modalTransferParent.appendChild(divModalHeader);
+    //сборка боди
+    let divModalBody = document.createElement("div");
+    divModalBody.className = "modal-body";
+    let divContainerBody = document.createElement("div");
+    divContainerBody.className = "container-fluid";
+    divContainerBody.id = "containerTransferContent";
+    
+    if(requestResult.length > 0) {
+            let transferLabelRow = document.createElement("div");
+            transferLabelRow.className = "row fw-bold mb-3";
+            transferLabelRow.id = "rowTransferLabels";
+           
+            let transferLabelNum = document.createElement("div");
+            transferLabelNum.className = "col col-1";
+            transferLabelNum.innerText = "№";
+           
+            let transferLabelDate = document.createElement("div");
+            transferLabelDate.className = "col col-2";
+            transferLabelDate.innerText = "Дата";
+            
+            let transferLabelInventaryOld = document.createElement("div");
+            transferLabelInventaryOld.className = "col col-2";
+            transferLabelInventaryOld.innerText = "Инвентарный №, старый";
+            
+            let transferLabelInventaryNew = document.createElement("div");
+            transferLabelInventaryNew.className = "col col-2";
+            transferLabelInventaryNew.innerText = "Инвентарный №, новый";
+            
+            let transferLabelFrom = document.createElement("div");
+            transferLabelFrom.className = "col col-1";
+            transferLabelFrom.innerText = "Откуда";
+            
+            let transferLabelTo = document.createElement("div");
+            transferLabelTo.className = "col col-1";
+            transferLabelTo.innerText = "Куда";
+            
+            let transferLabelDocumentNumber = document.createElement("div");
+            transferLabelDocumentNumber.className = "col col-2";
+            transferLabelDocumentNumber.innerText = "№ док-та";
+            
+            let transferLabelBtn = document.createElement("div");
+            transferLabelBtn.className = "col col-1";
+            
+            transferLabelRow.appendChild(transferLabelNum);
+            transferLabelRow.appendChild(transferLabelDate);
+            transferLabelRow.appendChild(transferLabelInventaryOld);
+            transferLabelRow.appendChild(transferLabelInventaryNew);
+            transferLabelRow.appendChild(transferLabelFrom);
+            transferLabelRow.appendChild(transferLabelTo);
+            transferLabelRow.appendChild(transferLabelDocumentNumber);
+            transferLabelRow.appendChild(transferLabelBtn);
+           
+            divContainerBody.appendChild(transferLabelRow);
+        
+        for(i = 0; i < requestResult.length; i++) {
+            let parseDate = Date.parse(requestResult[i].dateTransfer);
+            let dateTransferParsed = new Date(parseDate);
+            let dateTransferFormat = dateTransferParsed.toLocaleDateString('ru');
+            
+            let transferRow = document.createElement("div");
+            transferRow.className = "row transferRow mt-3";
+            transferRow.setAttribute("transferId", requestResult[i].id);
+            let transferNum = document.createElement("div");
+            transferNum.className = "col col-1";
+            transferNum.innerText = i + 1;
+            
+            let transferDate = document.createElement("div");
+            transferDate.className = "col col-2";
+            transferDate.innerText = dateTransferFormat;
+            
+            let transferInventaryNumberOld = document.createElement("div");
+            transferInventaryNumberOld.className = "col col-2";
+            transferInventaryNumberOld.innerText = requestResult[i].inventaryNumberOld;
+            
+            let transferInventaryNumberNew = document.createElement("div");
+            transferInventaryNumberNew.className = "col col-2";
+            transferInventaryNumberNew.innerText = requestResult[i].inventaryNumberNew;
+            
+            let transferFrom = document.createElement("div");
+            transferFrom.className = "col col-1";
+            transferFrom.innerText = requestResult[i].transferFrom;
+            
+            let transferTo = document.createElement("div");
+            transferTo.className = "col col-1";
+            transferTo.innerText = requestResult[i].transferTo;
+            
+            let transferDocumentNumber = document.createElement("div");
+            transferDocumentNumber.className = "col col-2";
+            transferDocumentNumber.innerText = requestResult[i].documentNumber;
+            
+            transferRow.appendChild(transferNum);
+            transferRow.appendChild(transferDate);
+            transferRow.appendChild(transferInventaryNumberOld);
+            transferRow.appendChild(transferInventaryNumberNew);
+            transferRow.appendChild(transferFrom);
+            transferRow.appendChild(transferTo);
+            transferRow.appendChild(transferDocumentNumber);
+            let addNewTransferCol = document.createElement("div");
+            addNewTransferCol.className = "col col-1";
+            
+            let deleteBtnLink = document.createElement("button");
+            deleteBtnLink.className = "deleteLink px-1";
+            deleteBtnLink.style = "border: none; background: transparent;";
+            deleteBtnLink.setAttribute("data-tooltip", "Удалить сведения о перемещении");
+            
+            let deleteTransferIcon = document.createElementNS("http://www.w3.org/2000/svg","svg");
+            deleteTransferIcon.setAttribute("class","bi bi-trash delete-icon");
+            deleteTransferIcon.setAttribute("width", "16");
+            deleteTransferIcon.setAttribute("height", "16");
+            deleteTransferIcon.setAttribute("viewbox", "0 0 16 16");
+
+            let iconDeletePath1 = document.createElementNS("http://www.w3.org/2000/svg","path");
+            iconDeletePath1.setAttribute("d", "M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z");
+            let iconDeletePath2 = document.createElementNS("http://www.w3.org/2000/svg","path");
+            iconDeletePath2.setAttribute("fill-rule","evenodd");
+            iconDeletePath2.setAttribute("d", "M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z");
+            deleteTransferIcon.appendChild(iconDeletePath1);
+            deleteTransferIcon.appendChild(iconDeletePath2);
+            deleteBtnLink.appendChild(deleteTransferIcon);
+            addNewTransferCol.appendChild(deleteBtnLink);
+            
+            
+            let editBtnLink = document.createElement("button");
+            editBtnLink.className = "editLink px-1";
+            editBtnLink.style = "border: none; background: transparent;";
+            editBtnLink.setAttribute("data-tooltip", "Редактировать запись о перемещении");
+            
+            let editBtnIcon = document.createElementNS("http://www.w3.org/2000/svg","svg");
+            editBtnIcon.setAttribute("class", "bi bi-pencil-square edit-icon");
+            editBtnIcon.setAttribute("width", "16");
+            editBtnIcon.setAttribute("height", "16");
+            editBtnIcon.setAttribute("viewbox", "0 0 16 16");
+            
+            let iconEditPath1 = document.createElementNS("http://www.w3.org/2000/svg","path");
+            iconEditPath1.setAttribute("d", "M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z");
+            let iconEditPath2 = document.createElementNS("http://www.w3.org/2000/svg","path");
+            iconEditPath2.setAttribute("fill-rule","evenodd");
+            iconEditPath2.setAttribute("d", "M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z");
+            
+            editBtnIcon.appendChild(iconEditPath1);
+            editBtnIcon.appendChild(iconEditPath2);
+            editBtnLink.appendChild(editBtnIcon);
+            addNewTransferCol.appendChild(editBtnLink);
+            transferRow.appendChild(addNewTransferCol);
+                deleteBtnLink.addEventListener("click", function() {
+                    handleDeleteTransfer(svtObjId);
+                });
+                
+                editBtnLink.addEventListener("click", function () {
+                    handleEditTransfer(svtObjId);
+                });
+                if(i == requestResult.length - 1) {
+              
+                let addNewTransferLink = document.createElement("button");
+                addNewTransferLink.style = "border: none;  background: transparent;";
+                addNewTransferLink.className = "px-1";
+                addNewTransferLink.id = "add-transfer-btn";
+                addNewTransferLink.setAttribute("data-tooltip", "Внести сведения о перемещении");
+                
+              
+                let addNewTransferIcon = document.createElementNS("http://www.w3.org/2000/svg","svg");
+                addNewTransferIcon.setAttribute("class","bi bi-plus-circle add-icon");
+                addNewTransferIcon.setAttribute("width", "16");
+                addNewTransferIcon.setAttribute("height", "16");
+                addNewTransferIcon.setAttribute("viewbox", "0 0 16 16");
+                
+                let iconPath1 = document.createElementNS("http://www.w3.org/2000/svg","path");
+                iconPath1.setAttribute("d", "M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z");
+                let iconPath2 = document.createElementNS("http://www.w3.org/2000/svg","path");
+                iconPath2.setAttribute("d", "M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z");
+                addNewTransferIcon.appendChild(iconPath1);
+                addNewTransferIcon.appendChild(iconPath2);
+               
+                addNewTransferLink.appendChild(addNewTransferIcon);
+                
+                addNewTransferCol.appendChild(addNewTransferLink);
+                transferRow.appendChild(addNewTransferCol);
+                
+            }
+            divContainerBody.appendChild(transferRow);
+        }
+    } else {
+      
+        divContainerBody.innerHTML = ' <div class="row mt-2"><div class="col"><div>Перемещений не было.</div></div><div class="row mt-3 text-center"><div class="col"><button  data-tooltip="Внести сведения о перемещении" id="add-transfer-btn" style="border: none; background: transparent;">' +
+   ' <svg id="add-icon" class="bi bi-plus-circle" width="42" height="42" viewBox="0 0 16 16">' +
+      '  <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>' +
+       ' <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>' +
+   ' </svg>' +
+' </button></div></div></div>';
+    
+
+    
+    }
+    divModalBody.appendChild(divContainerBody);
+    modalTransferParent.appendChild(divModalBody);
+    
+
+         $("#add-transfer-btn")[0].addEventListener("click",  function(){
+             handleAddTransferBtn(svtObjId);
+         });
+
+    //сборка футера
+    let divModalFooter = document.createElement("div");
+    divModalFooter.className = "modal-footer svtObjModalFooter";
+    divModalFooter.id = "transferFooter";
+    let footerBtnCancel = document.createElement("button");
+    footerBtnCancel.className = "btn btn-secondary btn-sm";
+    footerBtnCancel.setAttribute("data-bs-target", "#addPlaceModal");
+    footerBtnCancel.setAttribute("data-bs-toggle", "modal");
+    footerBtnCancel.innerText = "Назад";
+    footerBtnCancel.id = "backToModal";
+//    let footerBtnSave = document.createElement("button");
+//    footerBtnSave.className = "btn btn-primary btn-sm";
+//    footerBtnSave.id = "btnTransferSave";
+//    footerBtnSave.innerText = "Сохранить";
+    
+    divModalFooter.appendChild(footerBtnCancel);
+  //  divModalFooter.appendChild(footerBtnSave);
+    modalTransferParent.appendChild(divModalFooter);
+};
+
+let modalRepairContentLoad = function (svtObjId, title) {
+    if(modalRepairParent.childNodes.length > 1) {
+        modalRepairParent.innerHTML = "";
+    }
+    let xhr = new XMLHttpRequest();
+    xhr.open('GET', '/repairs?id=' + svtObjId, false);
+    xhr.send();
+    let requestResult;
+    if(xhr.status != 200) {
+        alert(xhr.status + ': ' + xhr.statusText);
+    } else {
+        console.log(xhr.response);
+        requestResult = JSON.parse(xhr.response);
+    }
+    let divModalHeader = document.createElement("div");
+    divModalHeader.className = "modal-header modalHeaderContent";
+    let titleModal = document.createElement("h5");
+    titleModal.className = "modal-title";
+    titleModal.id = "modalRepairTitle";
+    titleModal.innerText = "Ремонт " + title;
+    divModalHeader.appendChild(titleModal);
+    let headerCloseBtn = document.createElement("button");
+    headerCloseBtn.className = "btn-close btn-close-white";
+    headerCloseBtn.setAttribute("data-bs-dismiss", "modal");
+    headerCloseBtn.setAttribute("aria-label", "Close");
+    headerCloseBtn.id = "closeRepairBtn";
+    divModalHeader.appendChild(headerCloseBtn);
+    modalRepairParent.appendChild(divModalHeader);
+    //сборка боди
+    let divModalBody = document.createElement("div");
+    divModalBody.className = "modal-body";
+    let divContainerBody = document.createElement("div");
+    divContainerBody.className = "container";
+    divContainerBody.id = "containerRepairContent";
+    
+    if(requestResult.length > 0) {
+            let repairLabelRow = document.createElement("div");
+            repairLabelRow.className = "row fw-bold mb-3";
+            repairLabelRow.id = "rowRepairLabels";
+           
+            let repairLabelNum = document.createElement("div");
+            repairLabelNum.className = "col col-1";
+            repairLabelNum.innerText = "№";
+           
+            let repairLabelDate = document.createElement("div");
+            repairLabelDate.className = "col col-3";
+            repairLabelDate.innerText = "Дата";
+            
+            let repairLabelDocumentNumber = document.createElement("div");
+            repairLabelDocumentNumber.className = "col col-3";
+            repairLabelDocumentNumber.innerText = "№ док-та";
+            
+            
+            let repairLabelDefinition = document.createElement("div");
+            repairLabelDefinition.className = "col col-4";
+            repairLabelDefinition.innerText = "Перечень работ";
+            repairLabelRow.appendChild(repairLabelNum);
+            repairLabelRow.appendChild(repairLabelDate);
+            repairLabelRow.appendChild(repairLabelDocumentNumber);
+            repairLabelRow.appendChild(repairLabelDefinition);
+            divContainerBody.appendChild(repairLabelRow);
+        
+        for(i = 0; i < requestResult.length; i++) {
+            let parseDate = Date.parse(requestResult[i].dateRepair);
+            let dateRepairParsed = new Date(parseDate);
+            let dateRepairFormat = dateRepairParsed.toLocaleDateString('ru');
+            
+            let repairRow = document.createElement("div");
+            repairRow.className = "row repairRow mt-3";
+            repairRow.setAttribute("repairId", requestResult[i].id);
+            let repairNum = document.createElement("div");
+            repairNum.className = "col col-1";
+            repairNum.innerText = i + 1;
+            
+            let repairDate = document.createElement("div");
+            repairDate.className = "col col-3";
+            repairDate.innerText = dateRepairFormat;
+            let repairDocumentNumber = document.createElement("div");
+            repairDocumentNumber.className = "col col-3";
+            repairDocumentNumber.innerText = requestResult[i].documentNumber;
+            let repairDefinition = document.createElement("div");
+            repairDefinition.className = "col col-4";
+            repairDefinition.innerText = requestResult[i].definition;
+            repairRow.appendChild(repairNum);
+            repairRow.appendChild(repairDate);
+            repairRow.appendChild(repairDocumentNumber);
+            repairRow.appendChild(repairDefinition);
+            let addNewRepairCol = document.createElement("div");
+            addNewRepairCol.className = "col col-1";
+            
+            let deleteBtnLink = document.createElement("button");
+            deleteBtnLink.className = "deleteLink px-1";
+            deleteBtnLink.style = "border: none; background: transparent;";
+            deleteBtnLink.setAttribute("data-tooltip", "Удалить сведения о ремонте");
+            
+            let deleteRepairIcon = document.createElementNS("http://www.w3.org/2000/svg","svg");
+            deleteRepairIcon.setAttribute("class","bi bi-trash delete-icon");
+            deleteRepairIcon.setAttribute("width", "16");
+            deleteRepairIcon.setAttribute("height", "16");
+            deleteRepairIcon.setAttribute("viewbox", "0 0 16 16");
+
+            let iconDeletePath1 = document.createElementNS("http://www.w3.org/2000/svg","path");
+            iconDeletePath1.setAttribute("d", "M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z");
+            let iconDeletePath2 = document.createElementNS("http://www.w3.org/2000/svg","path");
+            iconDeletePath2.setAttribute("fill-rule","evenodd");
+            iconDeletePath2.setAttribute("d", "M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z");
+            deleteRepairIcon.appendChild(iconDeletePath1);
+            deleteRepairIcon.appendChild(iconDeletePath2);
+            deleteBtnLink.appendChild(deleteRepairIcon);
+            addNewRepairCol.appendChild(deleteBtnLink);
+            
+            
+            let editBtnLink = document.createElement("button");
+            editBtnLink.style = "border: none; background: transparent;";
+            editBtnLink.className = "editLink px-1";
+            editBtnLink.setAttribute("data-tooltip", "Редактировать запись о ремонте");
+            
+            let editBtnIcon = document.createElementNS("http://www.w3.org/2000/svg","svg");
+            editBtnIcon.setAttribute("class", "bi bi-pencil-square edit-icon");
+            editBtnIcon.setAttribute("width", "16");
+            editBtnIcon.setAttribute("height", "16");
+            editBtnIcon.setAttribute("viewbox", "0 0 16 16");
+            
+            let iconEditPath1 = document.createElementNS("http://www.w3.org/2000/svg","path");
+            iconEditPath1.setAttribute("d", "M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z");
+            let iconEditPath2 = document.createElementNS("http://www.w3.org/2000/svg","path");
+            iconEditPath2.setAttribute("fill-rule","evenodd");
+            iconEditPath2.setAttribute("d", "M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z");
+            
+            editBtnIcon.appendChild(iconEditPath1);
+            editBtnIcon.appendChild(iconEditPath2);
+            editBtnLink.appendChild(editBtnIcon);
+            addNewRepairCol.appendChild(editBtnLink);
+            repairRow.appendChild(addNewRepairCol);
+                deleteBtnLink.addEventListener("click", function() {
+                    handleDeleteRepair(svtObjId);
+                });
+                
+                editBtnLink.addEventListener("click", function () {
+                    handleEditRepair(svtObjId);
+                });
+                if(i == requestResult.length - 1) {
+              
+                let addNewRepairLink = document.createElement("button");
+                addNewRepairLink.className = "px-1";
+                addNewRepairLink.style = "border: none; background: transparent;";
+                addNewRepairLink.id = "add-repair-btn";
+                addNewRepairLink.setAttribute("data-tooltip", "Внести сведения о ремонте");
+                
+              
+                let addNewRepairIcon = document.createElementNS("http://www.w3.org/2000/svg","svg");
+                addNewRepairIcon.setAttribute("class","bi bi-plus-circle add-icon");
+                addNewRepairIcon.setAttribute("width", "16");
+                addNewRepairIcon.setAttribute("height", "16");
+                addNewRepairIcon.setAttribute("viewbox", "0 0 16 16");
+                
+                let iconPath1 = document.createElementNS("http://www.w3.org/2000/svg","path");
+                iconPath1.setAttribute("d", "M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z");
+                let iconPath2 = document.createElementNS("http://www.w3.org/2000/svg","path");
+                iconPath2.setAttribute("d", "M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z");
+                addNewRepairIcon.appendChild(iconPath1);
+                addNewRepairIcon.appendChild(iconPath2);
+               
+                addNewRepairLink.appendChild(addNewRepairIcon);
+                
+                addNewRepairCol.appendChild(addNewRepairLink);
+                repairRow.appendChild(addNewRepairCol);
+                
+            }
+            divContainerBody.appendChild(repairRow);
+        }
+    } else {
+      
+        divContainerBody.innerHTML = ' <div class="row mt-2"><div class="col"><div>В ремонте не был.</div></div><div class="row mt-3 text-center"><div class="col"><button  data-tooltip="Внести сведения о ремонте" id="add-repair-btn" style = "border: none; background: transparent;">' +
+   ' <svg id="add-icon" class="bi bi-plus-circle" width="42" height="42" viewBox="0 0 16 16">' +
+      '  <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>' +
+       ' <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>' +
+   ' </svg>' +
+' </button></div></div></div>';
+    
+
+    
+    }
+    divModalBody.appendChild(divContainerBody);
+    modalRepairParent.appendChild(divModalBody);
+    
+
+         $("#add-repair-btn")[0].addEventListener("click",  function(){
+             handleAddBtn(svtObjId);
+         });
+
+    //сборка футера
+    let divModalFooter = document.createElement("div");
+    divModalFooter.className = "modal-footer svtObjModalFooter";
+    divModalFooter.id = "repairFooter";
+    let footerBtnCancel = document.createElement("button");
+    footerBtnCancel.className = "btn btn-secondary btn-sm";
+    footerBtnCancel.setAttribute("data-bs-target", "#addPlaceModal");
+    footerBtnCancel.setAttribute("data-bs-toggle", "modal");
+    footerBtnCancel.innerText = "Назад";
+    footerBtnCancel.id = "backToModal";
+//    let footerBtnSave = document.createElement("button");
+//    footerBtnSave.className = "btn btn-primary btn-sm";
+//    footerBtnSave.id = "btnRepairSave";
+//    footerBtnSave.innerText = "Сохранить";
+    
+    divModalFooter.appendChild(footerBtnCancel);
+  //  divModalFooter.appendChild(footerBtnSave);
+    modalRepairParent.appendChild(divModalFooter);
+
+};
+
 // Модальное окно добавления/редактирования телефона
 let modalContentLoad = function (eventReason, svtObjId) {
+    if(modalParent.childNodes.length > 1) {
+        modalParent.innerHTML = "";
+    }
     let requestLink;
     let titleAction;
     // Сборка header
@@ -815,6 +2109,7 @@ let modalContentLoad = function (eventReason, svtObjId) {
     divModalHeader.className = "modal-header modalHeaderContent";
     let titleModal = document.createElement("h5");
     titleModal.className = "modal-title";
+    titleModal.id = "modalTitle";
     if (null != svtObjId) {
         titleAction = "Редактировать";
     } else {
@@ -869,6 +2164,10 @@ let modalContentLoad = function (eventReason, svtObjId) {
         case "asuo":
             titleModal.innerText = titleAction + " электронная очередь";
             break;
+        case "fax":       
+            titleModal.innerText = titleAction + " факс";
+        
+            break;
     }
     divModalHeader.appendChild(titleModal);
     let headerCloseBtn = document.createElement("button");
@@ -883,7 +2182,7 @@ let modalContentLoad = function (eventReason, svtObjId) {
     divModalBody.className = "modal-body";
     let divContainerBody = document.createElement("div");
     divContainerBody.className = "container";
-    divContainerBody.id = "modalContent";
+    divContainerBody.id = "containerContent";
     divContainerBody.innerHTML = ' <div class="row mt-2">' +
             '<div class="col">Район</div>' +
             '<div class="col">' +
@@ -925,6 +2224,7 @@ let modalContentLoad = function (eventReason, svtObjId) {
             '<div class="col">' +
             '<input class="form-control form-control-sm" type="text" placeholder="введите серийный номер" aria-label="serialNumber" id="serialNumber">' +
             '</div></div>';
+    
     switch (attrib) {
         case "switch":
             
@@ -1523,6 +2823,59 @@ let modalContentLoad = function (eventReason, svtObjId) {
             divRowSpeakersSelect.appendChild(divColLabelSpeakersSelect);
             divRowSpeakersSelect.appendChild(divColSpeakersSelect);
             divContainerBody.appendChild(divRowSpeakersSelect);
+            break;
+        case "fax":
+            let divRowNumberRoomFax = document.createElement("div");
+            divRowNumberRoomFax.className = "row mt-2";
+            let divColLabelNumberRoomFax = document.createElement("div");
+            divColLabelNumberRoomFax.className = "col";
+            divColLabelNumberRoomFax.innerText = "Кабинет";
+            let divColInputNumberRoomFax = document.createElement("div");
+            divColInputNumberRoomFax.className = "col";
+            let inputNumberRoomFax = document.createElement("input");
+            inputNumberRoomFax.className = "form-control form-control-sm";
+            inputNumberRoomFax.type = "text";
+            inputNumberRoomFax.placeholder = "укажите расположение";
+            inputNumberRoomFax.id = "numberRoom";
+            inputNumberRoomFax.name = "numberRoom";
+            divColInputNumberRoomFax.appendChild(inputNumberRoomFax);
+            divRowNumberRoomFax.appendChild(divColLabelNumberRoomFax);
+            divRowNumberRoomFax.appendChild(divColInputNumberRoomFax);
+            divContainerBody.appendChild(divRowNumberRoomFax);
+            let divRowNameFromOneCFax = document.createElement("div");
+            divRowNameFromOneCFax.className = "row mt-2";
+            let divColLabelNameFromOneCFax = document.createElement("div");
+            divColLabelNameFromOneCFax.className = "col";
+            divColLabelNameFromOneCFax.innerText = "Наименование в ведомости ОС";
+            let divColInputNameFromOneCFax = document.createElement("div");
+            divColInputNameFromOneCFax.className = "col";
+            let inputNameFromOneCFax = document.createElement("textarea");
+            inputNameFromOneCFax.className = "form-control form-control-sm";
+            inputNameFromOneCFax.placeholder = "введите наименование";
+            inputNameFromOneCFax.id = "nameFromOneC";
+            inputNameFromOneCFax.setAttribute("aria-label", "nameFromOneC");
+            divColInputNameFromOneCFax.appendChild(inputNameFromOneCFax);
+            divRowNameFromOneCFax.appendChild(divColLabelNameFromOneCFax);
+            divRowNameFromOneCFax.appendChild(divColInputNameFromOneCFax);
+            divContainerBody.appendChild(divRowNameFromOneCFax);
+            var divRowIpAdressFax = document.createElement("div");
+            divRowIpAdressFax.className = "row mt-2";
+            var divColLabelIpAdressFax = document.createElement("div");
+            divColLabelIpAdressFax.className = "col";
+            divColLabelIpAdressFax.innerText = "ip адрес";
+            var divColInputIpAdressFax = document.createElement("div");
+            divColInputIpAdressFax.className = "col";
+            var inputIpAdressFax = document.createElement("input");
+            inputIpAdressFax.className = "form-control form-control-sm";
+            inputIpAdressFax.type = "text";
+            inputIpAdressFax.name = "ipAdress";
+            inputIpAdressFax.placeholder = "xxx.xxx.xxx.xxx";
+            inputIpAdressFax.pattern = "^([0-9]{1,3}\.){3}[0-9]{1,3}$";
+            inputIpAdressFax.id = "ipAdress";
+            divColInputIpAdressFax.appendChild(inputIpAdressFax);
+            divRowIpAdressFax.appendChild(divColLabelIpAdressFax);
+            divRowIpAdressFax.appendChild(divColInputIpAdressFax);
+            divContainerBody.appendChild(divRowIpAdressFax);
             break;
         case "server":
             let divRowNumberRoomServer = document.createElement("div");
@@ -2309,6 +3662,9 @@ let modalContentLoad = function (eventReason, svtObjId) {
             case "phones":
                 requestLink = "/getphone?phoneId=";
                 break;
+            case "fax":
+                requestLink = "/getfax?faxId=";
+                break;
             case "monitors":
                 requestLink = "/getmonitor?monitorId=";
                 break;
@@ -2361,6 +3717,7 @@ let modalContentLoad = function (eventReason, svtObjId) {
             async: false,
             dataType: 'json',
             success: function (callback) {
+                $("#modalTitle")[0].innerText =  $("#modalTitle")[0].innerText + ": " + callback.model;
                 idPlace = callback.placeId;
                 codeDepartment = callback.departmentCode;
                 modelId = callback.modelId;
@@ -2393,6 +3750,8 @@ let modalContentLoad = function (eventReason, svtObjId) {
                     speakersId = callback.speakersId;
                     ipAdress = callback.ipAdress;
                     dateUpgrade = callback.dateUpgrade;
+                } else if(attrib == "fax") {
+                    ipAdress = callback.ipAdress;
                 } else if (attrib == "scanner") {
                     ipAdress = callback.ipAdress;
                 } else if(attrib == "asuo") {
@@ -2464,6 +3823,12 @@ let modalContentLoad = function (eventReason, svtObjId) {
             case "phones":
                 requestLink = "/getphone?phoneId=";
                 $("#innerCallNumber")[0].value = innerCallNumber;
+                break;
+            case "fax":
+                requestLink = "/getfax?faxId=";
+                $("#nameFromOneC")[0].value = nameFromOneC;
+                $("#numberRoom")[0].value = numberRoom;
+                $("#ipAdress")[0].value = ipAdress;
                 break;
             case "monitors":
                 requestLink = "/getmonitor?monitorId=";
@@ -3238,6 +4603,9 @@ let modalContentLoad = function (eventReason, svtObjId) {
                 case "phones":
                     requestLink = "/modphones";
                     break;
+                case "fax":
+                    requestLink = "/modfax";
+                    break;
                 case "monitors":
                     requestLink = "/modmonitors";
                     break;
@@ -3735,8 +5103,8 @@ let modalContentLoad = function (eventReason, svtObjId) {
                 placeholder: "Выберите из списка",
                 preload: true,
                 valueField: 'id',
-                labelField: 'name',
-                searchField: ["id", "name"],
+                labelField: 'model',
+                searchField: ["id", "model"],
                 load: function (query, callback) {
                     $.ajax({
                         url: "/modos",
@@ -4211,8 +5579,8 @@ let modalContentLoad = function (eventReason, svtObjId) {
                 placeholder: "Выберите из списка",
                 preload: true,
                 valueField: 'id',
-                labelField: 'name',
-                searchField: ["id", "name"],
+                labelField: 'model',
+                searchField: ["id", "model"],
                 load: function (query, callback) {
                     $.ajax({
                         url: "/modos",
@@ -4491,6 +5859,37 @@ let modalContentLoad = function (eventReason, svtObjId) {
     }
     
     if (eventReason.indexOf("element") >= 0 || eventReason.indexOf("storage") >= 0) {
+        $("#containerContent").append('<div class="row mt-3"><div class="col"><button class="btn btn-primary btn-sm" id="repairBtn"  data-bs-toggle="modal" data-bs-target="#repairModal">' + 
+                '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-wrench" viewBox="0 0 16 16">' +
+                  '<path d="M.102 2.223A3.004 3.004 0 0 0 3.78 5.897l6.341 6.252A3.003 3.003 0 0 0 13 16a3 3 0 1 0-.851-5.878L5.897 3.781A3.004 3.004 0 0 0 2.223.1l2.141 2.142L4 4l-1.757.364zm13.37 9.019.528.026.287.445.445.287.026.529L15 13l-.242.471-.026.529-.445.287-.287.445-.529.026L13 15l-.471-.242-.529-.026-.287-.445-.445-.287-.026-.529L11 13l.242-.471.026-.529.445-.287.287-.445.529-.026L13 11z"/>' +
+                    '</svg>' +
+                ' Ремонт</button>' + " " + '<button class="btn btn-primary btn-sm" id="transferBtn"  data-bs-toggle="modal" data-bs-target="#transferModal">Перемещения</button></div><div class="col"></div></div>');
+          $("#repairBtn")[0].addEventListener("click", function () {
+           
+            modalRepairContentLoad(svtObjId, document.querySelector('#modelSelect').innerText);
+            
+            modalRepair.addEventListener('hidden.bs.modal', function (event) {
+                modalRepairParent.innerHTML = "";
+                modalParent.innerHTML = "";
+                modalContentLoad("element", svtObjId);
+            });
+        });
+        
+        
+         $("#transferBtn")[0].addEventListener("click", function () {
+           
+            modalTransferContentLoad(svtObjId, document.querySelector('#modelSelect').innerText);
+            
+            modalTransfer.addEventListener('hidden.bs.modal', function (event) {
+                
+                modalTransferParent.innerHTML = "";
+                modalParent.innerHTML = "";
+                modalContentLoad("element", svtObjId);
+                
+            });
+        });
+        
+        
         if (eventReason.indexOf("storage") >= 0) {
             if(null != $("#dateCreateSelect")[0]) {
                 dateCreate.disabled = true;
@@ -4640,6 +6039,7 @@ let modalContentLoad = function (eventReason, svtObjId) {
     });
     $('#btnSave')[0].addEventListener('click', handleClickSavePhoneBtn);
     stor = false;
+  
 };
 
 document.addEventListener("DOMContentLoaded", function () {
@@ -5291,6 +6691,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
 });
+
+
 
 
 

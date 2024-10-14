@@ -14,6 +14,7 @@ import ru.gov.sfr.aos.monitoring.entities.CdDrive;
 import ru.gov.sfr.aos.monitoring.entities.ConditionerModel;
 import ru.gov.sfr.aos.monitoring.entities.Cpu;
 import ru.gov.sfr.aos.monitoring.entities.DisplayModel;
+import ru.gov.sfr.aos.monitoring.entities.FaxModel;
 import ru.gov.sfr.aos.monitoring.entities.Hdd;
 import ru.gov.sfr.aos.monitoring.entities.InfomatModel;
 import ru.gov.sfr.aos.monitoring.entities.Keyboard;
@@ -188,4 +189,10 @@ public abstract class SvtModelMapper {
     public abstract SvtModelDto getModelSubDisplayDto(SubDisplayModel subDisplayModel);
     public abstract List<SubDisplayModel> getModelSubDisplayList(List<SvtModelDto> dtoes);
     public abstract List<SvtModelDto> getModelSubDisplayDtoes (List<SubDisplayModel> modelSubDisplayList);
+    
+    public abstract FaxModel getModelFax (SvtModelDto dto);
+    public abstract SvtModelDto getModelFaxDto(FaxModel faxModel);
+    public abstract List<FaxModel> getModelFaxList(List<SvtModelDto> dtoes);
+    public abstract List<SvtModelDto> getModelFaxDtoes (List<FaxModel> modelFaxList);
+    
 }

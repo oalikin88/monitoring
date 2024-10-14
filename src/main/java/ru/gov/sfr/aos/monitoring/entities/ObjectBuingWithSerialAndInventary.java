@@ -19,6 +19,7 @@ public abstract class ObjectBuingWithSerialAndInventary extends ObjectBuing {
     protected Status status;
     protected String inventaryNumber;
     protected String serialNumber;
+   
 
     protected ObjectBuingWithSerialAndInventary() {
         super();
@@ -64,9 +65,7 @@ public abstract class ObjectBuingWithSerialAndInventary extends ObjectBuing {
         this.serialNumber = serialNumber;
     }
 
+  
 
-
-
-    
-    
+ 
 }
