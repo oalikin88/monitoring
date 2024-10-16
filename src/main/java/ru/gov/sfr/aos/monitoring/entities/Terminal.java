@@ -33,6 +33,11 @@ public class Terminal extends ObjectBuingWithSerialAndInventary implements Seria
     public void setTerminalModel(TerminalModel terminalModel) {
         this.terminalModel = terminalModel;
     }
+
+    @Override
+    public String toString() {
+        return "Terminal{" + "id=" + this.id + ", serial=" + this.serialNumber + ", inventary=" + this.inventaryNumber + ", terminalModel=" + terminalModel + '}';
+    }
     
     
     

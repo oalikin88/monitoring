@@ -74,6 +74,11 @@ public class DepartmentDTO {
         }
         return Objects.equals(this.code, other.code);
     }
+
+    @Override
+    public String toString() {
+        return "DepartmentDTO{" + "name=" + name + ", code=" + code + ", phones=" + phones + '}';
+    }
     
     
 }

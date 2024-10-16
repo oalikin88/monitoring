@@ -37,5 +37,8 @@ public class UpsModel extends SvtModel {
         this.upsList = upsList;
     }
     
-    
+        @Override
+    public String toString() {
+        return "UpsModel{" + "id=" + this.id + ", model=" + this.model + "}";
+    }
 }

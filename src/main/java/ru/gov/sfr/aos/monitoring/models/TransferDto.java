@@ -86,6 +86,11 @@ public class TransferDto {
     public void setDocumentNumber(String documentNumber) {
         this.documentNumber = documentNumber;
     }
+
+    @Override
+    public String toString() {
+        return "TransferDto{" + "id=" + id + ", idObjectBuing=" + idObjectBuing + ", dateTransfer=" + dateTransfer + ", inventaryNumberOld=" + inventaryNumberOld + ", inventaryNumberNew=" + inventaryNumberNew + ", transferFrom=" + transferFrom + ", transferTo=" + transferTo + ", documentNumber=" + documentNumber + '}';
+    }
     
     
 }

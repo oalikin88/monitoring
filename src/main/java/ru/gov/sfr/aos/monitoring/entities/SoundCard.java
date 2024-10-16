@@ -19,7 +19,10 @@ public class SoundCard extends SvtModel {
     }
 
     
-  
+      @Override
+    public String toString() {
+        return "SoundCardModel{" + "id=" + this.id + ", model=" + this.model + "}";
+    }
     
     
 }

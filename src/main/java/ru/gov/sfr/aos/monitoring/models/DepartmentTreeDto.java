@@ -48,6 +48,11 @@ public class DepartmentTreeDto <D extends SvtDTO> {
     public void setDtoes(List<D> dtoes) {
         this.dtoes = dtoes;
     }
+
+    @Override
+    public String toString() {
+        return "DepartmentTreeDto{" + "department=" + department + ", departmentCode=" + departmentCode + ", dtoes=" + dtoes + '}';
+    }
     
     
 }

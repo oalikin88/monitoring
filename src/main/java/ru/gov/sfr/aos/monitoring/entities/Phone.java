@@ -146,6 +146,11 @@ public class Phone extends ObjectBuingWithSerialAndInventary implements Serializ
     public void setNameFromeOneC(String nameFromeOneC) {
         this.nameFromeOneC = nameFromeOneC;
     }
+
+    @Override
+    public String toString() {
+        return "Phone{" + "id=" +this.id + "serial=" + this.serialNumber + ", inventary=" + this.inventaryNumber + ", phoneModel=" + phoneModel + ", yearCreated=" + yearCreated + ", dateExploitationBegin=" + dateExploitationBegin + ", phoneNumber=" + phoneNumber + ", nameFromeOneC=" + nameFromeOneC + '}';
+    }
     
     
     

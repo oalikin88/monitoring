@@ -35,6 +35,9 @@ public class SwitchHubModel extends SvtModel {
     }
     
     
-    
+        @Override
+    public String toString() {
+        return "SwitchHubModel{" + "id=" + this.id + ", model=" + this.model + "}";
+    }
     
 }

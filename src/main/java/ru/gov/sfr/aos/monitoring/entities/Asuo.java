@@ -133,6 +133,12 @@ public class Asuo extends ObjectBuing implements Serializable {
     public void setNumberRoom(String numberRoom) {
         this.numberRoom = numberRoom;
     }
+
+    @Override
+    public String toString() {
+        return "Asuo{" + "terminal=" + terminal + ", thermoPrinter=" + thermoPrinter + ", switchingUnit=" + switchingUnit + ", display=" + display + ", subDisplayModel=" + subDisplayModel + ", subDisplayAmount=" + subDisplayAmount + ", switchHubSet=" + switchHubSet + ", nameFromOneC=" + nameFromOneC + ", dateExploitationBegin=" + dateExploitationBegin + ", yearCreated=" + yearCreated + ", numberRoom=" + numberRoom + '}';
+    }
+    
     
     
 }

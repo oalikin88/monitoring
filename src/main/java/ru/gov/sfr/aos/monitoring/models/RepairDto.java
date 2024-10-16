@@ -60,6 +60,11 @@ public class RepairDto {
         this.idObjectBuing = idObjectBuing;
     }
 
+    @Override
+    public String toString() {
+        return "RepairDto{" + "id=" + id + ", idObjectBuing=" + idObjectBuing + ", dateRepair=" + dateRepair + ", documentNumber=" + documentNumber + ", definition=" + definition + '}';
+    }
+
     
     
     

@@ -152,6 +152,11 @@ public class Scanner extends ObjectBuingWithSerialAndInventary implements Serial
         this.dateExploitationBegin = dateExploitationBegin;
     }
 
+    @Override
+    public String toString() {
+        return "Scanner{" + "id=" + this.id + ", serial=" + this.serialNumber + ", inventary=" + this.inventaryNumber + ", scannerModel=" + scannerModel + ", yearCreated=" + yearCreated + ", ipAdress=" + ipAdress + ", numberRoom=" + numberRoom + ", nameFromOneC=" + nameFromOneC + ", dateExploitationBegin=" + dateExploitationBegin + '}';
+    }
+
  
     
     

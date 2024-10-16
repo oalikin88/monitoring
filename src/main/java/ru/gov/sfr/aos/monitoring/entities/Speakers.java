@@ -18,7 +18,10 @@ public class Speakers extends SvtModel {
     public Speakers() {
     }
 
-    
+        @Override
+    public String toString() {
+        return "SpeakersModel{" + "id=" + this.id + ", model=" + this.model + "}";
+    }
 
     
     

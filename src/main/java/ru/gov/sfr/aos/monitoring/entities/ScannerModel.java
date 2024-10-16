@@ -33,5 +33,8 @@ public class ScannerModel extends SvtModel {
         this.scanners = scanners;
     }
     
-    
+        @Override
+    public String toString() {
+        return "ScannerModel{" + "id=" + this.id + ", model=" + this.model + "}";
+    }
 }

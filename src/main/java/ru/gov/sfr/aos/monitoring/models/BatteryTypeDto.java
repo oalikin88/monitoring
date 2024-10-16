@@ -33,6 +33,11 @@ public class BatteryTypeDto {
     public void setType(String type) {
         this.type = type;
     }
+
+    @Override
+    public String toString() {
+        return "BatteryTypeDto{" + "id=" + id + ", type=" + type + '}';
+    }
     
     
     

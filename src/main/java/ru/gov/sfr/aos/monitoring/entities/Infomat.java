@@ -60,6 +60,11 @@ public class Infomat extends ObjectBuingWithSerialAndInventary implements Serial
     public void setNumberRoom(String numberRoom) {
         this.numberRoom = numberRoom;
     }
+
+    @Override
+    public String toString() {
+        return "Infomat{" + "id=" + this.id + ", serial=" + this.serialNumber + ", inventary=" + this.inventaryNumber + ", infomatModel=" + infomatModel + ", nameFromOneC=" + nameFromOneC + ", yearCreated=" + yearCreated + ", numberRoom=" + numberRoom + '}';
+    }
     
     
     

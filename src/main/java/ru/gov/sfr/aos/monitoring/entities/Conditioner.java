@@ -115,6 +115,11 @@ public class Conditioner extends ObjectBuingWithSerialAndInventary implements Se
     public void setNumberRoom(String numberRoom) {
         this.numberRoom = numberRoom;
     }
+
+    @Override
+    public String toString() {
+        return "Conditioner{" + "id=" + this.id + ", serial=" + this.serialNumber + ", inventary=" + this.inventaryNumber + ", conditionerModel=" + conditionerModel + ", nameFromOneC=" + nameFromOneC + ", description=" + description + ", numberRoom=" + numberRoom + ", price=" + price + ", yearCreated=" + yearCreated + ", conditionerType=" + conditionerType + ", splitSystem=" + splitSystem + ", winterKit=" + winterKit + ", havePomp=" + havePomp + '}';
+    }
     
     
 }

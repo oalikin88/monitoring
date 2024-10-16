@@ -38,6 +38,11 @@ public class OperationSystemDto {
     public void setLicense(boolean license) {
         this.license = license;
     }
+
+    @Override
+    public String toString() {
+        return "OperationSystemDto{" + "id=" + id + ", model=" + model + ", license=" + license + '}';
+    }
     
     
 }

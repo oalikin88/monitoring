@@ -47,6 +47,11 @@ public class PhonesTreeDto {
     public void setPhonesByDepartment(List<DepartmentTreeDto> phonesByDepartment) {
         this.phonesByDepartment = phonesByDepartment;
     }
+
+    @Override
+    public String toString() {
+        return "PhonesTreeDto{" + "locationId=" + locationId + ", locationName=" + locationName + ", phonesByDepartment=" + phonesByDepartment + '}';
+    }
     
     
     

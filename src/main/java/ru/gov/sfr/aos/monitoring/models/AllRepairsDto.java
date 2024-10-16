@@ -34,6 +34,11 @@ public class AllRepairsDto {
     public void setRepairsDtoes(List<RepairDto> repairsDtoes) {
         this.repairsDtoes = repairsDtoes;
     }
+
+    @Override
+    public String toString() {
+        return "AllRepairsDto{" + "objectBuingId=" + objectBuingId + ", repairsDtoes=" + repairsDtoes + '}';
+    }
     
     
     

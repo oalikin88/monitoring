@@ -85,6 +85,11 @@ public class PlaceDTO {
     public void setDepartmentCode(String departmentCode) {
         this.departmentCode = departmentCode;
     }
+
+    @Override
+    public String toString() {
+        return "PlaceDTO{" + "placeId=" + placeId + ", username=" + username + ", placeType=" + placeType + ", locationId=" + locationId + ", locationName=" + locationName + ", department=" + department + ", departmentCode=" + departmentCode + '}';
+    }
     
     
     

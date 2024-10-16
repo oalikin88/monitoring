@@ -53,6 +53,11 @@ public class HddDto extends SvtModelDto {
     public void setInventaryNumber(String inventaryNumber) {
         this.inventaryNumber = inventaryNumber;
     }
+
+    @Override
+    public String toString() {
+        return "HddDto{" + "id=" + this.getId() + ", model=" + this.getModel() + ", capacity=" + capacity + ", unit=" + unit + ", serialNumber=" + serialNumber + ", inventaryNumber=" + inventaryNumber + '}';
+    }
     
     
     

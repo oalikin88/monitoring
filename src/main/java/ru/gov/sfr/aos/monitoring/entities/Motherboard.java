@@ -22,7 +22,10 @@ public class Motherboard extends SvtModel implements Serializable{
 
     
     
-
+    @Override
+    public String toString() {
+        return "MotherboardModel{" + "id=" + this.id + ", model=" + this.model + "}";
+    }
     
     
 }

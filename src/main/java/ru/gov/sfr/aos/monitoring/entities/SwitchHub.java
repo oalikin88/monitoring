@@ -81,6 +81,11 @@ public class SwitchHub extends ObjectBuingWithSerialAndInventary implements Seri
     public void setNameFromOneC(String nameFromOneC) {
         this.nameFromOneC = nameFromOneC;
     }
+
+    @Override
+    public String toString() {
+        return "SwitchHub{" + "id=" + this.id + ", serial=" + this.serialNumber + ", inventary=" + this.inventaryNumber + "switchHubModel=" + switchHubModel + ", switchHubType=" + switchHubType + ", portAmount=" + portAmount + ", numberRoom=" + numberRoom + ", nameFromOneC=" + nameFromOneC + '}';
+    }
     
     
     

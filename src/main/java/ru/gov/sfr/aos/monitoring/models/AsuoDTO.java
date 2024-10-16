@@ -277,6 +277,11 @@ public class AsuoDTO extends MainSvtDto{
     public void setSwitchId(List<Long> switchId) {
         this.switchId = switchId;
     }
+
+    @Override
+    public String toString() {
+        return "AsuoDTO{" + "id=" + id + ", placeId=" + placeId + ", placeName=" + placeName + ", nameFromOneC=" + nameFromOneC + ", dateExploitationBegin=" + dateExploitationBegin + ", yearCreated=" + yearCreated + ", numberRoom=" + numberRoom + ", displayId=" + displayId + ", displayModel=" + displayModel + ", displaySerial=" + displaySerial + ", displayInventary=" + displayInventary + ", terminalId=" + terminalId + ", terminalModel=" + terminalModel + ", terminalSerial=" + terminalSerial + ", terminalInventary=" + terminalInventary + ", thermoprinterId=" + thermoprinterId + ", thermoprinterModel=" + thermoprinterModel + ", thermoprinterSerial=" + thermoprinterSerial + ", thermoprinterInventary=" + thermoprinterInventary + ", switches=" + switches + ", switchId=" + switchId + ", subDisplayModelId=" + subDisplayModelId + ", subDisplayModel=" + subDisplayModel + ", subDisplayAmount=" + subDisplayAmount + ", switchingUnitId=" + switchingUnitId + ", switchingUnitModel=" + switchingUnitModel + ", switchingUnitInventary=" + switchingUnitInventary + ", switchingUnitSerial=" + switchingUnitSerial + ", locationId=" + locationId + '}';
+    }
     
     
     

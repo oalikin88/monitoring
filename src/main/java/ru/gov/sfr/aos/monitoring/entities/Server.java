@@ -154,6 +154,11 @@ public class Server extends ObjectBuingWithSerialAndInventary implements Seriali
         this.operationSystems = operationSystems;
     }
 
+    @Override
+    public String toString() {
+        return "Server{"+ "id=" + this.id + ", serial=" + this.serialNumber + ", inventary=" + this.inventaryNumber + ", serverModel=" + serverModel + ", yearCreated=" + yearCreated + ", dateExploitationBegin=" + dateExploitationBegin + ", nameFromOneC=" + nameFromOneC + ", dateUpgrade=" + dateUpgrade + ", numberRoom=" + numberRoom + ", ipAdress=" + ipAdress + ", cpu=" + cpu + ", cpuAmount=" + cpuAmount + ", ram=" + ram + ", hdd=" + hdd + ", operationSystems=" + operationSystems + '}';
+    }
+
     
     
 }

@@ -20,7 +20,10 @@ public class Keyboard extends SvtModel {
 
     
 
-    
+        @Override
+    public String toString() {
+        return "KeyboardModel{" + "id=" + this.id + ", model=" + this.model + "}";
+    }
     
     
     

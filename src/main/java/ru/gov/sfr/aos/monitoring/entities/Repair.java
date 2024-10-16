@@ -73,6 +73,11 @@ public class Repair {
         this.objectBuing = objectBuing;
     }
 
+    @Override
+    public String toString() {
+        return "Repair{" + "id=" + id + ", dateRepair=" + dateRepair + ", documentNumber=" + documentNumber + ", definition=" + definition + ", objectBuing=" + objectBuing + '}';
+    }
+
 
     
     

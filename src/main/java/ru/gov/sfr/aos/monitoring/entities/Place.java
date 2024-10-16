@@ -100,6 +100,11 @@ public class Place {
     public void setArchived(boolean archived) {
         this.archived = archived;
     }
+
+    @Override
+    public String toString() {
+        return "Place{" + "id=" + id + ", username=" + username + ", placeType=" + placeType + ", location=" + location + ", department=" + department + ", departmentCode=" + departmentCode + ", archived=" + archived + '}';
+    }
     
     
     

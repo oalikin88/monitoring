@@ -32,6 +32,11 @@ public class DepDto {
     public void setCode(String code) {
         this.code = code;
     }
+
+    @Override
+    public String toString() {
+        return "DepDto{" + "name=" + name + ", code=" + code + '}';
+    }
     
     
 }

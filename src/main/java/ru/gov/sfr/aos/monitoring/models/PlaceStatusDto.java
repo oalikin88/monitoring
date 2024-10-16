@@ -35,5 +35,12 @@ public class PlaceStatusDto {
     public void setLabel(String label) {
         this.label = label;
     }
+
+    @Override
+    public String toString() {
+        return "PlaceStatusDto{" + "value=" + value + ", label=" + label + '}';
+    }
+    
+    
     
 }

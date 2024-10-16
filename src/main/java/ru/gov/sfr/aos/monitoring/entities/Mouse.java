@@ -21,6 +21,9 @@ public class Mouse extends SvtModel implements Serializable {
 
     
 
-    
+        @Override
+    public String toString() {
+        return "MouseModel{" + "id=" + this.id + ", model=" + this.model + "}";
+    }
     
 }

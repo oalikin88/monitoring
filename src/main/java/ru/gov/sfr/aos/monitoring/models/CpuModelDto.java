@@ -35,6 +35,11 @@ public class CpuModelDto extends SvtModelDto {
     public void setFreq(int freq) {
         this.freq = freq;
     }
+
+    @Override
+    public String toString() {
+        return "CpuModelDto{" + "id=" + this.getId() +  ", model=" + this.getModel() + ", core=" + core + ", freq=" + freq + '}';
+    }
     
     
     

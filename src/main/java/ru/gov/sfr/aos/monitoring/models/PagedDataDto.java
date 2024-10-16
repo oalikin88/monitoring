@@ -30,6 +30,11 @@ public class PagedDataDto<T> {
     public void setTotalPage(Long totalPage) {
         this.totalPage = totalPage;
     }
+
+    @Override
+    public String toString() {
+        return "PagedDataDto{" + "data=" + data + ", totalPage=" + totalPage + '}';
+    }
     
     
     

@@ -34,5 +34,8 @@ public class DisplayModel extends SvtModel {
         this.displays = displays;
     }
     
-    
+        @Override
+    public String toString() {
+        return "DisplayModel{" + "id=" + this.id + ", model=" + this.model + "}";
+    }
 }

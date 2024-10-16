@@ -35,5 +35,8 @@ public class SwitchingUnitModel extends SvtModel {
     }
     
     
-    
+        @Override
+    public String toString() {
+        return "SwitchingUnitModel{" + "id=" + this.id + ", model=" + this.model + "}";
+    }
 }

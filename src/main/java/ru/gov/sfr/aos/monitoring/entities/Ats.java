@@ -112,6 +112,11 @@ public class Ats extends ObjectBuingWithSerialAndInventary implements Serializab
     public void setInnerConnectionAnalog(int innerConnectionAnalog) {
         this.innerConnectionAnalog = innerConnectionAnalog;
     }
+
+    @Override
+    public String toString() {
+        return "Ats{" + "id=" + this.id + ", serial=" +this.serialNumber + ", inventary=" + this.inventaryNumber + ", atsModel=" + atsModel + ", nameFromOneC=" + nameFromOneC + ", numberRoom=" + numberRoom + ", cityNumberAmount=" + cityNumberAmount + ", outerConnectionType=" + outerConnectionType + ", innerConnectionIp=" + innerConnectionIp + ", innerConnectionAnalog=" + innerConnectionAnalog + ", yearCreated=" + yearCreated + '}';
+    }
     
     
     

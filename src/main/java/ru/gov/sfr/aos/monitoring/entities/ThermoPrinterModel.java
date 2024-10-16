@@ -33,6 +33,9 @@ public class ThermoPrinterModel extends SvtModel {
         this.thermoPrinters = thermoPrinters;
     }
     
-    
+        @Override
+    public String toString() {
+        return "ThermoPrinterModel{" + "id=" + this.id + ", model=" + this.model + "}";
+    }
     
 }

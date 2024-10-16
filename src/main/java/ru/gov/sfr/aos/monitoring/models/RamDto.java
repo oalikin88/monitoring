@@ -23,5 +23,12 @@ public class RamDto extends SvtModelDto {
     public void setCapacity(int capacity) {
         this.capacity = capacity;
     }
+
+    @Override
+    public String toString() {
+        return "RamDto{" + "id=" + this.getId() + ", model=" + this.getModel() + ", capacity=" + capacity + '}';
+    }
+    
+    
     
 }

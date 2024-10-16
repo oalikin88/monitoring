@@ -39,5 +39,8 @@ public class SystemBlockModel extends SvtModel {
         this.systemBlocks = systemBlocks;
     }
     
-    
+        @Override
+    public String toString() {
+        return "SystemBlockModel{" + "id=" + this.id + ", model=" + this.model + "}";
+    }
 }

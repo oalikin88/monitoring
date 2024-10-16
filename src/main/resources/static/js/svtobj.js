@@ -1323,7 +1323,7 @@ let handleClickUpdateBtn = function () {
             break;
     }
     $.ajax({
-        type: "POST",
+        type: "PUT",
         url: requestLink,
         data: JSON.stringify(dto),
         async: false,

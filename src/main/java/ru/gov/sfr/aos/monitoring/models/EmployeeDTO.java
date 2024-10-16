@@ -37,6 +37,11 @@ public class EmployeeDTO {
         this.name = name;
     }
 
+    @Override
+    public String toString() {
+        return "EmployeeDTO{" + "code=" + code + ", name=" + name + '}';
+    }
+
   
     
     

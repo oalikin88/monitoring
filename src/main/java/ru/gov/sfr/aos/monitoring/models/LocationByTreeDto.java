@@ -48,6 +48,11 @@ public class LocationByTreeDto {
     public void setDepartments(List<DepartmentTreeDto> departments) {
         this.departments = departments;
     }
+
+    @Override
+    public String toString() {
+        return "LocationByTreeDto{" + "locationId=" + locationId + ", locationName=" + locationName + ", departments=" + departments + '}';
+    }
     
     
     

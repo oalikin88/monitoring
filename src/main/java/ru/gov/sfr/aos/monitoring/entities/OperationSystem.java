@@ -67,6 +67,11 @@ public class OperationSystem {
     public void setSystemBlocks(Set<SystemBlock> systemBlocks) {
         this.systemBlocks = systemBlocks;
     }
+
+    @Override
+    public String toString() {
+        return "OperationSystem{" + "id=" + id + ", model=" + model + ", license=" + license + ", systemBlocks=" + systemBlocks + '}';
+    }
     
     
 }

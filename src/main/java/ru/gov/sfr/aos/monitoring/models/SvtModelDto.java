@@ -35,5 +35,12 @@ public class SvtModelDto {
     public void setModel(String model) {
         this.model = model;
     }
+
+    @Override
+    public String toString() {
+        return "SvtModelDto{" + "id=" + id + ", model=" + model + '}';
+    }
+    
+    
     
 }

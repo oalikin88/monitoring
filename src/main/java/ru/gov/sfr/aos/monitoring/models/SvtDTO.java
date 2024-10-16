@@ -246,6 +246,11 @@ public class SvtDTO extends MainSvtDto {
     public void setNumberRoom(String numberRoom) {
         this.numberRoom = numberRoom;
     }
+
+    @Override
+    public String toString() {
+        return "SvtDTO{" + "id=" + id + ", modelId=" + modelId + ", model=" + model + ", status=" + status + ", inventaryNumber=" + inventaryNumber + ", serialNumber=" + serialNumber + ", yearCreated=" + yearCreated + ", dateExploitationBegin=" + dateExploitationBegin + ", placeId=" + placeId + ", placeName=" + placeName + ", placeType=" + placeType + ", departmentCode=" + departmentCode + ", locationId=" + locationId + ", phoneNumber=" + phoneNumber + ", nameFromOneC=" + nameFromOneC + ", typeDto=" + typeDto + ", baseType=" + baseType + ", batteryType=" + batteryType + ", batteryTypeId=" + batteryTypeId + ", batteryAmount=" + batteryAmount + ", yearReplacement=" + yearReplacement + ", numberRoom=" + numberRoom + '}';
+    }
     
     
     

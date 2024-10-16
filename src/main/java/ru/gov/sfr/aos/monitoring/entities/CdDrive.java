@@ -18,8 +18,10 @@ public class CdDrive extends SvtModel {
     public CdDrive() {
     }
 
+    @Override
+    public String toString() {
+        return "CdDrive{" + "id=" + this.id + "model=" + this.model + '}';
+    }
 
-    
-    
-    
+
 }

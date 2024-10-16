@@ -19,7 +19,10 @@ public class LanCard extends SvtModel {
     }
 
     
-
+    @Override
+    public String toString() {
+        return "LanCardModel{" + "id=" + this.id + ", model=" + this.model + "}";
+    }
     
     
 }

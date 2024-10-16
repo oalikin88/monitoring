@@ -33,6 +33,11 @@ public class ThermoPrinter extends ObjectBuingWithSerialAndInventary implements 
     public void setThermoPrinterModel(ThermoPrinterModel thermoPrinterModel) {
         this.thermoPrinterModel = thermoPrinterModel;
     }
+
+    @Override
+    public String toString() {
+        return "ThermoPrinter{" + "id=" + this.id + ", serial=" + this.serialNumber + ", inventary=" + this.inventaryNumber + ", thermoPrinterModel=" + thermoPrinterModel + '}';
+    }
     
     
 }

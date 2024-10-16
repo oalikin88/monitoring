@@ -37,6 +37,9 @@ public class InfomatModel extends SvtModel {
         this.infomates = infomates;
     }
     
-    
+        @Override
+    public String toString() {
+        return "InfomatModel{" + "id=" + this.id + ", model=" + this.model + "}";
+    }
     
 }

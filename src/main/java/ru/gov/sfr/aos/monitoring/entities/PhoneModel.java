@@ -37,6 +37,9 @@ public class PhoneModel extends SvtModel {
         this.phones = phones;
     }
     
-    
+        @Override
+    public String toString() {
+        return "PhoneModel{" + "id=" + this.id + ", model=" + this.model + "}";
+    }
     
 }

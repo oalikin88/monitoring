@@ -33,6 +33,11 @@ public class SwitchingUnit extends ObjectBuingWithSerialAndInventary implements 
     public void setSwitchingUnitModel(SwitchingUnitModel switchingUnitModel) {
         this.switchingUnitModel = switchingUnitModel;
     }
+
+    @Override
+    public String toString() {
+        return "SwitchingUnit{" + "id=" + this.id + ", serial=" + this.serialNumber + ", inventary=" + this.inventaryNumber + ", switchingUnitModel=" + switchingUnitModel + '}';
+    }
     
     
     

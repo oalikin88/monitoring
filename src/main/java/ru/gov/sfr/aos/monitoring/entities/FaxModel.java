@@ -30,6 +30,11 @@ public class FaxModel extends SvtModel {
     public void setFaxes(Set<Fax> faxes) {
         this.faxes = faxes;
     }
+
+    @Override
+    public String toString() {
+        return "FaxModel{" + "id=" + this.id + ", model=" + this.model + '}';
+    }
     
     
     

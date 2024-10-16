@@ -90,6 +90,11 @@ public class Fax extends ObjectBuingWithSerialAndInventary implements Serializab
     public void setNumberRoom(String numberRoom) {
         this.numberRoom = numberRoom;
     }
+
+    @Override
+    public String toString() {
+        return "Fax{" + "id=" + this.id + ", serial=" + this.serialNumber + "inventary=" + this.inventaryNumber + ", model=" + model + ", dateExploitationBegin=" + dateExploitationBegin + ", yearCreated=" + yearCreated + ", ipAdress=" + ipAdress + ", nameFromeOneC=" + nameFromeOneC + ", numberRoom=" + numberRoom + '}';
+    }
     
     
     

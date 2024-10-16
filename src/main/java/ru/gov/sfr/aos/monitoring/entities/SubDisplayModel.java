@@ -35,5 +35,8 @@ public class SubDisplayModel extends SvtModel {
     }
 
     
-    
+        @Override
+    public String toString() {
+        return "SubDisplayModel{" + "id=" + this.id + ", model=" + this.model + "}";
+    }
 }

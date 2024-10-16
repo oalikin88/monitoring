@@ -37,5 +37,8 @@ public class Cpu extends SvtModel {
         this.freq = freq;
     }
     
-    
+      @Override
+    public String toString() {
+        return "CpuModel{" + "id=" + this.id + ", model=" + this.model + "}";
+    }
 }

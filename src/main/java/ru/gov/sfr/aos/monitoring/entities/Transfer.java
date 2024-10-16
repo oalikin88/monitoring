@@ -99,6 +99,11 @@ public class Transfer {
     public void setObjectBuing(ObjectBuing objectBuing) {
         this.objectBuing = objectBuing;
     }
+
+    @Override
+    public String toString() {
+        return "Transfer{" + "id=" + id + ", dateTransfer=" + dateTransfer + ", inventaryNumberOld=" + inventaryNumberOld + ", inventaryNumberNew=" + inventaryNumberNew + ", transferFrom=" + transferFrom + ", transferTo=" + transferTo + ", documentNumber=" + documentNumber + ", objectBuing=" + objectBuing + '}';
+    }
     
     
 }

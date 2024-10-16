@@ -40,7 +40,10 @@ public class MonitorModel extends SvtModel {
         this.monitors = monitors;
     }
 
-
+    @Override
+    public String toString() {
+        return "MonitorModel{" + "id=" + this.id + ", model=" + this.model + "}";
+    }
     
     
 }

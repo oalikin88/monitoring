@@ -33,6 +33,11 @@ public class ConditionerModel extends SvtModel {
     public void setConditioners(Set<Conditioner> conditioners) {
         this.conditioners = conditioners;
     }
+
+    @Override
+    public String toString() {
+        return "ConditionerModel{" + "id=" + this.id + ", model=" + this.model + "}";
+    }
     
     
 }

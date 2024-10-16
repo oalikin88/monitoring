@@ -149,6 +149,11 @@ public class Ups extends ObjectBuingWithSerialAndInventary implements Serializab
     public void setNumberRoom(String numberRoom) {
         this.numberRoom = numberRoom;
     }
+
+    @Override
+    public String toString() {
+        return "Ups{" + "id=" + this.id + ", upsModel=" + upsModel + ", status=" + status + ", inventaryNumber=" + inventaryNumber + ", serialNumber=" + serialNumber + ", yearCreated=" + yearCreated + ", yearReplacement=" + yearReplacement + ", batteryType=" + batteryType + ", batteryAmount=" + batteryAmount + ", dateExploitationBegin=" + dateExploitationBegin + ", numberRoom=" + numberRoom + ", nameFromOneC=" + nameFromOneC + '}';
+    }
     
     
 }

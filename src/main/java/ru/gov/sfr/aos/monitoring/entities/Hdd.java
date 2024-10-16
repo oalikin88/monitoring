@@ -70,6 +70,11 @@ public class Hdd extends SvtModel {
     public void setSystemblocks(Set<SystemBlock> systemblocks) {
         this.systemblocks = systemblocks;
     }
+
+    @Override
+    public String toString() {
+        return "Hdd{" + "id=" + this.id + ", serial=" + this.serialNumber + ", inventary=" + this.inventaryNumber + ", capacity=" + capacity + ", unit=" + unit + ", serialNumber=" + serialNumber + ", inventaryNumber=" + inventaryNumber + ", systemblocks=" + systemblocks + '}';
+    }
     
     
     

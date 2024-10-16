@@ -26,6 +26,9 @@ public class Ram extends SvtModel {
         this.capacity = capacity;
     }
     
-    
+        @Override
+    public String toString() {
+        return "RamModel{" + "id=" + this.id + ", model=" + this.model + "}";
+    }
     
 }

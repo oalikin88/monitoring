@@ -38,6 +38,11 @@ public class ManufacturerDTO {
     public void setModels(List <String> models) {
         this.models = models;
     }
+
+    @Override
+    public String toString() {
+        return "ManufacturerDTO{" + "manufacturer=" + manufacturer + ", models=" + models + '}';
+    }
     
     
 }

@@ -39,6 +39,11 @@ public class PlaningBuyDto {
         this.dateEnd = dateEnd;
     }
 
+    @Override
+    public String toString() {
+        return "PlaningBuyDto{" + "dateBegin=" + dateBegin + ", dateEnd=" + dateEnd + '}';
+    }
+
 
     
     

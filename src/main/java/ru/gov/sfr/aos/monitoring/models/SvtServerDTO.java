@@ -157,6 +157,11 @@ public class SvtServerDTO extends SvtDTO {
     public void setIpAdress(String ipAdress) {
         this.ipAdress = ipAdress;
     }
+
+    @Override
+    public String toString() {
+        return "SvtServerDTO{" + "id=" + this.id + "model=" + this.model +  ", numberRoom=" + numberRoom + ", dateUpgrade=" + dateUpgrade + ", cpuId=" + cpuId + ", cpuModel=" + cpuModel + ", cpuCore=" + cpuCore + ", cpuFreq=" + cpuFreq + ", cpuAmount=" + cpuAmount + ", ramId=" + ramId + ", ramModel=" + ramModel + ", ramCapacity=" + ramCapacity + ", hddIdList=" + hddIdList + ", operationSystemName=" + operationSystemName + ", operationSystemId=" + operationSystemId + ", ipAdress=" + ipAdress + '}';
+    }
     
     
 }

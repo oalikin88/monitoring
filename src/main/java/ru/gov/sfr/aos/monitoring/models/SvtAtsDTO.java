@@ -55,6 +55,11 @@ public class SvtAtsDTO extends SvtDTO {
     public void setInnerConnectionAnalog(int innerConnectionAnalog) {
         this.innerConnectionAnalog = innerConnectionAnalog;
     }
+
+    @Override
+    public String toString() {
+        return "SvtAtsDTO{" + "id=" + this.getId() + ", serial=" + this.serialNumber + ", inventary=" + this.inventaryNumber + ", cityNumberAmount=" + cityNumberAmount + ", outerConnectionType=" + outerConnectionType + ", innerConnectionIp=" + innerConnectionIp + ", innerConnectionAnalog=" + innerConnectionAnalog + '}';
+    }
     
     
     

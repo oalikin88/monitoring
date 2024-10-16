@@ -33,6 +33,11 @@ public class SvtScannerDTO extends SvtDTO {
     public void setNumberRoom(String numberRoom) {
         this.numberRoom = numberRoom;
     }
+
+    @Override
+    public String toString() {
+        return "SvtScannerDTO{" + "id=" + this.getId() + ", model=" + this.model + ", ipAdress=" + ipAdress + ", numberRoom=" + numberRoom + '}';
+    }
     
     
 }

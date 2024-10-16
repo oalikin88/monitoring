@@ -68,6 +68,11 @@ public class ContractForViewDTO {
     public void setItems(String items) {
         this.items = items;
     }
+
+    @Override
+    public String toString() {
+        return "ContractForViewDTO{" + "id=" + id + ", contractNumber=" + contractNumber + ", dateStartContract=" + dateStartContract + ", dateEndContract=" + dateEndContract + ", items=" + items + '}';
+    }
     
     
     

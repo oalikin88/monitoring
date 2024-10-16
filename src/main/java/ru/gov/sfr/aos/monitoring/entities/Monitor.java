@@ -140,6 +140,11 @@ public class Monitor extends ObjectBuingWithSerialAndInventary implements Serial
     public void setBaseType(BaseType baseType) {
         this.baseType = baseType;
     }
+
+    @Override
+    public String toString() {
+        return "Monitor{" + "id=" + id + ", monitorModel=" + monitorModel + ", status=" + status + ", yearCreated=" + yearCreated + ", dateExploitationBegin=" + dateExploitationBegin + ", nameFromeOneC=" + nameFromeOneC + ", baseType=" + baseType + '}';
+    }
     
     
 }

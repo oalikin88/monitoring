@@ -33,5 +33,8 @@ public class TerminalModel extends SvtModel {
         this.terminals = terminals;
     }
     
-    
+        @Override
+    public String toString() {
+        return "TerminalModel{" + "id=" + this.id + ", model=" + this.model + "}";
+    }
 }

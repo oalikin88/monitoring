@@ -37,5 +37,11 @@ public class SvtSwitchHubDTO extends SvtDTO {
     public void setPortAmount(int portAmount) {
         this.portAmount = portAmount;
     }
+
+    @Override
+    public String toString() {
+        return "SvtSwitchHubDTO{" + "id=" + this.getId() + ", serial=" + this.serialNumber + ", inventary=" + this.inventaryNumber + ", switchHubType=" + switchHubType + ", portAmount=" + portAmount + '}';
+    }
+    
     
 }

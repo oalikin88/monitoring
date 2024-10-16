@@ -19,6 +19,9 @@ public class VideoCard extends SvtModel {
     }
 
     
-
+    @Override
+    public String toString() {
+        return "VideoCardModel{" + "id=" + this.id + ", model=" + this.model + "}";
+    }
     
 }

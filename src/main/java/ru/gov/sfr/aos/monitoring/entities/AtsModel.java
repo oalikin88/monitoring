@@ -34,6 +34,11 @@ public class AtsModel extends SvtModel {
     public void setAtses(Set<Ats> atses) {
         this.atses = atses;
     }
+
+    @Override
+    public String toString() {
+        return "AtsModel{" + "model=" + this.getModel() + '}';
+    }
     
     
 }

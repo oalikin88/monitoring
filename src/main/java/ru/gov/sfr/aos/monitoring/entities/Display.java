@@ -33,6 +33,11 @@ public class Display extends ObjectBuingWithSerialAndInventary implements Serial
     public void setDisplayModel(DisplayModel displayModel) {
         this.displayModel = displayModel;
     }
+
+    @Override
+    public String toString() {
+        return "Display{" + "id=" + this.id + ", serial=" + this.serialNumber + ", inventary=" + this.inventaryNumber + ", displayModel=" + displayModel + '}';
+    }
     
-    
+  
 }

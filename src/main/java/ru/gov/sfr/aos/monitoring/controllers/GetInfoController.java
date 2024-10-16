@@ -8,7 +8,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-import org.hibernate.annotations.UpdateTimestamp;
 import org.opfr.springBootStarterDictionary.fallback.FallbackOrganizationClient;
 import org.opfr.springBootStarterDictionary.models.DictionaryEmployee;
 import org.opfr.springBootStarterDictionary.models.DictionaryOrganization;
@@ -19,8 +18,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+import ru.gov.sfr.aos.monitoring.anotations.Log;
 import ru.gov.sfr.aos.monitoring.dictionaries.PlaceType;
 import ru.gov.sfr.aos.monitoring.entities.Asuo;
 import ru.gov.sfr.aos.monitoring.entities.Ats;
@@ -1041,19 +1040,19 @@ public class GetInfoController {
         List<RepairDto> repairs = repairInfoService.getRepairs(id);
         return repairs;
     }
-    
+    @Log
     @PostMapping("/repairs")
     public ResponseEntity<String> sendRepair(@RequestBody RepairDto dto) throws IOException {
         clientDao.addRepair(dto);
         return ResponseEntity.ok("Запись сохранена");
     }
-    
+    @Log
     @DeleteMapping("/repairs")
     public ResponseEntity<String> deleteRepair(Long id) throws IOException {
         clientDao.deleteRepair(id);
         return ResponseEntity.ok("Запись удалена");
     }
-    
+    @Log
     @PutMapping("/repairs")
     public ResponseEntity<String> updateRepair(@RequestBody RepairDto dto) throws IOException {
         clientDao.editRepair(dto);
@@ -1065,19 +1064,19 @@ public class GetInfoController {
         List <TransferDto> transfers = transferInfoService.getTransfers(id);
         return transfers;
     }
-    
+        @Log("Save transfer")
       @PostMapping("/transfers")
     public ResponseEntity<String> sendTransfer(@RequestBody TransferDto dto) throws IOException {
         clientDao.addTransfer(dto);
         return ResponseEntity.ok("Запись сохранена");
     }
-    
+        @Log
         @DeleteMapping("/transfers")
     public ResponseEntity<String> deleteTransfer(Long id) throws IOException {
         clientDao.deleteTransfer(id);
         return ResponseEntity.ok("Запись удалена");
     }
-    
+    @Log
     @PutMapping("/transfers")
     public ResponseEntity<String> updateTransfer(@RequestBody TransferDto dto) throws IOException {
         clientDao.editTransfer(dto);

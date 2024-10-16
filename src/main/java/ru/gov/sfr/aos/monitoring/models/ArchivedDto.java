@@ -32,5 +32,10 @@ public class ArchivedDto {
     public void setArchived(boolean archived) {
         this.archived = archived;
     }
+
+    @Override
+    public String toString() {
+        return "ArchivedDto{" + "id=" + id + ", archived=" + archived + '}';
+    }
     
 }

@@ -33,5 +33,8 @@ public class RouterModel extends SvtModel {
         this.routers = routers;
     }
     
-    
+        @Override
+    public String toString() {
+        return "RouterModel{" + "id=" + this.id + ", model=" + this.model + "}";
+    }
 }

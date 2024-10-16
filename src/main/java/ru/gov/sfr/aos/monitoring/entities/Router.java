@@ -69,6 +69,11 @@ public class Router extends ObjectBuingWithSerialAndInventary implements Seriali
     public void setNumberRoom(String numberRoom) {
         this.numberRoom = numberRoom;
     }
+
+    @Override
+    public String toString() {
+        return "Router{" + "id=" + this.id +  ", serial=" + this.serialNumber + ", inventary=" + this.inventaryNumber +  ", routerModel=" + routerModel + ", nameFromOneC=" + nameFromOneC + ", portAmount=" + portAmount + ", numberRoom=" + numberRoom + '}';
+    }
     
     
     

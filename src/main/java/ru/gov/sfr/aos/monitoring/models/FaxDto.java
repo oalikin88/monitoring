@@ -177,6 +177,11 @@ public class FaxDto extends MainSvtDto {
     public void setIpAdress(String ipAdress) {
         this.ipAdress = ipAdress;
     }
+
+    @Override
+    public String toString() {
+        return "FaxDto{" + "id=" + id + ", modelId=" + modelId + ", model=" + model + ", status=" + status + ", inventaryNumber=" + inventaryNumber + ", serialNumber=" + serialNumber + ", yearCreated=" + yearCreated + ", dateExploitationBegin=" + dateExploitationBegin + ", placeId=" + placeId + ", placeName=" + placeName + ", placeType=" + placeType + ", departmentCode=" + departmentCode + ", locationId=" + locationId + ", nameFromOneC=" + nameFromOneC + ", numberRoom=" + numberRoom + ", ipAdress=" + ipAdress + '}';
+    }
     
     
 }

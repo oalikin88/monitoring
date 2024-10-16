@@ -39,5 +39,8 @@ public class ServerModel extends SvtModel {
     }
     
     
-    
+        @Override
+    public String toString() {
+        return "ServerModel{" + "id=" + this.id + ", model=" + this.model + "}";
+    }
 }

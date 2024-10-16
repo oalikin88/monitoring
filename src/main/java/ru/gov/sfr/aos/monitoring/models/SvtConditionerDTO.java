@@ -86,6 +86,11 @@ public class SvtConditionerDTO extends SvtDTO {
     public void setPrice(double price) {
         this.price = price;
     }
+
+    @Override
+    public String toString() {
+        return "SvtConditionerDTO{" + "id=" + this.id + ", model=" + this.model + ", serial=" + this.serialNumber + ", inventary=" + this.inventaryNumber + ", description=" + description + ", yearCreated=" + yearCreated + ", conditionerType=" + conditionerType + ", splitSystem=" + splitSystem + ", winterKit=" + winterKit + ", havePomp=" + havePomp + ", price=" + price + '}';
+    }
     
     
     
