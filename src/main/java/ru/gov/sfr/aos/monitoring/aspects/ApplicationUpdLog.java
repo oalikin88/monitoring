@@ -24,12 +24,13 @@ import ru.gov.sfr.aos.monitoring.services.ApplicationLogService;
  */
 @Aspect
 @Configuration
-public class ApplicationLogingAspect {
+public class ApplicationUpdLog {
     @Autowired
     private ApplicationLogService applicationLogService;
     private Logger logger = Logger.getLogger(ApplicationLogingAspect.class.getCanonicalName());
     
-    @Pointcut("@annotation(ru.gov.sfr.aos.monitoring.anotations.Log)")
+    
+    @Pointcut("@annotation(ru.gov.sfr.aos.monitoring.anotations.UpdLog)")
     public void pointcut() {
     }
     
@@ -41,7 +42,6 @@ public class ApplicationLogingAspect {
         try {
             //Execution method
             result = point.proceed();
-            
         } catch (Throwable e) {
             e.printStackTrace();
         }
@@ -54,24 +54,13 @@ public class ApplicationLogingAspect {
         ApplicationLog log = new ApplicationLog();
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
         StringBuilder sb = new StringBuilder();
-        switch (request.getMethod()) {
-            case "POST":
-                sb.append("Создана запись:");
-                break;
-            case "PUT":
-                sb.append("Отредактирована запись:");
-                break;
-            case "DELETE":
-                sb.append("Удалена запись:");
-                break;
-        }
+  
         
-        sb.append(" ");
+        sb.append("Отредактировано: ");
         sb.append(joinPoint.getArgs()[0].toString());
         log.setOperation(sb.toString());
         log.setUsername(request.getUserPrincipal().getName());
         log.setRequestTime(LocalDateTime.now());
         applicationLogService.saveApplicationLog(log);
     }
-    
 }

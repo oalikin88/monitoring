@@ -13,11 +13,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import ru.gov.sfr.aos.monitoring.anotations.Log;
 import ru.gov.sfr.aos.monitoring.anotations.SendArchive;
+import ru.gov.sfr.aos.monitoring.anotations.UpdLog;
 import ru.gov.sfr.aos.monitoring.dictionaries.PlaceType;
 import ru.gov.sfr.aos.monitoring.entities.Asuo;
 import ru.gov.sfr.aos.monitoring.entities.Ats;
@@ -454,8 +454,8 @@ public class SvtViewController {
     }
     
     //   @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
-    @Log
-    @PutMapping("/mmonitorsupd")
+    @UpdLog
+    @PostMapping("/mmonitorsupd")
     public String updateModelMonitor(@RequestBody SvtModelDto dto) throws ObjectAlreadyExists {
         MonitorModel monitorModel = svtModelMapper.getMonitorModel(dto);
         monitorModelService.update(monitorModel);
@@ -656,8 +656,8 @@ public class SvtViewController {
     }
     
     //   @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
-    @Log
-    @PutMapping("/updupsforserver")
+    @UpdLog
+    @PostMapping("/updupsforserver")
     public String updateServerUps(@RequestBody SvtDTO dto) throws ObjectAlreadyExists {
         upsService.updateSvtObj(dto);
         return "redirect:/upsforserver";
@@ -675,8 +675,8 @@ public class SvtViewController {
     }
     
   //  @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
-    @Log
-    @PutMapping("/updphone")
+    @UpdLog
+    @PostMapping("/updphone")
     public String updatePhone(@RequestBody SvtDTO dto) throws ObjectAlreadyExists {
         phoneService.updateSvtObj(dto);
         return "redirect:/phones";
@@ -684,8 +684,8 @@ public class SvtViewController {
     }
     
   //   @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
-    @Log
-    @PutMapping("/updups")
+    @UpdLog
+    @PostMapping("/updups")
     public String updateUps(@RequestBody SvtDTO dto) throws ObjectAlreadyExists {
         upsService.updateSvtObj(dto);
         return "redirect:/ups";
@@ -693,8 +693,8 @@ public class SvtViewController {
     }
     
   //  @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
-    @Log
-    @PutMapping("/updmonitor")
+    @UpdLog
+    @PostMapping("/updmonitor")
     public String updateMonitor(@RequestBody SvtDTO dto) throws ObjectAlreadyExists {
         monitorService.updateSvtObj(dto);
         return "redirect:/monitors";
@@ -709,6 +709,7 @@ public class SvtViewController {
     
     
   //  @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
+   @UpdLog
     @PostMapping("/phonetostor")
     public String sendToStorage (@RequestBody SvtDTO dto) throws ObjectAlreadyExists {
         Phone phone = phoneMapper.getEntityFromDto(dto);
@@ -718,6 +719,7 @@ public class SvtViewController {
     }
     
   //    @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
+    @UpdLog
     @PostMapping("/upstostor")
     public String sendToStorageUps (@RequestBody SvtDTO dto) throws ObjectAlreadyExists {
         Ups ups = upsMapper.getEntityFromDto(dto);
@@ -729,6 +731,7 @@ public class SvtViewController {
     }
     
   //      @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
+    @UpdLog
     @PostMapping("/monitortostor")
     public String sendToStorageMonitor (@RequestBody SvtDTO dto) throws ObjectAlreadyExists {
         Monitor monitor = monitorMapper.getEntityFromDto(dto);
@@ -740,6 +743,7 @@ public class SvtViewController {
  
     
   //  @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
+    @Log
     @PostMapping("/upsbackstor")
     public String backFromStorageUps (@RequestBody SvtDTO dto) throws ObjectAlreadyExists {
         Ups ups = upsMapper.getEntityFromDto(dto);
@@ -876,6 +880,7 @@ public class SvtViewController {
     
     
       //      @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
+    @UpdLog
     @PostMapping("/sysblockstostor")
     public String sendToStorageSystemblock (@RequestBody SvtSystemBlockDTO dto) throws ObjectAlreadyExists {
            // SystemBlock findById = sysrepo.findById(dto.getId()).get();
@@ -886,8 +891,8 @@ public class SvtViewController {
     }
     
 
-    @Log
-        @PutMapping("/updsysblocks")
+    @UpdLog
+        @PostMapping("/updsysblocks")
     public String updateSystemblock(@RequestBody SvtSystemBlockDTO dto) throws ObjectAlreadyExists {
         systemblockService.updateSvtObj(dto);
         return "redirect:/sysblocks";
@@ -1185,8 +1190,8 @@ public class SvtViewController {
     }
     
     //    @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
-    @Log
-    @PutMapping("/osupd")
+    @UpdLog
+    @PostMapping("/osupd")
     public String updateOperationSystem(@RequestBody OperationSystemDto dto) throws ObjectAlreadyExists {
             OperationSystem operationSystem = operationSystemMapper.getOperationSystem(dto);
             operationSystemService.updateOperationSystem(operationSystem);
@@ -1263,6 +1268,7 @@ public class SvtViewController {
     }
     
     //      @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
+    @UpdLog
     @PostMapping("/scannertostor")
     public String sendToStorageScanner (@RequestBody SvtScannerDTO dto) throws ObjectAlreadyExists {
            // SystemBlock findById = sysrepo.findById(dto.getId()).get();
@@ -1273,8 +1279,8 @@ public class SvtViewController {
     }
     
 
-        @Log
-        @PutMapping("/updscanner")
+        @UpdLog
+        @PostMapping("/updscanner")
     public String updateScanner(@RequestBody SvtScannerDTO dto) throws ObjectAlreadyExists {
         scannerService.updateSvtObj(dto);
         return "redirect:/scanner";
@@ -1351,7 +1357,7 @@ public class SvtViewController {
  
     
  //   @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
-    @Log
+    @UpdLog
     @PostMapping("/server")
     public String saveServer(@RequestBody SvtServerDTO dto) throws ObjectAlreadyExists {
         serverService.createSvtObj(dto);
@@ -1360,6 +1366,7 @@ public class SvtViewController {
     
     
         //      @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
+    @UpdLog
     @PostMapping("/servertostor")
     public String sendToStorageServer (@RequestBody SvtServerDTO dto) throws ObjectAlreadyExists {
             // SystemBlock findById = sysrepo.findById(dto.getId()).get();
@@ -1370,8 +1377,8 @@ public class SvtViewController {
     }
     
 
-    @Log
-     @PutMapping("/updserver")
+    @UpdLog
+     @PostMapping("/updserver")
     public String updateServer (@RequestBody SvtServerDTO dto) throws ObjectAlreadyExists {
         serverService.updateSvtObj(dto);
         return "redirect:/server";
@@ -1455,6 +1462,7 @@ public class SvtViewController {
     }
     
            //      @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
+    @UpdLog
     @PostMapping("/switchtostor")
     public String sendToStorageSwitchHub (@RequestBody SvtSwitchHubDTO dto) throws ObjectAlreadyExists {
             // SystemBlock findById = sysrepo.findById(dto.getId()).get();
@@ -1465,8 +1473,8 @@ public class SvtViewController {
     }
     
 
-    @Log
-     @PutMapping("/updswitch")
+    @UpdLog
+     @PostMapping("/updswitch")
     public String updateSwitchHub (@RequestBody SvtSwitchHubDTO dto) throws ObjectAlreadyExists {
         switchHubService.updateSvtObj(dto);
         return "redirect:/switch";
@@ -1545,8 +1553,8 @@ public class SvtViewController {
     }
     
            //      @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
-    @Log
-    @PutMapping("/routertostor")
+    @UpdLog
+    @PostMapping("/routertostor")
     public String sendToStorageRouter(@RequestBody SvtSwitchHubDTO dto) throws ObjectAlreadyExists {
             // SystemBlock findById = sysrepo.findById(dto.getId()).get();
             Router router = routerMapper.getEntityFromDto(dto);
@@ -1556,8 +1564,8 @@ public class SvtViewController {
     }
     
 
-    @Log
-     @PutMapping("/updrouter")
+    @UpdLog
+     @PostMapping("/updrouter")
     public String updateRouter (@RequestBody SvtSwitchHubDTO dto) throws ObjectAlreadyExists {
         routerService.updateSvtObj(dto);
         return "redirect:/router";
@@ -1636,8 +1644,8 @@ public class SvtViewController {
         return "redirect:/ats";
     }
     
-    @Log
-        @PutMapping("/updats")
+    @UpdLog
+        @PostMapping("/updats")
     public String updateAts (@RequestBody SvtAtsDTO dto) throws ObjectAlreadyExists {
         atsService.updateSvtObj(dto);
         return "redirect:/ats";
@@ -1645,8 +1653,8 @@ public class SvtViewController {
     }
     
               //      @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
-    @Log
-    @PutMapping("/atstostor")
+    @UpdLog
+    @PostMapping("/atstostor")
     public String sendToStorageAts(@RequestBody SvtAtsDTO dto) throws ObjectAlreadyExists {
             // SystemBlock findById = sysrepo.findById(dto.getId()).get();
             Ats ats = atsMapper.getEntityFromDto(dto);
@@ -1727,8 +1735,8 @@ public class SvtViewController {
         conditionerService.createSvtObj(dto);
         return "redirect:/conditioner";
     }
-          @Log
-          @PutMapping("/updconditioner")
+          @UpdLog
+          @PostMapping("/updconditioner")
     public String updateConditioner (@RequestBody SvtConditionerDTO dto) throws ObjectAlreadyExists {
         conditionerService.updateSvtObj(dto);
         return "redirect:/conditioner";
@@ -1736,8 +1744,8 @@ public class SvtViewController {
     }
     
               //      @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
-    @Log
-    @PutMapping("/conditionertostor")
+    @UpdLog
+    @PostMapping("/conditionertostor")
     public String sendToStorageConditioner(@RequestBody SvtConditionerDTO dto) throws ObjectAlreadyExists {
             // SystemBlock findById = sysrepo.findById(dto.getId()).get();
             Conditioner conditioner = conditionerMapper.getEntityFromDto(dto);
@@ -1748,7 +1756,7 @@ public class SvtViewController {
     
        //   @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
     @Log
-    @PutMapping("/conditionerbackstor")
+    @PostMapping("/conditionerbackstor")
     public String backFromStorageConditioner (@RequestBody SvtConditionerDTO dto) throws ObjectAlreadyExists {
             Conditioner conditioner = conditionerMapper.getEntityFromDto(dto);
         conditionerService.backFromStorage(conditioner, dto.getPlaceId());
@@ -1776,8 +1784,8 @@ public class SvtViewController {
     }
     
     //   @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
-    @Log
-    @PutMapping("/mfaxupd")
+    @UpdLog
+    @PostMapping("/mfaxupd")
     public String updateModelFax(@RequestBody SvtModelDto dto) throws ObjectAlreadyExists {
         FaxModel faxModel = svtModelMapper.getModelFax(dto);
         faxModelService.update(faxModel);
@@ -1837,8 +1845,8 @@ public class SvtViewController {
         faxService.createSvtObj(dto);
         return "redirect:/fax";
     }
-     @Log
-     @PutMapping("/updfax")
+     @UpdLog
+     @PostMapping("/updfax")
     public String updateFax (@RequestBody FaxDto dto) throws ObjectAlreadyExists {
         faxService.updateSvtObj(dto);
         return "redirect:/fax";
@@ -1846,8 +1854,8 @@ public class SvtViewController {
     }
     
               //      @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
-    @Log
-    @PutMapping("/faxtostor")
+    @UpdLog
+    @PostMapping("/faxtostor")
     public String sendToStorageFax(@RequestBody FaxDto dto) throws ObjectAlreadyExists {
             // SystemBlock findById = sysrepo.findById(dto.getId()).get();
             Fax fax = faxMapper.getEntityFromDto(dto);
@@ -1858,7 +1866,7 @@ public class SvtViewController {
     
        //   @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
     @Log
-    @PutMapping("/faxbackstor")
+    @PostMapping("/faxbackstor")
     public String backFromStorageFax (@RequestBody FaxDto dto) throws ObjectAlreadyExists {
             Fax fax = faxMapper.getEntityFromDto(dto);
         faxService.backFromStorage(fax, dto.getPlaceId());
@@ -1936,8 +1944,8 @@ public class SvtViewController {
         infomatService.createSvtObj(dto);
         return "redirect:/infomat";
     }
-            @Log
-          @PutMapping("/updinfomat")
+            @UpdLog
+          @PostMapping("/updinfomat")
     public String updateInfomat (@RequestBody SvtDTO dto) throws ObjectAlreadyExists {
         infomatService.updateSvtObj(dto);
         return "redirect:/infomat";
@@ -1945,8 +1953,8 @@ public class SvtViewController {
     }
     
               //      @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
-    @Log
-    @PutMapping("/infomattostor")
+    @UpdLog
+    @PostMapping("/infomattostor")
     public String sendToStorageInfomat(@RequestBody SvtDTO dto) throws ObjectAlreadyExists {
             // SystemBlock findById = sysrepo.findById(dto.getId()).get();
             Infomat infomat = infomatMapper.getEntityFromDto(dto);
@@ -2027,7 +2035,7 @@ public class SvtViewController {
         terminalService.createSvtObj(dto);
         return "redirect:/terminal";
     }
-          @Log
+          @UpdLog
           @PostMapping("/updterminal")
     public String updateTerminal (@RequestBody SvtDTO dto) throws ObjectAlreadyExists {
         terminalService.updateSvtObj(dto);
@@ -2036,8 +2044,8 @@ public class SvtViewController {
     }
     
               //      @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
-    @Log
-    @PutMapping("/terminaltostor")
+    @UpdLog
+    @PostMapping("/terminaltostor")
     public String sendToStorageTerminal(@RequestBody SvtDTO dto) throws ObjectAlreadyExists {
         Terminal terminal = terminalMapper.getEntityFromDto(dto);
         terminalService.sendToStorage(terminal);
@@ -2115,8 +2123,8 @@ public class SvtViewController {
         thermoprinterService.createSvtObj(dto);
         return "redirect:/thermoprinter";
     }
-          @Log
-          @PutMapping("/updthermoprinter")
+          @UpdLog
+          @PostMapping("/updthermoprinter")
     public String updateThermoprinter (@RequestBody SvtDTO dto) throws ObjectAlreadyExists {
         thermoprinterService.updateSvtObj(dto);
         return "redirect:/thermoprinter";
@@ -2124,8 +2132,8 @@ public class SvtViewController {
     }
     
               //      @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
-    @Log
-    @PutMapping("/thermoprintertostor")
+    @UpdLog
+    @PostMapping("/thermoprintertostor")
     public String sendToStorageThermoprinter(@RequestBody SvtDTO dto) throws ObjectAlreadyExists {
             ThermoPrinter thermoprinter = thermoprinterMapper.getEntityFromDto(dto);
         thermoprinterService.sendToStorage(thermoprinter);
@@ -2203,8 +2211,8 @@ public class SvtViewController {
         displayService.createSvtObj(dto);
         return "redirect:/display";
     }
-          @Log
-          @PutMapping("/upddisplay")
+          @UpdLog
+          @PostMapping("/upddisplay")
     public String updateDisplay (@RequestBody SvtDTO dto) throws ObjectAlreadyExists {
         displayService.updateSvtObj(dto);
         return "redirect:/display";
@@ -2212,8 +2220,8 @@ public class SvtViewController {
     }
     
               //      @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
-    @Log
-    @PutMapping("/displaytostor")
+    @UpdLog
+    @PostMapping("/displaytostor")
     public String sendToStorageDisplay(@RequestBody SvtDTO dto) throws ObjectAlreadyExists {
             Display display = displayMapper.getEntityFromDto(dto);
         displayService.sendToStorage(display);
@@ -2292,8 +2300,8 @@ public class SvtViewController {
         swunitService.createSvtObj(dto);
         return "redirect:/swunit";
     }
-          @Log
-          @PutMapping("/updswunit")
+          @UpdLog
+          @PostMapping("/updswunit")
     public String updateSwunit (@RequestBody SvtDTO dto) throws ObjectAlreadyExists {
         swunitService.updateSvtObj(dto);
         return "redirect:/swunit";
@@ -2301,8 +2309,8 @@ public class SvtViewController {
     }
     
               //      @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
-    @Log
-    @PutMapping("/swunittostor")
+    @UpdLog
+    @PostMapping("/swunittostor")
     public String sendToStorageSwunit(@RequestBody SvtDTO dto) throws ObjectAlreadyExists {
             SwitchingUnit swunit = swunitMapper.getEntityFromDto(dto);
         swunitService.sendToStorage(swunit);
@@ -2381,8 +2389,8 @@ public class SvtViewController {
         asuoService.createSvtObj(dto);
         return "redirect:/asuo";
     }
-           @Log
-          @PutMapping("/updasuo")
+           @UpdLog
+          @PostMapping("/updasuo")
     public String updateAsuo (@RequestBody AsuoDTO dto) throws ObjectAlreadyExists {
         Asuo asuo = asuoMapper.getEntityFromDto(dto);
         asuoService.updateSvtObj(dto);
@@ -2391,6 +2399,7 @@ public class SvtViewController {
     }
     
               //      @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
+    @UpdLog
     @PostMapping("/asuotostor")
     public String sendToStorageAsuo(@RequestBody AsuoDTO dto) throws ObjectAlreadyExists {
             Asuo asuo = asuoMapper.getEntityFromDto(dto);
