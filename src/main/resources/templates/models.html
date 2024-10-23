@@ -99,8 +99,12 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                             <div class="col-1">№ п/п</div>
                             <div class="col-7 text-start">Наименование</div>
                             <div class="col-4 text-start ms-0 ps-0">Лицензия</div>
-
- 
+                        </div>
+                             
+                            <div class="row fw-bold" th:case="'mupsbat'">
+                            <div class="col-1">№ п/п</div>
+                            <div class="col-11 text-start">Тип батареи</div>
+                            
                         </div>
                               <div class="row fw-bold" th:case="*">
                             <div class="col-1">№ п/п</div>
@@ -119,6 +123,13 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                                       
                                       </div>
                     </div>
+                            <div class = "row element pb-2 mb-2 mt-2 pt-2" th:attr="id = ${dto.id}" data-bs-toggle="modal" data-bs-target="#addBtnModal" th:case="mupsbat">
+                             <div class="col-1" th:text="${stat.count}"></div>
+                                    <div class="col-11 text-start">
+                                        <span th:text="${dto.type}"></span>
+                                      </div>
+                            </div>
+                            
                         <div class = "row element pb-2 mb-2 mt-2 pt-2" th:attr="id = ${dto.id}" data-bs-toggle="modal" data-bs-target="#addBtnModal" th:case="*">
                              <div class="col-1" th:text="${stat.count}"></div>
                                     <div class="col-11 text-start">

@@ -4,6 +4,7 @@
  */
 package ru.gov.sfr.aos.monitoring.controllers;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -12,6 +13,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -94,6 +96,7 @@ import ru.gov.sfr.aos.monitoring.models.BatteryTypeDto;
 import ru.gov.sfr.aos.monitoring.models.CpuModelDto;
 import ru.gov.sfr.aos.monitoring.models.DepartmentDTO;
 import ru.gov.sfr.aos.monitoring.models.FaxDto;
+import ru.gov.sfr.aos.monitoring.models.FilterDto;
 import ru.gov.sfr.aos.monitoring.models.HddDto;
 import ru.gov.sfr.aos.monitoring.models.LocationByTreeDto;
 import ru.gov.sfr.aos.monitoring.models.OperationSystemDto;
@@ -182,7 +185,7 @@ import ru.gov.sfr.aos.monitoring.services.VideoCardModelService;
 @Controller
 public class SvtViewController {
     
-        @Autowired
+    @Autowired
     private PlaceService placeService;
     @Autowired
     private PhoneService phoneService;
@@ -520,29 +523,58 @@ public class SvtViewController {
     
  //   @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
     @GetMapping("/phones")
-    public String getPhones(Model model, @RequestParam(value="username",required=false) String username) {
+    public String getPhones(Model model, @RequestParam(value="username", required=false) String username, @ModelAttribute FilterDto dto) {
+        List<SvtDTO> filter = null;
         Map<Location, List<Phone>> svtObjectsByEmployee = null;
+        List<LocationByTreeDto> treeSvtDtoByEmployee = null;
+        Map<Location, List<Phone>> svtObjectsByStorage = null;
+        List<LocationByTreeDto> treeSvtDtoByStorage = null;
+        if(dto.model == null && dto.status == null && dto.yearCreatedOne == null && dto.yearCreatedTwo == null) {
         if(null != username) {
             svtObjectsByEmployee = phoneService.getSvtObjectsByName(username, PlaceType.EMPLOYEE);
         } else {
             svtObjectsByEmployee = phoneService.getSvtObjectsByPlaceType(PlaceType.EMPLOYEE);
         }
         
-        List<LocationByTreeDto> treeSvtDtoByEmployee = phoneOutDtoTreeService.getTreeSvtDtoByPlaceType(svtObjectsByEmployee)
+        treeSvtDtoByEmployee = phoneOutDtoTreeService.getTreeSvtDtoByPlaceType(svtObjectsByEmployee)
                 .stream()
                 .sorted((o1, o2) -> o1.getLocationName().compareTo(o2.getLocationName()))
                 .collect(Collectors.toList());
-        Map<Location, List<Phone>> svtObjectsByStorage = null;
+        
+        
         if(null != username) {
             svtObjectsByStorage = phoneService.getSvtObjectsByName(username, PlaceType.STORAGE);
         } else {
             svtObjectsByStorage = phoneService.getSvtObjectsByPlaceType(PlaceType.STORAGE);
         }
         
-        List<LocationByTreeDto> treeSvtDtoByStorage = phoneOutDtoTreeService.getTreeSvtDtoByPlaceType(svtObjectsByStorage)
+          treeSvtDtoByStorage = phoneOutDtoTreeService.getTreeSvtDtoByPlaceType(svtObjectsByStorage)
                 .stream()
                 .sorted((o1, o2) -> o1.getLocationName().compareTo(o2.getLocationName()))
                 .collect(Collectors.toList());
+        
+        } else {
+            List<Phone> phonesByFilter = phoneService.getPhonesByFilter(dto);
+             filter = new ArrayList<>();
+            for(Phone p : phonesByFilter) {
+                SvtDTO phoneDto = phoneMapper.getDto(p);
+                filter.add(phoneDto);
+            }
+            
+            svtObjectsByEmployee = phoneService.getPhonesByPlaceTypeAndFilter(PlaceType.EMPLOYEE, phonesByFilter);
+            treeSvtDtoByEmployee = phoneOutDtoTreeService.getTreeSvtDtoByPlaceType(svtObjectsByEmployee)
+                .stream()
+                .sorted((o1, o2) -> o1.getLocationName().compareTo(o2.getLocationName()))
+                .collect(Collectors.toList());
+            
+            svtObjectsByStorage = phoneService.getPhonesByPlaceTypeAndFilter(PlaceType.STORAGE, phonesByFilter);
+               treeSvtDtoByStorage = phoneOutDtoTreeService.getTreeSvtDtoByPlaceType(svtObjectsByStorage)
+                .stream()
+                .sorted((o1, o2) -> o1.getLocationName().compareTo(o2.getLocationName()))
+                .collect(Collectors.toList());
+        }
+        
+      
         
         model.addAttribute("dtoes", treeSvtDtoByEmployee);
         model.addAttribute("dtoesStorage", treeSvtDtoByStorage);
@@ -550,34 +582,66 @@ public class SvtViewController {
         model.addAttribute("placeAttribute", "employee");
         model.addAttribute("namePage","Телефоны");
         
+        
         return "svtobj";
     }
     
  //   @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
     @GetMapping("/ups")
-    public String getUps(Model model, @RequestParam(value="username",required=false) String username) {
+    public String getUps(Model model, @RequestParam(value="username",required=false) String username, @ModelAttribute FilterDto dto) {
         Map<Location, List<Ups>> svtObjectsByEmployee = null;
+        
+        List<LocationByTreeDto> treeSvtDtoByEmployee = null;
+        Map<Location, List<Ups>> svtObjectsByStorage = null;
+        List<LocationByTreeDto> treeSvtDtoByStorage = null;
+        List<SvtDTO> filter = null;
+        if(dto.model == null && dto.status == null && dto.yearCreatedOne == null && dto.yearCreatedTwo == null) {
         if(null != username) {
             svtObjectsByEmployee = upsService.getSvtObjectsByName(username, PlaceType.EMPLOYEE);
         } else {
             svtObjectsByEmployee = upsService.getSvtObjectsByPlaceType(PlaceType.EMPLOYEE);
         }
-        List<LocationByTreeDto> treeSvtDtoByEmployee = upsOutDtoTreeService.getTreeSvtDtoByPlaceType(svtObjectsByEmployee)
+         treeSvtDtoByEmployee = upsOutDtoTreeService.getTreeSvtDtoByPlaceType(svtObjectsByEmployee)
                 .stream()
                 .sorted((o1, o2) -> o1.getLocationName().compareTo(o2.getLocationName()))
                 .collect(Collectors.toList());
         
-        Map<Location, List<Ups>> svtObjectsByStorage = null;
+        
         if(null != username) {
             svtObjectsByStorage = upsService.getSvtObjectsByName(username, PlaceType.STORAGE);
         } else {
            svtObjectsByStorage = upsService.getSvtObjectsByPlaceType(PlaceType.STORAGE); 
         }
         
-        List<LocationByTreeDto> treeSvtDtoByStorage = upsOutDtoTreeService.getTreeSvtDtoByPlaceType(svtObjectsByStorage)
+           treeSvtDtoByStorage = upsOutDtoTreeService.getTreeSvtDtoByPlaceType(svtObjectsByStorage)
                 .stream()
                 .sorted((o1, o2) -> o1.getLocationName().compareTo(o2.getLocationName()))
                 .collect(Collectors.toList());
+        
+        }else {
+        
+        
+               List<Ups> upsByFilter = upsService.getUpsByFilter(dto);
+             filter = new ArrayList<>();
+            for(Ups p : upsByFilter) {
+                SvtDTO upsDto = upsMapper.getDto(p);
+                filter.add(upsDto);
+            }
+            
+            svtObjectsByEmployee = upsService.getUpsByPlaceTypeAndFilter(PlaceType.EMPLOYEE, upsByFilter);
+            treeSvtDtoByEmployee = upsOutDtoTreeService.getTreeSvtDtoByPlaceType(svtObjectsByEmployee)
+                .stream()
+                .sorted((o1, o2) -> o1.getLocationName().compareTo(o2.getLocationName()))
+                .collect(Collectors.toList());
+            
+            svtObjectsByStorage = upsService.getUpsByPlaceTypeAndFilter(PlaceType.STORAGE, upsByFilter);
+               treeSvtDtoByStorage = upsOutDtoTreeService.getTreeSvtDtoByPlaceType(svtObjectsByStorage)
+                .stream()
+                .sorted((o1, o2) -> o1.getLocationName().compareTo(o2.getLocationName()))
+                .collect(Collectors.toList());
+            
+        }
+      
         
         model.addAttribute("dtoes", treeSvtDtoByEmployee);
         model.addAttribute("dtoesStorage", treeSvtDtoByStorage);

@@ -8,16 +8,22 @@ import java.time.Instant;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import ru.gov.sfr.aos.monitoring.dictionaries.PlaceType;
 import ru.gov.sfr.aos.monitoring.dictionaries.Status;
 import ru.gov.sfr.aos.monitoring.entities.Contract;
+import ru.gov.sfr.aos.monitoring.entities.Location;
 import ru.gov.sfr.aos.monitoring.entities.ObjectBuing;
 import ru.gov.sfr.aos.monitoring.entities.Phone;
 import ru.gov.sfr.aos.monitoring.entities.PhoneModel;
 import ru.gov.sfr.aos.monitoring.entities.Place;
 import ru.gov.sfr.aos.monitoring.exceptions.ObjectAlreadyExists;
+import ru.gov.sfr.aos.monitoring.models.FilterDto;
 import ru.gov.sfr.aos.monitoring.models.SvtDTO;
 import ru.gov.sfr.aos.monitoring.repositories.ContractRepo;
 import ru.gov.sfr.aos.monitoring.repositories.PhoneModelRepo;
@@ -127,6 +133,36 @@ public class PhoneService extends SvtObjService<Phone, PhoneRepo, SvtDTO>{
         phoneFromDB.setYearCreated(dto.getYearCreated());
         phoneFromDB.setPhoneModel(phoneModelFromDto);
         phoneRepo.save(phoneFromDB);
+    }
+    
+    
+    public List<Phone> getPhonesByFilter(FilterDto dto) {
+      
+      
+        
+        List<Phone> result = phoneRepo.findPhonesByAllFilters(dto.getStatus(), dto.getModel(), dto.getYearCreatedOne(), dto.getYearCreatedTwo());
+        return result;
+    }
+    
+    
+    
+            public Map<Location, List<Phone>> getPhonesByPlaceAndFilter(List<Phone> input) {
+        Map<Location, List<Phone>> collect = input
+                .stream()
+                .collect(Collectors
+                        .groupingBy((Phone el) -> el.getPlace()
+                                .getLocation()));
+        
+        return collect;
+    }
+          public Map<Location, List<Phone>> getPhonesByPlaceTypeAndFilter(PlaceType placeType, List<Phone> input) {
+        Map<Location, List<Phone>> collect = (Map<Location, List<Phone>>) input
+                .stream().filter(e -> e.getPlace().getPlaceType().equals(placeType))
+                .collect(Collectors
+                        .groupingBy((Phone el) -> el.getPlace()
+                                .getLocation()));
+        
+        return collect;
     }
     
 }

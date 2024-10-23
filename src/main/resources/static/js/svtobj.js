@@ -1600,6 +1600,85 @@ let requestToEnableStorage = function () {
 };
 window.onload = function () {
    
+   $('#filter-btn')[0].addEventListener('click', function() {
+       console.log("click filter");
+       
+    
+    window.location.href = window.location.pathname + "?model=" +  document.querySelector('#filter-model').value + 
+            "&status=" + document.querySelector('#filter-status').value + "&yearCreatedOne=" + document.querySelector('#dateBegin').value + 
+            "&yearCreatedTwo=" + document.querySelector('#dateEnd').value;
+       
+   });
+   
+    $('#filter-model').selectize({
+        preload: true,
+        valueField: 'model',
+        labelField: 'model',
+        searchField: ["model"],
+        load: function (query, callback) {
+            let requestLink;
+            switch (attrib) {
+                case "phones":
+                    requestLink = "/modphones";
+                    break;
+                case "fax":
+                    requestLink = "/modfax";
+                    break;
+                case "monitors":
+                    requestLink = "/modmonitors";
+                    break;
+                case "ups":
+                    requestLink = "/modups";
+                    break;
+                case "systemblock":
+                    requestLink = "/modsysblock";
+                    break;
+                case "scanner":
+                    requestLink = "/modscanner";
+                    break;
+                case "server":
+                    requestLink = "/modserver";
+                    break;
+                case "switch":
+                    requestLink = "/modswitch";
+                    break;
+                case "router":
+                    requestLink = "/modrouter";
+                    break;
+                case "ats":
+                    requestLink = "/modats";
+                    break;
+                case "conditioner":
+                    requestLink = "/modconditioner";
+                    break;
+                case "infomat":
+                    requestLink = "/modinfomat";
+                    break;
+                case "terminal":
+                    requestLink = "/modterminal";
+                    break;
+                case "thermoprinter":
+                    requestLink = "/modthermoprinter";
+                    break;
+                case "display":
+                    requestLink = "/moddisplay";
+                    break;
+                case "swunit":
+                    requestLink = "/modswunit";
+                    break;
+            }
+            $.ajax({
+                url: requestLink,
+                type: 'GET',
+                async: false,
+                dataType: 'json',
+                error: callback,
+                success: callback
+            });
+          
+        }
+    });
+   
     $("#searchSvtObjBtn")[0].addEventListener("click", function () {
         handleClickSearchSvtObject($("#searchSvtObjInput")[0].value);
     });

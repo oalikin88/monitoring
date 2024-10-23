@@ -119,6 +119,18 @@ let handleClickSaveBtn = function (name) {
          dto.license = $("#licenseFlag")[0].checked;
      }
      
+     switch (attribute) {
+        case "mupsbat":
+            delete dto.model;
+                dto.type = document.querySelector('#model').value;
+                break;
+            break;
+            
+        default:
+            
+            break;
+    }
+     
 //        switch (attribute) {
 //            case "mphones":
 //                link = "/mphones/";

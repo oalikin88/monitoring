@@ -8,17 +8,23 @@ import java.time.Instant;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import ru.gov.sfr.aos.monitoring.dictionaries.PlaceType;
 import ru.gov.sfr.aos.monitoring.dictionaries.Status;
 import ru.gov.sfr.aos.monitoring.entities.BatteryType;
 import ru.gov.sfr.aos.monitoring.entities.Contract;
+import ru.gov.sfr.aos.monitoring.entities.Location;
 import ru.gov.sfr.aos.monitoring.entities.ObjectBuing;
 import ru.gov.sfr.aos.monitoring.entities.Place;
 import ru.gov.sfr.aos.monitoring.entities.Ups;
 import ru.gov.sfr.aos.monitoring.entities.UpsModel;
 import ru.gov.sfr.aos.monitoring.exceptions.ObjectAlreadyExists;
+import ru.gov.sfr.aos.monitoring.models.FilterDto;
 import ru.gov.sfr.aos.monitoring.models.SvtDTO;
 import ru.gov.sfr.aos.monitoring.repositories.BatteryTypeRepo;
 import ru.gov.sfr.aos.monitoring.repositories.ContractRepo;
@@ -141,5 +147,36 @@ public class UpsService extends SvtObjService<Ups, UpsRepo, SvtDTO>{
         upsRepo.save(upsFromDB);
         
     }
+    
+    
+        public List<Ups> getUpsByFilter(FilterDto dto) {
+      
+      
+        
+        List<Ups> result = upsRepo.findUpsByAllFilters(dto.getStatus(), dto.getModel(), dto.getYearCreatedOne(), dto.getYearCreatedTwo());
+        return result;
+    }
+    
+    
+    
+            public Map<Location, List<Ups>> getUpssByPlaceAndFilter(List<Ups> input) {
+        Map<Location, List<Ups>> collect = input
+                .stream()
+                .collect(Collectors
+                        .groupingBy((Ups el) -> el.getPlace()
+                                .getLocation()));
+        
+        return collect;
+    }
+          public Map<Location, List<Ups>> getUpsByPlaceTypeAndFilter(PlaceType placeType, List<Ups> input) {
+        Map<Location, List<Ups>> collect = (Map<Location, List<Ups>>) input
+                .stream().filter(e -> e.getPlace().getPlaceType().equals(placeType))
+                .collect(Collectors
+                        .groupingBy((Ups el) -> el.getPlace()
+                                .getLocation()));
+        
+        return collect;
+    }
+    
     
 }

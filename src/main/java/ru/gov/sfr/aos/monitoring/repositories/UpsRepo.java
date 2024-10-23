@@ -4,6 +4,8 @@
  */
 package ru.gov.sfr.aos.monitoring.repositories;
 
+import java.util.List;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import ru.gov.sfr.aos.monitoring.entities.Ups;
 
@@ -15,4 +17,15 @@ import ru.gov.sfr.aos.monitoring.entities.Ups;
 @Repository
 public interface UpsRepo extends ObjectBuingWithSerialAndInventaryRepo<Ups> {
     
+       @Query(value = "SELECT ups.*, ob.*, ups_model.* "
+   + "FROM ups ups "
+   + "JOIN object_buing ob "
+   + "ON ups.ups_id = ob.id "
+   + "JOIN ups_model ups_model "
+   + "ON ups.ups_model_id = ups_model.id "
+   + "WHERE ((?1 is NULL or ?1 = '') or (ups.status = ?1)) "
+   + "AND ((?2 is NULL or ?2 = '') or (ups_model.model = ?2)) "
+   + "AND ((?3 is NULL or ?3 = '') or (ups.year_created >= ?3)) "
+   + "AND ((?4 is NULL or ?4 = '') or (ups.year_created <= ?4)) ", nativeQuery = true)
+    List<Ups> findUpsByAllFilters (String status, String model, String yearCreatedOne, String yearCreatedTwo);
 }
