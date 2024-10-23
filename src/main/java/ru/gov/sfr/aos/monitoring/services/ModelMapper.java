@@ -139,7 +139,12 @@ public class ModelMapper {
     
     
     public void saveModelPrinter(ModelDTO dto) {
-        Model modelFromDB = modelRepo.findById(dto.idModel).orElseThrow();
+        Model modelFromDB = null;
+        if(dto.idModel != null) {
+        modelFromDB = modelRepo.findById(dto.idModel).orElseThrow();
+        } else {
+            modelFromDB = new Model();
+        }
         modelFromDB.setName(dto.getModel().trim());
         modelFromDB.setPrintSpeed(Long.parseLong(dto.getPrintSpeed()));
         if(dto.getPrintFormatType().equals("A4")) {
@@ -157,10 +162,18 @@ public class ModelMapper {
         } else {
             modelFromDB.setDeviceType(DeviceType.MFU);
         }
-        if(!dto.getManufacturer().trim().equals(modelFromDB.getManufacturer().getName())) {
-            Manufacturer manufacturer = manufacturerRepo.findByNameContainingIgnoreCase(dto.getManufacturer().trim()).orElseThrow();
-            modelFromDB.setManufacturer(manufacturer);
+        Manufacturer manufacturer = null;
+        
+        Optional<Manufacturer> manuf = manufacturerRepo.findByNameContainingIgnoreCase(dto.getManufacturer().trim());
+        if(manuf.isEmpty()) {
+            manufacturer = new Manufacturer(dto.getManufacturer().trim());
+        } else {
+            manufacturer = manuf.get();
         }
+            
+            modelFromDB.setManufacturer(manufacturer);
+        
+        
         modelRepo.save(modelFromDB);
     }
     
