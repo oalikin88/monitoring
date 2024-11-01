@@ -8,13 +8,18 @@ import java.time.Instant;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import ru.gov.sfr.aos.monitoring.dictionaries.PlaceType;
 import ru.gov.sfr.aos.monitoring.dictionaries.Status;
 import ru.gov.sfr.aos.monitoring.entities.Contract;
 import ru.gov.sfr.aos.monitoring.entities.Cpu;
 import ru.gov.sfr.aos.monitoring.entities.Hdd;
+import ru.gov.sfr.aos.monitoring.entities.Location;
 import ru.gov.sfr.aos.monitoring.entities.ObjectBuing;
 import ru.gov.sfr.aos.monitoring.entities.OperationSystem;
 import ru.gov.sfr.aos.monitoring.entities.Place;
@@ -22,6 +27,7 @@ import ru.gov.sfr.aos.monitoring.entities.Ram;
 import ru.gov.sfr.aos.monitoring.entities.Server;
 import ru.gov.sfr.aos.monitoring.entities.ServerModel;
 import ru.gov.sfr.aos.monitoring.exceptions.ObjectAlreadyExists;
+import ru.gov.sfr.aos.monitoring.models.FilterDto;
 import ru.gov.sfr.aos.monitoring.models.SvtServerDTO;
 import ru.gov.sfr.aos.monitoring.repositories.ContractRepo;
 import ru.gov.sfr.aos.monitoring.repositories.CpuRepo;
@@ -108,6 +114,7 @@ public class ServerService extends SvtObjService <Server, ServerRepo, SvtServerD
                 server.setCpuAmount(dto.getCpuAmount());
                 server.setDateExploitationBegin(dto.getDateExploitationBegin());
                 server.setDateUpgrade(dto.getDateUpgrade());
+                server.setYearCreated(dto.getYearCreated());
                 server.setHdd(hddList);
                 server.setOperationSystems(operatingSystemList);
                 server.setInventaryNumber(dto.getInventaryNumber());
@@ -183,6 +190,7 @@ public class ServerService extends SvtObjService <Server, ServerRepo, SvtServerD
                 server.setCpuAmount(dto.getCpuAmount());
                 server.setDateExploitationBegin(dto.getDateExploitationBegin());
                 server.setDateUpgrade(dto.getDateUpgrade());
+                server.setYearCreated(dto.getYearCreated());
                 server.setHdd(hddList);
                 server.setOperationSystems(operatingSystemList);
                 server.setInventaryNumber(dto.getInventaryNumber());
@@ -208,5 +216,33 @@ public class ServerService extends SvtObjService <Server, ServerRepo, SvtServerD
                 server.setIpAdress(dto.getIpAdress());
                 serverRepo.save(server);
     }
+    
+    
+    public List<Server> getServerByFilter(FilterDto dto) {
+
+        List<Server> result = serverRepo.findServerByAllFilters(dto.getStatus(), dto.getModel(), dto.getYearCreatedOne(), dto.getYearCreatedTwo());
+        return result;
+    }
+
+    public Map<Location, List<Server>> getServerByPlaceAndFilter(List<Server> input) {
+        Map<Location, List<Server>> collect = input
+                .stream()
+                .collect(Collectors
+                        .groupingBy((Server el) -> el.getPlace()
+                        .getLocation()));
+
+        return collect;
+    }
+
+    public Map<Location, List<Server>> getServerByPlaceTypeAndFilter(PlaceType placeType, List<Server> input) {
+        Map<Location, List<Server>> collect = (Map<Location, List<Server>>) input
+                .stream().filter(e -> e.getPlace().getPlaceType().equals(placeType))
+                .collect(Collectors
+                        .groupingBy((Server el) -> el.getPlace()
+                        .getLocation()));
+
+        return collect;
+    }
+
     
 }

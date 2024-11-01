@@ -5,8 +5,10 @@
 package ru.gov.sfr.aos.monitoring.services;
 
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.gov.sfr.aos.monitoring.entities.Cpu;
+import ru.gov.sfr.aos.monitoring.exceptions.ObjectAlreadyExists;
 import ru.gov.sfr.aos.monitoring.repositories.CpuRepo;
 
 /**
@@ -16,4 +18,16 @@ import ru.gov.sfr.aos.monitoring.repositories.CpuRepo;
 @Service
 public class CpuModelService extends SvtModelService<Cpu, CpuRepo> {
 
+    @Autowired
+    private CpuRepo cpuRepo;
+
+    public void update(Cpu e) throws ObjectAlreadyExists {
+        Cpu cpu = cpuRepo.findById(e.getId()).get();
+        cpu.setCore(e.getCore());
+        cpu.setModel(e.getModel());
+        cpu.setFreq(e.getFreq());
+        cpuRepo.save(cpu);
+    }
+    
+    
 }

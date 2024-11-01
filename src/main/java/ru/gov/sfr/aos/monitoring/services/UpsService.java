@@ -159,7 +159,7 @@ public class UpsService extends SvtObjService<Ups, UpsRepo, SvtDTO>{
     
     
     
-            public Map<Location, List<Ups>> getUpssByPlaceAndFilter(List<Ups> input) {
+            public Map<Location, List<Ups>> getUpsByPlaceAndFilter(List<Ups> input) {
         Map<Location, List<Ups>> collect = input
                 .stream()
                 .collect(Collectors

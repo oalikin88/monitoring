@@ -38,8 +38,8 @@ public class AsuoDTO extends MainSvtDto{
     private int subDisplayAmount;
     private Long switchingUnitId;   
     private String switchingUnitModel;   
-    private Long switchingUnitInventary;   
-    private Long switchingUnitSerial;   
+    private String switchingUnitInventary;   
+    private String switchingUnitSerial;   
     private Long locationId;
     
     public AsuoDTO() {
@@ -246,19 +246,19 @@ public class AsuoDTO extends MainSvtDto{
         this.switchingUnitModel = switchingUnitModel;
     }
 
-    public Long getSwitchingUnitInventary() {
+    public String getSwitchingUnitInventary() {
         return switchingUnitInventary;
     }
 
-    public void setSwitchingUnitInventary(Long switchingUnitInventary) {
+    public void setSwitchingUnitInventary(String switchingUnitInventary) {
         this.switchingUnitInventary = switchingUnitInventary;
     }
 
-    public Long getSwitchingUnitSerial() {
+    public String getSwitchingUnitSerial() {
         return switchingUnitSerial;
     }
 
-    public void setSwitchingUnitSerial(Long switchingUnitSerial) {
+    public void setSwitchingUnitSerial(String switchingUnitSerial) {
         this.switchingUnitSerial = switchingUnitSerial;
     }
 

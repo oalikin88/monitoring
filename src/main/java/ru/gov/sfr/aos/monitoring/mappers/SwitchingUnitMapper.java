@@ -31,6 +31,8 @@ public abstract class SwitchingUnitMapper implements SvtMapper<SwitchingUnit, Sv
     @Mapping(source = "place.placeType", target = "placeType")
     @Mapping(source = "place.departmentCode", target = "departmentCode")
     @Mapping(source = "place.location.id", target = "locationId")
+    @Mapping(source = "inventaryNumber", target = "inventaryNumber")
+    @Mapping(source = "serialNumber", target = "serialNumber")
     @Override
     public abstract SvtDTO getDto(SwitchingUnit entity);
     
@@ -43,6 +45,8 @@ public abstract class SwitchingUnitMapper implements SvtMapper<SwitchingUnit, Sv
     @Mapping(target = "place.placeType", source = "placeType")
     @Mapping(target = "place.departmentCode", source = "departmentCode")
     @Mapping(target = "place.location.id", source = "locationId")
+    @Mapping(source = "inventaryNumber", target = "inventaryNumber")
+    @Mapping(source = "serialNumber", target = "serialNumber")
     @Override
     public abstract SwitchingUnit getEntityFromDto(SvtDTO dto); 
     

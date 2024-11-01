@@ -8,16 +8,23 @@ import java.time.Instant;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import ru.gov.sfr.aos.monitoring.dictionaries.PlaceType;
 import ru.gov.sfr.aos.monitoring.dictionaries.Status;
+import ru.gov.sfr.aos.monitoring.entities.Conditioner;
 import ru.gov.sfr.aos.monitoring.entities.Contract;
 import ru.gov.sfr.aos.monitoring.entities.Infomat;
 import ru.gov.sfr.aos.monitoring.entities.InfomatModel;
+import ru.gov.sfr.aos.monitoring.entities.Location;
 import ru.gov.sfr.aos.monitoring.entities.ObjectBuing;
 import ru.gov.sfr.aos.monitoring.entities.Place;
 import ru.gov.sfr.aos.monitoring.exceptions.ObjectAlreadyExists;
+import ru.gov.sfr.aos.monitoring.models.FilterDto;
 import ru.gov.sfr.aos.monitoring.models.SvtDTO;
 import ru.gov.sfr.aos.monitoring.repositories.ContractRepo;
 import ru.gov.sfr.aos.monitoring.repositories.InfomatModelRepo;
@@ -122,6 +129,33 @@ public class InfomatService extends SvtObjService<Infomat, InfomatRepo, SvtDTO> 
              infomat.setYearCreated(dto.getYearCreated());
              infomat.setNumberRoom(dto.getNumberRoom());
              infomatRepo.save(infomat);
+    }
+    
+    
+        public List<Infomat> getInfomatByFilter(FilterDto dto) {
+
+        List<Infomat> result = infomatRepo.findInfomatByAllFilters(dto.getStatus(), dto.getModel(), dto.getYearCreatedOne(), dto.getYearCreatedTwo());
+        return result;
+    }
+
+    public Map<Location, List<Infomat>> getInfomatByPlaceAndFilter(List<Infomat> input) {
+        Map<Location, List<Infomat>> collect = input
+                .stream()
+                .collect(Collectors
+                        .groupingBy((Infomat el) -> el.getPlace()
+                        .getLocation()));
+
+        return collect;
+    }
+
+    public Map<Location, List<Infomat>> getInfomatByPlaceTypeAndFilter(PlaceType placeType, List<Infomat> input) {
+        Map<Location, List<Infomat>> collect = (Map<Location, List<Infomat>>) input
+                .stream().filter(e -> e.getPlace().getPlaceType().equals(placeType))
+                .collect(Collectors
+                        .groupingBy((Infomat el) -> el.getPlace()
+                        .getLocation()));
+
+        return collect;
     }
     
 }

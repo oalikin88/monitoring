@@ -26,6 +26,7 @@ public abstract class SwitchHubMapper implements SvtMapper<SwitchHub, SvtSwitchH
     
     
     @Mapping(source = "numberRoom", target = "numberRoom")
+    @Mapping(source = "yearCreated", target = "yearCreated")
     @Mapping(source = "place.id", target = "placeId")
     @Mapping(source = "place.username", target = "placeName")
     @Mapping(source = "place.placeType", target = "placeType")
@@ -35,6 +36,8 @@ public abstract class SwitchHubMapper implements SvtMapper<SwitchHub, SvtSwitchH
     @Mapping(source = "switchHubModel.id", target = "modelId")
     @Mapping(source = "portAmount", target = "portAmount")
     @Mapping(source = "nameFromOneC", target = "nameFromOneC")
+    @Mapping(source = "inventaryNumber", target = "inventaryNumber")
+    @Mapping(source = "serialNumber", target = "serialNumber")
     @Override
     public abstract SvtSwitchHubDTO getDto(SwitchHub switchHub);
     @Mapping(target = "contract", expression = "java(switchHubRepo.findById(dto.getId()).get().getContract())")
@@ -45,8 +48,11 @@ public abstract class SwitchHubMapper implements SvtMapper<SwitchHub, SvtSwitchH
     @Mapping(target = "place.departmentCode", source = "departmentCode")
     @Mapping(target = "place.location.id", source = "locationId")
     @Mapping(target = "numberRoom", source = "numberRoom")
+    @Mapping(target = "yearCreated", source = "yearCreated")
     @Mapping(target = "portAmount", source = "portAmount")
     @Mapping(source = "nameFromOneC", target = "nameFromOneC")
+    @Mapping(source = "inventaryNumber", target = "inventaryNumber")
+    @Mapping(source = "serialNumber", target = "serialNumber")
     @Override
     public abstract SwitchHub getEntityFromDto(SvtSwitchHubDTO dto);
     

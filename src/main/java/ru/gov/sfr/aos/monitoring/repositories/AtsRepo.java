@@ -5,6 +5,7 @@
 package ru.gov.sfr.aos.monitoring.repositories;
 
 import java.util.List;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import ru.gov.sfr.aos.monitoring.dictionaries.PlaceType;
 import ru.gov.sfr.aos.monitoring.entities.Ats;
@@ -17,5 +18,18 @@ import ru.gov.sfr.aos.monitoring.entities.Ats;
 public interface AtsRepo extends ObjectBuingWithSerialAndInventaryRepo <Ats> {
     boolean existsBySerialNumberIgnoreCase(String serialNumber);
     List<Ats> findByPlacePlaceTypeLikeAndArchivedFalse(PlaceType placetype);
+    
+    
+    @Query(value = "SELECT ats.*, ob.*, ats_model.* "
+   + "FROM ats ats "
+   + "JOIN object_buing ob "
+   + "ON ats.ats_id = ob.id "
+   + "JOIN ats_model ats_model "
+   + "ON ats.ats_model_id = ats_model.id "
+   + "WHERE ((?1 is NULL or ?1 = '') or (ats.status = ?1)) "
+   + "AND ((?2 is NULL or ?2 = '') or (ats_model.model = ?2)) "
+   + "AND ((?3 is NULL or ?3 = '') or (ats.year_created >= ?3)) "
+   + "AND ((?4 is NULL or ?4 = '') or (ats.year_created <= ?4)) ", nativeQuery = true)
+    List<Ats> findAtsByAllFilters (String status, String model, String yearCreatedOne, String yearCreatedTwo);
     
 }

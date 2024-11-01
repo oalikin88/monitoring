@@ -62,19 +62,9 @@ public abstract class SvtModelService <E extends SvtModel, R extends SvtModelsRe
     }
     
     public void update(SvtModel e) throws ObjectAlreadyExists {
-        String newModel = e.getModel();
         E model = (E) repository.findById(e.getId()).get();
-         List<? extends SvtModel> list = repository.findByModelIgnoreCase(newModel);
-         
-        if (list.isEmpty()) {
-            model.setModel(newModel);
-            repository.save(model);
-        } else {
-           
-                
-                    throw new ObjectAlreadyExists(newModel + " уже есть в базе данных");
-                
-            }
+        e.setId(model.getId());
+        repository.save(e);
            
     }
     

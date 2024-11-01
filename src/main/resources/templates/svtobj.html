@@ -39,7 +39,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                     </div>
                     
                     <div class="col-7">
-                        <div class="input-group mb-3" id="searchSvtObjDiv">
+                        <div class="input-group" id="searchSvtObjDiv">
                             <input type="text" class="form-control form-control-sm" placeholder="Поиск по ФИО" aria-label="searchModel" aria-describedby="basic-addon1" id="searchSvtObjInput">
                             <span class="input-group-text" id="searchSvtObjBtn">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16"><path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"></path>
@@ -47,11 +47,16 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                             </span>
                         </div>
                     </div>
-                    
-                    <div class="col-2">
-                        
-                        <div class="dropdown">
+                    <th:block th:switch="${attribute}">
+                        <div class="col-2" th:case="asuo"></div>
+                        <div class="col-2" th:case="display"></div>
+                        <div class="col-2" th:case="terminal"></div>
+                        <div class="col-2" th:case="thermoprinter"></div>
+                        <div class="col-2" th:case="swunit"></div>
                             
+                        
+                    <div class="col-2" th:case="*">
+                        <div class="dropdown">
                           <button type="button" class="btn btn-primary btn-sm dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="outside">
                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-filter-square" viewBox="0 0 16 16">
                               <path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2z"/>
@@ -59,13 +64,11 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                             </svg>
                             <span style="margin-left: 10px;">Фильтр</span>
                           </button>
-                            
                           <div class="dropdown-menu mt-1 p-4" style="width: 420px;" id="dropdown-container">
-                              
                               <div class="container">
                                   
                                   <div class="row text-center fw-bold mb-3">
-                                      <div>Дата выпуска</div>
+                                      <div>Год выпуска</div>
                                   </div>
                                   
                                   
@@ -116,7 +119,9 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                           </div>
                         </div>
                         </div>
+                       
                     </div>
+                         </th:block>
                 </div>
                 <div class="content" id="content"> 
                 <ul class="tree" >
@@ -128,6 +133,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                                 <li class="department">
                                     <details>
                                         <summary th:text="${innerDto.department}"></summary>
+                                        
                                         <th:block th:switch="${attribute}">
                                          
                                             <div class="row fw-bold mt-3 mb-3" th:case="switch">
@@ -137,6 +143,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                                                     <div class="col">Инвентарный номер</div>
                                                     <div class="col">Тип</div>
                                                     <div class="col">Кол-во портов</div>
+                                                    <div class="col">Год выпуска</div>
                                                     <div class="col">Состояние</div>
                                                 </div>
                                             <div class="row fw-bold mt-3 mb-3" th:case="router">
@@ -146,6 +153,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                                                     <div class="col">Инвентарный номер</div>
                                                     <div class="col">Расположение</div>
                                                     <div class="col">Кол-во портов</div>
+                                                    <div class="col">Год выпуска</div>
                                                     <div class="col">Состояние</div>
                                                 </div>
                                             <div class="row fw-bold mt-3 mb-3" th:case="ats">
@@ -153,7 +161,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                                                     <div class="col">ФИО</div>
                                                     <div class="col">Серийный номер</div>
                                                     <div class="col">Инвентарный номер</div>
-                                                    <div class="col">Год ввода в экспл</div>
+                                                    <div class="col">Год выпуска</div>
                                                     <div class="col">Кол-во город. номеров</div>
                                                     <div class="col">Состояние</div>
                                                 </div>
@@ -162,7 +170,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                                                     <div class="col">ФИО</div>
                                                     <div class="col">Серийный номер</div>
                                                     <div class="col">Инвентарный номер</div>
-                                                    <div class="col">Год ввода в экспл</div>
+                                                    <div class="col">Год выпуска</div>
                                                     <div class="col">Тип</div>
                                                     <div class="col">Состояние</div>
                                                 </div>
@@ -220,7 +228,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                                                     <div class="col">Инвентарный номер</div>
                                                     <div class="col">Дата ввода в экспл</div>
                                                     <div class="col">Состояние</div>
-                                                    <div class="col">Дата выпуска</div>
+                                                    <div class="col">Год выпуска</div>
                                                      <th:block th:switch="${attribute}">
                                                         <div class="col" th:case="'phones'">
                                                             Внутренний номер
@@ -249,6 +257,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                                                 <div class="col" th:case="HUB" th:text="Концентратор"></div>
                                                 </th:block>
                                                 <div class="col" th:text="${inInnerDto.portAmount}"></div>
+                                                <div class="col" th:text="${inInnerDto.yearCreated}"></div>
                                                 <th:block th:switch="${inInnerDto.status}">
                                                 <div class="col" th:case="OK" th:text="Исправен"></div>
                                                 <div class="col" th:case="REPAIR" th:text="Ремонт"></div>
@@ -264,6 +273,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                                                 <div class="col" th:text="${inInnerDto.inventaryNumber}"></div>
                                                 <div class="col" th:text="${inInnerDto.numberRoom}"></div>
                                                 <div class="col" th:text="${inInnerDto.portAmount}"></div>
+                                                <div class="col" th:text="${inInnerDto.yearCreated}"></div>
                                                 <th:block th:switch="${inInnerDto.status}">
                                                 <div class="col" th:case="OK" th:text="Исправен"></div>
                                                 <div class="col" th:case="REPAIR" th:text="Ремонт"></div>
@@ -413,7 +423,8 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                                                         </th:block>
                                                         </div>
                                                         <div class="col" th:case="'ups'">
-                                                           <span th:text="${inInnerDto.yearReplacement}"></span>
+                                                            <span th:if="${inInnerDto.yearReplacement == 0}">Нет</span>
+                                                            <span th:unless="${inInnerDto.yearReplacement == 0}" th:text="${inInnerDto.yearReplacement}"></span>
                                                         </div>
                                                     </th:block> 
                                              </div>
@@ -428,7 +439,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                         </details>
                     </li>
                 </ul>
-                    <div th:if="${dtoes.size} == 0">
+                    <div th:if="${dtoes.size} == 0 AND ${dtoesStorage.size} == 0">
                     <h3 class="mt-5 pt-5 text-center">В базе данных отсутствуют [[${namePage.substring(0, 1).toLowerCase() + namePage.substring(1)}]]</h3>
                 </div>
                     </div>

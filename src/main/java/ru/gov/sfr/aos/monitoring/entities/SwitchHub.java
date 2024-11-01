@@ -26,6 +26,7 @@ public class SwitchHub extends ObjectBuingWithSerialAndInventary implements Seri
     private SwitchHubModel switchHubModel;
     private SwitchHubType switchHubType;
     private int portAmount;
+    private int yearCreated;
     private String numberRoom;
     private String nameFromOneC;
 
@@ -81,6 +82,16 @@ public class SwitchHub extends ObjectBuingWithSerialAndInventary implements Seri
     public void setNameFromOneC(String nameFromOneC) {
         this.nameFromOneC = nameFromOneC;
     }
+
+    public int getYearCreated() {
+        return yearCreated;
+    }
+
+    public void setYearCreated(int yearCreated) {
+        this.yearCreated = yearCreated;
+    }
+    
+    
 
     @Override
     public String toString() {

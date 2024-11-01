@@ -67,9 +67,23 @@ let handleClickUpdateBtn = function (name, id) {
         id: id,
         model: $("#model")[0].value,
     };
-    
-    if(attribute == "os") {
+    switch(attribute) {
+        case "os":
         dto.license = $("#licenseFlag")[0].checked;
+        break;
+    case "mhdd":
+        dto.capacity = $("#capacity")[0].value;
+        dto.unit = $("#unit")[0].value;
+        dto.serialNumber = $("#serialNumber")[0].value;
+        dto.inventaryNumber = $("#inventaryNumber")[0].value;
+        break;
+    case "mram":
+        dto.capacity = $("#capacity")[0].value;
+        break;
+    case "mcpu":
+        dto.core = $("#core")[0].value;
+        dto.freq = $("#freq")[0].value;
+        break;
     }
     
     $.ajax({
@@ -119,107 +133,97 @@ let handleClickSaveBtn = function (name) {
          dto.license = $("#licenseFlag")[0].checked;
      }
      
-     switch (attribute) {
-        case "mupsbat":
-            delete dto.model;
-                dto.type = document.querySelector('#model').value;
-                break;
-            break;
-            
-        default:
-            
-            break;
-    }
+ 
      
-//        switch (attribute) {
-//            case "mphones":
-//                link = "/mphones/";
-//                break;
-//            case "mmonitors":
-//                link = "/mmonitors/";
-//                break;
-//            case "mupsbat":
-//                link = "/mupsbat/";
-//                delete dto.model;
-//                dto.type = document.querySelector('#modelNameInput').value;
-//                break;
-//            case "mcpu":
-//                link = "/mcpu/";
-//                dto.core = document.querySelector('#coreAmount').value;
-//                dto.freq = document.querySelector('#freq').value;
-//                break;
-//            case "mram":
-//                link = "/mram/";
-//                dto.capacity = document.querySelector('#capacity').value;
-//                break;
-//            case "mhdd":
-//                link = "/mhdd/";
-//                dto.capacity = document.querySelector('#capacity').value;
-//                dto.unit = document.querySelector('#unit').value;
-//                dto.serialNumber = document.querySelector('#serialNumber').value;
-//                dto.inventaryNumber = document.querySelector('#inventaryNumber').value;
-//                break;
-//             case "mhdd":
-//                link = "/mvideo/";
-//                break;
-//             case "mcddrive":
-//                link = "/mcddrive/";
-//                break;
-//            case "mscard":
-//                link = "/mscard/";
-//                break;
-//            case "mlcard":
-//                link = "/mlcard/";
-//                break;
-//            case "mkeyboard":
-//                link = "/mkeyboard/";
-//                break;
-//            case "mmouse":
-//                link = "/mmouse/";
-//                break;
-//            case "mspeakers":
-//                link = "/mspeakers/";
-//                break;
-//            case "mscanner":
-//                link = "/mscanner/";
-//                break;
-//            case "os":
-//                link = "/os/";
-//                delete dto.model;
-//                dto.name = document.querySelector('#modelNameInput').value;
-//                dto.license = $("#licenseFlag")[0].checked;
-//                break;
-//            case "mserver":
-//                link = "/mserver/";
-//                break;
-//            case "mswitch":
-//                link = "/mswitch/";
-//                break;
-//            case "mrouter":
-//                link = "/mrouter/";
-//                break;
-//             case "mats":
-//                link = "/mats/";
-//                break;
-//            case "mconditioner":
-//                link = "/mconditioner/";
-//                break;
-//            case "mterminal":
-//                link = "/mterminal/";
-//                break;
-//            case "mthermoprinter":
-//                link = "/mthermoprinter/";
-//                break;
-//            case "mdisplay":
-//                link = "/mdisplay/";
-//                break;
-//            case "mswunit":
-//                link = "/mswunit/";
-//                break;
-//            case "msubdisplay":
-//                link = "/msubdisplay/";
-//                break;
-//        } 
+        switch (attribute) {
+            case "mphones":
+                link = "/mphones/";
+                break;
+            case "mmonitors":
+                link = "/mmonitors/";
+                break;
+            case "mupsbat":
+                link = "/mupsbat/";
+                delete dto.model;
+                dto.type = document.querySelector('#modelNameInput').value;
+                break;
+            case "mcpu":
+                link = "/mcpu/";
+                dto.core = document.querySelector('#core').value;
+                dto.freq = document.querySelector('#freq').value;
+                break;
+            case "mram":
+                link = "/mram/";
+                dto.capacity = document.querySelector('#capacity').value;
+                break;
+            case "mhdd":
+                link = "/mhdd/";
+                dto.capacity = document.querySelector('#capacity').value;
+                dto.unit = document.querySelector('#unit').value;
+                dto.serialNumber = document.querySelector('#serialNumber').value;
+                dto.inventaryNumber = document.querySelector('#inventaryNumber').value;
+                break;
+             case "mhdd":
+                link = "/mvideo/";
+                break;
+             case "mcddrive":
+                link = "/mcddrive/";
+                break;
+            case "mscard":
+                link = "/mscard/";
+                break;
+            case "mlcard":
+                link = "/mlcard/";
+                break;
+            case "mkeyboard":
+                link = "/mkeyboard/";
+                break;
+            case "mmouse":
+                link = "/mmouse/";
+                break;
+            case "mspeakers":
+                link = "/mspeakers/";
+                break;
+            case "mscanner":
+                link = "/mscanner/";
+                break;
+            case "os":
+                link = "/os/";
+                delete dto.model;
+                dto.model = document.querySelector('#model').value;
+                dto.license = $("#licenseFlag")[0].checked;
+                break;
+            case "mserver":
+                link = "/mserver/";
+                break;
+            case "mswitch":
+                link = "/mswitch/";
+                break;
+            case "mrouter":
+                link = "/mrouter/";
+                break;
+             case "mats":
+                link = "/mats/";
+                break;
+            case "mconditioner":
+                link = "/mconditioner/";
+                break;
+            case "mterminal":
+                link = "/mterminal/";
+                break;
+            case "mthermoprinter":
+                link = "/mthermoprinter/";
+                break;
+            case "mdisplay":
+                link = "/mdisplay/";
+                break;
+            case "mswunit":
+                link = "/mswunit/";
+                break;
+            case "msubdisplay":
+                link = "/msubdisplay/";
+                break;
+        } 
                 $.ajax({
         type: "POST",
         url: requestLink,
@@ -306,7 +310,8 @@ let modalContentLoad = function(eventReason, dto) {
  
     divModalBody.appendChild(divContainerBody);
     
-    if(attribute == "os") {
+    switch(attribute) {
+        case "os":
         let divLicenceRow = document.createElement("div");
         divLicenceRow.className = "row mt-2";
         let licenceLabelCol = document.createElement("div");
@@ -331,6 +336,92 @@ let modalContentLoad = function(eventReason, dto) {
         if(dto != null) {
             inputLicenceFormCheck.checked = dto.license;
         }
+            break;
+         case 'mram':
+        let divCapacityRamRow = document.createElement("div");
+        divCapacityRamRow.className = "row mt-2";
+        let capacityRamLabelCol = document.createElement("div");
+        capacityRamLabelCol.className = "col";
+        capacityRamLabelCol.innerHTML = "Объём, ГБ";
+        let capacityRamInputCol = document.createElement("div");
+        capacityRamInputCol.className = "col";
+        let capacityRamInput = document.createElement("input");
+        capacityRamInput.type = "number";
+        capacityRamInput.className = "form-control form-control-sm";
+        capacityRamInput.id = "capacity";
+        divCapacityRamRow.appendChild(capacityRamLabelCol);
+        divCapacityRamRow.appendChild(capacityRamInputCol);
+        capacityRamInputCol.appendChild(capacityRamInput);
+        divContainerBody.appendChild(divCapacityRamRow);
+        break;
+    case "mhdd":
+        divContainerBody.insertAdjacentHTML('beforeend',
+        ' <div class="row mt-3">' +
+            '<div class="col">Объём</div>' +
+            '<div class="col">' +
+                '<div class="input-group input-group-sm mb-3">' +
+                    '<input type="number" class="form-control" id="capacity" placeholder="объём ОЗУ" aria-label="объём ОЗУ" aria-describedby="ram-capacity" min="1" value="1">' +
+                '</div>' +
+            '</div>' +
+        '</div>' +
+
+        '<div class="row">' +
+            '<div class="col">Единица измерения</div>' +
+            '<div class="col">' +
+                '<div class="input-group input-group-sm mb-3">' +
+                    '<select class="form-select form-select-sm" aria-label="Default select example" id="unit">' +
+                      '<option value="GB" selected>ГБ</option>' +
+                      '<option value="MB">МБ</option>' +
+                      '<option value="TB">ТБ</option>' +
+                    '</select>' +
+                '</div>' +
+            '</div>' +
+        '</div>' +
+
+        '<div class="row">' +
+            '<div class="col">Серийный номер</div>' +
+            '<div class="col">' +
+                '<div class="input-group input-group-sm mb-3">' +
+                    '<input type="text" class="form-control" id="serialNumber" placeholder="серийный номер" aria-label="серийный номер" aria-describedby="serial-number">' +
+                '</div>' +
+            '</div>' +
+        '</div>' +
+
+        '<div class="row">' +
+            '<div class="col">Учётный номер</div>' +
+            '<div class="col">' +
+                '<div class="input-group input-group-sm mb-3">' +
+                    '<input type="text" class="form-control" id="inventaryNumber" placeholder="учётный номер" aria-label="учётный номер" aria-describedby="inventary-number">' +
+                '</div>' +
+            '</div>' +
+        '</div>'
+                );
+                            
+            break;
+        case "mcpu":
+            divContainerBody.insertAdjacentHTML('beforeend', 
+            '  <div class="row mt-3">' +
+                '<div class="col">Количество ядер</div>' +
+                '<div class="col">' +
+                    '<div class="input-group input-group-sm mb-3">' + 
+                        '<input type="number" class="form-control" id="core" placeholder="количество ядер" aria-label="количество ядер" aria-describedby="core-amount">' + 
+                    '</div>' + 
+                '</div>' +
+            '</div>' +
+
+            '<div class="row">' + 
+                '<div class="col">Частота</div>' +
+                '<div class="col">' +
+                    '<div class="input-group input-group-sm mb-3">' + 
+                        '<input type="number" class="form-control" id="freq" placeholder="частота процессора" aria-label="частота процессора" aria-describedby="freq-core">' +
+                    '</div>' +
+                '</div>' +
+            '</div>' +
+        '</div>'
+            
+            );
+            break;
+        
     }
     
            
@@ -368,6 +459,17 @@ let modalContentLoad = function(eventReason, dto) {
     
         if(dto != null) {
         $("#model")[0].value = dto.model;
+        switch(attribute) {
+            case 'mram':
+                $("#capacity")[0].value = dto.capacity;
+                break;
+            case 'mhdd':
+                $("#capacity")[0].value = dto.capacity;
+                $('#unit')[0].value = dto.unit;
+                $('#serialNumber')[0].value = dto.serialNumber;
+                $('#inventaryNumber')[0].value = dto.inventaryNumber;
+                break;
+        }
     }
     
     

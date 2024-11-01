@@ -2330,7 +2330,7 @@ let modalContentLoad = function (eventReason, svtObjId) {
             divRowYearExplAts.className = "row mt-2";
             let divColLabelYearExplAts = document.createElement("div");
             divColLabelYearExplAts.className = "col";
-            divColLabelYearExplAts.innerText = "Год ввода в эксплуатацию";
+            divColLabelYearExplAts.innerText = "Год выпуска";
             let divColSelectYearExplAts = document.createElement("div");
             divColSelectYearExplAts.className = "col";
             let selectYearExplAts = document.createElement("select");
@@ -2347,7 +2347,7 @@ let modalContentLoad = function (eventReason, svtObjId) {
             divRowYearExplConditioner.className = "row mt-2";
             let divColLabelYearExplConditioner = document.createElement("div");
             divColLabelYearExplConditioner.className = "col";
-            divColLabelYearExplConditioner.innerText = "Год ввода в эксплуатацию";
+            divColLabelYearExplConditioner.innerText = "Год выпуска";
             let divColSelectYearExplConditioner = document.createElement("div");
             divColSelectYearExplConditioner.className = "col";
             let selectYearExplConditioner = document.createElement("select");
@@ -3170,6 +3170,26 @@ let modalContentLoad = function (eventReason, svtObjId) {
             portAmountSwitchRow.appendChild(divColLabelSwitchPortAmount);
             portAmountSwitchRow.appendChild(divColInputSwitchPortAmount);
             divContainerBody.appendChild(portAmountSwitchRow);
+            
+            let yearCreatedSwitchRow = document.createElement("div");
+            yearCreatedSwitchRow.className = "row mt-2";
+            let divColLabelSwitchYearCreated = document.createElement("div");
+            divColLabelSwitchYearCreated.className = "col";
+            divColLabelSwitchYearCreated.innerText = "Год выпуска";
+            let divColInputSwitchYearCreated = document.createElement("div");
+            divColInputSwitchYearCreated.className = "col";
+            let inputSwitchYearCreated = document.createElement("input");
+            inputSwitchYearCreated.className = "form-control form-control-sm";
+            inputSwitchYearCreated.type = "number";
+            inputSwitchYearCreated.min = 2000;
+            inputSwitchYearCreated.value = 2000;
+            inputSwitchYearCreated.id = "dateCreateSelect";
+            divColInputSwitchYearCreated.appendChild(inputSwitchYearCreated);
+            yearCreatedSwitchRow.appendChild(divColLabelSwitchYearCreated);
+            yearCreatedSwitchRow.appendChild(divColInputSwitchYearCreated);
+            divContainerBody.appendChild(yearCreatedSwitchRow);
+            
+            
              let divRowNameFromOneCSwitch = document.createElement("div");
             divRowNameFromOneCSwitch.className = "row mt-2";
             let divColLabelNameFromOneCSwitch = document.createElement("div");
@@ -3225,6 +3245,26 @@ let modalContentLoad = function (eventReason, svtObjId) {
             portAmountRouterRow.appendChild(divColLabelRouterPortAmount);
             portAmountRouterRow.appendChild(divColInputRouterPortAmount);
             divContainerBody.appendChild(portAmountRouterRow);
+            
+            let yearCreatedRouterRow = document.createElement("div");
+            yearCreatedRouterRow.className = "row mt-2";
+            let divColLabelRouterYearCreated = document.createElement("div");
+            divColLabelRouterYearCreated.className = "col";
+            divColLabelRouterYearCreated.innerText = "Год выпуска";
+            let divColInputRouterYearCreated = document.createElement("div");
+            divColInputRouterYearCreated.className = "col";
+            let inputRouterYearCreated = document.createElement("input");
+            inputRouterYearCreated.className = "form-control form-control-sm";
+            inputRouterYearCreated.type = "number";
+            inputRouterYearCreated.min = 2000;
+            inputRouterYearCreated.value = 2000;
+            inputRouterYearCreated.id = "dateCreateSelect";
+            divColInputRouterYearCreated.appendChild(inputRouterYearCreated);
+            yearCreatedRouterRow.appendChild(divColLabelRouterYearCreated);
+            yearCreatedRouterRow.appendChild(divColInputRouterYearCreated);
+            divContainerBody.appendChild(yearCreatedRouterRow);
+            
+            
              let divRowNameFromOneCRouter = document.createElement("div");
             divRowNameFromOneCRouter.className = "row mt-2";
             let divColLabelNameFromOneCRouter = document.createElement("div");
@@ -3986,7 +4026,7 @@ let modalContentLoad = function (eventReason, svtObjId) {
                     $("#winterKitTrue")[0].checked = true;
                 }
                 if(havePomp) {
-                    $("#havePompTrue")[0].checked = true;
+                    $("#pompTrue")[0].checked = true;
                 }
                 break;
                 case "infomat":
@@ -6123,21 +6163,36 @@ let modalContentLoad = function (eventReason, svtObjId) {
 
 document.addEventListener("DOMContentLoaded", function () {
     let treeLocations = [...document.querySelectorAll('.location')];
-    switch (attrib) {
-        case "phones":
-            dynamicLabel = "Внутренний номер";
-            break;
-        case "monitors":
-            dynamicLabel = "По ведомости ОС";
-            break;
-        case "ups":
-            dynamicLabel = "Год замены";
-            break;
-    }
+  
     for (j = 0; j < storageDtoes.length; j++) {
         let addDepartmentFlag = false;
         for (i = 0; i < treeLocations.length; i++) {
             if (treeLocations[i].childNodes[1].innerText == storageDtoes[j].locationName) {
+                
+switch (attrib) {
+                    case "phones":
+                        dynamicLabel = "Внутренний номер";
+                        dynamicField = storageDtoes[j].departments[d].dtoes[t].phoneNumber;
+                        break;
+                    case "monitors":
+                        dynamicLabel = "По ведомости ОС";
+                        if(storageDtoes[j].departments[d].dtoes[t].baseType == "SINGLE") {
+                            dynamicField = "Отдельно";
+                        } else {
+                            dynamicField = "В составе АРМ";
+                        }
+                        break;
+                    case "ups":
+                        dynamicLabel = "Год замены";
+                        if(storageDtoes[j].departments[d].dtoes[t].yearReplacement == 0) {
+                          dynamicField = "нет";  
+                        } else {
+                            dynamicField = storageDtoes[j].departments[d].dtoes[t].yearReplacement;
+                        }
+                        
+                        break;
+                }
+                
                 liItem = document.createElement('li');
                 liItem.className = "department";
                 liItem.innerHTML = "<details> <summary>Склад</summary>";
@@ -6228,7 +6283,7 @@ document.addEventListener("DOMContentLoaded", function () {
                             '<div class="col">Свитч</div>' +
                             '<div class="col">Электронное табло на кабинки и кабинеты</div>';
                     break;
-                    case "*":
+                    default:
                        headerElement.className = "row fw-bold mt-3 mb-3";
                 if (dynamicLabel != null) {
                     headerElement.innerHTML = '<div class="col">Модель</div>' +
@@ -6237,7 +6292,7 @@ document.addEventListener("DOMContentLoaded", function () {
                             '<div class="col">Инвентарный номер</div>' +
                             '<div class="col">Дата ввода в экспл</div>' +
                             '<div class="col">Состояние</div>' +
-                            '<div class="col">Дата выпуска</div>' +
+                            '<div class="col">Год выпуска</div>' +
                             '<div class="col">' + dynamicLabel + '</div>';
                 } else {
                     headerElement.innerHTML = '<div class="col">Модель</div>' +
@@ -6246,9 +6301,10 @@ document.addEventListener("DOMContentLoaded", function () {
                             '<div class="col">Инвентарный номер</div>' +
                             '<div class="col">Дата ввода в экспл</div>' +
                             '<div class="col">Состояние</div>' +
-                            '<div class="col">Дата выпуска</div>';
+                            '<div class="col">Год выпуска</div>';
                 }
                         break;
+                       
                 }
                 
                 liItem.childNodes[0].append(headerElement);
@@ -6262,43 +6318,13 @@ document.addEventListener("DOMContentLoaded", function () {
                         elDepartment.setAttribute("data-bs-target", "#addPlaceModal");
                         let dateBegin = new Date(storageDtoes[j].departments[d].dtoes[t].dateExploitationBegin);
                         let formatedDate = dateBegin.toLocaleDateString('ru');
+                        
+                     
+                        
+                        
                         switch (attrib) {
-                            case "phones":
-                                elDepartment.innerHTML = '<div class="row mb-2 d-flex align-items-center text-start">' +
-                                        '<div class="col">' + count + '. ' + storageDtoes[j].departments[d].dtoes[t].model + '</div>' +
-                                        '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].placeName + '</div>' +
-                                        '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].serialNumber + '</div>' +
-                                        '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].inventaryNumber + '</div>' +
-                                        '<div class="col">' + formatedDate + '</div>' +
-                                        '<div class="col">' + getStatus(storageDtoes[j].departments[d].dtoes[t].status) + '</div>' +
-                                        '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].yearCreated + '</div>' +
-                                        '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].phoneNumber + '</div>' +
-                                        '</div>';
-                                break;
-                            case "monitors":
-                                elDepartment.innerHTML = '<div class="row mb-2 d-flex align-items-center text-start">' +
-                                        '<div class="col">' + count + '. ' + storageDtoes[j].departments[d].dtoes[t].model + '</div>' +
-                                        '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].placeName + '</div>' +
-                                        '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].serialNumber + '</div>' +
-                                        '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].inventaryNumber + '</div>' +
-                                        '<div class="col">' + formatedDate + '</div>' +
-                                        '<div class="col">' + getStatus(storageDtoes[j].departments[d].dtoes[t].status) + '</div>' +
-                                        '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].yearCreated + '</div>' +
-                                        '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].baseType + '</div>' +
-                                        '</div>';
-                                break;
-                            case "ups":
-                                elDepartment.innerHTML = '<div class="row mb-2 d-flex align-items-center text-start">' +
-                                        '<div class="col">' + count + '. ' + storageDtoes[j].departments[d].dtoes[t].model + '</div>' +
-                                        '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].placeName + '</div>' +
-                                        '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].serialNumber + '</div>' +
-                                        '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].inventaryNumber + '</div>' +
-                                        '<div class="col">' + formatedDate + '</div>' +
-                                        '<div class="col">' + getStatus(storageDtoes[j].departments[d].dtoes[t].status) + '</div>' +
-                                        '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].yearCreated + '</div>' +
-                                        '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].yearReplacement + '</div>' +
-                                        '</div>';
-                                break;
+
+
                             case "systemblock":
                                 elDepartment.innerHTML = '<div class="row mb-2 d-flex align-items-center text-start">' +
                                         '<div class="col">' + count + '. ' + storageDtoes[j].departments[d].dtoes[t].model + '</div>' +
@@ -6465,6 +6491,22 @@ document.addEventListener("DOMContentLoaded", function () {
             liLocation.childNodes[0].childNodes[2].append(liItem);
             headerElement = document.createElement('div');
             headerElement.className = "row fw-bold mt-3 mb-3";
+            
+               switch (attrib) {
+                            case "phones":
+                                dynamicLabel = "Внутренний номер";
+                            
+                                break;
+                            case "monitors":
+                                dynamicLabel = "По ведомости ОС";
+                               
+                                break;
+                            case "ups":
+                                dynamicLabel = "Год замены";
+                                
+                                break;
+                        }
+            
             switch (attrib) {
                 case "switch":
                     headerElement.innerHTML = '<div class="col">Модель</div>' +
@@ -6473,6 +6515,7 @@ document.addEventListener("DOMContentLoaded", function () {
                             '<div class="col">Инвентарный номер</div>' +
                             '<div class="col">Тип</div>' +
                             '<div class="col">Кол-во портов</div>' +
+                            '<div class="col">Год выпуска</div>' +
                             '<div class="col">Состояние</div>';
                     break;
                 case "router":
@@ -6482,6 +6525,7 @@ document.addEventListener("DOMContentLoaded", function () {
                             '<div class="col">Инвентарный номер</div>' +
                             '<div class="col">Расположение</div>' +
                             '<div class="col">Кол-во портов</div>' +
+                            '<div class="col">Год выпуска</div>' +
                             '<div class="col">Состояние</div>';
                     break;
                 case "ats":
@@ -6549,7 +6593,7 @@ document.addEventListener("DOMContentLoaded", function () {
                             '<div class="col">Свитч</div>' +
                             '<div class="col">Электронное табло на кабинки и кабинеты</div>';
                     break;
-                case "*":
+                default:
                     headerElement.className = "row fw-bold mt-3 mb-3";
                     if (dynamicLabel != null) {
                         headerElement.innerHTML = '<div class="col">Модель</div>' +
@@ -6558,7 +6602,7 @@ document.addEventListener("DOMContentLoaded", function () {
                                 '<div class="col">Инвентарный номер</div>' +
                                 '<div class="col">Дата ввода в экспл</div>' +
                                 '<div class="col">Состояние</div>' +
-                                '<div class="col">Дата выпуска</div>' +
+                                '<div class="col">Год выпуска</div>' +
                                 '<div class="col">' + dynamicLabel + '</div>';
                     } else {
                         headerElement.innerHTML = '<div class="col">Модель</div>' +
@@ -6567,13 +6611,39 @@ document.addEventListener("DOMContentLoaded", function () {
                                 '<div class="col">Инвентарный номер</div>' +
                                 '<div class="col">Дата ввода в экспл</div>' +
                                 '<div class="col">Состояние</div>' +
-                                '<div class="col">Дата выпуска</div>';
+                                '<div class="col">Год выпуска</div>';
                     }
                     break;
             }
             liItem.childNodes[0].append(headerElement);
             for (d = 0; d < storageDtoes[j].departments.length; d++) {
+                
                 for (t = 0; t < storageDtoes[j].departments[d].dtoes.length; t++) {
+                    
+                   switch (attrib) {
+                    case "phones":
+                        dynamicLabel = "Внутренний номер";
+                        dynamicField = storageDtoes[j].departments[d].dtoes[t].phoneNumber;
+                        break;
+                    case "monitors":
+                        dynamicLabel = "По ведомости ОС";
+                        if(storageDtoes[j].departments[d].dtoes[t].baseType == "SINGLE") {
+                            dynamicField = "Отдельно";
+                        } else {
+                            dynamicField = "В составе АРМ";
+                        }
+                        break;
+                    case "ups":
+                        dynamicLabel = "Год замены";
+                        if(storageDtoes[j].departments[d].dtoes[t].yearReplacement == 0) {
+                          dynamicField = "нет";  
+                        } else {
+                            dynamicField = storageDtoes[j].departments[d].dtoes[t].yearReplacement;
+                        }
+                        
+                        break;
+                }
+                    
                     count = t + 1;
                     elDepartment = document.createElement("li");
                     elDepartment.className = "element storage";
@@ -6583,43 +6653,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     let dateBegin = new Date(storageDtoes[j].departments[d].dtoes[t].dateExploitationBegin);
                     let formatedDate = dateBegin.toLocaleDateString('ru');
                     switch (attrib) {
-                        case "phones":
-                            elDepartment.innerHTML = '<div class="row mb-2 d-flex align-items-center text-start">' +
-                                    '<div class="col">' + count + '. ' + storageDtoes[j].departments[d].dtoes[t].model + '</div>' +
-                                    '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].placeName + '</div>' +
-                                    '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].serialNumber + '</div>' +
-                                    '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].inventaryNumber + '</div>' +
-                                    '<div class="col">' + formatedDate + '</div>' +
-                                    '<div class="col">' + getStatus(storageDtoes[j].departments[d].dtoes[t].status) + '</div>' +
-                                    '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].yearCreated + '</div>' +
-                                    '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].phoneNumber + '</div>' +
-                                    '</div>';
 
-                            break;
-                        case "monitors":
-                            elDepartment.innerHTML = '<div class="row mb-2 d-flex align-items-center text-start">' +
-                                    '<div class="col">' + count + '. ' + storageDtoes[j].departments[d].dtoes[t].model + '</div>' +
-                                    '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].placeName + '</div>' +
-                                    '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].serialNumber + '</div>' +
-                                    '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].inventaryNumber + '</div>' +
-                                    '<div class="col">' + formatedDate + '</div>' +
-                                    '<div class="col">' + getStatus(storageDtoes[j].departments[d].dtoes[t].status) + '</div>' +
-                                    '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].yearCreated + '</div>' +
-                                    '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].baseType + '</div>' +
-                                    '</div>';
-                            break;
-                        case "ups":
-                            elDepartment.innerHTML = '<div class="row mb-2 d-flex align-items-center text-start">' +
-                                    '<div class="col">' + count + '. ' + storageDtoes[j].departments[d].dtoes[t].model + '</div>' +
-                                    '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].placeName + '</div>' +
-                                    '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].serialNumber + '</div>' +
-                                    '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].inventaryNumber + '</div>' +
-                                    '<div class="col">' + formatedDate + '</div>' +
-                                    '<div class="col">' + getStatus(storageDtoes[j].departments[d].dtoes[t].status) + '</div>' +
-                                    '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].yearCreated + '</div>' +
-                                    '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].yearReplacement + '</div>' +
-                                    '</div>';
-                            break;
                         case "systemblock":
                             elDepartment.innerHTML = '<div class="row mb-2 d-flex align-items-center text-start">' +
                                     '<div class="col">' + count + '. ' + storageDtoes[j].departments[d].dtoes[t].model + '</div>' +
@@ -6662,6 +6696,7 @@ document.addEventListener("DOMContentLoaded", function () {
                                     '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].inventaryNumber + '</div>' +
                                     '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].switchHubType + '</div>' +
                                     '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].portAmount + '</div>' +
+                                    '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].yearCreated + '</div>' +
                                     '<div class="col">' + getStatus(storageDtoes[j].departments[d].dtoes[t].status) + '</div>' +
                                     '</div>';
                                 break;
@@ -6674,6 +6709,7 @@ document.addEventListener("DOMContentLoaded", function () {
                                     '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].inventaryNumber + '</div>' +
                                     '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].numberRoom + '</div>' +
                                     '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].portAmount + '</div>' +
+                                    '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].yearCreated + '</div>' +
                                     '<div class="col">' + getStatus(storageDtoes[j].departments[d].dtoes[t].status) + '</div>' +
                                     '</div>';
                                 break;
@@ -6757,6 +6793,20 @@ document.addEventListener("DOMContentLoaded", function () {
                                     '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].switches.length + ' ед.' + '</div>' +
                                     '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].subDisplayModel + '</div>' +
                                     '</div>';
+                                break;
+                            default:
+                                if(dynamicLabel != null) {
+                                elDepartment.innerHTML = '<div class="row mb-2 d-flex align-items-center text-start">' +
+                                    '<div class="col">' + count + '. ' + storageDtoes[j].departments[d].dtoes[t].model + '</div>' +
+                                    '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].placeName + '</div>' +
+                                    '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].serialNumber + '</div>' +
+                                    '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].inventaryNumber + '</div>' +
+                                    '<div class="col">' + formatedDate + '</div>' +
+                                    '<div class="col">' + getStatus(storageDtoes[j].departments[d].dtoes[t].status) + '</div>' +
+                                    '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].yearCreated + '</div>' +
+                                    '<div class="col">' + dynamicField + '</div>' +
+                                    '</div>';
+                        }
                                 break;
                     }
                     liItem.childNodes[0].append(elDepartment);

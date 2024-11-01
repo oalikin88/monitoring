@@ -260,6 +260,9 @@ li > .active {
 
 #top-panel {
     box-shadow: 0px 5px 10px -5px #111; 
+    min-height: 56px;
+    align-items: center;
+    border-radius: 5px;
 }
 
 #content {

@@ -62,7 +62,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                         <button type="button" class="btn btn-primary btn-sm" id="addBtn" data-bs-toggle="modal" data-bs-target="#addBtnModal">Добавить</button>
                     </div>
                     <div class="col-9">
-                        <div class="input-group mb-3" id="searchModelDiv">
+                        <div class="input-group" id="searchModelDiv">
                             <input type="text" class="form-control form-control-sm" placeholder="поиск" aria-label="searchModel" aria-describedby="basic-addon1" id="searchModelInput">
                             <span class="input-group-text" id="searchSvtObjBtn">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16"><path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"></path>
@@ -127,6 +127,36 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                              <div class="col-1" th:text="${stat.count}"></div>
                                     <div class="col-11 text-start">
                                         <span th:text="${dto.type}"></span>
+                                      </div>
+                            </div>
+                            <div class = "row element pb-2 mb-2 mt-2 pt-2" th:attr="id = ${dto.id}" data-bs-toggle="modal" data-bs-target="#addBtnModal" th:case="mhdd">
+                             <div class="col-1" th:text="${stat.count}"></div>
+                                    
+                             <div class="col-4 text-start"> <span th:text="${dto.model}"></span></div>
+                            <div class="col-1 text-start ms-0 ps-0"> <span th:text="${dto.capacity} + ' '"></span><span th:text="${dto.unit}"></span></div>
+                            <div class="col-3 text-start ma-0 ps-0"> <span th:text="${dto.serialNumber}"></span></div>
+                            <div class="col-3 text-start ms-0 ps-0"><span th:text="${dto.inventaryNumber}"></span></div>
+                            </div>
+                            
+                            <div class = "row element pb-2 mb-2 mt-2 pt-2" th:attr="id = ${dto.id}" data-bs-toggle="modal" data-bs-target="#addBtnModal" th:case="mram">
+                             <div class="col-1" th:text="${stat.count}"></div>
+                                    <div class="col-6 text-start">
+                                        <span th:text="${dto.model}"></span>
+                                      </div>
+                             <div class="col-5 text-start">
+                                        <span th:text="${dto.capacity}"></span>
+                                      </div>
+                            </div>
+                            <div class = "row element pb-2 mb-2 mt-2 pt-2" th:attr="id = ${dto.id}" data-bs-toggle="modal" data-bs-target="#addBtnModal" th:case="mcpu">
+                             <div class="col-1" th:text="${stat.count}"></div>
+                                    <div class="col-5 text-start">
+                                        <span th:text="${dto.model}"></span>
+                                      </div>
+                             <div class="col-3 text-start">
+                                        <span th:text="${dto.core}"></span>
+                                      </div>
+                             <div class="col-3 text-start">
+                                        <span th:text="${dto.freq}"></span>
                                       </div>
                             </div>
                             
@@ -207,6 +237,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                                     </div>
 
                                 </div>
+
                                 <div th:case="'mhdd'">
 
                                     <div class="row">

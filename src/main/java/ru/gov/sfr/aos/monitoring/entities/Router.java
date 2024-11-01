@@ -26,6 +26,7 @@ public class Router extends ObjectBuingWithSerialAndInventary implements Seriali
     private String nameFromOneC;
     private int portAmount;
     private String numberRoom;
+    private int yearCreated;
 
     public Router() {
     }
@@ -70,6 +71,16 @@ public class Router extends ObjectBuingWithSerialAndInventary implements Seriali
         this.numberRoom = numberRoom;
     }
 
+    public int getYearCreated() {
+        return yearCreated;
+    }
+
+    public void setYearCreated(int yearCreated) {
+        this.yearCreated = yearCreated;
+    }
+
+    
+    
     @Override
     public String toString() {
         return "Router{" + "id=" + this.id +  ", serial=" + this.serialNumber + ", inventary=" + this.inventaryNumber +  ", routerModel=" + routerModel + ", nameFromOneC=" + nameFromOneC + ", portAmount=" + portAmount + ", numberRoom=" + numberRoom + '}';

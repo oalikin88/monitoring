@@ -5,9 +5,11 @@
 package ru.gov.sfr.aos.monitoring.repositories;
 
 import java.util.List;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import ru.gov.sfr.aos.monitoring.entities.Router;
 import ru.gov.sfr.aos.monitoring.dictionaries.PlaceType;
+import ru.gov.sfr.aos.monitoring.entities.SwitchHub;
 
 
 /**
@@ -18,4 +20,19 @@ import ru.gov.sfr.aos.monitoring.dictionaries.PlaceType;
 public interface RouterRepo extends ObjectBuingWithSerialAndInventaryRepo<Router> {
     boolean existsBySerialNumberIgnoreCase(String serialNumber);
     List<Router> findByPlacePlaceTypeLikeAndArchivedFalse(PlaceType placetype);
+    
+    
+   @Query(value = "SELECT router.*, ob.*, router_model.* "
+   + "FROM router router "
+   + "JOIN object_buing ob "
+   + "ON router.router_id = ob.id "
+   + "JOIN router_model router_model "
+   + "ON router.router_model_id = router_model.id "
+   + "WHERE ((?1 is NULL or ?1 = '') or (router.status = ?1)) "
+   + "AND ((?2 is NULL or ?2 = '') or (router_model.model = ?2)) "
+   + "AND ((?3 is NULL or ?3 = '') or (router.year_created >= ?3)) "
+   + "AND ((?4 is NULL or ?4 = '') or (router.year_created <= ?4)) ", nativeQuery = true)
+    List<Router> findRouterByAllFilters (String status, String model, String yearCreatedOne, String yearCreatedTwo);
+    
+    
 }

@@ -4,8 +4,10 @@
  */
 package ru.gov.sfr.aos.monitoring.services;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.gov.sfr.aos.monitoring.entities.Hdd;
+import ru.gov.sfr.aos.monitoring.exceptions.ObjectAlreadyExists;
 import ru.gov.sfr.aos.monitoring.repositories.HddRepo;
 
 /**
@@ -14,5 +16,19 @@ import ru.gov.sfr.aos.monitoring.repositories.HddRepo;
  */
 @Service
 public class HddModelService extends SvtModelService<Hdd, HddRepo>{
+    
+    @Autowired
+    private HddRepo hddRepo;
+    
+    
+    public void update(Hdd e) throws ObjectAlreadyExists {
+       Hdd hdd = hddRepo.findById(e.getId()).get();
+       hdd.setCapacity(e.getCapacity());
+       hdd.setUnit(e.getUnit());
+       hdd.setInventaryNumber(e.getInventaryNumber());
+       hdd.setSerialNumber(e.getSerialNumber());
+       hdd.setModel(e.getModel());
+       hddRepo.save(hdd);
+    }
     
 }

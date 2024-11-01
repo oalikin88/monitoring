@@ -405,7 +405,7 @@ public class SvtViewController {
     @GetMapping("/mphones")
     public String getModelPhones(Model model) {
 
-        List<PhoneModel> phoneModels = phoneModelService.getAllModels();
+        List<PhoneModel> phoneModels = phoneModelService.getAllActualModels();
         List<SvtModelDto> phoneModelsDtoes = svtModelMapper.getPhoneModelsDtoes(phoneModels);
         model.addAttribute("dtoes", phoneModelsDtoes);
         model.addAttribute("namePage", "Модели телефонов");
@@ -420,6 +420,14 @@ public class SvtViewController {
     public String saveModelPhone(@RequestBody SvtModelDto dto) throws ObjectAlreadyExists {
         PhoneModel phoneModel = svtModelMapper.getPhoneModel(dto);
         phoneModelService.saveModel(phoneModel);
+        return "redirect:/mphones";
+        
+    }
+    
+    @SendArchive
+    @PostMapping("/mphonesarchived")
+    public String sendModelPhoneToArchive(@RequestBody ArchivedDto dto) throws ObjectAlreadyExists {
+        phoneModelService.sendModelToArchive(dto.getId());
         return "redirect:/mphones";
         
     }
@@ -470,7 +478,7 @@ public class SvtViewController {
     @GetMapping("/mups")
     public String getModelUps(Model model) {
 
-        List<UpsModel> upsModels = upsModelService.getAllModels();
+        List<UpsModel> upsModels = upsModelService.getAllActualModels();
         List<SvtModelDto> upsModelsDtoes = svtModelMapper.getUpsModelsDtoes(upsModels);
         model.addAttribute("dtoes", upsModelsDtoes);
         model.addAttribute("namePage", "Модели ИБП");
@@ -488,6 +496,16 @@ public class SvtViewController {
         return "redirect:/mups";
         
     }
+    
+    @SendArchive
+    @PostMapping("/mupsarchived")
+    public String sendModelUpsToArchive(@RequestBody ArchivedDto dto) throws ObjectAlreadyExists {
+        upsModelService.sendModelToArchive(dto.getId());
+        return "redirect:/mups";
+        
+    }
+    
+    
  //    @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
     @GetMapping("/mupsbat")
     public String getBatteryTypeUps(Model model) {
@@ -670,30 +688,56 @@ public class SvtViewController {
     
      //   @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
     @GetMapping("/upsforserver")
-    public String getServerUps(Model model, @RequestParam(value="username", required=false) String username) {
+    public String getServerUps(Model model, @RequestParam(value="username", required=false) String username, @ModelAttribute FilterDto dto) {
         Map<Location, List<Ups>> svtObjectsByEmployee = null;
+        Map<Location, List<Ups>> svtObjectsByStorage = null;
+        List<LocationByTreeDto> treeSvtDtoByEmployee = null;
+        List<LocationByTreeDto> treeSvtDtoByStorage = null;
+         List<SvtDTO> filter = null;
+        if(dto.model == null && dto.status == null && dto.yearCreatedOne == null && dto.yearCreatedTwo == null) {
         if(null != username) {
             svtObjectsByEmployee = upsService.getSvtObjectsByName(username, PlaceType.SERVERROOM);
         } else {
             svtObjectsByEmployee = upsService.getSvtObjectsByPlaceType(PlaceType.SERVERROOM);
         }
-        List<LocationByTreeDto> treeSvtDtoByEmployee = upsOutDtoTreeService.getTreeSvtDtoByPlaceType(svtObjectsByEmployee)
+        treeSvtDtoByEmployee = upsOutDtoTreeService.getTreeSvtDtoByPlaceType(svtObjectsByEmployee)
                 .stream()
                 .sorted((o1, o2) -> o1.getLocationName().compareTo(o2.getLocationName()))
                 .collect(Collectors.toList());
         
-        Map<Location, List<Ups>> svtObjectsByStorage = null;
+        
         if(null != username) {
             svtObjectsByStorage = upsService.getSvtObjectsByName(username, PlaceType.STORAGE);
         } else {
            svtObjectsByStorage = upsService.getSvtObjectsByPlaceType(PlaceType.STORAGE); 
         }
         
-        List<LocationByTreeDto> treeSvtDtoByStorage = upsOutDtoTreeService.getTreeSvtDtoByPlaceType(svtObjectsByStorage)
+        treeSvtDtoByStorage = upsOutDtoTreeService.getTreeSvtDtoByPlaceType(svtObjectsByStorage)
+                .stream()
+                .sorted((o1, o2) -> o1.getLocationName().compareTo(o2.getLocationName()))
+                .collect(Collectors.toList());
+        } else {
+        
+            List<Ups> upsByFilter = upsService.getUpsByFilter(dto);
+             filter = new ArrayList<>();
+            for(Ups p : upsByFilter) {
+                SvtDTO upsDto = upsMapper.getDto(p);
+                filter.add(upsDto);
+            }
+            
+            svtObjectsByEmployee = upsService.getUpsByPlaceTypeAndFilter(PlaceType.SERVERROOM, upsByFilter);
+            treeSvtDtoByEmployee = upsOutDtoTreeService.getTreeSvtDtoByPlaceType(svtObjectsByEmployee)
+                .stream()
+                .sorted((o1, o2) -> o1.getLocationName().compareTo(o2.getLocationName()))
+                .collect(Collectors.toList());
+            
+            svtObjectsByStorage = upsService.getUpsByPlaceTypeAndFilter(PlaceType.STORAGE, upsByFilter);
+               treeSvtDtoByStorage = upsOutDtoTreeService.getTreeSvtDtoByPlaceType(svtObjectsByStorage)
                 .stream()
                 .sorted((o1, o2) -> o1.getLocationName().compareTo(o2.getLocationName()))
                 .collect(Collectors.toList());
         
+        }
         model.addAttribute("dtoes", treeSvtDtoByEmployee);
         model.addAttribute("dtoesStorage", treeSvtDtoByStorage);
         model.addAttribute("attribute", "ups");
@@ -823,8 +867,13 @@ public class SvtViewController {
     
   //  @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
     @GetMapping("/monitors")
-    public String getMonitors(Model model, @RequestParam(value="username",required=false) String username) {
+    public String getMonitors(Model model, @RequestParam(value="username",required=false) String username, @ModelAttribute FilterDto dto) {
         Map<Location, List<Monitor>> svtObjectsByEmployee = null;
+        List<LocationByTreeDto> treeSvtDtoByEmployee = null;
+         Map<Location, List<Monitor>> svtObjectsByStorage = null;
+         List<LocationByTreeDto> treeSvtDtoByStorage = null;
+         List<SvtDTO> filter = null;
+        if(dto.model == null && dto.status == null && dto.yearCreatedOne == null && dto.yearCreatedTwo == null) {
         if(null != username) {
         svtObjectsByEmployee = monitorService.getSvtObjectsByName(username, PlaceType.EMPLOYEE);
             } else {
@@ -832,22 +881,45 @@ public class SvtViewController {
             }
         
          
-        List<LocationByTreeDto> treeSvtDtoByEmployee = monitorOutDtoTreeService.getTreeSvtDtoByPlaceType(svtObjectsByEmployee)
+        treeSvtDtoByEmployee = monitorOutDtoTreeService.getTreeSvtDtoByPlaceType(svtObjectsByEmployee)
                 .stream()
                 .sorted((o1, o2) -> o1.getLocationName().compareTo(o2.getLocationName()))
                 .collect(Collectors.toList());
         
-        Map<Location, List<Monitor>> svtObjectsByStorage = null;
+       
         if(null != username) {
              svtObjectsByStorage = monitorService.getSvtObjectsByName(username, PlaceType.STORAGE);
          } else {
             svtObjectsByStorage = monitorService.getSvtObjectsByPlaceType(PlaceType.STORAGE);
         }
-        List<LocationByTreeDto> treeSvtDtoByStorage = monitorOutDtoTreeService.getTreeSvtDtoByPlaceType(svtObjectsByStorage)
+        treeSvtDtoByStorage = monitorOutDtoTreeService.getTreeSvtDtoByPlaceType(svtObjectsByStorage)
                 .stream()
                 .sorted((o1, o2) -> o1.getLocationName().compareTo(o2.getLocationName()))
                 .collect(Collectors.toList());
         
+        } else {
+        
+        
+             List<Monitor> monitorByFilter = monitorService.getMonitorByFilter(dto);
+             filter = new ArrayList<>();
+            for(Monitor p : monitorByFilter) {
+                SvtDTO upsDto = monitorMapper.getDto(p);
+                filter.add(upsDto);
+            }
+            
+            svtObjectsByEmployee = monitorService.getMonitorByPlaceTypeAndFilter(PlaceType.EMPLOYEE, monitorByFilter);
+            treeSvtDtoByEmployee = monitorOutDtoTreeService.getTreeSvtDtoByPlaceType(svtObjectsByEmployee)
+                .stream()
+                .sorted((o1, o2) -> o1.getLocationName().compareTo(o2.getLocationName()))
+                .collect(Collectors.toList());
+            
+            svtObjectsByStorage = monitorService.getMonitorByPlaceTypeAndFilter(PlaceType.STORAGE, monitorByFilter);
+               treeSvtDtoByStorage = monitorOutDtoTreeService.getTreeSvtDtoByPlaceType(svtObjectsByStorage)
+                .stream()
+                .sorted((o1, o2) -> o1.getLocationName().compareTo(o2.getLocationName()))
+                .collect(Collectors.toList());
+            
+        }
         model.addAttribute("dtoes", treeSvtDtoByEmployee);
         model.addAttribute("dtoesStorage", treeSvtDtoByStorage);
         model.addAttribute("attribute", "monitors");
@@ -880,11 +952,11 @@ public class SvtViewController {
     @GetMapping("/msysblock")
     public String getModelSystemblock(Model model) {
 
-        List<SystemBlockModel> systemBlockModels = systemBlockModelService.getAllModels();
+        List<SystemBlockModel> systemBlockModels = systemBlockModelService.getAllActualModels();
         List<SvtModelDto> systemBlockModelsDtoes = svtModelMapper.getSystemBlockModelsDtoes(systemBlockModels);
         model.addAttribute("dtoes", systemBlockModelsDtoes);
         model.addAttribute("namePage", "Модели системных блоков");
-        model.addAttribute("attribute", "systemBlock");
+        model.addAttribute("attribute", "msysblock");
         return "models";
     }
     
@@ -898,31 +970,67 @@ public class SvtViewController {
         
     }
     
+    @SendArchive
+    @PostMapping("/msysblockarchived")
+    public String sendModelSystemBlockToArchive(@RequestBody ArchivedDto dto) throws ObjectAlreadyExists {
+        systemBlockModelService.sendModelToArchive(dto.getId());
+        return "redirect:/msysblock";
+        
+    }
+    
+    
+    
   //  @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
     @GetMapping("/sysblocks")
-    public String getSysBlocks(Model model, @RequestParam(value="username",required=false) String username) {
+    public String getSysBlocks(Model model, @RequestParam(value="username",required=false) String username,  @ModelAttribute FilterDto dto) {
         Map<Location, List<SystemBlock>> svtObjectsByEmployee = null;
+         List<SvtDTO> filter = null;
+         List<LocationByTreeDto> treeSvtDtoByEmployee = null;
+         Map<Location, List<SystemBlock>> svtObjectsByStorage = null;
+         List<LocationByTreeDto> treeSvtDtoByStorage = null;
+         
+        if(dto.model == null && dto.status == null && dto.yearCreatedOne == null && dto.yearCreatedTwo == null) {
         if(null != username) {
             svtObjectsByEmployee = systemblockService.getSvtObjectsByName(username, PlaceType.EMPLOYEE);
         } else {
             svtObjectsByEmployee = systemblockService.getSvtObjectsByPlaceType(PlaceType.EMPLOYEE);
         }
-        List<LocationByTreeDto> treeSvtDtoByEmployee = systemBlockOutDtoTreeService.getTreeSvtDtoByPlaceType(svtObjectsByEmployee)
+        treeSvtDtoByEmployee = systemBlockOutDtoTreeService.getTreeSvtDtoByPlaceType(svtObjectsByEmployee)
                 .stream()
                 .sorted((o1, o2) -> o1.getLocationName().compareTo(o2.getLocationName()))
                 .collect(Collectors.toList());
-        Map<Location, List<SystemBlock>> svtObjectsByStorage = null;
+        
         
         if(null != username) {
             svtObjectsByStorage = systemblockService.getSvtObjectsByName(username, PlaceType.STORAGE);
         } else {
             svtObjectsByStorage = systemblockService.getSvtObjectsByPlaceType(PlaceType.STORAGE);
         }
-        List<LocationByTreeDto> treeSvtDtoByStorage = systemBlockOutDtoTreeService.getTreeSvtDtoByPlaceType(svtObjectsByStorage)
+        treeSvtDtoByStorage = systemBlockOutDtoTreeService.getTreeSvtDtoByPlaceType(svtObjectsByStorage)
                 .stream()
                 .sorted((o1, o2) -> o1.getLocationName().compareTo(o2.getLocationName()))
                 .collect(Collectors.toList());
-        
+        } else {
+            
+              List<SystemBlock> systemblockByFilter = systemblockService.getSystemBlockByFilter(dto);
+             filter = new ArrayList<>();
+            for(SystemBlock p : systemblockByFilter) {
+                SvtDTO upsDto = systemblockMapper.getDto(p);
+                filter.add(upsDto);
+            }
+            
+            svtObjectsByEmployee = systemblockService.getSystemblockByPlaceTypeAndFilter(PlaceType.EMPLOYEE, systemblockByFilter);
+            treeSvtDtoByEmployee = systemBlockOutDtoTreeService.getTreeSvtDtoByPlaceType(svtObjectsByEmployee)
+                .stream()
+                .sorted((o1, o2) -> o1.getLocationName().compareTo(o2.getLocationName()))
+                .collect(Collectors.toList());
+            
+            svtObjectsByStorage = systemblockService.getSystemblockByPlaceTypeAndFilter(PlaceType.STORAGE, systemblockByFilter);
+               treeSvtDtoByStorage = systemBlockOutDtoTreeService.getTreeSvtDtoByPlaceType(svtObjectsByStorage)
+                .stream()
+                .sorted((o1, o2) -> o1.getLocationName().compareTo(o2.getLocationName()))
+                .collect(Collectors.toList());
+        }
         model.addAttribute("dtoes", treeSvtDtoByEmployee);
         model.addAttribute("dtoesStorage", treeSvtDtoByStorage);
         model.addAttribute("attribute", "systemblock");
@@ -977,7 +1085,7 @@ public class SvtViewController {
     @GetMapping("/mmotherboard")
     public String getModelMotherboard(Model model) {
 
-        List<Motherboard> motherboardModels = motherboardModelService.getAllModels();
+        List<Motherboard> motherboardModels = motherboardModelService.getAllActualModels();
         List<SvtModelDto> getMotherboardModelsDtoes = svtModelMapper.getModelMotherboardModelsDtoes(motherboardModels);
         model.addAttribute("dtoes", getMotherboardModelsDtoes);
         model.addAttribute("namePage", "Модели материнской платы");
@@ -996,11 +1104,19 @@ public class SvtViewController {
         
     }
     
+    @SendArchive
+    @PostMapping("/mmotherboardarchived")
+    public String sendModelMotherboardToArchive(@RequestBody ArchivedDto dto) throws ObjectAlreadyExists {
+        motherboardModelService.sendModelToArchive(dto.getId());
+        return "redirect:/mmotherboard";
+        
+    }
+    
  //   @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
     @GetMapping("/mcpu")
     public String getModelCpu(Model model) {
 
-        List<Cpu> cpuModels = cpuModelService.getAllModels();
+        List<Cpu> cpuModels = cpuModelService.getAllActualModels();
         List<CpuModelDto> getCpuDtoes = svtModelMapper.getCpuModelDtoes(cpuModels);
         model.addAttribute("dtoes", getCpuDtoes);
         model.addAttribute("namePage", "Модели процессоров");
@@ -1019,11 +1135,28 @@ public class SvtViewController {
         
     }
     
+    @SendArchive
+    @PostMapping("/mcpuarchived")
+    public String sendModelCpuToArchive(@RequestBody ArchivedDto dto) throws ObjectAlreadyExists {
+        cpuModelService.sendModelToArchive(dto.getId());
+        return "redirect:/mcpu";
+        
+    }
+    
+    @UpdLog
+    @PostMapping("/mcpuupd")
+    public String updateModelCpu(@RequestBody CpuModelDto dto) throws ObjectAlreadyExists {
+        Cpu cpu = svtModelMapper.getCpu(dto);
+        cpuModelService.update(cpu);
+        return "redirect:/mcpu";
+    }
+    
+    
  //   @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
     @GetMapping("/mram")
     public String getModelRam(Model model) {
 
-        List<Ram> ramModels = ramModelService.getAllModels();
+        List<Ram> ramModels = ramModelService.getAllActualModels();
         List<RamDto> getRamDtoes = svtModelMapper.getRamDtoes(ramModels);
         model.addAttribute("dtoes", getRamDtoes);
         model.addAttribute("namePage", "Модели ОЗУ");
@@ -1042,11 +1175,31 @@ public class SvtViewController {
         
     }
     
+     @SendArchive
+    @PostMapping("/mramarchived")
+    public String sendModelRamToArchive(@RequestBody ArchivedDto dto) throws ObjectAlreadyExists {
+        ramModelService.sendModelToArchive(dto.getId());
+        return "redirect:/mram";
+        
+    }
+    
+    
+    
+       @UpdLog
+    @PostMapping("/mramupd")
+    public String updateModelRam(@RequestBody RamDto dto) throws ObjectAlreadyExists {
+        Ram ram = svtModelMapper.getRam(dto);
+        ramModelService.update(ram);
+        return "redirect:/mram";
+        
+    }
+    
+    
  //   @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
     @GetMapping("/mhdd")
     public String getModelHdd(Model model) {
 
-        List<Hdd> hddModels = hddModelService.getAllModels();
+        List<Hdd> hddModels = hddModelService.getAllActualModels();
         List<HddDto> getHddDtoes = svtModelMapper.getHddDtoes(hddModels);
         model.addAttribute("dtoes", getHddDtoes);
         model.addAttribute("namePage", "Модели НЖМД");
@@ -1065,11 +1218,29 @@ public class SvtViewController {
         
     }
     
+    
+    @SendArchive
+    @PostMapping("/mhddarchived")
+    public String sendModelHddToArchive(@RequestBody ArchivedDto dto) throws ObjectAlreadyExists {
+        hddModelService.sendModelToArchive(dto.getId());
+        return "redirect:/mhdd";
+        
+    }
+    
+
+        @PostMapping("/mhddupd")
+    public String updateModelHdd(@RequestBody HddDto dto) throws ObjectAlreadyExists {
+        Hdd hdd = svtModelMapper.getHdd(dto);
+        hddModelService.update(hdd);
+        return "redirect:/mhdd";
+     
+    }
+    
   //   @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
     @GetMapping("/mvideo")
     public String getModelVideoCard(Model model) {
 
-        List<VideoCard> videoCardModels = videoCardModelService.getAllModels();
+        List<VideoCard> videoCardModels = videoCardModelService.getAllActualModels();
         List<SvtModelDto> getVideoCardDtoes = svtModelMapper.getVideoCardDtoes(videoCardModels);
         model.addAttribute("dtoes", getVideoCardDtoes);
         model.addAttribute("namePage", "Модели видеоадаптеров");
@@ -1088,12 +1259,28 @@ public class SvtViewController {
         
     }
     
+      @SendArchive
+    @PostMapping("/mvideoarchived")
+    public String sendModelVideoCardToArchive(@RequestBody ArchivedDto dto) throws ObjectAlreadyExists {
+        videoCardModelService.sendModelToArchive(dto.getId());
+        return "redirect:/mvideo";
+        
+    }
+    
+    @UpdLog
+    @PostMapping("/mvideoupd")
+    public String updateModelVideoCard(@RequestBody SvtModelDto dto) throws ObjectAlreadyExists {
+        VideoCard videocard = svtModelMapper.getVideoCard(dto);
+        videoCardModelService.update(videocard);
+        return "redirect:/mvideo";
+        
+    }
     
   //    @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
     @GetMapping("/mcddrive")
     public String getModelCdDrive(Model model) {
 
-        List<CdDrive> cdDriveModels = cdDriveModelService.getAllModels();
+        List<CdDrive> cdDriveModels = cdDriveModelService.getAllActualModels();
         List<SvtModelDto> getCdDriveDtoes = svtModelMapper.getCdDriveDtoes(cdDriveModels);
         model.addAttribute("dtoes", getCdDriveDtoes);
         model.addAttribute("namePage", "Модели приводов");
@@ -1109,6 +1296,22 @@ public class SvtViewController {
         CdDrive cdDrive = svtModelMapper.getCdDrive(dto);
         cdDriveModelService.saveModel(cdDrive);
         return "redirect:/mcddrive";
+    }
+    
+    
+    @SendArchive
+    @PostMapping("/mcddrivearchived")
+    public String sendModelCdDriveToArchive(@RequestBody ArchivedDto dto) throws ObjectAlreadyExists {
+        cdDriveModelService.sendModelToArchive(dto.getId());
+        return "redirect:/mcddrive";
+    }
+    
+    @UpdLog
+    @PostMapping("/mcddriveupd")
+    public String updateModelCdDrive(@RequestBody SvtModelDto dto) throws ObjectAlreadyExists {
+        CdDrive cdDrive = svtModelMapper.getCdDrive(dto);
+        cdDriveModelService.update(cdDrive);
+        return "redirect:/mcddrive";
         
     }
     
@@ -1116,7 +1319,7 @@ public class SvtViewController {
     @GetMapping("/mscard")
     public String getModelSCard(Model model) {
 
-        List<SoundCard> soundCardModels = soundCardModelService.getAllModels();
+        List<SoundCard> soundCardModels = soundCardModelService.getAllActualModels();
         List<SvtModelDto> getSoundCardDtoes = svtModelMapper.getSoundCardDtoes(soundCardModels);
         model.addAttribute("dtoes", getSoundCardDtoes);
         model.addAttribute("namePage", "Модели звуковых карт");
@@ -1132,6 +1335,22 @@ public class SvtViewController {
         SoundCard soundCard = svtModelMapper.getSoundCard(dto);
         soundCardModelService.saveModel(soundCard);
         return "redirect:/mscard";
+    }
+    
+    
+     @SendArchive
+    @PostMapping("/mscardarchived")
+    public String sendModelSCardToArchive(@RequestBody ArchivedDto dto) throws ObjectAlreadyExists {
+        soundCardModelService.sendModelToArchive(dto.getId());
+        return "redirect:/mscard";
+    }
+    
+    @UpdLog
+    @PostMapping("/mscardupd")
+    public String updateModelSCard(@RequestBody SvtModelDto dto) throws ObjectAlreadyExists {
+        SoundCard soundCard = svtModelMapper.getSoundCard(dto);
+        soundCardModelService.update(soundCard);
+        return "redirect:/mscard";
         
     }
     
@@ -1140,7 +1359,7 @@ public class SvtViewController {
     @GetMapping("/mlcard")
     public String getLansCard(Model model) {
 
-        List<LanCard> lanCardModels = lanCardModelService.getAllModels();
+        List<LanCard> lanCardModels = lanCardModelService.getAllActualModels();
         List<SvtModelDto> getLanCardDtoes = svtModelMapper.getLanCardDtoes(lanCardModels);
         model.addAttribute("dtoes", getLanCardDtoes);
         model.addAttribute("namePage", "Модели сетевых карт");
@@ -1149,12 +1368,28 @@ public class SvtViewController {
         return "models";
     }
     
-    @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
+    //@PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
     @Log
     @PostMapping("/mlcard")
     public String saveModelLanCard(@RequestBody SvtModelDto dto) throws ObjectAlreadyExists {
         LanCard lanCard = svtModelMapper.getLanCard(dto);
         lanCardModelService.saveModel(lanCard);
+        return "redirect:/mlcard";
+    }
+    
+      @SendArchive
+    @PostMapping("/mlcardarchived")
+    public String sendModelLanCardToArchive(@RequestBody ArchivedDto dto) throws ObjectAlreadyExists {
+        lanCardModelService.sendModelToArchive(dto.getId());
+        return "redirect:/mlcard";
+    }
+    
+    
+       @Log
+    @PostMapping("/mlcardupd")
+    public String updateModelLanCard(@RequestBody SvtModelDto dto) throws ObjectAlreadyExists {
+        LanCard lanCard = svtModelMapper.getLanCard(dto);
+        lanCardModelService.update(lanCard);
         return "redirect:/mlcard";
         
     }
@@ -1164,7 +1399,7 @@ public class SvtViewController {
     @GetMapping("/mkeyboard")
     public String getKeyboard(Model model) {
 
-        List<Keyboard> keyboardModels = keyboardModelService.getAllModels();
+        List<Keyboard> keyboardModels = keyboardModelService.getAllActualModels();
         List<SvtModelDto> getKeyboardDtoes = svtModelMapper.getKeyboardDtoes(keyboardModels);
         model.addAttribute("dtoes", getKeyboardDtoes);
         model.addAttribute("namePage", "Модели клавиатур");
@@ -1180,6 +1415,22 @@ public class SvtViewController {
         Keyboard keyboard = svtModelMapper.getKeyboard(dto);
         keyboardModelService.saveModel(keyboard);
         return "redirect:/mkeyboard";
+    }
+    
+      @SendArchive
+    @PostMapping("/mkeyboardarchived")
+    public String sendModelKeyboardToArchive(@RequestBody ArchivedDto dto) throws ObjectAlreadyExists {
+        keyboardModelService.sendModelToArchive(dto.getId());
+        return "redirect:/mkeyboard";
+    }
+    
+    
+        @UpdLog
+    @PostMapping("/mkeyboardupd")
+    public String updateModelKeyboard(@RequestBody SvtModelDto dto) throws ObjectAlreadyExists {
+        Keyboard keyboard = svtModelMapper.getKeyboard(dto);
+        keyboardModelService.update(keyboard);
+        return "redirect:/mkeyboard";
         
     }
     
@@ -1187,7 +1438,7 @@ public class SvtViewController {
     @GetMapping("/mmouse")
     public String getMouse(Model model) {
 
-        List<Mouse> mouseModels = mouseModelService.getAllModels();
+        List<Mouse> mouseModels = mouseModelService.getAllActualModels();
         List<SvtModelDto> getMouseModelsDtoes = svtModelMapper.getMouseDtoes(mouseModels);
         model.addAttribute("dtoes", getMouseModelsDtoes);
         model.addAttribute("namePage", "Модели мышей");
@@ -1206,11 +1457,28 @@ public class SvtViewController {
         
     }
     
+    @SendArchive
+    @PostMapping("/mmousearchived")
+    public String sendModelMouseToArchive(@RequestBody ArchivedDto dto) throws ObjectAlreadyExists {
+        mouseModelService.sendModelToArchive(dto.getId());
+        return "redirect:/mmouse";
+    }
+    
+    
+    @UpdLog
+    @PostMapping("/mmouseupd")
+    public String updateModelMouse(@RequestBody SvtModelDto dto) throws ObjectAlreadyExists {
+        Mouse mouse = svtModelMapper.getMouse(dto);
+        mouseModelService.update(mouse);
+        return "redirect:/mmouse";
+        
+    }
+    
  //      @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
     @GetMapping("/mspeakers")
     public String getSpeakers(Model model) {
 
-        List<Speakers> speakersModels = speakersModelService.getAllModels();
+        List<Speakers> speakersModels = speakersModelService.getAllActualModels();
         List<SvtModelDto> getSpeakersModelsDtoes = svtModelMapper.getSpeakersDtoes(speakersModels);
         model.addAttribute("dtoes", getSpeakersModelsDtoes);
         model.addAttribute("namePage", "Модели колонок");
@@ -1226,20 +1494,34 @@ public class SvtViewController {
         Speakers speakers = svtModelMapper.getSpeakers(dto);
         speakersModelService.saveModel(speakers);
         return "redirect:/mspeakers";
-        
     }
     
+    
+     @SendArchive
+    @PostMapping("/mspeakersarchived")
+    public String sendModelSpeakersToArchive(@RequestBody ArchivedDto dto) throws ObjectAlreadyExists {
+        speakersModelService.sendModelToArchive(dto.getId());
+        return "redirect:/mspeakers";
+    }
+    
+    
+     @UpdLog
+    @PostMapping("/mspeakersupd")
+    public String updateModelSpeakers(@RequestBody SvtModelDto dto) throws ObjectAlreadyExists {
+        Speakers speakers = svtModelMapper.getSpeakers(dto);
+        speakersModelService.update(speakers);
+        return "redirect:/mspeakers";
+    }
     
  //      @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
     @GetMapping("/os")
     public String getOperationSystems(Model model) {
 
-            List<OperationSystem> allOperationSystem = operationSystemService.getAllOperationSystem();
-            List<OperationSystemDto> operationSystemDtoesList = operationSystemMapper.getOperationSystemDtoesList(allOperationSystem);
+        List<OperationSystem> allOperationSystem = operationSystemService.getAllOperationSystem();
+        List<OperationSystemDto> operationSystemDtoesList = operationSystemMapper.getOperationSystemDtoesList(allOperationSystem);
         model.addAttribute("dtoes", operationSystemDtoesList);
         model.addAttribute("namePage", "Операционные системы");
         model.addAttribute("attribute", "os");
-        
         return "models";
     }
     
@@ -1267,7 +1549,7 @@ public class SvtViewController {
     @GetMapping("/mscanner")
     public String getModelScanner(Model model) {
 
-        List<ScannerModel> scannerModels = scannerModelService.getAllModels();
+        List<ScannerModel> scannerModels = scannerModelService.getAllActualModels();
         List<SvtModelDto> scannerModelsDtoes = svtModelMapper.getModelScannerDtoes(scannerModels);
         model.addAttribute("dtoes", scannerModelsDtoes);
         model.addAttribute("namePage", "Модели сканеров");
@@ -1286,33 +1568,69 @@ public class SvtViewController {
         
     }
     
+     @SendArchive
+    @PostMapping("/mscannerarchived")
+    public String sendModelScannerToArchive(@RequestBody ArchivedDto dto) throws ObjectAlreadyExists {
+        
+        scannerModelService.sendModelToArchive(dto.getId());
+        return "redirect:/mscanner";
+        
+    }
+    
     
     //   @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
     @GetMapping("/scanner")
-    public String getScanners(Model model, @RequestParam(value="username", required=false) String username) {
+    public String getScanners(Model model, @RequestParam(value="username", required=false) String username, @ModelAttribute FilterDto dto) {
+        
         Map<Location, List<Scanner>> svtObjectsByEmployee = null;
+        List<LocationByTreeDto> treeSvtDtoByEmployee = null;
+        Map<Location, List<Scanner>> svtObjectsByStorage = null;
+        List<LocationByTreeDto> treeSvtDtoByStorage = null;
+        List<SvtDTO> filter = null;
+        if(dto.model == null && dto.status == null && dto.yearCreatedOne == null && dto.yearCreatedTwo == null) {
         if(null != username) {
             svtObjectsByEmployee = scannerService.getSvtObjectsByName(username, PlaceType.EMPLOYEE);
         } else {
             svtObjectsByEmployee = scannerService.getSvtObjectsByPlaceType(PlaceType.EMPLOYEE);
         }
-        List<LocationByTreeDto> treeSvtDtoByEmployee = scannerOutDtoTreeService.getTreeSvtDtoByPlaceType(svtObjectsByEmployee)
+       treeSvtDtoByEmployee = scannerOutDtoTreeService.getTreeSvtDtoByPlaceType(svtObjectsByEmployee)
                 .stream()
                 .sorted((o1, o2) -> o1.getLocationName().compareTo(o2.getLocationName()))
                 .collect(Collectors.toList());
         
-        Map<Location, List<Scanner>> svtObjectsByStorage = null;
+        
         if(null != username) {
             svtObjectsByStorage = scannerService.getSvtObjectsByName(username, PlaceType.STORAGE);
         } else {
            svtObjectsByStorage = scannerService.getSvtObjectsByPlaceType(PlaceType.STORAGE); 
         }
         
-        List<LocationByTreeDto> treeSvtDtoByStorage = scannerOutDtoTreeService.getTreeSvtDtoByPlaceType(svtObjectsByStorage)
+        treeSvtDtoByStorage = scannerOutDtoTreeService.getTreeSvtDtoByPlaceType(svtObjectsByStorage)
                 .stream()
                 .sorted((o1, o2) -> o1.getLocationName().compareTo(o2.getLocationName()))
                 .collect(Collectors.toList());
-        
+        } else {
+            
+             List<Scanner> scannerByFilter = scannerService.getScannerByFilter(dto);
+             filter = new ArrayList<>();
+            for(Scanner p : scannerByFilter) {
+                SvtDTO scannerDto = scannerMapper.getDto(p);
+                filter.add(scannerDto);
+            }
+            
+            svtObjectsByEmployee = scannerService.getScannerByPlaceTypeAndFilter(PlaceType.EMPLOYEE, scannerByFilter);
+            treeSvtDtoByEmployee = scannerOutDtoTreeService.getTreeSvtDtoByPlaceType(svtObjectsByEmployee)
+                .stream()
+                .sorted((o1, o2) -> o1.getLocationName().compareTo(o2.getLocationName()))
+                .collect(Collectors.toList());
+            
+            svtObjectsByStorage = scannerService.getScannerByPlaceTypeAndFilter(PlaceType.STORAGE, scannerByFilter);
+               treeSvtDtoByStorage = scannerOutDtoTreeService.getTreeSvtDtoByPlaceType(svtObjectsByStorage)
+                .stream()
+                .sorted((o1, o2) -> o1.getLocationName().compareTo(o2.getLocationName()))
+                .collect(Collectors.toList());
+            
+        }
         model.addAttribute("dtoes", treeSvtDtoByEmployee);
         model.addAttribute("dtoesStorage", treeSvtDtoByStorage);
         model.addAttribute("attribute", "scanner");
@@ -1364,7 +1682,7 @@ public class SvtViewController {
     @GetMapping("/mserver")
     public String getModelServer(Model model) {
 
-        List<ServerModel> serverModels = serverModelService.getAllModels();
+        List<ServerModel> serverModels = serverModelService.getAllActualModels();
         List<SvtModelDto> getServerModelsDtoes = svtModelMapper.getModelServerDtoes(serverModels);
         model.addAttribute("dtoes", getServerModelsDtoes);
         model.addAttribute("namePage", "Модели серверов");
@@ -1380,35 +1698,67 @@ public class SvtViewController {
         ServerModel serverModel = svtModelMapper.getModelServer(dto);
         serverModelService.saveModel(serverModel);
         return "redirect:/mserver";
-        
+    }
+    
+    @SendArchive
+    @PostMapping("/mserverarchived")
+    public String sendModelServerToArchive(@RequestBody ArchivedDto dto) throws ObjectAlreadyExists {
+        serverModelService.sendModelToArchive(dto.getId());
+        return "redirect:/mserver";
     }
     
     
     //  @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
     @GetMapping("/server")
-    public String getServers(Model model, @RequestParam(value="username",required=false) String username) {
+    public String getServers(Model model, @RequestParam(value="username",required=false) String username, @ModelAttribute FilterDto dto) {
         Map<Location, List<Server>> svtObjectsByEmployee = null;
+        List<LocationByTreeDto> treeSvtDtoByEmployee = null;
+        Map<Location, List<Server>> svtObjectsByStorage = null;
+        List<LocationByTreeDto> treeSvtDtoByStorage = null;
+        List<SvtDTO> filter = null;
+        if(dto.model == null && dto.status == null && dto.yearCreatedOne == null && dto.yearCreatedTwo == null) {
         if(null != username) {
             svtObjectsByEmployee = serverService.getSvtObjectsByName(username, PlaceType.SERVERROOM);
         } else {
             svtObjectsByEmployee = serverService.getSvtObjectsByPlaceType(PlaceType.SERVERROOM);
         }
-        List<LocationByTreeDto> treeSvtDtoByEmployee = serverOutDtoTreeService.getTreeSvtDtoByPlaceType(svtObjectsByEmployee)
+        treeSvtDtoByEmployee = serverOutDtoTreeService.getTreeSvtDtoByPlaceType(svtObjectsByEmployee)
                 .stream()
                 .sorted((o1, o2) -> o1.getLocationName().compareTo(o2.getLocationName()))
                 .collect(Collectors.toList());
-        Map<Location, List<Server>> svtObjectsByStorage = null;
+        
         
         if(null != username) {
             svtObjectsByStorage = serverService.getSvtObjectsByName(username, PlaceType.STORAGE);
         } else {
             svtObjectsByStorage = serverService.getSvtObjectsByPlaceType(PlaceType.STORAGE);
         }
-        List<LocationByTreeDto> treeSvtDtoByStorage = serverOutDtoTreeService.getTreeSvtDtoByPlaceType(svtObjectsByStorage)
+        treeSvtDtoByStorage = serverOutDtoTreeService.getTreeSvtDtoByPlaceType(svtObjectsByStorage)
                 .stream()
                 .sorted((o1, o2) -> o1.getLocationName().compareTo(o2.getLocationName()))
                 .collect(Collectors.toList());
+        }else {
         
+            List<Server> serverByFilter = serverService.getServerByFilter(dto);
+             filter = new ArrayList<>();
+            for(Server p : serverByFilter) {
+                SvtDTO serverDto = serverMapper.getDto(p);
+                filter.add(serverDto);
+            }
+            
+            svtObjectsByEmployee = serverService.getServerByPlaceTypeAndFilter(PlaceType.SERVERROOM, serverByFilter);
+            treeSvtDtoByEmployee = serverOutDtoTreeService.getTreeSvtDtoByPlaceType(svtObjectsByEmployee)
+                .stream()
+                .sorted((o1, o2) -> o1.getLocationName().compareTo(o2.getLocationName()))
+                .collect(Collectors.toList());
+            
+            svtObjectsByStorage = serverService.getServerByPlaceTypeAndFilter(PlaceType.STORAGE, serverByFilter);
+               treeSvtDtoByStorage = serverOutDtoTreeService.getTreeSvtDtoByPlaceType(svtObjectsByStorage)
+                .stream()
+                .sorted((o1, o2) -> o1.getLocationName().compareTo(o2.getLocationName()))
+                .collect(Collectors.toList());
+            
+        }
         model.addAttribute("dtoes", treeSvtDtoByEmployee);
         model.addAttribute("dtoesStorage", treeSvtDtoByStorage);
         model.addAttribute("attribute", "server");
@@ -1463,12 +1813,11 @@ public class SvtViewController {
     @GetMapping("/mswitch")
     public String getModelSwitchHub(Model model) {
 
-        List<SwitchHubModel> switchHubModels = switchHubModelService.getAllModels();
+        List<SwitchHubModel> switchHubModels = switchHubModelService.getAllActualModels();
         List<SvtModelDto> getSwitchHubModelsDtoes = svtModelMapper.getModelSwitchHubDtoes(switchHubModels);
         model.addAttribute("dtoes", getSwitchHubModelsDtoes);
         model.addAttribute("namePage", "Модели коммутаторов/концентраторов");
         model.addAttribute("attribute", "mswitch");
-        
         return "models";
     }
     
@@ -1479,35 +1828,67 @@ public class SvtViewController {
         SwitchHubModel switchHubModel = svtModelMapper.getModelSwitchHub(dto);
         switchHubModelService.saveModel(switchHubModel);
         return "redirect:/mswitch";
-        
+    }
+    
+      @SendArchive
+    @PostMapping("/mswitcharchived")
+    public String sendModelSwitchHubToArchive(@RequestBody ArchivedDto dto) throws ObjectAlreadyExists {
+        switchHubModelService.sendModelToArchive(dto.getId());
+        return "redirect:/mswitch";
     }
     
     
      //  @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
     @GetMapping("/switch")
-    public String getSwitchHub(Model model, @RequestParam(value="username",required=false) String username) {
+    public String getSwitchHub(Model model, @RequestParam(value="username",required=false) String username, @ModelAttribute FilterDto dto) {
         Map<Location, List<SwitchHub>> svtObjectsByEmployee = null;
+        List<LocationByTreeDto> treeSvtDtoByEmployee = null;
+        Map<Location, List<SwitchHub>> svtObjectsByStorage = null;
+        List<LocationByTreeDto> treeSvtDtoByStorage = null;
+        List<SvtDTO> filter = null;
+        if(dto.model == null && dto.status == null && dto.yearCreatedOne == null && dto.yearCreatedTwo == null) {
         if(null != username) {
             svtObjectsByEmployee = switchHubService.getSvtObjectsByName(username, PlaceType.SERVERROOM);
         } else {
             svtObjectsByEmployee = switchHubService.getSvtObjectsByPlaceType(PlaceType.SERVERROOM);
         }
-        List<LocationByTreeDto> treeSvtDtoByEmployee = switchHubOutDtoTreeService.getTreeSvtDtoByPlaceType(svtObjectsByEmployee)
+        treeSvtDtoByEmployee = switchHubOutDtoTreeService.getTreeSvtDtoByPlaceType(svtObjectsByEmployee)
                 .stream()
                 .sorted((o1, o2) -> o1.getLocationName().compareTo(o2.getLocationName()))
                 .collect(Collectors.toList());
-        Map<Location, List<SwitchHub>> svtObjectsByStorage = null;
+        
         
         if(null != username) {
             svtObjectsByStorage = switchHubService.getSvtObjectsByName(username, PlaceType.STORAGE);
         } else {
             svtObjectsByStorage = switchHubService.getSvtObjectsByPlaceType(PlaceType.STORAGE);
         }
-        List<LocationByTreeDto> treeSvtDtoByStorage = switchHubOutDtoTreeService.getTreeSvtDtoByPlaceType(svtObjectsByStorage)
+        treeSvtDtoByStorage = switchHubOutDtoTreeService.getTreeSvtDtoByPlaceType(svtObjectsByStorage)
                 .stream()
                 .sorted((o1, o2) -> o1.getLocationName().compareTo(o2.getLocationName()))
                 .collect(Collectors.toList());
+        } else {
         
+            List<SwitchHub> switchHubByFilter = switchHubService.getSwitchHubByFilter(dto);
+             filter = new ArrayList<>();
+            for(SwitchHub p : switchHubByFilter) {
+                SvtDTO switchHubDto = switchHubMapper.getDto(p);
+                filter.add(switchHubDto);
+            }
+            
+            svtObjectsByEmployee = switchHubService.getSwitchHubByPlaceTypeAndFilter(PlaceType.SERVERROOM, switchHubByFilter);
+            treeSvtDtoByEmployee = switchHubOutDtoTreeService.getTreeSvtDtoByPlaceType(svtObjectsByEmployee)
+                .stream()
+                .sorted((o1, o2) -> o1.getLocationName().compareTo(o2.getLocationName()))
+                .collect(Collectors.toList());
+            
+            svtObjectsByStorage = switchHubService.getSwitchHubByPlaceTypeAndFilter(PlaceType.STORAGE, switchHubByFilter);
+               treeSvtDtoByStorage = switchHubOutDtoTreeService.getTreeSvtDtoByPlaceType(svtObjectsByStorage)
+                .stream()
+                .sorted((o1, o2) -> o1.getLocationName().compareTo(o2.getLocationName()))
+                .collect(Collectors.toList());
+            
+        }
         model.addAttribute("dtoes", treeSvtDtoByEmployee);
         model.addAttribute("dtoesStorage", treeSvtDtoByStorage);
         model.addAttribute("attribute", "switch");
@@ -1556,7 +1937,7 @@ public class SvtViewController {
             //      @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
     @GetMapping("/mrouter")
     public String getModelRouterb(Model model) {
-        List<RouterModel> routerModels = routerModelService.getAllModels();
+        List<RouterModel> routerModels = routerModelService.getAllActualModels();
         List<SvtModelDto> getRouterModelsDtoes = svtModelMapper.getModelRouterDtoes(routerModels);
         model.addAttribute("dtoes", getRouterModelsDtoes);
         model.addAttribute("namePage", "Модели маршрутизаторов");
@@ -1571,34 +1952,66 @@ public class SvtViewController {
         RouterModel routerModel = svtModelMapper.getModelRouter(dto);
         routerModelService.saveModel(routerModel);
         return "redirect:/mrouter";
-        
+    }
+    
+    @SendArchive
+    @PostMapping("/mrouterarchived")
+    public String sendModelRouterToArchive(@RequestBody ArchivedDto dto) throws ObjectAlreadyExists {
+        routerModelService.sendModelToArchive(dto.getId());
+        return "redirect:/mrouter";
     }
     
          //  @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
     @GetMapping("/router")
-    public String getRouter(Model model, @RequestParam(value="username",required=false) String username) {
+    public String getRouter(Model model, @RequestParam(value="username",required=false) String username, @ModelAttribute FilterDto dto) {
         Map<Location, List<Router>> svtObjectsByEmployee = null;
+        List<LocationByTreeDto> treeSvtDtoByEmployee = null;
+        Map<Location, List<Router>> svtObjectsByStorage = null;
+        List<LocationByTreeDto> treeSvtDtoByStorage = null;
+        List<SvtDTO> filter = null;
+        if(dto.model == null && dto.status == null && dto.yearCreatedOne == null && dto.yearCreatedTwo == null) {
         if(null != username) {
             svtObjectsByEmployee = routerService.getSvtObjectsByName(username, PlaceType.SERVERROOM);
         } else {
             svtObjectsByEmployee = routerService.getSvtObjectsByPlaceType(PlaceType.SERVERROOM);
         }
-        List<LocationByTreeDto> treeSvtDtoByEmployee = routerOutDtoTreeService.getTreeSvtDtoByPlaceType(svtObjectsByEmployee)
+        treeSvtDtoByEmployee = routerOutDtoTreeService.getTreeSvtDtoByPlaceType(svtObjectsByEmployee)
                 .stream()
                 .sorted((o1, o2) -> o1.getLocationName().compareTo(o2.getLocationName()))
                 .collect(Collectors.toList());
-        Map<Location, List<Router>> svtObjectsByStorage = null;
+        
         
         if(null != username) {
             svtObjectsByStorage = routerService.getSvtObjectsByName(username, PlaceType.STORAGE);
         } else {
             svtObjectsByStorage = routerService.getSvtObjectsByPlaceType(PlaceType.STORAGE);
         }
-        List<LocationByTreeDto> treeSvtDtoByStorage = routerOutDtoTreeService.getTreeSvtDtoByPlaceType(svtObjectsByStorage)
+        treeSvtDtoByStorage = routerOutDtoTreeService.getTreeSvtDtoByPlaceType(svtObjectsByStorage)
                 .stream()
                 .sorted((o1, o2) -> o1.getLocationName().compareTo(o2.getLocationName()))
                 .collect(Collectors.toList());
+        } else {
         
+            List<Router> routerByFilter = routerService.getRouterByFilter(dto);
+             filter = new ArrayList<>();
+            for(Router p : routerByFilter) {
+                SvtDTO routerHubDto = routerMapper.getDto(p);
+                filter.add(routerHubDto);
+            }
+            
+            svtObjectsByEmployee = routerService.getRouterByPlaceTypeAndFilter(PlaceType.SERVERROOM, routerByFilter);
+            treeSvtDtoByEmployee = routerOutDtoTreeService.getTreeSvtDtoByPlaceType(svtObjectsByEmployee)
+                .stream()
+                .sorted((o1, o2) -> o1.getLocationName().compareTo(o2.getLocationName()))
+                .collect(Collectors.toList());
+            
+            svtObjectsByStorage = routerService.getRouterByPlaceTypeAndFilter(PlaceType.STORAGE, routerByFilter);
+               treeSvtDtoByStorage = routerOutDtoTreeService.getTreeSvtDtoByPlaceType(svtObjectsByStorage)
+                .stream()
+                .sorted((o1, o2) -> o1.getLocationName().compareTo(o2.getLocationName()))
+                .collect(Collectors.toList());
+            
+        }
         model.addAttribute("dtoes", treeSvtDtoByEmployee);
         model.addAttribute("dtoesStorage", treeSvtDtoByStorage);
         model.addAttribute("attribute", "router");
@@ -1648,7 +2061,7 @@ public class SvtViewController {
                 //      @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
     @GetMapping("/mats")
     public String getModelAts(Model model) {
-        List<AtsModel> atsModels = atsModelService.getAllModels();
+        List<AtsModel> atsModels = atsModelService.getAllActualModels();
         List<SvtModelDto> getAtsModelsDtoes = svtModelMapper.getModelAtsDtoes(atsModels);
         model.addAttribute("dtoes", getAtsModelsDtoes);
         model.addAttribute("namePage", "Модели АТС");
@@ -1663,34 +2076,65 @@ public class SvtViewController {
         AtsModel atsModel = svtModelMapper.getModelAts(dto);
         atsModelService.saveModel(atsModel);
         return "redirect:/mats";
-        
+    }
+    
+    
+     @SendArchive
+    @PostMapping("/matsarchived")
+    public String sendModelAtsToArchive(@RequestBody ArchivedDto dto) throws ObjectAlreadyExists {
+        atsModelService.sendModelToArchive(dto.getId());
+        return "redirect:/mats";
     }
     
              //  @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
     @GetMapping("/ats")
-    public String getAts(Model model, @RequestParam(value="username",required=false) String username) {
+    public String getAts(Model model, @RequestParam(value="username",required=false) String username, @ModelAttribute FilterDto dto) {
         Map<Location, List<Ats>> svtObjectsByEmployee = null;
+        List<LocationByTreeDto> treeSvtDtoByEmployee = null;
+        Map<Location, List<Ats>> svtObjectsByStorage = null;
+        List<LocationByTreeDto> treeSvtDtoByStorage = null;
+        List<SvtDTO> filter = null;
+        if(dto.model == null && dto.status == null && dto.yearCreatedOne == null && dto.yearCreatedTwo == null) {
         if(null != username) {
             svtObjectsByEmployee = atsService.getSvtObjectsByName(username, PlaceType.SERVERROOM);
         } else {
             svtObjectsByEmployee = atsService.getSvtObjectsByPlaceType(PlaceType.SERVERROOM);
         }
-        List<LocationByTreeDto> treeSvtDtoByEmployee = atsOutDtoTreeService.getTreeSvtDtoByPlaceType(svtObjectsByEmployee)
+        treeSvtDtoByEmployee = atsOutDtoTreeService.getTreeSvtDtoByPlaceType(svtObjectsByEmployee)
                 .stream()
                 .sorted((o1, o2) -> o1.getLocationName().compareTo(o2.getLocationName()))
                 .collect(Collectors.toList());
-        Map<Location, List<Ats>> svtObjectsByStorage = null;
+        
         
         if(null != username) {
             svtObjectsByStorage = atsService.getSvtObjectsByName(username, PlaceType.STORAGE);
         } else {
             svtObjectsByStorage = atsService.getSvtObjectsByPlaceType(PlaceType.STORAGE);
         }
-        List<LocationByTreeDto> treeSvtDtoByStorage = atsOutDtoTreeService.getTreeSvtDtoByPlaceType(svtObjectsByStorage)
+        treeSvtDtoByStorage = atsOutDtoTreeService.getTreeSvtDtoByPlaceType(svtObjectsByStorage)
                 .stream()
                 .sorted((o1, o2) -> o1.getLocationName().compareTo(o2.getLocationName()))
                 .collect(Collectors.toList());
-        
+        } else {
+            
+             List<Ats> atsByFilter = atsService.getAtsByFilter(dto);
+             filter = new ArrayList<>();
+            for(Ats p : atsByFilter) {
+                SvtDTO atsDto = atsMapper.getDto(p);
+                filter.add(atsDto);
+            }
+            svtObjectsByEmployee = atsService.getAtsByPlaceTypeAndFilter(PlaceType.SERVERROOM, atsByFilter);
+            treeSvtDtoByEmployee = atsOutDtoTreeService.getTreeSvtDtoByPlaceType(svtObjectsByEmployee)
+                .stream()
+                .sorted((o1, o2) -> o1.getLocationName().compareTo(o2.getLocationName()))
+                .collect(Collectors.toList());
+            
+            svtObjectsByStorage = atsService.getAtsByPlaceTypeAndFilter(PlaceType.STORAGE, atsByFilter);
+               treeSvtDtoByStorage = atsOutDtoTreeService.getTreeSvtDtoByPlaceType(svtObjectsByStorage)
+                .stream()
+                .sorted((o1, o2) -> o1.getLocationName().compareTo(o2.getLocationName()))
+                .collect(Collectors.toList());
+        }
         model.addAttribute("dtoes", treeSvtDtoByEmployee);
         model.addAttribute("dtoesStorage", treeSvtDtoByStorage);
         model.addAttribute("attribute", "ats");
@@ -1740,7 +2184,7 @@ public class SvtViewController {
                    //      @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
     @GetMapping("/mconditioner")
     public String getModelConditioner(Model model) {
-        List<ConditionerModel> conditionerModels = conditionerModelService.getAllModels();
+        List<ConditionerModel> conditionerModels = conditionerModelService.getAllActualModels();
         List<SvtModelDto> getAtsModelsDtoes = svtModelMapper.getModelConditionerDtoes(conditionerModels);
         model.addAttribute("dtoes", getAtsModelsDtoes);
         model.addAttribute("namePage", "Модели кондиционеров");
@@ -1755,33 +2199,66 @@ public class SvtViewController {
         ConditionerModel conditionerModel = svtModelMapper.getModelConditioner(dto);
         conditionerModelService.saveModel(conditionerModel);
         return "redirect:/mconditioner";
-        
+    }
+    
+     @SendArchive
+    @PostMapping("/mconditionerarchived")
+    public String sendModelConditionerToArchive(@RequestBody ArchivedDto dto) throws ObjectAlreadyExists {
+        conditionerModelService.sendModelToArchive(dto.getId());
+        return "redirect:/mconditioner";
     }
     
                  //  @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
     @GetMapping("/conditioner")
-    public String getConditioner(Model model, @RequestParam(value="username", required=false) String username) {
+    public String getConditioner(Model model, @RequestParam(value="username", required=false) String username, @ModelAttribute FilterDto dto) {
         Map<Location, List<Conditioner>> svtObjectsByEmployee = null;
+        List<LocationByTreeDto> treeSvtDtoByEmployee = null;
+        Map<Location, List<Conditioner>> svtObjectsByStorage = null;
+        List<LocationByTreeDto> treeSvtDtoByStorage = null;
+         List<SvtDTO> filter = null;
+        if(dto.model == null && dto.status == null && dto.yearCreatedOne == null && dto.yearCreatedTwo == null) {
         if(null != username) {
             svtObjectsByEmployee = conditionerService.getSvtObjectsByName(username, PlaceType.SERVERROOM);
         } else {
             svtObjectsByEmployee = conditionerService.getSvtObjectsByPlaceType(PlaceType.SERVERROOM);
         }
-        List<LocationByTreeDto> treeSvtDtoByEmployee = conditionerOutDtoTreeService.getTreeSvtDtoByPlaceType(svtObjectsByEmployee)
+        treeSvtDtoByEmployee = conditionerOutDtoTreeService.getTreeSvtDtoByPlaceType(svtObjectsByEmployee)
                 .stream()
                 .sorted((o1, o2) -> o1.getLocationName().compareTo(o2.getLocationName()))
                 .collect(Collectors.toList());
-        Map<Location, List<Conditioner>> svtObjectsByStorage = null;
+        
         
         if(null != username) {
             svtObjectsByStorage = conditionerService.getSvtObjectsByName(username, PlaceType.STORAGE);
         } else {
             svtObjectsByStorage = conditionerService.getSvtObjectsByPlaceType(PlaceType.STORAGE);
         }
-        List<LocationByTreeDto> treeSvtDtoByStorage = conditionerOutDtoTreeService.getTreeSvtDtoByPlaceType(svtObjectsByStorage)
+        treeSvtDtoByStorage = conditionerOutDtoTreeService.getTreeSvtDtoByPlaceType(svtObjectsByStorage)
                 .stream()
                 .sorted((o1, o2) -> o1.getLocationName().compareTo(o2.getLocationName()))
                 .collect(Collectors.toList());
+        
+        } else {
+        
+             List<Conditioner> conditionerByFilter = conditionerService.getConditionerByFilter(dto);
+             filter = new ArrayList<>();
+            for(Conditioner p : conditionerByFilter) {
+                SvtDTO conditionerDto = conditionerMapper.getDto(p);
+                filter.add(conditionerDto);
+            }
+            svtObjectsByEmployee = conditionerService.getConditionerByPlaceTypeAndFilter(PlaceType.SERVERROOM, conditionerByFilter);
+            treeSvtDtoByEmployee = conditionerOutDtoTreeService.getTreeSvtDtoByPlaceType(svtObjectsByEmployee)
+                .stream()
+                .sorted((o1, o2) -> o1.getLocationName().compareTo(o2.getLocationName()))
+                .collect(Collectors.toList());
+            
+            svtObjectsByStorage = conditionerService.getConditionerByPlaceTypeAndFilter(PlaceType.STORAGE, conditionerByFilter);
+               treeSvtDtoByStorage = conditionerOutDtoTreeService.getTreeSvtDtoByPlaceType(svtObjectsByStorage)
+                .stream()
+                .sorted((o1, o2) -> o1.getLocationName().compareTo(o2.getLocationName()))
+                .collect(Collectors.toList());
+            
+        }
         
         model.addAttribute("dtoes", treeSvtDtoByEmployee);
         model.addAttribute("dtoesStorage", treeSvtDtoByStorage);
@@ -1839,7 +2316,7 @@ public class SvtViewController {
                        //      @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
     @GetMapping("/mfax")
     public String getModelFax(Model model) {
-        List<FaxModel> faxModels = faxModelService.getAllModels();
+        List<FaxModel> faxModels = faxModelService.getAllActualModels();
         List<SvtModelDto> getFaxModelsDtoes = svtModelMapper.getModelFaxDtoes(faxModels);
         model.addAttribute("dtoes", getFaxModelsDtoes);
         model.addAttribute("namePage", "Модели факсов");
@@ -1864,34 +2341,68 @@ public class SvtViewController {
         FaxModel faxModel = svtModelMapper.getModelFax(dto);
         faxModelService.saveModel(faxModel);
         return "redirect:/mfax";
-        
+    }
+    
+    @SendArchive
+    @PostMapping("/mfaxarchived")
+    public String sendModelFaxToArchive(@RequestBody ArchivedDto dto) throws ObjectAlreadyExists {
+        faxModelService.sendModelToArchive(dto.getId());
+        return "redirect:/mfax";
     }
     
     
                      //  @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
     @GetMapping("/fax")
-    public String getFax(Model model, @RequestParam(value="username", required=false) String username) {
+    public String getFax(Model model, @RequestParam(value="username", required=false) String username, @ModelAttribute FilterDto dto) {
         Map<Location, List<Fax>> svtObjectsByEmployee = null;
+        List<LocationByTreeDto> treeSvtDtoByEmployee = null;
+        Map<Location, List<Fax>> svtObjectsByStorage = null;
+        List<LocationByTreeDto> treeSvtDtoByStorage = null;
+        List<FaxDto> filter = null;
+        if(dto.model == null && dto.status == null && dto.yearCreatedOne == null && dto.yearCreatedTwo == null) {
         if(null != username) {
             svtObjectsByEmployee = faxService.getSvtObjectsByName(username, PlaceType.OFFICEEQUIPMENT);
         } else {
             svtObjectsByEmployee = faxService.getSvtObjectsByPlaceType(PlaceType.OFFICEEQUIPMENT);
         }
-        List<LocationByTreeDto> treeSvtDtoByEmployee = faxOutDtoTreeService.getTreeSvtDtoByPlaceType(svtObjectsByEmployee)
+        treeSvtDtoByEmployee = faxOutDtoTreeService.getTreeSvtDtoByPlaceType(svtObjectsByEmployee)
                 .stream()
                 .sorted((o1, o2) -> o1.getLocationName().compareTo(o2.getLocationName()))
                 .collect(Collectors.toList());
-        Map<Location, List<Fax>> svtObjectsByStorage = null;
+        
         
         if(null != username) {
             svtObjectsByStorage = faxService.getSvtObjectsByName(username, PlaceType.STORAGE);
         } else {
             svtObjectsByStorage = faxService.getSvtObjectsByPlaceType(PlaceType.STORAGE);
         }
-        List<LocationByTreeDto> treeSvtDtoByStorage = faxOutDtoTreeService.getTreeSvtDtoByPlaceType(svtObjectsByStorage)
+        treeSvtDtoByStorage = faxOutDtoTreeService.getTreeSvtDtoByPlaceType(svtObjectsByStorage)
                 .stream()
                 .sorted((o1, o2) -> o1.getLocationName().compareTo(o2.getLocationName()))
                 .collect(Collectors.toList());
+        
+        } else {
+        
+             List<Fax> faxByFilter = faxService.getFaxByFilter(dto);
+             filter = new ArrayList<>();
+            for(Fax p : faxByFilter) {
+                FaxDto faxDto = faxMapper.getDto(p);
+                filter.add(faxDto);
+            }
+            svtObjectsByEmployee = faxService.getFaxByPlaceTypeAndFilter(PlaceType.OFFICEEQUIPMENT, faxByFilter);
+            treeSvtDtoByEmployee = faxOutDtoTreeService.getTreeSvtDtoByPlaceType(svtObjectsByEmployee)
+                .stream()
+                .sorted((o1, o2) -> o1.getLocationName().compareTo(o2.getLocationName()))
+                .collect(Collectors.toList());
+            
+            svtObjectsByStorage = faxService.getFaxByPlaceTypeAndFilter(PlaceType.STORAGE, faxByFilter);
+               treeSvtDtoByStorage = faxOutDtoTreeService.getTreeSvtDtoByPlaceType(svtObjectsByStorage)
+                .stream()
+                .sorted((o1, o2) -> o1.getLocationName().compareTo(o2.getLocationName()))
+                .collect(Collectors.toList());
+            
+        }
+        
         
         model.addAttribute("dtoes", treeSvtDtoByEmployee);
         model.addAttribute("dtoesStorage", treeSvtDtoByStorage);
@@ -1949,7 +2460,7 @@ public class SvtViewController {
      //      @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
     @GetMapping("/minfomat")
     public String getModelInfomat(Model model) {
-        List<InfomatModel> infomatModels = infomatModelService.getAllModels();
+        List<InfomatModel> infomatModels = infomatModelService.getAllActualModels();
         List<SvtModelDto> getInfomatModelsDtoes = svtModelMapper.getModelInfomatDtoes(infomatModels);
         model.addAttribute("dtoes", getInfomatModelsDtoes);
         model.addAttribute("namePage", "Модели инфоматов");
@@ -1966,31 +2477,65 @@ public class SvtViewController {
         return "redirect:/minfomat";
     }
     
+    @SendArchive
+    @PostMapping("/minfomatarchived")
+    public String sendModelInfomatToArchive(@RequestBody ArchivedDto dto) throws ObjectAlreadyExists {
+        infomatModelService.sendModelToArchive(dto.getId());
+        return "redirect:/minfomat";
+    }
+    
     
                   //  @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
     @GetMapping("/infomat")
-    public String getInfomat(Model model, @RequestParam(value="username", required = false) String username) {
+    public String getInfomat(Model model, @RequestParam(value="username", required = false) String username, @ModelAttribute FilterDto dto) {
         Map<Location, List<Infomat>> svtObjectsByEmployee = null;
+        List<LocationByTreeDto> treeSvtDtoByEmployee = null;
+        Map<Location, List<Infomat>> svtObjectsByStorage = null;
+        List<LocationByTreeDto> treeSvtDtoByStorage = null;
+        List<SvtDTO> filter = null;
+        if(dto.model == null && dto.status == null && dto.yearCreatedOne == null && dto.yearCreatedTwo == null) {
         if(null != username) {
             svtObjectsByEmployee = infomatService.getSvtObjectsByName(username, PlaceType.OFFICEEQUIPMENT);
         } else {
             svtObjectsByEmployee = infomatService.getSvtObjectsByPlaceType(PlaceType.OFFICEEQUIPMENT);
         }
-        List<LocationByTreeDto> treeSvtDtoByEmployee = infomatOutDtoTreeService.getTreeSvtDtoByPlaceType(svtObjectsByEmployee)
+       treeSvtDtoByEmployee = infomatOutDtoTreeService.getTreeSvtDtoByPlaceType(svtObjectsByEmployee)
                 .stream()
                 .sorted((o1, o2) -> o1.getLocationName().compareTo(o2.getLocationName()))
                 .collect(Collectors.toList());
-        Map<Location, List<Infomat>> svtObjectsByStorage = null;
+        
         
         if(null != username) {
             svtObjectsByStorage = infomatService.getSvtObjectsByName(username, PlaceType.STORAGE);
         } else {
             svtObjectsByStorage = infomatService.getSvtObjectsByPlaceType(PlaceType.STORAGE);
         }
-        List<LocationByTreeDto> treeSvtDtoByStorage = infomatOutDtoTreeService.getTreeSvtDtoByPlaceType(svtObjectsByStorage)
+        treeSvtDtoByStorage = infomatOutDtoTreeService.getTreeSvtDtoByPlaceType(svtObjectsByStorage)
                 .stream()
                 .sorted((o1, o2) -> o1.getLocationName().compareTo(o2.getLocationName()))
                 .collect(Collectors.toList());
+        
+        } else {
+            
+            List<Infomat> infomatByFilter = infomatService.getInfomatByFilter(dto);
+             filter = new ArrayList<>();
+            for(Infomat p : infomatByFilter) {
+                SvtDTO infomatDto = infomatMapper.getDto(p);
+                filter.add(infomatDto);
+            }
+            svtObjectsByEmployee = infomatService.getInfomatByPlaceTypeAndFilter(PlaceType.OFFICEEQUIPMENT, infomatByFilter);
+            treeSvtDtoByEmployee = infomatOutDtoTreeService.getTreeSvtDtoByPlaceType(svtObjectsByEmployee)
+                .stream()
+                .sorted((o1, o2) -> o1.getLocationName().compareTo(o2.getLocationName()))
+                .collect(Collectors.toList());
+            
+            svtObjectsByStorage = infomatService.getInfomatByPlaceTypeAndFilter(PlaceType.STORAGE, infomatByFilter);
+               treeSvtDtoByStorage = infomatOutDtoTreeService.getTreeSvtDtoByPlaceType(svtObjectsByStorage)
+                .stream()
+                .sorted((o1, o2) -> o1.getLocationName().compareTo(o2.getLocationName()))
+                .collect(Collectors.toList());
+            
+        }
         
         model.addAttribute("dtoes", treeSvtDtoByEmployee);
         model.addAttribute("dtoesStorage", treeSvtDtoByStorage);
@@ -2041,7 +2586,7 @@ public class SvtViewController {
          //      @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
     @GetMapping("/mterminal")
     public String getModelTerminal(Model model) {
-        List<TerminalModel> terminalModels = terminalModelService.getAllModels();
+        List<TerminalModel> terminalModels = terminalModelService.getAllActualModels();
         List<SvtModelDto> getTerminalModelsDtoes = svtModelMapper.getModelTerminalDtoes(terminalModels);
         model.addAttribute("dtoes", getTerminalModelsDtoes);
         model.addAttribute("namePage", "Модели терминалов");
@@ -2055,6 +2600,13 @@ public class SvtViewController {
     public String saveModelTerminal(@RequestBody SvtModelDto dto) throws ObjectAlreadyExists {
         TerminalModel terminalModel = svtModelMapper.getModelTerminal(dto);
         terminalModelService.saveModel(terminalModel);
+        return "redirect:/mterminal";
+    }
+    
+    @SendArchive
+    @PostMapping("/mterminalarchived")
+    public String sendModelTerminalToArchive(@RequestBody ArchivedDto dto) throws ObjectAlreadyExists {
+        terminalModelService.sendModelToArchive(dto.getId());
         return "redirect:/mterminal";
     }
     
@@ -2129,7 +2681,7 @@ public class SvtViewController {
              //      @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
     @GetMapping("/mthermoprinter")
     public String getModelThermoprinter(Model model) {
-        List<ThermoPrinterModel> thermoprinterModels = thermoprinterModelService.getAllModels();
+        List<ThermoPrinterModel> thermoprinterModels = thermoprinterModelService.getAllActualModels();
         List<SvtModelDto> getThermoprinterModelsDtoes = svtModelMapper.getModelThermoprinterDtoes(thermoprinterModels);
         model.addAttribute("dtoes", getThermoprinterModelsDtoes);
         model.addAttribute("namePage", "Модели термопринтеров");
@@ -2143,6 +2695,13 @@ public class SvtViewController {
     public String saveModelThermoprinter(@RequestBody SvtModelDto dto) throws ObjectAlreadyExists {
         ThermoPrinterModel thermoprinterModel = svtModelMapper.getModelThermoprinter(dto);
         thermoprinterModelService.saveModel(thermoprinterModel);
+        return "redirect:/mthermoprinter";
+    }
+    
+      @SendArchive
+    @PostMapping("/mthermoprinterarchived")
+    public String sendModelThermoprinterToArchive(@RequestBody ArchivedDto dto) throws ObjectAlreadyExists {
+        thermoprinterModelService.sendModelToArchive(dto.getId());
         return "redirect:/mthermoprinter";
     }
     
@@ -2217,7 +2776,7 @@ public class SvtViewController {
     //      @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
     @GetMapping("/mdisplay")
     public String getModelDisplay(Model model) {
-        List<DisplayModel> displayModels = displayModelService.getAllModels();
+        List<DisplayModel> displayModels = displayModelService.getAllActualModels();
         List<SvtModelDto> getDisplayModelsDtoes = svtModelMapper.getModelDisplayDtoes(displayModels);
         model.addAttribute("dtoes", getDisplayModelsDtoes);
         model.addAttribute("namePage", "Модели главного табло");
@@ -2233,6 +2792,14 @@ public class SvtViewController {
         displayModelService.saveModel(displayModel);
         return "redirect:/mdisplay";
     }
+    
+     @SendArchive
+    @PostMapping("/mdisplayarchived")
+    public String sendModelDisplayToArchive(@RequestBody ArchivedDto dto) throws ObjectAlreadyExists {
+        displayModelService.sendModelToArchive(dto.getId());
+        return "redirect:/mdisplay";
+    }
+    
     
                          //  @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
     @GetMapping("/display")
@@ -2306,7 +2873,7 @@ public class SvtViewController {
     //      @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
     @GetMapping("/mswunit")
     public String getModelSwunit(Model model) {
-        List<SwitchingUnitModel> swunitModels = swunitModelService.getAllModels();
+        List<SwitchingUnitModel> swunitModels = swunitModelService.getAllActualModels();
         List<SvtModelDto> getDisplayModelsDtoes = svtModelMapper.getModelSwunitDtoes(swunitModels);
         model.addAttribute("dtoes", getDisplayModelsDtoes);
         model.addAttribute("namePage", "Модели блоков коммутации");
@@ -2322,6 +2889,14 @@ public class SvtViewController {
         swunitModelService.saveModel(swunitModel);
         return "redirect:/mswunit";
     }
+    
+     @SendArchive
+    @PostMapping("/mswunitarchived")
+    public String sendModelSwunitToArchive(@RequestBody ArchivedDto dto) throws ObjectAlreadyExists {
+        swunitModelService.sendModelToArchive(dto.getId());
+        return "redirect:/mswunit";
+    }
+    
     
               //  @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
     @GetMapping("/swunit")
@@ -2394,7 +2969,7 @@ public class SvtViewController {
       //      @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
     @GetMapping("/msubdisplay")
     public String getModelSubDisplay(Model model) {
-        List<SubDisplayModel> subDisplayModels = subDisplayModelService.getAllModels();
+        List<SubDisplayModel> subDisplayModels = subDisplayModelService.getAllActualModels();
         List<SvtModelDto> getSubDisplayModelsDtoes = svtModelMapper.getModelSubDisplayDtoes(subDisplayModels);
         model.addAttribute("dtoes", getSubDisplayModelsDtoes);
         model.addAttribute("namePage", "Модели электронных табло");
@@ -2408,6 +2983,13 @@ public class SvtViewController {
     public String saveModelSubDisplay(@RequestBody SvtModelDto dto) throws ObjectAlreadyExists {
         SubDisplayModel subDisplayModel = svtModelMapper.getModelSubDisplay(dto);
         subDisplayModelService.saveModel(subDisplayModel);
+        return "redirect:/msubdisplay";
+    }
+    
+    @SendArchive
+    @PostMapping("/msubdisplayarchived")
+    public String sendModelSubDisplayToArchive(@RequestBody ArchivedDto dto) throws ObjectAlreadyExists {
+        subDisplayModelService.sendModelToArchive(dto.getId());
         return "redirect:/msubdisplay";
     }
     

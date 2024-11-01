@@ -17,7 +17,7 @@ import ru.gov.sfr.aos.monitoring.entities.Ups;
 @Repository
 public interface UpsRepo extends ObjectBuingWithSerialAndInventaryRepo<Ups> {
     
-       @Query(value = "SELECT ups.*, ob.*, ups_model.* "
+   @Query(value = "SELECT ups.*, ob.*, ups_model.* "
    + "FROM ups ups "
    + "JOIN object_buing ob "
    + "ON ups.ups_id = ob.id "

@@ -8,16 +8,22 @@ import java.time.Instant;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.gov.sfr.aos.monitoring.dictionaries.ConditionerType;
+import ru.gov.sfr.aos.monitoring.dictionaries.PlaceType;
 import ru.gov.sfr.aos.monitoring.dictionaries.Status;
 import ru.gov.sfr.aos.monitoring.entities.Conditioner;
 import ru.gov.sfr.aos.monitoring.entities.ConditionerModel;
 import ru.gov.sfr.aos.monitoring.entities.Contract;
+import ru.gov.sfr.aos.monitoring.entities.Location;
 import ru.gov.sfr.aos.monitoring.entities.ObjectBuing;
 import ru.gov.sfr.aos.monitoring.entities.Place;
+import ru.gov.sfr.aos.monitoring.models.FilterDto;
 import ru.gov.sfr.aos.monitoring.models.SvtConditionerDTO;
 import ru.gov.sfr.aos.monitoring.repositories.ConditionerModelRepo;
 import ru.gov.sfr.aos.monitoring.repositories.ConditionerRepo;
@@ -163,4 +169,32 @@ public class ConditionerService extends SvtObjService<Conditioner, ConditionerRe
         conditionerRepo.save(conditioner);
     }
 
+    
+    public List<Conditioner> getConditionerByFilter(FilterDto dto) {
+
+        List<Conditioner> result = conditionerRepo.findConditionerByAllFilters(dto.getStatus(), dto.getModel(), dto.getYearCreatedOne(), dto.getYearCreatedTwo());
+        return result;
+    }
+
+    public Map<Location, List<Conditioner>> getConditionerByPlaceAndFilter(List<Conditioner> input) {
+        Map<Location, List<Conditioner>> collect = input
+                .stream()
+                .collect(Collectors
+                        .groupingBy((Conditioner el) -> el.getPlace()
+                        .getLocation()));
+
+        return collect;
+    }
+
+    public Map<Location, List<Conditioner>> getConditionerByPlaceTypeAndFilter(PlaceType placeType, List<Conditioner> input) {
+        Map<Location, List<Conditioner>> collect = (Map<Location, List<Conditioner>>) input
+                .stream().filter(e -> e.getPlace().getPlaceType().equals(placeType))
+                .collect(Collectors
+                        .groupingBy((Conditioner el) -> el.getPlace()
+                        .getLocation()));
+
+        return collect;
+    }
+    
+    
 }
