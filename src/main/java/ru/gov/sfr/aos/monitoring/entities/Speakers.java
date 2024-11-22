@@ -18,6 +18,11 @@ public class Speakers extends SvtModel {
     public Speakers() {
     }
 
+    public Speakers(String model) {
+        super(model);
+    }
+    
+
         @Override
     public String toString() {
         return "SpeakersModel{" + "id=" + this.id + ", model=" + this.model + "}";

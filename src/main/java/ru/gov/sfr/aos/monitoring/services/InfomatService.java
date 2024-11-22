@@ -16,7 +16,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.gov.sfr.aos.monitoring.dictionaries.PlaceType;
 import ru.gov.sfr.aos.monitoring.dictionaries.Status;
-import ru.gov.sfr.aos.monitoring.entities.Conditioner;
 import ru.gov.sfr.aos.monitoring.entities.Contract;
 import ru.gov.sfr.aos.monitoring.entities.Infomat;
 import ru.gov.sfr.aos.monitoring.entities.InfomatModel;
@@ -134,7 +133,7 @@ public class InfomatService extends SvtObjService<Infomat, InfomatRepo, SvtDTO> 
     
         public List<Infomat> getInfomatByFilter(FilterDto dto) {
 
-        List<Infomat> result = infomatRepo.findInfomatByAllFilters(dto.getStatus(), dto.getModel(), dto.getYearCreatedOne(), dto.getYearCreatedTwo());
+        List<Infomat> result = infomatRepo.findInfomatByAllFilters(dto.getStatus(), dto.getModel(), dto.getYearCreatedOne(), dto.getYearCreatedTwo(), dto.getLocation());
         return result;
     }
 

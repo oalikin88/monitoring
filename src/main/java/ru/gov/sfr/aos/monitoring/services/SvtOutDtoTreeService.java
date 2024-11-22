@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeSet;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import ru.gov.sfr.aos.monitoring.entities.Location;
@@ -64,7 +65,8 @@ public abstract class SvtOutDtoTreeService <E extends ObjectBuingWithSerialAndIn
             LocationByTreeDto locationByTreeDto = new LocationByTreeDto();
             locationByTreeDto.setLocationId(outEntry.getKey().getId());
             locationByTreeDto.setLocationName(outEntry.getKey().getName());
-            Set<String> departmentsByLocation = outEntry.getKey().getPlacesSet().stream().map(e -> e.getDepartment()).collect(Collectors.toSet());
+            Set<String> tempDepartmentsByLocation = outEntry.getKey().getPlacesSet().stream().map(e -> e.getDepartment()).collect(Collectors.toSet());
+            TreeSet<String> departmentsByLocation = new TreeSet<>(tempDepartmentsByLocation);
             List<DepartmentTreeDto> svtObjectsByDepartmentsList = new ArrayList<>();
             for (String department : departmentsByLocation) {
                 List<D> dtoList = new ArrayList<>();

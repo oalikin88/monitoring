@@ -18,6 +18,10 @@ public class LanCard extends SvtModel {
     public LanCard() {
     }
 
+    public LanCard(String model) {
+        super(model);
+    }
+    
     
     @Override
     public String toString() {

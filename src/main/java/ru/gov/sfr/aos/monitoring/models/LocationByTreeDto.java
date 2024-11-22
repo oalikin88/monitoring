@@ -16,7 +16,6 @@ public class LocationByTreeDto {
     private Long locationId;
     private String locationName;
     private List<DepartmentTreeDto> departments = new ArrayList<>();
-
     public LocationByTreeDto() {
     }
 
@@ -54,6 +53,12 @@ public class LocationByTreeDto {
         return "LocationByTreeDto{" + "locationId=" + locationId + ", locationName=" + locationName + ", departments=" + departments + '}';
     }
     
-    
+    public int getAmount() {
+        int result = 0;
+        for(DepartmentTreeDto dep : this.departments) {
+            result = result + dep.getDtoes().size();
+        }
+        return result;
+    }
     
 }

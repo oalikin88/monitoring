@@ -172,7 +172,7 @@ public class ConditionerService extends SvtObjService<Conditioner, ConditionerRe
     
     public List<Conditioner> getConditionerByFilter(FilterDto dto) {
 
-        List<Conditioner> result = conditionerRepo.findConditionerByAllFilters(dto.getStatus(), dto.getModel(), dto.getYearCreatedOne(), dto.getYearCreatedTwo());
+        List<Conditioner> result = conditionerRepo.findConditionerByAllFilters(dto.getStatus(), dto.getModel(), dto.getYearCreatedOne(), dto.getYearCreatedTwo(), dto.getLocation());
         return result;
     }
 

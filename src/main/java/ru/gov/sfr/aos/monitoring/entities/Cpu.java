@@ -20,6 +20,11 @@ public class Cpu extends SvtModel {
     public Cpu() {
     }
 
+    public Cpu(String model) {
+        super(model);
+    }
+
+    
 
     public int getCore() {
         return core;

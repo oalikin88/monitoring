@@ -9,57 +9,57 @@
                     <a href="#">СВТ 2.0</a>
                 </div>
             </div>
-            <ul class="sidebar-nav">
-                <li class="sidebar-item">
+            <ul class="sidebar-nav top-level-menu">
+                <li class="sidebar-item" id="li-place">
                     <a href="#" class="sidebar-link has-dropdown collapsed" data-bs-toggle="collapse" 
                        data-bs-target="#place" aria-expanded="false" aria-controls="place">
                         <i class="lni lni-laptop-phone"></i>
                         <span>Рабочие места</span>
                     </a>
-                    <ul id="place" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
-                        <li class="sidebar-item">
+                    <ul id="place" class="sidebar-dropdown list-unstyled collapse second-level-menu" data-bs-parent="#sidebar">
+                        <li class="sidebar-item" id="li-sysblocks">
                             <a href="/sysblocks" class="sidebar-link">Системные блоки</a>
                         </li>
-                        <li class="sidebar-item">
+                        <li class="sidebar-item" id="li-monitors">
                             <a href="/monitors" class="sidebar-link">Мониторы</a>
                         </li>
                         <li class="sidebar-item">
                             <a href="http://10.41.30.43:8100/inventories" class="sidebar-link">Принтеры</a>
                         </li>
-                        <li class="sidebar-item">
+                        <li class="sidebar-item" id="li-scanner">
                             <a href="/scanner" class="sidebar-link">Сканеры</a>
                         </li>
-                        <li class="sidebar-item">
+                        <li class="sidebar-item" id="li-ups">
                             <a href="/ups" class="sidebar-link">ИБП</a>
                         </li>
-                        <li class="sidebar-item">
+                        <li class="sidebar-item" id="li-phones">
                             <a href="/phones" class="sidebar-link">Телефоны</a>
                         </li>
                     </ul>
                 </li>
-                <li class="sidebar-item">
+                <li class="sidebar-item" id="li-server">
                     <a href="#" class="sidebar-link has-dropdown collapsed" data-bs-toggle="collapse" 
                        data-bs-target="#server" aria-expanded="false" aria-controls="server">
                         <i class="lni lni-database"></i>
                         <span>Серверная</span>
                     </a>
-                    <ul id="server" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
-                        <li class="sidebar-item">
+                    <ul id="server" class="sidebar-dropdown list-unstyled collapse second-level-menu" data-bs-parent="#sidebar">
+                        <li class="sidebar-item" id="li-servers">
                             <a href="/server" class="sidebar-link">Серверы</a>
                         </li>
-                        <li class="sidebar-item">
+                        <li class="sidebar-item" id="li-switch">
                             <a href="/switch" class="sidebar-link">Коммутаторы / Концентраторы</a>
                         </li>
-                        <li class="sidebar-item">
+                        <li class="sidebar-item" id="li-router">
                             <a href="/router" class="sidebar-link">Маршрутизаторы</a>
                         </li>
-                        <li class="sidebar-item">
+                        <li class="sidebar-item" id="li-upsforserver">
                             <a href="/upsforserver" class="sidebar-link">ИБП для серверов</a>
                         </li>
-                        <li class="sidebar-item">
+                        <li class="sidebar-item" id="li-ats">
                             <a href="/ats" class="sidebar-link">АТС</a>
                         </li>
-                        <li class="sidebar-item">
+                        <li class="sidebar-item" id="li-conditioner">
                             <a href="/conditioner" class="sidebar-link">Кондиционеры</a>
                         </li>
                     </ul>
@@ -71,7 +71,7 @@
                         <i class="lni lni-printer"></i>
                         <span>Оргтехника</span>
                     </a>
-                    <ul id="officeEquipment" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
+                    <ul id="officeEquipment" class="sidebar-dropdown list-unstyled collapse second-level-menu" data-bs-parent="#sidebar">
                         <li class="sidebar-item">
                             <a href="http://10.41.30.43:8100/inventories" class="sidebar-link">Копиры</a>
                         </li>
@@ -85,11 +85,11 @@
                             <a href="/infomat" class="sidebar-link">Инфоматы</a>
                         </li>
                         <li class="sidebar-item">
-                               <a href="#" class="sidebar-link collapsed" data-bs-toggle="collapse" 
+                               <a href="#" class="sidebar-link has-dropdown collapsed" data-bs-toggle="collapse" 
                                 data-bs-target="#components-and-asuo" aria-expanded="false" aria-controls="components-and-asuo">
                                 АСУО и компоненты
                             </a>
-                                <ul id="components-and-asuo" class="sidebar-dropdown list-unstyled collapse">
+                                <ul id="components-and-asuo" class="sidebar-dropdown list-unstyled collapse third-level-menu">
                                     <li class="sidebar-item">
                                         <a href="/asuo" class="sidebar-link">АСУО</a>
                                     </li>
@@ -98,7 +98,7 @@
                                 data-bs-target="#components-asuo" aria-expanded="false" aria-controls="components-asuo">
                                 Компоненты
                             </a>
-                                <ul id="components-asuo" class="sidebar-dropdown list-unstyled collapse">
+                                <ul id="components-asuo" class="sidebar-dropdown list-unstyled collapse fourth-level-menu">
                                     <li class="sidebar-item">
                                         <a href="/display" class="sidebar-link">Главное табло</a>
                                     </li>
@@ -130,7 +130,7 @@
                         <i class="lni lni-library"></i>
                         <span>Справочники</span>
                     </a>
-                    <ul id="dictionaries" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
+                    <ul id="dictionaries" class="sidebar-dropdown list-unstyled collapse second-level-menu" data-bs-parent="#sidebar">
                        
                         <li class="sidebar-item">
                             <a href="/dep" class="sidebar-link">Отделы</a>
@@ -189,7 +189,7 @@
                                 data-bs-target="#ups-list" aria-expanded="false" aria-controls="ups-list">
                                 ИБП
                             </a>
-                                <ul id="ups-list" class="sidebar-dropdown list-unstyled collapse">
+                                <ul id="ups-list" class="sidebar-dropdown list-unstyled collapse third-level-menu">
                                     <li class="sidebar-item">
                                         <a href="/mups" class="sidebar-link">Модель ИБП</a>
                                     </li>
@@ -206,7 +206,7 @@
                                 data-bs-target="#components" aria-expanded="false" aria-controls="components">
                                 Комплектующие
                             </a>
-                                <ul id="components" class="sidebar-dropdown list-unstyled collapse">
+                                <ul id="components" class="sidebar-dropdown list-unstyled collapse third-level-menu">
                                     <li class="sidebar-item">
                                         <a href="/mmotherboard" class="sidebar-link">Материнская плата</a>
                                     </li>
@@ -247,7 +247,7 @@
                                 data-bs-target="#components-asuo-model" aria-expanded="false" aria-controls="components-asuo-model">
                                 АСУО и компоненты
                             </a>
-                                <ul id="components-asuo-model" class="sidebar-dropdown list-unstyled collapse">
+                                <ul id="components-asuo-model" class="sidebar-dropdown list-unstyled collapse third-level-menu">
                                     
                                     <li class="sidebar-item">
                                         <a href="/mdisplay" class="sidebar-link">Главное табло</a>
@@ -278,7 +278,7 @@
                         <i class="lni lni-package"></i>
                         <span>Склад</span>
                     </a>
-                    <ul id="storage" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
+                    <ul id="storage" class="sidebar-dropdown list-unstyled collapse second-level-menu" data-bs-parent="#sidebar">
                         <li class="sidebar-item">
                             <a href="http://10.41.30.43:8100/inventories" class="sidebar-link">Расходные материалы</a>
                         </li>

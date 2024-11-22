@@ -96,6 +96,16 @@ public abstract class SvtObjService <E extends ObjectBuingWithSerialAndInventary
         
         return collect;
 }
+        
+          public Map<Location, List<E>> getSvtObjectsByInventaryNumberAndPlace(String inventaryNumber, PlaceType placeType) {
+             Map<Location, List<E>> collect = (Map<Location, List<E>>) repository.findByInventaryNumberContainingAndPlacePlaceTypeLikeAndArchivedFalse(inventaryNumber, placeType)
+                .stream()
+                .collect(Collectors
+                        .groupingBy((E el) -> el.getPlace()
+                                .getLocation()));
+        
+        return collect;
+}
           
         public abstract void createSvtObj(D dto) throws ObjectAlreadyExists;
         

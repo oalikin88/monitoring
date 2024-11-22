@@ -19,7 +19,10 @@ public class Mouse extends SvtModel implements Serializable {
     public Mouse() {
     }
 
-    
+    public Mouse(String model) {
+        super(model);
+    }
+
 
         @Override
     public String toString() {

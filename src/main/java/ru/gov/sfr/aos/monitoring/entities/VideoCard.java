@@ -18,6 +18,10 @@ public class VideoCard extends SvtModel {
     public VideoCard() {
     }
 
+    public VideoCard(String model) {
+        super(model);
+    }
+
     
     @Override
     public String toString() {

@@ -220,7 +220,7 @@ public class ServerService extends SvtObjService <Server, ServerRepo, SvtServerD
     
     public List<Server> getServerByFilter(FilterDto dto) {
 
-        List<Server> result = serverRepo.findServerByAllFilters(dto.getStatus(), dto.getModel(), dto.getYearCreatedOne(), dto.getYearCreatedTwo());
+        List<Server> result = serverRepo.findServerByAllFilters(dto.getStatus(), dto.getModel(), dto.getYearCreatedOne(), dto.getYearCreatedTwo(), dto.getLocation());
         return result;
     }
 

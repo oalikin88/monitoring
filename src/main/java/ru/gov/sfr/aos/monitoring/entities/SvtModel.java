@@ -23,6 +23,10 @@ public class SvtModel {
 
     protected SvtModel() {
     }
+    
+    protected SvtModel(String model) {
+        this.model = model;
+    }
 
     public String getModel() {
         return model;

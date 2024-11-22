@@ -16,7 +16,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.gov.sfr.aos.monitoring.dictionaries.PlaceType;
 import ru.gov.sfr.aos.monitoring.dictionaries.Status;
-import ru.gov.sfr.aos.monitoring.entities.Conditioner;
 import ru.gov.sfr.aos.monitoring.entities.Contract;
 import ru.gov.sfr.aos.monitoring.entities.Fax;
 import ru.gov.sfr.aos.monitoring.entities.FaxModel;
@@ -148,7 +147,7 @@ public class FaxService extends SvtObjService<Fax, FaxRepo, FaxDto>  {
     
         public List<Fax> getFaxByFilter(FilterDto dto) {
 
-        List<Fax> result = faxRepo.findFaxByAllFilters(dto.getStatus(), dto.getModel(), dto.getYearCreatedOne(), dto.getYearCreatedTwo());
+        List<Fax> result = faxRepo.findFaxByAllFilters(dto.getStatus(), dto.getModel(), dto.getYearCreatedOne(), dto.getYearCreatedTwo(), dto.getLocation());
         return result;
     }
 

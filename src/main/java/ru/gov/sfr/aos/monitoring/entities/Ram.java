@@ -16,8 +16,12 @@ public class Ram extends SvtModel {
 
     public Ram() {
     }
-    
 
+    public Ram(String model) {
+        super(model);
+    }
+    
+    
     public int getCapacity() {
         return capacity;
     }

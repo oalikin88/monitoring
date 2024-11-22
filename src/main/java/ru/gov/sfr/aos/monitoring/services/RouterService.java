@@ -22,7 +22,6 @@ import ru.gov.sfr.aos.monitoring.entities.ObjectBuing;
 import ru.gov.sfr.aos.monitoring.entities.Place;
 import ru.gov.sfr.aos.monitoring.entities.Router;
 import ru.gov.sfr.aos.monitoring.entities.RouterModel;
-import ru.gov.sfr.aos.monitoring.entities.SwitchHub;
 import ru.gov.sfr.aos.monitoring.exceptions.ObjectAlreadyExists;
 import ru.gov.sfr.aos.monitoring.models.FilterDto;
 import ru.gov.sfr.aos.monitoring.models.SvtSwitchHubDTO;
@@ -149,7 +148,7 @@ public class RouterService extends SvtObjService<Router, RouterRepo, SvtSwitchHu
     
     public List<Router> getRouterByFilter(FilterDto dto) {
 
-        List<Router> result = routerRepo.findRouterByAllFilters(dto.getStatus(), dto.getModel(), dto.getYearCreatedOne(), dto.getYearCreatedTwo());
+        List<Router> result = routerRepo.findRouterByAllFilters(dto.getStatus(), dto.getModel(), dto.getYearCreatedOne(), dto.getYearCreatedTwo(), dto.getLocation());
         return result;
     }
 

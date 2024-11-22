@@ -19,17 +19,20 @@ public interface FaxRepo extends ObjectBuingWithSerialAndInventaryRepo <Fax> {
     boolean existsBySerialNumberIgnoreCase(String serialNumber);
     List<Fax> findByPlacePlaceTypeLikeAndArchivedFalse(PlaceType placetype);
     
-   @Query(value = "SELECT fax.*, ob.*, fax_model.* "
+   @Query(value = "SELECT fax.*, ob.*, fax_model.*, place.* "
    + "FROM fax fax "
    + "JOIN object_buing ob "
    + "ON fax.fax_id = ob.id "
+   + "JOIN place place " 
+   + "ON ob.place_id = place.id "
    + "JOIN fax_model fax_model "
    + "ON fax.model_id = fax_model.id "
    + "WHERE ((?1 is NULL or ?1 = '') or (fax.status = ?1)) "
-   + "AND ((?2 is NULL or ?2 = '') or (fax_model.model = ?2)) "
+   + "AND ((?2 is NULL or ?2 = '') or (fax_model.id = ?2)) "
    + "AND ((?3 is NULL or ?3 = '') or (fax.year_created >= ?3)) "
-   + "AND ((?4 is NULL or ?4 = '') or (fax.year_created <= ?4)) ", nativeQuery = true)
-    List<Fax> findFaxByAllFilters (String status, String model, String yearCreatedOne, String yearCreatedTwo);
+   + "AND ((?4 is NULL or ?4 = '') or (fax.year_created <= ?4)) "
+   + "AND ((?5 is NULL or ?5 = '') or (place.location_id = ?5)) ", nativeQuery = true)
+    List<Fax> findFaxByAllFilters (String status, String model, String yearCreatedOne, String yearCreatedTwo, String location);
     
     
 }

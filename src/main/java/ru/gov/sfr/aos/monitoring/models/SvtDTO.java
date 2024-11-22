@@ -94,7 +94,11 @@ public class SvtDTO extends MainSvtDto {
     }
 
     public String getInventaryNumber() {
-        return inventaryNumber;
+        String result = "";
+        if(null != inventaryNumber) {
+            result = result + inventaryNumber;
+        } 
+        return result;
     }
 
     public void setInventaryNumber(String inventaryNumber) {
@@ -102,7 +106,11 @@ public class SvtDTO extends MainSvtDto {
     }
 
     public String getSerialNumber() {
-        return serialNumber;
+        String result = "";
+        if(null != serialNumber) {
+            result = result + serialNumber;
+        }
+        return result;
     }
 
     public void setSerialNumber(String serialNumber) {
@@ -135,7 +143,12 @@ public class SvtDTO extends MainSvtDto {
     }
 
     public String getModel() {
-        return model;
+        String result = "";
+        if(null != model) {
+            result = result + model;
+        } 
+        
+        return result;
     }
 
     public void setModel(String model) {
@@ -143,7 +156,11 @@ public class SvtDTO extends MainSvtDto {
     }
 
     public String getPlaceName() {
-        return placeName;
+        String result = "";
+        if(null != placeName) {
+            result = result + placeName;
+        }
+        return result;
     }
 
     public void setPlaceName(String placeName) {
@@ -151,7 +168,11 @@ public class SvtDTO extends MainSvtDto {
     }
 
     public String getPlaceType() {
-        return placeType;
+        String result = "";
+        if(null != placeType) {
+            result = result + placeType;
+        }
+        return result;
     }
 
     public void setPlaceType(String placeType) {
@@ -160,7 +181,11 @@ public class SvtDTO extends MainSvtDto {
 
 
     public String getDepartmentCode() {
-        return departmentCode;
+        String result = "";
+        if(null != departmentCode) {
+            result = result + departmentCode;
+        }
+        return result;
     }
 
     public void setDepartmentCode(String departmentCode) {
@@ -176,7 +201,11 @@ public class SvtDTO extends MainSvtDto {
     }
 
     public String getTypeDto() {
-        return typeDto;
+        String result = "";
+        if(null != typeDto) {
+            result = result + typeDto;
+        }
+        return result;
     }
 
     public void setTypeDto(String typeDto) {
@@ -184,7 +213,11 @@ public class SvtDTO extends MainSvtDto {
     }
 
     public String getPhoneNumber() {
-        return phoneNumber;
+        String result = "";
+        if(null != phoneNumber) {
+            result = result + phoneNumber;
+        } 
+        return result;
     }
 
     public void setPhoneNumber(String phoneNumber) {
@@ -192,7 +225,11 @@ public class SvtDTO extends MainSvtDto {
     }
 
     public String getNameFromOneC() {
-        return nameFromOneC;
+        String result = "";
+        if(null != nameFromOneC) {
+            result = result + nameFromOneC;
+        }
+        return result;
     }
 
     public void setNameFromOneC(String nameFromOneC) {
@@ -200,7 +237,12 @@ public class SvtDTO extends MainSvtDto {
     }
 
     public String getBaseType() {
-        return baseType;
+        String result = "";
+        if(null != baseType) {
+            result = result + baseType;
+        }
+        
+        return result;
     }
 
     public void setBaseType(String baseType) {
@@ -208,7 +250,11 @@ public class SvtDTO extends MainSvtDto {
     }
 
     public String getBatteryType() {
-        return batteryType;
+        String result = "";
+        if(null != batteryType) {
+            result = result + batteryType;
+        }
+        return result;
     }
 
     public void setBatteryType(String batteryType) {

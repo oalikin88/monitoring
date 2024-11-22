@@ -167,7 +167,7 @@ public class SwitchHubService extends SvtObjService<SwitchHub, SwitchHubRepo, Sv
       
       
         
-        List<SwitchHub> result = switchHubRepo.findSwitchHubByAllFilters(dto.getStatus(), dto.getModel(), dto.getYearCreatedOne(), dto.getYearCreatedTwo());
+        List<SwitchHub> result = switchHubRepo.findSwitchHubByAllFilters(dto.getStatus(), dto.getModel(), dto.getYearCreatedOne(), dto.getYearCreatedTwo(), dto.getLocation());
         return result;
     }
     

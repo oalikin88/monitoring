@@ -19,8 +19,11 @@ public class Motherboard extends SvtModel implements Serializable{
     public Motherboard() {
     }
 
+    public Motherboard(String model) {
+        super(model);
+    }
 
-    
+
     
     @Override
     public String toString() {

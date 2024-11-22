@@ -160,7 +160,7 @@ public class MonitorService extends SvtObjService <Monitor, MonitorRepo, SvtDTO>
       
       
         
-        List<Monitor> result = monitorRepo.findMonitorByAllFilters(dto.getStatus(), dto.getModel(), dto.getYearCreatedOne(), dto.getYearCreatedTwo());
+        List<Monitor> result = monitorRepo.findMonitorByAllFilters(dto.getStatus(), dto.getModel(), dto.getYearCreatedOne(), dto.getYearCreatedTwo(), dto.getLocation());
         return result;
     }
     

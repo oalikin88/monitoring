@@ -18,6 +18,10 @@ public class Keyboard extends SvtModel {
     public Keyboard() {
     }
 
+    public Keyboard(String model) {
+        super(model);
+    }
+    
     
 
         @Override

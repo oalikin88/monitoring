@@ -29,7 +29,7 @@ public class SystemBlockModel extends SvtModel {
         this.model = model;
     }
 
-
+    
 
     public Set<SystemBlock> getSystemBlocks() {
         return systemBlocks;

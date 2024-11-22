@@ -46,6 +46,11 @@ h1 {
     background-color: #fafbfe;
 }
 
+#searchChoise {
+    max-width: 210px;
+}
+
+
 
     
 /*#add-icon {
@@ -66,6 +71,12 @@ h1 {
 
 .saveEdit-icon:hover {
     fill: rgb(21, 179, 146);
+}
+
+#buttonAccordionTitleSysBlock {
+    
+    font-size: 15px;
+    font-weight: 700;
 }
 
 [data-tooltip] {
@@ -212,10 +223,17 @@ a.sidebar-link:hover {
     border-left: 3px solid #3b7ddd;
 }
 
-li > .active {
+#sidebar:not(.expand) li.active {
    border-left: 3px solid #F85541!important;
     background-color: #3b7ddd!important;
 }
+
+#sidebar.expand li > .active {
+   border-left: 3px solid #F85541!important;
+    background-color: #3b7ddd!important;
+}
+
+
 
 .sidebar-item {
     position: relative;
@@ -223,7 +241,7 @@ li > .active {
 
 }
 
-#sidebar:not(.expand) .sidebar-item .sidebar-dropdown {
+#sidebar:not(.expand) .second-level-menu  {
     position: absolute;
     top: 0;
     left: 70px;
@@ -233,12 +251,45 @@ li > .active {
     display: none;
 }
 
-#sidebar:not(.expand) .sidebar-item:hover .has-dropdown+.sidebar-dropdown {
+
+#sidebar:not(.expand)  .third-level-menu  {
+    position: absolute;
+    top: 0;
+    left: 240px;
+    background-color: #0e2238;
+    padding: 0;
+    min-width: 15rem;
+    display: none;
+}
+
+
+
+
+#sidebar:not(.expand) .top-level-menu > li:hover .second-level-menu {
     display: block;
     max-height: 15em;
     width: 100%;
     opacity: 1;
 }
+
+#sidebar:not(.expand) .second-level-menu > li:hover > .third-level-menu {
+    display: block;
+    max-height: 15em;
+    width: 100%;
+    opacity: 1;
+}
+
+/*#sidebar:not(.expand) .second-level-menu > li:hover > .third-level-menu > li {
+    display: block;
+    max-height: 15em;
+    width: 100%;
+    opacity: 1;
+}*/
+
+
+
+
+
 
 #sidebar.expand .sidebar-link[data-bs-toggle="collapse"]::after {
     border: solid;

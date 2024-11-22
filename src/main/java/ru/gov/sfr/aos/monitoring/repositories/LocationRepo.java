@@ -20,4 +20,5 @@ public interface LocationRepo extends JpaRepository<Location, Long> {
     Optional<Location> findByNameIgnoreCase(String name); 
     List<Location> findByNameNot(String name);
     
+    
 }

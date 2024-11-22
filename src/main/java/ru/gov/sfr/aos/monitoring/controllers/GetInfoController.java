@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import ru.gov.sfr.aos.monitoring.anotations.Log;
 import ru.gov.sfr.aos.monitoring.dictionaries.PlaceType;
@@ -356,9 +357,16 @@ public class GetInfoController {
     }
 
     @GetMapping("/locations")
-    public List<LocationDTO> getLocations() {
-
-        List<LocationDTO> locations = locationService.getAllLocations();
+    public List<LocationDTO> getLocations(@RequestParam(value="id", required = false) String id) {
+        List<LocationDTO> locations = null;
+        if(null != id) {
+            locations = new ArrayList<>();
+            long parseLong = Long.parseLong(id);
+            LocationDTO locationById = locationService.getLocationById(parseLong);
+            locations.add(locationById);
+        } else {
+        locations = locationService.getAllLocations();
+        }
         return locations;
     }
 //
@@ -1040,19 +1048,19 @@ public class GetInfoController {
         List<RepairDto> repairs = repairInfoService.getRepairs(id);
         return repairs;
     }
-    @Log
+ //   @Log
     @PostMapping("/repairs")
     public ResponseEntity<String> sendRepair(@RequestBody RepairDto dto) throws IOException {
         clientDao.addRepair(dto);
         return ResponseEntity.ok("Запись сохранена");
     }
-    @Log
+ //   @Log
     @DeleteMapping("/repairs")
     public ResponseEntity<String> deleteRepair(Long id) throws IOException {
         clientDao.deleteRepair(id);
         return ResponseEntity.ok("Запись удалена");
     }
-    @Log
+ //   @Log
     @PutMapping("/repairs")
     public ResponseEntity<String> updateRepair(@RequestBody RepairDto dto) throws IOException {
         clientDao.editRepair(dto);
@@ -1064,19 +1072,19 @@ public class GetInfoController {
         List <TransferDto> transfers = transferInfoService.getTransfers(id);
         return transfers;
     }
-        @Log("Save transfer")
+   //     @Log("Save transfer")
       @PostMapping("/transfers")
     public ResponseEntity<String> sendTransfer(@RequestBody TransferDto dto) throws IOException {
         clientDao.addTransfer(dto);
         return ResponseEntity.ok("Запись сохранена");
     }
-        @Log
+//        @Log
         @DeleteMapping("/transfers")
     public ResponseEntity<String> deleteTransfer(Long id) throws IOException {
         clientDao.deleteTransfer(id);
         return ResponseEntity.ok("Запись удалена");
     }
-    @Log
+  //  @Log
     @PutMapping("/transfers")
     public ResponseEntity<String> updateTransfer(@RequestBody TransferDto dto) throws IOException {
         clientDao.editTransfer(dto);

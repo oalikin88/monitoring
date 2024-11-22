@@ -23,7 +23,6 @@ import ru.gov.sfr.aos.monitoring.entities.Contract;
 import ru.gov.sfr.aos.monitoring.entities.Location;
 import ru.gov.sfr.aos.monitoring.entities.ObjectBuing;
 import ru.gov.sfr.aos.monitoring.entities.Place;
-import ru.gov.sfr.aos.monitoring.entities.Router;
 import ru.gov.sfr.aos.monitoring.exceptions.ObjectAlreadyExists;
 import ru.gov.sfr.aos.monitoring.models.FilterDto;
 import ru.gov.sfr.aos.monitoring.models.SvtAtsDTO;
@@ -153,7 +152,7 @@ public class AtsService extends SvtObjService <Ats, AtsRepo, SvtAtsDTO> {
     
       public List<Ats> getAtsByFilter(FilterDto dto) {
 
-        List<Ats> result = atsRepo.findAtsByAllFilters(dto.getStatus(), dto.getModel(), dto.getYearCreatedOne(), dto.getYearCreatedTwo());
+        List<Ats> result = atsRepo.findAtsByAllFilters(dto.getStatus(), dto.getModel(), dto.getYearCreatedOne(), dto.getYearCreatedTwo(), dto.getLocation());
         return result;
     }
 

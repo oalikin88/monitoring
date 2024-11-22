@@ -140,7 +140,7 @@ public class PhoneService extends SvtObjService<Phone, PhoneRepo, SvtDTO>{
       
       
         
-        List<Phone> result = phoneRepo.findPhonesByAllFilters(dto.getStatus(), dto.getModel(), dto.getYearCreatedOne(), dto.getYearCreatedTwo());
+        List<Phone> result = phoneRepo.findPhonesByAllFilters(dto.getStatus(), dto.getModel(), dto.getYearCreatedOne(), dto.getYearCreatedTwo(), dto.getLocation());
         return result;
     }
     

@@ -33,7 +33,6 @@ import ru.gov.sfr.aos.monitoring.entities.SoundCard;
 import ru.gov.sfr.aos.monitoring.entities.Speakers;
 import ru.gov.sfr.aos.monitoring.entities.SystemBlock;
 import ru.gov.sfr.aos.monitoring.entities.SystemBlockModel;
-import ru.gov.sfr.aos.monitoring.entities.Ups;
 import ru.gov.sfr.aos.monitoring.entities.VideoCard;
 import ru.gov.sfr.aos.monitoring.exceptions.ObjectAlreadyExists;
 import ru.gov.sfr.aos.monitoring.models.FilterDto;
@@ -95,11 +94,6 @@ public class SystemBlockService extends SvtObjService <SystemBlock, SystemBlockR
     private OperationSystemService operationSystemService;
     
 
-    
-    
-        
-    
-
     @Override
     public void createSvtObj(SvtSystemBlockDTO dto) throws ObjectAlreadyExists {
 
@@ -121,25 +115,79 @@ public class SystemBlockService extends SvtObjService <SystemBlock, SystemBlockR
             SoundCard soundCard = null;
             Speakers speakers = null;
             VideoCard videoCard = null;
+            
+            
             place = placeRepo.findById(dto.getPlaceId()).get();
-            systemblockModel = systemBlockModelRepo.findById(dto.getModelId()).get();
-            motherboard = motherboardRepo.findById(dto.getMotherboardId()).get();
-            cdDrive = cdDriveRepo.findById(dto.getCdDriveId()).get();
-            cpu = cpuRepo.findById(dto.getCpuId()).get();
+            
+            if(null == dto.getModelId()) {
+                systemblockModel = new SystemBlockModel("no name");
+            } else {
+                systemblockModel = systemBlockModelRepo.findById(dto.getModelId()).get();
+            }
+            if(null == dto.getMotherboardId()) {
+                motherboard = new Motherboard("нет");
+            } else {
+                motherboard = motherboardRepo.findById(dto.getMotherboardId()).get();
+            }
+            if(null == dto.getCdDriveId()) {
+                cdDrive = new CdDrive("нет");
+            } else {
+                cdDrive = cdDriveRepo.findById(dto.getCdDriveId()).get();
+            }
+            
+            if(null == dto.getCpuId()) {
+                cpu = new Cpu("нет");
+            } else {
+              cpu = cpuRepo.findById(dto.getCpuId()).get();  
+            }
+            
             if(dto.getHddIdList().size() > 0) {
                 for(Long el : dto.getHddIdList()) {
                     Hdd hddFromDto = hddRepo.findById(el).get();
                     hdd.add(hddFromDto);
                 }
             }
-            keyboard = keyboardRepo.findById(dto.getKeyboardId()).get();
-            lanCard = lanCardRepo.findById(dto.getLanCardId()).get();
-            mouse = mouseRepo.findById(dto.getMouseId()).get();
-            ram = ramRepo.findById(dto.getRamId()).get();
-            soundCard = soundCardRepo.findById(dto.getSoundCardId()).get();
-            speakers = speakersRepo.findById(dto.getSpeakersId()).get();
-            videoCard = videoCardRepo.findById(dto.getVideoCardId()).get();
+            if(null == dto.getKeyboardId()) {
+                keyboard = new Keyboard("нет");
+            } else {
+                keyboard = keyboardRepo.findById(dto.getKeyboardId()).get();
+            }
             
+            if(null == dto.getLanCardId()) {
+                lanCard = new LanCard("нет");
+            } else {
+                lanCard = lanCardRepo.findById(dto.getLanCardId()).get();
+            }
+            
+            if(null == dto.getMouseId()) {
+                mouse = new Mouse("нет");
+            } else {
+                mouse = mouseRepo.findById(dto.getMouseId()).get();
+            }
+            
+            if(null == dto.getRamId()) {
+                ram = new Ram("нет");
+            } else {
+                ram = ramRepo.findById(dto.getRamId()).get();
+            }
+            
+            if(null == dto.getSoundCardId()) {
+                soundCard = new SoundCard("нет");
+            } else {
+                soundCard = soundCardRepo.findById(dto.getSoundCardId()).get();
+            }
+            
+            if(null == dto.getSpeakersId()) {
+                speakers = new Speakers("нет");
+            } else {
+                speakers = speakersRepo.findById(dto.getSpeakersId()).get();
+            }
+            
+            if(null == dto.getVideoCardId()) {
+                videoCard = new VideoCard("нет");
+            } else {
+                videoCard = videoCardRepo.findById(dto.getVideoCardId()).get();
+            }
             
             
             for(int i = 0; i < dto.getOperationSystemId().size(); i++) {
@@ -225,23 +273,72 @@ public class SystemBlockService extends SvtObjService <SystemBlock, SystemBlockR
             Speakers speakers = null;
             VideoCard videoCard = null;
             place = placeRepo.findById(dto.getPlaceId()).get();
-            systemblockModel = systemBlockModelRepo.findById(dto.getModelId()).get();
-            motherboard = motherboardRepo.findById(dto.getMotherboardId()).get();
-            cdDrive = cdDriveRepo.findById(dto.getCdDriveId()).get();
-            cpu = cpuRepo.findById(dto.getCpuId()).get();
+            
+             if(null == dto.getModelId()) {
+                systemblockModel = new SystemBlockModel("no name");
+            } else {
+                systemblockModel = systemBlockModelRepo.findById(dto.getModelId()).get();
+            }
+             if(null == dto.getMotherboardId()) {
+                motherboard = new Motherboard("нет");
+            } else {
+                motherboard = motherboardRepo.findById(dto.getMotherboardId()).get();
+            }
+            if(null == dto.getCdDriveId()) {
+                cdDrive = new CdDrive("нет");
+            } else {
+                cdDrive = cdDriveRepo.findById(dto.getCdDriveId()).get();
+            }
+            
+            if(null == dto.getCpuId()) {
+                cpu = new Cpu("нет");
+            } else {
+              cpu = cpuRepo.findById(dto.getCpuId()).get();  
+            }
+            
             if(dto.getHddIdList().size() > 0) {
                 for(Long el : dto.getHddIdList()) {
                     Hdd hddFromDto = hddRepo.findById(el).get();
                     hdd.add(hddFromDto);
                 }
             }
-            keyboard = keyboardRepo.findById(dto.getKeyboardId()).get();
-            lanCard = lanCardRepo.findById(dto.getLanCardId()).get();
-            mouse = mouseRepo.findById(dto.getMouseId()).get();
-            ram = ramRepo.findById(dto.getRamId()).get();
-            soundCard = soundCardRepo.findById(dto.getSoundCardId()).get();
-            speakers = speakersRepo.findById(dto.getSpeakersId()).get();
-            videoCard = videoCardRepo.findById(dto.getVideoCardId()).get();
+            
+            if(null == dto.getKeyboardId()) {
+                keyboard = new Keyboard("нет");
+            } else {
+                keyboard = keyboardRepo.findById(dto.getKeyboardId()).get();
+            }
+            
+            if(null == dto.getLanCardId()) {
+                lanCard = new LanCard("нет");
+            } else {
+                lanCard = lanCardRepo.findById(dto.getLanCardId()).get();
+            }
+            if(null == dto.getMouseId()) {
+                mouse = new Mouse("нет");
+            } else {
+                mouse = mouseRepo.findById(dto.getMouseId()).get();
+            }
+            if(null == dto.getRamId()) {
+                ram = new Ram("нет");
+            } else {
+                ram = ramRepo.findById(dto.getRamId()).get();
+            }
+            if(null == dto.getSoundCardId()) {
+                soundCard = new SoundCard("нет");
+            } else {
+                soundCard = soundCardRepo.findById(dto.getSoundCardId()).get();
+            }
+            if(null == dto.getSpeakersId()) {
+                speakers = new Speakers("нет");
+            } else {
+                speakers = speakersRepo.findById(dto.getSpeakersId()).get();
+            }
+            if(null == dto.getVideoCardId()) {
+                videoCard = new VideoCard("нет");
+            } else {
+                videoCard = videoCardRepo.findById(dto.getVideoCardId()).get();
+            }
             systemBlockFromDB.setMotherBoard(motherboard);
             systemBlockFromDB.setCdDrive(cdDrive);
             systemBlockFromDB.setCpu(cpu);
@@ -290,7 +387,7 @@ public class SystemBlockService extends SvtObjService <SystemBlock, SystemBlockR
       
       
         
-        List<SystemBlock> result = systemBlockRepo.findSystemblockByAllFilters(dto.getStatus(), dto.getModel(), dto.getYearCreatedOne(), dto.getYearCreatedTwo());
+        List<SystemBlock> result = systemBlockRepo.findSystemblockByAllFilters(dto.getStatus(), dto.getModel(), dto.getYearCreatedOne(), dto.getYearCreatedTwo(), dto.getLocation());
         return result;
     }
     

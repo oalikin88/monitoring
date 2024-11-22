@@ -82,6 +82,9 @@ let subDisplayModelId;
 let switchingUnitId;
 let subDisplayAmount;
 let displayId;
+let fff = window.location.href;
+
+
 
 let handleDeleteRepair = function (svtObjId) {
     let deleteRequest = new XMLHttpRequest();
@@ -1339,59 +1342,59 @@ let handleClickUpdateBtn = function () {
         contentType: 'application/json'
     });
 };
-let handleClickSearchSvtObject = function (input) {
+let handleClickSearchSvtObject = function (field, input) {
     let request;
     switch (attrib) {
         case "phones":
-            request = "/phones?username=";
+            request = "/phones?" + field + "=";
             break;
         case "fax":
-            requestLink = "/fax?username=";
+            requestLink = "/fax?" + field + "=";
             break;
         case "systemblock":
-            request = "/sysblocks?username=";
+            request = "/sysblocks?" + field + "=";
             break;
         case "monitors":
-            request = "/monitors?username=";
+            request = "/monitors?" + field + "=";
             break;
         case "ups":
-            request = "/ups?username=";
+            request = "/ups?" + field + "=";
             break;
         case "scanner":
-            request = "/scanner?username=";
+            request = "/scanner?" + field + "=";
             break;
         case "server":
-            request = "/server?username=";
+            request = "/server?" + field + "=";
             break;
         case "switch":
-            request = "/switch?username=";
+            request = "/switch?" + field + "=";
             break;
         case "router":
-            request = "/router?username=";
+            request = "/router?" + field + "=";
             break;
         case "ats":
-            request = "/ats?username=";
+            request = "/ats?" + field + "=";
             break;
         case "conditioner":
-            request = "/conditioner?username=";
+            request = "/conditioner?" + field + "=";
             break;
         case "infomat":
-            request = "/infomat?username=";
+            request = "/infomat?" + field + "=";
             break;
         case "terminal":
-            request = "/terminal?username=";
+            request = "/terminal?" + field + "=";
             break;
         case "thermoprinter":
-            request = "/thermoprinter?username=";
+            request = "/thermoprinter?" + field + "=";
             break;
         case "display":
-            request = "/display?username=";
+            request = "/display?" + field + "=";
             break;
         case "swunit":
-            request = "/swunit?username=";
+            request = "/swunit?" + field + "=";
             break;
         case "asuo":
-            request = "/asuo?username=";
+            request = "/asuo?" + field + "=";
             break;
     }
     window.location.href = request + input;
@@ -1598,21 +1601,131 @@ let requestToEnableStorage = function () {
     $('#btnSave')[0].addEventListener('click', handleClickUpdateBtn);
     $('#archivedBtn')[0].addEventListener('click', handleClickArchivedBtn);
 };
+
+
+
 window.onload = function () {
-   
-   $('#filter-btn')[0].addEventListener('click', function() {
-       console.log("click filter");
-       
     
+    
+    $("#getReport")[0].addEventListener("click", function() {
+        
+        
+        lin = fff.replace("/ups", "/get-doc/get-ups");
+        let fileName = "docReportUps.xlsx";
+         $.ajax({
+        url: lin,
+        cache: false,
+        xhr: function () {
+            var xhr = new XMLHttpRequest();
+            
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState == 2) {
+                    if (xhr.status == 200) {
+                        xhr.responseType = "blob";
+                    } else {
+                        xhr.responseType = "text";
+                    }
+                }
+            };
+            return xhr;
+        },
+        success: function (data) {
+            var blob = new Blob([data], { type: "application/octetstream" });
+
+            var isIE = false || !!document.documentMode;
+            if (isIE) {
+                window.navigator.msSaveBlob(blob, fileName);
+            } else {
+                var url = window.URL || window.webkitURL;
+                link = url.createObjectURL(blob);
+                var a = $("<a />");
+                a.attr("download", fileName);
+                a.attr("href", link);
+                $("body").append(a);
+                a[0].click();
+                $("body").remove(a);
+            }
+        }
+    });
+    
+    });
+    
+     
+     $("#searchChoise")[0].addEventListener("change", function() {
+         switch($("#searchChoise")[0].value) {
+             
+             case "fio":
+                $("#searchSvtObjInput")[0].placeholder = "поиск по ФИО";
+                break;
+            case "inventaryNumber":
+                $("#searchSvtObjInput")[0].placeholder = "поиск по инвентарному номеру";
+                break;
+             
+         }
+     });
+     
+      $('#searchSvtObjInput').keyup(function(event) {
+    if (event.keyCode === 13) {
+       $("#searchSvtObjBtn")[0].click();
+    }
+});
+
+   if($('#filter-btn').length > 0) {
+        $('#filter-btn')[0].addEventListener('click', function() {
     window.location.href = window.location.pathname + "?model=" +  document.querySelector('#filter-model').value + 
             "&status=" + document.querySelector('#filter-status').value + "&yearCreatedOne=" + document.querySelector('#dateBegin').value + 
-            "&yearCreatedTwo=" + document.querySelector('#dateEnd').value;
+            "&yearCreatedTwo=" + document.querySelector('#dateEnd').value + "&location=" + document.querySelector('#filter-location').value;
        
    });
+   }
+  
+   
+   $('#filter-location').selectize({
+        preload: true,
+        valueField: 'id',
+        labelField: 'name',
+        searchField: ["id", "name"],
+        load: function (query, callback) {
+            switch (placeAttrib) {
+                case "serverroom":
+                    $.ajax({
+                        url: '/locplacetype?placeType=SERVERROOM',
+                        type: 'GET',
+                        async: false,
+                        dataType: 'json',
+                        error: callback,
+                        success: callback
+                    });
+                    break;
+                    case "officeequipment":
+                    $.ajax({
+                        url: '/locplacetype?placeType=OFFICEEQUIPMENT',
+                        type: 'GET',
+                        async: false,
+                        dataType: 'json',
+                        error: callback,
+                        success: callback
+                    });
+                    break;
+                default:
+                    $.ajax({
+                        url: '/loc',
+                        type: 'GET',
+                        async: false,
+                        dataType: 'json',
+                        error: callback,
+                        success: callback
+                    });
+                    break;
+            }
+             
+
+        }
+        });
    
     $('#filter-model').selectize({
         preload: true,
-        valueField: 'model',
+        valueField: 'id',
         labelField: 'model',
         searchField: ["model"],
         load: function (query, callback) {
@@ -1680,7 +1793,7 @@ window.onload = function () {
     });
    
     $("#searchSvtObjBtn")[0].addEventListener("click", function () {
-        handleClickSearchSvtObject($("#searchSvtObjInput")[0].value);
+        handleClickSearchSvtObject($("#searchChoise")[0].value, $("#searchSvtObjInput")[0].value);
     });
     let elem = document.querySelectorAll('.element');
     addPlaceBtn.addEventListener('click', function () {
@@ -2797,6 +2910,41 @@ let modalContentLoad = function (eventReason, svtObjId) {
             divRowHddSelect.appendChild(divColLabelHddSelect);
             divRowHddSelect.appendChild(divColHddSelect);
             divContainerBody.appendChild(divRowHddSelect);
+            
+            
+            let accordionFlushSysBlock = document.createElement("div");
+            accordionFlushSysBlock.className = "accordion accordion-flush mt-3";
+            accordionFlushSysBlock.id = "accordionFlushExample";
+            let accordionItemSysBlock = document.createElement("div");
+            accordionItemSysBlock.className = "accordion-item";
+            let accordionHeaderSysBlock = document.createElement("h2");
+            accordionHeaderSysBlock.className = "accordion-header";
+            let accordionButtonSysBlock = document.createElement("button");
+            accordionButtonSysBlock.className = "accordion-button collapsed";
+            accordionButtonSysBlock.type = "button";
+            accordionButtonSysBlock.setAttribute("data-bs-toggle", "collapse");
+            accordionButtonSysBlock.setAttribute("data-bs-target", "#flush-collapseOne");
+            accordionButtonSysBlock.setAttribute("aria-expanded", "false");
+            accordionButtonSysBlock.setAttribute("aria-controls", "flush-collapseOne");
+            let buttonSpanTitleSysBlock = document.createElement("span");
+            buttonSpanTitleSysBlock.id = "buttonAccordionTitleSysBlock";
+            buttonSpanTitleSysBlock.innerText = "Дополнительная информация:";
+            let accordionFlushCollapseSysBlock = document.createElement("div");
+            accordionFlushCollapseSysBlock.className = "accordion-collapse collapse";
+            accordionFlushCollapseSysBlock.id = "flush-collapseOne";
+            accordionFlushCollapseSysBlock.setAttribute("data-bs-parent", "#accordionFlushExample");
+            let accordionBodySysBlock = document.createElement("div");
+            accordionBodySysBlock.className = "accordion-body";
+            accordionBodySysBlock.id = "accordionBodySysBlock";
+            accordionFlushSysBlock.appendChild(accordionItemSysBlock);
+            accordionItemSysBlock.appendChild(accordionHeaderSysBlock);
+            accordionHeaderSysBlock.appendChild(accordionButtonSysBlock);
+            accordionButtonSysBlock.appendChild(buttonSpanTitleSysBlock);
+            accordionItemSysBlock.appendChild(accordionFlushCollapseSysBlock);
+            accordionFlushCollapseSysBlock.appendChild(accordionBodySysBlock);
+            divContainerBody.appendChild(accordionFlushSysBlock);
+            
+            
             let divRowVideoCardSelect = document.createElement("div");
             divRowVideoCardSelect.className = "row mt-2";
             let divColLabelVideoCardSelect = document.createElement("div");
@@ -2811,7 +2959,7 @@ let modalContentLoad = function (eventReason, svtObjId) {
             divColVideoCardSelect.appendChild(selectVideoCard);
             divRowVideoCardSelect.appendChild(divColLabelVideoCardSelect);
             divRowVideoCardSelect.appendChild(divColVideoCardSelect);
-            divContainerBody.appendChild(divRowVideoCardSelect);
+            accordionBodySysBlock.appendChild(divRowVideoCardSelect);
             let divRowSoundCardSelect = document.createElement("div");
             divRowSoundCardSelect.className = "row mt-2";
             let divColLabelSoundCardSelect = document.createElement("div");
@@ -2826,7 +2974,7 @@ let modalContentLoad = function (eventReason, svtObjId) {
             divColSoundCardSelect.appendChild(selectSoundCard);
             divRowSoundCardSelect.appendChild(divColLabelSoundCardSelect);
             divRowSoundCardSelect.appendChild(divColSoundCardSelect);
-            divContainerBody.appendChild(divRowSoundCardSelect);
+            accordionBodySysBlock.appendChild(divRowSoundCardSelect);
             let divRowLanCardSelect = document.createElement("div");
             divRowLanCardSelect.className = "row mt-2";
             let divColLabelLanCardSelect = document.createElement("div");
@@ -2841,7 +2989,7 @@ let modalContentLoad = function (eventReason, svtObjId) {
             divColLanCardSelect.appendChild(selectLanCard);
             divRowLanCardSelect.appendChild(divColLabelLanCardSelect);
             divRowLanCardSelect.appendChild(divColLanCardSelect);
-            divContainerBody.appendChild(divRowLanCardSelect);
+            accordionBodySysBlock.appendChild(divRowLanCardSelect);
             let divRowCdDriveSelect = document.createElement("div");
             divRowCdDriveSelect.className = "row mt-2";
             let divColLabelCdDriveSelect = document.createElement("div");
@@ -2856,7 +3004,7 @@ let modalContentLoad = function (eventReason, svtObjId) {
             divColCdDriveSelect.appendChild(selectCdDrive);
             divRowCdDriveSelect.appendChild(divColLabelCdDriveSelect);
             divRowCdDriveSelect.appendChild(divColCdDriveSelect);
-            divContainerBody.appendChild(divRowCdDriveSelect);
+            accordionBodySysBlock.appendChild(divRowCdDriveSelect);
             let divRowKeyboardSelect = document.createElement("div");
             divRowKeyboardSelect.className = "row mt-2";
             let divColLabelKeyboardSelect = document.createElement("div");
@@ -2871,7 +3019,7 @@ let modalContentLoad = function (eventReason, svtObjId) {
             divColKeyboardSelect.appendChild(selectKeyboard);
             divRowKeyboardSelect.appendChild(divColLabelKeyboardSelect);
             divRowKeyboardSelect.appendChild(divColKeyboardSelect);
-            divContainerBody.appendChild(divRowKeyboardSelect);
+            accordionBodySysBlock.appendChild(divRowKeyboardSelect);
             let divRowMouseSelect = document.createElement("div");
             divRowMouseSelect.className = "row mt-2";
             let divColLabelMouseSelect = document.createElement("div");
@@ -2886,7 +3034,7 @@ let modalContentLoad = function (eventReason, svtObjId) {
             divColMouseSelect.appendChild(selectMouse);
             divRowMouseSelect.appendChild(divColLabelMouseSelect);
             divRowMouseSelect.appendChild(divColMouseSelect);
-            divContainerBody.appendChild(divRowMouseSelect);
+            accordionBodySysBlock.appendChild(divRowMouseSelect);
             let divRowSpeakersSelect = document.createElement("div");
             divRowSpeakersSelect.className = "row mt-2";
             let divColLabelSpeakersSelect = document.createElement("div");
@@ -2901,7 +3049,9 @@ let modalContentLoad = function (eventReason, svtObjId) {
             divColSpeakersSelect.appendChild(selectSpeakers);
             divRowSpeakersSelect.appendChild(divColLabelSpeakersSelect);
             divRowSpeakersSelect.appendChild(divColSpeakersSelect);
-            divContainerBody.appendChild(divRowSpeakersSelect);
+            accordionBodySysBlock.appendChild(divRowSpeakersSelect);
+            
+         
             break;
         case "fax":
             let divRowNumberRoomFax = document.createElement("div");
@@ -6168,30 +6318,8 @@ document.addEventListener("DOMContentLoaded", function () {
         let addDepartmentFlag = false;
         for (i = 0; i < treeLocations.length; i++) {
             if (treeLocations[i].childNodes[1].innerText == storageDtoes[j].locationName) {
-                
-switch (attrib) {
-                    case "phones":
-                        dynamicLabel = "Внутренний номер";
-                        dynamicField = storageDtoes[j].departments[d].dtoes[t].phoneNumber;
-                        break;
-                    case "monitors":
-                        dynamicLabel = "По ведомости ОС";
-                        if(storageDtoes[j].departments[d].dtoes[t].baseType == "SINGLE") {
-                            dynamicField = "Отдельно";
-                        } else {
-                            dynamicField = "В составе АРМ";
-                        }
-                        break;
-                    case "ups":
-                        dynamicLabel = "Год замены";
-                        if(storageDtoes[j].departments[d].dtoes[t].yearReplacement == 0) {
-                          dynamicField = "нет";  
-                        } else {
-                            dynamicField = storageDtoes[j].departments[d].dtoes[t].yearReplacement;
-                        }
-                        
-                        break;
-                }
+             
+              
                 
                 liItem = document.createElement('li');
                 liItem.className = "department";
@@ -6199,6 +6327,22 @@ switch (attrib) {
                 treeLocations[i].childNodes[1].childNodes[3].append(liItem);
                 headerElement = document.createElement('div');
                 headerElement.className = "row fw-bold mt-3 mb-3";
+                switch (attrib) {
+                    case "phones":
+                        dynamicLabel = "Внутренний номер";
+
+                        break;
+                    case "monitors":
+                        dynamicLabel = "По ведомости ОС";
+
+                        break;
+                    case "ups":
+                        dynamicLabel = "Год замены";
+
+                        break;
+                        }
+                
+                
                 switch(attrib) {
                     case "switch":
                      headerElement.innerHTML = '<div class="col">Модель</div>' +
@@ -6319,7 +6463,29 @@ switch (attrib) {
                         let dateBegin = new Date(storageDtoes[j].departments[d].dtoes[t].dateExploitationBegin);
                         let formatedDate = dateBegin.toLocaleDateString('ru');
                         
-                     
+                          switch (attrib) {
+                    case "phones":
+                        dynamicLabel = "Внутренний номер";
+                        dynamicField = storageDtoes[j].departments[d].dtoes[t].phoneNumber;
+                        break;
+                    case "monitors":
+                        dynamicLabel = "По ведомости ОС";
+                        if(storageDtoes[j].departments[d].dtoes[t].baseType == "SINGLE") {
+                            dynamicField = "Отдельно";
+                        } else {
+                            dynamicField = "В составе АРМ";
+                        }
+                        break;
+                    case "ups":
+                        dynamicLabel = "Год замены";
+                        if(storageDtoes[j].departments[d].dtoes[t].yearReplacement == 0) {
+                          dynamicField = "нет";  
+                        } else {
+                            dynamicField = storageDtoes[j].departments[d].dtoes[t].yearReplacement;
+                        }
+                        
+                        break;
+                }
                         
                         
                         switch (attrib) {
@@ -6460,6 +6626,20 @@ switch (attrib) {
                                     '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].switches.length + ' ед.' + '</div>' +
                                     '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].subDisplayModel + '</div>' +
                                     '</div>';
+                                break;
+                                default:
+                                if(dynamicLabel != null) {
+                                elDepartment.innerHTML = '<div class="row mb-2 d-flex align-items-center text-start">' +
+                                    '<div class="col">' + count + '. ' + storageDtoes[j].departments[d].dtoes[t].model + '</div>' +
+                                    '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].placeName + '</div>' +
+                                    '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].serialNumber + '</div>' +
+                                    '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].inventaryNumber + '</div>' +
+                                    '<div class="col">' + formatedDate + '</div>' +
+                                    '<div class="col">' + getStatus(storageDtoes[j].departments[d].dtoes[t].status) + '</div>' +
+                                    '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].yearCreated + '</div>' +
+                                    '<div class="col">' + dynamicField + '</div>' +
+                                    '</div>';
+                        }
                                 break;
                         }
                         liItem.childNodes[0].append(elDepartment);
@@ -6815,9 +6995,150 @@ switch (attrib) {
         }
     }
 
+     // Получение строки о результате поиска или фильтра
 
-
-
+    //$("#searchChoise")[0]
+let req;
+let req2;
+let vvv;
+let link;
+    if(window.location.href.indexOf('?') >= 0) {
+       link = decodeURIComponent(window.location.href);
+       req = link.substring(window.location.href.indexOf('?') + 1, window.location.href.length);
+       req2 = req.replaceAll('&', '=');
+       vvv = req2.split("=");
+        
+        
+        
+        
+        
+       // alert(vvv.indexOf('inventaryNumber'));
+        if(vvv.indexOf('inventaryNumber') >= 0 && vvv[vvv.indexOf('inventaryNumber') + 1] != '') {
+            $("#mesage")[0].style = "margin-left: 40px; margin-bottom: 15px; font-weight: 800;";
+            $("#mesage")[0].innerHTML = "Поиск по инвентарному номеру: " + vvv[vvv.indexOf('inventaryNumber') + 1] + ", найдено " + amountDevice + " записей.";
+        } else if(vvv.indexOf('username') >= 0 && vvv[vvv.indexOf('username') + 1] != '') {
+            $("#mesage")[0].style = "margin-left: 40px; margin-bottom: 15px; font-weight: 800;";
+            $("#mesage")[0].innerHTML = "Поиск по ФИО: " + vvv[vvv.indexOf('username') + 1] + ", найдено " + amountDevice + " записей.";
+        } else if(vvv.indexOf('model') >= 0 && vvv[vvv.indexOf('model') + 1] != '') {
+            
+            
+              let requestLink;
+            switch (attrib) {
+                case "phones":
+                    requestLink = "/modphones";
+                    break;
+                case "fax":
+                    requestLink = "/modfax";
+                    break;
+                case "monitors":
+                    requestLink = "/modmonitors";
+                    break;
+                case "ups":
+                    requestLink = "/modups";
+                    break;
+                case "systemblock":
+                    requestLink = "/modsysblock";
+                    break;
+                case "scanner":
+                    requestLink = "/modscanner";
+                    break;
+                case "server":
+                    requestLink = "/modserver";
+                    break;
+                case "switch":
+                    requestLink = "/modswitch";
+                    break;
+                case "router":
+                    requestLink = "/modrouter";
+                    break;
+                case "ats":
+                    requestLink = "/modats";
+                    break;
+                case "conditioner":
+                    requestLink = "/modconditioner";
+                    break;
+                case "infomat":
+                    requestLink = "/modinfomat";
+                    break;
+                case "terminal":
+                    requestLink = "/modterminal";
+                    break;
+                case "thermoprinter":
+                    requestLink = "/modthermoprinter";
+                    break;
+                case "display":
+                    requestLink = "/moddisplay";
+                    break;
+                case "swunit":
+                    requestLink = "/modswunit";
+                    break;
+            }
+            $.ajax({
+                url: requestLink,
+                type: 'GET',
+                async: false,
+                dataType: 'json',
+                error: function(callback) {
+                    console.log(callback);
+                },
+                success: function(callback) {
+                    console.log(callback);
+                    callback.forEach(elem => {
+                        if(elem.id == vvv[vvv.indexOf('model') + 1]) {
+                            $("#mesage")[0].style = "margin-left: 40px; margin-bottom: 15px; font-weight: 800;";
+                            $("#mesage")[0].innerHTML = "Отфильтровано по модели: " + elem.model + ", найдено " + amountDevice + " записей.";
+                        }
+                    });
+                }
+            });
+            
+            
+            
+            
+            
+            
+        } else if(vvv.indexOf('status') >= 0 && vvv[vvv.indexOf('status') + 1] != '') {
+            $("#mesage")[0].style = "margin-left: 40px; margin-bottom: 15px; font-weight: 800;";
+            let stat = getStatus(vvv[vvv.indexOf('status') + 1]);
+            $("#mesage")[0].innerHTML = "Отфильтровано по статусу: " + stat + ", найдено " + amountDevice + " записей.";
+        }else if((vvv.indexOf('yearCreatedOne') >= 0 && vvv[vvv.indexOf('yearCreatedOne') + 1] != '') && (vvv.indexOf('yearCreatedTwo') >= 0 && vvv[vvv.indexOf('yearCreatedTwo') + 1] != '')) {
+            $("#mesage")[0].style = "margin-left: 40px; margin-bottom: 15px; font-weight: 800;";
+            $("#mesage")[0].innerHTML = "Отфильтровано по году выпуска от: " + vvv[vvv.indexOf('yearCreatedOne') + 1] + " до " + vvv[vvv.indexOf('yearCreatedTwo') + 1] +  ", найдено " + amountDevice + " записей.";
+        }  else if(vvv.indexOf('yearCreatedOne') >= 0 && vvv[vvv.indexOf('yearCreatedOne') + 1] != '') {
+            $("#mesage")[0].style = "margin-left: 40px; margin-bottom: 15px; font-weight: 800;";
+            $("#mesage")[0].innerHTML = "Отфильтровано по году выпуска от: " + vvv[vvv.indexOf('yearCreatedOne') + 1] + ", найдено " + amountDevice + " записей.";
+            
+        } else if(vvv.indexOf('yearCreatedTwo') >= 0 && vvv[vvv.indexOf('yearCreatedTwo') + 1] != '') {
+            $("#mesage")[0].style = "margin-left: 40px; margin-bottom: 15px; font-weight: 800;";
+            $("#mesage")[0].innerHTML = "Отфильтровано по году выпуска до: " + vvv[vvv.indexOf('yearCreatedTwo') + 1] + ", найдено " + amountDevice + " записей.";
+        }else if(vvv.indexOf('location') >= 0 && vvv[vvv.indexOf('location') + 1] != '') {
+            
+            let xhr = new XMLHttpRequest();
+            xhr.open('GET', '/locations?id=' + vvv[vvv.indexOf('location') + 1], false);
+            try {
+              xhr.send();
+              if (xhr.status != 200) {
+                alert(`Ошибка ${xhr.status}: ${xhr.statusText}`);
+              } else {
+                let responseObj = JSON.parse(xhr.response);
+                $("#mesage")[0].style = "margin-left: 40px; margin-bottom: 15px; font-weight: 800;";
+                $("#mesage")[0].innerHTML = "Отфильтровано по району: " + responseObj[0].name + ", найдено " + amountDevice + " записей.";
+              }
+            } catch(err) { // для отлова ошибок используем конструкцию try...catch вместо onerror
+              alert("Запрос не удался");
+            }
+            
+            
+        }
+            
+        
+        
+        
+    }
+    
+   
+    
+    
 
 });
 

@@ -40,7 +40,11 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                     
                     <div class="col-7">
                         <div class="input-group" id="searchSvtObjDiv">
-                            <input type="text" class="form-control form-control-sm" placeholder="Поиск по ФИО" aria-label="searchModel" aria-describedby="basic-addon1" id="searchSvtObjInput">
+                             <select class="form-select form-select-sm customSelect" id="searchChoise">
+                                  <option value="username">ФИО</option>
+                                  <option value="inventaryNumber">инвентарный номер</option>
+                                </select>
+                            <input type="text" class="form-control form-control-sm" placeholder="поиск по ФИО" aria-label="searchModel" aria-describedby="basic-addon1" id="searchSvtObjInput">
                             <span class="input-group-text" id="searchSvtObjBtn">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16"><path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"></path>
                                 </svg>
@@ -55,7 +59,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                         <div class="col-2" th:case="swunit"></div>
                             
                         
-                    <div class="col-2" th:case="*">
+                    <div class="col-1" th:case="*">
                         <div class="dropdown">
                           <button type="button" class="btn btn-primary btn-sm dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="outside">
                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-filter-square" viewBox="0 0 16 16">
@@ -64,8 +68,22 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                             </svg>
                             <span style="margin-left: 10px;">Фильтр</span>
                           </button>
+                            
+                            
                           <div class="dropdown-menu mt-1 p-4" style="width: 420px;" id="dropdown-container">
                               <div class="container">
+                                  
+                                   <div class="row text-center fw-bold mb-3">
+                                      <div>Район</div>
+                                  </div>
+                                  
+                                  <div class="row mb-3">
+                                      <select class="form-select form-select-sm" name="filterLocation" id="filter-location" aria-label="Default select example">
+                                      <option selected value="">Выбрать район</option>
+                                  
+                                    </select>
+                                  </div>
+                                  
                                   
                                   <div class="row text-center fw-bold mb-3">
                                       <div>Год выпуска</div>
@@ -122,8 +140,12 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                        
                     </div>
                          </th:block>
+                    <div class="col-1">
+                        <button type="button" class="btn btn-light" id="getReport">Скачать</button>
+                    </div>
                 </div>
                 <div class="content" id="content"> 
+                    <div class="mes" id="mesage"></div>
                 <ul class="tree" >
                     <li class="location" th:each="dto : ${dtoes}" >
                         <details>
@@ -538,6 +560,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                                 let attrib = [[${attribute}]];
                                 let placeAttrib = [[${placeAttribute}]];
                                 let dtoes = [[${dtoes}]];
+                                let amountDevice = [[${amountDevice}]];
                 </script>
         
         

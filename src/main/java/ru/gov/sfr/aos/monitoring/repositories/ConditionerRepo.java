@@ -20,16 +20,19 @@ public interface ConditionerRepo extends ObjectBuingWithSerialAndInventaryRepo <
     List<Conditioner> findByPlacePlaceTypeLikeAndArchivedFalse(PlaceType placetype);
     
     
-   @Query(value = "SELECT conditioner.*, ob.*, conditioner_model.* "
+   @Query(value = "SELECT conditioner.*, ob.*, conditioner_model.*, place.* "
    + "FROM conditioner conditioner "
    + "JOIN object_buing ob "
    + "ON conditioner.conditioner_id = ob.id "
+   + "JOIN place place " 
+   + "ON ob.place_id = place.id "
    + "JOIN conditioner_model conditioner_model "
    + "ON conditioner.conditioner_model_id = conditioner_model.id "
    + "WHERE ((?1 is NULL or ?1 = '') or (conditioner.status = ?1)) "
-   + "AND ((?2 is NULL or ?2 = '') or (conditioner_model.model = ?2)) "
+   + "AND ((?2 is NULL or ?2 = '') or (conditioner_model.id = ?2)) "
    + "AND ((?3 is NULL or ?3 = '') or (conditioner.year_created >= ?3)) "
-   + "AND ((?4 is NULL or ?4 = '') or (conditioner.year_created <= ?4)) ", nativeQuery = true)
-    List<Conditioner> findConditionerByAllFilters (String status, String model, String yearCreatedOne, String yearCreatedTwo);
+   + "AND ((?4 is NULL or ?4 = '') or (conditioner.year_created <= ?4)) "
+   + "AND ((?5 is NULL or ?5 = '') or (place.location_id = ?5)) ", nativeQuery = true)
+    List<Conditioner> findConditionerByAllFilters (String status, String model, String yearCreatedOne, String yearCreatedTwo, String location);
     
 }

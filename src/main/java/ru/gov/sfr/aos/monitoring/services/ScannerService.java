@@ -156,7 +156,7 @@ public class ScannerService extends SvtObjService<Scanner, ScannerRepo, SvtScann
       
       
         
-        List<Scanner> result = scannerRepo.findScannerByAllFilters(dto.getStatus(), dto.getModel(), dto.getYearCreatedOne(), dto.getYearCreatedTwo());
+        List<Scanner> result = scannerRepo.findScannerByAllFilters(dto.getStatus(), dto.getModel(), dto.getYearCreatedOne(), dto.getYearCreatedTwo(), dto.getLocation());
         return result;
     }
     

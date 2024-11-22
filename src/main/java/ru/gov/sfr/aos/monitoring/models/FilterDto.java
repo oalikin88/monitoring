@@ -11,6 +11,7 @@ import ru.gov.sfr.aos.monitoring.dictionaries.Status;
  * @author Alikin Oleg
  */
 public class FilterDto {
+    public String location;
     public String yearCreatedOne;
     public String yearCreatedTwo;
     public String model;
@@ -49,6 +50,14 @@ public class FilterDto {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
     }
 
     

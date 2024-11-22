@@ -20,6 +20,7 @@ public interface ObjectBuingWithSerialAndInventaryRepo <E extends ObjectBuingWit
     boolean existsBySerialNumberIgnoreCase(String serialNumber);
     List<E> findByPlacePlaceTypeLikeAndArchivedFalse(PlaceType placetype);
     List<E> findByPlaceUsernameContainingAndPlacePlaceTypeLikeAndArchivedFalse(String username, PlaceType placetype);
+    List<E> findByInventaryNumberContainingAndPlacePlaceTypeLikeAndArchivedFalse(String inventaryNumber, PlaceType placetype);
     List<E> findByPlaceArchivedFalse();
     Optional<E> findById(Long id);
 }

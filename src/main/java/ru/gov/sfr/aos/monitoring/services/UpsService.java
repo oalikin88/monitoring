@@ -153,7 +153,7 @@ public class UpsService extends SvtObjService<Ups, UpsRepo, SvtDTO>{
       
       
         
-        List<Ups> result = upsRepo.findUpsByAllFilters(dto.getStatus(), dto.getModel(), dto.getYearCreatedOne(), dto.getYearCreatedTwo());
+        List<Ups> result = upsRepo.findUpsByAllFilters(dto.getStatus(), dto.getModel(), dto.getYearCreatedOne(), dto.getYearCreatedTwo(), dto.getLocation());
         return result;
     }
     
