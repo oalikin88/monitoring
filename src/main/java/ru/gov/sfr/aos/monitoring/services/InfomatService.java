@@ -48,13 +48,25 @@ public class InfomatService extends SvtObjService<Infomat, InfomatRepo, SvtDTO> 
     
     @Override
     public void createSvtObj(SvtDTO dto) throws ObjectAlreadyExists {
-        if(infomatRepo.existsBySerialNumberIgnoreCase(dto.getSerialNumber())) {
+        InfomatModel infomatModel = null;
+        if(infomatRepo.existsBySerialNumberIgnoreCase(dto.getSerialNumber().trim())) {
                 throw new ObjectAlreadyExists("Инфомат с таким серийным номером уже есть в базе данных");
+    }else if(infomatRepo.existsByInventaryNumberIgnoreCase(dto.getInventaryNumber().trim())) {
+         throw new ObjectAlreadyExists("Инфомат с таким инвентарным номером уже есть в базе данных");
     } else {
             
             Infomat infomat = new Infomat();
             Place place = placeRepo.findById(dto.getPlaceId()).get();
-            InfomatModel infomatModel = infomatModelRepo.findById(dto.getModelId()).get();
+            if(null == dto.getModelId()){
+                if(infomatModelRepo.existsByModelIgnoreCase("не указано")) {
+                    infomatModel = infomatModelRepo.findByModelIgnoreCase("не указано").get(0);
+                } else {
+                    infomatModel = new InfomatModel("не указано");
+                }
+            } else {
+                infomatModel = infomatModelRepo.findById(dto.getModelId()).get();
+            }
+            
             infomat.setInventaryNumber(dto.getInventaryNumber());
             infomat.setSerialNumber(dto.getSerialNumber());
             infomat.setPlace(place);
@@ -98,12 +110,42 @@ public class InfomatService extends SvtObjService<Infomat, InfomatRepo, SvtDTO> 
     }
 
     @Override
-    public void updateSvtObj(SvtDTO dto) {
+    public void updateSvtObj(SvtDTO dto) throws ObjectAlreadyExists {
+        InfomatModel infomatModel = null;
             Infomat infomat = infomatRepo.findById(dto.getId()).get();
             Place place = placeRepo.findById(dto.getPlaceId()).get();
-            InfomatModel infomatModel = infomatModelRepo.findById(dto.getModelId()).get();
-            infomat.setInventaryNumber(dto.getInventaryNumber());
-            infomat.setSerialNumber(dto.getSerialNumber());
+            if(null == dto.getModelId()){
+                if(infomatModelRepo.existsByModelIgnoreCase("не указано")) {
+                    infomatModel = infomatModelRepo.findByModelIgnoreCase("не указано").get(0);
+                } else {
+                    infomatModel = new InfomatModel("не указано");
+                }
+            } else {
+                infomatModel = infomatModelRepo.findById(dto.getModelId()).get();
+            }
+            
+            if(infomatRepo.existsByInventaryNumberIgnoreCase(dto.getInventaryNumber().trim())) {
+                Infomat checkInventary = infomatRepo.findByInventaryNumberIgnoreCase(dto.getInventaryNumber().trim()).get(0);
+                if(checkInventary.getId() != dto.getId()) {
+                    throw new ObjectAlreadyExists("Инфомат с таким инвентарным номером уже есть в базе данных");
+                } else {
+                    infomat.setInventaryNumber(dto.getInventaryNumber().trim());
+                }
+            } else {
+                infomat.setInventaryNumber(dto.getInventaryNumber().trim());
+            }
+            
+            if(infomatRepo.existsBySerialNumberIgnoreCase(dto.getSerialNumber().trim())) {
+                Infomat checkSerial = infomatRepo.findBySerialNumberIgnoreCase(dto.getSerialNumber().trim()).get(0);
+                if(checkSerial.getId() != dto.getId()) {
+                    throw new ObjectAlreadyExists("Инфомат с таким серийным номером уже есть в базе данных");
+                } else {
+                    infomat.setSerialNumber(dto.getSerialNumber().trim());
+                }
+            } else {
+                infomat.setSerialNumber(dto.getSerialNumber().trim());
+            }
+            
             infomat.setPlace(place);
             
             infomat.setInfomatModel(infomatModel);

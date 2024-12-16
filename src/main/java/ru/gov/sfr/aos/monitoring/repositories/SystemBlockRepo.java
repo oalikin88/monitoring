@@ -17,6 +17,10 @@ import ru.gov.sfr.aos.monitoring.entities.SystemBlock;
 @Repository
 public interface SystemBlockRepo extends ObjectBuingWithSerialAndInventaryRepo<SystemBlock>{
     boolean existsBySerialNumberIgnoreCase(String serialNumber);
+    boolean existsByInventaryNumberIgnoreCase(String inventaryNumber);
+    List<SystemBlock> findBySerialNumberIgnoreCase(String serialNumber);
+    List<SystemBlock> findByInventaryNumberIgnoreCase(String inventaryNumber);
+    
     List<SystemBlock> findByPlacePlaceTypeLikeAndArchivedFalse(PlaceType placetype);
     
      @Query(value = "SELECT sysblock.*, ob.*, sysblock_model.*, place.* "
@@ -33,4 +37,5 @@ public interface SystemBlockRepo extends ObjectBuingWithSerialAndInventaryRepo<S
    + "AND ((?4 is NULL or ?4 = '') or (sysblock.year_created <= ?4)) "
    + "AND ((?5 is NULL or ?5 = '') or (place.location_id = ?5))", nativeQuery = true)
     List<SystemBlock> findSystemblockByAllFilters (String status, String model, String yearCreatedOne, String yearCreatedTwo, String location);
+    
 }

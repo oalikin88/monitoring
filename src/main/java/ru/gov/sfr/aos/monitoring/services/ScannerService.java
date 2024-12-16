@@ -49,16 +49,29 @@ public class ScannerService extends SvtObjService<Scanner, ScannerRepo, SvtScann
     @Override
     public void createSvtObj(SvtScannerDTO dto) throws ObjectAlreadyExists {
 
-            if (scannerRepo.existsBySerialNumberIgnoreCase(dto.getSerialNumber())) {
+            if (scannerRepo.existsBySerialNumberIgnoreCase(dto.getSerialNumber().trim())) {
                 throw new ObjectAlreadyExists("Сканер с таким серийным номером уже есть в базе данных");
             
+        } else if(scannerRepo.existsByInventaryNumberIgnoreCase(dto.getInventaryNumber().trim())){
+            throw new ObjectAlreadyExists("Сканер с таким инвентарным номером уже есть в базе данных");
         } else {
             Scanner scanner = new Scanner();
             Place place = null;
             Contract contract = null;
             ScannerModel scannerModel = null;
             place = placeRepo.findById(dto.getPlaceId()).get();
-            scannerModel = scannerModelRepo.findById(dto.getModelId()).get();
+            
+            if(null == dto.getModelId()) {
+                if(scannerModelRepo.existsByModelIgnoreCase("не указано")) {
+                    scannerModel = scannerModelRepo.findByModelIgnoreCase("не указано").get(0);
+                } else {
+                    scannerModel = new ScannerModel();
+                    scannerModel.setModel("не указано");
+                }
+            } else {
+                scannerModel = scannerModelRepo.findById(dto.getModelId()).get();
+            }
+            
             scanner.setPlace(place);
             scanner.setScannerModel(scannerModel);
             switch (dto.getStatus()) {
@@ -103,13 +116,24 @@ public class ScannerService extends SvtObjService<Scanner, ScannerRepo, SvtScann
     }
 
     @Override
-    public void updateSvtObj(SvtScannerDTO dto) {
+    public void updateSvtObj(SvtScannerDTO dto) throws ObjectAlreadyExists {
         Scanner scanner = scannerRepo.findById(dto.getId()).get();
         Place place = null;
         Contract contract = null;
         ScannerModel scannerModel = null;
         place = placeRepo.findById(dto.getPlaceId()).get();
-        scannerModel = scannerModelRepo.findById(dto.getModelId()).get();
+        
+        if(null == dto.getModelId()) {
+                if(scannerModelRepo.existsByModelIgnoreCase("не указано")) {
+                    scannerModel = scannerModelRepo.findByModelIgnoreCase("не указано").get(0);
+                } else {
+                    scannerModel = new ScannerModel();
+                    scannerModel.setModel("не указано");
+                }
+            } else {
+                scannerModel = scannerModelRepo.findById(dto.getModelId()).get();
+            }
+        
         scanner.setPlace(place);
         scanner.setScannerModel(scannerModel);
         switch (dto.getStatus()) {
@@ -142,8 +166,28 @@ public class ScannerService extends SvtObjService<Scanner, ScannerRepo, SvtScann
 
         }
         scanner.setContract(contract);
-        scanner.setSerialNumber(dto.getSerialNumber());
-        scanner.setInventaryNumber(dto.getInventaryNumber());
+        if(scannerRepo.existsBySerialNumberIgnoreCase(dto.getSerialNumber().trim())) {
+            Scanner checkSerial = scannerRepo.findBySerialNumberIgnoreCase(dto.getSerialNumber().trim()).get(0);
+            if(checkSerial.getId() != dto.getId()) {
+                throw new ObjectAlreadyExists("Сканер с таким серийным номером уже есть в базе данных");
+            } else {
+                scanner.setSerialNumber(dto.getSerialNumber().trim());
+            }
+        } else {
+             scanner.setSerialNumber(dto.getSerialNumber().trim());
+        }
+       
+        if(scannerRepo.existsByInventaryNumberIgnoreCase(dto.getInventaryNumber().trim())) {
+            Scanner checkInventary = scannerRepo.findByInventaryNumberIgnoreCase(dto.getInventaryNumber().trim()).get(0);
+            if(dto.getId() != checkInventary.getId()) {
+                throw new ObjectAlreadyExists("Сканер с таким инвентарным номером уже есть в базе данных");
+            } else {
+                scanner.setInventaryNumber(dto.getInventaryNumber().trim());
+            }
+        } else {
+            scanner.setInventaryNumber(dto.getInventaryNumber().trim());
+        }
+        
         scanner.setYearCreated(dto.getYearCreated());
         scanner.setNumberRoom(dto.getNumberRoom());
         scanner.setNameFromOneC(dto.getNameFromOneC());

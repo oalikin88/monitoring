@@ -52,15 +52,28 @@ public class FaxService extends SvtObjService<Fax, FaxRepo, FaxDto>  {
     
     @Override
     public void createSvtObj(FaxDto dto) throws ObjectAlreadyExists {
-        if(faxRepo.existsBySerialNumberIgnoreCase(dto.getSerialNumber())) {
+        if(faxRepo.existsBySerialNumberIgnoreCase(dto.getSerialNumber().trim())) {
            throw new ObjectAlreadyExists("Факс с таким серийным номером уже есть в базе данных");
+        }else if(faxRepo.existsByInventaryNumberIgnoreCase(dto.getInventaryNumber().trim())) {
+            throw new ObjectAlreadyExists("Факс с таким инвентарным номером уже есть в базе данных");
         }else {
             Fax fax = new Fax();
             Place place = null;
             FaxModel faxModel = null;
             
             place = placeRepo.findById(dto.getPlaceId()).get();
-            faxModel = faxModelRepo.findById(dto.getModelId()).get();
+            
+            if(null == dto.getModelId()) {
+                if(faxModelRepo.existsByModelIgnoreCase("не указано")) {
+                    faxModel = faxModelRepo.findByModelIgnoreCase("не указано").get(0);
+                } else {
+                    faxModel = new FaxModel();
+                    faxModel.setModel("не указано");
+                }
+            } else {
+                faxModel = faxModelRepo.findById(dto.getModelId()).get();
+            }
+            
             switch (dto.getStatus()) {
             case "REPAIR":
                 fax.setStatus(Status.REPAIR);
@@ -106,13 +119,22 @@ public class FaxService extends SvtObjService<Fax, FaxRepo, FaxDto>  {
     }
 
     @Override
-    public void updateSvtObj(FaxDto dto) {
+    public void updateSvtObj(FaxDto dto) throws ObjectAlreadyExists {
           Fax fax = faxRepo.findById(dto.getId()).get();
             Place place = null;
             FaxModel faxModel = null;
             
             place = placeRepo.findById(dto.getPlaceId()).get();
-            faxModel = faxModelRepo.findById(dto.getModelId()).get();
+              if(null == dto.getModelId()) {
+                if(faxModelRepo.existsByModelIgnoreCase("не указано")) {
+                    faxModel = faxModelRepo.findByModelIgnoreCase("не указано").get(0);
+                } else {
+                    faxModel = new FaxModel();
+                    faxModel.setModel("не указано");
+                }
+            } else {
+                faxModel = faxModelRepo.findById(dto.getModelId()).get();
+            }
             switch (dto.getStatus()) {
             case "REPAIR":
                 fax.setStatus(Status.REPAIR);
@@ -130,8 +152,27 @@ public class FaxService extends SvtObjService<Fax, FaxRepo, FaxDto>  {
                 fax.setStatus(Status.DEFECTIVE);
                 break;
         }
-        fax.setInventaryNumber(dto.getInventaryNumber());
-        fax.setSerialNumber(dto.getSerialNumber());
+        if(faxRepo.existsByInventaryNumberIgnoreCase(dto.getInventaryNumber().trim())) {
+            Fax checkInventary = faxRepo.findByInventaryNumberIgnoreCase(dto.getInventaryNumber().trim()).get(0);
+            if(checkInventary.getId() != dto.getId()) {
+                throw new ObjectAlreadyExists("Факс с таким инвентарным номером уже есть в базе данных");
+            } else {
+                 fax.setInventaryNumber(dto.getInventaryNumber().trim());
+            }
+        } else {
+             fax.setInventaryNumber(dto.getInventaryNumber().trim());
+        }
+       
+        if(faxRepo.existsBySerialNumberIgnoreCase(dto.getSerialNumber().trim())) {
+            Fax checkSerial = faxRepo.findBySerialNumberIgnoreCase(dto.getSerialNumber().trim()).get(0);
+            if(checkSerial.getId() != dto.getId()) {
+                throw new ObjectAlreadyExists("Факс с таким серийным номером уже есть в базе данных");
+            } else {
+                 fax.setSerialNumber(dto.getSerialNumber().trim());
+            }
+        } else {
+             fax.setSerialNumber(dto.getSerialNumber().trim());
+        }
         fax.setYearCreated(dto.getYearCreated());
         fax.setDateExploitationBegin(dto.getDateExploitationBegin());
         fax.setNameFromeOneC(dto.getNameFromOneC());

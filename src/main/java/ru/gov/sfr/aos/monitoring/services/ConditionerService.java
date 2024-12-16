@@ -23,6 +23,7 @@ import ru.gov.sfr.aos.monitoring.entities.Contract;
 import ru.gov.sfr.aos.monitoring.entities.Location;
 import ru.gov.sfr.aos.monitoring.entities.ObjectBuing;
 import ru.gov.sfr.aos.monitoring.entities.Place;
+import ru.gov.sfr.aos.monitoring.exceptions.ObjectAlreadyExists;
 import ru.gov.sfr.aos.monitoring.models.FilterDto;
 import ru.gov.sfr.aos.monitoring.models.SvtConditionerDTO;
 import ru.gov.sfr.aos.monitoring.repositories.ConditionerModelRepo;
@@ -47,15 +48,29 @@ public class ConditionerService extends SvtObjService<Conditioner, ConditionerRe
     private ContractRepo contractRepo;
 
     @Override
-    public void createSvtObj(SvtConditionerDTO dto) {
-        if (null != dto.getId()) {
-            if (conditionerRepo.existsBySerialNumberIgnoreCase(dto.getSerialNumber())) {
-                System.out.println("такой кондиционер уже есть в базе данных");
-            }
+    public void createSvtObj(SvtConditionerDTO dto) throws ObjectAlreadyExists {
+        ConditionerModel conditionerModel = null;
+        
+            if (conditionerRepo.existsBySerialNumberIgnoreCase(dto.getSerialNumber().trim())) {
+                throw new ObjectAlreadyExists("Кондиционер с таким серийным номеров уже есть в базе данных");
+            } else if(conditionerRepo.existsByInventaryNumberIgnoreCase(dto.getInventaryNumber().trim())) {
+                throw new ObjectAlreadyExists("Кондиционер с таким инвентарным номеров уже есть в базе данных");
+            
         } else {
             Conditioner conditioner = new Conditioner();
             Place place = placeRepo.findById(dto.getPlaceId()).get();
-            ConditionerModel conditionerModel = conditionerModelRepo.findById(dto.getModelId()).get();
+            
+            if(null == dto.getModelId()) {
+                if(conditionerModelRepo.existsByModelIgnoreCase("не указано")) {
+                    conditionerModel = conditionerModelRepo.findByModelIgnoreCase("не указано").get(0);
+                } else {
+                    conditionerModel = new ConditionerModel();
+                    conditionerModel.setModel("не указано");
+                }
+            } else {
+                conditionerModel = conditionerModelRepo.findById(dto.getModelId()).get();
+            }
+            
             conditioner.setPlace(place);
             conditioner.setConditionerModel(conditionerModel);
             conditioner.setSerialNumber(dto.getSerialNumber());
@@ -118,14 +133,47 @@ public class ConditionerService extends SvtObjService<Conditioner, ConditionerRe
     }
 
     @Override
-    public void updateSvtObj(SvtConditionerDTO dto) {
+    public void updateSvtObj(SvtConditionerDTO dto) throws ObjectAlreadyExists {
+        ConditionerModel conditionerModel = null;
         Conditioner conditioner = conditionerRepo.findById(dto.getId()).get();
         Place place = placeRepo.findById(dto.getPlaceId()).get();
-        ConditionerModel conditionerModel = conditionerModelRepo.findById(dto.getModelId()).get();
+        
+        if(null == dto.getModelId()) {
+                if(conditionerModelRepo.existsByModelIgnoreCase("не указано")) {
+                    conditionerModel = conditionerModelRepo.findByModelIgnoreCase("не указано").get(0);
+                } else {
+                    conditionerModel = new ConditionerModel();
+                    conditionerModel.setModel("не указано");
+                }
+            } else {
+                conditionerModel = conditionerModelRepo.findById(dto.getModelId()).get();
+            }
+        
         conditioner.setPlace(place);
         conditioner.setConditionerModel(conditionerModel);
-        conditioner.setSerialNumber(dto.getSerialNumber());
-        conditioner.setInventaryNumber(dto.getInventaryNumber());
+        
+        if(conditionerRepo.existsBySerialNumberIgnoreCase(dto.getSerialNumber().trim())) {
+            Conditioner checkSerial = conditionerRepo.findBySerialNumberIgnoreCase(dto.getSerialNumber().trim()).get(0);
+            if(checkSerial.getId() != dto.getId()) {
+                throw new ObjectAlreadyExists("Кондиционер с таким серийным номеров уже есть в базе данных");
+            } else {
+                conditioner.setSerialNumber(dto.getSerialNumber().trim());
+            }
+        } else {
+            conditioner.setSerialNumber(dto.getSerialNumber().trim());
+        } 
+        
+        if(conditionerRepo.existsByInventaryNumberIgnoreCase(dto.getInventaryNumber().trim())) {
+            Conditioner checkInventary = conditionerRepo.findByInventaryNumberIgnoreCase(dto.getInventaryNumber().trim()).get(0);
+            if(checkInventary.getId() != dto.getId()) {
+                throw new ObjectAlreadyExists("Кондиционер с таким инвентарным номеров уже есть в базе данных");
+            } else {
+                conditioner.setInventaryNumber(dto.getInventaryNumber().trim());
+            }
+        } else {
+            conditioner.setInventaryNumber(dto.getInventaryNumber().trim());
+        }
+        
         conditioner.setYearCreated(dto.getYearCreated());
         conditioner.setDescription(dto.getDescription());
         conditioner.setNameFromOneC(dto.getNameFromOneC());

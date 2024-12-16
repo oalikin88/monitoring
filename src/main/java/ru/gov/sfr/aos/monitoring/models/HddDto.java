@@ -14,6 +14,9 @@ public class HddDto extends SvtModelDto {
     private String serialNumber;
     private String inventaryNumber;
 
+    public HddDto() {
+    }
+    
     public HddDto(int capacity, String unit, String serialNumber, String inventaryNumber, String model) {
         super(model);
         this.capacity = capacity;

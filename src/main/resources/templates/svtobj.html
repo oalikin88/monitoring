@@ -24,8 +24,9 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
     <body>
         <div class="wrapper">
             <aside th:insert="svt :: sidebar"></aside>
-            <div class="main p-3">
+            <div class="main">
                 
+ 
                 <div class="row mb-2" id="top-panel">
                     
                 <div class="col-2 d-flex align-items-center justify-content-center">
@@ -141,9 +142,22 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                     </div>
                          </th:block>
                     <div class="col-1">
+                        <th:block th:switch="${attribute}">
+                        <div class="col-2" th:case="asuo"></div>
+                        <div class="col-2" th:case="display"></div>
+                        <div class="col-2" th:case="terminal"></div>
+                        <div class="col-2" th:case="thermoprinter"></div>
+                        <div class="col-2" th:case="swunit"></div>
+                            
+                        
+                    <div class="col-1" th:case="*">
                         <button type="button" class="btn btn-light" id="getReport">Скачать</button>
                     </div>
+                         </th:block>
+                    </div>
                 </div>
+                
+                
                 <div class="content" id="content"> 
                     <div class="mes" id="mesage"></div>
                 <ul class="tree" >
@@ -551,7 +565,8 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                     </div>
                   </div>
                 </div>
-
+                
+     
              
                 <!--объявление переменных из данных приходящих с бэка-->
                 
@@ -561,6 +576,13 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                                 let placeAttrib = [[${placeAttribute}]];
                                 let dtoes = [[${dtoes}]];
                                 let amountDevice = [[${amountDevice}]];
+                                let filterLocation = [[${filterLocation}]];
+                                let filterModel = [[${filterModel}]];
+                                let filterStatus = [[${filterStatus}]];
+                                let filterDateBegin = [[${filterDateBegin}]];
+                                let filterDateEnd = [[${filterDateEnd}]];
+                                let searchFIO = [[${searchFIO}]];
+                                let searchInventary = [[${searchInventary}]];
                 </script>
         
         

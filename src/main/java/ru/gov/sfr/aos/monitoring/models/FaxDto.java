@@ -67,7 +67,13 @@ public class FaxDto extends MainSvtDto {
     }
 
     public String getModel() {
-        return model;
+        String result = "";
+        if(null == model) {
+            result = "не указано";
+        } else {
+            result = model;
+        }
+        return result;
     }
 
     public void setModel(String model) {
@@ -75,7 +81,13 @@ public class FaxDto extends MainSvtDto {
     }
 
     public String getStatus() {
-        return status;
+        String result = "";
+        if(null == result) {
+            result = "не указан";
+        } else {
+            result = status;
+        }
+        return result;
     }
 
     public void setStatus(String status) {
@@ -83,7 +95,13 @@ public class FaxDto extends MainSvtDto {
     }
 
     public String getInventaryNumber() {
-        return inventaryNumber;
+        String result = "";
+        if(null == inventaryNumber) {
+            result = "не указан";
+        } else {
+            result = inventaryNumber;
+        }
+        return result;
     }
 
     public void setInventaryNumber(String inventaryNumber) {
@@ -91,7 +109,13 @@ public class FaxDto extends MainSvtDto {
     }
 
     public String getSerialNumber() {
-        return serialNumber;
+        String result = "";
+        if(null == serialNumber) {
+            result = "не указан";
+        } else {
+            result = serialNumber;
+        }
+        return result;
     }
 
     public void setSerialNumber(String serialNumber) {
@@ -131,7 +155,13 @@ public class FaxDto extends MainSvtDto {
     }
 
     public String getPlaceType() {
-        return placeType;
+        String result = "";
+        if(null == placeType) {
+            result = "не указан";
+        } else {
+            result = placeType;
+        }
+        return result;
     }
 
     public void setPlaceType(String placeType) {
@@ -139,7 +169,13 @@ public class FaxDto extends MainSvtDto {
     }
 
     public String getDepartmentCode() {
-        return departmentCode;
+        String result = "";
+        if(null == departmentCode) {
+            result = "не указан";
+        } else {
+            result = departmentCode;
+        }
+        return result;
     }
 
     public void setDepartmentCode(String departmentCode) {
@@ -155,7 +191,13 @@ public class FaxDto extends MainSvtDto {
     }
 
     public String getNameFromOneC() {
-        return nameFromOneC;
+        String result = "";
+        if(null == nameFromOneC) {
+            result = "нет";
+        } else {
+            result = nameFromOneC;
+        }
+        return result;
     }
 
     public void setNameFromOneC(String nameFromOneC) {
@@ -163,7 +205,13 @@ public class FaxDto extends MainSvtDto {
     }
 
     public String getNumberRoom() {
-        return numberRoom;
+        String result = "";
+        if(null == numberRoom) {
+            result = "не указан";
+        } else {
+            result = numberRoom;
+        }
+        return result;
     }
 
     public void setNumberRoom(String numberRoom) {
@@ -171,7 +219,13 @@ public class FaxDto extends MainSvtDto {
     }
 
     public String getIpAdress() {
-        return ipAdress;
+        String result = "";
+        if(null == ipAdress) {
+            result = "не указан";
+        } else {
+            result = ipAdress;
+        }
+        return result;
     }
 
     public void setIpAdress(String ipAdress) {

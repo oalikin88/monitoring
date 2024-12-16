@@ -22,6 +22,10 @@ public class OperationSystemService {
     @Autowired
     private OperationSystemRepo operationSystemRepo;
     
+    public List<OperationSystem> getOperationSystemBySystemblock(Long idSysBlock) {
+        return operationSystemRepo.findBySystemBlocksId(idSysBlock);
+    }
+    
     public List<OperationSystem> getAllOperationSystem() {
         return operationSystemRepo.findAll();
     }
@@ -50,5 +54,14 @@ public class OperationSystemService {
         osFromDB.setLicense(operationSystem.isLicense());
         operationSystemRepo.save(osFromDB);
 
+    }
+    
+    public void sendOsToArchive(Long id) throws ObjectAlreadyExists {
+        if(operationSystemRepo.existsById(id)) {
+            OperationSystem os = operationSystemRepo.findById(id).get();
+            os.setArchived(true);
+        } else {
+            throw new ObjectAlreadyExists("Операционной системы с id:" + id + ", нет в базе данных");
+        }
     }
 }

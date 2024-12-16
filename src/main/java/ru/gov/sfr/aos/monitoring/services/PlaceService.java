@@ -1,6 +1,7 @@
 package ru.gov.sfr.aos.monitoring.services;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 import ru.gov.sfr.aos.monitoring.dictionaries.PlaceType;
 import ru.gov.sfr.aos.monitoring.entities.Location;
 import ru.gov.sfr.aos.monitoring.entities.Place;
+import ru.gov.sfr.aos.monitoring.exceptions.ObjectAlreadyExists;
 import ru.gov.sfr.aos.monitoring.models.DepDto;
 import ru.gov.sfr.aos.monitoring.models.DepartmentDTO;
 import ru.gov.sfr.aos.monitoring.models.LocationDTO;
@@ -35,9 +37,14 @@ public class PlaceService {
     @Autowired
     private PlaceMapper placeMapper;
 
-    public void createPlace(PlaceDTO dto) {
+    public void createPlace(PlaceDTO dto) throws ObjectAlreadyExists {
         Place place = new Place();
-        place.setUsername(dto.getUsername());
+        if(dto.getUsername().isBlank() || dto.getUsername().isEmpty()) {
+            throw new ObjectAlreadyExists("поле \"ФИО\" не может быть пустым");
+        } else {
+            place.setUsername(dto.getUsername());
+        }
+        
         switch (dto.getPlaceType()) {
             case "Сотрудник":
                 place.setPlaceType(PlaceType.EMPLOYEE);
@@ -52,19 +59,42 @@ public class PlaceService {
                 place.setPlaceType(PlaceType.STORAGE);
                 break;
         }
-        place.setDepartment(dto.getDepartment());
-        place.setDepartmentCode(dto.getDepartmentCode());
+        if(dto.getDepartment().isBlank() || dto.getDepartment().isEmpty()) {
+            throw new ObjectAlreadyExists("поле \"Отдел\" не может быть пустым");
+        } else {
+            place.setDepartment(dto.getDepartment());
+            place.setDepartmentCode(dto.getDepartmentCode());
+        }
         Optional<Location> findLocationById = locationRepo.findById(dto.getLocationId());
-        place.setLocation(findLocationById.get());
+        
+        if(findLocationById.isEmpty()) {
+            throw new ObjectAlreadyExists("поле \"Район\" не может быть пустым");
+        } else {
+            
+            place.setLocation(findLocationById.get());
+        }
+        
         placeRepo.save(place);
     }
 
-    public void updatePlace(PlaceDTO dto) {
+    public void updatePlace(PlaceDTO dto) throws ObjectAlreadyExists {
         Place placeFromDb = placeRepo.findById(dto.getPlaceId()).get();
-        placeFromDb.setDepartment(dto.getDepartment());
-        placeFromDb.setDepartmentCode(dto.getDepartmentCode());
-        Location location = locationRepo.findById(dto.getLocationId()).get();
-        placeFromDb.setLocation(location);
+        if(dto.getDepartment().isBlank() || dto.getDepartment().isEmpty()) {
+            throw new ObjectAlreadyExists("поле \"Отдел\" не может быть пустым");
+        } else {
+            placeFromDb.setDepartment(dto.getDepartment());
+            placeFromDb.setDepartmentCode(dto.getDepartmentCode());
+        }
+       
+            Optional<Location> location = locationRepo.findById(dto.getLocationId());
+            if(location.isEmpty()) {
+                throw new ObjectAlreadyExists("Район указан неверно");
+            } else {
+                placeFromDb.setLocation(location.get());
+            }
+            
+        
+        
         switch (dto.getPlaceType()) {
             case "Сотрудник":
                 placeFromDb.setPlaceType(PlaceType.EMPLOYEE);
@@ -79,7 +109,11 @@ public class PlaceService {
                 placeFromDb.setPlaceType(PlaceType.STORAGE);
                 break;
         }
-        placeFromDb.setUsername(dto.getUsername());
+        if(dto.getUsername().isBlank() || dto.getUsername().isEmpty()) {
+            throw new ObjectAlreadyExists("поле \"ФИО\" не может быть пустым");
+        } else {
+            placeFromDb.setUsername(dto.getUsername());
+        }
         placeRepo.save(placeFromDb);
     }
 
@@ -135,10 +169,10 @@ public class PlaceService {
         return dtoes;
     }
 
-    public List<DepartmentDTO> getDepartmentsByLocation(Long locationId) {
+    public Set<DepartmentDTO> getDepartmentsByLocation(Long locationId) {
         Location location = locationRepo.findById(locationId).get();
         Set<Place> places = location.getPlacesSet();
-        List<DepartmentDTO> dtoes = new ArrayList<>();
+        Set<DepartmentDTO> dtoes = new HashSet<>();
         for (Place place : places) {
             DepartmentDTO dto = new DepartmentDTO();
             dto.setName(place.getDepartment());

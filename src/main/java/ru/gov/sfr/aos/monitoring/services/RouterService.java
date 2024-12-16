@@ -48,13 +48,27 @@ public class RouterService extends SvtObjService<Router, RouterRepo, SvtSwitchHu
     
     @Override
     public void createSvtObj(SvtSwitchHubDTO dto) throws ObjectAlreadyExists {
-            if(routerRepo.existsBySerialNumberIgnoreCase(dto.getSerialNumber())) {
-                throw new ObjectAlreadyExists("АТС с таким серийным номером уже есть в базе данных");
+        RouterModel routerModel = null;
+            if(routerRepo.existsBySerialNumberIgnoreCase(dto.getSerialNumber().trim())) {
+                throw new ObjectAlreadyExists("Маршрутизатор с таким серийным номером уже есть в базе данных");
+    }else if(routerRepo.existsByInventaryNumberIgnoreCase(dto.getInventaryNumber().trim())){
+        throw new ObjectAlreadyExists("Маршрутизатор с таким инвентарным номером уже есть в базе данных");
     } else {
             
             Router router = new Router();
             Place place = placeRepo.findById(dto.getPlaceId()).get();
-            RouterModel routerModel = routerModelRepo.findById(dto.getModelId()).get();
+            
+            if(null == dto.getModelId()) {
+                if(routerModelRepo.existsByModelIgnoreCase("не указано")) {
+                    routerModel = routerModelRepo.findByModelIgnoreCase("не указано").get(0);
+                } else {
+                    routerModel = new RouterModel();
+                    routerModel.setModel("не указано");
+                }
+            } else {
+                routerModel = routerModelRepo.findById(dto.getModelId()).get();
+            }
+            
             router.setInventaryNumber(dto.getInventaryNumber());
             router.setSerialNumber(dto.getSerialNumber());
             router.setPlace(place);
@@ -99,12 +113,43 @@ public class RouterService extends SvtObjService<Router, RouterRepo, SvtSwitchHu
     }
 
     @Override
-    public void updateSvtObj(SvtSwitchHubDTO dto) {
+    public void updateSvtObj(SvtSwitchHubDTO dto) throws ObjectAlreadyExists {
         Router router = routerRepo.findById(dto.getId()).get();
         Place place = placeRepo.findById(dto.getPlaceId()).get();
-            RouterModel routerModel = routerModelRepo.findById(dto.getModelId()).get();
-            router.setInventaryNumber(dto.getInventaryNumber());
-            router.setSerialNumber(dto.getSerialNumber());
+        RouterModel routerModel = null;
+            if(null == dto.getModelId()) {
+                if(routerModelRepo.existsByModelIgnoreCase("не указано")) {
+                    routerModel = routerModelRepo.findByModelIgnoreCase("не указано").get(0);
+                } else {
+                    routerModel = new RouterModel();
+                    routerModel.setModel("не указано");
+                }
+            } else {
+                routerModel = routerModelRepo.findById(dto.getModelId()).get();
+            }
+            
+            if(routerRepo.existsByInventaryNumberIgnoreCase(dto.getInventaryNumber().trim())) {
+                Router checkInventary = routerRepo.findByInventaryNumberIgnoreCase(dto.getInventaryNumber().trim()).get(0);
+                if(checkInventary.getId() != dto.getId()) {
+                    throw new ObjectAlreadyExists("Маршрутизатор с таким инвентарным номером уже есть в базе данных");
+                } else {
+                    router.setInventaryNumber(dto.getInventaryNumber().trim());
+                }
+            } else {
+                router.setInventaryNumber(dto.getInventaryNumber().trim());
+            }
+            
+            if(routerRepo.existsBySerialNumberIgnoreCase(dto.getSerialNumber().trim())) {
+                Router checkSerial = routerRepo.findBySerialNumberIgnoreCase(dto.getSerialNumber().trim()).get(0);
+                if(checkSerial.getId() != dto.getId()) {
+                    throw new ObjectAlreadyExists("Маршрутизатор с таким серийным номером уже есть в базе данных");
+                } else {
+                    router.setSerialNumber(dto.getSerialNumber().trim());
+                }
+            } else {
+                router.setSerialNumber(dto.getSerialNumber().trim());
+            }
+            
             router.setYearCreated(dto.getYearCreated());
             router.setPlace(place);
             Contract contract = null;

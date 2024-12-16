@@ -7,12 +7,11 @@ package ru.gov.sfr.aos.monitoring.aspects;
 import java.time.LocalDateTime;
 import java.util.logging.Logger;
 import javax.servlet.http.HttpServletRequest;
-import org.aspectj.lang.ProceedingJoinPoint;
-import org.aspectj.lang.annotation.Around;
+import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;
-import org.aspectj.lang.annotation.Pointcut;
+import org.aspectj.lang.annotation.Before;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Configuration;
+import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import ru.gov.sfr.aos.monitoring.entities.ApplicationLog;
@@ -23,55 +22,92 @@ import ru.gov.sfr.aos.monitoring.services.ApplicationLogService;
  * @author Alikin Oleg
  */
 @Aspect
-@Configuration
+@Component
 public class ApplicationLogingAspect {
     @Autowired
     private ApplicationLogService applicationLogService;
     private Logger logger = Logger.getLogger(ApplicationLogingAspect.class.getCanonicalName());
     
-    @Pointcut("@annotation(ru.gov.sfr.aos.monitoring.anotations.Log)")
-    public void pointcut() {
-    }
     
- 
-    @Around("pointcut()")
-   // @Around("execution(* ru.gov.sfr.aos.monitoring.annotation.*(..))")
-    public Object around(ProceedingJoinPoint point) {
-        Object result = null;
-        try {
-            //Execution method
-            result = point.proceed();
-            
-        } catch (Throwable e) {
-            e.printStackTrace();
+
+    @Before("execution(* ru.gov.sfr.aos.monitoring.controllers.*.*(..))")
+    public void logMethodAccessBefore(JoinPoint joinPoint) {
+        if (RequestContextHolder.getRequestAttributes() == null) {
+            return;
         }
-        //Save log
-        saveLog(point);
-        return result;
-    }
-    
-    private void saveLog(ProceedingJoinPoint joinPoint) {
-        ApplicationLog log = new ApplicationLog();
+
+        
+          ApplicationLog log = new ApplicationLog();
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
         StringBuilder sb = new StringBuilder();
         switch (request.getMethod()) {
             case "POST":
-                sb.append("Создана запись:");
+                logger.info("Создана запись:" + joinPoint.getArgs()[0].toString() + ". User: " + request.getUserPrincipal().getName());
                 break;
             case "PUT":
-                sb.append("Отредактирована запись:");
+                logger.info("Отредактирована запись:" + joinPoint.getArgs()[0].toString() + ". User: " + request.getUserPrincipal().getName());
                 break;
             case "DELETE":
-                sb.append("Удалена запись:");
+                logger.info("Удалена запись:" + joinPoint.getArgs()[0].toString() + ". User: " + request.getUserPrincipal().getName());
+                break;
+            case "GET":
+                logger.info(request.getUserPrincipal().getName() + " запросил " + joinPoint.getSignature());
                 break;
         }
         
-        sb.append(" ");
-        sb.append(joinPoint.getArgs()[0].toString());
-        log.setOperation(sb.toString());
-        log.setUsername(request.getUserPrincipal().getName());
-        log.setRequestTime(LocalDateTime.now());
-        applicationLogService.saveApplicationLog(log);
+
     }
+    
+    
+    
+    
+    
+    
+    
+    
+//    @Pointcut("@annotation(ru.gov.sfr.aos.monitoring.anotations.Log)")
+//    public void pointcut() {
+//    }
+//    
+// 
+//    @Around("pointcut()")
+//   // @Around("execution(* ru.gov.sfr.aos.monitoring.annotation.*(..))")
+//    public Object around(ProceedingJoinPoint point) {
+//        Object result = null;
+//        try {
+//            //Execution method
+//            result = point.proceed();
+//            
+//        } catch (Throwable e) {
+//            e.printStackTrace();
+//        }
+//        //Save log
+//        saveLog(point);
+//        return result;
+//    }
+//    
+//    private void saveLog(ProceedingJoinPoint joinPoint) {
+//        ApplicationLog log = new ApplicationLog();
+//        HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
+//        StringBuilder sb = new StringBuilder();
+//        switch (request.getMethod()) {
+//            case "POST":
+//                sb.append("Создана запись:");
+//                break;
+//            case "PUT":
+//                sb.append("Отредактирована запись:");
+//                break;
+//            case "DELETE":
+//                sb.append("Удалена запись:");
+//                break;
+//        }
+//        
+//        sb.append(" ");
+//        sb.append(joinPoint.getArgs()[0].toString());
+//        log.setOperation(sb.toString());
+//        log.setUsername(request.getUserPrincipal().getName());
+//        log.setRequestTime(LocalDateTime.now());
+//        applicationLogService.saveApplicationLog(log);
+//    }
     
 }

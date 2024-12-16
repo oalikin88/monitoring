@@ -5,8 +5,8 @@
 package ru.gov.sfr.aos.monitoring.services;
 
 import java.util.List;
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
-import ru.gov.sfr.aos.monitoring.entities.Ram;
 import ru.gov.sfr.aos.monitoring.entities.SvtModel;
 import ru.gov.sfr.aos.monitoring.exceptions.ObjectAlreadyExists;
 import ru.gov.sfr.aos.monitoring.repositories.SvtModelsRepo;
@@ -34,37 +34,25 @@ public abstract class SvtModelService <E extends SvtModel, R extends SvtModelsRe
         List<E> models = repository.findByArchivedFalse();
         return models;
     }
+    
+    public Optional<E> getById(Long id) {
+        Optional<E> e = repository.findById(id);
+        return e;
+    }
 
     public void saveModel(SvtModel e) throws ObjectAlreadyExists {
-        
-        List<? extends SvtModel> list = repository.findByModelIgnoreCase(e.getModel());
-        if (list.isEmpty()) {
-            repository.save(e);
-        } else {
-            if(e instanceof Ram) {
-                boolean flag = false;
-                for(Ram ram : (List<Ram>)list) {
-                    if(((Ram) e).getCapacity() == ram.getCapacity()) {
-                        flag = true;
-                    }
-                    
-                }
-                if(!flag) {
-                    repository.save(e);
-                } else {
-                   throw new ObjectAlreadyExists("такая модель уже есть в базе данных"); 
-                }
-            } else {
-                throw new ObjectAlreadyExists("такая модель уже есть в базе данных");
-            }
-            
-        }
+
+        repository.save(e);
+
     }
     
     public void update(SvtModel e) throws ObjectAlreadyExists {
-        E model = (E) repository.findById(e.getId()).get();
-        e.setId(model.getId());
-        repository.save(e);
+        if (repository.existsById(e.getId())) {
+             repository.save(e);
+        } else {
+            throw new ObjectAlreadyExists("Невозможно отредактировать");
+        }
+       
            
     }
     
@@ -80,5 +68,7 @@ public abstract class SvtModelService <E extends SvtModel, R extends SvtModelsRe
         model.setArchived(false);
         repository.save(model);
     }
+    
+    
 
 }

@@ -19,6 +19,7 @@ public class BatteryType {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String type;
+    private boolean archived;
 
     public BatteryType() {
     }
@@ -43,9 +44,19 @@ public class BatteryType {
         this.type = type;
     }
 
+    public boolean isArchived() {
+        return archived;
+    }
+
+    public void setArchived(boolean archived) {
+        this.archived = archived;
+    }
+    
+    
+
     @Override
     public String toString() {
-        return "BatteryType{" + "id=" + id + ", type=" + type + '}';
+        return "BatteryType{" + "id=" + id + ", type=" + type + ", archived=" + archived + '}';
     }
     
     

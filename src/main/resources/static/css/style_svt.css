@@ -37,7 +37,7 @@ h1 {
 .main {
     min-height: 100vh;
     width: 100%;
-    overflow: hidden;
+/*    overflow: hidden;*/
     -webkit-transition: all 0.35s ease-in-out;
     -moz-transition: all 0.35s ease-in-out;
     -ms-transition: all 0.35s ease-in-out;
@@ -153,6 +153,16 @@ h1 {
   transform: translateX(-50%) scaleY(1);
 }
 
+aside {
+    background-color: #0e223e;
+  
+}
+
+#wrap {
+    position:sticky;
+    top:0;
+}
+
 #sidebar {
     width: 70px;
     min-width: 70px;
@@ -163,6 +173,7 @@ h1 {
     background-color: #0e223e;
     height: 100%;
     user-select: none;
+    
     
 }
 
@@ -202,6 +213,7 @@ h1 {
 .sidebar-nav {
     padding: 2rem 0;
     flex: 1 1 auto;
+    
 }
 
 a.sidebar-link {
@@ -311,9 +323,16 @@ a.sidebar-link:hover {
 
 #top-panel {
     box-shadow: 0px 5px 10px -5px #111; 
+    margin-left: 5px;
+    margin-right: 5px;
     min-height: 56px;
     align-items: center;
     border-radius: 5px;
+    position: sticky;
+    top: 0;
+    background: #fff;
+    z-index: 1000;
+   
 }
 
 #content {
@@ -346,3 +365,4 @@ a.sidebar-link:hover {
     font-size: 15px;
     
 }
+

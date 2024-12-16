@@ -38,6 +38,7 @@ public class Monitor extends ObjectBuingWithSerialAndInventary implements Serial
     private int yearCreated;
     private Date dateExploitationBegin;
     private String nameFromeOneC;
+    private String numberRoom;
     @Enumerated(EnumType.STRING)
     private BaseType baseType;
 
@@ -141,6 +142,16 @@ public class Monitor extends ObjectBuingWithSerialAndInventary implements Serial
         this.baseType = baseType;
     }
 
+    public String getNumberRoom() {
+        return numberRoom;
+    }
+
+    public void setNumberRoom(String numberRoom) {
+        this.numberRoom = numberRoom;
+    }
+
+    
+    
     @Override
     public String toString() {
         return "Monitor{" + "id=" + id + ", monitorModel=" + monitorModel + ", status=" + status + ", yearCreated=" + yearCreated + ", dateExploitationBegin=" + dateExploitationBegin + ", nameFromeOneC=" + nameFromeOneC + ", baseType=" + baseType + '}';

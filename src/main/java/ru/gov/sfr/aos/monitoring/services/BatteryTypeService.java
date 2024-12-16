@@ -25,12 +25,40 @@ public class BatteryTypeService {
         return batteryTypes;
     }
     
+    
+    public List<BatteryType> getAllActualBatteryTypes() {
+        List<BatteryType> batteryTypes = batteryTypeRepo.findByArchivedFalse();
+        return batteryTypes;
+    }
+    
     public void saveBatteryType(BatteryType batteryType) throws ObjectAlreadyExists {
         List<BatteryType> batteryTypes = batteryTypeRepo.findByTypeIgnoreCase(batteryType.getType());
         if(batteryTypes.isEmpty()) {
             batteryTypeRepo.save(batteryType);
         } else {
             throw new ObjectAlreadyExists("Такой тип батареи ИБП уже есть в базе данных");
+        }
+    }
+    
+    public void sendToArchive(Long id) throws ObjectAlreadyExists {
+        if(batteryTypeRepo.existsById(id)) {
+            BatteryType batType = batteryTypeRepo.findById(id).get();
+            batType.setArchived(true);
+            batteryTypeRepo.save(batType);
+        } else {
+            throw new ObjectAlreadyExists("Тип батареи с id:" + id + ", отсутствует в базе данных.");
+        }
+    }
+    
+    
+    public void update(BatteryType batteryType) throws ObjectAlreadyExists {
+        if(batteryTypeRepo.existsById(batteryType.getId())) {
+            if(batteryTypeRepo.existsByTypeIgnoreCase(batteryType.getType().trim())) {
+                throw new ObjectAlreadyExists(batteryType.getType() + " уже есть в базе данных.");
+            }
+            batteryTypeRepo.save(batteryType);
+        } else {
+            throw new ObjectAlreadyExists("Тип батареи с id:" + batteryType.getId() + ", отсутствует в базе данных." );
         }
     }
      

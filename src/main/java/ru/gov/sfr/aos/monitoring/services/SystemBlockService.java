@@ -34,6 +34,7 @@ import ru.gov.sfr.aos.monitoring.entities.Speakers;
 import ru.gov.sfr.aos.monitoring.entities.SystemBlock;
 import ru.gov.sfr.aos.monitoring.entities.SystemBlockModel;
 import ru.gov.sfr.aos.monitoring.entities.VideoCard;
+import ru.gov.sfr.aos.monitoring.enums.UnitHdd;
 import ru.gov.sfr.aos.monitoring.exceptions.ObjectAlreadyExists;
 import ru.gov.sfr.aos.monitoring.models.FilterDto;
 import ru.gov.sfr.aos.monitoring.models.SvtSystemBlockDTO;
@@ -100,6 +101,8 @@ public class SystemBlockService extends SvtObjService <SystemBlock, SystemBlockR
             if(systemBlockRepo.existsBySerialNumberIgnoreCase(dto.getSerialNumber())) {
                 throw new ObjectAlreadyExists("Системный блок с таким серийным номером уже есть в базе данных");
             
+        } else if(systemBlockRepo.existsByInventaryNumberIgnoreCase(dto.getInventaryNumber())) {
+            throw new ObjectAlreadyExists("Системный блок с таким инвентарным номером уже есть в базе данных");
         } else {
             SystemBlock systemBlock = new SystemBlock();
             Place place = null;
@@ -107,7 +110,7 @@ public class SystemBlockService extends SvtObjService <SystemBlock, SystemBlockR
             Motherboard motherboard = null;
             CdDrive cdDrive = null;
             Cpu cpu = null;
-            Set<Hdd> hdd = new HashSet<>();
+            Set<Hdd> hddSet = new HashSet<>();
             Keyboard keyboard = null;
             LanCard lanCard = null;
             Mouse mouse = null;
@@ -115,76 +118,156 @@ public class SystemBlockService extends SvtObjService <SystemBlock, SystemBlockR
             SoundCard soundCard = null;
             Speakers speakers = null;
             VideoCard videoCard = null;
-            
+            Hdd hdd = null;
             
             place = placeRepo.findById(dto.getPlaceId()).get();
             
+            // Модель системного блока
             if(null == dto.getModelId()) {
-                systemblockModel = new SystemBlockModel("no name");
+                if(systemBlockModelRepo.existsByModelIgnoreCase("no name")) {
+                    systemblockModel = systemBlockModelRepo.findByModelIgnoreCase("no name").get(0);
+                } else {
+                    systemblockModel = new SystemBlockModel("no name");
+                }
+                
             } else {
                 systemblockModel = systemBlockModelRepo.findById(dto.getModelId()).get();
             }
+            
+            
+            // Материнская плата
             if(null == dto.getMotherboardId()) {
-                motherboard = new Motherboard("нет");
+                if(motherboardRepo.existsByModelIgnoreCase("не указано")) {
+                    motherboard = motherboardRepo.findByModelIgnoreCase("не указано").get(0);
+                } else {
+                     motherboard = new Motherboard("не указано");
+                }
             } else {
                 motherboard = motherboardRepo.findById(dto.getMotherboardId()).get();
             }
+            
+            // Привод
             if(null == dto.getCdDriveId()) {
-                cdDrive = new CdDrive("нет");
+                if(cdDriveRepo.existsByModelIgnoreCase("не указано")) {
+                    cdDrive = cdDriveRepo.findByModelIgnoreCase("не указано").get(0);
+                } else {
+                    cdDrive = new CdDrive("не указано");
+                }
             } else {
                 cdDrive = cdDriveRepo.findById(dto.getCdDriveId()).get();
             }
             
+            
+            // Процессор
             if(null == dto.getCpuId()) {
-                cpu = new Cpu("нет");
+                if(cpuRepo.existsByModelIgnoreCase("не указано")) {
+                    cpu = cpuRepo.findByModelIgnoreCase("не указано").get(0);
+                } else {
+                    cpu = new Cpu("не указано");
+                }
             } else {
               cpu = cpuRepo.findById(dto.getCpuId()).get();  
             }
             
-            if(dto.getHddIdList().size() > 0) {
+            
+            // Жесткий диск
+            if(dto.getHddIdList().size() == 0) {
+                if(hddRepo.existsByModelIgnoreCase("не указано")) {
+                    hdd = hddRepo.findByModelIgnoreCase("не указано").get(0);
+                } else {
+                    hdd = new Hdd();
+                    hdd.setCapacity(0);
+                    hdd.setInventaryNumber("не указано");
+                    hdd.setModel("не указано");
+                    hdd.setUnit(UnitHdd.GB);
+                    hdd.setSerialNumber("не указано");
+                    hddSet.add(hdd);
+                }
+            } else {
                 for(Long el : dto.getHddIdList()) {
-                    Hdd hddFromDto = hddRepo.findById(el).get();
-                    hdd.add(hddFromDto);
+                    hdd = hddRepo.findById(el).get();
+                    hddSet.add(hdd);
                 }
             }
+            
+            // Клавиатура
             if(null == dto.getKeyboardId()) {
-                keyboard = new Keyboard("нет");
+                if(keyboardRepo.existsByModelIgnoreCase("не указано")) {
+                    keyboard = keyboardRepo.findByModelIgnoreCase("не указано").get(0);
+                } else {
+                     keyboard = new Keyboard("не указано");
+                }
             } else {
                 keyboard = keyboardRepo.findById(dto.getKeyboardId()).get();
             }
             
+            
+            // Сетевая карта
             if(null == dto.getLanCardId()) {
-                lanCard = new LanCard("нет");
+                if(lanCardRepo.existsByModelIgnoreCase("не указано")) {
+                    lanCard = lanCardRepo.findByModelIgnoreCase("не указано").get(0);
+                } else {
+                    lanCard = new LanCard("не указано");
+                }
             } else {
                 lanCard = lanCardRepo.findById(dto.getLanCardId()).get();
             }
             
+            
+            // Мышь
             if(null == dto.getMouseId()) {
-                mouse = new Mouse("нет");
+                if(mouseRepo.existsByModelIgnoreCase("не указано")) {
+                    mouse = mouseRepo.findByModelIgnoreCase("не указано").get(0);
+                } else {
+                     mouse = new Mouse("не указано");
+                }
             } else {
                 mouse = mouseRepo.findById(dto.getMouseId()).get();
             }
             
+            
+            // Оперативная память
             if(null == dto.getRamId()) {
-                ram = new Ram("нет");
+                if(ramRepo.existsByModelIgnoreCase("не указао")) {
+                    ram = ramRepo.findByModelIgnoreCase("не указано").get(0);
+                } else {
+                     ram = new Ram("не указано");
+                }
             } else {
                 ram = ramRepo.findById(dto.getRamId()).get();
             }
             
+            // Звуковая карта
             if(null == dto.getSoundCardId()) {
-                soundCard = new SoundCard("нет");
+                if(soundCardRepo.existsByModelIgnoreCase("не указано")) {
+                    soundCard = soundCardRepo.findByModelIgnoreCase("не указано").get(0);
+                } else {
+                    soundCard = new SoundCard("не указано");
+                }
             } else {
                 soundCard = soundCardRepo.findById(dto.getSoundCardId()).get();
             }
+                
             
+            // Колонки
             if(null == dto.getSpeakersId()) {
-                speakers = new Speakers("нет");
+                if(speakersRepo.existsByModelIgnoreCase("не указано")) {
+                    speakers = speakersRepo.findByModelIgnoreCase("не указано").get(0);
+                } else {
+                    speakers = new Speakers("не указано");
+                }
             } else {
                 speakers = speakersRepo.findById(dto.getSpeakersId()).get();
             }
             
+            
+            // Видеокарта
             if(null == dto.getVideoCardId()) {
-                videoCard = new VideoCard("нет");
+                if(videoCardRepo.existsByModelIgnoreCase("не указано")) {
+                    videoCard = videoCardRepo.findByModelIgnoreCase("не указано").get(0);
+                } else {
+                    videoCard = new VideoCard("не указано");
+                }
             } else {
                 videoCard = videoCardRepo.findById(dto.getVideoCardId()).get();
             }
@@ -199,7 +282,7 @@ public class SystemBlockService extends SvtObjService <SystemBlock, SystemBlockR
             systemBlock.setMotherBoard(motherboard);
             systemBlock.setCdDrive(cdDrive);
             systemBlock.setCpu(cpu);
-            systemBlock.setHdd(hdd);
+            systemBlock.setHdd(hddSet);
             systemBlock.setKeyboard(keyboard);
             systemBlock.setLanCard(lanCard);
             systemBlock.setMouse(mouse);
@@ -223,6 +306,9 @@ public class SystemBlockService extends SvtObjService <SystemBlock, SystemBlockR
                 break;
             case "DEFECTIVE":
                 systemBlock.setStatus(Status.DEFECTIVE);
+                break;
+            default: 
+                systemBlock.setStatus(Status.OK);
                 break;
         }
             systemBlock.setInventaryNumber(dto.getInventaryNumber());
@@ -257,14 +343,15 @@ public class SystemBlockService extends SvtObjService <SystemBlock, SystemBlockR
     }
 
     @Override
-    public void updateSvtObj(SvtSystemBlockDTO dto) {
-        SystemBlock systemBlockFromDB = systemBlockRepo.findById(dto.getId()).get();
-        Place place = null;
+    public void updateSvtObj(SvtSystemBlockDTO dto) throws ObjectAlreadyExists {
+        SystemBlock systemBlock = systemBlockRepo.findById(dto.getId()).get();
+      
+            Place place = null;
             SystemBlockModel systemblockModel = null;
             Motherboard motherboard = null;
             CdDrive cdDrive = null;
             Cpu cpu = null;
-            Set<Hdd> hdd = new HashSet<>();
+            Set<Hdd> hddSet = new HashSet<>();
             Keyboard keyboard = null;
             LanCard lanCard = null;
             Mouse mouse = null;
@@ -272,114 +359,247 @@ public class SystemBlockService extends SvtObjService <SystemBlock, SystemBlockR
             SoundCard soundCard = null;
             Speakers speakers = null;
             VideoCard videoCard = null;
+            Hdd hdd = null;
             place = placeRepo.findById(dto.getPlaceId()).get();
             
-             if(null == dto.getModelId()) {
-                systemblockModel = new SystemBlockModel("no name");
+            // Модель системного блока
+            if(null == dto.getModelId()) {
+                if(systemBlockModelRepo.existsByModelIgnoreCase("no name")) {
+                    systemblockModel = systemBlockModelRepo.findByModelIgnoreCase("no name").get(0);
+                } else {
+                    systemblockModel = new SystemBlockModel("no name");
+                }
             } else {
                 systemblockModel = systemBlockModelRepo.findById(dto.getModelId()).get();
             }
-             if(null == dto.getMotherboardId()) {
-                motherboard = new Motherboard("нет");
+            
+            
+            // Материнская плата
+            if(null == dto.getMotherboardId()) {
+                if(motherboardRepo.existsByModelIgnoreCase("не указано")) {
+                    motherboard = motherboardRepo.findByModelIgnoreCase("не указано").get(0);
+                } else {
+                     motherboard = new Motherboard("не указано");
+                }
             } else {
                 motherboard = motherboardRepo.findById(dto.getMotherboardId()).get();
             }
+            
+            // Привод
             if(null == dto.getCdDriveId()) {
-                cdDrive = new CdDrive("нет");
+                if(cdDriveRepo.existsByModelIgnoreCase("не указано")) {
+                    cdDrive = cdDriveRepo.findByModelIgnoreCase("не указано").get(0);
+                } else {
+                    cdDrive = new CdDrive("не указано");
+                }
             } else {
                 cdDrive = cdDriveRepo.findById(dto.getCdDriveId()).get();
             }
             
+            
+            // Процессор
             if(null == dto.getCpuId()) {
-                cpu = new Cpu("нет");
+                if(cpuRepo.existsByModelIgnoreCase("не указано")) {
+                    cpu = cpuRepo.findByModelIgnoreCase("не указано").get(0);
+                } else {
+                    cpu = new Cpu("не указано");
+                }
             } else {
               cpu = cpuRepo.findById(dto.getCpuId()).get();  
             }
             
-            if(dto.getHddIdList().size() > 0) {
+            
+            // Жесткий диск
+            if(dto.getHddIdList().size() == 0) {
+                if(hddRepo.existsByModelIgnoreCase("не указано")) {
+                    hdd = hddRepo.findByModelIgnoreCase("не указано").get(0);
+                } else {
+                    hdd = new Hdd();
+                    hdd.setCapacity(0);
+                    hdd.setInventaryNumber("не указано");
+                    hdd.setModel("не указано");
+                    hdd.setUnit(UnitHdd.GB);
+                    hdd.setSerialNumber("не указано");
+                    hddSet.add(hdd);
+                }
+            } else {
                 for(Long el : dto.getHddIdList()) {
-                    Hdd hddFromDto = hddRepo.findById(el).get();
-                    hdd.add(hddFromDto);
+                    hdd = hddRepo.findById(el).get();
+                    hddSet.add(hdd);
                 }
             }
             
+            // Клавиатура
             if(null == dto.getKeyboardId()) {
-                keyboard = new Keyboard("нет");
+                if(keyboardRepo.existsByModelIgnoreCase("не указано")) {
+                    keyboard = keyboardRepo.findByModelIgnoreCase("не указано").get(0);
+                } else {
+                     keyboard = new Keyboard("не указано");
+                }
             } else {
                 keyboard = keyboardRepo.findById(dto.getKeyboardId()).get();
             }
             
+            
+            // Сетевая карта
             if(null == dto.getLanCardId()) {
-                lanCard = new LanCard("нет");
+                if(lanCardRepo.existsByModelIgnoreCase("не указано")) {
+                    lanCard = lanCardRepo.findByModelIgnoreCase("не указано").get(0);
+                } else {
+                    lanCard = new LanCard("не указано");
+                }
             } else {
                 lanCard = lanCardRepo.findById(dto.getLanCardId()).get();
             }
+            
+            
+            // Мышь
             if(null == dto.getMouseId()) {
-                mouse = new Mouse("нет");
+                if(mouseRepo.existsByModelIgnoreCase("не указано")) {
+                    mouse = mouseRepo.findByModelIgnoreCase("не указано").get(0);
+                } else {
+                     mouse = new Mouse("не указано");
+                }
             } else {
                 mouse = mouseRepo.findById(dto.getMouseId()).get();
             }
+            
+            
+            // Оперативная память
             if(null == dto.getRamId()) {
-                ram = new Ram("нет");
+                if(ramRepo.existsByModelIgnoreCase("не указао")) {
+                    ram = ramRepo.findByModelIgnoreCase("не указано").get(0);
+                } else {
+                     ram = new Ram("не указано");
+                }
             } else {
                 ram = ramRepo.findById(dto.getRamId()).get();
             }
+            
+            // Звуковая карта
             if(null == dto.getSoundCardId()) {
-                soundCard = new SoundCard("нет");
+                if(soundCardRepo.existsByModelIgnoreCase("не указано")) {
+                    soundCard = soundCardRepo.findByModelIgnoreCase("не указано").get(0);
+                } else {
+                    soundCard = new SoundCard("не указано");
+                }
             } else {
                 soundCard = soundCardRepo.findById(dto.getSoundCardId()).get();
             }
+                
+            
+            // Колонки
             if(null == dto.getSpeakersId()) {
-                speakers = new Speakers("нет");
+                if(speakersRepo.existsByModelIgnoreCase("не указано")) {
+                    speakers = speakersRepo.findByModelIgnoreCase("не указано").get(0);
+                } else {
+                    speakers = new Speakers("не указано");
+                }
             } else {
                 speakers = speakersRepo.findById(dto.getSpeakersId()).get();
             }
+            
+            
+            // Видеокарта
             if(null == dto.getVideoCardId()) {
-                videoCard = new VideoCard("нет");
+                if(videoCardRepo.existsByModelIgnoreCase("не указано")) {
+                    videoCard = videoCardRepo.findByModelIgnoreCase("не указано").get(0);
+                } else {
+                    videoCard = new VideoCard("не указано");
+                }
             } else {
                 videoCard = videoCardRepo.findById(dto.getVideoCardId()).get();
             }
-            systemBlockFromDB.setMotherBoard(motherboard);
-            systemBlockFromDB.setCdDrive(cdDrive);
-            systemBlockFromDB.setCpu(cpu);
-            systemBlockFromDB.setHdd(hdd);
-            systemBlockFromDB.setKeyboard(keyboard);
-            systemBlockFromDB.setLanCard(lanCard);
-            systemBlockFromDB.setMouse(mouse);
-            systemBlockFromDB.setRam(ram);
-            systemBlockFromDB.setSystemBlockModel(systemblockModel);
-            systemBlockFromDB.setSoundCard(soundCard);
-            systemBlockFromDB.setSpeakers(speakers);
-            systemBlockFromDB.setVideoCard(videoCard);
+            
+            
+            for(int i = 0; i < dto.getOperationSystemId().size(); i++) {
+                OperationSystem operationSystem = operationSystemService.getOperationSystem(dto.getOperationSystemId().get(i));
+                systemBlock.getOperationSystems().add(operationSystem);
+            }
+            
+            
+            systemBlock.setMotherBoard(motherboard);
+            systemBlock.setCdDrive(cdDrive);
+            systemBlock.setCpu(cpu);
+            systemBlock.setHdd(hddSet);
+            systemBlock.setKeyboard(keyboard);
+            systemBlock.setLanCard(lanCard);
+            systemBlock.setMouse(mouse);
+            systemBlock.setRam(ram);
+            systemBlock.setSystemBlockModel(systemblockModel);
+            systemBlock.setSoundCard(soundCard);
+            systemBlock.setSpeakers(speakers);
+            systemBlock.setVideoCard(videoCard);
             switch (dto.getStatus()) {
             case "REPAIR":
-                systemBlockFromDB.setStatus(Status.REPAIR);
+                systemBlock.setStatus(Status.REPAIR);
                 break;
             case "MONITORING":
-                systemBlockFromDB.setStatus(Status.MONITORING);
+                systemBlock.setStatus(Status.MONITORING);
                 break;
             case "UTILIZATION":
-                systemBlockFromDB.setStatus(Status.UTILIZATION);
+                systemBlock.setStatus(Status.UTILIZATION);
                 break;
             case "OK":
-                systemBlockFromDB.setStatus(Status.OK);
+                systemBlock.setStatus(Status.OK);
                 break;
             case "DEFECTIVE":
-                systemBlockFromDB.setStatus(Status.DEFECTIVE);
+                systemBlock.setStatus(Status.DEFECTIVE);
+                break;
+            default: 
+                systemBlock.setStatus(Status.OK);
                 break;
         }
-            systemBlockFromDB.setInventaryNumber(dto.getInventaryNumber());
-            systemBlockFromDB.setSerialNumber(dto.getSerialNumber());
-            systemBlockFromDB.setYearCreated(dto.getYearCreated());
-            systemBlockFromDB.setDateExploitationBegin(dto.getDateExploitationBegin());
-            systemBlockFromDB.setPlace(place);
+            
+            if(systemBlockRepo.existsBySerialNumberIgnoreCase(dto.getSerialNumber())) {
+                SystemBlock checkSerial = systemBlockRepo.findBySerialNumberIgnoreCase(dto.getSerialNumber()).get(0);
+                if(dto.getId() != checkSerial.getId()) {
+                    throw new ObjectAlreadyExists("Системный блок с таким серийным номером уже есть в базе данных");
+                } else {
+                   systemBlock.setSerialNumber(dto.getSerialNumber());
+                }
+            } else {
+                systemBlock.setSerialNumber(dto.getSerialNumber());
+            } 
+                
+            if(systemBlockRepo.existsByInventaryNumberIgnoreCase(dto.getInventaryNumber())) {
+                SystemBlock checkInventary = systemBlockRepo.findByInventaryNumberIgnoreCase(dto.getInventaryNumber()).get(0);
+                if(dto.getId() != checkInventary.getId()) {
+                    throw new ObjectAlreadyExists("Системный блок с таким инвентарным номером уже есть в базе данных");
+                } else {
+                   systemBlock.setInventaryNumber(dto.getInventaryNumber());
+                }
+            } else {
+                systemBlock.setInventaryNumber(dto.getInventaryNumber());
+            } 
+            
+            systemBlock.setYearCreated(dto.getYearCreated());
+            systemBlock.setDateExploitationBegin(dto.getDateExploitationBegin());
+            systemBlock.setPlace(place);
+            
+            Contract contract = null;
+            if(contractRepo.existsByContractNumberIgnoreCase("00000000")) {
+                contract = contractRepo.findByContractNumberIgnoreCase("00000000").get();
+                Set<ObjectBuing> objectBuingFromContractDB = contract.getObjectBuing();
+                objectBuingFromContractDB.add(systemBlock);
+            } else {
+                contract = new Contract();
+                contract.setDateEndContract(Date.from(Instant.now()));
+                contract.setDateStartContract(Date.from(Instant.now()));
+                contract.setObjectBuing(new HashSet<>(Arrays.asList(systemBlock)));
+                contract.setContractNumber("00000000");
+                
+            }
+            systemBlock.setContract(contract);
+            systemBlock.setNameFromOneC(dto.getNameFromOneC());
             Set<OperationSystem> operationSystemsFromDtoes = operationSystemService.getOperationSystemsFromDtoes(dto.getOperationSystemId());
-            systemBlockFromDB.setOperationSystems(operationSystemsFromDtoes);
-            systemBlockFromDB.setIpAdress(dto.getIpAdress());
-            systemBlockFromDB.setNameFromOneC(dto.getNameFromOneC());
-            systemBlockFromDB.setDateUpgrade(dto.getDateUpgrade());
-            systemBlockFromDB.setNumberRoom(dto.getNumberRoom());
-            systemBlockRepo.save(systemBlockFromDB);
+            systemBlock.setOperationSystems(operationSystemsFromDtoes);
+            systemBlock.setIpAdress(dto.getIpAdress());
+            systemBlock.setDateUpgrade(dto.getDateUpgrade());
+            systemBlock.setNumberRoom(dto.getNumberRoom());
+            systemBlockRepo.save(systemBlock);
+            
+        
     }
 
     

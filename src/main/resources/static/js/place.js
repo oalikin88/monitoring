@@ -3,11 +3,14 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Other/javascript.js to edit this template
  */
 
-
+const modalError = document.getElementById('modalError');
+const modalErrorParent = document.getElementById('modalErrorContent');
 let addPlaceBtn = document.querySelector('#addPlaceBtn');
 let btnSavePlace = document.querySelector('#btnSavePlace');
 const modalPlace = document.getElementById("addPlaceModal");
 let modalParent = document.querySelector("#modalContent");
+let curLoc;
+let curDep;
 let dto = new Object();
 
 let handleClickSearchSvtObject = function(input) {
@@ -15,6 +18,46 @@ let handleClickSearchSvtObject = function(input) {
     
         window.location.href = request + input;
 }
+
+
+
+let getModalError = function(textError) {
+      
+    //if you have another AudioContext class use that one, as some browsers have a limit
+    modalHeader = document.createElement('div');
+    modalHeader.className = 'modal-header modalHeaderError';
+    titleModal = document.createElement('h1');
+    titleModal.className = 'modal-title fs-5';
+    titleModal.id = 'titleModal';
+    titleModal.innerText = 'Ошибка!';
+    closeHeaderButton = document.createElement('button');
+    closeHeaderButton.className = 'btn-close btn-close-white';
+    closeHeaderButton.setAttribute("data-bs-dismiss", "modal");
+    closeHeaderButton.setAttribute('aria-label', 'Закрыть');
+
+    modalErrorParent.appendChild(modalHeader);
+    modalHeader.appendChild(titleModal);
+    modalHeader.appendChild(closeHeaderButton);
+
+    modalBody = document.createElement('div');
+    modalBody.className = 'modal-body';
+    modalBody.id = 'modalBody';
+
+    modalErrorParent.append(modalBody);
+    modalFooter = document.createElement('div');
+    modalFooter.className = 'modal-footer';
+    footerBtnClose = document.createElement('button');
+    footerBtnClose.className = 'btn btn-secondary btn-sm';
+    footerBtnClose.setAttribute('data-bs-dismiss', 'modal');
+    footerBtnClose.innerText = 'Закрыть';
+
+    modalErrorParent.appendChild(modalFooter);
+    modalFooter.appendChild(footerBtnClose);
+    $("#modalBody").append(textError);
+    return new bootstrap.Modal(modalError).show();
+};
+
+
 
 let modalContentLoad = function (idPlace, placeName) {
     
@@ -238,51 +281,75 @@ let modalContentLoad = function (idPlace, placeName) {
     
     $('#locationSelect').selectize({
         preload: true,
+        persist: false,
         valueField: 'id',
         labelField: 'name',
         searchField: ["id", "name"],
-        load: function (query, callback) {
+        sortField: 'name',
+        placeholder: 'выберите район',
+        onInitialize: function () {
             $.ajax({
                 url: '/locations',
                 type: 'GET',
                 async: false,
                 dataType: 'json',
-                error: callback,
-                success: callback
-            });
-            if(null != idPlace) {
+                error: function (res) {
+                    console.log(res);
+                },
+                success: function (res) {
+                    let keys = Object.keys($('#locationSelect')[0].selectize.options);
+                    for (let i = 0; i < keys.length; i++) {
+                        $('#locationSelect')[0].selectize.removeOption(keys[i]);
+                    }
+                    res.forEach(model => {
+                        $('#locationSelect')[0].selectize.addOption(model);
+                        $('#locationSelect')[0].selectize.addItem(model);
+                    });
+                        if(null != idPlace) {
+                            $('#locationSelect')[0].selectize.setValue($('#locationSelect')[0].selectize.search(dto.locationId).items[0].id);
+                        } else {
+                        $('#locationSelect')[0].selectize.setValue($('#locationSelect')[0].selectize.search(0).items[0].id);
+                        }
+                    }
                 
-            $('#locationSelect')[0].selectize.setValue( $('#locationSelect')[0].selectize.search(dto.locationId).items[0].id);
-            } else {
-            
-            $('#locationSelect')[0].selectize.setValue( $('#locationSelect')[0].selectize.search(0).items[0].id);
-            }
-            
-           // 
+            });
+           
         }
 
     });
     
      $('#departmentSelect').selectize({
         preload: true,
+        persist: false,
         valueField: 'code',
         labelField: 'name',
+        sortField: 'name',
         searchField: ["code", "name"],
-        load: function (query, callback) {
-            $.ajax({
+        onInitialize: function () {
+          $.ajax({
                 url: '/departments',
                 type: 'GET',
                 async: false,
                 dataType: 'json',
-                error: callback,
-                success: callback
+                error: function(res) {
+                  console.log(res);  
+                },
+                success: function (res) {
+                    let keys = Object.keys($('#departmentSelect')[0].selectize.options);
+                    for (let i = 0; i < keys.length; i++) {
+                        $('#departmentSelect')[0].selectize.removeOption(keys[i]);
+                    }
+                    res.forEach(model => {
+                        $('#departmentSelect')[0].selectize.addOption(model);
+                        $('#departmentSelect')[0].selectize.addItem(model);
+                    });
+                        if(null != idPlace) {
+                            $('#departmentSelect')[0].selectize.setValue($('#departmentSelect')[0].selectize.search(dto.departmentCode).items[0].id);
+                        } else {
+                        $('#departmentSelect')[0].selectize.setValue($('#departmentSelect')[0].selectize.search(0).items[0].id);
+                    }          
+                }
             });
-            if(null != idPlace) {
-                
-                $('#departmentSelect')[0].selectize.setValue($('#departmentSelect')[0].selectize.search(dto.departmentCode).items[0].id);
-            } else {
-                $('#departmentSelect')[0].selectize.setValue($('#departmentSelect')[0].selectize.search(0).items[0].id);
-            }
             
         }
 
@@ -291,23 +358,37 @@ let modalContentLoad = function (idPlace, placeName) {
     
     $('#employeeSelect').selectize({
         preload: true,
+        persist: false,
         valueField: 'name',
         labelField: 'name',
+        sortField: 'name',
         searchField: ["code", "name"],
-        load: function (query, callback) {
+        onInitialize: function () {
              $.ajax({
                 url: '/getinfooo',
                 type: 'GET',
                 async: false,
                 dataType: 'json',
-                error: callback,
-                success: callback
+                error: function(res) {
+                    console.log(res);
+                },
+                success: function(res) {
+                    let keys = Object.keys($('#employeeSelect')[0].selectize.options);
+                    for (let i = 0; i < keys.length; i++) {
+                        $('#employeeSelect')[0].selectize.removeOption(keys[i]);
+                    }
+                    res.forEach(model => {
+                        $('#employeeSelect')[0].selectize.addOption(model);
+                        $('#employeeSelect')[0].selectize.addItem(model);
+                    });
+                    if(null != idPlace) {
+                        $('#employeeSelect')[0].selectize.setValue($('#employeeSelect')[0].selectize.search(dto.username).items[0].id);
+                    } else {
+                        $('#employeeSelect')[0].selectize.setValue($('#employeeSelect')[0].selectize.search(0).items[0].id);
+                    }
+                }
             });
-            if(null != idPlace) {
-            $('#employeeSelect')[0].selectize.setValue($('#employeeSelect')[0].selectize.search(dto.username).items[0].id);
-            } else{
-               $('#employeeSelect')[0].selectize.setValue($('#employeeSelect')[0].selectize.search(0).items[0].id);
-            }
+            
             
         }
 
@@ -316,27 +397,22 @@ let modalContentLoad = function (idPlace, placeName) {
     if($("#archivedBtn")[0] != null) {
         $("#archivedBtn")[0].addEventListener("click", function() {
             
-            let outDto = {
-            placeId: idPlace,
-            placeType : document.querySelector('#placeTypeSelect').value,
-            locationId : document.querySelector('#locationSelect').value,
-            departmentCode : document.querySelector('#departmentSelect').value,
-            department : $('#departmentSelect')[0].selectize.$control[0].innerText,
-            username : document.querySelector('#employeeSelect').value
+            let dto = {
+            id: idPlace
+            
         };
         
         
          $.ajax({
-        type: "POST",
+        type: "DELETE",
         url: "/placetoarchive",
-        data: JSON.stringify(outDto),
+        data: JSON.stringify(dto),
         async: false,
-        success: function () {
-            
+        success: function (res) {
                     window.location.reload();
         },
-        error: function(callback) {
-                    console.log(callback);
+        error: function(res) {
+                    console.log(res);
   }, 
         processData: false,
         contentType: 'application/json'
@@ -359,25 +435,16 @@ let modalContentLoad = function (idPlace, placeName) {
             username : document.querySelector('#employeeSelect').value
         };
                 $.ajax({
-        type: "POST",
+        type: "PUT",
         url: "/places/",
         data: JSON.stringify(outDto),
         async: false,
-        success: function () {
-            
+        success: function (res) {
+            console.log(res);
             window.location.reload();
         },
         error: function(callback) {
-            if($('#exceptionContainer').length == 0) {
-             $('#modalBody').append(callback.responseText);
-         } else {
-             
-             $('#exceptionContainer').replaceWith(callback.responseText);
-            
-         }
-
-            new bootstrap.Modal(document.getElementById('modalError')).show();
-           // $('#resultInfo').append(callback.responseText);
+          getModalError(callback.responseText);
   }, 
         processData: false,
         contentType: 'application/json'
@@ -403,21 +470,12 @@ let modalContentLoad = function (idPlace, placeName) {
         url: "/places/",
         data: JSON.stringify(outDto),
         async: false,
-        success: function () {
-            
+        success: function (res) {
+            console.log(res);
             window.location.reload();
         },
         error: function(callback) {
-            if($('#exceptionContainer').length == 0) {
-             $('#modalBody').append(callback.responseText);
-         } else {
-             
-             $('#exceptionContainer').replaceWith(callback.responseText);
-            
-         }
-
-            new bootstrap.Modal(document.getElementById('modalError')).show();
-           // $('#resultInfo').append(callback.responseText);
+            getModalError(callback.responseText);
   }, 
         processData: false,
         contentType: 'application/json'
@@ -532,6 +590,12 @@ let modalContentLoad = function (idPlace, placeName) {
 //});
 
 window.onload = function() {
+    
+      modalError.addEventListener('hidden.bs.modal', function (event) {
+         modalErrorParent.innerHTML = "";
+     });      
+    
+    
     let elem = document.querySelectorAll('.element');
     $("#searchSvtObjBtn")[0].addEventListener("click", function() {
         handleClickSearchSvtObject($("#searchSvtObjInput")[0].value);
@@ -550,6 +614,12 @@ window.onload = function() {
     
     modalPlace.addEventListener('hidden.bs.modal', function(event) {
         modalParent.innerHTML = "";
+    });
+    
+    $('#searchSvtObjInput').keyup(function (event) {
+        if (event.keyCode === 13) {
+            $("#searchSvtObjBtn")[0].click();
+        }
     });
     
 //   window.addEventListener('scroll', function() {

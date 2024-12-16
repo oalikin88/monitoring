@@ -29,6 +29,7 @@ public class Phone extends ObjectBuingWithSerialAndInventary implements Serializ
     private Date dateExploitationBegin;
     private String phoneNumber;
     private String nameFromeOneC;
+    private String numberRoom;
 
      public Phone() {
     }
@@ -147,6 +148,16 @@ public class Phone extends ObjectBuingWithSerialAndInventary implements Serializ
         this.nameFromeOneC = nameFromeOneC;
     }
 
+    public String getNumberRoom() {
+        return numberRoom;
+    }
+
+    public void setNumberRoom(String numberRoom) {
+        this.numberRoom = numberRoom;
+    }
+
+    
+    
     @Override
     public String toString() {
         return "Phone{" + "id=" +this.id + "serial=" + this.serialNumber + ", inventary=" + this.inventaryNumber + ", phoneModel=" + phoneModel + ", yearCreated=" + yearCreated + ", dateExploitationBegin=" + dateExploitationBegin + ", phoneNumber=" + phoneNumber + ", nameFromeOneC=" + nameFromeOneC + '}';

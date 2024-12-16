@@ -26,6 +26,7 @@ import ru.gov.sfr.aos.monitoring.entities.Place;
 import ru.gov.sfr.aos.monitoring.entities.Ram;
 import ru.gov.sfr.aos.monitoring.entities.Server;
 import ru.gov.sfr.aos.monitoring.entities.ServerModel;
+import ru.gov.sfr.aos.monitoring.enums.UnitHdd;
 import ru.gov.sfr.aos.monitoring.exceptions.ObjectAlreadyExists;
 import ru.gov.sfr.aos.monitoring.models.FilterDto;
 import ru.gov.sfr.aos.monitoring.models.SvtServerDTO;
@@ -65,63 +66,111 @@ public class ServerService extends SvtObjService <Server, ServerRepo, SvtServerD
     @Override
     public void createSvtObj(SvtServerDTO dto) throws ObjectAlreadyExists {
 
-            if(serverRepo.existsBySerialNumberIgnoreCase(dto.getSerialNumber())) {
+            if(serverRepo.existsBySerialNumberIgnoreCase(dto.getSerialNumber().trim())) {
                 throw new ObjectAlreadyExists("Сервер с таким серийным номером уже есть в базе данных");
-            
+        } else if(serverRepo.existsByInventaryNumberIgnoreCase(dto.getInventaryNumber().trim())) {
+            throw new ObjectAlreadyExists("Сервер с таким инвентарным номером уже есть в базе данных");
         }else {
                 Server server = new Server();
                 Place place = null;
                 ServerModel serverModel = null;
                 Contract contract = null;
                 Cpu cpu = null;
-                Set<Hdd> hddList = new HashSet<>();
+                Set<Hdd> hddSet = new HashSet<>();
                 Set<OperationSystem> operatingSystemList = new HashSet<>();
                 Ram ram = null;
+                Hdd hdd = null;
                 place = placeRepo.findById(dto.getPlaceId()).get();
-                cpu = cpuRepo.findById(dto.getCpuId()).get();
-                serverModel = serverModelRepo.findById(dto.getModelId()).get();
-                ram = ramRepo.findById(dto.getRamId()).get();
-                if(dto.getHddIdList().size() > 0) {
-                    for(Long el : dto.getHddIdList()) {
-                        Hdd hddFromDto = hddRepo.findById(el).get();
-                        hddList.add(hddFromDto);
-                    }
+                
+                // Процессор
+            if(null == dto.getCpuId()) {
+                if(cpuRepo.existsByModelIgnoreCase("не указано")) {
+                    cpu = cpuRepo.findByModelIgnoreCase("не указано").get(0);
+                } else {
+                    cpu = new Cpu("не указано");
                 }
+            } else {
+              cpu = cpuRepo.findById(dto.getCpuId()).get();  
+            }
+                
+                if(null == dto.getModelId()) {
+                    if(serverModelRepo.existsByModelIgnoreCase("no name")) {
+                        serverModel = serverModelRepo.findByModelIgnoreCase("no name").get(0);
+                    } else {
+                        serverModel = new ServerModel("no name");
+                    }
+                } else {
+                    serverModel = serverModelRepo.findById(dto.getModelId()).get();
+                }
+                
+                // Оперативная память
+            if(null == dto.getRamId()) {
+                if(ramRepo.existsByModelIgnoreCase("не указао")) {
+                    ram = ramRepo.findByModelIgnoreCase("не указано").get(0);
+                } else {
+                     ram = new Ram("не указано");
+                }
+            } else {
+                ram = ramRepo.findById(dto.getRamId()).get();
+            }
+                
+                // Жесткий диск
+            if(dto.getHddIdList().size() == 0) {
+                if(hddRepo.existsByModelIgnoreCase("не указано")) {
+                    hdd = hddRepo.findByModelIgnoreCase("не указано").get(0);
+                } else {
+                    hdd = new Hdd();
+                    hdd.setCapacity(0);
+                    hdd.setInventaryNumber("не указано");
+                    hdd.setModel("не указано");
+                    hdd.setUnit(UnitHdd.GB);
+                    hdd.setSerialNumber("не указано");
+                    hddSet.add(hdd);
+                }
+            } else {
+                for(Long el : dto.getHddIdList()) {
+                    hdd = hddRepo.findById(el).get();
+                    hddSet.add(hdd);
+                }
+            }
                 if(dto.getOperationSystemId().size() > 0) {
                     for(Long el : dto.getOperationSystemId()) {
                         OperationSystem osFromDto = operationSystemRepo.findById(el).get();
                         operatingSystemList.add(osFromDto);
                     }
                 }
+                
                 switch (dto.getStatus()) {
-            case "REPAIR":
-                server.setStatus(Status.REPAIR);
-                break;
-            case "MONITORING":
-                server.setStatus(Status.MONITORING);
-                break;
-            case "UTILIZATION":
-                server.setStatus(Status.UTILIZATION);
-                break;
-            case "OK":
-                server.setStatus(Status.OK);
-                break;
-            case "DEFECTIVE":
-                server.setStatus(Status.DEFECTIVE);
-                break;
-        }
+                    case "REPAIR":
+                        server.setStatus(Status.REPAIR);
+                        break;
+                    case "MONITORING":
+                        server.setStatus(Status.MONITORING);
+                        break;
+                    case "UTILIZATION":
+                        server.setStatus(Status.UTILIZATION);
+                        break;
+                    case "OK":
+                        server.setStatus(Status.OK);
+                        break;
+                    case "DEFECTIVE":
+                        server.setStatus(Status.DEFECTIVE);
+                        break;
+                }
+                
                 server.setCpu(cpu);
                 server.setCpuAmount(dto.getCpuAmount());
                 server.setDateExploitationBegin(dto.getDateExploitationBegin());
                 server.setDateUpgrade(dto.getDateUpgrade());
                 server.setYearCreated(dto.getYearCreated());
-                server.setHdd(hddList);
+                server.setHdd(hddSet);
                 server.setOperationSystems(operatingSystemList);
                 server.setInventaryNumber(dto.getInventaryNumber());
                 server.setSerialNumber(dto.getSerialNumber());
                 server.setServerModel(serverModel);
                 server.setRam(ram);
                 server.setPlace(place);
+                
                 if(contractRepo.existsByContractNumberIgnoreCase("00000000")) {
                 contract = contractRepo.findByContractNumberIgnoreCase("00000000").get();
                 Set<ObjectBuing> objectBuingFromContractDB = contract.getObjectBuing();
@@ -144,25 +193,71 @@ public class ServerService extends SvtObjService <Server, ServerRepo, SvtServerD
     }
 
     @Override
-    public void updateSvtObj(SvtServerDTO dto) {
+    public void updateSvtObj(SvtServerDTO dto) throws ObjectAlreadyExists {
         Server server = serverRepo.findById(dto.getId()).get();
         Place place = null;
                 ServerModel serverModel = null;
                 Contract contract = null;
                 Cpu cpu = null;
-                Set<Hdd> hddList = new HashSet<>();
+                Set<Hdd> hddSet = new HashSet<>();
                 Set<OperationSystem> operatingSystemList = new HashSet<>();
                 Ram ram = null;
                 place = placeRepo.findById(dto.getPlaceId()).get();
-                cpu = cpuRepo.findById(dto.getCpuId()).get();
-                serverModel = serverModelRepo.findById(dto.getModelId()).get();
-                ram = ramRepo.findById(dto.getRamId()).get();
-                if(dto.getHddIdList().size() > 0) {
-                    for(Long el : dto.getHddIdList()) {
-                        Hdd hddFromDto = hddRepo.findById(el).get();
-                        hddList.add(hddFromDto);
-                    }
+                Hdd hdd = null;
+                
+                   // Процессор
+            if(null == dto.getCpuId()) {
+                if(cpuRepo.existsByModelIgnoreCase("не указано")) {
+                    cpu = cpuRepo.findByModelIgnoreCase("не указано").get(0);
+                } else {
+                    cpu = new Cpu("не указано");
                 }
+            } else {
+              cpu = cpuRepo.findById(dto.getCpuId()).get();  
+            }
+                
+                 if(null == dto.getModelId()) {
+                    if(serverModelRepo.existsByModelIgnoreCase("no name")) {
+                        serverModel = serverModelRepo.findByModelIgnoreCase("no name").get(0);
+                    } else {
+                        serverModel = new ServerModel("no name");
+                    }
+                } else {
+                    serverModel = serverModelRepo.findById(dto.getModelId()).get();
+                }
+                
+                 // Оперативная память
+            if(null == dto.getRamId()) {
+                if(ramRepo.existsByModelIgnoreCase("не указао")) {
+                    ram = ramRepo.findByModelIgnoreCase("не указано").get(0);
+                } else {
+                     ram = new Ram("не указано");
+                }
+            } else {
+                ram = ramRepo.findById(dto.getRamId()).get();
+            }
+                
+                
+                   // Жесткий диск
+            if(dto.getHddIdList().size() == 0) {
+                if(hddRepo.existsByModelIgnoreCase("не указано")) {
+                    hdd = hddRepo.findByModelIgnoreCase("не указано").get(0);
+                } else {
+                    hdd = new Hdd();
+                    hdd.setCapacity(0);
+                    hdd.setInventaryNumber("не указано");
+                    hdd.setModel("не указано");
+                    hdd.setUnit(UnitHdd.GB);
+                    hdd.setSerialNumber("не указано");
+                    hddSet.add(hdd);
+                }
+            } else {
+                for(Long el : dto.getHddIdList()) {
+                    hdd = hddRepo.findById(el).get();
+                    hddSet.add(hdd);
+                }
+            }
+            
                 if(dto.getOperationSystemId().size() > 0) {
                     for(Long el : dto.getOperationSystemId()) {
                         OperationSystem osFromDto = operationSystemRepo.findById(el).get();
@@ -191,10 +286,32 @@ public class ServerService extends SvtObjService <Server, ServerRepo, SvtServerD
                 server.setDateExploitationBegin(dto.getDateExploitationBegin());
                 server.setDateUpgrade(dto.getDateUpgrade());
                 server.setYearCreated(dto.getYearCreated());
-                server.setHdd(hddList);
+                server.setHdd(hddSet);
                 server.setOperationSystems(operatingSystemList);
-                server.setInventaryNumber(dto.getInventaryNumber());
+                
+                if(serverRepo.existsBySerialNumberIgnoreCase(dto.getSerialNumber())) {
+                Server checkSerial = serverRepo.findBySerialNumberIgnoreCase(dto.getSerialNumber()).get(0);
+                if(dto.getId() != checkSerial.getId()) {
+                    throw new ObjectAlreadyExists("Сервер с таким серийным номером уже есть в базе данных");
+                } else {
+                   server.setSerialNumber(dto.getSerialNumber());
+                }
+            } else {
                 server.setSerialNumber(dto.getSerialNumber());
+            } 
+                
+                
+                if(serverRepo.existsByInventaryNumberIgnoreCase(dto.getInventaryNumber())) {
+                Server checkInventary = serverRepo.findByInventaryNumberIgnoreCase(dto.getInventaryNumber()).get(0);
+                if(dto.getId() != checkInventary.getId()) {
+                    throw new ObjectAlreadyExists("Сервер с таким инвентарным номером уже есть в базе данных");
+                } else {
+                   server.setInventaryNumber(dto.getInventaryNumber());
+                }
+            } else {
+                server.setInventaryNumber(dto.getInventaryNumber());
+            } 
+                
                 server.setServerModel(serverModel);
                 server.setRam(ram);
                 if(contractRepo.existsByContractNumberIgnoreCase("00000000")) {

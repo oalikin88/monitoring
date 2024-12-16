@@ -13,6 +13,9 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import ru.gov.sfr.aos.monitoring.dictionaries.PlaceType;
 
 /**
@@ -25,11 +28,16 @@ public class Place {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     private Long id;
+    @NotBlank(message = "Поле \"ФИО\" не должно быть пустым")
+    @NotEmpty(message = "Поле \"ФИО\" не должно быть пустым")
     private String username;
     @Enumerated(EnumType.STRING)
     private PlaceType placeType;
+    @NotNull(message = "Поле \"Район\" не должно быть пустым")
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Location location;
+    @NotBlank(message = "Поле \"Отдел\" не должно быть пустым")
+    @NotEmpty(message = "Поле \"Отдел\" не должно быть пустым")
     private String department;
     private String departmentCode;
     private boolean archived;

@@ -17,6 +17,9 @@ import ru.gov.sfr.aos.monitoring.entities.Monitor;
 @Repository
 public interface MonitorRepo extends ObjectBuingWithSerialAndInventaryRepo <Monitor> {
     boolean existsBySerialNumberIgnoreCase(String serialNumber);
+    boolean existsByInventaryNumberIgnoreCase(String inventaryNumber);
+    List<Monitor> findBySerialNumberIgnoreCase(String serialNumber);
+    List<Monitor> findByInventaryNumberIgnoreCase(String inventaryNumber);
     List<Monitor> findByPlacePlaceTypeLikeAndArchivedFalse(PlaceType placeType);
     
    @Query(value = "SELECT monitor.*, ob.*, monitor_model.*, place.* "

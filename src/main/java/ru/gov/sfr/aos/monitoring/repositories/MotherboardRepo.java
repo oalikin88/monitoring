@@ -4,6 +4,7 @@
  */
 package ru.gov.sfr.aos.monitoring.repositories;
 
+import java.util.List;
 import org.springframework.stereotype.Repository;
 import ru.gov.sfr.aos.monitoring.entities.Motherboard;
 
@@ -13,5 +14,7 @@ import ru.gov.sfr.aos.monitoring.entities.Motherboard;
  */
 @Repository
 public interface MotherboardRepo extends SvtModelsRepo<Motherboard>{
+    boolean existsByModelIgnoreCase(String model);
+    List<Motherboard> findByModelIgnoreCase(String model);
     
 }

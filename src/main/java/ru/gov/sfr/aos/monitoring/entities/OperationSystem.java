@@ -22,6 +22,7 @@ public class OperationSystem {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String model;
+    private boolean archived;
     private boolean license;
     @ManyToMany(mappedBy = "operationSystems")
     private Set<SystemBlock> systemBlocks = new HashSet<>();
@@ -68,9 +69,19 @@ public class OperationSystem {
         this.systemBlocks = systemBlocks;
     }
 
+    public boolean isArchived() {
+        return archived;
+    }
+
+    public void setArchived(boolean archived) {
+        this.archived = archived;
+    }
+
+    
+    
     @Override
     public String toString() {
-        return "OperationSystem{" + "id=" + id + ", model=" + model + ", license=" + license + ", systemBlocks=" + systemBlocks + '}';
+        return "OperationSystem{" + "id=" + id + ", model=" + model + ", license=" + license + ", systemBlocks=" + systemBlocks + ", archived=" + archived + '}';
     }
     
     

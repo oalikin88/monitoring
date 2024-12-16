@@ -30,6 +30,7 @@ public abstract class MonitorMapper implements SvtMapper<Monitor, SvtDTO> {
     @Mapping(source = "place.location.id", target = "locationId")
     @Mapping(source = "baseType", target = "baseType")
     @Mapping(source = "nameFromeOneC", target = "nameFromOneC")
+    @Mapping(source = "numberRoom", target = "numberRoom")
     public abstract SvtDTO getDto(Monitor monitor);
     
     @Mapping(target = "contract", expression = "java(monitorRepo.findById(dto.getId()).get().getContract())")
@@ -42,5 +43,6 @@ public abstract class MonitorMapper implements SvtMapper<Monitor, SvtDTO> {
     @Mapping(target = "place.location.id", source = "locationId")
     @Mapping(target = "baseType", source = "baseType")
     @Mapping(target = "nameFromeOneC", source = "nameFromOneC")
+    @Mapping(target = "numberRoom", source = "numberRoom")
     public abstract Monitor getEntityFromDto(SvtDTO dto);
 }

@@ -1,6 +1,7 @@
 <html>
     <body> 
         <aside id="sidebar" th:fragment="sidebar">
+            <div class="wrap" id="wrap">
             <div class="d-flex">
                 <button id="toggle-btn" type="button">
                     <i class="lni lni-grid-alt"></i>
@@ -65,7 +66,7 @@
                     </ul>
                 </li>
 
-                <li class="sidebar-item">
+                <li class="sidebar-item" id="li-office">
                     <a href="#" class="sidebar-link has-dropdown collapsed" data-bs-toggle="collapse" 
                        data-bs-target="#officeEquipment" aria-expanded="false" aria-controls="officeEquipment">
                         <i class="lni lni-printer"></i>
@@ -124,7 +125,7 @@
 
                 </li>
 
-                <li class="sidebar-item">
+                <li class="sidebar-item" id="li-dictionaries">
                     <a href="#" class="sidebar-link has-dropdown collapsed" data-bs-toggle="collapse" 
                        data-bs-target="#dictionaries" aria-expanded="false" aria-controls="dictionaries">
                         <i class="lni lni-library"></i>
@@ -175,9 +176,9 @@
                         <li class="sidebar-item">
                             <a href="/minfomat" class="sidebar-link">Инфоматы</a>
                         </li>
-                        <li class="sidebar-item">
+<!--                        <li class="sidebar-item">
                             <a href="/contr" class="sidebar-link">Контракты</a>
-                        </li>
+                        </li>-->
                         
                         <li class="sidebar-item">
                             <a href="/os" class="sidebar-link">Операционные системы</a>
@@ -272,7 +273,7 @@
                     </ul>
                 </li>
 
-                <li class="sidebar-item">
+                <li class="sidebar-item" id="li-storage">
                     <a href="#" class="sidebar-link has-dropdown collapsed" data-bs-toggle="collapse" 
                        data-bs-target="#storage" aria-expanded="false" aria-controls="storage">
                         <i class="lni lni-package"></i>
@@ -295,6 +296,7 @@
                         <span>Выйти</span>
                     </a>
                 </div>-->
+            </div>>
         </aside>
         
     </body>

@@ -9,8 +9,20 @@ package ru.gov.sfr.aos.monitoring.dictionaries;
  * @author 041AlikinOS
  */
 public enum ConditionerType {
-    WINDOW,
-    WALL,
-    CEILING,
-    FLOOR
+    WINDOW("оконный"),
+    WALL("настенный"),
+    CEILING("потолочный"),
+    FLOOR("напольный");
+    
+    private String conditionerType;
+    
+    private ConditionerType(String conditionerType) {
+        this.conditionerType = conditionerType;
+    }
+
+    public String getConditionerTypeString() {
+        return conditionerType;
+    }
+    
+    
 }

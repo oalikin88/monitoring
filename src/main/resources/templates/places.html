@@ -29,7 +29,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                        <button type="button" class="btn btn-primary btn-sm" id="addPlaceBtn" data-bs-toggle="modal" data-bs-target="#addPlaceModal">Добавить</button>
                    </div>
                    <div class="col-8">
-                        <div class="input-group mb-3" id="searchSvtObjDiv">
+                        <div class="input-group" id="searchSvtObjDiv">
                             <input type="text" class="form-control form-control-sm" placeholder="Поиск по ФИО" aria-label="searchModel" aria-describedby="basic-addon1" id="searchSvtObjInput">
                             <span class="input-group-text" id="searchSvtObjBtn">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16"><path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"></path>
@@ -66,67 +66,23 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                
             </div>
         </div>
-         
+        
         
         <!-- Modal add place -->
 <div class="modal fade" id="addPlaceModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered modal-lg">
     <div class="modal-content" id="modalContent">
-<!--      <div class="modal-header">
-        <h5 class="modal-title fs-5" id="exampleModalLabel">Добавление рабочего места</h5>
-        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-          <div class="container">
-              
-              <div class="row">
-                  <div class="col">Тип рабочего места</div>
-                  <div class="col">
-                      <select class="form-select form-select-sm" id="placeTypeSelect" aria-label="Default select example" >
-                        <option value="Сотрудник" selected>Сотрудник</option>
-                        <option value="Серверная">Серверная</option>
-                        <option value="Оргтехника">Оргтехника</option>
-                        <option value="Склад">Склад</option>
-                      </select>
-                  </div>
-              </div>
-              <div class="row mt-2">
-                  <div class="col">Район</div>
-                  <div class="col">
-                      <select class="form-select form-select-sm" id="locationSelect" aria-label="Default select example" >
-                      </select>
-                  </div>
-              </div>
-              <div class="row mt-2">
-                  <div class="col">Отдел</div>
-                  <div class="col">
-                      <select class="form-select form-select-sm" id="departmentSelect" aria-label="Default select example" >
-                      </select>
-                  </div>
-              </div>
-              <div class="row mt-2">
-                  <div class="col">ФИО</div>
-                  <div class="col">
-                      <select class="form-select form-select-sm" id="employeeSelect" aria-label="Default select example" >
-                      </select>
-                  </div>
-              </div>
-              
-          </div>
-          </div>
-     
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary btn-sm"  data-bs-dismiss="modal">Отменить</button>
-        <button type="button" class="btn btn-primary btn-sm" id="btnSavePlace" >Сохранить</button>
-      </div>-->
-                
-    
-          
-           
         </div>
-     
   </div>
 </div>
+        
+                    <!-- Модальное окно error-->
+        <div class="modal fade" id="modalError" data-bs-backdrop="static" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-error">
+                <div class="modal-content" id="modalErrorContent">
+                </div>
+            </div>
+        </div>
         
          <script src="/js/bootstrap.bundle.min.js"></script>
         <script src="/js/main_svt.js"></script>

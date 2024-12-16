@@ -10,6 +10,7 @@ package ru.gov.sfr.aos.monitoring.models;
  */
 public class PlaceDTO {
     private Long placeId;
+    private Long modelId;
     private String username;
     private String placeType;
     private Long locationId;
@@ -85,6 +86,16 @@ public class PlaceDTO {
     public void setDepartmentCode(String departmentCode) {
         this.departmentCode = departmentCode;
     }
+
+    public Long getModelId() {
+        return modelId;
+    }
+
+    public void setModelId(Long modelId) {
+        this.modelId = modelId;
+    }
+    
+    
 
     @Override
     public String toString() {

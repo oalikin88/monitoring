@@ -109,6 +109,6 @@ public abstract class SvtObjService <E extends ObjectBuingWithSerialAndInventary
           
         public abstract void createSvtObj(D dto) throws ObjectAlreadyExists;
         
-        public abstract void updateSvtObj(D dto);
+        public abstract void updateSvtObj(D dto) throws ObjectAlreadyExists;
     
 }

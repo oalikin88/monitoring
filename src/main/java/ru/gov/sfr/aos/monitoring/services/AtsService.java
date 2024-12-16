@@ -49,15 +49,30 @@ public class AtsService extends SvtObjService <Ats, AtsRepo, SvtAtsDTO> {
     
     @Override
     public void createSvtObj(SvtAtsDTO dto) throws ObjectAlreadyExists {
-         
-            if(atsRepo.existsBySerialNumberIgnoreCase(dto.getSerialNumber())) {
+    AtsModel atsModel = null;
+    
+            if(atsRepo.existsBySerialNumberIgnoreCase(dto.getSerialNumber().trim())) {
                  throw new ObjectAlreadyExists("Маршрутизатор с таким серийным номером уже есть в базе данных");
             
+    }else if(atsRepo.existsByInventaryNumberIgnoreCase(dto.getInventaryNumber().trim())){
+        throw new ObjectAlreadyExists("Маршрутизатор с таким инвентарным номером уже есть в базе данных");
     } else {
             
             Ats ats = new Ats();
             Place place = placeRepo.findById(dto.getPlaceId()).get();
-            AtsModel atsModel = atsModelRepo.findById(dto.getModelId()).get();
+            
+            if(null == dto.getModelId()) {
+                if(atsModelRepo.existsByModelIgnoreCase("не указано")) {
+                    atsModel = atsModelRepo.findByModelIgnoreCase("не указано").get(0);
+                } else {
+                    atsModel = new AtsModel();
+                    atsModel.setModel("не указано");
+                }
+            } else {
+                atsModel = atsModelRepo.findById(dto.getModelId()).get();
+            }
+            
+            
             ats.setInventaryNumber(dto.getInventaryNumber());
             ats.setSerialNumber(dto.getSerialNumber());
             ats.setPlace(place);
@@ -110,12 +125,43 @@ public class AtsService extends SvtObjService <Ats, AtsRepo, SvtAtsDTO> {
     }
 
     @Override
-    public void updateSvtObj(SvtAtsDTO dto) {
+    public void updateSvtObj(SvtAtsDTO dto) throws ObjectAlreadyExists {
+        AtsModel atsModel = null;
         Ats ats = atsRepo.findById(dto.getId()).get();
         Place place = placeRepo.findById(dto.getPlaceId()).get();
-            AtsModel atsModel = atsModelRepo.findById(dto.getModelId()).get();
-            ats.setInventaryNumber(dto.getInventaryNumber());
-            ats.setSerialNumber(dto.getSerialNumber());
+        
+            if(null == dto.getModelId()) {
+                if(atsModelRepo.existsByModelIgnoreCase("не указано")) {
+                    atsModel = atsModelRepo.findByModelIgnoreCase("не указано").get(0);
+                } else {
+                    atsModel = new AtsModel();
+                    atsModel.setModel("не указано");
+                }
+            } else {
+                atsModel = atsModelRepo.findById(dto.getModelId()).get();
+            }
+            
+            if(atsRepo.existsByInventaryNumberIgnoreCase(dto.getInventaryNumber().trim())) {
+                Ats checkInventary = atsRepo.findByInventaryNumberIgnoreCase(dto.getInventaryNumber().trim()).get(0);
+                if(checkInventary.getId() != dto.getId()) {
+                    throw new ObjectAlreadyExists("АТС с таким инвентарным номером уже есть в базе данных");
+                } else {
+                    ats.setInventaryNumber(dto.getInventaryNumber().trim());
+                }
+            } else {
+                ats.setInventaryNumber(dto.getInventaryNumber().trim());
+            }
+            
+            if(atsRepo.existsBySerialNumberIgnoreCase(dto.getSerialNumber().trim())) {
+                Ats checkSerial = atsRepo.findBySerialNumberIgnoreCase(dto.getSerialNumber().trim()).get(0);
+                if(checkSerial.getId() != dto.getId()) {
+                    throw new ObjectAlreadyExists("АТС с таким серийным номером уже есть в базе данных");
+                } else {
+                    ats.setSerialNumber(dto.getSerialNumber().trim());
+                }
+            } else {
+                ats.setSerialNumber(dto.getSerialNumber().trim());
+            }
             ats.setPlace(place);
              ats.setAtsModel(atsModel);
              switch (dto.getStatus()) {

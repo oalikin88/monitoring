@@ -17,4 +17,5 @@ import ru.gov.sfr.aos.monitoring.entities.SvtModel;
 public interface SvtModelsRepo <E extends SvtModel> extends JpaRepository <E, Long> {
     List<E> findByModelIgnoreCase(String model);
     List<E> findByArchivedFalse();
+    boolean existsByModelIgnoreCase(String model);
 }

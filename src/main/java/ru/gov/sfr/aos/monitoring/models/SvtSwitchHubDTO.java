@@ -23,7 +23,13 @@ public class SvtSwitchHubDTO extends SvtDTO {
     }
 
     public String getSwitchHubType() {
-        return switchHubType;
+        String result= "";
+        if(null == switchHubType) {
+            result = "не указан";
+        } else {
+            result = switchHubType;
+        }
+        return result;
     }
 
     public void setSwitchHubType(String switchHubType) {

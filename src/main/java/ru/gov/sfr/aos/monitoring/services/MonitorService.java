@@ -54,15 +54,27 @@ public class MonitorService extends SvtObjService <Monitor, MonitorRepo, SvtDTO>
     @Override
     public void createSvtObj(SvtDTO dto) throws ObjectAlreadyExists {
 
-        if(monitorRepo.existsBySerialNumberIgnoreCase(dto.getSerialNumber())) {
+        if(monitorRepo.existsBySerialNumberIgnoreCase(dto.getSerialNumber().trim())) {
             throw new ObjectAlreadyExists("Монитор с таким серийным номером уже есть в базе данных");
+        } else if(monitorRepo.existsByInventaryNumberIgnoreCase(dto.getInventaryNumber().trim())){
+            throw new ObjectAlreadyExists("Монитор с таким инвентарным номером уже есть в базе данных");
         }else {
             Monitor monitor = new Monitor();
             Place place = null;
              MonitorModel monitorModel = null;
             
             place = placeRepo.findById(dto.getPlaceId()).get();
-            monitorModel = monitorModelRepo.findById(dto.getModelId()).get();
+            
+            if (null == dto.getModelId()) {
+                if (monitorModelRepo.existsByModelIgnoreCase("не указано")) {
+                    monitorModel = monitorModelRepo.findByModelIgnoreCase("не указано").get(0);
+                } else {
+                    monitorModel = new MonitorModel("не указано");
+                }
+            } else {
+                monitorModel = monitorModelRepo.findById(dto.getModelId()).get();
+            }
+            
             switch (dto.getStatus()) {
             case "REPAIR":
                 monitor.setStatus(Status.REPAIR);
@@ -79,9 +91,14 @@ public class MonitorService extends SvtObjService <Monitor, MonitorRepo, SvtDTO>
             case "DEFECTIVE":
                 monitor.setStatus(Status.DEFECTIVE);
                 break;
+            default:
+                monitor.setStatus(Status.OK);
+                break;
         }
-        monitor.setInventaryNumber(dto.getInventaryNumber());
-        monitor.setSerialNumber(dto.getSerialNumber());
+           
+        monitor.setNumberRoom(dto.getNumberRoom());
+        monitor.setInventaryNumber(dto.getInventaryNumber().trim());
+        monitor.setSerialNumber(dto.getSerialNumber().trim());
         monitor.setYearCreated(dto.getYearCreated());
         monitor.setDateExploitationBegin(dto.getDateExploitationBegin());
         monitor.setNameFromeOneC(dto.getNameFromOneC());
@@ -116,16 +133,49 @@ public class MonitorService extends SvtObjService <Monitor, MonitorRepo, SvtDTO>
     }
 
     @Override
-    public void updateSvtObj(SvtDTO dto) {
+    public void updateSvtObj(SvtDTO dto) throws ObjectAlreadyExists {
         Monitor monitorFromDB = monitorRepo.findById(dto.getId()).get();
         Place placeFromDto = placeRepo.findById(dto.getPlaceId()).get();
-        MonitorModel monitorModelFromDto = monitorModelRepo.findById(dto.getModelId()).get();
+         MonitorModel monitorModelFromDto = null;
+        if(null == dto.getModelId()) {
+            if(monitorModelRepo.existsByModelIgnoreCase("не указано")) {
+                monitorModelFromDto = monitorModelRepo.findByModelIgnoreCase("не указано").get(0);
+            } else {
+                monitorModelFromDto = new MonitorModel();
+                monitorModelFromDto.setModel("не указано");
+            }
+        } else {
+            monitorModelFromDto = monitorModelRepo.findById(dto.getModelId()).get();
+        }
+        
         monitorFromDB.setDateExploitationBegin(dto.getDateExploitationBegin());
-        monitorFromDB.setInventaryNumber(dto.getInventaryNumber());
-        monitorFromDB.setSerialNumber(dto.getSerialNumber());
+        
+        if (monitorRepo.existsByInventaryNumberIgnoreCase(dto.getInventaryNumber().trim())) {
+            Monitor checkInventary = monitorRepo.findByInventaryNumberIgnoreCase(dto.getInventaryNumber()).get(0);
+            if (checkInventary.getId() != dto.getId()) {
+                throw new ObjectAlreadyExists("Монитор с таким инвентарным номером уже есть в базе данных");
+            } else {
+                monitorFromDB.setInventaryNumber(dto.getInventaryNumber().trim());
+            }
+        } else {
+            monitorFromDB.setInventaryNumber(dto.getInventaryNumber().trim());
+        }
+    
+        if(monitorRepo.existsBySerialNumberIgnoreCase(dto.getSerialNumber().trim())) {
+            Monitor checkSerial = monitorRepo.findBySerialNumberIgnoreCase(dto.getSerialNumber().trim()).get(0);
+            if(checkSerial.getId() != dto.getId()) {
+                throw new ObjectAlreadyExists("Монитор с таким серийным номером уже есть в базе данных");
+            } else {
+                monitorFromDB.setSerialNumber(dto.getSerialNumber().trim());
+            }
+        } else {
+             monitorFromDB.setSerialNumber(dto.getSerialNumber().trim());
+        }
+        
         monitorFromDB.setNameFromeOneC(dto.getNameFromOneC());
         monitorFromDB.setPlace(placeFromDto);
         monitorFromDB.setMonitorModel(monitorModelFromDto);
+        monitorFromDB.setNumberRoom(dto.getNumberRoom());
         switch (dto.getStatus()) {
             case "REPAIR":
                 monitorFromDB.setStatus(Status.REPAIR);
@@ -141,6 +191,9 @@ public class MonitorService extends SvtObjService <Monitor, MonitorRepo, SvtDTO>
                 break;
             case "DEFECTIVE":
                 monitorFromDB.setStatus(Status.DEFECTIVE);
+                break;
+            default:
+                monitorFromDB.setStatus(Status.OK);
                 break;
         }
         switch (dto.getBaseType()) {

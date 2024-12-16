@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import ru.gov.sfr.aos.monitoring.anotations.Log;
 import ru.gov.sfr.aos.monitoring.dictionaries.PlaceType;
 import ru.gov.sfr.aos.monitoring.entities.Asuo;
 import ru.gov.sfr.aos.monitoring.entities.Ats;
@@ -626,17 +625,19 @@ public class GetInfoController {
     }
 
     @GetMapping("/depbyloc")
-    public List<DepartmentDTO> getDepartmentsByLocation(Long locationId) {
+    public Set<DepartmentDTO> getDepartmentsByLocation(Long locationId) {
 
-        List<DepartmentDTO> dtoes = placeService.getDepartmentsByLocation(locationId);
+        Set<DepartmentDTO> dtoes = placeService.getDepartmentsByLocation(locationId);
 
         return dtoes;
     }
 
     @GetMapping("/placebydepandloc")
     public List<PlaceDTO> getplacesByLocationAndDepartments(Long locationId, String departmentCode) {
-
-        List<PlaceDTO> dtoes = placeService.getPlacesByLocationAndDepartment(locationId, departmentCode);
+        List<PlaceDTO> dtoes = null;
+      
+        dtoes = placeService.getPlacesByLocationAndDepartment(locationId, departmentCode);
+     
         return dtoes;
     }
     

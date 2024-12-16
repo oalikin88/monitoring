@@ -51,15 +51,27 @@ public class PhoneService extends SvtObjService<Phone, PhoneRepo, SvtDTO>{
     public void createSvtObj(SvtDTO dto) throws ObjectAlreadyExists {
           
             
-        if(phoneRepo.existsBySerialNumberIgnoreCase(dto.getSerialNumber())) {
+        if(phoneRepo.existsBySerialNumberIgnoreCase(dto.getSerialNumber().trim())) {
            throw new ObjectAlreadyExists("Телефон с таким серийным номером уже есть в базе данных");
+        } else if(phoneRepo.existsByInventaryNumberIgnoreCase(dto.getInventaryNumber().trim())){
+            throw new ObjectAlreadyExists("Телефон с таким инвентарным номером уже есть в базе данных");
         }else {
             Phone phone = new Phone();
             Place place = null;
             PhoneModel phoneModel = null;
             
             place = placeRepo.findById(dto.getPlaceId()).get();
-            phoneModel = phoneModelRepo.findById(dto.getModelId()).get();
+            
+            if(null == dto.getModelId()) {
+                if(phoneModelRepo.existsByModelIgnoreCase("не указано")) {
+                    phoneModel = phoneModelRepo.findByModelIgnoreCase("не указано").get(0);
+                } else {
+                    phoneModel = new PhoneModel("не указано");
+                } 
+            } else {
+                phoneModel = phoneModelRepo.findById(dto.getModelId()).get();
+            }
+            
             switch (dto.getStatus()) {
             case "REPAIR":
                 phone.setStatus(Status.REPAIR);
@@ -77,6 +89,7 @@ public class PhoneService extends SvtObjService<Phone, PhoneRepo, SvtDTO>{
                 phone.setStatus(Status.DEFECTIVE);
                 break;
         }
+        
         phone.setInventaryNumber(dto.getInventaryNumber());
         phone.setSerialNumber(dto.getSerialNumber());
         phone.setYearCreated(dto.getYearCreated());
@@ -84,7 +97,8 @@ public class PhoneService extends SvtObjService<Phone, PhoneRepo, SvtDTO>{
         phone.setPhoneNumber(dto.getPhoneNumber());
         phone.setPlace(place);
         phone.setPhoneModel(phoneModel);
-        
+        phone.setNameFromeOneC(dto.getNameFromOneC());
+        phone.setNumberRoom(dto.getNumberRoom());
         Contract contract = null;
             if(contractRepo.existsByContractNumberIgnoreCase("00000000")) {
                 contract = contractRepo.findByContractNumberIgnoreCase("00000000").get();
@@ -104,15 +118,47 @@ public class PhoneService extends SvtObjService<Phone, PhoneRepo, SvtDTO>{
     }
 
     @Override
-    public void updateSvtObj(SvtDTO dto) {
+    public void updateSvtObj(SvtDTO dto) throws ObjectAlreadyExists {
         Phone phoneFromDB = phoneRepo.findById(dto.getId()).get();
         Place placeFromDto = placeRepo.findById(dto.getPlaceId()).get();
-        PhoneModel phoneModelFromDto = phoneModelRepo.findById(dto.getModelId()).get();
+        PhoneModel phoneModel = null;
+        
+        if(null == dto.getModelId()) {
+                if(phoneModelRepo.existsByModelIgnoreCase("не указано")) {
+                    phoneModel = phoneModelRepo.findByModelIgnoreCase("не указано").get(0);
+                } else {
+                    phoneModel = new PhoneModel("не указано");
+                } 
+            } else {
+                phoneModel = phoneModelRepo.findById(dto.getModelId()).get();
+            }
         phoneFromDB.setDateExploitationBegin(dto.getDateExploitationBegin());
-        phoneFromDB.setInventaryNumber(dto.getInventaryNumber());
-        phoneFromDB.setSerialNumber(dto.getSerialNumber());
+        if(phoneRepo.existsByInventaryNumberIgnoreCase(dto.getInventaryNumber().trim())) {
+            Phone checkInventary = phoneRepo.findByInventaryNumberIgnoreCase(dto.getInventaryNumber().trim()).get(0);
+            if(checkInventary.getId() != dto.getId()) {
+                throw new ObjectAlreadyExists("Телефон с таким инвентарным номером уже есть в базе данных");
+            } else {
+                phoneFromDB.setInventaryNumber(dto.getInventaryNumber().trim());
+            }
+        } else {
+            phoneFromDB.setInventaryNumber(dto.getInventaryNumber().trim());
+        }
+        
+        if(phoneRepo.existsBySerialNumberIgnoreCase(dto.getSerialNumber().trim())) {
+            Phone checkSerial = phoneRepo.findBySerialNumberIgnoreCase(dto.getSerialNumber().trim()).get(0);
+            if(checkSerial.getId() != dto.getId()) {
+                throw new ObjectAlreadyExists("Телефон с таким серийным номером уже есть в базе данных");
+            } else {
+                phoneFromDB.setSerialNumber(dto.getSerialNumber().trim());
+            }
+        } else {
+            phoneFromDB.setSerialNumber(dto.getSerialNumber().trim());
+        }
+        
         phoneFromDB.setPhoneNumber(dto.getPhoneNumber());
         phoneFromDB.setPlace(placeFromDto);
+        phoneFromDB.setNameFromeOneC(dto.getNameFromOneC());
+        phoneFromDB.setNumberRoom(dto.getNumberRoom());
         switch (dto.getStatus()) {
             case "REPAIR":
                 phoneFromDB.setStatus(Status.REPAIR);
@@ -131,7 +177,7 @@ public class PhoneService extends SvtObjService<Phone, PhoneRepo, SvtDTO>{
                 break;
         }
         phoneFromDB.setYearCreated(dto.getYearCreated());
-        phoneFromDB.setPhoneModel(phoneModelFromDto);
+        phoneFromDB.setPhoneModel(phoneModel);
         phoneRepo.save(phoneFromDB);
     }
     

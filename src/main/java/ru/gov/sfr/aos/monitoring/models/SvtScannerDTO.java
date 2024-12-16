@@ -19,7 +19,13 @@ public class SvtScannerDTO extends SvtDTO {
     }
 
     public String getIpAdress() {
-        return ipAdress;
+         String result = "";
+        if(null == ipAdress) {
+            result = "нет";
+        } else {
+            result = ipAdress;
+        }
+        return result;
     }
 
     public void setIpAdress(String ipAdress) {
@@ -27,7 +33,13 @@ public class SvtScannerDTO extends SvtDTO {
     }
 
     public String getNumberRoom() {
-        return numberRoom;
+        String result = "";
+        if(null == numberRoom) {
+            result = "нет";
+        } else {
+            result = numberRoom;
+        }
+        return result;
     }
 
     public void setNumberRoom(String numberRoom) {

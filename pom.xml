@@ -62,12 +62,12 @@
             <version>0.7.1</version>
             <type>jar</type>
         </dependency>
-        <dependency>
+<!--        <dependency>
             <groupId>org.opfr.starter</groupId>
             <artifactId>org-spring-boot-report-starter</artifactId>
             <version>0.0.2</version>
             <type>jar</type>
-        </dependency>
+        </dependency>-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-validation</artifactId>

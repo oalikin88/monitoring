@@ -32,12 +32,19 @@ public class SvtConditionerDTO extends SvtDTO {
     }
 
     public String getDescription() {
-        return description;
+         String result = "";
+        if(null == description) {
+            result = "отсутствует";
+        } else {
+            result = description;
+        }
+        return result;
     }
 
     public void setDescription(String description) {
         this.description = description;
     }
+
 
     public int getYearCreated() {
         return yearCreated;
@@ -48,7 +55,13 @@ public class SvtConditionerDTO extends SvtDTO {
     }
 
     public String getConditionerType() {
-        return conditionerType;
+        String result = "";
+        if(null == conditionerType) {
+            result = "не указан";
+        } else {
+            result = conditionerType;
+        }
+        return result;
     }
 
     public void setConditionerType(String conditionerType) {

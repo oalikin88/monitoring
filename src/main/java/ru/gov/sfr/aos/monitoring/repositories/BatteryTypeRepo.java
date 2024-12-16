@@ -16,4 +16,6 @@ import ru.gov.sfr.aos.monitoring.entities.BatteryType;
 @Repository
 public interface BatteryTypeRepo extends JpaRepository<BatteryType, Long> {
     List<BatteryType> findByTypeIgnoreCase(String type);
+    List<BatteryType> findByArchivedFalse();
+    boolean existsByTypeIgnoreCase(String type);
 }

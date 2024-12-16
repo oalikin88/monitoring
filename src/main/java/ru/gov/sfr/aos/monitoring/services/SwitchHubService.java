@@ -51,6 +51,7 @@ public class SwitchHubService extends SvtObjService<SwitchHub, SwitchHubRepo, Sv
     public void createSvtObj(SvtSwitchHubDTO dto) throws ObjectAlreadyExists {
         SwitchHubType switchHubType = null;
         String switchHubTypeRus = null;
+        SwitchHubModel switchHubModel = null;
         switch (dto.getSwitchHubType()) {
             case "SWITCH":
                 switchHubTypeRus = "коммутатор";
@@ -62,14 +63,26 @@ public class SwitchHubService extends SvtObjService<SwitchHub, SwitchHubRepo, Sv
                 break;
         }
         
-            if(switchHubRepo.existsBySerialNumberIgnoreCase(dto.getSerialNumber())) {
-                throw new ObjectAlreadyExists(switchHubTypeRus + " с таким серийным номером уже есть в базе данных");
-            
-    } else {
+           if (switchHubRepo.existsBySerialNumberIgnoreCase(dto.getSerialNumber().trim())) {
+            throw new ObjectAlreadyExists(switchHubTypeRus + " с таким серийным номером уже есть в базе данных");
+        }else if(switchHubRepo.existsByInventaryNumberIgnoreCase(dto.getInventaryNumber().trim())){
+            throw new ObjectAlreadyExists(switchHubTypeRus + " с таким инвентарным номером уже есть в базе данных");
+        } else {
             
             SwitchHub switchHub = new SwitchHub();
             Place place = placeRepo.findById(dto.getPlaceId()).get();
-            SwitchHubModel switchHubModel = switchHubModelRepo.findById(dto.getModelId()).get();
+            
+            if(null == dto.getModelId()) {
+                if(switchHubModelRepo.existsByModelIgnoreCase("не указано")) {
+                    switchHubModel = switchHubModelRepo.findByModelIgnoreCase("не указано").get(0);
+                } else {
+                    switchHubModel = new SwitchHubModel();
+                    switchHubModel.setModel("не указано");
+                }
+            } else {
+                switchHubModel = switchHubModelRepo.findById(dto.getModelId()).get();
+            }
+            
             switchHub.setInventaryNumber(dto.getInventaryNumber());
             switchHub.setSerialNumber(dto.getSerialNumber());
             switchHub.setPlace(place);
@@ -116,24 +129,62 @@ public class SwitchHubService extends SvtObjService<SwitchHub, SwitchHubRepo, Sv
     }
 
     @Override
-    public void updateSvtObj(SvtSwitchHubDTO dto) {
-        SwitchHub switchHub = switchHubRepo.findById(dto.getId()).get();
-        Place place = placeRepo.findById(dto.getPlaceId()).get();
-            SwitchHubModel switchHubModel = switchHubModelRepo.findById(dto.getModelId()).get();
-            switchHub.setInventaryNumber(dto.getInventaryNumber());
-            switchHub.setSerialNumber(dto.getSerialNumber());
-            switchHub.setPlace(place);
-            switchHub.setYearCreated(dto.getYearCreated());
-            switchHub.setSwitchHubModel(switchHubModel);
-            SwitchHubType switchHubType = null;
-            switch (dto.getSwitchHubType()) {
+    public void updateSvtObj(SvtSwitchHubDTO dto) throws ObjectAlreadyExists {
+        SwitchHubModel switchHubModel = null;
+        String switchHubTypeRus = null;
+        SwitchHubType switchHubType = null;
+        switch (dto.getSwitchHubType()) {
             case "SWITCH":
+                switchHubTypeRus = "коммутатор";
                 switchHubType = SwitchHubType.SWITCH;
                 break;
             case "HUB":
+                switchHubTypeRus = "концентратор";
                 switchHubType = SwitchHubType.HUB;
                 break;
         }
+        SwitchHub switchHub = switchHubRepo.findById(dto.getId()).get();
+        Place place = placeRepo.findById(dto.getPlaceId()).get();
+        
+            
+            if(null == dto.getModelId()) {
+                if(switchHubModelRepo.existsByModelIgnoreCase("не указано")) {
+                    switchHubModel = switchHubModelRepo.findByModelIgnoreCase("не указано").get(0);
+                } else {
+                    switchHubModel = new SwitchHubModel();
+                    switchHubModel.setModel("не указано");
+                }
+            } else {
+                switchHubModel = switchHubModelRepo.findById(dto.getModelId()).get();
+            }
+            
+            if(switchHubRepo.existsByInventaryNumberIgnoreCase(dto.getInventaryNumber().trim())) {
+                SwitchHub checkInventary = switchHubRepo.findByInventaryNumberIgnoreCase(dto.getInventaryNumber().trim()).get(0);
+                if(checkInventary.getId() != dto.getId()) {
+                    throw new ObjectAlreadyExists(switchHubTypeRus + " с таким инвентарным номером уже есть в базе данных");
+                } else {
+                    switchHub.setInventaryNumber(dto.getInventaryNumber().trim());
+                }
+            } else {
+                switchHub.setInventaryNumber(dto.getInventaryNumber().trim());
+            }
+            
+            if(switchHubRepo.existsBySerialNumberIgnoreCase(dto.getSerialNumber().trim())) {
+                SwitchHub checkSerial = switchHubRepo.findBySerialNumberIgnoreCase(dto.getSerialNumber().trim()).get(0);
+                if(checkSerial.getId() != dto.getId()) {
+                    throw new ObjectAlreadyExists(switchHubTypeRus + " с таким серийным номером уже есть в базе данных");
+                } else {
+                    switchHub.setSerialNumber(dto.getSerialNumber().trim());
+                }
+            } else {
+                switchHub.setSerialNumber(dto.getSerialNumber().trim());
+            }
+            
+            switchHub.setPlace(place);
+            switchHub.setYearCreated(dto.getYearCreated());
+            switchHub.setSwitchHubModel(switchHubModel);
+      
+           
             switchHub.setSwitchHubType(switchHubType);
              switch (dto.getStatus()) {
             case "REPAIR":

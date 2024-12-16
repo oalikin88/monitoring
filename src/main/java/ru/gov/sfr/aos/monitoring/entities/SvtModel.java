@@ -33,7 +33,7 @@ public class SvtModel {
     }
 
     public void setModel(String model) {
-        this.model = model;
+        this.model = model.trim();
     }
 
     public boolean isArchived() {

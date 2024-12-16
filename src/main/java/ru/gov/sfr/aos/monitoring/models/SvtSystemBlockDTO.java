@@ -78,7 +78,13 @@ public class SvtSystemBlockDTO extends SvtDTO {
     
     
     public String getNumberRoom() {
-        return numberRoom;
+        String result = "";
+        if(null == numberRoom) {
+            result = "не указан";
+        } else {
+            result = numberRoom;
+        }
+        return result;
     }
 
     public void setNumberRoom(String numberRoom) {
@@ -102,7 +108,13 @@ public class SvtSystemBlockDTO extends SvtDTO {
     }
 
     public String getMotherboardModel() {
-        return motherboardModel;
+        String result = "";
+        if(null == motherboardModel) {
+            result = "нет";
+        } else {
+            result = motherboardModel;
+        }
+        return result;
     }
 
     public void setMotherboardModel(String motherboardModel) {
@@ -118,7 +130,13 @@ public class SvtSystemBlockDTO extends SvtDTO {
     }
 
     public String getCpuModel() {
-        return cpuModel;
+        String result = "";
+        if(null == cpuModel) {
+            result = "нет";
+        } else {
+            result = cpuModel;
+        }
+        return result;
     }
 
     public void setCpuModel(String cpuModel) {
@@ -134,7 +152,13 @@ public class SvtSystemBlockDTO extends SvtDTO {
     }
 
     public String getRamModel() {
-        return ramModel;
+        String result = "";
+        if(null == ramModel) {
+            result = "нет";
+        } else {
+            result = ramModel;
+        }
+        return result;
     }
 
     public void setRamModel(String ramModel) {

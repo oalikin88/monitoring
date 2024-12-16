@@ -4,6 +4,7 @@
  */
 package ru.gov.sfr.aos.monitoring.repositories;
 
+import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import ru.gov.sfr.aos.monitoring.entities.OperationSystem;
@@ -15,4 +16,5 @@ import ru.gov.sfr.aos.monitoring.entities.OperationSystem;
 @Repository
 public interface OperationSystemRepo extends JpaRepository<OperationSystem, Long> {
     boolean existsByModelIgnoreCase(String name);
+    List<OperationSystem> findBySystemBlocksId(Long idSysBlock);
 }

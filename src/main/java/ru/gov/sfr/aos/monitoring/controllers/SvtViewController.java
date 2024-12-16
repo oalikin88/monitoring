@@ -7,18 +7,21 @@ package ru.gov.sfr.aos.monitoring.controllers;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
-import ru.gov.sfr.aos.monitoring.anotations.Log;
-import ru.gov.sfr.aos.monitoring.anotations.SendArchive;
-import ru.gov.sfr.aos.monitoring.anotations.UpdLog;
 import ru.gov.sfr.aos.monitoring.dictionaries.PlaceType;
 import ru.gov.sfr.aos.monitoring.entities.Asuo;
 import ru.gov.sfr.aos.monitoring.entities.Ats;
@@ -134,6 +137,7 @@ import ru.gov.sfr.aos.monitoring.services.InfomatOutDtoTreeService;
 import ru.gov.sfr.aos.monitoring.services.InfomatService;
 import ru.gov.sfr.aos.monitoring.services.KeyboardModelService;
 import ru.gov.sfr.aos.monitoring.services.LanCardModelService;
+import ru.gov.sfr.aos.monitoring.services.LocationService;
 import ru.gov.sfr.aos.monitoring.services.MonitorModelService;
 import ru.gov.sfr.aos.monitoring.services.MonitorOutDtoTreeService;
 import ru.gov.sfr.aos.monitoring.services.MonitorService;
@@ -358,6 +362,8 @@ public class SvtViewController {
     private FaxOutDtoTreeService faxOutDtoTreeService;
     @Autowired
     private FaxMapper faxMapper;
+    @Autowired
+    private LocationService locationService;
     
 //  @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
     @GetMapping("/svt")
@@ -381,22 +387,26 @@ public class SvtViewController {
     }
     
  //   @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
-    @Log
+   // @Log
     @PostMapping("/places")
-    public String addPlace(@RequestBody PlaceDTO dto) {
-
-        if(null != dto.getPlaceId()) {
-            placeService.updatePlace(dto);
-        } else {
+    public ResponseEntity<String> addPlace(@RequestBody PlaceDTO dto) throws ObjectAlreadyExists {
             placeService.createPlace(dto);
-        }
-        return "redirect:/places";
+        return new ResponseEntity(HttpStatus.ACCEPTED);
     }
-    @SendArchive
-    @PostMapping("/placetoarchive")
-    public String sendPlaceToArchived(@RequestBody PlaceDTO dto) {
-        placeService.sendPlaceToArchive(dto.getPlaceId());
-        return "redirect:/places";
+    
+    
+        @PutMapping("/places")
+    public ResponseEntity<String> updatePlace(@RequestBody PlaceDTO dto) throws ObjectAlreadyExists {
+
+            placeService.updatePlace(dto);
+        return new ResponseEntity(HttpStatus.ACCEPTED);
+    }
+    
+   // @SendArchive
+    @DeleteMapping("/placetoarchive")
+    public ResponseEntity<String> sendPlaceToArchived(@RequestBody ArchivedDto dto) {
+        placeService.sendPlaceToArchive(dto.getId());
+        return new ResponseEntity(HttpStatus.ACCEPTED);
     }
 
     
@@ -414,20 +424,38 @@ public class SvtViewController {
     }
     
 //    @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
-    @Log
+ //   @Log
     @PostMapping("/mphones")
-    public String saveModelPhone(@RequestBody SvtModelDto dto) throws ObjectAlreadyExists {
+    public ResponseEntity<String> saveModelPhone(@RequestBody SvtModelDto dto) throws ObjectAlreadyExists {
         PhoneModel phoneModel = svtModelMapper.getPhoneModel(dto);
-        phoneModelService.saveModel(phoneModel);
-        return "redirect:/mphones";
+        try{
+            phoneModelService.saveModel(phoneModel);
+        }catch(Exception e) {
+             return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+        
+        return new ResponseEntity(HttpStatus.ACCEPTED);
         
     }
     
-    @SendArchive
-    @PostMapping("/mphonesarchived")
-    public String sendModelPhoneToArchive(@RequestBody ArchivedDto dto) throws ObjectAlreadyExists {
+    @PutMapping("/mphonesupd")
+    public ResponseEntity<String> updateModelPhone(@RequestBody SvtModelDto dto) throws ObjectAlreadyExists {
+        PhoneModel phoneModel = svtModelMapper.getPhoneModel(dto);
+        try{
+            phoneModelService.update(phoneModel);
+        } catch(Exception e) {
+           return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+        
+        return new ResponseEntity(HttpStatus.ACCEPTED);
+        
+    }
+    
+  //  @SendArchive
+    @DeleteMapping("/mphonesarchived")
+    public ResponseEntity<String> sendModelPhoneToArchive(@RequestBody ArchivedDto dto) throws ObjectAlreadyExists {
         phoneModelService.sendModelToArchive(dto.getId());
-        return "redirect:/mphones";
+        return new ResponseEntity(HttpStatus.ACCEPTED);
         
     }
     
@@ -445,31 +473,41 @@ public class SvtViewController {
     }
     
     //   @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
-    @SendArchive
-    @PostMapping("/mmonitorsarchived")
-    public String sendModelMonitorToArchive(@RequestBody ArchivedDto dto) {
+  //  @SendArchive
+    @DeleteMapping("/mmonitorsarchived")
+    public ResponseEntity<String> sendModelMonitorToArchive(@RequestBody ArchivedDto dto) {
         monitorModelService.sendModelToArchive(dto.getId());
-        return "redirect:/mmonitors";
+        return new ResponseEntity(HttpStatus.ACCEPTED);
     }
  
     
  //   @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
-    @Log
+  //  @Log
     @PostMapping("/mmonitors")
-    public String saveModelMonitor(@RequestBody SvtModelDto dto) throws ObjectAlreadyExists {
+    public ResponseEntity<String> saveModelMonitor(@RequestBody SvtModelDto dto) throws ObjectAlreadyExists {
         MonitorModel monitorModel = svtModelMapper.getMonitorModel(dto);
-        monitorModelService.saveModel(monitorModel);
-        return "redirect:/mmonitors";
+        try{
+            monitorModelService.saveModel(monitorModel);
+        } catch(Exception e) {
+            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+        
+        return new ResponseEntity(HttpStatus.ACCEPTED);
         
     }
     
     //   @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
-    @UpdLog
-    @PostMapping("/mmonitorsupd")
-    public String updateModelMonitor(@RequestBody SvtModelDto dto) throws ObjectAlreadyExists {
+  //  @UpdLog
+    @PutMapping("/mmonitorsupd")
+    public ResponseEntity<String> updateModelMonitor(@RequestBody SvtModelDto dto) throws ObjectAlreadyExists {
         MonitorModel monitorModel = svtModelMapper.getMonitorModel(dto);
-        monitorModelService.update(monitorModel);
-        return "redirect:/mmonitors";
+        try{
+            monitorModelService.update(monitorModel);
+        } catch(Exception e) {
+            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+        
+        return new ResponseEntity(HttpStatus.ACCEPTED);
         
     }
     
@@ -487,20 +525,36 @@ public class SvtViewController {
     }
     
  //   @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
-    @Log
+  //  @Log
     @PostMapping("/mups")
-    public String saveModelUps(@RequestBody SvtModelDto dto) throws ObjectAlreadyExists {
+    public ResponseEntity<String> saveModelUps(@RequestBody SvtModelDto dto) throws ObjectAlreadyExists {
         UpsModel upsModel = svtModelMapper.getUpsModel(dto);
-        upsModelService.saveModel(upsModel);
-        return "redirect:/mups";
+        try{
+            upsModelService.saveModel(upsModel);
+        }catch(Exception e) {
+            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
         
+        return new ResponseEntity(HttpStatus.ACCEPTED); 
     }
     
-    @SendArchive
-    @PostMapping("/mupsarchived")
-    public String sendModelUpsToArchive(@RequestBody ArchivedDto dto) throws ObjectAlreadyExists {
+    @PutMapping("/mupsupd")
+    public ResponseEntity<String> updateModelUps(@RequestBody SvtModelDto dto) throws ObjectAlreadyExists {
+        UpsModel upsModel = svtModelMapper.getUpsModel(dto);
+        try{
+            upsModelService.update(upsModel);
+        }catch(Exception e) {
+            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST); 
+        }
+        
+        return new ResponseEntity(HttpStatus.ACCEPTED); 
+    }
+    
+  //  @SendArchive
+    @DeleteMapping("/mupsarchived")
+    public ResponseEntity<String> sendModelUpsToArchive(@RequestBody ArchivedDto dto) throws ObjectAlreadyExists {
         upsModelService.sendModelToArchive(dto.getId());
-        return "redirect:/mups";
+        return new ResponseEntity(HttpStatus.ACCEPTED);
         
     }
     
@@ -509,7 +563,7 @@ public class SvtViewController {
     @GetMapping("/mupsbat")
     public String getBatteryTypeUps(Model model) {
 
-        List<BatteryType> allBatteryTypes = batteryTypeService.getAllBatteryTypes();
+        List<BatteryType> allBatteryTypes = batteryTypeService.getAllActualBatteryTypes();
         List<BatteryTypeDto> batteryTypeDtoesList = batteryTypeMapper.getBatteryTypeDtoesList(allBatteryTypes);
         model.addAttribute("dtoes", batteryTypeDtoesList);
         model.addAttribute("namePage", "Типы батарей для ИБП");
@@ -519,12 +573,33 @@ public class SvtViewController {
     }
     
  //   @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
-    @Log
+ //   @Log
     @PostMapping("/mupsbat")
-    public String saveBatteryTypeUps(@RequestBody BatteryTypeDto dto) throws ObjectAlreadyExists {
+    public ResponseEntity<String> saveBatteryTypeUps(@RequestBody BatteryTypeDto dto) throws ObjectAlreadyExists {
         BatteryType batteryType = batteryTypeMapper.getBatteryType(dto);
-        batteryTypeService.saveBatteryType(batteryType);
-        return "redirect:/mupsbat";
+        try {
+            batteryTypeService.saveBatteryType(batteryType);
+        } catch(Exception e) {
+           return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST); 
+        }
+        return new ResponseEntity(HttpStatus.ACCEPTED);
+    }
+    
+    @PutMapping("/mupsbatupd")
+    public ResponseEntity<String> updateBatteryTypeUps(@RequestBody BatteryTypeDto dto) throws ObjectAlreadyExists {
+        BatteryType batteryType = batteryTypeMapper.getBatteryType(dto);
+        try{
+            batteryTypeService.update(batteryType);
+        } catch(Exception e) {
+            return new ResponseEntity(e. getMessage(), HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity(HttpStatus.ACCEPTED);
+    }
+    
+    @DeleteMapping("/mupsbatarchived")
+    public ResponseEntity<String> sendToArchiveBatteryTypeUps(@RequestBody ArchivedDto dto) throws ObjectAlreadyExists {
+        batteryTypeService.sendToArchive(dto.getId());
+        return new ResponseEntity(HttpStatus.ACCEPTED);
         
     }
     
@@ -601,7 +676,26 @@ public class SvtViewController {
         }
         
         int amount = SvtViewController.getAmountDevices(treeSvtDtoByEmployee, treeSvtDtoByStorage);
+        String filterLocation = null;
+        if(null != dto.getLocation() && !dto.getLocation().isEmpty() && !dto.getLocation().isBlank()) {
+            filterLocation = locationService.getLocationById(Long.parseLong(dto.getLocation())).getName();
+        }
         
+        String filterModel = null;
+        if(null != dto.getModel() && !dto.getModel().isBlank() && !dto.getModel().isEmpty()) {
+            Optional<PhoneModel> optModel = phoneModelService.getById(Long.parseLong(dto.getModel()));
+            if(optModel.isPresent()) {
+                filterModel = optModel.get().getModel();
+            }
+            
+        }
+        model.addAttribute("searchFIO", username);
+        model.addAttribute("searchInventary", inventaryNumber);
+        model.addAttribute("filterDateBegin", dto.getYearCreatedOne());
+        model.addAttribute("filterDateEnd", dto.getYearCreatedTwo());
+        model.addAttribute("filterStatus", dto.getStatus());
+        model.addAttribute("filterModel", filterModel);
+        model.addAttribute("filterLocation", filterLocation);
         model.addAttribute("dtoes", treeSvtDtoByEmployee);
         model.addAttribute("dtoesStorage", treeSvtDtoByStorage);
         model.addAttribute("attribute", "phones");
@@ -673,7 +767,26 @@ public class SvtViewController {
         }
         
         int amount = SvtViewController.getAmountDevices(treeSvtDtoByEmployee, treeSvtDtoByStorage);
+        String filterLocation = null;
+        if(null != dto.getLocation() && !dto.getLocation().isEmpty() && !dto.getLocation().isBlank()) {
+            filterLocation = locationService.getLocationById(Long.parseLong(dto.getLocation())).getName();
+        }
         
+        String filterModel = null;
+        if(null != dto.getModel() && !dto.getModel().isBlank() && !dto.getModel().isEmpty()) {
+            Optional<UpsModel> optModel = upsModelService.getById(Long.parseLong(dto.getModel()));
+            if(optModel.isPresent()) {
+                filterModel = optModel.get().getModel();
+            }
+            
+        }
+        model.addAttribute("searchFIO", username);
+        model.addAttribute("searchInventary", inventaryNumber);
+        model.addAttribute("filterDateBegin", dto.getYearCreatedOne());
+        model.addAttribute("filterDateEnd", dto.getYearCreatedTwo());
+        model.addAttribute("filterStatus", dto.getStatus());
+        model.addAttribute("filterModel", filterModel);
+        model.addAttribute("filterLocation", filterLocation);
         model.addAttribute("dtoes", treeSvtDtoByEmployee);
         model.addAttribute("dtoesStorage", treeSvtDtoByStorage);
         model.addAttribute("attribute", "ups");
@@ -686,17 +799,17 @@ public class SvtViewController {
 //    @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
    // @Log
     @PostMapping("/ups")
-    public String saveUps(@RequestBody SvtDTO dto) throws ObjectAlreadyExists {
+    public ResponseEntity<String> saveUps(@RequestBody SvtDTO dto) throws ObjectAlreadyExists {
         upsService.createSvtObj(dto);
-        return "redirect:/ups";
+        return new ResponseEntity(HttpStatus.ACCEPTED);
      
     }
     
    // @SendArchive
-    @PostMapping("/upsarchived")
-    public String sendUpsToArchive(@RequestBody ArchivedDto dto) {
+    @DeleteMapping("/upsarchived")
+    public ResponseEntity<String> sendUpsToArchive(@RequestBody ArchivedDto dto) {
         upsService.svtObjToArchive(dto);
-        return "redirect:/ups";
+        return new ResponseEntity(HttpStatus.ACCEPTED);
     }
     
      //   @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
@@ -757,10 +870,29 @@ public class SvtViewController {
         }
         
         int amount = SvtViewController.getAmountDevices(treeSvtDtoByEmployee, treeSvtDtoByStorage);
+        String filterLocation = null;
+        if(null != dto.getLocation() && !dto.getLocation().isEmpty() && !dto.getLocation().isBlank()) {
+            filterLocation = locationService.getLocationById(Long.parseLong(dto.getLocation())).getName();
+        }
         
+        String filterModel = null;
+        if(null != dto.getModel() && !dto.getModel().isBlank() && !dto.getModel().isEmpty()) {
+            Optional<UpsModel> optModel = upsModelService.getById(Long.parseLong(dto.getModel()));
+            if(optModel.isPresent()) {
+                filterModel = optModel.get().getModel();
+            }
+            
+        }
+        model.addAttribute("searchFIO", username);
+        model.addAttribute("searchInventary", inventaryNumber);
+        model.addAttribute("filterDateBegin", dto.getYearCreatedOne());
+        model.addAttribute("filterDateEnd", dto.getYearCreatedTwo());
+        model.addAttribute("filterStatus", dto.getStatus());
+        model.addAttribute("filterModel", filterModel);
+        model.addAttribute("filterLocation", filterLocation);
         model.addAttribute("dtoes", treeSvtDtoByEmployee);
         model.addAttribute("dtoesStorage", treeSvtDtoByStorage);
-        model.addAttribute("attribute", "ups");
+        model.addAttribute("attribute", "upsforserver");
         model.addAttribute("placeAttribute", "serverroom");
         model.addAttribute("namePage","ИБП");
         model.addAttribute("amountDevice", amount);
@@ -770,25 +902,25 @@ public class SvtViewController {
 //    @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
   //  @Log
     @PostMapping("/upsforserver")
-    public String saveServerUps(@RequestBody SvtDTO dto) throws ObjectAlreadyExists {
+    public ResponseEntity<String> saveServerUps(@RequestBody SvtDTO dto) throws ObjectAlreadyExists {
         upsService.createSvtObj(dto);
-        return "redirect:/upsforserver";
+        return new ResponseEntity(HttpStatus.ACCEPTED);
      
     }
     
   //  @SendArchive
-    @PostMapping("/upsforserverarchived")
-    public String sendUpsForServerToArchive(@RequestBody ArchivedDto dto) {
+    @DeleteMapping("/upsforserverarchived")
+    public ResponseEntity<String> sendUpsForServerToArchive(@RequestBody ArchivedDto dto) {
         upsService.svtObjToArchive(dto);
-        return "redirect:/upsforserver";
+        return new ResponseEntity(HttpStatus.ACCEPTED);
     }
     
     //   @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
   //  @UpdLog
-    @PostMapping("/updupsforserver")
-    public String updateServerUps(@RequestBody SvtDTO dto) throws ObjectAlreadyExists {
+    @PutMapping("/updupsforserver")
+    public ResponseEntity<String> updateServerUps(@RequestBody SvtDTO dto) throws ObjectAlreadyExists {
         upsService.updateSvtObj(dto);
-        return "redirect:/upsforserver";
+        return new ResponseEntity(HttpStatus.ACCEPTED);
      
     }
     
@@ -796,75 +928,75 @@ public class SvtViewController {
   //  @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
   //  @Log
     @PostMapping("/phones")
-    public String savePhone(@RequestBody SvtDTO dto) throws ObjectAlreadyExists {
+    public ResponseEntity<String> savePhone(@RequestBody SvtDTO dto) throws ObjectAlreadyExists {
         phoneService.createSvtObj(dto);
-        return "redirect:/phones";
+        return new ResponseEntity(HttpStatus.ACCEPTED);
      
     }
     
   //  @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
   //  @UpdLog
-    @PostMapping("/updphone")
-    public String updatePhone(@RequestBody SvtDTO dto) throws ObjectAlreadyExists {
+    @PutMapping("/updphone")
+    public ResponseEntity<String> updatePhone(@RequestBody SvtDTO dto) throws ObjectAlreadyExists {
         phoneService.updateSvtObj(dto);
-        return "redirect:/phones";
+        return new ResponseEntity(HttpStatus.ACCEPTED);
      
     }
     
   //   @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
   //  @UpdLog
-    @PostMapping("/updups")
-    public String updateUps(@RequestBody SvtDTO dto) throws ObjectAlreadyExists {
+    @PutMapping("/updups")
+    public ResponseEntity<String> updateUps(@RequestBody SvtDTO dto) throws ObjectAlreadyExists {
         upsService.updateSvtObj(dto);
-        return "redirect:/ups";
+        return new ResponseEntity(HttpStatus.ACCEPTED);
      
     }
     
   //  @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
   //  @UpdLog
-    @PostMapping("/updmonitor")
-    public String updateMonitor(@RequestBody SvtDTO dto) throws ObjectAlreadyExists {
+    @PutMapping("/updmonitor")
+    public ResponseEntity<String> updateMonitor(@RequestBody SvtDTO dto) throws ObjectAlreadyExists {
         monitorService.updateSvtObj(dto);
-        return "redirect:/monitors";
+        return new ResponseEntity(HttpStatus.ACCEPTED);
      
     }
   //  @SendArchive
-   @PostMapping("/monitorsarchived") 
-   public String sendMonitorToArchive(@RequestBody ArchivedDto dto) {
+   @DeleteMapping("/monitorsarchived") 
+   public ResponseEntity<String> sendMonitorToArchive(@RequestBody ArchivedDto dto) {
         monitorService.svtObjToArchive(dto);
-        return "redirect:/monitors";
+        return new ResponseEntity(HttpStatus.ACCEPTED);
     }
     
     
   //  @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
  //  @UpdLog
-    @PostMapping("/phonetostor")
-    public String sendToStorage (@RequestBody SvtDTO dto) throws ObjectAlreadyExists {
+    @PutMapping("/phonetostor")
+    public ResponseEntity<String> sendToStorage (@RequestBody SvtDTO dto) throws ObjectAlreadyExists {
         Phone phone = phoneMapper.getEntityFromDto(dto);
         phoneService.sendToStorage(phone);
-        return "redirect:/phones";
+        return new ResponseEntity(HttpStatus.ACCEPTED);
         
     }
     
   //    @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
   //  @UpdLog
-    @PostMapping("/upstostor")
-    public String sendToStorageUps (@RequestBody SvtDTO dto) throws ObjectAlreadyExists {
+    @PutMapping("/upstostor")
+    public ResponseEntity<String> sendToStorageUps (@RequestBody SvtDTO dto) throws ObjectAlreadyExists {
         Ups ups = upsMapper.getEntityFromDto(dto);
         BatteryType batteryType = batteryTypeRepo.findById(ups.getBatteryType().getId()).get();
         ups.setBatteryType(batteryType);
         upsService.sendToStorage(ups);
-        return "redirect:/ups";
+        return new ResponseEntity(HttpStatus.ACCEPTED);
         
     }
     
   //      @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
   //  @UpdLog
-    @PostMapping("/monitortostor")
-    public String sendToStorageMonitor (@RequestBody SvtDTO dto) throws ObjectAlreadyExists {
+    @PutMapping("/monitortostor")
+    public ResponseEntity<String> sendToStorageMonitor (@RequestBody SvtDTO dto) throws ObjectAlreadyExists {
         Monitor monitor = monitorMapper.getEntityFromDto(dto);
         monitorService.sendToStorage(monitor);
-        return "redirect:/monitors";
+        return new ResponseEntity(HttpStatus.ACCEPTED);
         
     }
     
@@ -872,13 +1004,13 @@ public class SvtViewController {
     
   //  @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
  //   @Log
-    @PostMapping("/upsbackstor")
-    public String backFromStorageUps (@RequestBody SvtDTO dto) throws ObjectAlreadyExists {
+    @PutMapping("/upsbackstor")
+    public ResponseEntity<String> backFromStorageUps (@RequestBody SvtDTO dto) throws ObjectAlreadyExists {
         Ups ups = upsMapper.getEntityFromDto(dto);
         BatteryType batteryType = batteryTypeRepo.findById(ups.getBatteryType().getId()).get();
         ups.setBatteryType(batteryType);
         upsService.backFromStorage(ups, dto.getPlaceId());
-        return "redirect:/ups";
+        return new ResponseEntity(HttpStatus.ACCEPTED);
         
     }
     
@@ -942,7 +1074,26 @@ public class SvtViewController {
         }
         
         int amount = SvtViewController.getAmountDevices(treeSvtDtoByEmployee, treeSvtDtoByStorage);
+        String filterLocation = null;
+        if(null != dto.getLocation() && !dto.getLocation().isEmpty() && !dto.getLocation().isBlank()) {
+            filterLocation = locationService.getLocationById(Long.parseLong(dto.getLocation())).getName();
+        }
         
+        String filterModel = null;
+        if(null != dto.getModel() && !dto.getModel().isBlank() && !dto.getModel().isEmpty()) {
+            Optional<MonitorModel> optModel = monitorModelService.getById(Long.parseLong(dto.getModel()));
+            if(optModel.isPresent()) {
+                filterModel = optModel.get().getModel();
+            }
+            
+        }
+        model.addAttribute("searchFIO", username);
+        model.addAttribute("searchInventary", inventaryNumber);
+        model.addAttribute("filterDateBegin", dto.getYearCreatedOne());
+        model.addAttribute("filterDateEnd", dto.getYearCreatedTwo());
+        model.addAttribute("filterStatus", dto.getStatus());
+        model.addAttribute("filterModel", filterModel);
+        model.addAttribute("filterLocation", filterLocation);
         model.addAttribute("dtoes", treeSvtDtoByEmployee);
         model.addAttribute("dtoesStorage", treeSvtDtoByStorage);
         model.addAttribute("attribute", "monitors");
@@ -956,19 +1107,19 @@ public class SvtViewController {
  //   @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
   //  @Log
     @PostMapping("/monitors")
-    public String saveMonitor(@RequestBody SvtDTO dto) throws ObjectAlreadyExists {
+    public ResponseEntity<String> saveMonitor(@RequestBody SvtDTO dto) throws ObjectAlreadyExists {
         monitorService.createSvtObj(dto);
-        return "redirect:/monitors";
+        return new ResponseEntity(HttpStatus.ACCEPTED);
     }
     
 
     
  //   @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
   //  @SendArchive
-    @PostMapping("/phonesarchived")
-    public String sendPhoneToArchive(@RequestBody ArchivedDto dto) throws ObjectAlreadyExists {
+    @PutMapping("/phonesarchived")
+    public ResponseEntity<String> sendPhoneToArchive(@RequestBody ArchivedDto dto) throws ObjectAlreadyExists {
         phoneService.svtObjToArchive(dto);
-        return "redirect:/phones";
+        return new ResponseEntity(HttpStatus.ACCEPTED);
     }   
     
     
@@ -988,18 +1139,34 @@ public class SvtViewController {
   //  @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
  //   @Log
     @PostMapping("/msysblock")
-    public String saveModelSystemBlock(@RequestBody SvtModelDto dto) throws ObjectAlreadyExists {
+    public ResponseEntity<String> saveModelSystemBlock(@RequestBody SvtModelDto dto) throws ObjectAlreadyExists {
         SystemBlockModel systemBlockModel = svtModelMapper.getSystemBlockModel(dto);
-        systemBlockModelService.saveModel(systemBlockModel);
-        return "redirect:/msysblock";
+        try{
+            systemBlockModelService.saveModel(systemBlockModel);
+        }catch(Exception e) {
+            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity(HttpStatus.ACCEPTED);
+    }
+
+    @PutMapping("/msysblockupd")
+    public ResponseEntity<String> updateModelSystemBlock(@RequestBody SvtModelDto dto) throws ObjectAlreadyExists {
+        SystemBlockModel systemBlockModel = svtModelMapper.getSystemBlockModel(dto);
+        try{
+            systemBlockModelService.update(systemBlockModel);
+        }catch(Exception e) {
+            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
         
+        return new ResponseEntity(HttpStatus.ACCEPTED);
     }
     
+    
   //  @SendArchive
-    @PostMapping("/msysblockarchived")
-    public String sendModelSystemBlockToArchive(@RequestBody ArchivedDto dto) throws ObjectAlreadyExists {
+    @DeleteMapping("/msysblockarchived")
+    public ResponseEntity<String> sendModelSystemBlockToArchive(@RequestBody ArchivedDto dto) throws ObjectAlreadyExists {
         systemBlockModelService.sendModelToArchive(dto.getId());
-        return "redirect:/msysblock";
+        return new ResponseEntity(HttpStatus.ACCEPTED);
         
     }
     
@@ -1065,6 +1232,32 @@ public class SvtViewController {
         
         int amount = SvtViewController.getAmountDevices(treeSvtDtoByEmployee, treeSvtDtoByStorage);
         
+//        if(dto != null) {
+//            if(dto.location != null) {
+//                model.addAttribute("filterLocation", dto.getLocation());
+//            }
+//        }
+
+        String filterLocation = null;
+        if(null != dto.getLocation() && !dto.getLocation().isEmpty() && !dto.getLocation().isBlank()) {
+            filterLocation = locationService.getLocationById(Long.parseLong(dto.getLocation())).getName();
+        }
+        
+        String filterModel = null;
+        if(null != dto.getModel() && !dto.getModel().isBlank() && !dto.getModel().isEmpty()) {
+            Optional<SystemBlockModel> optModel = systemBlockModelService.getById(Long.parseLong(dto.getModel()));
+            if(optModel.isPresent()) {
+                filterModel = optModel.get().getModel();
+            }
+            
+        }
+        model.addAttribute("searchFIO", username);
+        model.addAttribute("searchInventary", inventaryNumber);
+        model.addAttribute("filterDateBegin", dto.getYearCreatedOne());
+        model.addAttribute("filterDateEnd", dto.getYearCreatedTwo());
+        model.addAttribute("filterStatus", dto.getStatus());
+        model.addAttribute("filterModel", filterModel);
+        model.addAttribute("filterLocation", filterLocation);
         model.addAttribute("dtoes", treeSvtDtoByEmployee);
         model.addAttribute("dtoesStorage", treeSvtDtoByStorage);
         model.addAttribute("attribute", "systemblock");
@@ -1080,39 +1273,39 @@ public class SvtViewController {
  //   @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
   //  @Log
     @PostMapping("/sysblocks")
-    public String saveSystemblock(@RequestBody SvtSystemBlockDTO dto) throws ObjectAlreadyExists {
+    public ResponseEntity<String> saveSystemblock(@RequestBody SvtSystemBlockDTO dto) throws ObjectAlreadyExists {
         systemblockService.createSvtObj(dto);
-        return "redirect:/sysblocks";
+        return new ResponseEntity(HttpStatus.ACCEPTED);
     }
     
     
       //      @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
   //  @UpdLog
-    @PostMapping("/sysblockstostor")
-    public String sendToStorageSystemblock (@RequestBody SvtSystemBlockDTO dto) throws ObjectAlreadyExists {
+    @PutMapping("/sysblockstostor")
+    public ResponseEntity<String> sendToStorageSystemblock (@RequestBody SvtSystemBlockDTO dto) throws ObjectAlreadyExists {
            // SystemBlock findById = sysrepo.findById(dto.getId()).get();
             SystemBlock systemblock = systemblockMapper.getEntityFromDto(dto);
         systemblockService.sendToStorage(systemblock);
-        return "redirect:/sysblocks";
+        return new ResponseEntity(HttpStatus.ACCEPTED);
         
     }
     
 
  //   @UpdLog
-        @PostMapping("/updsysblocks")
-    public String updateSystemblock(@RequestBody SvtSystemBlockDTO dto) throws ObjectAlreadyExists {
+        @PutMapping("/updsysblocks")
+    public ResponseEntity<String> updateSystemblock(@RequestBody SvtSystemBlockDTO dto) throws ObjectAlreadyExists {
         systemblockService.updateSvtObj(dto);
-        return "redirect:/sysblocks";
+        return new ResponseEntity(HttpStatus.ACCEPTED);
      
     }
     
     
      //   @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
   //  @SendArchive
-    @PostMapping("/systemblockarchived")
-    public String sendSystemBlockToArchive(@RequestBody ArchivedDto dto) throws ObjectAlreadyExists {
+    @DeleteMapping("/systemblockarchived")
+    public ResponseEntity<String> sendSystemBlockToArchive(@RequestBody ArchivedDto dto) throws ObjectAlreadyExists {
         systemblockService.svtObjToArchive(dto);
-        return "redirect:/sysblocks";
+        return new ResponseEntity(HttpStatus.ACCEPTED);
     }
     
     
@@ -1132,18 +1325,35 @@ public class SvtViewController {
  //   @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
  //  @Log
     @PostMapping("/mmotherboard")
-    public String saveModelMotherboard(@RequestBody SvtModelDto dto) throws ObjectAlreadyExists {
+    public ResponseEntity<String> saveModelMotherboard(@RequestBody SvtModelDto dto) throws ObjectAlreadyExists {
             Motherboard modelMotherboard = svtModelMapper.getModelMotherboard(dto);
-        motherboardModelService.saveModel(modelMotherboard);
-        return "redirect:/mmotherboard";
+            try{
+                motherboardModelService.saveModel(modelMotherboard);
+            }catch(Exception e) {
+                return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
+            }
+        return new ResponseEntity(HttpStatus.ACCEPTED);
+        
+    }
+    
+    @PutMapping("/mmotherboardupd")
+    public ResponseEntity<String> updateModelMotherboard(@RequestBody SvtModelDto dto) throws ObjectAlreadyExists {
+            Motherboard modelMotherboard = svtModelMapper.getModelMotherboard(dto);
+            try{
+                motherboardModelService.update(modelMotherboard);
+            }catch(Exception e) {
+                return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
+            }
+        
+        return new ResponseEntity(HttpStatus.ACCEPTED);
         
     }
     
  //   @SendArchive
-    @PostMapping("/mmotherboardarchived")
-    public String sendModelMotherboardToArchive(@RequestBody ArchivedDto dto) throws ObjectAlreadyExists {
+    @DeleteMapping("/mmotherboardarchived")
+    public ResponseEntity<String> sendModelMotherboardToArchive(@RequestBody ArchivedDto dto) throws ObjectAlreadyExists {
         motherboardModelService.sendModelToArchive(dto.getId());
-        return "redirect:/mmotherboard";
+        return new ResponseEntity(HttpStatus.ACCEPTED);
         
     }
     
@@ -1163,27 +1373,36 @@ public class SvtViewController {
  //   @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
  //   @Log
     @PostMapping("/mcpu")
-    public String saveModelCpu(@RequestBody CpuModelDto dto) throws ObjectAlreadyExists {
+    public ResponseEntity<String> saveModelCpu(@RequestBody CpuModelDto dto) throws ObjectAlreadyExists {
         Cpu cpu = svtModelMapper.getCpu(dto);
-        cpuModelService.saveModel(cpu);
-        return "redirect:/mcpu";
+        try{
+            cpuModelService.saveModel(cpu);
+        }catch(Exception e) {
+            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+        
+        return new ResponseEntity(HttpStatus.ACCEPTED);
         
     }
     
  //   @SendArchive
-    @PostMapping("/mcpuarchived")
-    public String sendModelCpuToArchive(@RequestBody ArchivedDto dto) throws ObjectAlreadyExists {
+    @DeleteMapping("/mcpuarchived")
+    public ResponseEntity<String> sendModelCpuToArchive(@RequestBody ArchivedDto dto) throws ObjectAlreadyExists {
         cpuModelService.sendModelToArchive(dto.getId());
-        return "redirect:/mcpu";
+        return new ResponseEntity(HttpStatus.ACCEPTED);
         
     }
     
  //   @UpdLog
-    @PostMapping("/mcpuupd")
-    public String updateModelCpu(@RequestBody CpuModelDto dto) throws ObjectAlreadyExists {
+    @PutMapping("/mcpuupd")
+    public ResponseEntity<String> updateModelCpu(@RequestBody CpuModelDto dto) throws ObjectAlreadyExists {
         Cpu cpu = svtModelMapper.getCpu(dto);
-        cpuModelService.update(cpu);
-        return "redirect:/mcpu";
+        try{
+            cpuModelService.update(cpu);
+        }catch(Exception e) {
+            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity(HttpStatus.ACCEPTED);
     }
     
     
@@ -1203,30 +1422,38 @@ public class SvtViewController {
  //   @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
  //   @Log
     @PostMapping("/mram")
-    public String saveModelRam(@RequestBody RamDto dto) throws ObjectAlreadyExists {
+    public ResponseEntity<String> saveModelRam(@RequestBody RamDto dto) throws ObjectAlreadyExists {
         Ram ram = svtModelMapper.getRam(dto);
-        ramModelService.saveModel(ram);
-        return "redirect:/mram";
+        try{
+            ramModelService.saveModel(ram);
+        }catch(Exception e) {
+            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+        
+        return new ResponseEntity(HttpStatus.ACCEPTED);
         
     }
     
   //   @SendArchive
-    @PostMapping("/mramarchived")
-    public String sendModelRamToArchive(@RequestBody ArchivedDto dto) throws ObjectAlreadyExists {
+    @DeleteMapping("/mramarchived")
+    public ResponseEntity<String> sendModelRamToArchive(@RequestBody ArchivedDto dto) throws ObjectAlreadyExists {
         ramModelService.sendModelToArchive(dto.getId());
-        return "redirect:/mram";
+        return new ResponseEntity(HttpStatus.ACCEPTED);
         
     }
     
     
     
   //     @UpdLog
-    @PostMapping("/mramupd")
-    public String updateModelRam(@RequestBody RamDto dto) throws ObjectAlreadyExists {
+    @PutMapping("/mramupd")
+    public ResponseEntity<String> updateModelRam(@RequestBody RamDto dto) throws ObjectAlreadyExists {
         Ram ram = svtModelMapper.getRam(dto);
-        ramModelService.update(ram);
-        return "redirect:/mram";
-        
+        try{
+            ramModelService.update(ram);
+        }catch(Exception e) {
+            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity(HttpStatus.ACCEPTED);
     }
     
     
@@ -1246,29 +1473,37 @@ public class SvtViewController {
  //   @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
   //  @Log
     @PostMapping("/mhdd")
-    public String saveModelHdd(@RequestBody HddDto dto) throws ObjectAlreadyExists {
+    public ResponseEntity<String> saveModelHdd(@RequestBody HddDto dto) throws ObjectAlreadyExists {
         Hdd hdd = svtModelMapper.getHdd(dto);
-        hddModelService.saveModel(hdd);
-        return "redirect:/mhdd";
+        try{
+            hddModelService.saveModel(hdd);
+        } catch(Exception e) {
+            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+        }
+        
+        return new ResponseEntity(HttpStatus.ACCEPTED);
         
     }
     
     
 //    @SendArchive
-    @PostMapping("/mhddarchived")
-    public String sendModelHddToArchive(@RequestBody ArchivedDto dto) throws ObjectAlreadyExists {
+    @DeleteMapping("/mhddarchived")
+    public ResponseEntity<String> sendModelHddToArchive(@RequestBody ArchivedDto dto) throws ObjectAlreadyExists {
         hddModelService.sendModelToArchive(dto.getId());
-        return "redirect:/mhdd";
+        return new ResponseEntity(HttpStatus.ACCEPTED);
         
     }
     
 
-        @PostMapping("/mhddupd")
-    public String updateModelHdd(@RequestBody HddDto dto) throws ObjectAlreadyExists {
+        @PutMapping("/mhddupd")
+    public ResponseEntity<String> updateModelHdd(@RequestBody HddDto dto) throws ObjectAlreadyExists {
         Hdd hdd = svtModelMapper.getHdd(dto);
-        hddModelService.update(hdd);
-        return "redirect:/mhdd";
-     
+        try{
+            hddModelService.update(hdd);
+        }catch(Exception e){
+            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity(HttpStatus.ACCEPTED);
     }
     
   //   @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
@@ -1287,28 +1522,34 @@ public class SvtViewController {
  //   @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
  //   @Log
     @PostMapping("/mvideo")
-    public String saveModelVideoCard(@RequestBody SvtModelDto dto) throws ObjectAlreadyExists {
+    public ResponseEntity<String> saveModelVideoCard(@RequestBody SvtModelDto dto) throws ObjectAlreadyExists {
         VideoCard videocard = svtModelMapper.getVideoCard(dto);
-        videoCardModelService.saveModel(videocard);
-        return "redirect:/mvideo";
-        
+        try{
+            videoCardModelService.saveModel(videocard);
+        }catch(Exception e) {
+            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity(HttpStatus.ACCEPTED);
     }
     
  //     @SendArchive
-    @PostMapping("/mvideoarchived")
-    public String sendModelVideoCardToArchive(@RequestBody ArchivedDto dto) throws ObjectAlreadyExists {
+    @DeleteMapping("/mvideoarchived")
+    public ResponseEntity<String> sendModelVideoCardToArchive(@RequestBody ArchivedDto dto) throws ObjectAlreadyExists {
         videoCardModelService.sendModelToArchive(dto.getId());
-        return "redirect:/mvideo";
+        return new ResponseEntity(HttpStatus.ACCEPTED);
         
     }
     
  //   @UpdLog
-    @PostMapping("/mvideoupd")
-    public String updateModelVideoCard(@RequestBody SvtModelDto dto) throws ObjectAlreadyExists {
+    @PutMapping("/mvideoupd")
+    public ResponseEntity<String> updateModelVideoCard(@RequestBody SvtModelDto dto) throws ObjectAlreadyExists {
         VideoCard videocard = svtModelMapper.getVideoCard(dto);
-        videoCardModelService.update(videocard);
-        return "redirect:/mvideo";
-        
+        try{
+            videoCardModelService.update(videocard);
+        }catch(Exception e) {
+            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity(HttpStatus.ACCEPTED);
     }
     
   //    @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
@@ -1327,26 +1568,35 @@ public class SvtViewController {
  //   @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
   //  @Log
     @PostMapping("/mcddrive")
-    public String saveModelCdDrive(@RequestBody SvtModelDto dto) throws ObjectAlreadyExists {
+    public ResponseEntity<String> saveModelCdDrive(@RequestBody SvtModelDto dto) throws ObjectAlreadyExists {
         CdDrive cdDrive = svtModelMapper.getCdDrive(dto);
-        cdDriveModelService.saveModel(cdDrive);
-        return "redirect:/mcddrive";
+        try{
+            cdDriveModelService.saveModel(cdDrive);
+        }catch(Exception e) {
+            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity(HttpStatus.ACCEPTED);
     }
     
     
   //  @SendArchive
-    @PostMapping("/mcddrivearchived")
-    public String sendModelCdDriveToArchive(@RequestBody ArchivedDto dto) throws ObjectAlreadyExists {
+    @DeleteMapping("/mcddrivearchived")
+    public ResponseEntity<String> sendModelCdDriveToArchive(@RequestBody ArchivedDto dto) throws ObjectAlreadyExists {
         cdDriveModelService.sendModelToArchive(dto.getId());
-        return "redirect:/mcddrive";
+        return new ResponseEntity(HttpStatus.ACCEPTED);
     }
     
  //   @UpdLog
-    @PostMapping("/mcddriveupd")
-    public String updateModelCdDrive(@RequestBody SvtModelDto dto) throws ObjectAlreadyExists {
+    @PutMapping("/mcddriveupd")
+    public ResponseEntity<String> updateModelCdDrive(@RequestBody SvtModelDto dto) throws ObjectAlreadyExists {
         CdDrive cdDrive = svtModelMapper.getCdDrive(dto);
-        cdDriveModelService.update(cdDrive);
-        return "redirect:/mcddrive";
+        try{
+            cdDriveModelService.update(cdDrive);
+        }catch(Exception e) {
+            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+        
+        return new ResponseEntity(HttpStatus.ACCEPTED);
         
     }
     
@@ -1366,26 +1616,34 @@ public class SvtViewController {
  //   @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
  //   @Log
     @PostMapping("/mscard")
-    public String saveModelSCard(@RequestBody SvtModelDto dto) throws ObjectAlreadyExists {
+    public ResponseEntity<String> saveModelSCard(@RequestBody SvtModelDto dto) throws ObjectAlreadyExists {
         SoundCard soundCard = svtModelMapper.getSoundCard(dto);
-        soundCardModelService.saveModel(soundCard);
-        return "redirect:/mscard";
+        try{
+            soundCardModelService.saveModel(soundCard);
+        }catch(Exception e) {
+            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity(HttpStatus.ACCEPTED);
     }
     
     
  //    @SendArchive
-    @PostMapping("/mscardarchived")
-    public String sendModelSCardToArchive(@RequestBody ArchivedDto dto) throws ObjectAlreadyExists {
+    @DeleteMapping("/mscardarchived")
+    public ResponseEntity<String> sendModelSCardToArchive(@RequestBody ArchivedDto dto) throws ObjectAlreadyExists {
         soundCardModelService.sendModelToArchive(dto.getId());
-        return "redirect:/mscard";
+        return new ResponseEntity(HttpStatus.ACCEPTED);
     }
     
  //   @UpdLog
-    @PostMapping("/mscardupd")
-    public String updateModelSCard(@RequestBody SvtModelDto dto) throws ObjectAlreadyExists {
+    @PutMapping("/mscardupd")
+    public ResponseEntity<String> updateModelSCard(@RequestBody SvtModelDto dto) throws ObjectAlreadyExists {
         SoundCard soundCard = svtModelMapper.getSoundCard(dto);
-        soundCardModelService.update(soundCard);
-        return "redirect:/mscard";
+        try{
+            soundCardModelService.update(soundCard);
+        }catch(Exception e) {
+            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity(HttpStatus.ACCEPTED);
         
     }
     
@@ -1406,26 +1664,35 @@ public class SvtViewController {
     //@PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
  //   @Log
     @PostMapping("/mlcard")
-    public String saveModelLanCard(@RequestBody SvtModelDto dto) throws ObjectAlreadyExists {
+    public ResponseEntity<String> saveModelLanCard(@RequestBody SvtModelDto dto) throws ObjectAlreadyExists {
         LanCard lanCard = svtModelMapper.getLanCard(dto);
-        lanCardModelService.saveModel(lanCard);
-        return "redirect:/mlcard";
+        try{
+            lanCardModelService.saveModel(lanCard);
+        }catch(Exception e) {
+            return new ResponseEntity(e.getMessage(), HttpStatus.ACCEPTED);
+        }
+        return new ResponseEntity(HttpStatus.ACCEPTED);
     }
     
  //     @SendArchive
-    @PostMapping("/mlcardarchived")
-    public String sendModelLanCardToArchive(@RequestBody ArchivedDto dto) throws ObjectAlreadyExists {
+    @DeleteMapping("/mlcardarchived")
+    public ResponseEntity<String> sendModelLanCardToArchive(@RequestBody ArchivedDto dto) throws ObjectAlreadyExists {
         lanCardModelService.sendModelToArchive(dto.getId());
-        return "redirect:/mlcard";
+        return new ResponseEntity(HttpStatus.ACCEPTED);
     }
     
     
  //      @Log
-    @PostMapping("/mlcardupd")
-    public String updateModelLanCard(@RequestBody SvtModelDto dto) throws ObjectAlreadyExists {
+    @PutMapping("/mlcardupd")
+    public ResponseEntity<String> updateModelLanCard(@RequestBody SvtModelDto dto) throws ObjectAlreadyExists {
         LanCard lanCard = svtModelMapper.getLanCard(dto);
-        lanCardModelService.update(lanCard);
-        return "redirect:/mlcard";
+        try{
+            lanCardModelService.update(lanCard);
+        }catch(Exception e) {
+            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+        
+        return new ResponseEntity(HttpStatus.ACCEPTED);
         
     }
     
@@ -1446,26 +1713,34 @@ public class SvtViewController {
  //   @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
 //    @Log
     @PostMapping("/mkeyboard")
-    public String saveModelKeyboard(@RequestBody SvtModelDto dto) throws ObjectAlreadyExists {
+    public ResponseEntity<String> saveModelKeyboard(@RequestBody SvtModelDto dto) throws ObjectAlreadyExists {
         Keyboard keyboard = svtModelMapper.getKeyboard(dto);
-        keyboardModelService.saveModel(keyboard);
-        return "redirect:/mkeyboard";
+        try{
+           keyboardModelService.saveModel(keyboard); 
+        }catch(Exception e){
+            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity(HttpStatus.ACCEPTED);
     }
     
   //    @SendArchive
-    @PostMapping("/mkeyboardarchived")
-    public String sendModelKeyboardToArchive(@RequestBody ArchivedDto dto) throws ObjectAlreadyExists {
+    @DeleteMapping("/mkeyboardarchived")
+    public ResponseEntity<String> sendModelKeyboardToArchive(@RequestBody ArchivedDto dto) throws ObjectAlreadyExists {
         keyboardModelService.sendModelToArchive(dto.getId());
-        return "redirect:/mkeyboard";
+        return new ResponseEntity(HttpStatus.ACCEPTED);
     }
     
     
  //       @UpdLog
-    @PostMapping("/mkeyboardupd")
-    public String updateModelKeyboard(@RequestBody SvtModelDto dto) throws ObjectAlreadyExists {
+    @PutMapping("/mkeyboardupd")
+    public ResponseEntity<String> updateModelKeyboard(@RequestBody SvtModelDto dto) throws ObjectAlreadyExists {
         Keyboard keyboard = svtModelMapper.getKeyboard(dto);
-        keyboardModelService.update(keyboard);
-        return "redirect:/mkeyboard";
+        try{
+            keyboardModelService.update(keyboard);
+        }catch(Exception e) {
+            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity(HttpStatus.ACCEPTED);
         
     }
     
@@ -1485,28 +1760,34 @@ public class SvtViewController {
 //    @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
  //   @Log
     @PostMapping("/mmouse")
-    public String saveModelMouse(@RequestBody SvtModelDto dto) throws ObjectAlreadyExists {
+    public ResponseEntity<String> saveModelMouse(@RequestBody SvtModelDto dto) throws ObjectAlreadyExists {
         Mouse mouse = svtModelMapper.getMouse(dto);
-        mouseModelService.saveModel(mouse);
-        return "redirect:/mmouse";
-        
+        try{
+            mouseModelService.saveModel(mouse);
+        }catch(Exception e) {
+            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity(HttpStatus.ACCEPTED);
     }
     
 //    @SendArchive
-    @PostMapping("/mmousearchived")
-    public String sendModelMouseToArchive(@RequestBody ArchivedDto dto) throws ObjectAlreadyExists {
+    @DeleteMapping("/mmousearchived")
+    public ResponseEntity<String> sendModelMouseToArchive(@RequestBody ArchivedDto dto) throws ObjectAlreadyExists {
         mouseModelService.sendModelToArchive(dto.getId());
-        return "redirect:/mmouse";
+        return new ResponseEntity(HttpStatus.ACCEPTED);
     }
     
     
  //   @UpdLog
-    @PostMapping("/mmouseupd")
-    public String updateModelMouse(@RequestBody SvtModelDto dto) throws ObjectAlreadyExists {
+    @PutMapping("/mmouseupd")
+    public ResponseEntity<String> updateModelMouse(@RequestBody SvtModelDto dto) throws ObjectAlreadyExists {
         Mouse mouse = svtModelMapper.getMouse(dto);
-        mouseModelService.update(mouse);
-        return "redirect:/mmouse";
-        
+        try{
+            mouseModelService.update(mouse);
+        }catch(Exception e) {
+            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity(HttpStatus.ACCEPTED);
     }
     
  //      @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
@@ -1525,27 +1806,36 @@ public class SvtViewController {
  //   @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
  //   @Log
     @PostMapping("/mspeakers")
-    public String saveModelSpeakers(@RequestBody SvtModelDto dto) throws ObjectAlreadyExists {
+    public ResponseEntity<String> saveModelSpeakers(@RequestBody SvtModelDto dto) throws ObjectAlreadyExists {
         Speakers speakers = svtModelMapper.getSpeakers(dto);
-        speakersModelService.saveModel(speakers);
-        return "redirect:/mspeakers";
+        try{
+            speakersModelService.saveModel(speakers);
+        }catch(Exception e) {
+            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity(HttpStatus.ACCEPTED);
     }
     
     
  //    @SendArchive
-    @PostMapping("/mspeakersarchived")
-    public String sendModelSpeakersToArchive(@RequestBody ArchivedDto dto) throws ObjectAlreadyExists {
+    @DeleteMapping("/mspeakersarchived")
+    public ResponseEntity<String> sendModelSpeakersToArchive(@RequestBody ArchivedDto dto) throws ObjectAlreadyExists {
         speakersModelService.sendModelToArchive(dto.getId());
-        return "redirect:/mspeakers";
+        return new ResponseEntity(HttpStatus.ACCEPTED);
     }
     
     
  //    @UpdLog
-    @PostMapping("/mspeakersupd")
-    public String updateModelSpeakers(@RequestBody SvtModelDto dto) throws ObjectAlreadyExists {
+    @PutMapping("/mspeakersupd")
+    public ResponseEntity<String> updateModelSpeakers(@RequestBody SvtModelDto dto) throws ObjectAlreadyExists {
         Speakers speakers = svtModelMapper.getSpeakers(dto);
-        speakersModelService.update(speakers);
-        return "redirect:/mspeakers";
+        try{
+            speakersModelService.update(speakers);
+        }catch(Exception e) {
+            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+        
+        return new ResponseEntity(HttpStatus.ACCEPTED);
     }
     
  //      @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
@@ -1563,21 +1853,28 @@ public class SvtViewController {
 //    @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
 //    @Log
     @PostMapping("/os")
-    public String saveOperationSystem(@RequestBody OperationSystemDto dto) throws ObjectAlreadyExists {
+    public ResponseEntity<String> saveOperationSystem(@RequestBody OperationSystemDto dto) throws ObjectAlreadyExists {
             OperationSystem operationSystem = operationSystemMapper.getOperationSystem(dto);
             operationSystemService.saveOperationSystem(operationSystem);
-        return "redirect:/os";
+        return new ResponseEntity(HttpStatus.ACCEPTED);
         
     }
     
     //    @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
  //   @UpdLog
-    @PostMapping("/osupd")
-    public String updateOperationSystem(@RequestBody OperationSystemDto dto) throws ObjectAlreadyExists {
+    @PutMapping("/osupd")
+    public ResponseEntity<String> updateOperationSystem(@RequestBody OperationSystemDto dto) throws ObjectAlreadyExists {
             OperationSystem operationSystem = operationSystemMapper.getOperationSystem(dto);
             operationSystemService.updateOperationSystem(operationSystem);
-        return "redirect:/os";
+        return new ResponseEntity(HttpStatus.ACCEPTED);
         
+    }
+    
+    
+        @DeleteMapping("/osarchived")
+    public ResponseEntity<String> osToArchive(@RequestBody ArchivedDto dto) throws ObjectAlreadyExists {
+        operationSystemService.sendOsToArchive(dto.getId());
+        return new ResponseEntity(HttpStatus.ACCEPTED);
     }
     
      //   @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
@@ -1596,19 +1893,38 @@ public class SvtViewController {
 //    @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
  //   @Log
     @PostMapping("/mscanner")
-    public String saveModelScanner(@RequestBody SvtModelDto dto) throws ObjectAlreadyExists {
+    public ResponseEntity<String> saveModelScanner(@RequestBody SvtModelDto dto) throws ObjectAlreadyExists {
         ScannerModel scannerModel = svtModelMapper.getModelScanner(dto);
-        scannerModelService.saveModel(scannerModel);
-        return "redirect:/mscanner";
+        try{
+            scannerModelService.saveModel(scannerModel);
+        }catch(Exception e) {
+            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+        
+        return new ResponseEntity(HttpStatus.ACCEPTED);
+        
+    }
+    
+    
+    @PutMapping("/mscannerupd")
+    public ResponseEntity<String> updateModelScanner(@RequestBody SvtModelDto dto) throws ObjectAlreadyExists {
+        ScannerModel scannerModel = svtModelMapper.getModelScanner(dto);
+        try{
+            scannerModelService.update(scannerModel);
+        }catch(Exception e) {
+            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+        
+        return new ResponseEntity(HttpStatus.ACCEPTED);
         
     }
     
  //    @SendArchive
-    @PostMapping("/mscannerarchived")
-    public String sendModelScannerToArchive(@RequestBody ArchivedDto dto) throws ObjectAlreadyExists {
+    @DeleteMapping("/mscannerarchived")
+    public ResponseEntity<String> sendModelScannerToArchive(@RequestBody ArchivedDto dto) throws ObjectAlreadyExists {
         
         scannerModelService.sendModelToArchive(dto.getId());
-        return "redirect:/mscanner";
+        return new ResponseEntity(HttpStatus.ACCEPTED);
         
     }
     
@@ -1674,7 +1990,26 @@ public class SvtViewController {
         }
         
         int amount = SvtViewController.getAmountDevices(treeSvtDtoByEmployee, treeSvtDtoByStorage);
+        String filterLocation = null;
+        if(null != dto.getLocation() && !dto.getLocation().isEmpty() && !dto.getLocation().isBlank()) {
+            filterLocation = locationService.getLocationById(Long.parseLong(dto.getLocation())).getName();
+        }
         
+        String filterModel = null;
+        if(null != dto.getModel() && !dto.getModel().isBlank() && !dto.getModel().isEmpty()) {
+            Optional<ScannerModel> optModel = scannerModelService.getById(Long.parseLong(dto.getModel()));
+            if(optModel.isPresent()) {
+                filterModel = optModel.get().getModel();
+            }
+            
+        }
+        model.addAttribute("searchFIO", username);
+        model.addAttribute("searchInventary", inventaryNumber);
+        model.addAttribute("filterDateBegin", dto.getYearCreatedOne());
+        model.addAttribute("filterDateEnd", dto.getYearCreatedTwo());
+        model.addAttribute("filterStatus", dto.getStatus());
+        model.addAttribute("filterModel", filterModel);
+        model.addAttribute("filterLocation", filterLocation);
         model.addAttribute("dtoes", treeSvtDtoByEmployee);
         model.addAttribute("dtoesStorage", treeSvtDtoByStorage);
         model.addAttribute("attribute", "scanner");
@@ -1687,39 +2022,39 @@ public class SvtViewController {
 //    @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
  //   @Log
     @PostMapping("/scanner")
-    public String saveScanner(@RequestBody SvtScannerDTO dto) throws ObjectAlreadyExists {
+    public ResponseEntity<String> saveScanner(@RequestBody SvtScannerDTO dto) throws ObjectAlreadyExists {
         scannerService.createSvtObj(dto);
-        return "redirect:/scanner";
+        return new ResponseEntity(HttpStatus.ACCEPTED);
      
     }
     
     //      @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
   //  @UpdLog
-    @PostMapping("/scannertostor")
-    public String sendToStorageScanner (@RequestBody SvtScannerDTO dto) throws ObjectAlreadyExists {
+    @PutMapping("/scannertostor")
+    public ResponseEntity<String> sendToStorageScanner (@RequestBody SvtScannerDTO dto) throws ObjectAlreadyExists {
            // SystemBlock findById = sysrepo.findById(dto.getId()).get();
             Scanner scanner = scannerMapper.getEntityFromDto(dto);
         scannerService.sendToStorage(scanner);
-        return "redirect:/scanner";
+        return new ResponseEntity(HttpStatus.ACCEPTED);
         
     }
     
 
  //       @UpdLog
-        @PostMapping("/updscanner")
-    public String updateScanner(@RequestBody SvtScannerDTO dto) throws ObjectAlreadyExists {
+        @PutMapping("/updscanner")
+    public ResponseEntity<String> updateScanner(@RequestBody SvtScannerDTO dto) throws ObjectAlreadyExists {
         scannerService.updateSvtObj(dto);
-        return "redirect:/scanner";
+        return new ResponseEntity(HttpStatus.ACCEPTED);
      
     }
     
     
      //   @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
  //   @SendArchive
-    @PostMapping("/scannerarchived")
-    public String sendScannerToArchive(@RequestBody ArchivedDto dto) throws ObjectAlreadyExists {
+    @DeleteMapping("/scannerarchived")
+    public ResponseEntity<String> sendScannerToArchive(@RequestBody ArchivedDto dto) throws ObjectAlreadyExists {
         scannerService.svtObjToArchive(dto);
-        return "redirect:/scanner";
+        return new ResponseEntity(HttpStatus.ACCEPTED);
     }
     
      //      @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
@@ -1738,17 +2073,35 @@ public class SvtViewController {
 //    @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
  //   @Log
     @PostMapping("/mserver")
-    public String saveModelServer(@RequestBody SvtModelDto dto) throws ObjectAlreadyExists {
+    public ResponseEntity<String> saveModelServer(@RequestBody SvtModelDto dto) throws ObjectAlreadyExists {
         ServerModel serverModel = svtModelMapper.getModelServer(dto);
-        serverModelService.saveModel(serverModel);
-        return "redirect:/mserver";
+        try{
+            serverModelService.saveModel(serverModel);
+        }catch(Exception e) {
+            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+        
+        return new ResponseEntity(HttpStatus.ACCEPTED);
+    }
+    
+    
+    @PutMapping("/mserverupd")
+    public ResponseEntity<String> updateModelServer(@RequestBody SvtModelDto dto) throws ObjectAlreadyExists {
+        ServerModel serverModel = svtModelMapper.getModelServer(dto);
+        try{
+            serverModelService.update(serverModel);
+        }catch(Exception e) {
+            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+        
+        return new ResponseEntity(HttpStatus.ACCEPTED);
     }
     
  //   @SendArchive
-    @PostMapping("/mserverarchived")
-    public String sendModelServerToArchive(@RequestBody ArchivedDto dto) throws ObjectAlreadyExists {
+    @DeleteMapping("/mserverarchived")
+    public ResponseEntity<String> sendModelServerToArchive(@RequestBody ArchivedDto dto) throws ObjectAlreadyExists {
         serverModelService.sendModelToArchive(dto.getId());
-        return "redirect:/mserver";
+        return new ResponseEntity(HttpStatus.ACCEPTED);
     }
     
     
@@ -1811,7 +2164,26 @@ public class SvtViewController {
         }
         
         int amount = SvtViewController.getAmountDevices(treeSvtDtoByEmployee, treeSvtDtoByStorage);
+        String filterLocation = null;
+        if(null != dto.getLocation() && !dto.getLocation().isEmpty() && !dto.getLocation().isBlank()) {
+            filterLocation = locationService.getLocationById(Long.parseLong(dto.getLocation())).getName();
+        }
         
+        String filterModel = null;
+        if(null != dto.getModel() && !dto.getModel().isBlank() && !dto.getModel().isEmpty()) {
+            Optional<ServerModel> optModel = serverModelService.getById(Long.parseLong(dto.getModel()));
+            if(optModel.isPresent()) {
+                filterModel = optModel.get().getModel();
+            }
+            
+        }
+        model.addAttribute("searchFIO", username);
+        model.addAttribute("searchInventary", inventaryNumber);
+        model.addAttribute("filterDateBegin", dto.getYearCreatedOne());
+        model.addAttribute("filterDateEnd", dto.getYearCreatedTwo());
+        model.addAttribute("filterStatus", dto.getStatus());
+        model.addAttribute("filterModel", filterModel);
+        model.addAttribute("filterLocation", filterLocation);
         model.addAttribute("dtoes", treeSvtDtoByEmployee);
         model.addAttribute("dtoesStorage", treeSvtDtoByStorage);
         model.addAttribute("attribute", "server");
@@ -1826,39 +2198,39 @@ public class SvtViewController {
  //   @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
   //  @UpdLog
     @PostMapping("/server")
-    public String saveServer(@RequestBody SvtServerDTO dto) throws ObjectAlreadyExists {
+    public ResponseEntity<String> saveServer(@RequestBody SvtServerDTO dto) throws ObjectAlreadyExists {
         serverService.createSvtObj(dto);
-        return "redirect:/server";
+        return new ResponseEntity(HttpStatus.ACCEPTED);
     }
     
     
         //      @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
   //  @UpdLog
     @PostMapping("/servertostor")
-    public String sendToStorageServer (@RequestBody SvtServerDTO dto) throws ObjectAlreadyExists {
+    public ResponseEntity<String> sendToStorageServer (@RequestBody SvtServerDTO dto) throws ObjectAlreadyExists {
             // SystemBlock findById = sysrepo.findById(dto.getId()).get();
             Server server = serverMapper.getEntityFromDto(dto);
         serverService.sendToStorage(server);
-        return "redirect:/server";
+        return new ResponseEntity(HttpStatus.ACCEPTED);
         
     }
     
 
    // @UpdLog
-     @PostMapping("/updserver")
-    public String updateServer (@RequestBody SvtServerDTO dto) throws ObjectAlreadyExists {
+     @PutMapping("/updserver")
+    public ResponseEntity<String> updateServer (@RequestBody SvtServerDTO dto) throws ObjectAlreadyExists {
         serverService.updateSvtObj(dto);
-        return "redirect:/server";
+        return new ResponseEntity(HttpStatus.ACCEPTED);
      
     }
     
     
     //   @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
   //  @SendArchive
-    @PostMapping("/serverarchived")
-    public String sendServerToArchive(@RequestBody ArchivedDto dto) throws ObjectAlreadyExists {
+    @DeleteMapping("/serverarchived")
+    public ResponseEntity<String> sendServerToArchive(@RequestBody ArchivedDto dto) throws ObjectAlreadyExists {
         serverService.svtObjToArchive(dto);
-        return "redirect:/server";
+        return new ResponseEntity(HttpStatus.ACCEPTED);
     }
     
     
@@ -1877,17 +2249,33 @@ public class SvtViewController {
 //    @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
  //   @Log
     @PostMapping("/mswitch")
-    public String saveModelSwitchHub(@RequestBody SvtModelDto dto) throws ObjectAlreadyExists {
+    public ResponseEntity<String> saveModelSwitchHub(@RequestBody SvtModelDto dto) throws ObjectAlreadyExists {
         SwitchHubModel switchHubModel = svtModelMapper.getModelSwitchHub(dto);
-        switchHubModelService.saveModel(switchHubModel);
-        return "redirect:/mswitch";
+        try{
+            switchHubModelService.saveModel(switchHubModel);
+        } catch(Exception e) {
+            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity(HttpStatus.ACCEPTED);
+    }
+    
+    
+    @PutMapping("/mswitchupd")
+    public ResponseEntity<String> updateModelSwitchHub(@RequestBody SvtModelDto dto) throws ObjectAlreadyExists {
+        SwitchHubModel switchHubModel = svtModelMapper.getModelSwitchHub(dto);
+        try{
+            switchHubModelService.update(switchHubModel);
+        }catch(Exception e) {
+            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity(HttpStatus.ACCEPTED);
     }
     
  //     @SendArchive
-    @PostMapping("/mswitcharchived")
-    public String sendModelSwitchHubToArchive(@RequestBody ArchivedDto dto) throws ObjectAlreadyExists {
+    @DeleteMapping("/mswitcharchived")
+    public ResponseEntity<String> sendModelSwitchHubToArchive(@RequestBody ArchivedDto dto) throws ObjectAlreadyExists {
         switchHubModelService.sendModelToArchive(dto.getId());
-        return "redirect:/mswitch";
+        return new ResponseEntity(HttpStatus.ACCEPTED);
     }
     
     
@@ -1950,7 +2338,26 @@ public class SvtViewController {
         }
         
         int amount = SvtViewController.getAmountDevices(treeSvtDtoByEmployee, treeSvtDtoByStorage);
+        String filterLocation = null;
+        if(null != dto.getLocation() && !dto.getLocation().isEmpty() && !dto.getLocation().isBlank()) {
+            filterLocation = locationService.getLocationById(Long.parseLong(dto.getLocation())).getName();
+        }
         
+        String filterModel = null;
+        if(null != dto.getModel() && !dto.getModel().isBlank() && !dto.getModel().isEmpty()) {
+            Optional<SwitchHubModel> optModel = switchHubModelService.getById(Long.parseLong(dto.getModel()));
+            if(optModel.isPresent()) {
+                filterModel = optModel.get().getModel();
+            }
+            
+        }
+        model.addAttribute("searchFIO", username);
+        model.addAttribute("searchInventary", inventaryNumber);
+        model.addAttribute("filterDateBegin", dto.getYearCreatedOne());
+        model.addAttribute("filterDateEnd", dto.getYearCreatedTwo());
+        model.addAttribute("filterStatus", dto.getStatus());
+        model.addAttribute("filterModel", filterModel);
+        model.addAttribute("filterLocation", filterLocation);
         model.addAttribute("dtoes", treeSvtDtoByEmployee);
         model.addAttribute("dtoesStorage", treeSvtDtoByStorage);
         model.addAttribute("attribute", "switch");
@@ -1963,37 +2370,36 @@ public class SvtViewController {
  //   @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
  //   @Log
     @PostMapping("/switch")
-    public String saveSwitchHub(@RequestBody SvtSwitchHubDTO dto) throws ObjectAlreadyExists {
+    public ResponseEntity<String> saveSwitchHub(@RequestBody SvtSwitchHubDTO dto) throws ObjectAlreadyExists {
         switchHubService.createSvtObj(dto);
-        return "redirect:/switch";
+        return new ResponseEntity(HttpStatus.ACCEPTED);
     }
     
            //      @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
  //   @UpdLog
-    @PostMapping("/switchtostor")
-    public String sendToStorageSwitchHub (@RequestBody SvtSwitchHubDTO dto) throws ObjectAlreadyExists {
-            // SystemBlock findById = sysrepo.findById(dto.getId()).get();
+    @PutMapping("/switchtostor")
+    public ResponseEntity<String> sendToStorageSwitchHub (@RequestBody SvtSwitchHubDTO dto) throws ObjectAlreadyExists {
             SwitchHub switchHub = switchHubMapper.getEntityFromDto(dto);
         switchHubService.sendToStorage(switchHub);
-        return "redirect:/switch";
+        return new ResponseEntity(HttpStatus.ACCEPTED);
         
     }
     
 
  //   @UpdLog
-     @PostMapping("/updswitch")
-    public String updateSwitchHub (@RequestBody SvtSwitchHubDTO dto) throws ObjectAlreadyExists {
+     @PutMapping("/updswitch")
+    public ResponseEntity<String> updateSwitchHub (@RequestBody SvtSwitchHubDTO dto) throws ObjectAlreadyExists {
         switchHubService.updateSvtObj(dto);
-        return "redirect:/switch";
+        return new ResponseEntity(HttpStatus.ACCEPTED);
      
     }
     
     //   @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
  //   @SendArchive
-    @PostMapping("/switcharchived")
-    public String sendSwitchHubToArchive(@RequestBody ArchivedDto dto) throws ObjectAlreadyExists {
+    @DeleteMapping("/switcharchived")
+    public ResponseEntity<String> sendSwitchHubToArchive(@RequestBody ArchivedDto dto) throws ObjectAlreadyExists {
         switchHubService.svtObjToArchive(dto);
-        return "redirect:/switch";
+        return new ResponseEntity(HttpStatus.ACCEPTED);
     }
     
             //      @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
@@ -2010,17 +2416,34 @@ public class SvtViewController {
 //    @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
  //   @Log
     @PostMapping("/mrouter")
-    public String saveModelRouter(@RequestBody SvtModelDto dto) throws ObjectAlreadyExists {
+    public ResponseEntity<String> saveModelRouter(@RequestBody SvtModelDto dto) throws ObjectAlreadyExists {
         RouterModel routerModel = svtModelMapper.getModelRouter(dto);
+        try{
         routerModelService.saveModel(routerModel);
-        return "redirect:/mrouter";
+        }catch(Exception e) {
+        return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+        
+        return new ResponseEntity(HttpStatus.ACCEPTED);
+    }
+    
+    @PutMapping("/mrouterupd")
+    public ResponseEntity<String> updateModelRouter(@RequestBody SvtModelDto dto) throws ObjectAlreadyExists {
+        RouterModel routerModel = svtModelMapper.getModelRouter(dto);
+        try{
+            routerModelService.update(routerModel);
+        }catch(Exception e) {
+            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+        
+        return new ResponseEntity(HttpStatus.ACCEPTED);
     }
     
   //  @SendArchive
-    @PostMapping("/mrouterarchived")
-    public String sendModelRouterToArchive(@RequestBody ArchivedDto dto) throws ObjectAlreadyExists {
+    @DeleteMapping("/mrouterarchived")
+    public ResponseEntity<String> sendModelRouterToArchive(@RequestBody ArchivedDto dto) throws ObjectAlreadyExists {
         routerModelService.sendModelToArchive(dto.getId());
-        return "redirect:/mrouter";
+        return new ResponseEntity(HttpStatus.ACCEPTED);
     }
     
          //  @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
@@ -2078,7 +2501,26 @@ public class SvtViewController {
         }
         
         int amount = SvtViewController.getAmountDevices(treeSvtDtoByEmployee, treeSvtDtoByStorage);
+        String filterLocation = null;
+        if(null != dto.getLocation() && !dto.getLocation().isEmpty() && !dto.getLocation().isBlank()) {
+            filterLocation = locationService.getLocationById(Long.parseLong(dto.getLocation())).getName();
+        }
         
+        String filterModel = null;
+        if(null != dto.getModel() && !dto.getModel().isBlank() && !dto.getModel().isEmpty()) {
+            Optional<RouterModel> optModel = routerModelService.getById(Long.parseLong(dto.getModel()));
+            if(optModel.isPresent()) {
+                filterModel = optModel.get().getModel();
+            }
+            
+        }
+        model.addAttribute("searchFIO", username);
+        model.addAttribute("searchInventary", inventaryNumber);
+        model.addAttribute("filterDateBegin", dto.getYearCreatedOne());
+        model.addAttribute("filterDateEnd", dto.getYearCreatedTwo());
+        model.addAttribute("filterStatus", dto.getStatus());
+        model.addAttribute("filterModel", filterModel);
+        model.addAttribute("filterLocation", filterLocation);
         model.addAttribute("dtoes", treeSvtDtoByEmployee);
         model.addAttribute("dtoesStorage", treeSvtDtoByStorage);
         model.addAttribute("attribute", "router");
@@ -2091,37 +2533,36 @@ public class SvtViewController {
  //   @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
   //  @Log
     @PostMapping("/router")
-    public String saveRouter(@RequestBody SvtSwitchHubDTO dto) throws ObjectAlreadyExists {
+    public ResponseEntity<String> saveRouter(@RequestBody SvtSwitchHubDTO dto) throws ObjectAlreadyExists {
         routerService.createSvtObj(dto);
-        return "redirect:/router";
+        return new ResponseEntity(HttpStatus.ACCEPTED);
     }
     
            //      @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
  //   @UpdLog
-    @PostMapping("/routertostor")
-    public String sendToStorageRouter(@RequestBody SvtSwitchHubDTO dto) throws ObjectAlreadyExists {
-            // SystemBlock findById = sysrepo.findById(dto.getId()).get();
+    @PutMapping("/routertostor")
+    public ResponseEntity<String> sendToStorageRouter(@RequestBody SvtSwitchHubDTO dto) throws ObjectAlreadyExists {
             Router router = routerMapper.getEntityFromDto(dto);
         routerService.sendToStorage(router);
-        return "redirect:/router";
+        return new ResponseEntity(HttpStatus.ACCEPTED);
         
     }
     
 
  //   @UpdLog
-     @PostMapping("/updrouter")
-    public String updateRouter (@RequestBody SvtSwitchHubDTO dto) throws ObjectAlreadyExists {
+     @PutMapping("/updrouter")
+    public ResponseEntity<String> updateRouter (@RequestBody SvtSwitchHubDTO dto) throws ObjectAlreadyExists {
         routerService.updateSvtObj(dto);
-        return "redirect:/router";
+        return new ResponseEntity(HttpStatus.ACCEPTED);
      
     }
     
         //   @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
   //  @SendArchive
-    @PostMapping("/routerarchived")
-    public String sendRouterToArchive(@RequestBody ArchivedDto dto) throws ObjectAlreadyExists {
+    @PutMapping("/routerarchived")
+    public ResponseEntity<String> sendRouterToArchive(@RequestBody ArchivedDto dto) throws ObjectAlreadyExists {
         routerService.svtObjToArchive(dto);
-        return "redirect:/router";
+        return new ResponseEntity(HttpStatus.ACCEPTED);
     }
     
     
@@ -2139,18 +2580,35 @@ public class SvtViewController {
 //    @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
  //   @Log
     @PostMapping("/mats")
-    public String saveModelAts(@RequestBody SvtModelDto dto) throws ObjectAlreadyExists {
+    public ResponseEntity<String> saveModelAts(@RequestBody SvtModelDto dto) throws ObjectAlreadyExists {
         AtsModel atsModel = svtModelMapper.getModelAts(dto);
-        atsModelService.saveModel(atsModel);
-        return "redirect:/mats";
+        try{
+            atsModelService.saveModel(atsModel);
+        }catch(Exception e){
+            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity(HttpStatus.ACCEPTED);
+    }
+    
+    
+    @PutMapping("/matsupd")
+    public ResponseEntity<String> updateModelAts(@RequestBody SvtModelDto dto) throws ObjectAlreadyExists {
+        AtsModel atsModel = svtModelMapper.getModelAts(dto);
+        try{
+            atsModelService.update(atsModel);
+        }catch(Exception e){
+            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+        
+        return new ResponseEntity(HttpStatus.ACCEPTED);
     }
     
     
  //    @SendArchive
-    @PostMapping("/matsarchived")
-    public String sendModelAtsToArchive(@RequestBody ArchivedDto dto) throws ObjectAlreadyExists {
+    @DeleteMapping("/matsarchived")
+    public ResponseEntity<String> sendModelAtsToArchive(@RequestBody ArchivedDto dto) throws ObjectAlreadyExists {
         atsModelService.sendModelToArchive(dto.getId());
-        return "redirect:/mats";
+        return new ResponseEntity(HttpStatus.ACCEPTED);
     }
     
              //  @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
@@ -2210,7 +2668,26 @@ public class SvtViewController {
         }
         
         int amount = SvtViewController.getAmountDevices(treeSvtDtoByEmployee, treeSvtDtoByStorage);
+        String filterLocation = null;
+        if(null != dto.getLocation() && !dto.getLocation().isEmpty() && !dto.getLocation().isBlank()) {
+            filterLocation = locationService.getLocationById(Long.parseLong(dto.getLocation())).getName();
+        }
         
+        String filterModel = null;
+        if(null != dto.getModel() && !dto.getModel().isBlank() && !dto.getModel().isEmpty()) {
+            Optional<AtsModel> optModel = atsModelService.getById(Long.parseLong(dto.getModel()));
+            if(optModel.isPresent()) {
+                filterModel = optModel.get().getModel();
+            }
+            
+        }
+        model.addAttribute("searchFIO", username);
+        model.addAttribute("searchInventary", inventaryNumber);
+        model.addAttribute("filterDateBegin", dto.getYearCreatedOne());
+        model.addAttribute("filterDateEnd", dto.getYearCreatedTwo());
+        model.addAttribute("filterStatus", dto.getStatus());
+        model.addAttribute("filterModel", filterModel);
+        model.addAttribute("filterLocation", filterLocation);
         model.addAttribute("dtoes", treeSvtDtoByEmployee);
         model.addAttribute("dtoesStorage", treeSvtDtoByStorage);
         model.addAttribute("attribute", "ats");
@@ -2223,42 +2700,41 @@ public class SvtViewController {
  //   @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
  //   @Log
     @PostMapping("/ats")
-    public String saveAts(@RequestBody SvtAtsDTO dto) throws ObjectAlreadyExists {
+    public ResponseEntity<String> saveAts(@RequestBody SvtAtsDTO dto) throws ObjectAlreadyExists {
         atsService.createSvtObj(dto);
-        return "redirect:/ats";
+        return new ResponseEntity(HttpStatus.ACCEPTED);
     }
     
  //   @UpdLog
-        @PostMapping("/updats")
-    public String updateAts (@RequestBody SvtAtsDTO dto) throws ObjectAlreadyExists {
+        @PutMapping("/updats")
+    public ResponseEntity<String> updateAts (@RequestBody SvtAtsDTO dto) throws ObjectAlreadyExists {
         atsService.updateSvtObj(dto);
-        return "redirect:/ats";
+        return new ResponseEntity(HttpStatus.ACCEPTED);
      
     }
     
               //      @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
  //   @UpdLog
-    @PostMapping("/atstostor")
-    public String sendToStorageAts(@RequestBody SvtAtsDTO dto) throws ObjectAlreadyExists {
-            // SystemBlock findById = sysrepo.findById(dto.getId()).get();
+    @PutMapping("/atstostor")
+    public ResponseEntity<String> sendToStorageAts(@RequestBody SvtAtsDTO dto) throws ObjectAlreadyExists {
             Ats ats = atsMapper.getEntityFromDto(dto);
         atsService.sendToStorage(ats);
-        return "redirect:/ats";
+        return new ResponseEntity(HttpStatus.ACCEPTED);
         
     }
     
     
           //   @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
  //   @SendArchive
-    @PostMapping("/atsarchived")
-    public String sendAtsToArchive(@RequestBody ArchivedDto dto) throws ObjectAlreadyExists {
+    @DeleteMapping("/atsarchived")
+    public ResponseEntity<String> sendAtsToArchive(@RequestBody ArchivedDto dto) throws ObjectAlreadyExists {
         atsService.svtObjToArchive(dto);
-        return "redirect:/ats";
+        return new ResponseEntity(HttpStatus.ACCEPTED);
     }
     
     
                    //      @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
- //   @GetMapping("/mconditioner")
+    @GetMapping("/mconditioner")
     public String getModelConditioner(Model model) {
         List<ConditionerModel> conditionerModels = conditionerModelService.getAllActualModels();
         List<SvtModelDto> getAtsModelsDtoes = svtModelMapper.getModelConditionerDtoes(conditionerModels);
@@ -2271,17 +2747,34 @@ public class SvtViewController {
 //    @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
  //   @Log
     @PostMapping("/mconditioner")
-    public String saveModelConditioner(@RequestBody SvtModelDto dto) throws ObjectAlreadyExists {
+    public ResponseEntity<String> saveModelConditioner(@RequestBody SvtModelDto dto) throws ObjectAlreadyExists {
         ConditionerModel conditionerModel = svtModelMapper.getModelConditioner(dto);
-        conditionerModelService.saveModel(conditionerModel);
-        return "redirect:/mconditioner";
+        try{
+            conditionerModelService.saveModel(conditionerModel);
+        }catch(Exception e){
+            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+        
+        return new ResponseEntity(HttpStatus.ACCEPTED);
+    }
+    
+    @PutMapping("/mconditionerupd")
+    public ResponseEntity<String> updModelConditioner(@RequestBody SvtModelDto dto) throws ObjectAlreadyExists {
+        ConditionerModel conditionerModel = svtModelMapper.getModelConditioner(dto);
+        try{
+            conditionerModelService.update(conditionerModel);
+        }catch(Exception e) {
+            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+        
+        return new ResponseEntity(HttpStatus.ACCEPTED);
     }
     
 //     @SendArchive
-    @PostMapping("/mconditionerarchived")
-    public String sendModelConditionerToArchive(@RequestBody ArchivedDto dto) throws ObjectAlreadyExists {
+    @DeleteMapping("/mconditionerarchived")
+    public ResponseEntity<String> sendModelConditionerToArchive(@RequestBody ArchivedDto dto) throws ObjectAlreadyExists {
         conditionerModelService.sendModelToArchive(dto.getId());
-        return "redirect:/mconditioner";
+        return new ResponseEntity(HttpStatus.ACCEPTED);
     }
     
                  //  @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
@@ -2342,7 +2835,26 @@ public class SvtViewController {
             
         }
         int amount = SvtViewController.getAmountDevices(treeSvtDtoByEmployee, treeSvtDtoByStorage);
+        String filterLocation = null;
+        if(null != dto.getLocation() && !dto.getLocation().isEmpty() && !dto.getLocation().isBlank()) {
+            filterLocation = locationService.getLocationById(Long.parseLong(dto.getLocation())).getName();
+        }
         
+        String filterModel = null;
+        if(null != dto.getModel() && !dto.getModel().isBlank() && !dto.getModel().isEmpty()) {
+            Optional<ConditionerModel> optModel = conditionerModelService.getById(Long.parseLong(dto.getModel()));
+            if(optModel.isPresent()) {
+                filterModel = optModel.get().getModel();
+            }
+            
+        }
+        model.addAttribute("searchFIO", username);
+        model.addAttribute("searchInventary", inventaryNumber);
+        model.addAttribute("filterDateBegin", dto.getYearCreatedOne());
+        model.addAttribute("filterDateEnd", dto.getYearCreatedTwo());
+        model.addAttribute("filterStatus", dto.getStatus());
+        model.addAttribute("filterModel", filterModel);
+        model.addAttribute("filterLocation", filterLocation);
         model.addAttribute("dtoes", treeSvtDtoByEmployee);
         model.addAttribute("dtoesStorage", treeSvtDtoByStorage);
         model.addAttribute("attribute", "conditioner");
@@ -2355,45 +2867,36 @@ public class SvtViewController {
  //   @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
  //   @Log
     @PostMapping("/conditioner")
-    public String saveConditioner(@RequestBody SvtConditionerDTO dto) throws ObjectAlreadyExists {
+    public ResponseEntity<String> saveConditioner(@RequestBody SvtConditionerDTO dto) throws ObjectAlreadyExists {
         conditionerService.createSvtObj(dto);
-        return "redirect:/conditioner";
+        return new ResponseEntity(HttpStatus.ACCEPTED);
     }
-          @UpdLog
-          @PostMapping("/updconditioner")
-    public String updateConditioner (@RequestBody SvtConditionerDTO dto) throws ObjectAlreadyExists {
+          @PutMapping("/updconditioner")
+    public ResponseEntity<String> updateConditioner (@RequestBody SvtConditionerDTO dto) throws ObjectAlreadyExists {
         conditionerService.updateSvtObj(dto);
-        return "redirect:/conditioner";
+        return new ResponseEntity(HttpStatus.ACCEPTED);
      
     }
     
               //      @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
  //   @UpdLog
-    @PostMapping("/conditionertostor")
-    public String sendToStorageConditioner(@RequestBody SvtConditionerDTO dto) throws ObjectAlreadyExists {
-            // SystemBlock findById = sysrepo.findById(dto.getId()).get();
+    @PutMapping("/conditionertostor")
+    public ResponseEntity<String> sendToStorageConditioner(@RequestBody SvtConditionerDTO dto) throws ObjectAlreadyExists {
             Conditioner conditioner = conditionerMapper.getEntityFromDto(dto);
         conditionerService.sendToStorage(conditioner);
-        return "redirect:/conditioner";
+        return new ResponseEntity(HttpStatus.ACCEPTED);
         
     }
     
-       //   @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
- //   @Log
-    @PostMapping("/conditionerbackstor")
-    public String backFromStorageConditioner (@RequestBody SvtConditionerDTO dto) throws ObjectAlreadyExists {
-            Conditioner conditioner = conditionerMapper.getEntityFromDto(dto);
-        conditionerService.backFromStorage(conditioner, dto.getPlaceId());
-        return "redirect:/conditioner";
-        
-    }
+
+   
     
           //   @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
  //   @SendArchive
-    @PostMapping("/conditionerarchived")
-    public String sendConditionerToArchive(@RequestBody ArchivedDto dto) throws ObjectAlreadyExists {
+    @DeleteMapping("/conditionerarchived")
+    public ResponseEntity<String> sendConditionerToArchive(@RequestBody ArchivedDto dto) throws ObjectAlreadyExists {
         conditionerService.svtObjToArchive(dto);
-        return "redirect:/conditioner";
+        return new ResponseEntity(HttpStatus.ACCEPTED);
     }
     
                        //      @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
@@ -2409,28 +2912,38 @@ public class SvtViewController {
     
     //   @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
  //   @UpdLog
-    @PostMapping("/mfaxupd")
-    public String updateModelFax(@RequestBody SvtModelDto dto) throws ObjectAlreadyExists {
+    @PutMapping("/mfaxupd")
+    public ResponseEntity<String> updateModelFax(@RequestBody SvtModelDto dto) throws ObjectAlreadyExists {
         FaxModel faxModel = svtModelMapper.getModelFax(dto);
-        faxModelService.update(faxModel);
-        return "redirect:/mfax";
+        try{
+            faxModelService.update(faxModel);
+        }catch(Exception e) {
+            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+        
+        return new ResponseEntity(HttpStatus.ACCEPTED);
         
     }
     
 //    @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
  //   @Log
     @PostMapping("/mfax")
-    public String saveModelFax(@RequestBody SvtModelDto dto) throws ObjectAlreadyExists {
+    public ResponseEntity<String> saveModelFax(@RequestBody SvtModelDto dto) throws ObjectAlreadyExists {
         FaxModel faxModel = svtModelMapper.getModelFax(dto);
-        faxModelService.saveModel(faxModel);
-        return "redirect:/mfax";
+        try{
+            faxModelService.saveModel(faxModel);
+        }catch(Exception e) {
+            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+        
+        return new ResponseEntity(HttpStatus.ACCEPTED);
     }
     
  //   @SendArchive
-    @PostMapping("/mfaxarchived")
-    public String sendModelFaxToArchive(@RequestBody ArchivedDto dto) throws ObjectAlreadyExists {
+    @DeleteMapping("/mfaxarchived")
+    public ResponseEntity<String> sendModelFaxToArchive(@RequestBody ArchivedDto dto) throws ObjectAlreadyExists {
         faxModelService.sendModelToArchive(dto.getId());
-        return "redirect:/mfax";
+        return new ResponseEntity(HttpStatus.ACCEPTED);
     }
     
     
@@ -2492,7 +3005,26 @@ public class SvtViewController {
             
         }
         int amount = SvtViewController.getAmountDevices(treeSvtDtoByEmployee, treeSvtDtoByStorage);
+        String filterLocation = null;
+        if(null != dto.getLocation() && !dto.getLocation().isEmpty() && !dto.getLocation().isBlank()) {
+            filterLocation = locationService.getLocationById(Long.parseLong(dto.getLocation())).getName();
+        }
         
+        String filterModel = null;
+        if(null != dto.getModel() && !dto.getModel().isBlank() && !dto.getModel().isEmpty()) {
+            Optional<FaxModel> optModel = faxModelService.getById(Long.parseLong(dto.getModel()));
+            if(optModel.isPresent()) {
+                filterModel = optModel.get().getModel();
+            }
+            
+        }
+        model.addAttribute("searchFIO", username);
+        model.addAttribute("searchInventary", inventaryNumber);
+        model.addAttribute("filterDateBegin", dto.getYearCreatedOne());
+        model.addAttribute("filterDateEnd", dto.getYearCreatedTwo());
+        model.addAttribute("filterStatus", dto.getStatus());
+        model.addAttribute("filterModel", filterModel);
+        model.addAttribute("filterLocation", filterLocation);
         model.addAttribute("dtoes", treeSvtDtoByEmployee);
         model.addAttribute("dtoesStorage", treeSvtDtoByStorage);
         model.addAttribute("attribute", "fax");
@@ -2505,45 +3037,37 @@ public class SvtViewController {
  //   @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
 //    @Log
     @PostMapping("/fax")
-    public String saveFax(@RequestBody FaxDto dto) throws ObjectAlreadyExists {
+    public ResponseEntity<String> saveFax(@RequestBody FaxDto dto) throws ObjectAlreadyExists {
         faxService.createSvtObj(dto);
-        return "redirect:/fax";
+        return new ResponseEntity(HttpStatus.ACCEPTED);
     }
  //    @UpdLog
-     @PostMapping("/updfax")
-    public String updateFax (@RequestBody FaxDto dto) throws ObjectAlreadyExists {
+     @PutMapping("/updfax")
+    public ResponseEntity<String> updateFax (@RequestBody FaxDto dto) throws ObjectAlreadyExists {
         faxService.updateSvtObj(dto);
-        return "redirect:/fax";
+        return new ResponseEntity(HttpStatus.ACCEPTED);
      
     }
     
               //      @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
  //   @UpdLog
-    @PostMapping("/faxtostor")
-    public String sendToStorageFax(@RequestBody FaxDto dto) throws ObjectAlreadyExists {
+    @DeleteMapping("/faxtostor")
+    public ResponseEntity<String> sendToStorageFax(@RequestBody FaxDto dto) throws ObjectAlreadyExists {
             // SystemBlock findById = sysrepo.findById(dto.getId()).get();
             Fax fax = faxMapper.getEntityFromDto(dto);
         faxService.sendToStorage(fax);
-        return "redirect:/fax";
+        return new ResponseEntity(HttpStatus.ACCEPTED);
         
     }
     
-       //   @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
- //   @Log
-    @PostMapping("/faxbackstor")
-    public String backFromStorageFax (@RequestBody FaxDto dto) throws ObjectAlreadyExists {
-            Fax fax = faxMapper.getEntityFromDto(dto);
-        faxService.backFromStorage(fax, dto.getPlaceId());
-        return "redirect:/fax";
-        
-    }
+
     
           //   @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
  //   @SendArchive
-    @PostMapping("/faxarchived")
-    public String sendFaxToArchive(@RequestBody ArchivedDto dto) throws ObjectAlreadyExists {
+    @DeleteMapping("/faxarchived")
+    public ResponseEntity<String> sendFaxToArchive(@RequestBody ArchivedDto dto) throws ObjectAlreadyExists {
         faxService.svtObjToArchive(dto);
-        return "redirect:/fax";
+        return new ResponseEntity(HttpStatus.ACCEPTED);
     }
     
      //      @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
@@ -2560,17 +3084,34 @@ public class SvtViewController {
 //    @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
  //   @Log
     @PostMapping("/minfomat")
-    public String saveModelInfomat(@RequestBody SvtModelDto dto) throws ObjectAlreadyExists {
+    public ResponseEntity<String> saveModelInfomat(@RequestBody SvtModelDto dto) throws ObjectAlreadyExists {
         InfomatModel infomatModel = svtModelMapper.getModelInfomat(dto);
-        infomatModelService.saveModel(infomatModel);
-        return "redirect:/minfomat";
+        try{
+            infomatModelService.saveModel(infomatModel);
+        }catch(Exception e) {
+            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+        
+        return new ResponseEntity(HttpStatus.ACCEPTED);
+    }
+    
+    @PutMapping("/minfomatupd")
+    public ResponseEntity<String> updateModelInfomat(@RequestBody SvtModelDto dto) throws ObjectAlreadyExists {
+        InfomatModel infomatModel = svtModelMapper.getModelInfomat(dto);
+        try{
+            infomatModelService.update(infomatModel);
+        }catch(Exception e) {
+            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+        
+        return new ResponseEntity(HttpStatus.ACCEPTED);
     }
     
 //    @SendArchive
-    @PostMapping("/minfomatarchived")
-    public String sendModelInfomatToArchive(@RequestBody ArchivedDto dto) throws ObjectAlreadyExists {
+    @DeleteMapping("/minfomatarchived")
+    public ResponseEntity<String> sendModelInfomatToArchive(@RequestBody ArchivedDto dto) throws ObjectAlreadyExists {
         infomatModelService.sendModelToArchive(dto.getId());
-        return "redirect:/minfomat";
+        return new ResponseEntity(HttpStatus.ACCEPTED);
     }
     
     
@@ -2632,6 +3173,26 @@ public class SvtViewController {
             
         }
         int amount = SvtViewController.getAmountDevices(treeSvtDtoByEmployee, treeSvtDtoByStorage);
+        String filterLocation = null;
+        if(null != dto.getLocation() && !dto.getLocation().isEmpty() && !dto.getLocation().isBlank()) {
+            filterLocation = locationService.getLocationById(Long.parseLong(dto.getLocation())).getName();
+        }
+        
+        String filterModel = null;
+        if(null != dto.getModel() && !dto.getModel().isBlank() && !dto.getModel().isEmpty()) {
+            Optional<InfomatModel> optModel = infomatModelService.getById(Long.parseLong(dto.getModel()));
+            if(optModel.isPresent()) {
+                filterModel = optModel.get().getModel();
+            }
+            
+        }
+        model.addAttribute("searchFIO", username);
+        model.addAttribute("searchInventary", inventaryNumber);
+        model.addAttribute("filterDateBegin", dto.getYearCreatedOne());
+        model.addAttribute("filterDateEnd", dto.getYearCreatedTwo());
+        model.addAttribute("filterStatus", dto.getStatus());
+        model.addAttribute("filterModel", filterModel);
+        model.addAttribute("filterLocation", filterLocation);
         model.addAttribute("dtoes", treeSvtDtoByEmployee);
         model.addAttribute("dtoesStorage", treeSvtDtoByStorage);
         model.addAttribute("attribute", "infomat");
@@ -2644,26 +3205,25 @@ public class SvtViewController {
  //   @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
  //   @Log
     @PostMapping("/infomat")
-    public String saveInfomat(@RequestBody SvtDTO dto) throws ObjectAlreadyExists {
+    public ResponseEntity<String> saveInfomat(@RequestBody SvtDTO dto) throws ObjectAlreadyExists {
         infomatService.createSvtObj(dto);
-        return "redirect:/infomat";
+        return new ResponseEntity(HttpStatus.ACCEPTED);
     }
 //            @UpdLog
-          @PostMapping("/updinfomat")
-    public String updateInfomat (@RequestBody SvtDTO dto) throws ObjectAlreadyExists {
+          @PutMapping("/updinfomat")
+    public ResponseEntity<String> updateInfomat (@RequestBody SvtDTO dto) throws ObjectAlreadyExists {
         infomatService.updateSvtObj(dto);
-        return "redirect:/infomat";
+        return new ResponseEntity(HttpStatus.ACCEPTED);
      
     }
     
               //      @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
  //   @UpdLog
-    @PostMapping("/infomattostor")
-    public String sendToStorageInfomat(@RequestBody SvtDTO dto) throws ObjectAlreadyExists {
-            // SystemBlock findById = sysrepo.findById(dto.getId()).get();
+    @DeleteMapping("/infomattostor")
+    public ResponseEntity<String> sendToStorageInfomat(@RequestBody SvtDTO dto) throws ObjectAlreadyExists {
             Infomat infomat = infomatMapper.getEntityFromDto(dto);
         infomatService.sendToStorage(infomat);
-        return "redirect:/infomat";
+        return new ResponseEntity(HttpStatus.ACCEPTED);
         
     }
     
@@ -2671,10 +3231,10 @@ public class SvtViewController {
     
           //   @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
  //   @SendArchive
-    @PostMapping("/infomatarchived")
-    public String sendInfomatToArchive(@RequestBody ArchivedDto dto) throws ObjectAlreadyExists {
+    @DeleteMapping("/infomatarchived")
+    public ResponseEntity<String> sendInfomatToArchive(@RequestBody ArchivedDto dto) throws ObjectAlreadyExists {
         infomatService.svtObjToArchive(dto);
-        return "redirect:/infomat";
+        return new ResponseEntity(HttpStatus.ACCEPTED);
     }
     
 
@@ -2692,17 +3252,22 @@ public class SvtViewController {
 //    @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
  //   @Log
     @PostMapping("/mterminal")
-    public String saveModelTerminal(@RequestBody SvtModelDto dto) throws ObjectAlreadyExists {
+    public ResponseEntity<String> saveModelTerminal(@RequestBody SvtModelDto dto) throws ObjectAlreadyExists {
         TerminalModel terminalModel = svtModelMapper.getModelTerminal(dto);
-        terminalModelService.saveModel(terminalModel);
-        return "redirect:/mterminal";
+        try{
+            terminalModelService.saveModel(terminalModel);
+        }catch(Exception e) {
+            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+        
+        return new ResponseEntity(HttpStatus.ACCEPTED);
     }
     
  //   @SendArchive
-    @PostMapping("/mterminalarchived")
-    public String sendModelTerminalToArchive(@RequestBody ArchivedDto dto) throws ObjectAlreadyExists {
+    @DeleteMapping("/mterminalarchived")
+    public ResponseEntity<String> sendModelTerminalToArchive(@RequestBody ArchivedDto dto) throws ObjectAlreadyExists {
         terminalModelService.sendModelToArchive(dto.getId());
-        return "redirect:/mterminal";
+        return new ResponseEntity(HttpStatus.ACCEPTED);
     }
     
                       //  @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
@@ -2742,35 +3307,40 @@ public class SvtViewController {
  //   @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
 //    @Log
     @PostMapping("/terminal")
-    public String saveTerminal(@RequestBody SvtDTO dto) throws ObjectAlreadyExists {
+    public ResponseEntity<String> saveTerminal(@RequestBody SvtDTO dto) throws ObjectAlreadyExists {
         terminalService.createSvtObj(dto);
-        return "redirect:/terminal";
+        return new ResponseEntity(HttpStatus.ACCEPTED);
     }
   //        @UpdLog
-          @PostMapping("/updterminal")
-    public String updateTerminal (@RequestBody SvtDTO dto) throws ObjectAlreadyExists {
-        terminalService.updateSvtObj(dto);
-        return "redirect:/terminal";
+          @PutMapping("/updterminal")
+    public ResponseEntity<String> updateTerminal (@RequestBody SvtDTO dto) throws ObjectAlreadyExists {
+        try{
+            terminalService.updateSvtObj(dto);
+        }catch(Exception e) {
+             return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+        
+        return new ResponseEntity(HttpStatus.ACCEPTED);
      
     }
     
               //      @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
  //   @UpdLog
-    @PostMapping("/terminaltostor")
-    public String sendToStorageTerminal(@RequestBody SvtDTO dto) throws ObjectAlreadyExists {
+    @PutMapping("/terminaltostor")
+    public ResponseEntity<String> sendToStorageTerminal(@RequestBody SvtDTO dto) throws ObjectAlreadyExists {
         Terminal terminal = terminalMapper.getEntityFromDto(dto);
         terminalService.sendToStorage(terminal);
-        return "redirect:/terminal";
+        return new ResponseEntity(HttpStatus.ACCEPTED);
         
     }
     
     
           //   @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
  //   @SendArchive
-    @PostMapping("/terminalarchived")
-    public String sendTerminalToArchive(@RequestBody ArchivedDto dto) throws ObjectAlreadyExists {
+    @DeleteMapping("/terminalarchived")
+    public ResponseEntity<String> sendTerminalToArchive(@RequestBody ArchivedDto dto) throws ObjectAlreadyExists {
         terminalService.svtObjToArchive(dto);
-        return "redirect:/terminal";
+        return new ResponseEntity(HttpStatus.ACCEPTED);
     }
     
              //      @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
@@ -2787,17 +3357,22 @@ public class SvtViewController {
 //    @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
 //    @Log
     @PostMapping("/mthermoprinter")
-    public String saveModelThermoprinter(@RequestBody SvtModelDto dto) throws ObjectAlreadyExists {
+    public ResponseEntity<String> saveModelThermoprinter(@RequestBody SvtModelDto dto) throws ObjectAlreadyExists {
         ThermoPrinterModel thermoprinterModel = svtModelMapper.getModelThermoprinter(dto);
-        thermoprinterModelService.saveModel(thermoprinterModel);
-        return "redirect:/mthermoprinter";
+        try{
+            thermoprinterModelService.saveModel(thermoprinterModel);
+        }catch(Exception e) {
+            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+        
+        return new ResponseEntity(HttpStatus.ACCEPTED);
     }
     
  //     @SendArchive
-    @PostMapping("/mthermoprinterarchived")
-    public String sendModelThermoprinterToArchive(@RequestBody ArchivedDto dto) throws ObjectAlreadyExists {
+    @DeleteMapping("/mthermoprinterarchived")
+    public ResponseEntity<String> sendModelThermoprinterToArchive(@RequestBody ArchivedDto dto) throws ObjectAlreadyExists {
         thermoprinterModelService.sendModelToArchive(dto.getId());
-        return "redirect:/mthermoprinter";
+        return new ResponseEntity(HttpStatus.ACCEPTED);
     }
     
                          //  @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
@@ -2837,35 +3412,39 @@ public class SvtViewController {
  //   @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
  //   @Log
     @PostMapping("/thermoprinter")
-    public String saveThermoprinter(@RequestBody SvtDTO dto) throws ObjectAlreadyExists {
+    public ResponseEntity<String> saveThermoprinter(@RequestBody SvtDTO dto) throws ObjectAlreadyExists {
         thermoprinterService.createSvtObj(dto);
-        return "redirect:/thermoprinter";
+        return new ResponseEntity(HttpStatus.ACCEPTED);
     }
-          @UpdLog
-          @PostMapping("/updthermoprinter")
-    public String updateThermoprinter (@RequestBody SvtDTO dto) throws ObjectAlreadyExists {
-        thermoprinterService.updateSvtObj(dto);
-        return "redirect:/thermoprinter";
+          @PutMapping("/updthermoprinter")
+    public ResponseEntity<String> updateThermoprinter (@RequestBody SvtDTO dto) throws ObjectAlreadyExists {
+        try{
+            thermoprinterService.updateSvtObj(dto);
+        }catch(Exception e) {
+             return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+        
+        return new ResponseEntity(HttpStatus.ACCEPTED);
      
     }
     
               //      @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
  //   @UpdLog
-    @PostMapping("/thermoprintertostor")
-    public String sendToStorageThermoprinter(@RequestBody SvtDTO dto) throws ObjectAlreadyExists {
+    @PutMapping("/thermoprintertostor")
+    public ResponseEntity<String> sendToStorageThermoprinter(@RequestBody SvtDTO dto) throws ObjectAlreadyExists {
             ThermoPrinter thermoprinter = thermoprinterMapper.getEntityFromDto(dto);
         thermoprinterService.sendToStorage(thermoprinter);
-        return "redirect:/thermoprinter";
+        return new ResponseEntity(HttpStatus.ACCEPTED);
         
     }
     
     
           //   @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
 //    @SendArchive
-    @PostMapping("/thermoprinterarchived")
-    public String sendThermoprinterToArchive(@RequestBody ArchivedDto dto) throws ObjectAlreadyExists {
+    @DeleteMapping("/thermoprinterarchived")
+    public ResponseEntity<String> sendThermoprinterToArchive(@RequestBody ArchivedDto dto) throws ObjectAlreadyExists {
         thermoprinterService.svtObjToArchive(dto);
-        return "redirect:/thermoprinter";
+        return new ResponseEntity(HttpStatus.ACCEPTED);
     }
     
     //      @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
@@ -2882,17 +3461,22 @@ public class SvtViewController {
 //    @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
  //   @Log
     @PostMapping("/mdisplay")
-    public String saveModelDisplay(@RequestBody SvtModelDto dto) throws ObjectAlreadyExists {
+    public ResponseEntity<String> saveModelDisplay(@RequestBody SvtModelDto dto) throws ObjectAlreadyExists {
         DisplayModel displayModel = svtModelMapper.getModelDisplay(dto);
-        displayModelService.saveModel(displayModel);
-        return "redirect:/mdisplay";
+        try{
+            displayModelService.saveModel(displayModel);
+        } catch(Exception e) {
+            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+        
+        return new ResponseEntity(HttpStatus.ACCEPTED);
     }
     
  //    @SendArchive
-    @PostMapping("/mdisplayarchived")
-    public String sendModelDisplayToArchive(@RequestBody ArchivedDto dto) throws ObjectAlreadyExists {
+    @DeleteMapping("/mdisplayarchived")
+    public ResponseEntity<String> sendModelDisplayToArchive(@RequestBody ArchivedDto dto) throws ObjectAlreadyExists {
         displayModelService.sendModelToArchive(dto.getId());
-        return "redirect:/mdisplay";
+        return new ResponseEntity(HttpStatus.ACCEPTED);
     }
     
     
@@ -2933,35 +3517,35 @@ public class SvtViewController {
  //   @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
  //   @Log
     @PostMapping("/display")
-    public String saveDisplay(@RequestBody SvtDTO dto) throws ObjectAlreadyExists {
+    public ResponseEntity<String> saveDisplay(@RequestBody SvtDTO dto) throws ObjectAlreadyExists {
         displayService.createSvtObj(dto);
-        return "redirect:/display";
+        return new ResponseEntity(HttpStatus.ACCEPTED);
     }
  //         @UpdLog
-          @PostMapping("/upddisplay")
-    public String updateDisplay (@RequestBody SvtDTO dto) throws ObjectAlreadyExists {
+          @PutMapping("/upddisplay")
+    public ResponseEntity<String> updateDisplay (@RequestBody SvtDTO dto) throws ObjectAlreadyExists {
         displayService.updateSvtObj(dto);
-        return "redirect:/display";
+        return new ResponseEntity(HttpStatus.ACCEPTED);
      
     }
     
               //      @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
  //   @UpdLog
-    @PostMapping("/displaytostor")
-    public String sendToStorageDisplay(@RequestBody SvtDTO dto) throws ObjectAlreadyExists {
+    @DeleteMapping("/displaytostor")
+    public ResponseEntity<String> sendToStorageDisplay(@RequestBody SvtDTO dto) throws ObjectAlreadyExists {
             Display display = displayMapper.getEntityFromDto(dto);
         displayService.sendToStorage(display);
-        return "redirect:/display";
+        return new ResponseEntity(HttpStatus.ACCEPTED);
         
     }
     
     
           //   @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
 //   @SendArchive
-    @PostMapping("/displayarchived")
-    public String sendDisplayToArchive(@RequestBody ArchivedDto dto) throws ObjectAlreadyExists {
+    @DeleteMapping("/displayarchived")
+    public ResponseEntity<String> sendDisplayToArchive(@RequestBody ArchivedDto dto) throws ObjectAlreadyExists {
         displayService.svtObjToArchive(dto);
-        return "redirect:/display";
+        return new ResponseEntity(HttpStatus.ACCEPTED);
     }
     
     
@@ -2979,17 +3563,22 @@ public class SvtViewController {
 //    @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
 //    @Log
     @PostMapping("/mswunit")
-    public String saveModelSwunit(@RequestBody SvtModelDto dto) throws ObjectAlreadyExists {
+    public ResponseEntity<String> saveModelSwunit(@RequestBody SvtModelDto dto) throws ObjectAlreadyExists {
         SwitchingUnitModel swunitModel = svtModelMapper.getModelSwunit(dto);
-        swunitModelService.saveModel(swunitModel);
-        return "redirect:/mswunit";
+        try{
+            swunitModelService.saveModel(swunitModel);
+        } catch(Exception e) {
+            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+        }
+        
+        return new ResponseEntity(HttpStatus.ACCEPTED);
     }
     
 //     @SendArchive
-    @PostMapping("/mswunitarchived")
-    public String sendModelSwunitToArchive(@RequestBody ArchivedDto dto) throws ObjectAlreadyExists {
+    @DeleteMapping("/mswunitarchived")
+    public ResponseEntity<String> sendModelSwunitToArchive(@RequestBody ArchivedDto dto) throws ObjectAlreadyExists {
         swunitModelService.sendModelToArchive(dto.getId());
-        return "redirect:/mswunit";
+        return new ResponseEntity(HttpStatus.ACCEPTED);
     }
     
     
@@ -3030,35 +3619,35 @@ public class SvtViewController {
  //   @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
  //   @Log
     @PostMapping("/swunit")
-    public String saveSwunit(@RequestBody SvtDTO dto) throws ObjectAlreadyExists {
+    public ResponseEntity<String> saveSwunit(@RequestBody SvtDTO dto) throws ObjectAlreadyExists {
         swunitService.createSvtObj(dto);
-        return "redirect:/swunit";
+        return new ResponseEntity(HttpStatus.ACCEPTED);
     }
 //          @UpdLog
-          @PostMapping("/updswunit")
-    public String updateSwunit (@RequestBody SvtDTO dto) throws ObjectAlreadyExists {
+          @PutMapping("/updswunit")
+    public ResponseEntity<String> updateSwunit (@RequestBody SvtDTO dto) throws ObjectAlreadyExists {
         swunitService.updateSvtObj(dto);
-        return "redirect:/swunit";
+        return new ResponseEntity(HttpStatus.ACCEPTED);
      
     }
     
               //      @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
 //    @UpdLog
-    @PostMapping("/swunittostor")
-    public String sendToStorageSwunit(@RequestBody SvtDTO dto) throws ObjectAlreadyExists {
+    @DeleteMapping("/swunittostor")
+    public ResponseEntity<String> sendToStorageSwunit(@RequestBody SvtDTO dto) throws ObjectAlreadyExists {
             SwitchingUnit swunit = swunitMapper.getEntityFromDto(dto);
         swunitService.sendToStorage(swunit);
-        return "redirect:/swunit";
+        return new ResponseEntity(HttpStatus.ACCEPTED);
         
     }
     
     
           //   @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
 //    @SendArchive
-    @PostMapping("/swunitarchived")
-    public String sendSwunitToArchive(@RequestBody ArchivedDto dto) throws ObjectAlreadyExists {
+    @DeleteMapping("/swunitarchived")
+    public ResponseEntity<String> sendSwunitToArchive(@RequestBody ArchivedDto dto) throws ObjectAlreadyExists {
         swunitService.svtObjToArchive(dto);
-        return "redirect:/swunit";
+        return new ResponseEntity(HttpStatus.ACCEPTED);
     }
 
       //      @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
@@ -3075,17 +3664,22 @@ public class SvtViewController {
 //    @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
  //   @Log
     @PostMapping("/msubdisplay")
-    public String saveModelSubDisplay(@RequestBody SvtModelDto dto) throws ObjectAlreadyExists {
+    public ResponseEntity<String> saveModelSubDisplay(@RequestBody SvtModelDto dto) throws ObjectAlreadyExists {
         SubDisplayModel subDisplayModel = svtModelMapper.getModelSubDisplay(dto);
-        subDisplayModelService.saveModel(subDisplayModel);
-        return "redirect:/msubdisplay";
+        try{
+            subDisplayModelService.saveModel(subDisplayModel);
+        }catch(Exception e) {
+            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+        
+        return new ResponseEntity(HttpStatus.ACCEPTED);
     }
     
 //    @SendArchive
-    @PostMapping("/msubdisplayarchived")
-    public String sendModelSubDisplayToArchive(@RequestBody ArchivedDto dto) throws ObjectAlreadyExists {
+    @DeleteMapping("/msubdisplayarchived")
+    public ResponseEntity<String> sendModelSubDisplayToArchive(@RequestBody ArchivedDto dto) throws ObjectAlreadyExists {
         subDisplayModelService.sendModelToArchive(dto.getId());
-        return "redirect:/msubdisplay";
+        return new ResponseEntity(HttpStatus.ACCEPTED);
     }
     
 
@@ -3126,36 +3720,36 @@ public class SvtViewController {
  //   @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
  //   @Log
     @PostMapping("/asuo")
-    public String saveAsuo(@RequestBody AsuoDTO dto) throws ObjectAlreadyExists {
+    public ResponseEntity<String> saveAsuo(@RequestBody AsuoDTO dto) throws ObjectAlreadyExists {
         asuoService.createSvtObj(dto);
-        return "redirect:/asuo";
+        return new ResponseEntity(HttpStatus.ACCEPTED);
     }
  //          @UpdLog
-          @PostMapping("/updasuo")
-    public String updateAsuo (@RequestBody AsuoDTO dto) throws ObjectAlreadyExists {
+          @PutMapping("/updasuo")
+    public ResponseEntity<String> updateAsuo (@RequestBody AsuoDTO dto) throws ObjectAlreadyExists {
         Asuo asuo = asuoMapper.getEntityFromDto(dto);
         asuoService.updateSvtObj(dto);
-        return "redirect:/asuo";
+        return new ResponseEntity(HttpStatus.ACCEPTED);
      
     }
     
               //      @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
  //   @UpdLog
-    @PostMapping("/asuotostor")
-    public String sendToStorageAsuo(@RequestBody AsuoDTO dto) throws ObjectAlreadyExists {
-            Asuo asuo = asuoMapper.getEntityFromDto(dto);
+    @PutMapping("/asuotostor")
+    public ResponseEntity<String> sendToStorageAsuo(@RequestBody AsuoDTO dto) throws ObjectAlreadyExists {
+        Asuo asuo = asuoMapper.getEntityFromDto(dto);
         asuoService.sendToStorage(asuo);
-        return "redirect:/asuo";
+        return new ResponseEntity(HttpStatus.ACCEPTED);
         
     }
     
     
           //   @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
 //   @SendArchive
-    @PostMapping("/asuoarchived")
-    public String sendAsuoToArchive(@RequestBody ArchivedDto dto) throws ObjectAlreadyExists {
+    @DeleteMapping("/asuoarchived")
+    public ResponseEntity<String> sendAsuoToArchive(@RequestBody ArchivedDto dto) throws ObjectAlreadyExists {
         asuoService.svtObjToArchive(dto);
-        return "redirect:/asuo";
+        return new ResponseEntity(HttpStatus.ACCEPTED);
     }
     
     

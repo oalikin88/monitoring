@@ -53,16 +53,27 @@ public class UpsService extends SvtObjService<Ups, UpsRepo, SvtDTO>{
     @Override
     public void createSvtObj(SvtDTO dto) throws ObjectAlreadyExists {
 
-        if(upsRepo.existsBySerialNumberIgnoreCase(dto.getSerialNumber())) {
+        if(upsRepo.existsBySerialNumberIgnoreCase(dto.getSerialNumber().trim())) {
             throw new ObjectAlreadyExists("ИБП с таким серийным номером уже есть в базе данных");
-        
+        } else if(upsRepo.existsByInventaryNumberIgnoreCase(dto.getInventaryNumber().trim())) {
+            throw new ObjectAlreadyExists("ИБП с таким инвентарным номером уже есть в базе данных");
         } else {
             Ups ups = new Ups();
             Place place = null;
             UpsModel upsModel = null;
             BatteryType batteryType = null; 
             place = placeRepo.findById(dto.getPlaceId()).get();
-            upsModel = upsModelRepo.findById(dto.getModelId()).get();
+            
+            if(null == dto.getModelId()) {
+                if(upsModelRepo.existsByModelIgnoreCase("не указано")) {
+                    upsModel = upsModelRepo.findByModelIgnoreCase("не указано").get(0);
+                } else {
+                    upsModel = new UpsModel("не указано");
+                }
+            } else {
+                upsModel = upsModelRepo.findById(dto.getModelId()).get();
+            }
+            
             batteryType = batteryTypeRepo.findById(dto.getBatteryTypeId()).get();
             switch (dto.getStatus()) {
             case "REPAIR":
@@ -81,6 +92,7 @@ public class UpsService extends SvtObjService<Ups, UpsRepo, SvtDTO>{
                 ups.setStatus(Status.DEFECTIVE);
                 break;
         }
+            
             ups.setInventaryNumber(dto.getInventaryNumber());
             ups.setSerialNumber(dto.getSerialNumber());
             ups.setYearCreated(dto.getYearCreated());
@@ -111,14 +123,43 @@ public class UpsService extends SvtObjService<Ups, UpsRepo, SvtDTO>{
     }
 
     @Override
-    public void updateSvtObj(SvtDTO dto) {
+    public void updateSvtObj(SvtDTO dto) throws ObjectAlreadyExists {
         Ups upsFromDB = upsRepo.findById(dto.getId()).get();
         Place placeFromDB = placeRepo.findById(dto.getPlaceId()).get();
-        UpsModel upsModelFromDto = upsModelRepo.findById(dto.getModelId()).get();
+        UpsModel upsModel = null;
+         if(null == dto.getModelId()) {
+                if(upsModelRepo.existsByModelIgnoreCase("не указано")) {
+                    upsModel = upsModelRepo.findByModelIgnoreCase("не указано").get(0);
+                } else {
+                    upsModel = new UpsModel("не указано");
+                }
+            } else {
+                upsModel = upsModelRepo.findById(dto.getModelId()).get();
+            }
         BatteryType batteryTypeFromDto = batteryTypeRepo.findById(dto.getBatteryTypeId()).get();
         upsFromDB.setYearCreated(dto.getYearCreated());
-        upsFromDB.setInventaryNumber(dto.getInventaryNumber());
-        upsFromDB.setSerialNumber(dto.getSerialNumber());
+        if(upsRepo.existsByInventaryNumberIgnoreCase(dto.getInventaryNumber().trim())) {
+            Ups checkInventary = upsRepo.findByInventaryNumberIgnoreCase(dto.getInventaryNumber().trim()).get(0);
+            if(checkInventary.getId() != dto.getId()) {
+                throw new ObjectAlreadyExists("ИБП с таким инвентарным номером уже есть в базе данных");
+            } else {
+                upsFromDB.setInventaryNumber(dto.getInventaryNumber().trim());
+            }
+        } else {
+            upsFromDB.setInventaryNumber(dto.getInventaryNumber().trim());
+        }
+        
+        if(upsRepo.existsBySerialNumberIgnoreCase(dto.getSerialNumber().trim())) {
+            Ups checkSerial = upsRepo.findBySerialNumberIgnoreCase(dto.getSerialNumber().trim()).get(0);
+            if(checkSerial.getId() != dto.getId()) {
+                throw new ObjectAlreadyExists("ИБП с таким серийным номером уже есть в базе данных");
+            }else {
+                upsFromDB.setSerialNumber(dto.getSerialNumber().trim());
+            }
+        } else {
+            upsFromDB.setSerialNumber(dto.getSerialNumber().trim());
+        }
+        
         upsFromDB.setYearReplacement(dto.getYearReplacement());
         upsFromDB.setPlace(placeFromDB);
         upsFromDB.setDateExploitationBegin(dto.getDateExploitationBegin());
@@ -139,7 +180,7 @@ public class UpsService extends SvtObjService<Ups, UpsRepo, SvtDTO>{
                 upsFromDB.setStatus(Status.DEFECTIVE);
                 break;
         }
-        upsFromDB.setUpsModel(upsModelFromDto);
+        upsFromDB.setUpsModel(upsModel);
         upsFromDB.setBatteryType(batteryTypeFromDto);
         upsFromDB.setBatteryAmount(dto.getBatteryAmount());
         upsFromDB.setNumberRoom(dto.getNumberRoom());

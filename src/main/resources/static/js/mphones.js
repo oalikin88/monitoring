@@ -84,10 +84,13 @@ let handleClickUpdateBtn = function (name, id) {
         dto.core = $("#core")[0].value;
         dto.freq = $("#freq")[0].value;
         break;
+    case "mupsbat":
+        delete dto.model;
+        dto.type = document.querySelector('#model').value;
     }
     
     $.ajax({
-        type: "POST",
+        type: "PUT",
         url: requestLink,
         data: JSON.stringify(dto),
         async: false,
@@ -145,7 +148,7 @@ let handleClickSaveBtn = function (name) {
             case "mupsbat":
                 link = "/mupsbat/";
                 delete dto.model;
-                dto.type = document.querySelector('#modelNameInput').value;
+                dto.type = document.querySelector('#model').value;
                 break;
             case "mcpu":
                 link = "/mcpu/";
@@ -251,7 +254,7 @@ let handleClickArchivedBtn = function(name, id) {
   };
   
   $.ajax({
-        type: "POST",
+        type: "DELETE",
         url: requestLink,
         data: JSON.stringify(dto),
         async: false,
@@ -327,7 +330,6 @@ let modalContentLoad = function(eventReason, dto) {
         labelLicenceFormCheck.className = "";
         labelLicenceFormCheck.for = "licenseFlag";
         labelLicenceFormCheck.innerHTML = "Лицензия";
-        
         divLicenceFormCheck.appendChild(inputLicenceFormCheck);
         divLicenceFormCheck.appendChild(labelLicenceFormCheck);
         licenceLabelCol.appendChild(divLicenceFormCheck);
@@ -458,7 +460,12 @@ let modalContentLoad = function(eventReason, dto) {
     modalWindowContent.appendChild(divModalFooter);
     
         if(dto != null) {
-        $("#model")[0].value = dto.model;
+            if(attribute == "mupsbat") {
+                $("#model")[0].value = dto.type;
+            } else {
+                $("#model")[0].value = dto.model;
+            }
+        
         switch(attribute) {
             case 'mram':
                 $("#capacity")[0].value = dto.capacity;
@@ -469,6 +476,9 @@ let modalContentLoad = function(eventReason, dto) {
                 $('#serialNumber')[0].value = dto.serialNumber;
                 $('#inventaryNumber')[0].value = dto.inventaryNumber;
                 break;
+            case "mcpu":    
+               $("#core")[0].value = dto.core;
+               $("#freq")[0].value = dto.freq;
         }
     }
     
@@ -495,6 +505,7 @@ let modalContentLoad = function(eventReason, dto) {
 
 
 $(document).ready(function() {
+    
     for(i = 0; i < document.getElementsByClassName('element').length; i++) {
         document.getElementsByClassName('element')[i].addEventListener('click', function() {
             modalContentLoad($(this)[0].className, dtoes.find(item => item.id == $(this)[0].id));
