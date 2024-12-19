@@ -32,10 +32,7 @@ public class Ups extends ObjectBuingWithSerialAndInventary implements Serializab
     private String serialNumber;
     private int yearCreated;
     private int yearReplacement;
-    @NotNull(message = "Поле \"Тип батареи\" не должно быть пустым")
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private BatteryType batteryType;
-    private int batteryAmount;
+    
     private Date dateExploitationBegin;
     private String numberRoom;
     private String nameFromOneC;
@@ -44,12 +41,10 @@ public class Ups extends ObjectBuingWithSerialAndInventary implements Serializab
     }
 
     public Ups(UpsModel upsModel, Status status, String inventaryNumber, String serialNumber, int yearCreated,
-            int yearReplacement, BatteryType batteryType, int batteryAmount, Date dateExploitationBegin, Contract contract, boolean archived) {
+            int yearReplacement, Date dateExploitationBegin, Contract contract, boolean archived) {
         super(status, inventaryNumber, serialNumber, contract);
         this.upsModel = upsModel;
         this.yearReplacement = yearReplacement;
-        this.batteryType = batteryType;
-        this.batteryAmount = batteryAmount;
         this.dateExploitationBegin = dateExploitationBegin;
     }
 
@@ -110,22 +105,6 @@ public class Ups extends ObjectBuingWithSerialAndInventary implements Serializab
         this.yearReplacement = yearReplacement;
     }
 
-    public BatteryType getBatteryType() {
-        return batteryType;
-    }
-
-    public void setBatteryType(BatteryType batteryType) {
-        this.batteryType = batteryType;
-    }
-
-    public int getBatteryAmount() {
-        return batteryAmount;
-    }
-
-    public void setBatteryAmount(int batteryAmount) {
-        this.batteryAmount = batteryAmount;
-    }
-
     public boolean isArchived() {
         return archived;
     }
@@ -152,7 +131,7 @@ public class Ups extends ObjectBuingWithSerialAndInventary implements Serializab
 
     @Override
     public String toString() {
-        return "Ups{" + "id=" + this.id + ", upsModel=" + upsModel + ", status=" + status + ", inventaryNumber=" + inventaryNumber + ", serialNumber=" + serialNumber + ", yearCreated=" + yearCreated + ", yearReplacement=" + yearReplacement + ", batteryType=" + batteryType + ", batteryAmount=" + batteryAmount + ", dateExploitationBegin=" + dateExploitationBegin + ", numberRoom=" + numberRoom + ", nameFromOneC=" + nameFromOneC + '}';
+        return "Ups{" + "id=" + this.id + ", upsModel=" + upsModel + ", status=" + status + ", inventaryNumber=" + inventaryNumber + ", serialNumber=" + serialNumber + ", yearCreated=" + yearCreated + ", yearReplacement=" + yearReplacement + ", batteryType=" + ", dateExploitationBegin=" + dateExploitationBegin + ", numberRoom=" + numberRoom + ", nameFromOneC=" + nameFromOneC + '}';
     }
     
     

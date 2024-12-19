@@ -4,36 +4,47 @@
  */
 package ru.gov.sfr.aos.monitoring.entities;
 
+
+import java.util.ArrayList;
+import java.util.List;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
 
+
 /**
  *
- * @author 041AlikinOS
+ * @author Alikin Oleg
+ * @param <E>
  */
 @MappedSuperclass
-public class SvtModel {
+public class ManufacturerModel<E> {
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     protected Long id;
-    protected String model;
+    protected String name;
     protected boolean archived;
+ 
 
-    protected SvtModel() {
+    public ManufacturerModel() {
     }
     
-    protected SvtModel(String model) {
-        this.model = model;
+    public Long getId() {
+        return id;
     }
 
-    public String getModel() {
-        return model;
+    public void setId(Long id) {
+        this.id = id;
     }
 
-    public void setModel(String model) {
-        this.model = model.strip();
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public boolean isArchived() {
@@ -44,18 +55,6 @@ public class SvtModel {
         this.archived = archived;
     }
 
-    public Long getId() {
-        return id;
-    }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
     
-    
-
- 
-    
-    
-   
 }

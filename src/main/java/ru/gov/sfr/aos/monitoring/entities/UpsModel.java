@@ -9,7 +9,9 @@ import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.validation.constraints.NotNull;
 
 /**
  *
@@ -17,10 +19,15 @@ import javax.persistence.OneToMany;
  */
 @Entity
 public class UpsModel extends SvtModel {
-
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private UpsManufacturer manufacturer;
+    @NotNull(message = "Поле \"Тип батареи\" не должно быть пустым")
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private BatteryType batteryType;
+    private int batteryAmount;
     @OneToMany(targetEntity = Ups.class, mappedBy = "upsModel", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<Ups> upsList = new HashSet<>();
-
+    
     public UpsModel() {
     }
 
@@ -36,6 +43,32 @@ public class UpsModel extends SvtModel {
     public void setUpsList(Set<Ups> upsList) {
         this.upsList = upsList;
     }
+
+    public ManufacturerModel getManufacturer() {
+        return manufacturer;
+    }
+
+    public void setManufacturer(UpsManufacturer manufacturer) {
+        this.manufacturer = manufacturer;
+    }
+
+    public BatteryType getBatteryType() {
+        return batteryType;
+    }
+
+    public void setBatteryType(BatteryType batteryType) {
+        this.batteryType = batteryType;
+    }
+
+    public int getBatteryAmount() {
+        return batteryAmount;
+    }
+
+    public void setBatteryAmount(int batteryAmount) {
+        this.batteryAmount = batteryAmount;
+    }
+    
+    
     
         @Override
     public String toString() {

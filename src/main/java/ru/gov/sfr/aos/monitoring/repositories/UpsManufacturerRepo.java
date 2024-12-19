@@ -4,16 +4,15 @@
  */
 package ru.gov.sfr.aos.monitoring.repositories;
 
-import java.util.List;
 import org.springframework.stereotype.Repository;
-import ru.gov.sfr.aos.monitoring.entities.UpsModel;
+import ru.gov.sfr.aos.monitoring.entities.UpsManufacturer;
 
 /**
  *
- * @author 041AlikinOS
+ * @author Alikin Oleg
  */
 
 @Repository
-public interface UpsModelRepo extends SvtModelsRepo<UpsModel>{
-    List<UpsModel> findByManufacturerId(Long id);
+public interface UpsManufacturerRepo extends ManufacturerModelRepo<UpsManufacturer>{
+    
 }

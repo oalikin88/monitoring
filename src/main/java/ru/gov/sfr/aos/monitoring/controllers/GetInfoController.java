@@ -12,6 +12,7 @@ import org.opfr.springBootStarterDictionary.fallback.FallbackOrganizationClient;
 import org.opfr.springBootStarterDictionary.models.DictionaryEmployee;
 import org.opfr.springBootStarterDictionary.models.DictionaryOrganization;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -66,8 +67,10 @@ import ru.gov.sfr.aos.monitoring.entities.TerminalModel;
 import ru.gov.sfr.aos.monitoring.entities.ThermoPrinter;
 import ru.gov.sfr.aos.monitoring.entities.ThermoPrinterModel;
 import ru.gov.sfr.aos.monitoring.entities.Ups;
+import ru.gov.sfr.aos.monitoring.entities.UpsManufacturer;
 import ru.gov.sfr.aos.monitoring.entities.UpsModel;
 import ru.gov.sfr.aos.monitoring.entities.VideoCard;
+import ru.gov.sfr.aos.monitoring.exceptions.ObjectAlreadyExists;
 import ru.gov.sfr.aos.monitoring.mappers.AsuoMapper;
 import ru.gov.sfr.aos.monitoring.mappers.AtsMapper;
 import ru.gov.sfr.aos.monitoring.mappers.BatteryTypeMapper;
@@ -101,7 +104,9 @@ import ru.gov.sfr.aos.monitoring.mappers.SwitchingUnitMapper;
 import ru.gov.sfr.aos.monitoring.mappers.SystemBlockMapper;
 import ru.gov.sfr.aos.monitoring.mappers.TerminalMapper;
 import ru.gov.sfr.aos.monitoring.mappers.ThermoprinterMapper;
+import ru.gov.sfr.aos.monitoring.mappers.UpsManufacturerMapper;
 import ru.gov.sfr.aos.monitoring.mappers.UpsMapper;
+import ru.gov.sfr.aos.monitoring.mappers.UpsModelMapper;
 import ru.gov.sfr.aos.monitoring.models.AsuoDTO;
 import ru.gov.sfr.aos.monitoring.models.BatteryTypeDto;
 import ru.gov.sfr.aos.monitoring.models.CpuModelDto;
@@ -118,6 +123,8 @@ import ru.gov.sfr.aos.monitoring.models.SvtServerDTO;
 import ru.gov.sfr.aos.monitoring.models.SvtSwitchHubDTO;
 import ru.gov.sfr.aos.monitoring.models.SvtSystemBlockDTO;
 import ru.gov.sfr.aos.monitoring.models.TransferDto;
+import ru.gov.sfr.aos.monitoring.models.UpsManufacturerDto;
+import ru.gov.sfr.aos.monitoring.models.UpsModelDto;
 import ru.gov.sfr.aos.monitoring.repositories.AsuoRepo;
 import ru.gov.sfr.aos.monitoring.repositories.BatteryTypeRepo;
 import ru.gov.sfr.aos.monitoring.services.AsuoService;
@@ -164,6 +171,7 @@ import ru.gov.sfr.aos.monitoring.services.TerminalService;
 import ru.gov.sfr.aos.monitoring.services.ThermoprinterModelService;
 import ru.gov.sfr.aos.monitoring.services.ThermoprinterService;
 import ru.gov.sfr.aos.monitoring.services.TransferInfoService;
+import ru.gov.sfr.aos.monitoring.services.UpsManufacturerService;
 import ru.gov.sfr.aos.monitoring.services.UpsModelService;
 import ru.gov.sfr.aos.monitoring.services.UpsService;
 import ru.gov.sfr.aos.monitoring.services.VideoCardModelService;
@@ -331,6 +339,60 @@ public class GetInfoController {
     private ClientDAO clientDao;
     @Autowired
     private TransferInfoService transferInfoService;
+    @Autowired
+    private UpsManufacturerService upsManufacturerService;
+    @Autowired
+    private UpsManufacturerMapper upsManufacturerMapper;
+    @Autowired
+    private UpsModelMapper upsModelMapper;
+    
+    @GetMapping("/batterytype")
+    public List<BatteryTypeDto> getBatteryTypes(@RequestParam(value="id", required = false) Long id) {
+        List<BatteryType> list = new ArrayList<>();
+        if(null != id) {
+            BatteryType batteryType = batteryTypeService.getBatteryType(id);
+            list.add(batteryType);
+        } else {
+            list = batteryTypeService.getAllActualBatteryTypes();
+        }
+        
+        List<BatteryTypeDto> out = batteryTypeMapper.getBatteryTypeDtoesList(list);
+        return out;
+    }
+    
+    @PostMapping("/save-ups-manufacturer")
+    public ResponseEntity<?> saveUpsManufacturer(String name) throws ObjectAlreadyExists {
+        UpsManufacturer savedManufacturer = null;
+        UpsManufacturer potencialManufacturer = upsManufacturerService.create(name);
+        try{
+            savedManufacturer = upsManufacturerService.save(potencialManufacturer);
+        } catch(Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+        
+        UpsManufacturerDto dto = upsManufacturerMapper.getDto(savedManufacturer);
+        
+        return ResponseEntity.ok(dto);
+    }
+    
+    @GetMapping("/get-ups-manufacturers")
+    public List<UpsManufacturerDto> getUpsManufacturers() {
+        List<UpsManufacturer> allManufacturers = upsManufacturerService.getAllManufacturers();
+        List<UpsManufacturerDto> out = upsManufacturerMapper.getListDtoes(allManufacturers);
+        return out;
+    }
+    
+    @GetMapping("/get-modelsby-manufacturer")
+    public List<UpsModelDto> getUpsModelsByManufacturer(@RequestParam(value="id", required = true) Long id) {
+        UpsManufacturer manufacturer = upsManufacturerService.getManufacturer(id);
+        List<UpsModel> upsListModel = manufacturer.getModels();
+        List<UpsModelDto> out = new ArrayList<>();
+        for(UpsModel model : upsListModel) {
+            UpsModelDto modeDto = upsModelMapper.getDto(model);
+            out.add(modeDto);
+        }
+        return out;
+    }
     
     @GetMapping("/getinfooo")
     public List<EmployeeDTO> getEmpl() {
@@ -479,8 +541,8 @@ public class GetInfoController {
      @GetMapping("/modups")
     public List<SvtModelDto> getModelUps() {
         List<UpsModel> allModels = upsModelService.getAllModels();
-        List<SvtModelDto> monitorModelsDtoes = svtModelMapper.getUpsModelsDtoes(allModels);
-        return monitorModelsDtoes;
+        List<SvtModelDto> upsModelDtoForSelectize = upsModelMapper.getUpsModelDtoForSelectize(allModels);
+        return upsModelDtoForSelectize;
     }
     
      @GetMapping("/modsysblock")

@@ -20,6 +20,10 @@ public class BatteryTypeService {
     @Autowired
     private BatteryTypeRepo batteryTypeRepo;
     
+    public BatteryType getBatteryType(Long id) {
+        return batteryTypeRepo.findById(id).get();
+    }
+    
     public List<BatteryType> getAllBatteryTypes() {
         List<BatteryType> batteryTypes = batteryTypeRepo.findAll();
         return batteryTypes;
@@ -32,7 +36,8 @@ public class BatteryTypeService {
     }
     
     public void saveBatteryType(BatteryType batteryType) throws ObjectAlreadyExists {
-        List<BatteryType> batteryTypes = batteryTypeRepo.findByTypeIgnoreCase(batteryType.getType());
+        
+        List<BatteryType> batteryTypes = batteryTypeRepo.findByTypeIgnoreCase(batteryType.getType().strip());
         if(batteryTypes.isEmpty()) {
             batteryTypeRepo.save(batteryType);
         } else {

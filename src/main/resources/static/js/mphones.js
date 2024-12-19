@@ -10,6 +10,7 @@ const modalWindowContent = document.querySelector('#modalContent-model');
 const modalAdd = document.getElementById('addBtnModal');
 const modalError = document.getElementById('modalError');
 const modalErrorParent = document.getElementById('modalErrorContent');
+let manufacturerChoise;
 
 function beep() {
    
@@ -149,6 +150,15 @@ let handleClickSaveBtn = function (name) {
                 link = "/mupsbat/";
                 delete dto.model;
                 dto.type = document.querySelector('#model').value;
+                break;
+            case "mups":
+                link = "/mups/";
+                
+                dto.batteryType = $('#batteryType')[0].selectize.getValue();
+                dto.manufacturerId = $('#manufacturer')[0].selectize.getValue();
+                dto.manufacturer = document.querySelector('#manufacturer').innerText;
+                dto.batteryAmount = document.querySelector('#batteryAmount').value;
+                
                 break;
             case "mcpu":
                 link = "/mcpu/";
@@ -305,11 +315,16 @@ let modalContentLoad = function(eventReason, dto) {
     let divContainerBody = document.createElement("div");
     divContainerBody.className = "container";
     divContainerBody.id = "modalContent";
-    divContainerBody.innerHTML = '<div class="row mt-2" id="modelRow">' +
+    divContainerBody.innerHTML = '<div class="row mt-2" id="manufacturerRow">' +
+            '<div class="col">Производитель</div>' +
+            '<div class="col">' +
+            '<select class="form-select form-select-sm"  placeholder="выберите производителя" aria-label="model" id="manufacturer">' +
+            '</select></div></div>' + 
+            '<div class="row mt-2" id="modelRow">' +
             '<div class="col">Наименование</div>' +
             '<div class="col">' +
-            '<input class="form-control form-control-sm" type="text" placeholder="введите наименование" aria-label="model" id="model">' +
-            '</div></div>';
+            '<select class="form-select form-select-sm" placeholder="выберите модель" aria-label="model" id="model">' +
+            '</select></div>';
  
     divModalBody.appendChild(divContainerBody);
     
@@ -423,7 +438,30 @@ let modalContentLoad = function(eventReason, dto) {
             
             );
             break;
-        
+        case "mups":
+               divContainerBody.insertAdjacentHTML('beforeend', 
+            '  <div class="row mt-2">' +
+                '<div class="col">Тип батареи</div>' +
+                '<div class="col">' +
+                    '<div class="input-group input-group-sm">' + 
+                        '<select class="form-select form-select-sm" id="batteryType" placeholder="тип батареи"></select>' + 
+                    '</div>' + 
+                '</div>' +
+            '</div>' +
+
+            '<div class="row mt-2">' + 
+                '<div class="col">Количество батарей</div>' +
+                '<div class="col">' +
+                    '<div class="input-group input-group-sm">' + 
+                        '<input class="form-control form-control-sm" id="batteryAmount" type="number" value="1" min="1" max="99" placeholder="количество батарей"/>' +
+                    '</div>' +
+                '</div>' +
+            '</div>' +
+        '</div>' 
+            
+            
+            );
+            break;
     }
     
            
@@ -460,11 +498,7 @@ let modalContentLoad = function(eventReason, dto) {
     modalWindowContent.appendChild(divModalFooter);
     
         if(dto != null) {
-            if(attribute == "mupsbat") {
-                $("#model")[0].value = dto.type;
-            } else {
-                $("#model")[0].value = dto.model;
-            }
+            
         
         switch(attribute) {
             case 'mram':
@@ -479,23 +513,157 @@ let modalContentLoad = function(eventReason, dto) {
             case "mcpu":    
                $("#core")[0].value = dto.core;
                $("#freq")[0].value = dto.freq;
+                break;
+            case "mups":
+                $("#model")[0].value = dto.model;
+                $("#model")[0].value = dto.type;
+                break;
         }
     }
     
+    if($("#manufacturer").length > 0) {
+        $("#manufacturer").selectize({
+        preload: true,
+        persist: true,
+        create: function(input,callback){
+              $.ajax({
+                   url: "/save-ups-manufacturer",
+                   type: "POST",
+                   data: {name : input},
+                      success: callback,
+                      error: function(res) {
+                          getModalError(res.responseText);
+                      }
+              });
+           },
+        placeholder: "выберите производителя",
+        valueField: 'id',
+        labelField: 'name',
+        sortField: 'name',
+        searchField: ["id", "name"],
+        onInitialize: function () {
+            $.ajax({
+                url: '/get-ups-manufacturers',
+                type: 'GET',
+                async: false,
+                dataType: 'json',
+                success: function(res) {
+                            res.forEach(model => {
+                                $('#manufacturer')[0].selectize.addOption(model);
+                                $('#manufacturer')[0].selectize.addItem(model);
+                            });
+                             if (null != dto) {
+                                 manufacturerChoise = $('#manufacturer')[0].selectize.search(dto.manufacturerId).items[0].id;
+                            $('#manufacturer')[0].selectize.setValue($('#manufacturer')[0].selectize.search(dto.manufacturerId).items[0].id);
+                        } else {
+                            manufacturerChoise = $('#manufacturer')[0].selectize.search("не указано").items[0].id;
+                            $('#manufacturer')[0].selectize.setValue($('#manufacturer')[0].selectize.search("не указано").items[0].id);
+                    }
+                    
+                }
+            });
+        },
+        onChange: function(value) {
+            if (value != '' && value != manufacturerChoise) {
+            $.ajax({
+                url: '/get-modelsby-manufacturer?id=' + $('#manufacturer')[0].selectize.getValue(),
+                type: 'GET',
+                async: false,
+                dataType: 'json',
+                success: function(res) {
+                    
+                        let keys = Object.keys($('#model')[0].selectize.options);
+                        for (let i = 0; i < keys.length; i++) {
+                            $('#model')[0].selectize.removeOption(keys[i]);
+                        }
+                    
+                            res.forEach(model => {
+                                $('#model')[0].selectize.addOption(model);
+                                $('#model')[0].selectize.addItem(model);
+                            });
+                            
+                            $('#model')[0].selectize.setValue($('#model')[0].selectize.search(0).items[0].id);
+                    
+                }
+            });
+            manufacturerChoise = value;
+        }
+    }
+        });
+    }
     
+    if($("#model").length > 0) {
+        $("#model").selectize({
+        preload: true,
+        persist: true,
+        create: true,
+        placeholder: "выберите модель",
+        valueField: 'id',
+        labelField: 'model',
+        sortField: 'model',
+        searchField: ["id", "model"],
+        onInitialize: function () {
+            $.ajax({
+                url: '/get-modelsby-manufacturer?id=' + $('#manufacturer')[0].selectize.getValue(),
+                type: 'GET',
+                async: false,
+                dataType: 'json',
+                success: function(res) {
+                            res.forEach(model => {
+                                $('#model')[0].selectize.addOption(model);
+                                $('#model')[0].selectize.addItem(model);
+                            });
+                             if (null != dto) {
+                            $('#model')[0].selectize.setValue($('#model')[0].selectize.search(dto.id).items[0].id);
+                        } else {
+                            $('#model')[0].selectize.setValue($('#model')[0].selectize.search("не указано").items[0].id);
+                    }
+                }
+            });
+        },
+        });
+    }
+    
+    
+     if($("#batteryType").length > 0) {
+        $("#batteryType").selectize({
+        preload: true,
+        persist: true,
+        create: true,
+        placeholder: "выберите тип батареи",
+        valueField: 'type',
+        labelField: 'type',
+        sortField: 'type',
+        searchField: ["id", "type"],
+        onInitialize: function () {
+            $.ajax({
+                url: '/batterytype',
+                type: 'GET',
+                async: false,
+                dataType: 'json',
+                success: function(res) {
+                            res.forEach(model => {
+                                $('#batteryType')[0].selectize.addOption(model);
+                                $('#batteryType')[0].selectize.addItem(model);
+                            });
+                             if (null != dto) {
+                            $('#batteryType')[0].selectize.setValue($('#batteryType')[0].selectize.search(dto.batteryTypeId).items[0].id);
+                        } else {
+                            $('#batteryType')[0].selectize.setValue($('#batteryType')[0].selectize.search("не указано").items[0].id);
+                    }
+                }
+            });
+        },
+        });
+    }
     btnSave = document.querySelector('#btnSave');
-    
        btnSave.addEventListener('click', function() {
-    
         if(dto != null) {
             handleClickUpdateBtn(attribute, dto.id);
-        } else {
-            
+        } else {      
             handleClickSaveBtn(attribute);
         }
-    
-    
-    
+
 });
 };
 
@@ -522,5 +690,12 @@ $(document).ready(function() {
          modalWindowContent.innerHTML = "";
      });
     
- 
+    modalError.addEventListener('hidden.bs.modal', function (event) {
+         modalWindowContent.innerHTML = "";
+         modalErrorParent.innerHTML = "";
+         modalContentLoad();
+     });
+    
+    
+    
 });

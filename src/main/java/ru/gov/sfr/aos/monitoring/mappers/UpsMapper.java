@@ -29,9 +29,6 @@ public abstract class UpsMapper implements SvtMapper<Ups, SvtDTO>{
     @Mapping(source = "place.placeType", target = "placeType")
     @Mapping(source = "place.departmentCode", target = "departmentCode")
     @Mapping(source = "place.location.id", target = "locationId")
-    @Mapping(source = "batteryType.id", target = "batteryTypeId")
-    @Mapping(source = "batteryType.type", target = "batteryType")
-    @Mapping(source = "batteryAmount", target = "batteryAmount")
     @Mapping(source = "numberRoom", target = "numberRoom")
     @Mapping(source = "nameFromOneC", target = "nameFromOneC")
     public abstract SvtDTO getDto(Ups ups);
@@ -44,9 +41,6 @@ public abstract class UpsMapper implements SvtMapper<Ups, SvtDTO>{
     @Mapping(target = "place.placeType", source = "placeType")
     @Mapping(target = "place.departmentCode", source = "departmentCode")
     @Mapping(target = "place.location.id", source = "locationId")
-    @Mapping(target = "batteryType.id", source = "batteryTypeId")
-    @Mapping(target = "batteryType.type", source = "batteryType")
-    @Mapping(target = "batteryAmount", source = "batteryAmount")
     @Mapping(target = "numberRoom", source = "numberRoom")
     @Mapping(target = "nameFromOneC", source = "nameFromOneC")
     public abstract Ups getEntityFromDto(SvtDTO dto);

@@ -22,6 +22,7 @@ import ru.gov.sfr.aos.monitoring.entities.Location;
 import ru.gov.sfr.aos.monitoring.entities.ObjectBuing;
 import ru.gov.sfr.aos.monitoring.entities.Place;
 import ru.gov.sfr.aos.monitoring.entities.Ups;
+import ru.gov.sfr.aos.monitoring.entities.UpsManufacturer;
 import ru.gov.sfr.aos.monitoring.entities.UpsModel;
 import ru.gov.sfr.aos.monitoring.exceptions.ObjectAlreadyExists;
 import ru.gov.sfr.aos.monitoring.models.FilterDto;
@@ -29,6 +30,7 @@ import ru.gov.sfr.aos.monitoring.models.SvtDTO;
 import ru.gov.sfr.aos.monitoring.repositories.BatteryTypeRepo;
 import ru.gov.sfr.aos.monitoring.repositories.ContractRepo;
 import ru.gov.sfr.aos.monitoring.repositories.PlaceRepo;
+import ru.gov.sfr.aos.monitoring.repositories.UpsManufacturerRepo;
 import ru.gov.sfr.aos.monitoring.repositories.UpsModelRepo;
 import ru.gov.sfr.aos.monitoring.repositories.UpsRepo;
 
@@ -49,6 +51,9 @@ public class UpsService extends SvtObjService<Ups, UpsRepo, SvtDTO>{
     private UpsRepo upsRepo;
     @Autowired
     private BatteryTypeRepo batteryTypeRepo;
+    @Autowired 
+    private UpsManufacturerRepo upsManufacturerRepo;
+
 
     @Override
     public void createSvtObj(SvtDTO dto) throws ObjectAlreadyExists {
@@ -61,20 +66,44 @@ public class UpsService extends SvtObjService<Ups, UpsRepo, SvtDTO>{
             Ups ups = new Ups();
             Place place = null;
             UpsModel upsModel = null;
+            UpsManufacturer upsManufacturer = null;
             BatteryType batteryType = null; 
             place = placeRepo.findById(dto.getPlaceId()).get();
             
-            if(null == dto.getModelId()) {
-                if(upsModelRepo.existsByModelIgnoreCase("не указано")) {
-                    upsModel = upsModelRepo.findByModelIgnoreCase("не указано").get(0);
+            
+              if (null == dto.getManufacturerId()) {
+                if (upsManufacturerRepo.existsByNameIgnoreCase("не указано")) {
+                    upsManufacturer = upsManufacturerRepo.findByNameIgnoreCase("не указано").get(0);
                 } else {
-                    upsModel = new UpsModel("не указано");
+                    upsManufacturer = new UpsManufacturer();
+                    upsManufacturer.setName("не указано");
+                }
+            } else {
+                upsManufacturer = upsManufacturerRepo.findById(dto.getManufacturerId()).get();
+            }
+                
+             if (null == dto.getModelId()) {
+                if (upsModelRepo.existsByModelIgnoreCase("не указано")) {
+                    upsModel = upsModelRepo.findByModelIgnoreCase("не указано").get(0);
+                    
+                } else {
+                    upsModel = new UpsModel();
+                    upsModel.setModel("не указано");
+                    upsModel.setManufacturer(upsManufacturer);
+                    upsModel.setBatteryAmount(0);
+                    if(batteryTypeRepo.existsByTypeIgnoreCase("не указано")) {
+                         batteryType = batteryTypeRepo.findByTypeIgnoreCase("не указано").get(0);
+                    } else {
+                        batteryType = new BatteryType("не указано");
+                    }
+                    upsModel.setBatteryType(batteryType);
                 }
             } else {
                 upsModel = upsModelRepo.findById(dto.getModelId()).get();
+                
             }
             
-            batteryType = batteryTypeRepo.findById(dto.getBatteryTypeId()).get();
+            
             switch (dto.getStatus()) {
             case "REPAIR":
                 ups.setStatus(Status.REPAIR);
@@ -100,11 +129,10 @@ public class UpsService extends SvtObjService<Ups, UpsRepo, SvtDTO>{
             ups.setYearCreated(dto.getYearCreated());
             ups.setPlace(place);
             ups.setUpsModel(upsModel);
-            ups.setBatteryType(batteryType);
-            ups.setBatteryAmount(dto.getBatteryAmount());
             ups.setDateExploitationBegin(dto.getDateExploitationBegin());
             ups.setNumberRoom(dto.getNumberRoom());
             ups.setNameFromOneC(dto.getNameFromOneC());
+            
             Contract contract = null;
             if(contractRepo.existsByContractNumberIgnoreCase("00000000")) {
                 contract = contractRepo.findByContractNumberIgnoreCase("00000000").get();
@@ -127,16 +155,41 @@ public class UpsService extends SvtObjService<Ups, UpsRepo, SvtDTO>{
         Ups upsFromDB = upsRepo.findById(dto.getId()).get();
         Place placeFromDB = placeRepo.findById(dto.getPlaceId()).get();
         UpsModel upsModel = null;
-         if(null == dto.getModelId()) {
-                if(upsModelRepo.existsByModelIgnoreCase("не указано")) {
-                    upsModel = upsModelRepo.findByModelIgnoreCase("не указано").get(0);
+        UpsManufacturer upsManufacturer = null;
+        BatteryType batteryType = null;
+        
+        if (null == dto.getManufacturerId()) {
+                if (upsManufacturerRepo.existsByNameIgnoreCase("не указано")) {
+                    upsManufacturer = upsManufacturerRepo.findByNameIgnoreCase("не указано").get(0);
                 } else {
-                    upsModel = new UpsModel("не указано");
+                    upsManufacturer = new UpsManufacturer();
+                    upsManufacturer.setName("не указано");
+                }
+            } else {
+                upsManufacturer = upsManufacturerRepo.findById(dto.getManufacturerId()).get();
+            }
+        
+          if (null == dto.getModelId()) {
+                if (upsModelRepo.existsByModelIgnoreCase("не указано")) {
+                    upsModel = upsModelRepo.findByModelIgnoreCase("не указано").get(0);
+                    
+                } else {
+                    upsModel = new UpsModel();
+                    upsModel.setModel("не указано");
+                    upsModel.setManufacturer(upsManufacturer);
+                    upsModel.setBatteryAmount(0);
+                    if(batteryTypeRepo.existsByTypeIgnoreCase("не указано")) {
+                         batteryType = batteryTypeRepo.findByTypeIgnoreCase("не указано").get(0);
+                    } else {
+                        batteryType = new BatteryType("не указано");
+                    }
+                    upsModel.setBatteryType(batteryType);
                 }
             } else {
                 upsModel = upsModelRepo.findById(dto.getModelId()).get();
+                
             }
-        BatteryType batteryTypeFromDto = batteryTypeRepo.findById(dto.getBatteryTypeId()).get();
+       
         upsFromDB.setYearCreated(dto.getYearCreated());
         if(upsRepo.existsByInventaryNumberIgnoreCase(dto.getInventaryNumber().trim())) {
             Ups checkInventary = upsRepo.findByInventaryNumberIgnoreCase(dto.getInventaryNumber().trim()).get(0);
@@ -181,8 +234,6 @@ public class UpsService extends SvtObjService<Ups, UpsRepo, SvtDTO>{
                 break;
         }
         upsFromDB.setUpsModel(upsModel);
-        upsFromDB.setBatteryType(batteryTypeFromDto);
-        upsFromDB.setBatteryAmount(dto.getBatteryAmount());
         upsFromDB.setNumberRoom(dto.getNumberRoom());
         upsFromDB.setNameFromOneC(dto.getNameFromOneC());
         upsRepo.save(upsFromDB);

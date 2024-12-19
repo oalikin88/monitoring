@@ -10,7 +10,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -92,6 +91,7 @@ import ru.gov.sfr.aos.monitoring.mappers.SystemBlockMapper;
 import ru.gov.sfr.aos.monitoring.mappers.TerminalMapper;
 import ru.gov.sfr.aos.monitoring.mappers.ThermoprinterMapper;
 import ru.gov.sfr.aos.monitoring.mappers.UpsMapper;
+import ru.gov.sfr.aos.monitoring.mappers.UpsModelMapper;
 import ru.gov.sfr.aos.monitoring.models.ArchivedDto;
 import ru.gov.sfr.aos.monitoring.models.AsuoDTO;
 import ru.gov.sfr.aos.monitoring.models.BatteryTypeDto;
@@ -112,7 +112,7 @@ import ru.gov.sfr.aos.monitoring.models.SvtScannerDTO;
 import ru.gov.sfr.aos.monitoring.models.SvtServerDTO;
 import ru.gov.sfr.aos.monitoring.models.SvtSwitchHubDTO;
 import ru.gov.sfr.aos.monitoring.models.SvtSystemBlockDTO;
-import ru.gov.sfr.aos.monitoring.repositories.BatteryTypeRepo;
+import ru.gov.sfr.aos.monitoring.models.UpsModelDto;
 import ru.gov.sfr.aos.monitoring.services.AsuoOutDtoTreeService;
 import ru.gov.sfr.aos.monitoring.services.AsuoService;
 import ru.gov.sfr.aos.monitoring.services.AtsModelService;
@@ -222,8 +222,7 @@ public class SvtViewController {
     private BatteryTypeService batteryTypeService;
     @Autowired
     private BatteryTypeMapper batteryTypeMapper;
-    @Autowired
-    private BatteryTypeRepo batteryTypeRepo;
+ 
     @Autowired
     private SystemBlockModelService systemBlockModelService;
     @Autowired
@@ -364,6 +363,8 @@ public class SvtViewController {
     private FaxMapper faxMapper;
     @Autowired
     private LocationService locationService;
+    @Autowired
+    private UpsModelMapper upsModelMapper;
     
 //  @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
     @GetMapping("/svt")
@@ -514,9 +515,15 @@ public class SvtViewController {
   //  @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
     @GetMapping("/mups")
     public String getModelUps(Model model) {
-
+        
         List<UpsModel> upsModels = upsModelService.getAllActualModels();
-        List<SvtModelDto> upsModelsDtoes = svtModelMapper.getUpsModelsDtoes(upsModels);
+        List<UpsModelDto> upsModelsDtoes = new ArrayList<>();
+        for(UpsModel upsModel : upsModels) {
+            UpsModelDto dto = upsModelMapper.getDto(upsModel);
+            upsModelsDtoes.add(dto);
+        }
+        
+        
         model.addAttribute("dtoes", upsModelsDtoes);
         model.addAttribute("namePage", "Модели ИБП");
         model.addAttribute("attribute", "mups");
@@ -527,8 +534,8 @@ public class SvtViewController {
  //   @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
   //  @Log
     @PostMapping("/mups")
-    public ResponseEntity<String> saveModelUps(@RequestBody SvtModelDto dto) throws ObjectAlreadyExists {
-        UpsModel upsModel = svtModelMapper.getUpsModel(dto);
+    public ResponseEntity<String> saveModelUps(@RequestBody UpsModelDto dto) throws ObjectAlreadyExists {
+        UpsModel upsModel = upsModelMapper.getEntityFromDto(dto);
         try{
             upsModelService.saveModel(upsModel);
         }catch(Exception e) {
@@ -713,7 +720,6 @@ public class SvtViewController {
             @ModelAttribute FilterDto dto) {
         
         Map<Location, List<Ups>> svtObjectsByEmployee = null;
-        
         List<LocationByTreeDto> treeSvtDtoByEmployee = null;
         Map<Location, List<Ups>> svtObjectsByStorage = null;
         List<LocationByTreeDto> treeSvtDtoByStorage = null;
@@ -983,8 +989,6 @@ public class SvtViewController {
     @PutMapping("/upstostor")
     public ResponseEntity<String> sendToStorageUps (@RequestBody SvtDTO dto) throws ObjectAlreadyExists {
         Ups ups = upsMapper.getEntityFromDto(dto);
-        BatteryType batteryType = batteryTypeRepo.findById(ups.getBatteryType().getId()).get();
-        ups.setBatteryType(batteryType);
         upsService.sendToStorage(ups);
         return new ResponseEntity(HttpStatus.ACCEPTED);
         
@@ -999,22 +1003,6 @@ public class SvtViewController {
         return new ResponseEntity(HttpStatus.ACCEPTED);
         
     }
-    
- 
-    
-  //  @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
- //   @Log
-    @PutMapping("/upsbackstor")
-    public ResponseEntity<String> backFromStorageUps (@RequestBody SvtDTO dto) throws ObjectAlreadyExists {
-        Ups ups = upsMapper.getEntityFromDto(dto);
-        BatteryType batteryType = batteryTypeRepo.findById(ups.getBatteryType().getId()).get();
-        ups.setBatteryType(batteryType);
-        upsService.backFromStorage(ups, dto.getPlaceId());
-        return new ResponseEntity(HttpStatus.ACCEPTED);
-        
-    }
-    
-
     
     
   //  @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
@@ -1231,12 +1219,6 @@ public class SvtViewController {
         }
         
         int amount = SvtViewController.getAmountDevices(treeSvtDtoByEmployee, treeSvtDtoByStorage);
-        
-//        if(dto != null) {
-//            if(dto.location != null) {
-//                model.addAttribute("filterLocation", dto.getLocation());
-//            }
-//        }
 
         String filterLocation = null;
         if(null != dto.getLocation() && !dto.getLocation().isEmpty() && !dto.getLocation().isBlank()) {
@@ -1279,7 +1261,7 @@ public class SvtViewController {
     }
     
     
-      //      @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
+  //@PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
   //  @UpdLog
     @PutMapping("/sysblockstostor")
     public ResponseEntity<String> sendToStorageSystemblock (@RequestBody SvtSystemBlockDTO dto) throws ObjectAlreadyExists {

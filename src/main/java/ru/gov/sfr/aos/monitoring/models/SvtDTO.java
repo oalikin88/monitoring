@@ -35,6 +35,7 @@ public class SvtDTO extends MainSvtDto {
     protected int batteryAmount;
     protected int yearReplacement;
     protected String numberRoom;
+    protected Long manufacturerId;
     
 
     public SvtDTO() {
@@ -292,6 +293,16 @@ public class SvtDTO extends MainSvtDto {
     public void setNumberRoom(String numberRoom) {
         this.numberRoom = numberRoom;
     }
+
+    public Long getManufacturerId() {
+        return manufacturerId;
+    }
+
+    public void setManufacturerId(Long manufacturerId) {
+        this.manufacturerId = manufacturerId;
+    }
+    
+    
 
     @Override
     public String toString() {
