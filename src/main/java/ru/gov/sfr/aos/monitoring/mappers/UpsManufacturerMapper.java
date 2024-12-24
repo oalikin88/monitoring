@@ -37,7 +37,7 @@ public class UpsManufacturerMapper {
             UpsModelDto upsModelDto = upsModelMapper.getDto(el);
             modelDtoes.add(upsModelDto);
         }
-        dto.setModelsUps(modelDtoes);
+        dto.setModels(modelDtoes);
         return dto;
     }
     
@@ -59,7 +59,7 @@ public class UpsManufacturerMapper {
             upsManufacturer.setName(dto.getName().strip());
         }
         List<UpsModel> listModels = new ArrayList<>();
-        for(UpsModelDto el : dto.getModelsUps()) {
+        for(UpsModelDto el : dto.getModels()) {
             UpsModel upsModel = new UpsModel();
             upsModel.setId(el.getId());
             upsModel.setBatteryAmount(el.getBatteryAmount());

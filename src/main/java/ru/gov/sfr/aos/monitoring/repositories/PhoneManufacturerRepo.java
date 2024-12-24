@@ -4,16 +4,14 @@
  */
 package ru.gov.sfr.aos.monitoring.repositories;
 
-import java.util.List;
 import org.springframework.stereotype.Repository;
-import ru.gov.sfr.aos.monitoring.entities.PhoneModel;
+import ru.gov.sfr.aos.monitoring.entities.PhoneManufacturer;
 
 /**
  *
- * @author 041AlikinOS
+ * @author Alikin Oleg
  */
-
 @Repository
-public interface PhoneModelRepo extends SvtModelsRepo<PhoneModel> {
-    List<PhoneModel> findByManufacturerId(Long id);
+public interface PhoneManufacturerRepo extends ManufacturerModelRepo<PhoneManufacturer> {
+    
 }

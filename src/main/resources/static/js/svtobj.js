@@ -1220,16 +1220,14 @@ let handleClickUpdateBtn = function () {
             break;
         case "ups":
             requestLink = "/updups";
-            dto.batteryTypeId = $("#batteryTypeSelect")[0].selectize.getValue();
-            dto.batteryAmount = document.querySelector("#batteryAmount").value;
+
             dto.yearReplacement = document.querySelector("#dateReplaceSelect").value;
             dto.nameFromOneC = $("#nameFromOneC")[0].value;
             dto.numberRoom = $("#numberRoom")[0].value;
             break;
         case "upsforserver":
             requestLink = "/updupsforserver";
-            dto.batteryTypeId = $("#batteryTypeSelect")[0].selectize.getValue();
-            dto.batteryAmount = document.querySelector("#batteryAmount").value;
+
             dto.yearReplacement = document.querySelector("#dateReplaceSelect").value;
             dto.nameFromOneC = $("#nameFromOneC")[0].value;
             dto.numberRoom = $("#numberRoom")[0].value;
@@ -1466,16 +1464,12 @@ let handleClickSavePhoneBtn = function () {
             break;
         case "ups":
             requestLink = "/ups";
-            dto.batteryTypeId = $("#batteryTypeSelect")[0].selectize.getValue();
-            dto.batteryAmount = document.querySelector("#batteryAmount").value;
             dto.yearReplacement = document.querySelector("#dateReplaceSelect").value;
             dto.nameFromOneC = $("#nameFromOneC")[0].value;
             dto.numberRoom = $("#numberRoom")[0].value;
             break;
         case "upsforserver":
             requestLink = "/upsforserver";
-            dto.batteryTypeId = $("#batteryTypeSelect")[0].selectize.getValue();
-            dto.batteryAmount = document.querySelector("#batteryAmount").value;
             dto.yearReplacement = document.querySelector("#dateReplaceSelect").value;
             dto.nameFromOneC = $("#nameFromOneC")[0].value;
             dto.numberRoom = $("#numberRoom")[0].value;
@@ -2795,40 +2789,7 @@ let modalContentLoad = function (eventReason, svtObjId) {
             divRowDateReplaceBattery.appendChild(divColLabelDateReplaceBattery);
             divRowDateReplaceBattery.appendChild(divColDateReplaceBatterySelect);
             divContainerBody.appendChild(divRowDateReplaceBattery);
-            let divRowBatteryType = document.createElement("div");
-            divRowBatteryType.className = "row mt-2";
-            let divColLabelBatteryType = document.createElement("div");
-            divColLabelBatteryType.className = "col";
-            divColLabelBatteryType.innerText = "Тип батареи";
-            let divColBatteryTypeSelect = document.createElement("div");
-            divColBatteryTypeSelect.className = "col";
-            let selectBatteryType = document.createElement("select");
-            selectBatteryType.className = "form-select form-select-sm";
-            selectBatteryType.id = "batteryTypeSelect";
-            selectBatteryType.setAttribute("aria-label", "batteryTypeSelect");
-            divColBatteryTypeSelect.appendChild(selectBatteryType);
-            divRowBatteryType.appendChild(divColLabelBatteryType);
-            divRowBatteryType.appendChild(divColBatteryTypeSelect);
-            divContainerBody.appendChild(divRowBatteryType);
-            let divRowAmountBatteries = document.createElement("div");
-            divRowAmountBatteries.className = "row mt-2";
-            let divColLabelAmountBatteries = document.createElement("div");
-            divColLabelAmountBatteries.className = "col";
-            divColLabelAmountBatteries.innerText = "Количество батарей";
-            let divColInputAmountBatteries = document.createElement("div");
-            divColInputAmountBatteries.className = "col";
-            let inputAmountBatteries = document.createElement("input");
-            inputAmountBatteries.className = "form-control form-control-sm";
-            inputAmountBatteries.type = "number";
-            inputAmountBatteries.min = "1";
-            inputAmountBatteries.max = "100";
-            inputAmountBatteries.value = "1";
-            inputAmountBatteries.id = "batteryAmount";
-            inputAmountBatteries.setAttribute("aria-label", "battery-amount");
-            divColInputAmountBatteries.appendChild(inputAmountBatteries);
-            divRowAmountBatteries.appendChild(divColLabelAmountBatteries);
-            divRowAmountBatteries.appendChild(divColInputAmountBatteries);
-            divContainerBody.appendChild(divRowAmountBatteries);
+           
             break;
             case "upsforserver":
             let divRowNumberRoomUpsForServer = document.createElement("div");
@@ -2879,40 +2840,7 @@ let modalContentLoad = function (eventReason, svtObjId) {
             divRowDateReplaceBatteryUpsForServer.appendChild(divColLabelDateReplaceBatteryUpsForServer);
             divRowDateReplaceBatteryUpsForServer.appendChild(divColDateReplaceBatterySelectUpsForServer);
             divContainerBody.appendChild(divRowDateReplaceBatteryUpsForServer);
-            let divRowBatteryTypeUpsForServer = document.createElement("div");
-            divRowBatteryTypeUpsForServer.className = "row mt-2";
-            let divColLabelBatteryTypeUpsForServer = document.createElement("div");
-            divColLabelBatteryTypeUpsForServer.className = "col";
-            divColLabelBatteryTypeUpsForServer.innerText = "Тип батареи";
-            let divColBatteryTypeSelectUpsForServer = document.createElement("div");
-            divColBatteryTypeSelectUpsForServer.className = "col";
-            let selectBatteryTypeUpsForServer = document.createElement("select");
-            selectBatteryTypeUpsForServer.className = "form-select form-select-sm";
-            selectBatteryTypeUpsForServer.id = "batteryTypeSelect";
-            selectBatteryTypeUpsForServer.setAttribute("aria-label", "batteryTypeSelect");
-            divColBatteryTypeSelectUpsForServer.appendChild(selectBatteryTypeUpsForServer);
-            divRowBatteryTypeUpsForServer.appendChild(divColLabelBatteryTypeUpsForServer);
-            divRowBatteryTypeUpsForServer.appendChild(divColBatteryTypeSelectUpsForServer);
-            divContainerBody.appendChild(divRowBatteryTypeUpsForServer);
-            let divRowAmountBatteriesUpsForServer = document.createElement("div");
-            divRowAmountBatteriesUpsForServer.className = "row mt-2";
-            let divColLabelAmountBatteriesUpsForServer = document.createElement("div");
-            divColLabelAmountBatteriesUpsForServer.className = "col";
-            divColLabelAmountBatteriesUpsForServer.innerText = "Количество батарей";
-            let divColInputAmountBatteriesUpsForServer = document.createElement("div");
-            divColInputAmountBatteriesUpsForServer.className = "col";
-            let inputAmountBatteriesUpsForServer = document.createElement("input");
-            inputAmountBatteriesUpsForServer.className = "form-control form-control-sm";
-            inputAmountBatteriesUpsForServer.type = "number";
-            inputAmountBatteriesUpsForServer.min = "1";
-            inputAmountBatteriesUpsForServer.max = "100";
-            inputAmountBatteriesUpsForServer.value = "1";
-            inputAmountBatteriesUpsForServer.id = "batteryAmount";
-            inputAmountBatteriesUpsForServer.setAttribute("aria-label", "battery-amount");
-            divColInputAmountBatteriesUpsForServer.appendChild(inputAmountBatteriesUpsForServer);
-            divRowAmountBatteriesUpsForServer.appendChild(divColLabelAmountBatteriesUpsForServer);
-            divRowAmountBatteriesUpsForServer.appendChild(divColInputAmountBatteriesUpsForServer);
-            divContainerBody.appendChild(divRowAmountBatteriesUpsForServer);
+            
             break;
         case "scanner":
             let divRowIpAdress = document.createElement("div");
@@ -4319,14 +4247,12 @@ let modalContentLoad = function (eventReason, svtObjId) {
             case "ups":
                 requestLink = "/getups?upsId=";
                 $("#dateReplaceSelect")[0].value = dateReplaceBattery;
-                $("#batteryAmount")[0].value = batteryAmount;
                 $("#nameFromOneC")[0].value = nameFromOneC;
                 $("#numberRoom")[0].value = numberRoom;
                 break;
             case "upsforserver":
                 requestLink = "/getups?upsId=";
                 $("#dateReplaceSelect")[0].value = dateReplaceBattery;
-                $("#batteryAmount")[0].value = batteryAmount;
                 $("#nameFromOneC")[0].value = nameFromOneC;
                 $("#numberRoom")[0].value = numberRoom;
                 break;
@@ -5227,42 +5153,42 @@ let modalContentLoad = function (eventReason, svtObjId) {
             break;
             
         case "ups":
-            $('#batteryTypeSelect').selectize({
-                persist: true,
-                valueField: 'id',
-                sortField: 'type',
-                labelField: 'type',
-                searchField: ["id", "type"],
-                onInitialize: function () {
-                    $.ajax({
-                        url: "/typebatups",
-                        type: 'GET',
-                        async: false,
-                        dataType: 'json',
-                        error: function(res) {
-                            console.log(res);
-                        },
-                        success: function(res) {
-                          
-                            res.forEach(model => {
-                                $('#batteryTypeSelect')[0].selectize.addOption(model);
-                                $('#batteryTypeSelect')[0].selectize.addItem(model);
-                            });
-                             if (null != svtObjId) {
-                            $('#batteryTypeSelect')[0].selectize.setValue($('#batteryTypeSelect')[0].selectize.search(batteryTypeId).items[0].id);
-                        } else {
-                            $('#batteryTypeSelect')[0].selectize.setValue($('#batteryTypeSelect')[0].selectize.search(0).items[0].id);
-                        }
-                        }
-                    });
-
-                        if (eventReason.indexOf("storage") >= 0) {
-                            $('#batteryTypeSelect')[0].selectize.disable();
-                        } else {
-                            $('#batteryTypeSelect')[0].selectize.enable();
-                        }
-                }
-            });
+//            $('#batteryTypeSelect').selectize({
+//                persist: true,
+//                valueField: 'id',
+//                sortField: 'type',
+//                labelField: 'type',
+//                searchField: ["id", "type"],
+//                onInitialize: function () {
+//                    $.ajax({
+//                        url: "/typebatups",
+//                        type: 'GET',
+//                        async: false,
+//                        dataType: 'json',
+//                        error: function(res) {
+//                            console.log(res);
+//                        },
+//                        success: function(res) {
+//                          
+//                            res.forEach(model => {
+//                                $('#batteryTypeSelect')[0].selectize.addOption(model);
+//                                $('#batteryTypeSelect')[0].selectize.addItem(model);
+//                            });
+//                             if (null != svtObjId) {
+//                            $('#batteryTypeSelect')[0].selectize.setValue($('#batteryTypeSelect')[0].selectize.search(batteryTypeId).items[0].id);
+//                        } else {
+//                            $('#batteryTypeSelect')[0].selectize.setValue($('#batteryTypeSelect')[0].selectize.search(0).items[0].id);
+//                        }
+//                        }
+//                    });
+//
+//                        if (eventReason.indexOf("storage") >= 0) {
+//                            $('#batteryTypeSelect')[0].selectize.disable();
+//                        } else {
+//                            $('#batteryTypeSelect')[0].selectize.enable();
+//                        }
+//                }
+//            });
      
             let dateReplaceSelect = document.querySelector('#dateReplaceSelect');
             option = document.createElement('option');

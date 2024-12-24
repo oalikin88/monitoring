@@ -161,6 +161,20 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                                       </div>
                             </div>
                             
+                <div class = "row element pb-2 mb-2 mt-2 pt-2" th:attr="id = ${dto.id}" data-bs-toggle="modal" data-bs-target="#addBtnModal" th:case="mphones">
+                             <div class="col-1" th:text="${stat.count}"></div>
+                                    <div class="col-11 text-start">
+                                        <span th:text="${dto.manufacturerName} + ' ' +  ${dto.model}"></span>
+                                      </div>
+                    </div>
+                            
+                            <div class = "row element pb-2 mb-2 mt-2 pt-2" th:attr="id = ${dto.id}" data-bs-toggle="modal" data-bs-target="#addBtnModal" th:case="mups">
+                             <div class="col-1" th:text="${stat.count}"></div>
+                                    <div class="col-11 text-start">
+                                        <span th:text="${dto.manufacturer} + ' ' +  ${dto.model}"></span>
+                                      </div>
+                    </div>
+                            
                         <div class = "row element pb-2 mb-2 mt-2 pt-2" th:attr="id = ${dto.id}" data-bs-toggle="modal" data-bs-target="#addBtnModal" th:case="*">
                              <div class="col-1" th:text="${stat.count}"></div>
                                     <div class="col-11 text-start">
@@ -205,6 +219,9 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
         <script th:inline="javascript">
             let attribute = [[${attribute}]];
             let dtoes = [[${dtoes}]];
+            let manufacturersSaveLink = [[${manufacturersSaveLink}]];
+            let modelsByManufacturerLink = [[${modelsByManufacturerLink}]];
+            let manufacturersLink = [[${manufacturersLink}]];
             const namePage = [[${namePage}]];
         </script>
         <script src="/js/bootstrap.bundle.min.js"></script>

@@ -81,6 +81,7 @@ import ru.gov.sfr.aos.monitoring.mappers.InfomatMapper;
 import ru.gov.sfr.aos.monitoring.mappers.MonitorMapper;
 import ru.gov.sfr.aos.monitoring.mappers.OperationSystemMapper;
 import ru.gov.sfr.aos.monitoring.mappers.PhoneMapper;
+import ru.gov.sfr.aos.monitoring.mappers.PhoneModelMapper;
 import ru.gov.sfr.aos.monitoring.mappers.RouterMapper;
 import ru.gov.sfr.aos.monitoring.mappers.ScannerMapper;
 import ru.gov.sfr.aos.monitoring.mappers.ServerMapper;
@@ -365,6 +366,8 @@ public class SvtViewController {
     private LocationService locationService;
     @Autowired
     private UpsModelMapper upsModelMapper;
+    @Autowired
+    private PhoneModelMapper phoneModelMapper;
     
 //  @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
     @GetMapping("/svt")
@@ -416,10 +419,13 @@ public class SvtViewController {
     public String getModelPhones(Model model) {
 
         List<PhoneModel> phoneModels = phoneModelService.getAllActualModels();
-        List<SvtModelDto> phoneModelsDtoes = svtModelMapper.getPhoneModelsDtoes(phoneModels);
+        List<SvtModelDto> phoneModelsDtoes = phoneModelMapper.getListDtoes(phoneModels);
         model.addAttribute("dtoes", phoneModelsDtoes);
         model.addAttribute("namePage", "Модели телефонов");
         model.addAttribute("attribute", "mphones");
+        model.addAttribute("manufacturersSaveLink", "/save-phone-manufacturer");
+        model.addAttribute("modelsByManufacturerLink", "/get-phone-modelsby-manufacturer?id=");
+        model.addAttribute("manufacturersLink", "/get-phone-manufacturers");
         
         return "models";
     }
@@ -428,7 +434,7 @@ public class SvtViewController {
  //   @Log
     @PostMapping("/mphones")
     public ResponseEntity<String> saveModelPhone(@RequestBody SvtModelDto dto) throws ObjectAlreadyExists {
-        PhoneModel phoneModel = svtModelMapper.getPhoneModel(dto);
+        PhoneModel phoneModel = phoneModelMapper.getPhoneModel(dto);
         try{
             phoneModelService.saveModel(phoneModel);
         }catch(Exception e) {
@@ -441,7 +447,7 @@ public class SvtViewController {
     
     @PutMapping("/mphonesupd")
     public ResponseEntity<String> updateModelPhone(@RequestBody SvtModelDto dto) throws ObjectAlreadyExists {
-        PhoneModel phoneModel = svtModelMapper.getPhoneModel(dto);
+        PhoneModel phoneModel = phoneModelMapper.getPhoneModel(dto);
         try{
             phoneModelService.update(phoneModel);
         } catch(Exception e) {
@@ -527,6 +533,10 @@ public class SvtViewController {
         model.addAttribute("dtoes", upsModelsDtoes);
         model.addAttribute("namePage", "Модели ИБП");
         model.addAttribute("attribute", "mups");
+        model.addAttribute("manufacturersSaveLink", "/save-ups-manufacturer");
+        model.addAttribute("modelsByManufacturerLink", "/get-modelsby-manufacturer?id=");
+        model.addAttribute("manufacturersLink", "/get-ups-manufacturers");
+        
         
         return "models";
     }
@@ -546,8 +556,8 @@ public class SvtViewController {
     }
     
     @PutMapping("/mupsupd")
-    public ResponseEntity<String> updateModelUps(@RequestBody SvtModelDto dto) throws ObjectAlreadyExists {
-        UpsModel upsModel = svtModelMapper.getUpsModel(dto);
+    public ResponseEntity<String> updateModelUps(@RequestBody UpsModelDto dto) throws ObjectAlreadyExists {
+        UpsModel upsModel = upsModelMapper.getEntityFromDto(dto);
         try{
             upsModelService.update(upsModel);
         }catch(Exception e) {

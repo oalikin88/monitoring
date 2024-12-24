@@ -66,7 +66,8 @@ let handleClickUpdateBtn = function (name, id) {
     let requestLink = "/" + name + "upd";
     let dto = {
         id: id,
-        model: $("#model")[0].value,
+        model: $("#model")[0].innerText,
+        manufacturer: $("#manufacturer")[0].value,
     };
     switch(attribute) {
         case "os":
@@ -85,9 +86,16 @@ let handleClickUpdateBtn = function (name, id) {
         dto.core = $("#core")[0].value;
         dto.freq = $("#freq")[0].value;
         break;
-    case "mupsbat":
-        delete dto.model;
-        dto.type = document.querySelector('#model').value;
+    case "mups":
+        dto.batteryType = $('#batteryType')[0].selectize.getValue();
+        dto.manufacturerId = $('#manufacturer')[0].selectize.getValue();
+        dto.manufacturer = document.querySelector('#manufacturer').innerText;
+        dto.batteryAmount = document.querySelector('#batteryAmount').value;
+        break;
+    case "mphones":
+        dto.manufacturerName = document.querySelector('#manufacturer').innerText;
+        dto.manufacturerId = $('#manufacturer')[0].selectize.getValue();
+        break;
     }
     
     $.ajax({
@@ -142,6 +150,8 @@ let handleClickSaveBtn = function (name) {
         switch (attribute) {
             case "mphones":
                 link = "/mphones/";
+                dto.manufacturerName = document.querySelector('#manufacturer').innerText;
+                dto.manufacturerId = $('#manufacturer')[0].selectize.getValue();
                 break;
             case "mmonitors":
                 link = "/mmonitors/";
@@ -515,9 +525,9 @@ let modalContentLoad = function(eventReason, dto) {
                $("#freq")[0].value = dto.freq;
                 break;
             case "mups":
-                $("#model")[0].value = dto.model;
-                $("#model")[0].value = dto.type;
+                $("#batteryAmount")[0].value = dto.batteryAmount;
                 break;
+            
         }
     }
     
@@ -527,7 +537,7 @@ let modalContentLoad = function(eventReason, dto) {
         persist: true,
         create: function(input,callback){
               $.ajax({
-                   url: "/save-ups-manufacturer",
+                   url: manufacturersSaveLink,
                    type: "POST",
                    data: {name : input},
                       success: callback,
@@ -543,7 +553,7 @@ let modalContentLoad = function(eventReason, dto) {
         searchField: ["id", "name"],
         onInitialize: function () {
             $.ajax({
-                url: '/get-ups-manufacturers',
+                url: manufacturersLink,
                 type: 'GET',
                 async: false,
                 dataType: 'json',
@@ -566,7 +576,7 @@ let modalContentLoad = function(eventReason, dto) {
         onChange: function(value) {
             if (value != '' && value != manufacturerChoise) {
             $.ajax({
-                url: '/get-modelsby-manufacturer?id=' + $('#manufacturer')[0].selectize.getValue(),
+                url: modelsByManufacturerLink + $('#manufacturer')[0].selectize.getValue(),
                 type: 'GET',
                 async: false,
                 dataType: 'json',
@@ -604,7 +614,7 @@ let modalContentLoad = function(eventReason, dto) {
         searchField: ["id", "model"],
         onInitialize: function () {
             $.ajax({
-                url: '/get-modelsby-manufacturer?id=' + $('#manufacturer')[0].selectize.getValue(),
+                url: modelsByManufacturerLink + $('#manufacturer')[0].selectize.getValue(),
                 type: 'GET',
                 async: false,
                 dataType: 'json',

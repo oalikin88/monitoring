@@ -11,37 +11,45 @@ import java.util.List;
  *
  * @author 041AlikinOS
  */
-public class ManufacturerDTO {
-    public String manufacturer;
-    public List<String> models = new ArrayList<>();
+public class ManufacturerDTO <E> {
+    public Long id;
+    public String name;
+    public List<E> models = new ArrayList<>();
 
     public ManufacturerDTO() {
     }
 
-    public ManufacturerDTO(String manufacturer, List<String> models) {
-        this.manufacturer = manufacturer;
-        this.models = models;
+    public Long getId() {
+        return id;
     }
 
-    public String getManufacturer() {
-        return manufacturer;
+    public void setId(Long id) {
+        this.id = id;
     }
 
-    public void setManufacturer(String manufacturer) {
-        this.manufacturer = manufacturer;
-    }
-
-    public List <String> getModels() {
+    public List<E> getModels() {
         return models;
     }
 
-    public void setModels(List <String> models) {
+    public void setModels(List<E> models) {
         this.models = models;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    
+    
+
+
     @Override
     public String toString() {
-        return "ManufacturerDTO{" + "manufacturer=" + manufacturer + ", models=" + models + '}';
+        return "ManufacturerDTO{" + "manufacturer=" + name + ", models=" + models + '}';
     }
     
     

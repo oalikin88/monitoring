@@ -12,6 +12,8 @@ package ru.gov.sfr.aos.monitoring.models;
 public class SvtModelDto {
     private Long id;
     private String model;
+    private Long manufacturerId;
+    private String manufacturerName;
 
     public SvtModelDto() {
     }
@@ -35,6 +37,25 @@ public class SvtModelDto {
     public void setModel(String model) {
         this.model = model;
     }
+
+    public Long getManufacturerId() {
+        return manufacturerId;
+    }
+
+    public void setManufacturerId(Long manufacturerId) {
+        this.manufacturerId = manufacturerId;
+    }
+
+    public String getManufacturerName() {
+        return manufacturerName;
+    }
+
+    public void setManufacturerName(String manufacturerName) {
+        this.manufacturerName = manufacturerName;
+    }
+
+
+    
 
     @Override
     public String toString() {

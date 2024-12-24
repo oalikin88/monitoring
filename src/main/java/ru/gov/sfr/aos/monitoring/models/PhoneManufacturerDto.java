@@ -9,7 +9,6 @@ package ru.gov.sfr.aos.monitoring.models;
  *
  * @author Alikin Oleg
  */
-public class UpsManufacturerDto extends ManufacturerDTO<UpsModelDto>{
-
+public class PhoneManufacturerDto extends ManufacturerDTO<SvtModelDto>{
     
 }

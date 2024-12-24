@@ -7,10 +7,13 @@ package ru.gov.sfr.aos.monitoring.entities;
 
 import java.util.ArrayList;
 import java.util.List;
+import javax.persistence.CascadeType;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
+import javax.persistence.OneToMany;
 
 
 /**
@@ -20,16 +23,18 @@ import javax.persistence.MappedSuperclass;
  */
 @MappedSuperclass
 public class ManufacturerModel<E> {
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     protected Long id;
     protected String name;
     protected boolean archived;
- 
+    @OneToMany(mappedBy = "manufacturer", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    protected List<E> models = new ArrayList<>();
 
     public ManufacturerModel() {
     }
+    
     
     public Long getId() {
         return id;
@@ -55,6 +60,14 @@ public class ManufacturerModel<E> {
         this.archived = archived;
     }
 
+    public List<E> getModels() {
+        return models;
+    }
 
+    public void setModels(List<E> models) {
+        this.models = models;
+    }
+
+    
     
 }

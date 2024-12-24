@@ -4,17 +4,16 @@
  */
 package ru.gov.sfr.aos.monitoring.services;
 
-
 import org.springframework.stereotype.Service;
-import ru.gov.sfr.aos.monitoring.entities.UpsManufacturer;
-import ru.gov.sfr.aos.monitoring.repositories.UpsManufacturerRepo;
-
+import ru.gov.sfr.aos.monitoring.entities.PhoneManufacturer;
+import ru.gov.sfr.aos.monitoring.repositories.PhoneManufacturerRepo;
 
 /**
  *
  * @author Alikin Oleg
  */
+
 @Service
-public class UpsManufacturerService extends ManufacturerService<UpsManufacturerRepo, UpsManufacturer>{
-  
+public class PhoneManufacturerService extends ManufacturerService<PhoneManufacturerRepo, PhoneManufacturer>{
+    
 }

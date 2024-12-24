@@ -45,6 +45,7 @@ import ru.gov.sfr.aos.monitoring.entities.Motherboard;
 import ru.gov.sfr.aos.monitoring.entities.Mouse;
 import ru.gov.sfr.aos.monitoring.entities.OperationSystem;
 import ru.gov.sfr.aos.monitoring.entities.Phone;
+import ru.gov.sfr.aos.monitoring.entities.PhoneManufacturer;
 import ru.gov.sfr.aos.monitoring.entities.PhoneModel;
 import ru.gov.sfr.aos.monitoring.entities.Ram;
 import ru.gov.sfr.aos.monitoring.entities.Router;
@@ -80,6 +81,7 @@ import ru.gov.sfr.aos.monitoring.mappers.FaxMapper;
 import ru.gov.sfr.aos.monitoring.mappers.InfomatMapper;
 import ru.gov.sfr.aos.monitoring.mappers.MonitorMapper;
 import ru.gov.sfr.aos.monitoring.mappers.OperationSystemMapper;
+import ru.gov.sfr.aos.monitoring.mappers.PhoneManufacturerMapper;
 import ru.gov.sfr.aos.monitoring.mappers.SvtModelMapper;
 import ru.gov.sfr.aos.monitoring.models.DepartmentDTO;
 import ru.gov.sfr.aos.monitoring.models.EmployeeDTO;
@@ -96,6 +98,7 @@ import ru.gov.sfr.aos.monitoring.services.PhoneModelService;
 import ru.gov.sfr.aos.monitoring.services.PhoneService;
 import ru.gov.sfr.aos.monitoring.services.PlaceService;
 import ru.gov.sfr.aos.monitoring.mappers.PhoneMapper;
+import ru.gov.sfr.aos.monitoring.mappers.PhoneModelMapper;
 import ru.gov.sfr.aos.monitoring.mappers.RouterMapper;
 import ru.gov.sfr.aos.monitoring.mappers.ScannerMapper;
 import ru.gov.sfr.aos.monitoring.mappers.ServerMapper;
@@ -114,6 +117,7 @@ import ru.gov.sfr.aos.monitoring.models.DepDto;
 import ru.gov.sfr.aos.monitoring.models.FaxDto;
 import ru.gov.sfr.aos.monitoring.models.HddDto;
 import ru.gov.sfr.aos.monitoring.models.OperationSystemDto;
+import ru.gov.sfr.aos.monitoring.models.PhoneManufacturerDto;
 import ru.gov.sfr.aos.monitoring.models.RamDto;
 import ru.gov.sfr.aos.monitoring.models.RepairDto;
 import ru.gov.sfr.aos.monitoring.models.SvtAtsDTO;
@@ -149,6 +153,7 @@ import ru.gov.sfr.aos.monitoring.services.MonitorService;
 import ru.gov.sfr.aos.monitoring.services.MotherboardModelService;
 import ru.gov.sfr.aos.monitoring.services.MouseModelService;
 import ru.gov.sfr.aos.monitoring.services.OperationSystemService;
+import ru.gov.sfr.aos.monitoring.services.PhoneManufacturerService;
 import ru.gov.sfr.aos.monitoring.services.RamModelService;
 import ru.gov.sfr.aos.monitoring.services.RepairInfoService;
 import ru.gov.sfr.aos.monitoring.services.RouterModelService;
@@ -345,6 +350,11 @@ public class GetInfoController {
     private UpsManufacturerMapper upsManufacturerMapper;
     @Autowired
     private UpsModelMapper upsModelMapper;
+    @Autowired
+    private PhoneManufacturerService phoneManufacturerService;
+    @Autowired
+    private PhoneManufacturerMapper phoneManufacturerMapper;
+    @Autowired PhoneModelMapper phoneModelMapper;
     
     @GetMapping("/batterytype")
     public List<BatteryTypeDto> getBatteryTypes(@RequestParam(value="id", required = false) Long id) {
@@ -363,7 +373,8 @@ public class GetInfoController {
     @PostMapping("/save-ups-manufacturer")
     public ResponseEntity<?> saveUpsManufacturer(String name) throws ObjectAlreadyExists {
         UpsManufacturer savedManufacturer = null;
-        UpsManufacturer potencialManufacturer = upsManufacturerService.create(name);
+        UpsManufacturer potencialManufacturer = new UpsManufacturer();
+        potencialManufacturer.setName(name);
         try{
             savedManufacturer = upsManufacturerService.save(potencialManufacturer);
         } catch(Exception e) {
@@ -375,10 +386,34 @@ public class GetInfoController {
         return ResponseEntity.ok(dto);
     }
     
+    
+        @PostMapping("/save-phone-manufacturer")
+    public ResponseEntity<?> savePhoneManufacturer(String name) throws ObjectAlreadyExists {
+            PhoneManufacturer savedManufacturer = null;
+        PhoneManufacturer potencialManufacturer = new PhoneManufacturer();
+        potencialManufacturer.setName(name);
+        try{
+            savedManufacturer = phoneManufacturerService.save(potencialManufacturer);
+        } catch(Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+        
+        PhoneManufacturerDto dto = phoneManufacturerMapper.getDto(savedManufacturer);
+        
+        return ResponseEntity.ok(dto);
+    }
+    
     @GetMapping("/get-ups-manufacturers")
     public List<UpsManufacturerDto> getUpsManufacturers() {
         List<UpsManufacturer> allManufacturers = upsManufacturerService.getAllManufacturers();
         List<UpsManufacturerDto> out = upsManufacturerMapper.getListDtoes(allManufacturers);
+        return out;
+    }
+    
+    @GetMapping("/get-phone-manufacturers")
+    public List<PhoneManufacturerDto> getPhoneManufacturers() {
+        List<PhoneManufacturer> allManufacturers = phoneManufacturerService.getAllManufacturers();
+        List<PhoneManufacturerDto> out = phoneManufacturerMapper.getListDtoes(allManufacturers);
         return out;
     }
     
@@ -389,6 +424,18 @@ public class GetInfoController {
         List<UpsModelDto> out = new ArrayList<>();
         for(UpsModel model : upsListModel) {
             UpsModelDto modeDto = upsModelMapper.getDto(model);
+            out.add(modeDto);
+        }
+        return out;
+    }
+    
+    @GetMapping("/get-phone-modelsby-manufacturer")
+    public List<SvtModelDto> getPhoneModelsByManufacturer(@RequestParam(value="id", required = true) Long id) {
+        PhoneManufacturer manufacturer = phoneManufacturerService.getManufacturer(id);
+        List<PhoneModel> upsListModel = manufacturer.getModels();
+        List<SvtModelDto> out = new ArrayList<>();
+        for(PhoneModel model : upsListModel) {
+            SvtModelDto modeDto = svtModelMapper.getPhoneModelDto(model);
             out.add(modeDto);
         }
         return out;
@@ -526,8 +573,12 @@ public class GetInfoController {
     @GetMapping("/modphones")
     public List<SvtModelDto> getModelPhones() {
         List<PhoneModel> allModels = phoneModelService.getAllModels();
-        List<SvtModelDto> phoneModelsDtoes = svtModelMapper.getPhoneModelsDtoes(allModels);
-        return phoneModelsDtoes;
+        List<SvtModelDto> out = new ArrayList<>();
+        for(PhoneModel el : allModels) {
+            SvtModelDto dto = phoneModelMapper.getDtoForSelectize(el);
+            out.add(dto);
+        }
+        return out;
     }
     
        @GetMapping("/modmonitors")

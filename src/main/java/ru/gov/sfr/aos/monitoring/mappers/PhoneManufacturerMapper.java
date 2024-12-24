@@ -1,0 +1,44 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+package ru.gov.sfr.aos.monitoring.mappers;
+
+import java.util.ArrayList;
+import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import ru.gov.sfr.aos.monitoring.entities.PhoneManufacturer;
+import ru.gov.sfr.aos.monitoring.models.PhoneManufacturerDto;
+import ru.gov.sfr.aos.monitoring.models.SvtModelDto;
+
+/**
+ *
+ * @author Alikin Oleg
+ */
+@Component
+public class PhoneManufacturerMapper {
+
+    @Autowired
+    private SvtModelMapper mapper;
+    
+    
+    public PhoneManufacturerDto getDto(PhoneManufacturer entity) {
+        PhoneManufacturerDto dto = new PhoneManufacturerDto();
+        List<SvtModelDto> modelDtoes = new ArrayList<>();
+        dto.setId(entity.getId());
+        dto.setName(entity.getName());
+        modelDtoes = mapper.getPhoneModelsDtoes(entity.getModels());
+        dto.setModels(modelDtoes);
+        return dto;
+    }
+    
+    public List<PhoneManufacturerDto> getListDtoes(List<PhoneManufacturer> inputList) {
+        List<PhoneManufacturerDto> out = new ArrayList<>();
+        for(PhoneManufacturer el : inputList) {
+            PhoneManufacturerDto dto = getDto(el);
+            out.add(dto);
+        }
+        return out;
+    }
+}
