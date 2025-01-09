@@ -80,6 +80,7 @@ import ru.gov.sfr.aos.monitoring.mappers.FaxMapper;
 import ru.gov.sfr.aos.monitoring.mappers.FaxModelMapper;
 import ru.gov.sfr.aos.monitoring.mappers.InfomatMapper;
 import ru.gov.sfr.aos.monitoring.mappers.MonitorMapper;
+import ru.gov.sfr.aos.monitoring.mappers.MonitorModelMapper;
 import ru.gov.sfr.aos.monitoring.mappers.OperationSystemMapper;
 import ru.gov.sfr.aos.monitoring.mappers.PhoneMapper;
 import ru.gov.sfr.aos.monitoring.mappers.PhoneModelMapper;
@@ -371,6 +372,8 @@ public class SvtViewController {
     private PhoneModelMapper phoneModelMapper;
     @Autowired
     private FaxModelMapper faxModelMapper;
+    @Autowired
+    private MonitorModelMapper monitorModelMapper;
     
 //  @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
     @GetMapping("/svt")
@@ -474,11 +477,13 @@ public class SvtViewController {
     public String getModelMonitors(Model model) {
 
         List<MonitorModel> monitorModels = monitorModelService.getAllActualModels();
-        List<SvtModelDto> monitorModelsDtoes = svtModelMapper.getMonitorModelsDtoes(monitorModels);
+        List<SvtModelDto> monitorModelsDtoes = monitorModelMapper.getListDtoes(monitorModels);
         model.addAttribute("dtoes", monitorModelsDtoes);
         model.addAttribute("namePage", "Модели мониторов");
         model.addAttribute("attribute", "mmonitors");
-        
+        model.addAttribute("manufacturersSaveLink", "/save-monitor-manufacturer");
+        model.addAttribute("modelsByManufacturerLink", "/get-monitor-modelsby-manufacturer?id=");
+        model.addAttribute("manufacturersLink", "/get-monitor-manufacturers");
         return "models";
     }
     
@@ -495,7 +500,7 @@ public class SvtViewController {
   //  @Log
     @PostMapping("/mmonitors")
     public ResponseEntity<String> saveModelMonitor(@RequestBody SvtModelDto dto) throws ObjectAlreadyExists {
-        MonitorModel monitorModel = svtModelMapper.getMonitorModel(dto);
+        MonitorModel monitorModel = monitorModelMapper.getModel(dto);
         try{
             monitorModelService.saveModel(monitorModel);
         } catch(Exception e) {

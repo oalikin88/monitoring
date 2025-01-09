@@ -6,6 +6,7 @@ package ru.gov.sfr.aos.monitoring.entities;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.Objects;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -150,6 +151,58 @@ public class Monitor extends ObjectBuingWithSerialAndInventary implements Serial
         this.numberRoom = numberRoom;
     }
 
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 89 * hash + Objects.hashCode(this.id);
+        hash = 89 * hash + Objects.hashCode(this.monitorModel);
+        hash = 89 * hash + Objects.hashCode(this.status);
+        hash = 89 * hash + this.yearCreated;
+        hash = 89 * hash + Objects.hashCode(this.dateExploitationBegin);
+        hash = 89 * hash + Objects.hashCode(this.nameFromeOneC);
+        hash = 89 * hash + Objects.hashCode(this.numberRoom);
+        hash = 89 * hash + Objects.hashCode(this.baseType);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Monitor other = (Monitor) obj;
+        if (this.yearCreated != other.yearCreated) {
+            return false;
+        }
+        if (!Objects.equals(this.nameFromeOneC, other.nameFromeOneC)) {
+            return false;
+        }
+        if (!Objects.equals(this.numberRoom, other.numberRoom)) {
+            return false;
+        }
+        if (!Objects.equals(this.id, other.id)) {
+            return false;
+        }
+        if (!Objects.equals(this.monitorModel, other.monitorModel)) {
+            return false;
+        }
+        if (this.status != other.status) {
+            return false;
+        }
+        if (!Objects.equals(this.dateExploitationBegin, other.dateExploitationBegin)) {
+            return false;
+        }
+        return this.baseType == other.baseType;
+    }
+
+    
+    
     
     
     @Override

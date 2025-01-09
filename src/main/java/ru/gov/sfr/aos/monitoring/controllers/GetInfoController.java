@@ -41,6 +41,7 @@ import ru.gov.sfr.aos.monitoring.entities.InfomatModel;
 import ru.gov.sfr.aos.monitoring.entities.Keyboard;
 import ru.gov.sfr.aos.monitoring.entities.LanCard;
 import ru.gov.sfr.aos.monitoring.entities.Monitor;
+import ru.gov.sfr.aos.monitoring.entities.MonitorManufacturer;
 import ru.gov.sfr.aos.monitoring.entities.MonitorModel;
 import ru.gov.sfr.aos.monitoring.entities.Motherboard;
 import ru.gov.sfr.aos.monitoring.entities.Mouse;
@@ -82,7 +83,9 @@ import ru.gov.sfr.aos.monitoring.mappers.FaxManufacturerMapper;
 import ru.gov.sfr.aos.monitoring.mappers.FaxMapper;
 import ru.gov.sfr.aos.monitoring.mappers.FaxModelMapper;
 import ru.gov.sfr.aos.monitoring.mappers.InfomatMapper;
+import ru.gov.sfr.aos.monitoring.mappers.MonitorManufacturerMapper;
 import ru.gov.sfr.aos.monitoring.mappers.MonitorMapper;
+import ru.gov.sfr.aos.monitoring.mappers.MonitorModelMapper;
 import ru.gov.sfr.aos.monitoring.mappers.OperationSystemMapper;
 import ru.gov.sfr.aos.monitoring.mappers.PhoneManufacturerMapper;
 import ru.gov.sfr.aos.monitoring.mappers.SvtModelMapper;
@@ -154,6 +157,7 @@ import ru.gov.sfr.aos.monitoring.services.InfomatModelService;
 import ru.gov.sfr.aos.monitoring.services.InfomatService;
 import ru.gov.sfr.aos.monitoring.services.KeyboardModelService;
 import ru.gov.sfr.aos.monitoring.services.LanCardModelService;
+import ru.gov.sfr.aos.monitoring.services.MonitorManufacturerService;
 import ru.gov.sfr.aos.monitoring.services.MonitorService;
 import ru.gov.sfr.aos.monitoring.services.MotherboardModelService;
 import ru.gov.sfr.aos.monitoring.services.MouseModelService;
@@ -367,6 +371,12 @@ public class GetInfoController {
     private FaxManufacturerMapper faxManufacturerMapper;
     @Autowired
     private FaxModelMapper faxModelMapper;
+    @Autowired
+    private MonitorModelMapper monitorModelMapper;
+    @Autowired
+    private MonitorManufacturerService monitorManufacturerService;
+    @Autowired
+    private MonitorManufacturerMapper monitorManufacturerMapper;
     
     @GetMapping("/batterytype")
     public List<BatteryTypeDto> getBatteryTypes(@RequestParam(value="id", required = false) Long id) {
@@ -414,6 +424,20 @@ public class GetInfoController {
         return ResponseEntity.ok(dto);
     }
     
+     @PostMapping("/save-monitor-manufacturer")
+    public ResponseEntity<?> saveMonitorManufacturer(String name) throws ObjectAlreadyExists {
+        MonitorManufacturer savedManufacturer = null;
+        MonitorManufacturer potencialManufacturer = new MonitorManufacturer();
+        potencialManufacturer.setName(name);
+        try{
+            savedManufacturer = monitorManufacturerService.save(potencialManufacturer);
+        } catch(Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+        ManufacturerDTO dto = monitorManufacturerMapper.getDto(savedManufacturer);
+        return ResponseEntity.ok(dto);
+    }
+    
     
         @PostMapping("/save-phone-manufacturer")
     public ResponseEntity<?> savePhoneManufacturer(String name) throws ObjectAlreadyExists {
@@ -449,6 +473,17 @@ public class GetInfoController {
         return out;
     }
     
+     @GetMapping("/get-monitor-manufacturers")
+    public List<ManufacturerDTO> getMonitorManufacturers() {
+        List<MonitorManufacturer> allManufacturers = monitorManufacturerService.getAllManufacturers();
+        List<ManufacturerDTO> out = new ArrayList<>();
+        for(MonitorManufacturer el : allManufacturers) {
+            ManufacturerDTO dto = monitorManufacturerMapper.getDto(el);
+            out.add(dto);
+        }
+        return out;
+    }
+    
     @GetMapping("/get-phone-manufacturers")
     public List<PhoneManufacturerDto> getPhoneManufacturers() {
         List<PhoneManufacturer> allManufacturers = phoneManufacturerService.getAllManufacturers();
@@ -467,6 +502,19 @@ public class GetInfoController {
         }
         return out;
     }
+    
+    @GetMapping("/get-monitor-modelsby-manufacturer")
+    public List<SvtModelDto> getMonitorModelsByManufacturer(@RequestParam(value="id", required = true) Long id) {
+        MonitorManufacturer manufacturer = monitorManufacturerService.getManufacturer(id);
+        List<MonitorModel> upsListModel = manufacturer.getModels();
+        List<SvtModelDto> out = new ArrayList<>();
+        for(MonitorModel model : upsListModel) {
+            SvtModelDto modelDto = svtModelMapper.getMonitorModelDto(model);
+            out.add(modelDto);
+        }
+        return out;
+    }
+    
     
     @GetMapping("/get-phone-modelsby-manufacturer")
     public List<SvtModelDto> getPhoneModelsByManufacturer(@RequestParam(value="id", required = true) Long id) {
@@ -635,7 +683,12 @@ public class GetInfoController {
        @GetMapping("/modmonitors")
     public List<SvtModelDto> getModelMonitors() {
         List<MonitorModel> allModels = monitorModelService.getAllModels();
-        List<SvtModelDto> monitorModelsDtoes = svtModelMapper.getMonitorModelsDtoes(allModels);
+       List<SvtModelDto> monitorModelsDtoes = new ArrayList<>();
+       for(MonitorModel model : allModels) {
+          SvtModelDto dtoForSelectize = monitorModelMapper.getDtoForSelectize(model);
+          monitorModelsDtoes.add(dtoForSelectize);
+       }
+        
         return monitorModelsDtoes;
     }
     

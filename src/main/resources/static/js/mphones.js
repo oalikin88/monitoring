@@ -100,6 +100,10 @@ let handleClickUpdateBtn = function (name, id) {
         dto.manufacturerName = document.querySelector('#manufacturer').innerText;
         dto.manufacturerId = $('#manufacturer')[0].selectize.getValue();
         break;
+    case "mmonitors":
+        dto.manufacturerName = document.querySelector('#manufacturer').innerText;
+        dto.manufacturerId = $('#manufacturer')[0].selectize.getValue();
+        break;
     }
     
     $.ajax({
@@ -162,7 +166,8 @@ let handleClickSaveBtn = function (name) {
                 dto.manufacturerId = $('#manufacturer')[0].selectize.getValue();
                 break;
             case "mmonitors":
-                link = "/mmonitors/";
+                dto.manufacturerName = document.querySelector('#manufacturer').innerText;
+                dto.manufacturerId = $('#manufacturer')[0].selectize.getValue();
                 break;
             case "mupsbat":
                 link = "/mupsbat/";

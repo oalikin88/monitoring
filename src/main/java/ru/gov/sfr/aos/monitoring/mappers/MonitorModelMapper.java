@@ -7,8 +7,8 @@ package ru.gov.sfr.aos.monitoring.mappers;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.stereotype.Component;
-import ru.gov.sfr.aos.monitoring.entities.FaxManufacturer;
-import ru.gov.sfr.aos.monitoring.entities.FaxModel;
+import ru.gov.sfr.aos.monitoring.entities.MonitorManufacturer;
+import ru.gov.sfr.aos.monitoring.entities.MonitorModel;
 import ru.gov.sfr.aos.monitoring.interfaces.ModelMapper;
 import ru.gov.sfr.aos.monitoring.models.SvtModelDto;
 
@@ -17,21 +17,21 @@ import ru.gov.sfr.aos.monitoring.models.SvtModelDto;
  * @author Alikin Oleg
  */
 @Component
-public class FaxModelMapper implements ModelMapper<FaxModel>{
-     @Override
-     public FaxModel getModel(SvtModelDto dto) {
-        FaxManufacturer manufacturer = new FaxManufacturer();
+public class MonitorModelMapper implements ModelMapper<MonitorModel>{
+
+    @Override
+    public MonitorModel getModel(SvtModelDto dto) {
+        MonitorManufacturer manufacturer = new MonitorManufacturer();
         manufacturer.setId(dto.getManufacturerId());
         manufacturer.setName(dto.getManufacturerName());
-        FaxModel model = new FaxModel();
+        MonitorModel model = new MonitorModel();
         model.setModel(dto.getModel().strip());
         model.setManufacturer(manufacturer);
         return model;
-        
     }
-    
-     @Override
-    public SvtModelDto getDto(FaxModel entity) {
+
+    @Override
+    public SvtModelDto getDto(MonitorModel entity) {
         SvtModelDto dto = new SvtModelDto();
         dto.setModel(entity.getModel());
         dto.setManufacturerName(entity.getManufacturer().getName());
@@ -39,20 +39,19 @@ public class FaxModelMapper implements ModelMapper<FaxModel>{
         dto.setId(entity.getId());
         return dto;
     }
-    
-     @Override
-    public List<SvtModelDto> getListDtoes(List<FaxModel> inputList) {
-        List<SvtModelDto> out = new ArrayList<>();
-        for(FaxModel el : inputList) {
+
+    @Override
+    public List<SvtModelDto> getListDtoes(List<MonitorModel> inputList) {
+         List<SvtModelDto> out = new ArrayList<>();
+        for(MonitorModel el : inputList) {
             SvtModelDto dto = getDto(el);
             out.add(dto);
         }
         return out;
     }
-    
-    
-     @Override
-    public SvtModelDto getDtoForSelectize(FaxModel entity) {
+
+    @Override
+    public SvtModelDto getDtoForSelectize(MonitorModel entity) {
         SvtModelDto dto = new SvtModelDto();
         dto.setModel(entity.getManufacturer().getName() + " " + entity.getModel());
         dto.setManufacturerName(entity.getManufacturer().getName());
@@ -60,4 +59,7 @@ public class FaxModelMapper implements ModelMapper<FaxModel>{
         dto.setId(entity.getId());
         return dto;
     }
+    
+     
+    
 }
