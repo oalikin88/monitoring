@@ -77,6 +77,7 @@ import ru.gov.sfr.aos.monitoring.mappers.BatteryTypeMapper;
 import ru.gov.sfr.aos.monitoring.mappers.ConditionerMapper;
 import ru.gov.sfr.aos.monitoring.mappers.DisplayMapper;
 import ru.gov.sfr.aos.monitoring.mappers.FaxMapper;
+import ru.gov.sfr.aos.monitoring.mappers.FaxModelMapper;
 import ru.gov.sfr.aos.monitoring.mappers.InfomatMapper;
 import ru.gov.sfr.aos.monitoring.mappers.MonitorMapper;
 import ru.gov.sfr.aos.monitoring.mappers.OperationSystemMapper;
@@ -368,6 +369,8 @@ public class SvtViewController {
     private UpsModelMapper upsModelMapper;
     @Autowired
     private PhoneModelMapper phoneModelMapper;
+    @Autowired
+    private FaxModelMapper faxModelMapper;
     
 //  @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
     @GetMapping("/svt")
@@ -2895,10 +2898,14 @@ public class SvtViewController {
     @GetMapping("/mfax")
     public String getModelFax(Model model) {
         List<FaxModel> faxModels = faxModelService.getAllActualModels();
-        List<SvtModelDto> getFaxModelsDtoes = svtModelMapper.getModelFaxDtoes(faxModels);
+      
+        List<SvtModelDto> getFaxModelsDtoes = faxModelMapper.getListDtoes(faxModels);
         model.addAttribute("dtoes", getFaxModelsDtoes);
         model.addAttribute("namePage", "Модели факсов");
         model.addAttribute("attribute", "mfax");
+        model.addAttribute("manufacturersSaveLink", "/save-fax-manufacturer");
+        model.addAttribute("modelsByManufacturerLink", "/get-fax-modelsby-manufacturer?id=");
+        model.addAttribute("manufacturersLink", "/get-fax-manufacturers");
         return "models";
     }
     
@@ -2906,7 +2913,7 @@ public class SvtViewController {
  //   @UpdLog
     @PutMapping("/mfaxupd")
     public ResponseEntity<String> updateModelFax(@RequestBody SvtModelDto dto) throws ObjectAlreadyExists {
-        FaxModel faxModel = svtModelMapper.getModelFax(dto);
+        FaxModel faxModel = faxModelMapper.getModel(dto);
         try{
             faxModelService.update(faxModel);
         }catch(Exception e) {
@@ -2921,7 +2928,7 @@ public class SvtViewController {
  //   @Log
     @PostMapping("/mfax")
     public ResponseEntity<String> saveModelFax(@RequestBody SvtModelDto dto) throws ObjectAlreadyExists {
-        FaxModel faxModel = svtModelMapper.getModelFax(dto);
+        FaxModel faxModel = faxModelMapper.getModel(dto);
         try{
             faxModelService.saveModel(faxModel);
         }catch(Exception e) {

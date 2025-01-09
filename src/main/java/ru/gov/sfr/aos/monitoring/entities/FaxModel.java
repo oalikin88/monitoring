@@ -9,6 +9,7 @@ import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
 /**
@@ -17,6 +18,8 @@ import javax.persistence.OneToMany;
  */
 @Entity
 public class FaxModel extends SvtModel {
+    @ManyToOne(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
+    private FaxManufacturer manufacturer;
     @OneToMany(targetEntity = Fax.class, mappedBy = "model", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<Fax> faxes = new HashSet<>();
 
@@ -30,6 +33,16 @@ public class FaxModel extends SvtModel {
     public void setFaxes(Set<Fax> faxes) {
         this.faxes = faxes;
     }
+
+    public FaxManufacturer getManufacturer() {
+        return manufacturer;
+    }
+
+    public void setManufacturer(FaxManufacturer manufacturer) {
+        this.manufacturer = manufacturer;
+    }
+    
+    
 
     @Override
     public String toString() {

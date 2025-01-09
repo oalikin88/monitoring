@@ -4,10 +4,12 @@
  */
 package ru.gov.sfr.aos.monitoring.entities;
 
+
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
+
 
 /**
  *
@@ -21,10 +23,11 @@ public class SvtModel {
     protected String model;
     protected boolean archived;
 
-    protected SvtModel() {
+
+    public SvtModel() {
     }
     
-    protected SvtModel(String model) {
+    public SvtModel(String model) {
         this.model = model;
     }
 
@@ -51,11 +54,8 @@ public class SvtModel {
     public void setId(Long id) {
         this.id = id;
     }
-    
-    
 
- 
-    
+
     
    
 }

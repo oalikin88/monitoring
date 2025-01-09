@@ -33,6 +33,7 @@ import ru.gov.sfr.aos.monitoring.entities.Cpu;
 import ru.gov.sfr.aos.monitoring.entities.Display;
 import ru.gov.sfr.aos.monitoring.entities.DisplayModel;
 import ru.gov.sfr.aos.monitoring.entities.Fax;
+import ru.gov.sfr.aos.monitoring.entities.FaxManufacturer;
 import ru.gov.sfr.aos.monitoring.entities.FaxModel;
 import ru.gov.sfr.aos.monitoring.entities.Hdd;
 import ru.gov.sfr.aos.monitoring.entities.Infomat;
@@ -77,7 +78,9 @@ import ru.gov.sfr.aos.monitoring.mappers.AtsMapper;
 import ru.gov.sfr.aos.monitoring.mappers.BatteryTypeMapper;
 import ru.gov.sfr.aos.monitoring.mappers.ConditionerMapper;
 import ru.gov.sfr.aos.monitoring.mappers.DisplayMapper;
+import ru.gov.sfr.aos.monitoring.mappers.FaxManufacturerMapper;
 import ru.gov.sfr.aos.monitoring.mappers.FaxMapper;
+import ru.gov.sfr.aos.monitoring.mappers.FaxModelMapper;
 import ru.gov.sfr.aos.monitoring.mappers.InfomatMapper;
 import ru.gov.sfr.aos.monitoring.mappers.MonitorMapper;
 import ru.gov.sfr.aos.monitoring.mappers.OperationSystemMapper;
@@ -116,6 +119,7 @@ import ru.gov.sfr.aos.monitoring.models.CpuModelDto;
 import ru.gov.sfr.aos.monitoring.models.DepDto;
 import ru.gov.sfr.aos.monitoring.models.FaxDto;
 import ru.gov.sfr.aos.monitoring.models.HddDto;
+import ru.gov.sfr.aos.monitoring.models.ManufacturerDTO;
 import ru.gov.sfr.aos.monitoring.models.OperationSystemDto;
 import ru.gov.sfr.aos.monitoring.models.PhoneManufacturerDto;
 import ru.gov.sfr.aos.monitoring.models.RamDto;
@@ -142,6 +146,7 @@ import ru.gov.sfr.aos.monitoring.services.ConditionerService;
 import ru.gov.sfr.aos.monitoring.services.CpuModelService;
 import ru.gov.sfr.aos.monitoring.services.DisplayModelService;
 import ru.gov.sfr.aos.monitoring.services.DisplayService;
+import ru.gov.sfr.aos.monitoring.services.FaxManufacturerService;
 import ru.gov.sfr.aos.monitoring.services.FaxModelService;
 import ru.gov.sfr.aos.monitoring.services.FaxService;
 import ru.gov.sfr.aos.monitoring.services.HddModelService;
@@ -354,7 +359,14 @@ public class GetInfoController {
     private PhoneManufacturerService phoneManufacturerService;
     @Autowired
     private PhoneManufacturerMapper phoneManufacturerMapper;
-    @Autowired PhoneModelMapper phoneModelMapper;
+    @Autowired 
+    private PhoneModelMapper phoneModelMapper;
+    @Autowired
+    private FaxManufacturerService faxManufacturerService;
+    @Autowired
+    private FaxManufacturerMapper faxManufacturerMapper;
+    @Autowired
+    private FaxModelMapper faxModelMapper;
     
     @GetMapping("/batterytype")
     public List<BatteryTypeDto> getBatteryTypes(@RequestParam(value="id", required = false) Long id) {
@@ -386,6 +398,22 @@ public class GetInfoController {
         return ResponseEntity.ok(dto);
     }
     
+    @PostMapping("/save-fax-manufacturer")
+    public ResponseEntity<?> saveFaxManufacturer(String name) throws ObjectAlreadyExists {
+        FaxManufacturer savedManufacturer = null;
+        FaxManufacturer potencialManufacturer = new FaxManufacturer();
+        potencialManufacturer.setName(name);
+        try{
+            savedManufacturer = faxManufacturerService.save(potencialManufacturer);
+        } catch(Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+        
+        ManufacturerDTO dto = faxManufacturerMapper.getDto(savedManufacturer);
+        
+        return ResponseEntity.ok(dto);
+    }
+    
     
         @PostMapping("/save-phone-manufacturer")
     public ResponseEntity<?> savePhoneManufacturer(String name) throws ObjectAlreadyExists {
@@ -407,6 +435,17 @@ public class GetInfoController {
     public List<UpsManufacturerDto> getUpsManufacturers() {
         List<UpsManufacturer> allManufacturers = upsManufacturerService.getAllManufacturers();
         List<UpsManufacturerDto> out = upsManufacturerMapper.getListDtoes(allManufacturers);
+        return out;
+    }
+    
+    @GetMapping("/get-fax-manufacturers")
+    public List<ManufacturerDTO> getFaxManufacturers() {
+        List<FaxManufacturer> allManufacturers = faxManufacturerService.getAllManufacturers();
+        List<ManufacturerDTO> out = new ArrayList<>();
+        for(FaxManufacturer el : allManufacturers) {
+            ManufacturerDTO dto = faxManufacturerMapper.getDto(el);
+            out.add(dto);
+        }
         return out;
     }
     
@@ -436,6 +475,18 @@ public class GetInfoController {
         List<SvtModelDto> out = new ArrayList<>();
         for(PhoneModel model : upsListModel) {
             SvtModelDto modeDto = svtModelMapper.getPhoneModelDto(model);
+            out.add(modeDto);
+        }
+        return out;
+    }
+    
+    @GetMapping("/get-fax-modelsby-manufacturer")
+    public List<SvtModelDto> getFaxModelsByManufacturer(@RequestParam(value="id", required = true) Long id) {
+        FaxManufacturer manufacturer = faxManufacturerService.getManufacturer(id);
+        List<FaxModel> listModel = manufacturer.getModels();
+        List<SvtModelDto> out = new ArrayList<>();
+        for(FaxModel model : listModel) {
+            SvtModelDto modeDto = svtModelMapper.getModelFaxDto(model);
             out.add(modeDto);
         }
         return out;
@@ -1144,7 +1195,12 @@ public class GetInfoController {
           @GetMapping("/modfax")
     public List<SvtModelDto> getModelFax() {
         List<FaxModel> allModels = faxModelService.getAllModels();
-        List<SvtModelDto> dtoes = svtModelMapper.getModelFaxDtoes(allModels);
+        List<SvtModelDto> dtoes = new ArrayList<>();
+        for(FaxModel model : allModels) {
+            SvtModelDto dtoForSelectize = faxModelMapper.getDtoForSelectize(model);
+            dtoes.add(dtoForSelectize);
+        }
+        
         return dtoes;
     }
     

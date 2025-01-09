@@ -31,6 +31,7 @@ public class ManufacturerModel<E> {
     protected boolean archived;
     @OneToMany(mappedBy = "manufacturer", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     protected List<E> models = new ArrayList<>();
+    
 
     public ManufacturerModel() {
     }

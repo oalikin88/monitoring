@@ -96,6 +96,10 @@ let handleClickUpdateBtn = function (name, id) {
         dto.manufacturerName = document.querySelector('#manufacturer').innerText;
         dto.manufacturerId = $('#manufacturer')[0].selectize.getValue();
         break;
+    case "mfax":
+        dto.manufacturerName = document.querySelector('#manufacturer').innerText;
+        dto.manufacturerId = $('#manufacturer')[0].selectize.getValue();
+        break;
     }
     
     $.ajax({
@@ -150,6 +154,10 @@ let handleClickSaveBtn = function (name) {
         switch (attribute) {
             case "mphones":
                 link = "/mphones/";
+                dto.manufacturerName = document.querySelector('#manufacturer').innerText;
+                dto.manufacturerId = $('#manufacturer')[0].selectize.getValue();
+                break;
+            case "mfax":
                 dto.manufacturerName = document.querySelector('#manufacturer').innerText;
                 dto.manufacturerId = $('#manufacturer')[0].selectize.getValue();
                 break;
@@ -508,8 +516,6 @@ let modalContentLoad = function(eventReason, dto) {
     modalWindowContent.appendChild(divModalFooter);
     
         if(dto != null) {
-            
-        
         switch(attribute) {
             case 'mram':
                 $("#capacity")[0].value = dto.capacity;
