@@ -153,6 +153,8 @@ public class Server extends ObjectBuingWithSerialAndInventary implements Seriali
     public void setOperationSystems(Set<OperationSystem> operationSystems) {
         this.operationSystems = operationSystems;
     }
+    
+    
 
     @Override
     public String toString() {

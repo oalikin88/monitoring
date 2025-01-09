@@ -88,6 +88,7 @@ import ru.gov.sfr.aos.monitoring.mappers.RouterMapper;
 import ru.gov.sfr.aos.monitoring.mappers.ScannerMapper;
 import ru.gov.sfr.aos.monitoring.mappers.ScannerModelMapper;
 import ru.gov.sfr.aos.monitoring.mappers.ServerMapper;
+import ru.gov.sfr.aos.monitoring.mappers.ServerModelMapper;
 import ru.gov.sfr.aos.monitoring.mappers.SvtModelMapper;
 import ru.gov.sfr.aos.monitoring.mappers.SwitchHubMapper;
 import ru.gov.sfr.aos.monitoring.mappers.SwitchingUnitMapper;
@@ -377,6 +378,8 @@ public class SvtViewController {
     private MonitorModelMapper monitorModelMapper;
     @Autowired
     private ScannerModelMapper scannerModelMapper;
+    @Autowired
+    private ServerModelMapper serverModelMapper;
     
 //  @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
     @GetMapping("/svt")
@@ -2065,13 +2068,14 @@ public class SvtViewController {
      //      @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
     @GetMapping("/mserver")
     public String getModelServer(Model model) {
-
         List<ServerModel> serverModels = serverModelService.getAllActualModels();
-        List<SvtModelDto> getServerModelsDtoes = svtModelMapper.getModelServerDtoes(serverModels);
+        List<SvtModelDto> getServerModelsDtoes = serverModelMapper.getListDtoes(serverModels);
         model.addAttribute("dtoes", getServerModelsDtoes);
         model.addAttribute("namePage", "Модели серверов");
         model.addAttribute("attribute", "mserver");
-        
+        model.addAttribute("manufacturersSaveLink", "/save-server-manufacturer");
+        model.addAttribute("modelsByManufacturerLink", "/get-server-modelsby-manufacturer?id=");
+        model.addAttribute("manufacturersLink", "/get-server-manufacturers");
         return "models";
     }
     
@@ -2079,7 +2083,7 @@ public class SvtViewController {
  //   @Log
     @PostMapping("/mserver")
     public ResponseEntity<String> saveModelServer(@RequestBody SvtModelDto dto) throws ObjectAlreadyExists {
-        ServerModel serverModel = svtModelMapper.getModelServer(dto);
+        ServerModel serverModel = serverModelMapper.getModel(dto);
         try{
             serverModelService.saveModel(serverModel);
         }catch(Exception e) {
@@ -2092,7 +2096,7 @@ public class SvtViewController {
     
     @PutMapping("/mserverupd")
     public ResponseEntity<String> updateModelServer(@RequestBody SvtModelDto dto) throws ObjectAlreadyExists {
-        ServerModel serverModel = svtModelMapper.getModelServer(dto);
+        ServerModel serverModel = serverModelMapper.getModel(dto);
         try{
             serverModelService.update(serverModel);
         }catch(Exception e) {
@@ -2908,7 +2912,6 @@ public class SvtViewController {
     @GetMapping("/mfax")
     public String getModelFax(Model model) {
         List<FaxModel> faxModels = faxModelService.getAllActualModels();
-      
         List<SvtModelDto> getFaxModelsDtoes = faxModelMapper.getListDtoes(faxModels);
         model.addAttribute("dtoes", getFaxModelsDtoes);
         model.addAttribute("namePage", "Модели факсов");
