@@ -92,15 +92,12 @@ let handleClickUpdateBtn = function (name, id) {
         dto.manufacturer = document.querySelector('#manufacturer').innerText;
         dto.batteryAmount = document.querySelector('#batteryAmount').value;
         break;
-    case "mphones":
-        dto.manufacturerName = document.querySelector('#manufacturer').innerText;
-        dto.manufacturerId = $('#manufacturer')[0].selectize.getValue();
-        break;
-    case "mfax":
-        dto.manufacturerName = document.querySelector('#manufacturer').innerText;
-        dto.manufacturerId = $('#manufacturer')[0].selectize.getValue();
-        break;
+    
+     
     case "mmonitors":
+    case "mfax":
+    case "mphones":
+    case "mscanner":
         dto.manufacturerName = document.querySelector('#manufacturer').innerText;
         dto.manufacturerId = $('#manufacturer')[0].selectize.getValue();
         break;
@@ -157,15 +154,9 @@ let handleClickSaveBtn = function (name) {
      
         switch (attribute) {
             case "mphones":
-                link = "/mphones/";
-                dto.manufacturerName = document.querySelector('#manufacturer').innerText;
-                dto.manufacturerId = $('#manufacturer')[0].selectize.getValue();
-                break;
             case "mfax":
-                dto.manufacturerName = document.querySelector('#manufacturer').innerText;
-                dto.manufacturerId = $('#manufacturer')[0].selectize.getValue();
-                break;
             case "mmonitors":
+            case "mscanner":
                 dto.manufacturerName = document.querySelector('#manufacturer').innerText;
                 dto.manufacturerId = $('#manufacturer')[0].selectize.getValue();
                 break;

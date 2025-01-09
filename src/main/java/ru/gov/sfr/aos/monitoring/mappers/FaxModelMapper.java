@@ -24,6 +24,9 @@ public class FaxModelMapper implements ModelMapper<FaxModel>{
         manufacturer.setId(dto.getManufacturerId());
         manufacturer.setName(dto.getManufacturerName());
         FaxModel model = new FaxModel();
+        if(dto.getId() != null) {
+            model.setId(dto.getId());
+        }
         model.setModel(dto.getModel().strip());
         model.setManufacturer(manufacturer);
         return model;

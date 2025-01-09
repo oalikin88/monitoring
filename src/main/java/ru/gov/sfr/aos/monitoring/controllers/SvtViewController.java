@@ -86,6 +86,7 @@ import ru.gov.sfr.aos.monitoring.mappers.PhoneMapper;
 import ru.gov.sfr.aos.monitoring.mappers.PhoneModelMapper;
 import ru.gov.sfr.aos.monitoring.mappers.RouterMapper;
 import ru.gov.sfr.aos.monitoring.mappers.ScannerMapper;
+import ru.gov.sfr.aos.monitoring.mappers.ScannerModelMapper;
 import ru.gov.sfr.aos.monitoring.mappers.ServerMapper;
 import ru.gov.sfr.aos.monitoring.mappers.SvtModelMapper;
 import ru.gov.sfr.aos.monitoring.mappers.SwitchHubMapper;
@@ -374,6 +375,8 @@ public class SvtViewController {
     private FaxModelMapper faxModelMapper;
     @Autowired
     private MonitorModelMapper monitorModelMapper;
+    @Autowired
+    private ScannerModelMapper scannerModelMapper;
     
 //  @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
     @GetMapping("/svt")
@@ -440,7 +443,7 @@ public class SvtViewController {
  //   @Log
     @PostMapping("/mphones")
     public ResponseEntity<String> saveModelPhone(@RequestBody SvtModelDto dto) throws ObjectAlreadyExists {
-        PhoneModel phoneModel = phoneModelMapper.getPhoneModel(dto);
+        PhoneModel phoneModel = phoneModelMapper.getModel(dto);
         try{
             phoneModelService.saveModel(phoneModel);
         }catch(Exception e) {
@@ -453,7 +456,7 @@ public class SvtViewController {
     
     @PutMapping("/mphonesupd")
     public ResponseEntity<String> updateModelPhone(@RequestBody SvtModelDto dto) throws ObjectAlreadyExists {
-        PhoneModel phoneModel = phoneModelMapper.getPhoneModel(dto);
+        PhoneModel phoneModel = phoneModelMapper.getModel(dto);
         try{
             phoneModelService.update(phoneModel);
         } catch(Exception e) {
@@ -515,7 +518,7 @@ public class SvtViewController {
   //  @UpdLog
     @PutMapping("/mmonitorsupd")
     public ResponseEntity<String> updateModelMonitor(@RequestBody SvtModelDto dto) throws ObjectAlreadyExists {
-        MonitorModel monitorModel = svtModelMapper.getMonitorModel(dto);
+        MonitorModel monitorModel = monitorModelMapper.getModel(dto);
         try{
             monitorModelService.update(monitorModel);
         } catch(Exception e) {
@@ -1882,11 +1885,13 @@ public class SvtViewController {
     public String getModelScanner(Model model) {
 
         List<ScannerModel> scannerModels = scannerModelService.getAllActualModels();
-        List<SvtModelDto> scannerModelsDtoes = svtModelMapper.getModelScannerDtoes(scannerModels);
+        List<SvtModelDto> scannerModelsDtoes = scannerModelMapper.getListDtoes(scannerModels);
         model.addAttribute("dtoes", scannerModelsDtoes);
         model.addAttribute("namePage", "Модели сканеров");
         model.addAttribute("attribute", "mscanner");
-        
+        model.addAttribute("manufacturersSaveLink", "/save-scanner-manufacturer");
+        model.addAttribute("modelsByManufacturerLink", "/get-scanner-modelsby-manufacturer?id=");
+        model.addAttribute("manufacturersLink", "/get-scanner-manufacturers");
         return "models";
     }
     
@@ -1894,7 +1899,7 @@ public class SvtViewController {
  //   @Log
     @PostMapping("/mscanner")
     public ResponseEntity<String> saveModelScanner(@RequestBody SvtModelDto dto) throws ObjectAlreadyExists {
-        ScannerModel scannerModel = svtModelMapper.getModelScanner(dto);
+        ScannerModel scannerModel = scannerModelMapper.getModel(dto);
         try{
             scannerModelService.saveModel(scannerModel);
         }catch(Exception e) {
@@ -1908,7 +1913,7 @@ public class SvtViewController {
     
     @PutMapping("/mscannerupd")
     public ResponseEntity<String> updateModelScanner(@RequestBody SvtModelDto dto) throws ObjectAlreadyExists {
-        ScannerModel scannerModel = svtModelMapper.getModelScanner(dto);
+        ScannerModel scannerModel = scannerModelMapper.getModel(dto);
         try{
             scannerModelService.update(scannerModel);
         }catch(Exception e) {

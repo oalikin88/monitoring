@@ -53,6 +53,7 @@ import ru.gov.sfr.aos.monitoring.entities.Ram;
 import ru.gov.sfr.aos.monitoring.entities.Router;
 import ru.gov.sfr.aos.monitoring.entities.RouterModel;
 import ru.gov.sfr.aos.monitoring.entities.Scanner;
+import ru.gov.sfr.aos.monitoring.entities.ScannerManufacturer;
 import ru.gov.sfr.aos.monitoring.entities.ScannerModel;
 import ru.gov.sfr.aos.monitoring.entities.Server;
 import ru.gov.sfr.aos.monitoring.entities.ServerModel;
@@ -106,7 +107,9 @@ import ru.gov.sfr.aos.monitoring.services.PlaceService;
 import ru.gov.sfr.aos.monitoring.mappers.PhoneMapper;
 import ru.gov.sfr.aos.monitoring.mappers.PhoneModelMapper;
 import ru.gov.sfr.aos.monitoring.mappers.RouterMapper;
+import ru.gov.sfr.aos.monitoring.mappers.ScannerManufacturerMapper;
 import ru.gov.sfr.aos.monitoring.mappers.ScannerMapper;
+import ru.gov.sfr.aos.monitoring.mappers.ScannerModelMapper;
 import ru.gov.sfr.aos.monitoring.mappers.ServerMapper;
 import ru.gov.sfr.aos.monitoring.mappers.SwitchHubMapper;
 import ru.gov.sfr.aos.monitoring.mappers.SwitchingUnitMapper;
@@ -167,6 +170,7 @@ import ru.gov.sfr.aos.monitoring.services.RamModelService;
 import ru.gov.sfr.aos.monitoring.services.RepairInfoService;
 import ru.gov.sfr.aos.monitoring.services.RouterModelService;
 import ru.gov.sfr.aos.monitoring.services.RouterService;
+import ru.gov.sfr.aos.monitoring.services.ScannerManufacturerService;
 import ru.gov.sfr.aos.monitoring.services.ScannerModelService;
 import ru.gov.sfr.aos.monitoring.services.ScannerService;
 import ru.gov.sfr.aos.monitoring.services.ServerModelService;
@@ -377,6 +381,12 @@ public class GetInfoController {
     private MonitorManufacturerService monitorManufacturerService;
     @Autowired
     private MonitorManufacturerMapper monitorManufacturerMapper;
+    @Autowired
+    private ScannerManufacturerService scannerManufacturerService;
+    @Autowired
+    private ScannerManufacturerMapper scannerManufacturerMapper;
+    @Autowired
+    private ScannerModelMapper scannerModelMapper;
     
     @GetMapping("/batterytype")
     public List<BatteryTypeDto> getBatteryTypes(@RequestParam(value="id", required = false) Long id) {
@@ -439,6 +449,21 @@ public class GetInfoController {
     }
     
     
+    @PostMapping("/save-scanner-manufacturer")
+    public ResponseEntity<?> saveScannerManufacturer(String name) throws ObjectAlreadyExists {
+        ScannerManufacturer savedManufacturer = null;
+        ScannerManufacturer potencialManufacturer = new ScannerManufacturer();
+        potencialManufacturer.setName(name);
+        try{
+            savedManufacturer = scannerManufacturerService.save(potencialManufacturer);
+        } catch(Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+        ManufacturerDTO dto = scannerManufacturerMapper.getDto(savedManufacturer);
+        return ResponseEntity.ok(dto);
+    }
+    
+    
         @PostMapping("/save-phone-manufacturer")
     public ResponseEntity<?> savePhoneManufacturer(String name) throws ObjectAlreadyExists {
             PhoneManufacturer savedManufacturer = null;
@@ -484,6 +509,17 @@ public class GetInfoController {
         return out;
     }
     
+    @GetMapping("/get-scanner-manufacturers")
+    public List<ManufacturerDTO> getScannerManufacturers() {
+        List<ScannerManufacturer> allManufacturers = scannerManufacturerService.getAllManufacturers();
+        List<ManufacturerDTO> out = new ArrayList<>();
+        for(ScannerManufacturer el : allManufacturers) {
+            ManufacturerDTO dto = scannerManufacturerMapper.getDto(el);
+            out.add(dto);
+        }
+        return out;
+    }
+    
     @GetMapping("/get-phone-manufacturers")
     public List<PhoneManufacturerDto> getPhoneManufacturers() {
         List<PhoneManufacturer> allManufacturers = phoneManufacturerService.getAllManufacturers();
@@ -510,6 +546,18 @@ public class GetInfoController {
         List<SvtModelDto> out = new ArrayList<>();
         for(MonitorModel model : upsListModel) {
             SvtModelDto modelDto = svtModelMapper.getMonitorModelDto(model);
+            out.add(modelDto);
+        }
+        return out;
+    }
+    
+    @GetMapping("/get-scanner-modelsby-manufacturer")
+    public List<SvtModelDto> getScannerModelsByManufacturer(@RequestParam(value="id", required = true) Long id) {
+        ScannerManufacturer manufacturer = scannerManufacturerService.getManufacturer(id);
+        List<ScannerModel> upsListModel = manufacturer.getModels();
+        List<SvtModelDto> out = new ArrayList<>();
+        for(ScannerModel model : upsListModel) {
+            SvtModelDto modelDto = svtModelMapper.getModelScannerDto(model);
             out.add(modelDto);
         }
         return out;
@@ -953,7 +1001,11 @@ public class GetInfoController {
     @GetMapping("/modscanner")
     public List<SvtModelDto> getModelScanner() {
         List<ScannerModel> allModels = scannerModelService.getAllModels();
-        List<SvtModelDto> scannerModelsDtoes = svtModelMapper.getModelScannerDtoes(allModels);
+        List<SvtModelDto> scannerModelsDtoes = new ArrayList<>();
+        for(ScannerModel model : allModels) {
+            SvtModelDto dtoForSelectize = scannerModelMapper.getDtoForSelectize(model);
+            scannerModelsDtoes.add(dtoForSelectize);
+        }
         return scannerModelsDtoes;
     }
     

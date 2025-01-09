@@ -5,6 +5,7 @@
 package ru.gov.sfr.aos.monitoring.entities;
 
 
+import java.util.Objects;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -53,6 +54,33 @@ public class SvtModel {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final SvtModel other = (SvtModel) obj;
+        if (this.archived != other.archived) {
+            return false;
+        }
+        if (!Objects.equals(this.model, other.model)) {
+            return false;
+        }
+        return Objects.equals(this.id, other.id);
     }
 
 

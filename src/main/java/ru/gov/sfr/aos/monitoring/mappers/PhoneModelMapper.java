@@ -9,6 +9,7 @@ import java.util.List;
 import org.springframework.stereotype.Component;
 import ru.gov.sfr.aos.monitoring.entities.PhoneManufacturer;
 import ru.gov.sfr.aos.monitoring.entities.PhoneModel;
+import ru.gov.sfr.aos.monitoring.interfaces.ModelMapper;
 import ru.gov.sfr.aos.monitoring.models.SvtModelDto;
 
 /**
@@ -16,20 +17,25 @@ import ru.gov.sfr.aos.monitoring.models.SvtModelDto;
  * @author Alikin Oleg
  */
 @Component
-public class PhoneModelMapper {
+public class PhoneModelMapper implements ModelMapper<PhoneModel>{
 
     
-    public PhoneModel getPhoneModel(SvtModelDto dto) {
+    @Override
+    public PhoneModel getModel(SvtModelDto dto) {
         PhoneManufacturer manufacturer = new PhoneManufacturer();
         manufacturer.setId(dto.getManufacturerId());
         manufacturer.setName(dto.getManufacturerName());
         PhoneModel model = new PhoneModel();
+        if(dto.getId() != null) {
+            model.setId(dto.getId());
+        }
         model.setModel(dto.getModel().strip());
         model.setManufacturer(manufacturer);
         return model;
         
     }
     
+    @Override
     public SvtModelDto getDto(PhoneModel entity) {
         SvtModelDto dto = new SvtModelDto();
         dto.setModel(entity.getModel());
@@ -39,6 +45,7 @@ public class PhoneModelMapper {
         return dto;
     }
     
+    @Override
     public List<SvtModelDto> getListDtoes(List<PhoneModel> inputList) {
         List<SvtModelDto> out = new ArrayList<>();
         for(PhoneModel el : inputList) {
@@ -49,6 +56,7 @@ public class PhoneModelMapper {
     }
     
     
+    @Override
     public SvtModelDto getDtoForSelectize(PhoneModel entity) {
         SvtModelDto dto = new SvtModelDto();
         dto.setModel(entity.getManufacturer().getName() + " " + entity.getModel());
