@@ -76,6 +76,7 @@ import ru.gov.sfr.aos.monitoring.mappers.AtsMapper;
 import ru.gov.sfr.aos.monitoring.mappers.AtsModelMapper;
 import ru.gov.sfr.aos.monitoring.mappers.BatteryTypeMapper;
 import ru.gov.sfr.aos.monitoring.mappers.ConditionerMapper;
+import ru.gov.sfr.aos.monitoring.mappers.ConditionerModelMapper;
 import ru.gov.sfr.aos.monitoring.mappers.DisplayMapper;
 import ru.gov.sfr.aos.monitoring.mappers.FaxMapper;
 import ru.gov.sfr.aos.monitoring.mappers.FaxModelMapper;
@@ -389,6 +390,8 @@ public class SvtViewController {
     private RouterModelMapper routerModelMapper;
     @Autowired
     private AtsModelMapper atsModelMapper;
+    @Autowired
+    private ConditionerModelMapper conditionerModelMapper;
     
 //  @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
     @GetMapping("/svt")
@@ -2765,10 +2768,13 @@ public class SvtViewController {
     @GetMapping("/mconditioner")
     public String getModelConditioner(Model model) {
         List<ConditionerModel> conditionerModels = conditionerModelService.getAllActualModels();
-        List<SvtModelDto> getAtsModelsDtoes = svtModelMapper.getModelConditionerDtoes(conditionerModels);
+        List<SvtModelDto> getAtsModelsDtoes = conditionerModelMapper.getListDtoes(conditionerModels);
         model.addAttribute("dtoes", getAtsModelsDtoes);
         model.addAttribute("namePage", "Модели кондиционеров");
         model.addAttribute("attribute", "mconditioner");
+        model.addAttribute("manufacturersSaveLink", "/save-conditioner-manufacturer");
+        model.addAttribute("modelsByManufacturerLink", "/get-conditioner-modelsby-manufacturer?id=");
+        model.addAttribute("manufacturersLink", "/get-conditioner-manufacturers");
         return "models";
     }
     
@@ -2776,7 +2782,7 @@ public class SvtViewController {
  //   @Log
     @PostMapping("/mconditioner")
     public ResponseEntity<String> saveModelConditioner(@RequestBody SvtModelDto dto) throws ObjectAlreadyExists {
-        ConditionerModel conditionerModel = svtModelMapper.getModelConditioner(dto);
+        ConditionerModel conditionerModel = conditionerModelMapper.getModel(dto);
         try{
             conditionerModelService.saveModel(conditionerModel);
         }catch(Exception e){
@@ -2788,7 +2794,7 @@ public class SvtViewController {
     
     @PutMapping("/mconditionerupd")
     public ResponseEntity<String> updModelConditioner(@RequestBody SvtModelDto dto) throws ObjectAlreadyExists {
-        ConditionerModel conditionerModel = svtModelMapper.getModelConditioner(dto);
+        ConditionerModel conditionerModel = conditionerModelMapper.getModel(dto);
         try{
             conditionerModelService.update(conditionerModel);
         }catch(Exception e) {

@@ -31,6 +31,7 @@ import ru.gov.sfr.aos.monitoring.entities.AtsModel;
 import ru.gov.sfr.aos.monitoring.entities.BatteryType;
 import ru.gov.sfr.aos.monitoring.entities.CdDrive;
 import ru.gov.sfr.aos.monitoring.entities.Conditioner;
+import ru.gov.sfr.aos.monitoring.entities.ConditionerManufacturer;
 import ru.gov.sfr.aos.monitoring.entities.ConditionerModel;
 import ru.gov.sfr.aos.monitoring.entities.Cpu;
 import ru.gov.sfr.aos.monitoring.entities.Display;
@@ -86,7 +87,9 @@ import ru.gov.sfr.aos.monitoring.mappers.AtsManufacturerMapper;
 import ru.gov.sfr.aos.monitoring.mappers.AtsMapper;
 import ru.gov.sfr.aos.monitoring.mappers.AtsModelMapper;
 import ru.gov.sfr.aos.monitoring.mappers.BatteryTypeMapper;
+import ru.gov.sfr.aos.monitoring.mappers.ConditionerManufacturerMapper;
 import ru.gov.sfr.aos.monitoring.mappers.ConditionerMapper;
+import ru.gov.sfr.aos.monitoring.mappers.ConditionerModelMapper;
 import ru.gov.sfr.aos.monitoring.mappers.DisplayMapper;
 import ru.gov.sfr.aos.monitoring.mappers.FaxManufacturerMapper;
 import ru.gov.sfr.aos.monitoring.mappers.FaxMapper;
@@ -162,6 +165,7 @@ import ru.gov.sfr.aos.monitoring.services.AtsService;
 import ru.gov.sfr.aos.monitoring.services.BatteryTypeService;
 import ru.gov.sfr.aos.monitoring.services.CdDriveModelService;
 import ru.gov.sfr.aos.monitoring.services.ClientDAO;
+import ru.gov.sfr.aos.monitoring.services.ConditionerManufacturerService;
 import ru.gov.sfr.aos.monitoring.services.ConditionerModelService;
 import ru.gov.sfr.aos.monitoring.services.ConditionerService;
 import ru.gov.sfr.aos.monitoring.services.CpuModelService;
@@ -429,6 +433,12 @@ public class GetInfoController {
     private AtsManufacturerMapper atsManufacturerMapper;
     @Autowired
     private AtsModelMapper atsModelMapper;
+    @Autowired
+    private ConditionerManufacturerService conditionerManufacturerService;
+    @Autowired
+    private ConditionerManufacturerMapper conditionerManufacturerMapper;
+    @Autowired
+    private ConditionerModelMapper conditionerModelMapper;
     
     @GetMapping("/batterytype")
     public List<BatteryTypeDto> getBatteryTypes(@RequestParam(value="id", required = false) Long id) {
@@ -547,6 +557,20 @@ public class GetInfoController {
         return ResponseEntity.ok(dto);
     }
     
+    @PostMapping("/save-conditioner-manufacturer")
+    public ResponseEntity<?> saveConditionerManufacturer(String name) throws ObjectAlreadyExists {
+        ConditionerManufacturer savedManufacturer = null;
+        ConditionerManufacturer potencialManufacturer = new ConditionerManufacturer();
+        potencialManufacturer.setName(name);
+        try{
+            savedManufacturer = conditionerManufacturerService.save(potencialManufacturer);
+        } catch(Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+        ManufacturerDTO dto = conditionerManufacturerMapper.getDto(savedManufacturer);
+        return ResponseEntity.ok(dto);
+    }
+    
     
     @PostMapping("/save-scanner-manufacturer")
     public ResponseEntity<?> saveScannerManufacturer(String name) throws ObjectAlreadyExists {
@@ -652,6 +676,17 @@ public class GetInfoController {
         return out;
     }
     
+    @GetMapping("/get-conditioner-manufacturers")
+    public List<ManufacturerDTO> getConditionerManufacturers() {
+        List<ConditionerManufacturer> allManufacturers = conditionerManufacturerService.getAllManufacturers();
+        List<ManufacturerDTO> out = new ArrayList<>();
+        for(ConditionerManufacturer el : allManufacturers) {
+            ManufacturerDTO dto = conditionerManufacturerMapper.getDto(el);
+            out.add(dto);
+        }
+        return out;
+    }
+    
     
     @GetMapping("/get-scanner-manufacturers")
     public List<ManufacturerDTO> getScannerManufacturers() {
@@ -739,6 +774,19 @@ public class GetInfoController {
         Set<SvtModelDto> out = new HashSet<>();
         for(AtsModel model : upsListModel) {
             SvtModelDto modelDto = atsModelMapper.getDto(model);
+            out.add(modelDto);
+        }
+        return out;
+    }
+    
+    
+     @GetMapping("/get-conditioner-modelsby-manufacturer")
+    public Set<SvtModelDto> getConditionerModelsByManufacturer(@RequestParam(value="id", required = true) Long id) {
+        ConditionerManufacturer manufacturer = conditionerManufacturerService.getManufacturer(id);
+        Set<ConditionerModel> upsListModel = manufacturer.getModels();
+        Set<SvtModelDto> out = new HashSet<>();
+        for(ConditionerModel model : upsListModel) {
+            SvtModelDto modelDto = conditionerModelMapper.getDto(model);
             out.add(modelDto);
         }
         return out;
@@ -1276,9 +1324,13 @@ public class GetInfoController {
     }
     
        @GetMapping("/modconditioner")
-    public List<SvtModelDto> getModelConditioner() {
+    public Set<SvtModelDto> getModelConditioner() {
         List<ConditionerModel> allModels = conditionerModelService.getAllModels();
-        List<SvtModelDto> dtoes = svtModelMapper.getModelConditionerDtoes(allModels);
+        Set<SvtModelDto> dtoes = new HashSet<>();
+        for(ConditionerModel model : allModels) {
+            SvtModelDto dtoForSelectize = conditionerModelMapper.getDtoForSelectize(model);
+            dtoes.add(dtoForSelectize);
+        }
         return dtoes;
     }
     
