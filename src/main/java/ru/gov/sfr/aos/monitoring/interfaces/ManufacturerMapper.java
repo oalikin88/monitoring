@@ -4,8 +4,8 @@
  */
 package ru.gov.sfr.aos.monitoring.interfaces;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 import ru.gov.sfr.aos.monitoring.entities.ManufacturerModel;
 import ru.gov.sfr.aos.monitoring.entities.SvtModel;
 import ru.gov.sfr.aos.monitoring.models.ManufacturerDTO;
@@ -28,7 +28,7 @@ public interface ManufacturerMapper<R extends ManufacturerModel<M>, E extends Ma
     
      default E getDto(R entity) {
         E dto = (E)new ManufacturerDTO<>();
-        List<SvtModelDto> modelDtoes = new ArrayList<>();
+        Set<SvtModelDto> modelDtoes = new HashSet<>();
         dto.setId(entity.getId());
         dto.setName(entity.getName());
         for(M el : entity.getModels()) {

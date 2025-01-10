@@ -4,8 +4,9 @@
  */
 package ru.gov.sfr.aos.monitoring.models;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Set;
 
 /**
  *
@@ -14,7 +15,7 @@ import java.util.List;
 public class ManufacturerDTO <E> {
     public Long id;
     public String name;
-    public List<E> models = new ArrayList<>();
+    public Set<E> models = new HashSet<E>();
 
     public ManufacturerDTO() {
     }
@@ -27,11 +28,11 @@ public class ManufacturerDTO <E> {
         this.id = id;
     }
 
-    public List<E> getModels() {
+    public Set<E> getModels() {
         return models;
     }
 
-    public void setModels(List<E> models) {
+    public void setModels(Set<E> models) {
         this.models = models;
     }
 
@@ -41,6 +42,32 @@ public class ManufacturerDTO <E> {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 5;
+        hash = 29 * hash + Objects.hashCode(this.id);
+        hash = 29 * hash + Objects.hashCode(this.name);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final ManufacturerDTO<?> other = (ManufacturerDTO<?>) obj;
+        if (!Objects.equals(this.name, other.name)) {
+            return false;
+        }
+        return Objects.equals(this.id, other.id);
     }
 
     

@@ -5,7 +5,9 @@
 package ru.gov.sfr.aos.monitoring.mappers;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ru.gov.sfr.aos.monitoring.entities.BatteryType;
@@ -30,7 +32,7 @@ public class UpsManufacturerMapper {
     
     public UpsManufacturerDto getDto(UpsManufacturer entity) {
         UpsManufacturerDto dto = new UpsManufacturerDto();
-        List<UpsModelDto> modelDtoes = new ArrayList<>();
+        Set<UpsModelDto> modelDtoes = new HashSet<>();
         dto.setId(entity.getId());
         dto.setName(entity.getName());
         for(UpsModel el : entity.getModels()) {
@@ -58,7 +60,7 @@ public class UpsManufacturerMapper {
         } else {
             upsManufacturer.setName(dto.getName().strip());
         }
-        List<UpsModel> listModels = new ArrayList<>();
+        Set<UpsModel> listModels = new HashSet<>();
         for(UpsModelDto el : dto.getModels()) {
             UpsModel upsModel = new UpsModel();
             upsModel.setId(el.getId());

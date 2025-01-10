@@ -4,6 +4,8 @@
  */
 package ru.gov.sfr.aos.monitoring.models;
 
+import java.util.Objects;
+
 /**
  *
  * @author 041AlikinOS
@@ -54,7 +56,42 @@ public class SvtModelDto {
         this.manufacturerName = manufacturerName;
     }
 
+    @Override
+    public int hashCode() {
+        int hash = 3;
+        hash = 37 * hash + Objects.hashCode(this.id);
+        hash = 37 * hash + Objects.hashCode(this.model);
+        hash = 37 * hash + Objects.hashCode(this.manufacturerId);
+        hash = 37 * hash + Objects.hashCode(this.manufacturerName);
+        return hash;
+    }
 
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final SvtModelDto other = (SvtModelDto) obj;
+        if (!Objects.equals(this.model, other.model)) {
+            return false;
+        }
+        if (!Objects.equals(this.manufacturerName, other.manufacturerName)) {
+            return false;
+        }
+        if (!Objects.equals(this.id, other.id)) {
+            return false;
+        }
+        return Objects.equals(this.manufacturerId, other.manufacturerId);
+    }
+
+
+    
     
 
     @Override

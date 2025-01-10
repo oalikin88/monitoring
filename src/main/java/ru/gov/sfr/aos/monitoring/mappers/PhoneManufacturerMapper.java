@@ -5,7 +5,9 @@
 package ru.gov.sfr.aos.monitoring.mappers;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ru.gov.sfr.aos.monitoring.entities.PhoneManufacturer;
@@ -25,7 +27,7 @@ public class PhoneManufacturerMapper {
     
     public PhoneManufacturerDto getDto(PhoneManufacturer entity) {
         PhoneManufacturerDto dto = new PhoneManufacturerDto();
-        List<SvtModelDto> modelDtoes = new ArrayList<>();
+        Set<SvtModelDto> modelDtoes = new HashSet<>();
         dto.setId(entity.getId());
         dto.setName(entity.getName());
         modelDtoes = mapper.getPhoneModelsDtoes(entity.getModels());

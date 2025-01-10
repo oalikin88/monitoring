@@ -5,6 +5,7 @@
 package ru.gov.sfr.aos.monitoring.mappers;
 
 import java.util.List;
+import java.util.Set;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingConstants;
 import org.mapstruct.NullValuePropertyMappingStrategy;
@@ -61,9 +62,9 @@ public abstract class SvtModelMapper {
     public abstract List<PhoneModel> getPhoneModelList(List<SvtModelDto> dtoes);
     public abstract List<MonitorModel> getMonitorModelList(List<SvtModelDto> dtoes);
     public abstract List<UpsModel> getUpsModelList(List<SvtModelDto> dtoes);
-    public abstract List<SvtModelDto> getPhoneModelsDtoes(List<PhoneModel> phoneModels);
-    public abstract List<SvtModelDto> getMonitorModelsDtoes(List<MonitorModel> monitorModels);
-    public abstract List<SvtModelDto> getUpsModelsDtoes(List<UpsModel> monitorModels);
+    public abstract Set<SvtModelDto> getPhoneModelsDtoes(Set<PhoneModel> phoneModels);
+    public abstract Set<SvtModelDto> getMonitorModelsDtoes(Set<MonitorModel> monitorModels);
+    public abstract Set<SvtModelDto> getUpsModelsDtoes(Set<UpsModel> monitorModels);
     
     public abstract SystemBlockModel getSystemBlockModel (SvtModelDto dto);
     public abstract SvtModelDto getSystemBlockModelDto(SystemBlockModel systemBlockModel);

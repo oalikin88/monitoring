@@ -54,7 +54,6 @@ public class MonitorModel extends SvtModel {
     public int hashCode() {
         int hash = super.hashCode();
         hash = 97 * hash + Objects.hashCode(this.manufacturer);
-        hash = 97 * hash + Objects.hashCode(this.monitors);
         return hash;
     }
 

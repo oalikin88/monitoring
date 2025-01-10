@@ -85,6 +85,7 @@ import ru.gov.sfr.aos.monitoring.mappers.OperationSystemMapper;
 import ru.gov.sfr.aos.monitoring.mappers.PhoneMapper;
 import ru.gov.sfr.aos.monitoring.mappers.PhoneModelMapper;
 import ru.gov.sfr.aos.monitoring.mappers.RouterMapper;
+import ru.gov.sfr.aos.monitoring.mappers.RouterModelMapper;
 import ru.gov.sfr.aos.monitoring.mappers.ScannerMapper;
 import ru.gov.sfr.aos.monitoring.mappers.ScannerModelMapper;
 import ru.gov.sfr.aos.monitoring.mappers.ServerMapper;
@@ -383,6 +384,8 @@ public class SvtViewController {
     private ServerModelMapper serverModelMapper;
     @Autowired
     private SwitchHubModelMapper switchHubModelMapper;
+    @Autowired
+    private RouterModelMapper routerModelMapper;
     
 //  @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
     @GetMapping("/svt")
@@ -2421,10 +2424,14 @@ public class SvtViewController {
     @GetMapping("/mrouter")
     public String getModelRouterb(Model model) {
         List<RouterModel> routerModels = routerModelService.getAllActualModels();
-        List<SvtModelDto> getRouterModelsDtoes = svtModelMapper.getModelRouterDtoes(routerModels);
+        List<SvtModelDto> getRouterModelsDtoes = routerModelMapper.getListDtoes(routerModels);
         model.addAttribute("dtoes", getRouterModelsDtoes);
         model.addAttribute("namePage", "Модели маршрутизаторов");
         model.addAttribute("attribute", "mrouter");
+        model.addAttribute("manufacturersSaveLink", "/save-router-manufacturer");
+        model.addAttribute("modelsByManufacturerLink", "/get-router-modelsby-manufacturer?id=");
+        model.addAttribute("manufacturersLink", "/get-router-manufacturers");
+        
         return "models";
     }
     
@@ -2432,7 +2439,7 @@ public class SvtViewController {
  //   @Log
     @PostMapping("/mrouter")
     public ResponseEntity<String> saveModelRouter(@RequestBody SvtModelDto dto) throws ObjectAlreadyExists {
-        RouterModel routerModel = svtModelMapper.getModelRouter(dto);
+        RouterModel routerModel = routerModelMapper.getModel(dto);
         try{
         routerModelService.saveModel(routerModel);
         }catch(Exception e) {
@@ -2444,7 +2451,7 @@ public class SvtViewController {
     
     @PutMapping("/mrouterupd")
     public ResponseEntity<String> updateModelRouter(@RequestBody SvtModelDto dto) throws ObjectAlreadyExists {
-        RouterModel routerModel = svtModelMapper.getModelRouter(dto);
+        RouterModel routerModel = routerModelMapper.getModel(dto);
         try{
             routerModelService.update(routerModel);
         }catch(Exception e) {

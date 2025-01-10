@@ -5,9 +5,9 @@
 package ru.gov.sfr.aos.monitoring.entities;
 
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -31,7 +31,7 @@ public class ManufacturerModel<E> {
     protected String name;
     protected boolean archived;
     @OneToMany(mappedBy = "manufacturer", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    protected List<E> models = new ArrayList<>();
+    protected Set<E> models = new HashSet<E>();
     
 
     public ManufacturerModel() {
@@ -62,11 +62,11 @@ public class ManufacturerModel<E> {
         this.archived = archived;
     }
 
-    public List<E> getModels() {
+    public Set<E> getModels() {
         return models;
     }
 
-    public void setModels(List<E> models) {
+    public void setModels(Set<E> models) {
         this.models = models;
     }
 

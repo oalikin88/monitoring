@@ -6,8 +6,10 @@ package ru.gov.sfr.aos.monitoring.controllers;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 import org.opfr.springBootStarterDictionary.fallback.FallbackOrganizationClient;
 import org.opfr.springBootStarterDictionary.models.DictionaryEmployee;
 import org.opfr.springBootStarterDictionary.models.DictionaryOrganization;
@@ -51,6 +53,7 @@ import ru.gov.sfr.aos.monitoring.entities.PhoneManufacturer;
 import ru.gov.sfr.aos.monitoring.entities.PhoneModel;
 import ru.gov.sfr.aos.monitoring.entities.Ram;
 import ru.gov.sfr.aos.monitoring.entities.Router;
+import ru.gov.sfr.aos.monitoring.entities.RouterManufacturer;
 import ru.gov.sfr.aos.monitoring.entities.RouterModel;
 import ru.gov.sfr.aos.monitoring.entities.Scanner;
 import ru.gov.sfr.aos.monitoring.entities.ScannerManufacturer;
@@ -108,7 +111,9 @@ import ru.gov.sfr.aos.monitoring.services.PhoneService;
 import ru.gov.sfr.aos.monitoring.services.PlaceService;
 import ru.gov.sfr.aos.monitoring.mappers.PhoneMapper;
 import ru.gov.sfr.aos.monitoring.mappers.PhoneModelMapper;
+import ru.gov.sfr.aos.monitoring.mappers.RouterManufacturerMapper;
 import ru.gov.sfr.aos.monitoring.mappers.RouterMapper;
+import ru.gov.sfr.aos.monitoring.mappers.RouterModelMapper;
 import ru.gov.sfr.aos.monitoring.mappers.ScannerManufacturerMapper;
 import ru.gov.sfr.aos.monitoring.mappers.ScannerMapper;
 import ru.gov.sfr.aos.monitoring.mappers.ScannerModelMapper;
@@ -174,6 +179,7 @@ import ru.gov.sfr.aos.monitoring.services.OperationSystemService;
 import ru.gov.sfr.aos.monitoring.services.PhoneManufacturerService;
 import ru.gov.sfr.aos.monitoring.services.RamModelService;
 import ru.gov.sfr.aos.monitoring.services.RepairInfoService;
+import ru.gov.sfr.aos.monitoring.services.RouterManufacturerService;
 import ru.gov.sfr.aos.monitoring.services.RouterModelService;
 import ru.gov.sfr.aos.monitoring.services.RouterService;
 import ru.gov.sfr.aos.monitoring.services.ScannerManufacturerService;
@@ -407,6 +413,12 @@ public class GetInfoController {
     private SwitchHubManufacturerMapper switchHubManufacturerMapper;
     @Autowired
     private SwitchHubModelMapper switchHubModelMapper;
+    @Autowired
+    private RouterManufacturerService routerManufacturerService;
+    @Autowired
+    private RouterManufacturerMapper routerManufacturerMapper;
+    @Autowired
+    private RouterModelMapper routerModelMapper;
     
     @GetMapping("/batterytype")
     public List<BatteryTypeDto> getBatteryTypes(@RequestParam(value="id", required = false) Long id) {
@@ -497,6 +509,20 @@ public class GetInfoController {
         return ResponseEntity.ok(dto);
     }
     
+    @PostMapping("/save-router-manufacturer")
+    public ResponseEntity<?> saveRouterHubManufacturer(String name) throws ObjectAlreadyExists {
+        RouterManufacturer savedManufacturer = null;
+        RouterManufacturer potencialManufacturer = new RouterManufacturer();
+        potencialManufacturer.setName(name);
+        try{
+            savedManufacturer = routerManufacturerService.save(potencialManufacturer);
+        } catch(Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+        ManufacturerDTO dto = routerManufacturerMapper.getDto(savedManufacturer);
+        return ResponseEntity.ok(dto);
+    }
+    
     
     @PostMapping("/save-scanner-manufacturer")
     public ResponseEntity<?> saveScannerManufacturer(String name) throws ObjectAlreadyExists {
@@ -580,6 +606,17 @@ public class GetInfoController {
         return out;
     }
     
+    @GetMapping("/get-router-manufacturers")
+    public List<ManufacturerDTO> getRouterManufacturers() {
+        List<RouterManufacturer> allManufacturers = routerManufacturerService.getAllManufacturers();
+        List<ManufacturerDTO> out = new ArrayList<>();
+        for(RouterManufacturer el : allManufacturers) {
+            ManufacturerDTO dto = routerManufacturerMapper.getDto(el);
+            out.add(dto);
+        }
+        return out;
+    }
+    
     
     @GetMapping("/get-scanner-manufacturers")
     public List<ManufacturerDTO> getScannerManufacturers() {
@@ -602,7 +639,7 @@ public class GetInfoController {
     @GetMapping("/get-modelsby-manufacturer")
     public List<UpsModelDto> getUpsModelsByManufacturer(@RequestParam(value="id", required = true) Long id) {
         UpsManufacturer manufacturer = upsManufacturerService.getManufacturer(id);
-        List<UpsModel> upsListModel = manufacturer.getModels();
+        Set<UpsModel> upsListModel = manufacturer.getModels();
         List<UpsModelDto> out = new ArrayList<>();
         for(UpsModel model : upsListModel) {
             UpsModelDto modeDto = upsModelMapper.getDto(model);
@@ -614,7 +651,7 @@ public class GetInfoController {
     @GetMapping("/get-monitor-modelsby-manufacturer")
     public List<SvtModelDto> getMonitorModelsByManufacturer(@RequestParam(value="id", required = true) Long id) {
         MonitorManufacturer manufacturer = monitorManufacturerService.getManufacturer(id);
-        List<MonitorModel> upsListModel = manufacturer.getModels();
+        Set<MonitorModel> upsListModel = manufacturer.getModels();
         List<SvtModelDto> out = new ArrayList<>();
         for(MonitorModel model : upsListModel) {
             SvtModelDto modelDto = svtModelMapper.getMonitorModelDto(model);
@@ -626,7 +663,7 @@ public class GetInfoController {
     @GetMapping("/get-server-modelsby-manufacturer")
     public List<SvtModelDto> getServerModelsByManufacturer(@RequestParam(value="id", required = true) Long id) {
         ServerManufacturer manufacturer = serverManufacturerService.getManufacturer(id);
-        List<ServerModel> upsListModel = manufacturer.getModels();
+        Set<ServerModel> upsListModel = manufacturer.getModels();
         List<SvtModelDto> out = new ArrayList<>();
         for(ServerModel model : upsListModel) {
             SvtModelDto modelDto = svtModelMapper.getModelServerDto(model);
@@ -638,7 +675,7 @@ public class GetInfoController {
     @GetMapping("/get-switch-modelsby-manufacturer")
     public List<SvtModelDto> getSwitchHubModelsByManufacturer(@RequestParam(value="id", required = true) Long id) {
         SwitchHubManufacturer manufacturer = switchHubManufacturerService.getManufacturer(id);
-        List<SwitchHubModel> upsListModel = manufacturer.getModels();
+        Set<SwitchHubModel> upsListModel = manufacturer.getModels();
         List<SvtModelDto> out = new ArrayList<>();
         for(SwitchHubModel model : upsListModel) {
             SvtModelDto modelDto = switchHubModelMapper.getDto(model);
@@ -648,10 +685,23 @@ public class GetInfoController {
     }
     
     
+    @GetMapping("/get-router-modelsby-manufacturer")
+    public Set<SvtModelDto> getRouterModelsByManufacturer(@RequestParam(value="id", required = true) Long id) {
+        RouterManufacturer manufacturer = routerManufacturerService.getManufacturer(id);
+        Set<RouterModel> upsListModel = manufacturer.getModels();
+        Set<SvtModelDto> out = new HashSet<>();
+        for(RouterModel model : upsListModel) {
+            SvtModelDto modelDto = routerModelMapper.getDto(model);
+            out.add(modelDto);
+        }
+        return out;
+    }
+    
+    
     @GetMapping("/get-scanner-modelsby-manufacturer")
     public List<SvtModelDto> getScannerModelsByManufacturer(@RequestParam(value="id", required = true) Long id) {
         ScannerManufacturer manufacturer = scannerManufacturerService.getManufacturer(id);
-        List<ScannerModel> upsListModel = manufacturer.getModels();
+        Set<ScannerModel> upsListModel = manufacturer.getModels();
         List<SvtModelDto> out = new ArrayList<>();
         for(ScannerModel model : upsListModel) {
             SvtModelDto modelDto = svtModelMapper.getModelScannerDto(model);
@@ -664,7 +714,7 @@ public class GetInfoController {
     @GetMapping("/get-phone-modelsby-manufacturer")
     public List<SvtModelDto> getPhoneModelsByManufacturer(@RequestParam(value="id", required = true) Long id) {
         PhoneManufacturer manufacturer = phoneManufacturerService.getManufacturer(id);
-        List<PhoneModel> upsListModel = manufacturer.getModels();
+        Set<PhoneModel> upsListModel = manufacturer.getModels();
         List<SvtModelDto> out = new ArrayList<>();
         for(PhoneModel model : upsListModel) {
             SvtModelDto modeDto = svtModelMapper.getPhoneModelDto(model);
@@ -676,7 +726,7 @@ public class GetInfoController {
     @GetMapping("/get-fax-modelsby-manufacturer")
     public List<SvtModelDto> getFaxModelsByManufacturer(@RequestParam(value="id", required = true) Long id) {
         FaxManufacturer manufacturer = faxManufacturerService.getManufacturer(id);
-        List<FaxModel> listModel = manufacturer.getModels();
+        Set<FaxModel> listModel = manufacturer.getModels();
         List<SvtModelDto> out = new ArrayList<>();
         for(FaxModel model : listModel) {
             SvtModelDto modeDto = svtModelMapper.getModelFaxDto(model);
@@ -1122,7 +1172,7 @@ public class GetInfoController {
         List<SwitchHubModel> allModels = switchHubModelService.getAllModels();
         List<SvtModelDto> dtoes = new ArrayList<>();
         for(SwitchHubModel model : allModels) {
-            SvtModelDto dto = switchHubModelMapper.getDto(model);
+            SvtModelDto dto = switchHubModelMapper.getDtoForSelectize(model);
             dtoes.add(dto);
         }
         return dtoes;
@@ -1138,9 +1188,13 @@ public class GetInfoController {
     }
     
        @GetMapping("/modrouter")
-    public List<SvtModelDto> getModelRouter() {
+    public Set<SvtModelDto> getModelRouter() {
         List<RouterModel> allModels = routerModelService.getAllModels();
-        List<SvtModelDto> dtoes = svtModelMapper.getModelRouterDtoes(allModels);
+        Set<SvtModelDto> dtoes = new HashSet<>();
+        for(RouterModel model : allModels) {
+            SvtModelDto dtoForSelectize = routerModelMapper.getDtoForSelectize(model);
+            dtoes.add(dtoForSelectize);
+        }
         return dtoes;
     }
     
