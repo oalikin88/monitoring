@@ -5,6 +5,7 @@
 package ru.gov.sfr.aos.monitoring.entities;
 
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -40,6 +41,40 @@ public class FaxModel extends SvtModel {
 
     public void setManufacturer(FaxManufacturer manufacturer) {
         this.manufacturer = manufacturer;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = super.hashCode();
+        hash = 53 * hash + Objects.hashCode(this.manufacturer);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final FaxModel other = (FaxModel) obj;
+        
+        if (!Objects.equals(this.id, other.id)) {
+            return false;
+        }
+        
+        if (!Objects.equals(this.archived, other.archived)) {
+            return false;
+        }
+        if (!Objects.equals(this.model, other.model)) {
+            return false;
+        }
+        
+        return Objects.equals(this.manufacturer, other.manufacturer);
     }
     
     

@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
 import ru.gov.sfr.aos.monitoring.dictionaries.PlaceType;
 import ru.gov.sfr.aos.monitoring.entities.Asuo;
 import ru.gov.sfr.aos.monitoring.entities.Ats;
+import ru.gov.sfr.aos.monitoring.entities.AtsManufacturer;
 import ru.gov.sfr.aos.monitoring.entities.AtsModel;
 import ru.gov.sfr.aos.monitoring.entities.BatteryType;
 import ru.gov.sfr.aos.monitoring.entities.CdDrive;
@@ -81,7 +82,9 @@ import ru.gov.sfr.aos.monitoring.entities.UpsModel;
 import ru.gov.sfr.aos.monitoring.entities.VideoCard;
 import ru.gov.sfr.aos.monitoring.exceptions.ObjectAlreadyExists;
 import ru.gov.sfr.aos.monitoring.mappers.AsuoMapper;
+import ru.gov.sfr.aos.monitoring.mappers.AtsManufacturerMapper;
 import ru.gov.sfr.aos.monitoring.mappers.AtsMapper;
+import ru.gov.sfr.aos.monitoring.mappers.AtsModelMapper;
 import ru.gov.sfr.aos.monitoring.mappers.BatteryTypeMapper;
 import ru.gov.sfr.aos.monitoring.mappers.ConditionerMapper;
 import ru.gov.sfr.aos.monitoring.mappers.DisplayMapper;
@@ -153,6 +156,7 @@ import ru.gov.sfr.aos.monitoring.models.UpsModelDto;
 import ru.gov.sfr.aos.monitoring.repositories.AsuoRepo;
 import ru.gov.sfr.aos.monitoring.repositories.BatteryTypeRepo;
 import ru.gov.sfr.aos.monitoring.services.AsuoService;
+import ru.gov.sfr.aos.monitoring.services.AtsManufacturerService;
 import ru.gov.sfr.aos.monitoring.services.AtsModelService;
 import ru.gov.sfr.aos.monitoring.services.AtsService;
 import ru.gov.sfr.aos.monitoring.services.BatteryTypeService;
@@ -419,6 +423,12 @@ public class GetInfoController {
     private RouterManufacturerMapper routerManufacturerMapper;
     @Autowired
     private RouterModelMapper routerModelMapper;
+    @Autowired
+    private AtsManufacturerService atsManufacturerService;
+    @Autowired
+    private AtsManufacturerMapper atsManufacturerMapper;
+    @Autowired
+    private AtsModelMapper atsModelMapper;
     
     @GetMapping("/batterytype")
     public List<BatteryTypeDto> getBatteryTypes(@RequestParam(value="id", required = false) Long id) {
@@ -523,6 +533,20 @@ public class GetInfoController {
         return ResponseEntity.ok(dto);
     }
     
+    @PostMapping("/save-ats-manufacturer")
+    public ResponseEntity<?> saveAtsManufacturer(String name) throws ObjectAlreadyExists {
+        AtsManufacturer savedManufacturer = null;
+        AtsManufacturer potencialManufacturer = new AtsManufacturer();
+        potencialManufacturer.setName(name);
+        try{
+            savedManufacturer = atsManufacturerService.save(potencialManufacturer);
+        } catch(Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+        ManufacturerDTO dto = atsManufacturerMapper.getDto(savedManufacturer);
+        return ResponseEntity.ok(dto);
+    }
+    
     
     @PostMapping("/save-scanner-manufacturer")
     public ResponseEntity<?> saveScannerManufacturer(String name) throws ObjectAlreadyExists {
@@ -617,6 +641,17 @@ public class GetInfoController {
         return out;
     }
     
+    @GetMapping("/get-ats-manufacturers")
+    public List<ManufacturerDTO> getAtsManufacturers() {
+        List<AtsManufacturer> allManufacturers = atsManufacturerService.getAllManufacturers();
+        List<ManufacturerDTO> out = new ArrayList<>();
+        for(AtsManufacturer el : allManufacturers) {
+            ManufacturerDTO dto = atsManufacturerMapper.getDto(el);
+            out.add(dto);
+        }
+        return out;
+    }
+    
     
     @GetMapping("/get-scanner-manufacturers")
     public List<ManufacturerDTO> getScannerManufacturers() {
@@ -692,6 +727,18 @@ public class GetInfoController {
         Set<SvtModelDto> out = new HashSet<>();
         for(RouterModel model : upsListModel) {
             SvtModelDto modelDto = routerModelMapper.getDto(model);
+            out.add(modelDto);
+        }
+        return out;
+    }
+    
+    @GetMapping("/get-ats-modelsby-manufacturer")
+    public Set<SvtModelDto> getAtsModelsByManufacturer(@RequestParam(value="id", required = true) Long id) {
+        AtsManufacturer manufacturer = atsManufacturerService.getManufacturer(id);
+        Set<AtsModel> upsListModel = manufacturer.getModels();
+        Set<SvtModelDto> out = new HashSet<>();
+        for(AtsModel model : upsListModel) {
+            SvtModelDto modelDto = atsModelMapper.getDto(model);
             out.add(modelDto);
         }
         return out;
@@ -1208,9 +1255,14 @@ public class GetInfoController {
     }
     
     @GetMapping("/modats")
-    public List<SvtModelDto> getModelAts() {
+    public Set<SvtModelDto> getModelAts() {
         List<AtsModel> allModels = atsModelService.getAllModels();
-        List<SvtModelDto> dtoes = svtModelMapper.getModelAtsDtoes(allModels);
+        Set<SvtModelDto> dtoes = new HashSet<>();
+        for(AtsModel model : allModels) {
+            SvtModelDto dto = atsModelMapper.getDto(model);
+            dtoes.add(dto);
+        }
+        
         return dtoes;
     }
     

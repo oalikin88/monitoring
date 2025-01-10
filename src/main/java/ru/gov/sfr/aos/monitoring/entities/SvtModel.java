@@ -58,9 +58,14 @@ public class SvtModel {
 
     @Override
     public int hashCode() {
-        int hash = 7;
+        int hash = 5;
+        hash = 37 * hash + Objects.hashCode(this.id);
+        hash = 37 * hash + Objects.hashCode(this.model);
+        hash = 37 * hash + (this.archived ? 1 : 0);
         return hash;
     }
+
+    
 
     @Override
     public boolean equals(Object obj) {

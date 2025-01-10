@@ -98,6 +98,7 @@ let handleClickUpdateBtn = function (name, id) {
     case "mscanner":
     case "mswitch":
     case "mrouter":
+    case "mats":
         dto.manufacturerName = document.querySelector('#manufacturer').innerText;
         dto.manufacturerId = $('#manufacturer')[0].selectize.getValue();
         break;
@@ -159,6 +160,7 @@ let handleClickSaveBtn = function (name) {
             case "mscanner":
             case "mswitch":
             case "mrouter":
+            case "mats":
                 dto.manufacturerName = document.querySelector('#manufacturer').innerText;
                 dto.manufacturerId = $('#manufacturer')[0].selectize.getValue();
                 break;

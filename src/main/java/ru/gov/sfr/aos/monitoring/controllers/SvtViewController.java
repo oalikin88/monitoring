@@ -73,6 +73,7 @@ import ru.gov.sfr.aos.monitoring.entities.VideoCard;
 import ru.gov.sfr.aos.monitoring.exceptions.ObjectAlreadyExists;
 import ru.gov.sfr.aos.monitoring.mappers.AsuoMapper;
 import ru.gov.sfr.aos.monitoring.mappers.AtsMapper;
+import ru.gov.sfr.aos.monitoring.mappers.AtsModelMapper;
 import ru.gov.sfr.aos.monitoring.mappers.BatteryTypeMapper;
 import ru.gov.sfr.aos.monitoring.mappers.ConditionerMapper;
 import ru.gov.sfr.aos.monitoring.mappers.DisplayMapper;
@@ -386,6 +387,8 @@ public class SvtViewController {
     private SwitchHubModelMapper switchHubModelMapper;
     @Autowired
     private RouterModelMapper routerModelMapper;
+    @Autowired
+    private AtsModelMapper atsModelMapper;
     
 //  @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
     @GetMapping("/svt")
@@ -2592,10 +2595,13 @@ public class SvtViewController {
     @GetMapping("/mats")
     public String getModelAts(Model model) {
         List<AtsModel> atsModels = atsModelService.getAllActualModels();
-        List<SvtModelDto> getAtsModelsDtoes = svtModelMapper.getModelAtsDtoes(atsModels);
+        List<SvtModelDto> getAtsModelsDtoes = atsModelMapper.getListDtoes(atsModels);
         model.addAttribute("dtoes", getAtsModelsDtoes);
         model.addAttribute("namePage", "Модели АТС");
         model.addAttribute("attribute", "mats");
+        model.addAttribute("manufacturersSaveLink", "/save-ats-manufacturer");
+        model.addAttribute("modelsByManufacturerLink", "/get-ats-modelsby-manufacturer?id=");
+        model.addAttribute("manufacturersLink", "/get-ats-manufacturers");
         return "models";
     }
     
@@ -2603,7 +2609,7 @@ public class SvtViewController {
  //   @Log
     @PostMapping("/mats")
     public ResponseEntity<String> saveModelAts(@RequestBody SvtModelDto dto) throws ObjectAlreadyExists {
-        AtsModel atsModel = svtModelMapper.getModelAts(dto);
+        AtsModel atsModel = atsModelMapper.getModel(dto);
         try{
             atsModelService.saveModel(atsModel);
         }catch(Exception e){
@@ -2615,7 +2621,7 @@ public class SvtViewController {
     
     @PutMapping("/matsupd")
     public ResponseEntity<String> updateModelAts(@RequestBody SvtModelDto dto) throws ObjectAlreadyExists {
-        AtsModel atsModel = svtModelMapper.getModelAts(dto);
+        AtsModel atsModel = atsModelMapper.getModel(dto);
         try{
             atsModelService.update(atsModel);
         }catch(Exception e){
