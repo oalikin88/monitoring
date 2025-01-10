@@ -81,6 +81,7 @@ import ru.gov.sfr.aos.monitoring.mappers.DisplayMapper;
 import ru.gov.sfr.aos.monitoring.mappers.FaxMapper;
 import ru.gov.sfr.aos.monitoring.mappers.FaxModelMapper;
 import ru.gov.sfr.aos.monitoring.mappers.InfomatMapper;
+import ru.gov.sfr.aos.monitoring.mappers.InfomatModelMapper;
 import ru.gov.sfr.aos.monitoring.mappers.MonitorMapper;
 import ru.gov.sfr.aos.monitoring.mappers.MonitorModelMapper;
 import ru.gov.sfr.aos.monitoring.mappers.OperationSystemMapper;
@@ -392,6 +393,8 @@ public class SvtViewController {
     private AtsModelMapper atsModelMapper;
     @Autowired
     private ConditionerModelMapper conditionerModelMapper;
+    @Autowired
+    private InfomatModelMapper infomatModelMapper;
     
 //  @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
     @GetMapping("/svt")
@@ -3111,10 +3114,13 @@ public class SvtViewController {
     @GetMapping("/minfomat")
     public String getModelInfomat(Model model) {
         List<InfomatModel> infomatModels = infomatModelService.getAllActualModels();
-        List<SvtModelDto> getInfomatModelsDtoes = svtModelMapper.getModelInfomatDtoes(infomatModels);
+        List<SvtModelDto> getInfomatModelsDtoes = infomatModelMapper.getListDtoes(infomatModels);
         model.addAttribute("dtoes", getInfomatModelsDtoes);
         model.addAttribute("namePage", "Модели инфоматов");
         model.addAttribute("attribute", "minfomat");
+        model.addAttribute("manufacturersSaveLink", "/save-infomat-manufacturer");
+        model.addAttribute("modelsByManufacturerLink", "/get-infomat-modelsby-manufacturer?id=");
+        model.addAttribute("manufacturersLink", "/get-infomat-manufacturers");
         return "models";
     }
     
@@ -3122,7 +3128,7 @@ public class SvtViewController {
  //   @Log
     @PostMapping("/minfomat")
     public ResponseEntity<String> saveModelInfomat(@RequestBody SvtModelDto dto) throws ObjectAlreadyExists {
-        InfomatModel infomatModel = svtModelMapper.getModelInfomat(dto);
+        InfomatModel infomatModel = infomatModelMapper.getModel(dto);
         try{
             infomatModelService.saveModel(infomatModel);
         }catch(Exception e) {
@@ -3134,7 +3140,7 @@ public class SvtViewController {
     
     @PutMapping("/minfomatupd")
     public ResponseEntity<String> updateModelInfomat(@RequestBody SvtModelDto dto) throws ObjectAlreadyExists {
-        InfomatModel infomatModel = svtModelMapper.getModelInfomat(dto);
+        InfomatModel infomatModel = infomatModelMapper.getModel(dto);
         try{
             infomatModelService.update(infomatModel);
         }catch(Exception e) {

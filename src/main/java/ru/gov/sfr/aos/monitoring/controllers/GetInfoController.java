@@ -41,6 +41,7 @@ import ru.gov.sfr.aos.monitoring.entities.FaxManufacturer;
 import ru.gov.sfr.aos.monitoring.entities.FaxModel;
 import ru.gov.sfr.aos.monitoring.entities.Hdd;
 import ru.gov.sfr.aos.monitoring.entities.Infomat;
+import ru.gov.sfr.aos.monitoring.entities.InfomatManufacturer;
 import ru.gov.sfr.aos.monitoring.entities.InfomatModel;
 import ru.gov.sfr.aos.monitoring.entities.Keyboard;
 import ru.gov.sfr.aos.monitoring.entities.LanCard;
@@ -94,7 +95,9 @@ import ru.gov.sfr.aos.monitoring.mappers.DisplayMapper;
 import ru.gov.sfr.aos.monitoring.mappers.FaxManufacturerMapper;
 import ru.gov.sfr.aos.monitoring.mappers.FaxMapper;
 import ru.gov.sfr.aos.monitoring.mappers.FaxModelMapper;
+import ru.gov.sfr.aos.monitoring.mappers.InfomatManufacturerMapper;
 import ru.gov.sfr.aos.monitoring.mappers.InfomatMapper;
+import ru.gov.sfr.aos.monitoring.mappers.InfomatModelMapper;
 import ru.gov.sfr.aos.monitoring.mappers.MonitorManufacturerMapper;
 import ru.gov.sfr.aos.monitoring.mappers.MonitorMapper;
 import ru.gov.sfr.aos.monitoring.mappers.MonitorModelMapper;
@@ -175,6 +178,7 @@ import ru.gov.sfr.aos.monitoring.services.FaxManufacturerService;
 import ru.gov.sfr.aos.monitoring.services.FaxModelService;
 import ru.gov.sfr.aos.monitoring.services.FaxService;
 import ru.gov.sfr.aos.monitoring.services.HddModelService;
+import ru.gov.sfr.aos.monitoring.services.InfomatManufacturerService;
 import ru.gov.sfr.aos.monitoring.services.InfomatModelService;
 import ru.gov.sfr.aos.monitoring.services.InfomatService;
 import ru.gov.sfr.aos.monitoring.services.KeyboardModelService;
@@ -439,6 +443,12 @@ public class GetInfoController {
     private ConditionerManufacturerMapper conditionerManufacturerMapper;
     @Autowired
     private ConditionerModelMapper conditionerModelMapper;
+    @Autowired
+    private InfomatManufacturerMapper infomatManufacturerMapper;
+    @Autowired
+    private InfomatManufacturerService infomatManufacturerService;
+    @Autowired
+    private InfomatModelMapper infomatModelMapper;
     
     @GetMapping("/batterytype")
     public List<BatteryTypeDto> getBatteryTypes(@RequestParam(value="id", required = false) Long id) {
@@ -571,6 +581,20 @@ public class GetInfoController {
         return ResponseEntity.ok(dto);
     }
     
+    @PostMapping("/save-infomat-manufacturer")
+    public ResponseEntity<?> saveInfomatManufacturer(String name) throws ObjectAlreadyExists {
+        InfomatManufacturer savedManufacturer = null;
+        InfomatManufacturer potencialManufacturer = new InfomatManufacturer();
+        potencialManufacturer.setName(name);
+        try{
+            savedManufacturer = infomatManufacturerService.save(potencialManufacturer);
+        } catch(Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+        ManufacturerDTO dto = infomatManufacturerMapper.getDto(savedManufacturer);
+        return ResponseEntity.ok(dto);
+    }
+    
     
     @PostMapping("/save-scanner-manufacturer")
     public ResponseEntity<?> saveScannerManufacturer(String name) throws ObjectAlreadyExists {
@@ -687,6 +711,17 @@ public class GetInfoController {
         return out;
     }
     
+    @GetMapping("/get-infomat-manufacturers")
+    public List<ManufacturerDTO> getInfomatManufacturers() {
+        List<InfomatManufacturer> allManufacturers = infomatManufacturerService.getAllManufacturers();
+        List<ManufacturerDTO> out = new ArrayList<>();
+        for(InfomatManufacturer el : allManufacturers) {
+            ManufacturerDTO dto = infomatManufacturerMapper.getDto(el);
+            out.add(dto);
+        }
+        return out;
+    }
+    
     
     @GetMapping("/get-scanner-manufacturers")
     public List<ManufacturerDTO> getScannerManufacturers() {
@@ -787,6 +822,19 @@ public class GetInfoController {
         Set<SvtModelDto> out = new HashSet<>();
         for(ConditionerModel model : upsListModel) {
             SvtModelDto modelDto = conditionerModelMapper.getDto(model);
+            out.add(modelDto);
+        }
+        return out;
+    }
+    
+    
+    @GetMapping("/get-infomat-modelsby-manufacturer")
+    public Set<SvtModelDto> getInfomatModelsByManufacturer(@RequestParam(value="id", required = true) Long id) {
+        InfomatManufacturer manufacturer = infomatManufacturerService.getManufacturer(id);
+        Set<InfomatModel> upsListModel = manufacturer.getModels();
+        Set<SvtModelDto> out = new HashSet<>();
+        for(InfomatModel model : upsListModel) {
+            SvtModelDto modelDto = infomatModelMapper.getDto(model);
             out.add(modelDto);
         }
         return out;
@@ -1341,10 +1389,14 @@ public class GetInfoController {
         return conditionerDto;
     }
     
-         @GetMapping("/modinfomat")
-    public List<SvtModelDto> getModelInfomat() {
+    @GetMapping("/modinfomat")
+    public Set<SvtModelDto> getModelInfomat() {
         List<InfomatModel> allModels = infomatModelService.getAllModels();
-        List<SvtModelDto> dtoes = svtModelMapper.getModelInfomatDtoes(allModels);
+        Set<SvtModelDto> dtoes = new HashSet<>();
+        for(InfomatModel model : allModels) {
+            SvtModelDto dtoForSelectize = infomatModelMapper.getDtoForSelectize(model);
+            dtoes.add(dtoForSelectize);
+        }
         return dtoes;
     }
     
