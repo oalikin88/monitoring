@@ -62,6 +62,7 @@ import ru.gov.sfr.aos.monitoring.entities.SoundCard;
 import ru.gov.sfr.aos.monitoring.entities.Speakers;
 import ru.gov.sfr.aos.monitoring.entities.SubDisplayModel;
 import ru.gov.sfr.aos.monitoring.entities.SwitchHub;
+import ru.gov.sfr.aos.monitoring.entities.SwitchHubManufacturer;
 import ru.gov.sfr.aos.monitoring.entities.SwitchHubModel;
 import ru.gov.sfr.aos.monitoring.entities.SwitchingUnit;
 import ru.gov.sfr.aos.monitoring.entities.SwitchingUnitModel;
@@ -114,7 +115,9 @@ import ru.gov.sfr.aos.monitoring.mappers.ScannerModelMapper;
 import ru.gov.sfr.aos.monitoring.mappers.ServerManufacturerMapper;
 import ru.gov.sfr.aos.monitoring.mappers.ServerMapper;
 import ru.gov.sfr.aos.monitoring.mappers.ServerModelMapper;
+import ru.gov.sfr.aos.monitoring.mappers.SwitchHubManufacturerMapper;
 import ru.gov.sfr.aos.monitoring.mappers.SwitchHubMapper;
+import ru.gov.sfr.aos.monitoring.mappers.SwitchHubModelMapper;
 import ru.gov.sfr.aos.monitoring.mappers.SwitchingUnitMapper;
 import ru.gov.sfr.aos.monitoring.mappers.SystemBlockMapper;
 import ru.gov.sfr.aos.monitoring.mappers.TerminalMapper;
@@ -182,6 +185,7 @@ import ru.gov.sfr.aos.monitoring.services.ServerService;
 import ru.gov.sfr.aos.monitoring.services.SoundCardModelService;
 import ru.gov.sfr.aos.monitoring.services.SpeakersModelService;
 import ru.gov.sfr.aos.monitoring.services.SubDisplayModelService;
+import ru.gov.sfr.aos.monitoring.services.SwitchHubManufacturerService;
 import ru.gov.sfr.aos.monitoring.services.SwitchHubModelService;
 import ru.gov.sfr.aos.monitoring.services.SwitchHubService;
 import ru.gov.sfr.aos.monitoring.services.SwitchingUnitModelService;
@@ -397,6 +401,12 @@ public class GetInfoController {
     private ServerManufacturerMapper serverManufacturerMapper;
     @Autowired
     private ServerModelMapper serverModelMapper;
+    @Autowired
+    private SwitchHubManufacturerService switchHubManufacturerService;
+    @Autowired
+    private SwitchHubManufacturerMapper switchHubManufacturerMapper;
+    @Autowired
+    private SwitchHubModelMapper switchHubModelMapper;
     
     @GetMapping("/batterytype")
     public List<BatteryTypeDto> getBatteryTypes(@RequestParam(value="id", required = false) Long id) {
@@ -473,6 +483,20 @@ public class GetInfoController {
         return ResponseEntity.ok(dto);
     }
     
+    @PostMapping("/save-switch-manufacturer")
+    public ResponseEntity<?> saveSwitchHubManufacturer(String name) throws ObjectAlreadyExists {
+        SwitchHubManufacturer savedManufacturer = null;
+        SwitchHubManufacturer potencialManufacturer = new SwitchHubManufacturer();
+        potencialManufacturer.setName(name);
+        try{
+            savedManufacturer = switchHubManufacturerService.save(potencialManufacturer);
+        } catch(Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+        ManufacturerDTO dto = switchHubManufacturerMapper.getDto(savedManufacturer);
+        return ResponseEntity.ok(dto);
+    }
+    
     
     @PostMapping("/save-scanner-manufacturer")
     public ResponseEntity<?> saveScannerManufacturer(String name) throws ObjectAlreadyExists {
@@ -545,6 +569,18 @@ public class GetInfoController {
         return out;
     }
     
+    @GetMapping("/get-switch-manufacturers")
+    public List<ManufacturerDTO> getSwitchHubManufacturers() {
+        List<SwitchHubManufacturer> allManufacturers = switchHubManufacturerService.getAllManufacturers();
+        List<ManufacturerDTO> out = new ArrayList<>();
+        for(SwitchHubManufacturer el : allManufacturers) {
+            ManufacturerDTO dto = switchHubManufacturerMapper.getDto(el);
+            out.add(dto);
+        }
+        return out;
+    }
+    
+    
     @GetMapping("/get-scanner-manufacturers")
     public List<ManufacturerDTO> getScannerManufacturers() {
         List<ScannerManufacturer> allManufacturers = scannerManufacturerService.getAllManufacturers();
@@ -594,6 +630,18 @@ public class GetInfoController {
         List<SvtModelDto> out = new ArrayList<>();
         for(ServerModel model : upsListModel) {
             SvtModelDto modelDto = svtModelMapper.getModelServerDto(model);
+            out.add(modelDto);
+        }
+        return out;
+    }
+    
+    @GetMapping("/get-switch-modelsby-manufacturer")
+    public List<SvtModelDto> getSwitchHubModelsByManufacturer(@RequestParam(value="id", required = true) Long id) {
+        SwitchHubManufacturer manufacturer = switchHubManufacturerService.getManufacturer(id);
+        List<SwitchHubModel> upsListModel = manufacturer.getModels();
+        List<SvtModelDto> out = new ArrayList<>();
+        for(SwitchHubModel model : upsListModel) {
+            SvtModelDto modelDto = switchHubModelMapper.getDto(model);
             out.add(modelDto);
         }
         return out;
@@ -1072,7 +1120,11 @@ public class GetInfoController {
     @GetMapping("/modswitch")
     public List<SvtModelDto> getModelSwitchHub() {
         List<SwitchHubModel> allModels = switchHubModelService.getAllModels();
-        List<SvtModelDto> dtoes = svtModelMapper.getModelSwitchHubDtoes(allModels);
+        List<SvtModelDto> dtoes = new ArrayList<>();
+        for(SwitchHubModel model : allModels) {
+            SvtModelDto dto = switchHubModelMapper.getDto(model);
+            dtoes.add(dto);
+        }
         return dtoes;
     }
     

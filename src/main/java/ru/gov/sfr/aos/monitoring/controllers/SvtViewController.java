@@ -91,6 +91,7 @@ import ru.gov.sfr.aos.monitoring.mappers.ServerMapper;
 import ru.gov.sfr.aos.monitoring.mappers.ServerModelMapper;
 import ru.gov.sfr.aos.monitoring.mappers.SvtModelMapper;
 import ru.gov.sfr.aos.monitoring.mappers.SwitchHubMapper;
+import ru.gov.sfr.aos.monitoring.mappers.SwitchHubModelMapper;
 import ru.gov.sfr.aos.monitoring.mappers.SwitchingUnitMapper;
 import ru.gov.sfr.aos.monitoring.mappers.SystemBlockMapper;
 import ru.gov.sfr.aos.monitoring.mappers.TerminalMapper;
@@ -380,6 +381,8 @@ public class SvtViewController {
     private ScannerModelMapper scannerModelMapper;
     @Autowired
     private ServerModelMapper serverModelMapper;
+    @Autowired
+    private SwitchHubModelMapper switchHubModelMapper;
     
 //  @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
     @GetMapping("/svt")
@@ -2248,10 +2251,13 @@ public class SvtViewController {
     public String getModelSwitchHub(Model model) {
 
         List<SwitchHubModel> switchHubModels = switchHubModelService.getAllActualModels();
-        List<SvtModelDto> getSwitchHubModelsDtoes = svtModelMapper.getModelSwitchHubDtoes(switchHubModels);
+        List<SvtModelDto> getSwitchHubModelsDtoes = switchHubModelMapper.getListDtoes(switchHubModels);
         model.addAttribute("dtoes", getSwitchHubModelsDtoes);
         model.addAttribute("namePage", "Модели коммутаторов/концентраторов");
         model.addAttribute("attribute", "mswitch");
+        model.addAttribute("manufacturersSaveLink", "/save-switch-manufacturer");
+        model.addAttribute("modelsByManufacturerLink", "/get-switch-modelsby-manufacturer?id=");
+        model.addAttribute("manufacturersLink", "/get-switch-manufacturers");
         return "models";
     }
     
@@ -2259,7 +2265,7 @@ public class SvtViewController {
  //   @Log
     @PostMapping("/mswitch")
     public ResponseEntity<String> saveModelSwitchHub(@RequestBody SvtModelDto dto) throws ObjectAlreadyExists {
-        SwitchHubModel switchHubModel = svtModelMapper.getModelSwitchHub(dto);
+        SwitchHubModel switchHubModel = switchHubModelMapper.getModel(dto);
         try{
             switchHubModelService.saveModel(switchHubModel);
         } catch(Exception e) {
@@ -2271,7 +2277,7 @@ public class SvtViewController {
     
     @PutMapping("/mswitchupd")
     public ResponseEntity<String> updateModelSwitchHub(@RequestBody SvtModelDto dto) throws ObjectAlreadyExists {
-        SwitchHubModel switchHubModel = svtModelMapper.getModelSwitchHub(dto);
+        SwitchHubModel switchHubModel = switchHubModelMapper.getModel(dto);
         try{
             switchHubModelService.update(switchHubModel);
         }catch(Exception e) {

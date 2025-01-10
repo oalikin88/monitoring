@@ -92,12 +92,11 @@ let handleClickUpdateBtn = function (name, id) {
         dto.manufacturer = document.querySelector('#manufacturer').innerText;
         dto.batteryAmount = document.querySelector('#batteryAmount').value;
         break;
-    
-     
     case "mmonitors":
     case "mfax":
     case "mphones":
     case "mscanner":
+    case "mswitch":
         dto.manufacturerName = document.querySelector('#manufacturer').innerText;
         dto.manufacturerId = $('#manufacturer')[0].selectize.getValue();
         break;
@@ -157,6 +156,7 @@ let handleClickSaveBtn = function (name) {
             case "mfax":
             case "mmonitors":
             case "mscanner":
+            case "mswitch":
                 dto.manufacturerName = document.querySelector('#manufacturer').innerText;
                 dto.manufacturerId = $('#manufacturer')[0].selectize.getValue();
                 break;
