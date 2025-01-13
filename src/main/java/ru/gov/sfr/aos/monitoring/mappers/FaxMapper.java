@@ -37,6 +37,8 @@ public abstract class FaxMapper implements SvtMapper <Fax, FaxDto>  {
     @Mapping(source = "yearCreated", target = "yearCreated")
     @Mapping(source = "dateExploitationBegin", target = "dateExploitationBegin")
     @Mapping(source = "numberRoom", target = "numberRoom")
+    @Mapping(source = "model.manufacturer.name", target = "manufacturerName")
+    @Mapping(source = "model.manufacturer.id", target = "manufacturerId")
     @Override
     public abstract FaxDto getDto(Fax entity);
     

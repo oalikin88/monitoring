@@ -34,6 +34,8 @@ public abstract class RouterMapper implements SvtMapper <Router, SvtSwitchHubDTO
     @Mapping(source = "routerModel.id", target = "modelId")
     @Mapping(source = "portAmount", target = "portAmount")
     @Mapping(source = "nameFromOneC", target = "nameFromOneC")
+    @Mapping(source = "routerModel.manufacturer.name", target = "manufacturerName")
+    @Mapping(source = "routerModel.manufacturer.id", target = "manufacturerId")
     @Override
     public abstract SvtSwitchHubDTO getDto(Router router);
     

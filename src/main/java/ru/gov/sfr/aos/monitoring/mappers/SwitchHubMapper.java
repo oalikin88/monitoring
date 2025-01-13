@@ -38,6 +38,8 @@ public abstract class SwitchHubMapper implements SvtMapper<SwitchHub, SvtSwitchH
     @Mapping(source = "nameFromOneC", target = "nameFromOneC")
     @Mapping(source = "inventaryNumber", target = "inventaryNumber")
     @Mapping(source = "serialNumber", target = "serialNumber")
+    @Mapping(source = "switchHubModel.manufacturer.name", target = "manufacturerName")
+    @Mapping(source = "switchHubModel.manufacturer.id", target = "manufacturerId")
     @Override
     public abstract SvtSwitchHubDTO getDto(SwitchHub switchHub);
     @Mapping(target = "contract", expression = "java(switchHubRepo.findById(dto.getId()).get().getContract())")

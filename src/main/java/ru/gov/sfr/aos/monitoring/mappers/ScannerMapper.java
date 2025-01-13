@@ -29,6 +29,8 @@ public abstract class ScannerMapper implements SvtMapper<Scanner, SvtScannerDTO>
     @Mapping(source = "place.placeType", target = "placeType")
     @Mapping(source = "place.departmentCode", target = "departmentCode")
     @Mapping(source = "place.location.id", target = "locationId")
+    @Mapping(source = "scannerModel.manufacturer.name", target = "manufacturerName")
+    @Mapping(source = "scannerModel.manufacturer.id", target = "manufacturerId")
     public abstract SvtScannerDTO getDto(Scanner scanner);
     
     @Mapping(target = "numberRoom", source = "numberRoom")

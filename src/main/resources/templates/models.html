@@ -75,158 +75,220 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                 <div class="content" id="content"  th:if="${dtoes.size}> 0"> 
                     <div class="models">
                         <th:block th:switch="${attribute}">
-                        <div class="row fw-bold" th:case="'mcpu'">
-                            <div class="col-1">№ п/п</div>
-                            <div class="col-5 text-start">Наименование модели</div>
-                            <div class="col-3 text-start">Количество ядер</div>
-                            <div class="col-3 text-start">Частота</div>
- 
-                        </div>
+                            <div class="row fw-bold" th:case="'mcpu'">
+                                <div class="col-1">№ п/п</div>
+                                <div class="col-5 text-start">Наименование модели</div>
+                                <div class="col-3 text-start">Количество ядер</div>
+                                <div class="col-3 text-start">Частота</div>
+                            </div>
                             <div class="row fw-bold" th:case="'mram'">
-                            <div class="col-1">№ п/п</div>
-                            <div class="col-6 text-start">Тип ОЗУ</div>
-                            <div class="col-5 text-start">Объём, ГБ</div>
- 
-                        </div>
+                                <div class="col-1">№ п/п</div>
+                                <div class="col-6 text-start">Тип ОЗУ</div>
+                                <div class="col-5 text-start">Объём, ГБ</div>
+                            </div>
                             <div class="row fw-bold" th:case="'mhdd'">
-                            <div class="col-1">№ п/п</div>
-                            <div class="col-4 text-start">Наименование модели</div>
-                            <div class="col-1 text-start ms-0 ps-0">Объём, ед.изм</div>
-                            <div class="col-3 text-start ma-0 ps-0">Серийный номер</div>
-                            <div class="col-3 text-start ms-0 ps-0">Учётный номер</div>
- 
-                        </div>
+                                <div class="col-1">№ п/п</div>
+                                <div class="col-4 text-start">Наименование модели</div>
+                                <div class="col-1 text-start ms-0 ps-0">Объём, ед.изм</div>
+                                <div class="col-3 text-start ma-0 ps-0">Серийный номер</div>
+                                <div class="col-3 text-start ms-0 ps-0">Учётный номер</div>
+                            </div>
                             <div class="row fw-bold" th:case="'os'">
-                            <div class="col-1">№ п/п</div>
-                            <div class="col-7 text-start">Наименование</div>
-                            <div class="col-4 text-start ms-0 ps-0">Лицензия</div>
-                        </div>
-                             
+                                <div class="col-1">№ п/п</div>
+                                <div class="col-7 text-start">Наименование</div>
+                                <div class="col-4 text-start ms-0 ps-0">Лицензия</div>
+                            </div>
                             <div class="row fw-bold" th:case="'mupsbat'">
-                            <div class="col-1">№ п/п</div>
-                            <div class="col-11 text-start">Тип батареи</div>
-                            
-                        </div>
-                              <div class="row fw-bold" th:case="*">
-                            <div class="col-1">№ п/п</div>
-                            <div class="col-11 text-start">Наименование модели</div>
-                        </div>
-                            </th:block>
+                                <div class="col-1">№ п/п</div>
+                                <div class="col-11 text-start">Тип батареи</div>
+                            </div>
+                            <div class="row fw-bold" th:case="*">
+                                <div class="col-1">№ п/п</div>
+                                <div class="col-11 text-start">Наименование модели</div>
+                            </div>
+                        </th:block>
                         <th:block th:switch="${attribute}" th:each="dto, stat : ${dtoes}">
                             <div class = "row element pb-2 mb-2 mt-2 pt-2" th:attr="id = ${dto.id}" data-bs-toggle="modal" data-bs-target="#addBtnModal" th:case="os">
-                             <div class="col-1" th:text="${stat.count}"></div>
-                                    <div class="col-7 text-start">
-                                        <span th:text="${dto.model}"></span>
-                                      </div>
-                             <div class="col-4" th:switch="${dto.license}">
-                                        <span th:case="true">Есть</span>
-                                        <span th:case="false">Нет</span>
-                                      
-                                      </div>
-                    </div>
+                                <div class="col-1" th:text="${stat.count}"></div>
+                                <div class="col-7 text-start">
+                                    <span th:text="${dto.model}"></span>
+                                </div>
+                                <div class="col-4" th:switch="${dto.license}">
+                                    <span th:case="true">Есть</span>
+                                    <span th:case="false">Нет</span>
+
+                                </div>
+                            </div>
                             <div class = "row element pb-2 mb-2 mt-2 pt-2" th:attr="id = ${dto.id}" data-bs-toggle="modal" data-bs-target="#addBtnModal" th:case="mupsbat">
-                             <div class="col-1" th:text="${stat.count}"></div>
-                                    <div class="col-11 text-start">
-                                        <span th:text="${dto.type}"></span>
-                                      </div>
+                                <div class="col-1" th:text="${stat.count}"></div>
+                                <div class="col-11 text-start">
+                                    <span th:text="${dto.type}"></span>
+                                </div>
                             </div>
                             <div class = "row element pb-2 mb-2 mt-2 pt-2" th:attr="id = ${dto.id}" data-bs-toggle="modal" data-bs-target="#addBtnModal" th:case="mhdd">
-                             <div class="col-1" th:text="${stat.count}"></div>
-                                    
-                             <div class="col-4 text-start"> <span th:text="${dto.model}"></span></div>
-                            <div class="col-1 text-start ms-0 ps-0"> <span th:text="${dto.capacity} + ' '"></span><span th:text="${dto.unit}"></span></div>
-                            <div class="col-3 text-start ma-0 ps-0"> <span th:text="${dto.serialNumber}"></span></div>
-                            <div class="col-3 text-start ms-0 ps-0"><span th:text="${dto.inventaryNumber}"></span></div>
+                                <div class="col-1" th:text="${stat.count}"></div>
+
+                                <div class="col-4 text-start"> <span th:text="${dto.model}"></span></div>
+                                <div class="col-1 text-start ms-0 ps-0"> <span th:text="${dto.capacity} + ' '"></span><span th:text="${dto.unit}"></span></div>
+                                <div class="col-3 text-start ma-0 ps-0"> <span th:text="${dto.serialNumber}"></span></div>
+                                <div class="col-3 text-start ms-0 ps-0"><span th:text="${dto.inventaryNumber}"></span></div>
                             </div>
-                            
+
                             <div class = "row element pb-2 mb-2 mt-2 pt-2" th:attr="id = ${dto.id}" data-bs-toggle="modal" data-bs-target="#addBtnModal" th:case="mram">
-                             <div class="col-1" th:text="${stat.count}"></div>
-                                    <div class="col-6 text-start">
-                                        <span th:text="${dto.model}"></span>
-                                      </div>
-                             <div class="col-5 text-start">
-                                        <span th:text="${dto.capacity}"></span>
-                                      </div>
+                                <div class="col-1" th:text="${stat.count}"></div>
+                                <div class="col-6 text-start">
+                                    <span th:text="${dto.model}"></span>
+                                </div>
+                                <div class="col-5 text-start">
+                                    <span th:text="${dto.capacity}"></span>
+                                </div>
                             </div>
                             <div class = "row element pb-2 mb-2 mt-2 pt-2" th:attr="id = ${dto.id}" data-bs-toggle="modal" data-bs-target="#addBtnModal" th:case="mcpu">
-                             <div class="col-1" th:text="${stat.count}"></div>
-                                    <div class="col-5 text-start">
-                                        <span th:text="${dto.model}"></span>
-                                      </div>
-                             <div class="col-3 text-start">
-                                        <span th:text="${dto.core}"></span>
-                                      </div>
-                             <div class="col-3 text-start">
-                                        <span th:text="${dto.freq}"></span>
-                                      </div>
+                                <div class="col-1" th:text="${stat.count}"></div>
+                                <div class="col-5 text-start">
+                                    <span th:text="${dto.model}"></span>
+                                </div>
+                                <div class="col-3 text-start">
+                                    <span th:text="${dto.core}"></span>
+                                </div>
+                                <div class="col-3 text-start">
+                                    <span th:text="${dto.freq}"></span>
+                                </div>
+                            </div>
+
+                            <div class = "row element pb-2 mb-2 mt-2 pt-2" th:attr="id = ${dto.id}" data-bs-toggle="modal" data-bs-target="#addBtnModal" th:case="mphones">
+                                <div class="col-1" th:text="${stat.count}"></div>
+                                <div class="col-11 text-start">
+                                    <span th:text="${dto.manufacturerName} + ' ' +  ${dto.model}"></span>
+                                </div>
+                            </div>
+                            <div class = "row element pb-2 mb-2 mt-2 pt-2" th:attr="id = ${dto.id}" data-bs-toggle="modal" data-bs-target="#addBtnModal" th:case="mfax">
+                                <div class="col-1" th:text="${stat.count}"></div>
+                                <div class="col-11 text-start">
+                                    <span th:text="${dto.manufacturerName} + ' ' +  ${dto.model}"></span>
+                                </div>
+                            </div>
+                            <div class = "row element pb-2 mb-2 mt-2 pt-2" th:attr="id = ${dto.id}" data-bs-toggle="modal" data-bs-target="#addBtnModal" th:case="mmonitors">
+                                <div class="col-1" th:text="${stat.count}"></div>
+                                <div class="col-11 text-start">
+                                    <span th:text="${dto.manufacturerName} + ' ' +  ${dto.model}"></span>
+                                </div>
+                            </div>
+                            <div class = "row element pb-2 mb-2 mt-2 pt-2" th:attr="id = ${dto.id}" data-bs-toggle="modal" data-bs-target="#addBtnModal" th:case="mscanner">
+                                <div class="col-1" th:text="${stat.count}"></div>
+                                <div class="col-11 text-start">
+                                    <span th:text="${dto.manufacturerName} + ' ' +  ${dto.model}"></span>
+                                </div>
+                            </div>
+                            <div class = "row element pb-2 mb-2 mt-2 pt-2" th:attr="id = ${dto.id}" data-bs-toggle="modal" data-bs-target="#addBtnModal" th:case="mswitch">
+                                <div class="col-1" th:text="${stat.count}"></div>
+                                <div class="col-11 text-start">
+                                    <span th:text="${dto.manufacturerName} + ' ' +  ${dto.model}"></span>
+                                </div>
+                            </div>
+                            <div class = "row element pb-2 mb-2 mt-2 pt-2" th:attr="id = ${dto.id}" data-bs-toggle="modal" data-bs-target="#addBtnModal" th:case="mrouter">
+                                <div class="col-1" th:text="${stat.count}"></div>
+                                <div class="col-11 text-start">
+                                    <span th:text="${dto.manufacturerName} + ' ' +  ${dto.model}"></span>
+                                </div>
+                            </div>
+                            <div class = "row element pb-2 mb-2 mt-2 pt-2" th:attr="id = ${dto.id}" data-bs-toggle="modal" data-bs-target="#addBtnModal" th:case="mats">
+                                <div class="col-1" th:text="${stat.count}"></div>
+                                <div class="col-11 text-start">
+                                    <span th:text="${dto.manufacturerName} + ' ' +  ${dto.model}"></span>
+                                </div>
+                            </div>
+                            <div class = "row element pb-2 mb-2 mt-2 pt-2" th:attr="id = ${dto.id}" data-bs-toggle="modal" data-bs-target="#addBtnModal" th:case="mconditioner">
+                                <div class="col-1" th:text="${stat.count}"></div>
+                                <div class="col-11 text-start">
+                                    <span th:text="${dto.manufacturerName} + ' ' +  ${dto.model}"></span>
+                                </div>
+                            </div>
+                            <div class = "row element pb-2 mb-2 mt-2 pt-2" th:attr="id = ${dto.id}" data-bs-toggle="modal" data-bs-target="#addBtnModal" th:case="minfomat">
+                                <div class="col-1" th:text="${stat.count}"></div>
+                                <div class="col-11 text-start">
+                                    <span th:text="${dto.manufacturerName} + ' ' +  ${dto.model}"></span>
+                                </div>
+                            </div>
+                            <div class = "row element pb-2 mb-2 mt-2 pt-2" th:attr="id = ${dto.id}" data-bs-toggle="modal" data-bs-target="#addBtnModal" th:case="mserver">
+                                <div class="col-1" th:text="${stat.count}"></div>
+                                <div class="col-11 text-start">
+                                    <span th:text="${dto.manufacturerName} + ' ' +  ${dto.model}"></span>
+                                </div>
                             </div>
                             
-                <div class = "row element pb-2 mb-2 mt-2 pt-2" th:attr="id = ${dto.id}" data-bs-toggle="modal" data-bs-target="#addBtnModal" th:case="mphones">
-                             <div class="col-1" th:text="${stat.count}"></div>
-                                    <div class="col-11 text-start">
-                                        <span th:text="${dto.manufacturerName} + ' ' +  ${dto.model}"></span>
-                                      </div>
-                    </div>
-                            
+                            <div class = "row element pb-2 mb-2 mt-2 pt-2" th:attr="id = ${dto.id}" data-bs-toggle="modal" data-bs-target="#addBtnModal" th:case="msysblock">
+                                <div class="col-1" th:text="${stat.count}"></div>
+                                <div class="col-11 text-start">
+                                    <span th:text="${dto.manufacturerName} + ' ' +  ${dto.model}"></span>
+                                </div>
+                            </div>
+
                             <div class = "row element pb-2 mb-2 mt-2 pt-2" th:attr="id = ${dto.id}" data-bs-toggle="modal" data-bs-target="#addBtnModal" th:case="mups">
-                             <div class="col-1" th:text="${stat.count}"></div>
-                                    <div class="col-11 text-start">
-                                        <span th:text="${dto.manufacturer} + ' ' +  ${dto.model}"></span>
-                                      </div>
-                    </div>
-                            
-                        <div class = "row element pb-2 mb-2 mt-2 pt-2" th:attr="id = ${dto.id}" data-bs-toggle="modal" data-bs-target="#addBtnModal" th:case="*">
-                             <div class="col-1" th:text="${stat.count}"></div>
-                                    <div class="col-11 text-start">
-                                        <span th:text="${dto.model}"></span>
-                                      </div>
-                    </div>
+                                <div class="col-1" th:text="${stat.count}"></div>
+                                <div class="col-11 text-start">
+                                    <span th:text="${dto.manufacturer} + ' ' +  ${dto.model}"></span>
+                                </div>
+                            </div>
 
-                      
-                </th:block>
+                            <div class = "row element pb-2 mb-2 mt-2 pt-2" th:attr="id = ${dto.id}" data-bs-toggle="modal" data-bs-target="#addBtnModal" th:case="*">
+                                <div class="col-1" th:text="${stat.count}"></div>
+                                <div class="col-11 text-start">
+                                    <span th:text="${dto.model}"></span>
+                                </div>
+                            </div>
 
+
+                        </th:block>
+
+                    </div>
                 </div>
-                    </div>
                 <div th:if="${dtoes.size} == 0">
                     <h3 class="mt-5 pt-5 text-center">В базе данных отсутствуют [[${namePage.substring(0, 1).toLowerCase() + namePage.substring(1)}]]</h3>
                 </div>
 
-            
-        </div>
-
-
-        <!-- Modal add place -->
-        <div class="modal fade" id="addBtnModal" tabindex="-1" aria-labelledby="exampleModalLabel" data-bs-backdrop="static" data-bs-keyboard="false"  aria-hidden="true">
-            <div class="modal-dialog modal-lg modal-dialog-centered">
-                <div class="modal-content" id="modalContent-model">
-
-                </div>
 
             </div>
-        </div>
-        
-         <!-- Модальное окно error-->
-        <div class="modal fade" id="modalError" data-bs-backdrop="static" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-error">
-                <div class="modal-content" id="modalErrorContent">
 
+
+            <!-- Modal add place -->
+            <div class="modal fade" id="addBtnModal" tabindex="-1" aria-labelledby="exampleModalLabel" data-bs-backdrop="static" data-bs-keyboard="false"  aria-hidden="true">
+                <div class="modal-dialog modal-lg modal-dialog-centered">
+                    <div class="modal-content" id="modalContent-model">
+
+                    </div>
 
                 </div>
-
             </div>
-        </div>
-        
-        <script th:inline="javascript">
-            let attribute = [[${attribute}]];
-            let dtoes = [[${dtoes}]];
-            let manufacturersSaveLink = [[${manufacturersSaveLink}]];
-            let modelsByManufacturerLink = [[${modelsByManufacturerLink}]];
-            let manufacturersLink = [[${manufacturersLink}]];
-            const namePage = [[${namePage}]];
-        </script>
-        <script src="/js/bootstrap.bundle.min.js"></script>
-        <script src="/js/main_svt.js"></script>
-        <script src="/js/mphones.js"></script>
-        <script src="/js/highlight-sidebar.js"></script>
+
+            <!-- Модальное окно error-->
+            <div class="modal fade" id="modalError" data-bs-backdrop="static" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-error">
+                    <div class="modal-content" id="modalErrorContent">
+
+
+                    </div>
+
+                </div>
+            </div>
+
+            <script th:inline="javascript">
+                let attribute = [[${attribute}
+                ]];
+                        let dtoes = [[${dtoes}
+                        ]];
+                        let manufacturersSaveLink = [[${manufacturersSaveLink}
+                        ]];
+                        let modelsByManufacturerLink = [[${modelsByManufacturerLink}
+                        ]];
+                        let manufacturersLink = [[${manufacturersLink}
+                        ]];
+                        const namePage = [[${namePage}
+                        ]];
+            </script>
+            <script src="/js/bootstrap.bundle.min.js"></script>
+            <script src="/js/main_svt.js"></script>
+            <script src="/js/mphones.js"></script>
+            <script src="/js/highlight-sidebar.js"></script>
     </body>
 </html>

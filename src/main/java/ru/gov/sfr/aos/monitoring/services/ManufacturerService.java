@@ -43,8 +43,12 @@ public abstract class ManufacturerService <R extends ManufacturerModelRepo, E ex
         List<E> listPontencialDublers = repository.findAll();
         if(listPontencialDublers.size() != 0) {
             for(E el : listPontencialDublers) {
-                String manufacturerFromDBClear = RegularOperation.getForCompareValue(el.getName().strip().toLowerCase());
-                if(manufacturerClearNew.equals(manufacturerFromDBClear)) {
+                String manufacturerFromDBClear = null;
+                if(el.getName() != null) {
+                    manufacturerFromDBClear = RegularOperation.getForCompareValue(el.getName().strip().toLowerCase());
+                }
+                
+                if(manufacturerFromDBClear != null && manufacturerClearNew.equals(manufacturerFromDBClear)) {
                     throw new ObjectAlreadyExists("Производитель " + entity.getName() + " уже есть в базе данных");
                 }
             }

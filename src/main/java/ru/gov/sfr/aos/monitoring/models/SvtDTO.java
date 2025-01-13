@@ -36,6 +36,7 @@ public class SvtDTO extends MainSvtDto {
     protected int yearReplacement;
     protected String numberRoom;
     protected Long manufacturerId;
+    protected String manufacturerName;
     
 
     public SvtDTO() {
@@ -300,6 +301,18 @@ public class SvtDTO extends MainSvtDto {
 
     public void setManufacturerId(Long manufacturerId) {
         this.manufacturerId = manufacturerId;
+    }
+
+    public String getManufacturerName() {
+        String result = "не указан";
+        if(manufacturerName != null) {
+            result = manufacturerName;
+        }
+        return result;
+    }
+
+    public void setManufacturerName(String manufacturerName) {
+        this.manufacturerName = manufacturerName;
     }
     
     

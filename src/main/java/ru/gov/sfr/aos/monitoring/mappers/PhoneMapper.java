@@ -32,6 +32,8 @@ public abstract class PhoneMapper implements SvtMapper<Phone, SvtDTO> {
     @Mapping(source = "place.location.id", target = "locationId")
     @Mapping(source = "phoneNumber", target = "phoneNumber")
     @Mapping(source = "nameFromeOneC", target = "nameFromOneC")
+    @Mapping(source = "phoneModel.manufacturer.name", target = "manufacturerName")
+    @Mapping(source = "phoneModel.manufacturer.id", target = "manufacturerId")
     public abstract SvtDTO getDto(Phone phone);
     
     @Mapping(target = "contract", expression = "java(phoneRepo.findById(dto.getId()).get().getContract())")

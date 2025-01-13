@@ -37,6 +37,8 @@ public abstract class AtsMapper implements SvtMapper<Ats, SvtAtsDTO> {
     @Mapping(source = "innerConnectionAnalog", target = "innerConnectionAnalog")
     @Mapping(source = "yearCreated", target = "yearCreated")
     @Mapping(source = "outerConnectionType", target = "outerConnectionType")
+    @Mapping(source = "atsModel.manufacturer.name", target = "manufacturerName")
+    @Mapping(source = "atsModel.manufacturer.id", target = "manufacturerId")
     @Override
     public abstract SvtAtsDTO getDto(Ats ats);
     

@@ -58,6 +58,8 @@ public abstract class ServerMapper implements SvtMapper<Server, SvtServerDTO> {
     @Mapping(source = "ram.id", target = "ramId")
     @Mapping(source = "ram.model", target = "ramModel")
     @Mapping(source = "ram.capacity", target = "ramCapacity")
+    @Mapping(source = "serverModel.manufacturer.name", target = "manufacturerName")
+    @Mapping(source = "serverModel.manufacturer.id", target = "manufacturerId")
     @Mapping(expression = "java(server.getOperationSystems().stream().map(e -> e.getId()).collect(java.util.stream.Collectors.toList()))", target = "operationSystemId")
     @Mapping(expression = "java(server.getHdd().stream().map(e -> e.getId()).collect(java.util.stream.Collectors.toList()))", target = "hddIdList")
     @Override

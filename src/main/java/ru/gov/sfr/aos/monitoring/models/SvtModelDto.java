@@ -49,7 +49,11 @@ public class SvtModelDto {
     }
 
     public String getManufacturerName() {
-        return manufacturerName;
+        String result = "не указано";
+        if(manufacturerName != null) {
+            result = manufacturerName;
+        }
+        return result;
     }
 
     public void setManufacturerName(String manufacturerName) {

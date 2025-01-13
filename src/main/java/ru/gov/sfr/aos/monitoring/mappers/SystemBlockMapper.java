@@ -96,6 +96,8 @@ public abstract class SystemBlockMapper implements SvtMapper <SystemBlock, SvtSy
     @Mapping(source = "mouse.model", target = "mouseModel")
     @Mapping(source = "speakers.id", target = "speakersId")
     @Mapping(source = "speakers.model", target = "speakersModel")
+    @Mapping(source = "systemBlockModel.manufacturer.name", target = "manufacturerName")
+    @Mapping(source = "systemBlockModel.manufacturer.id", target = "manufacturerId")
     @Mapping(expression = "java(systemBlock.getOperationSystems().stream().map(e -> e.getId()).collect(java.util.stream.Collectors.toList()))", target = "operationSystemId")
     @Mapping(expression = "java(systemBlock.getHdd().stream().map(e -> e.getId()).collect(java.util.stream.Collectors.toList()))", target = "hddIdList")
     @Override

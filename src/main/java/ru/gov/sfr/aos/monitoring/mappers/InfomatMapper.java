@@ -32,6 +32,8 @@ public abstract class InfomatMapper implements SvtMapper <Infomat, SvtDTO> {
     @Mapping(source = "infomatModel.model", target = "model")
     @Mapping(source = "infomatModel.id", target = "modelId")
     @Mapping(source = "nameFromOneC", target = "nameFromOneC")
+    @Mapping(source = "infomatModel.manufacturer.name", target = "manufacturerName")
+    @Mapping(source = "infomatModel.manufacturer.id", target = "manufacturerId")
     @Override
     public abstract SvtDTO getDto(Infomat entity);
     

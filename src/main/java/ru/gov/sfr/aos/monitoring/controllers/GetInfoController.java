@@ -73,6 +73,7 @@ import ru.gov.sfr.aos.monitoring.entities.SwitchHubModel;
 import ru.gov.sfr.aos.monitoring.entities.SwitchingUnit;
 import ru.gov.sfr.aos.monitoring.entities.SwitchingUnitModel;
 import ru.gov.sfr.aos.monitoring.entities.SystemBlock;
+import ru.gov.sfr.aos.monitoring.entities.SystemBlockManufacturer;
 import ru.gov.sfr.aos.monitoring.entities.SystemBlockModel;
 import ru.gov.sfr.aos.monitoring.entities.Terminal;
 import ru.gov.sfr.aos.monitoring.entities.TerminalModel;
@@ -134,6 +135,8 @@ import ru.gov.sfr.aos.monitoring.mappers.SwitchHubMapper;
 import ru.gov.sfr.aos.monitoring.mappers.SwitchHubModelMapper;
 import ru.gov.sfr.aos.monitoring.mappers.SwitchingUnitMapper;
 import ru.gov.sfr.aos.monitoring.mappers.SystemBlockMapper;
+import ru.gov.sfr.aos.monitoring.mappers.SystemblockManufacturerMapper;
+import ru.gov.sfr.aos.monitoring.mappers.SystemblockModelMapper;
 import ru.gov.sfr.aos.monitoring.mappers.TerminalMapper;
 import ru.gov.sfr.aos.monitoring.mappers.ThermoprinterMapper;
 import ru.gov.sfr.aos.monitoring.mappers.UpsManufacturerMapper;
@@ -210,6 +213,7 @@ import ru.gov.sfr.aos.monitoring.services.SwitchingUnitModelService;
 import ru.gov.sfr.aos.monitoring.services.SwitchingUnitService;
 import ru.gov.sfr.aos.monitoring.services.SystemBlockModelService;
 import ru.gov.sfr.aos.monitoring.services.SystemBlockService;
+import ru.gov.sfr.aos.monitoring.services.SystemblockManufacturerService;
 import ru.gov.sfr.aos.monitoring.services.TerminalModelService;
 import ru.gov.sfr.aos.monitoring.services.TerminalService;
 import ru.gov.sfr.aos.monitoring.services.ThermoprinterModelService;
@@ -449,6 +453,12 @@ public class GetInfoController {
     private InfomatManufacturerService infomatManufacturerService;
     @Autowired
     private InfomatModelMapper infomatModelMapper;
+    @Autowired
+    private SystemblockManufacturerMapper sysblockManufacturerMapper;
+    @Autowired
+    private SystemblockManufacturerService sysblockManufacturerService;
+    @Autowired
+    private SystemblockModelMapper sysblockModelMapper;
     
     @GetMapping("/batterytype")
     public List<BatteryTypeDto> getBatteryTypes(@RequestParam(value="id", required = false) Long id) {
@@ -524,6 +534,22 @@ public class GetInfoController {
         ManufacturerDTO dto = serverManufacturerMapper.getDto(savedManufacturer);
         return ResponseEntity.ok(dto);
     }
+    
+    
+    @PostMapping("/save-sysblock-manufacturer")
+    public ResponseEntity<?> saveSysblockManufacturer(String name) throws ObjectAlreadyExists {
+        SystemBlockManufacturer savedManufacturer = null;
+        SystemBlockManufacturer potencialManufacturer = new SystemBlockManufacturer();
+        potencialManufacturer.setName(name);
+        try{
+            savedManufacturer = sysblockManufacturerService.save(potencialManufacturer);
+        } catch(Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+        ManufacturerDTO dto = sysblockManufacturerMapper.getDto(savedManufacturer);
+        return ResponseEntity.ok(dto);
+    }
+    
     
     @PostMapping("/save-switch-manufacturer")
     public ResponseEntity<?> saveSwitchHubManufacturer(String name) throws ObjectAlreadyExists {
@@ -667,6 +693,18 @@ public class GetInfoController {
         return out;
     }
     
+    
+    @GetMapping("/get-sysblock-manufacturers")
+    public List<ManufacturerDTO> getSysblockManufacturers() {
+        List<SystemBlockManufacturer> allManufacturers = sysblockManufacturerService.getAllManufacturers();
+        List<ManufacturerDTO> out = new ArrayList<>();
+        for(SystemBlockManufacturer el : allManufacturers) {
+            ManufacturerDTO dto = sysblockManufacturerMapper.getDto(el);
+            out.add(dto);
+        }
+        return out;
+    }
+    
     @GetMapping("/get-switch-manufacturers")
     public List<ManufacturerDTO> getSwitchHubManufacturers() {
         List<SwitchHubManufacturer> allManufacturers = switchHubManufacturerService.getAllManufacturers();
@@ -771,7 +809,19 @@ public class GetInfoController {
         Set<ServerModel> upsListModel = manufacturer.getModels();
         List<SvtModelDto> out = new ArrayList<>();
         for(ServerModel model : upsListModel) {
-            SvtModelDto modelDto = svtModelMapper.getModelServerDto(model);
+            SvtModelDto modelDto = serverModelMapper.getDto(model);
+            out.add(modelDto);
+        }
+        return out;
+    }
+    
+    @GetMapping("/get-sysblock-modelsby-manufacturer")
+    public List<SvtModelDto> getSysblockModelsByManufacturer(@RequestParam(value="id", required = true) Long id) {
+        SystemBlockManufacturer manufacturer = sysblockManufacturerService.getManufacturer(id);
+        Set<SystemBlockModel> upsListModel = manufacturer.getModels();
+        List<SvtModelDto> out = new ArrayList<>();
+        for(SystemBlockModel model : upsListModel) {
+            SvtModelDto modelDto = sysblockModelMapper.getDto(model);
             out.add(modelDto);
         }
         return out;
@@ -1009,7 +1059,7 @@ public class GetInfoController {
 
     @GetMapping("/modphones")
     public List<SvtModelDto> getModelPhones() {
-        List<PhoneModel> allModels = phoneModelService.getAllModels();
+        List<PhoneModel> allModels = phoneModelService.getAllActualModels();
         List<SvtModelDto> out = new ArrayList<>();
         for(PhoneModel el : allModels) {
             SvtModelDto dto = phoneModelMapper.getDtoForSelectize(el);
@@ -1020,7 +1070,7 @@ public class GetInfoController {
     
        @GetMapping("/modmonitors")
     public List<SvtModelDto> getModelMonitors() {
-        List<MonitorModel> allModels = monitorModelService.getAllModels();
+        List<MonitorModel> allModels = monitorModelService.getAllActualModels();
        List<SvtModelDto> monitorModelsDtoes = new ArrayList<>();
        for(MonitorModel model : allModels) {
           SvtModelDto dtoForSelectize = monitorModelMapper.getDtoForSelectize(model);
@@ -1033,16 +1083,20 @@ public class GetInfoController {
     
      @GetMapping("/modups")
     public List<SvtModelDto> getModelUps() {
-        List<UpsModel> allModels = upsModelService.getAllModels();
+        List<UpsModel> allModels = upsModelService.getAllActualModels();
         List<SvtModelDto> upsModelDtoForSelectize = upsModelMapper.getUpsModelDtoForSelectize(allModels);
         return upsModelDtoForSelectize;
     }
     
      @GetMapping("/modsysblock")
-    public List<SvtModelDto> getModelSysBlocks() {
+    public Set<SvtModelDto> getModelSysBlocks() {
 
-        List<SystemBlockModel> allModels = systemBlockModelService.getAllModels();
-        List<SvtModelDto> systemBlockModelsDtoes = svtModelMapper.getSystemBlockModelsDtoes(allModels);
+        List<SystemBlockModel> allModels = systemBlockModelService.getAllActualModels();
+        Set<SvtModelDto> systemBlockModelsDtoes = new HashSet<>();
+        for(SystemBlockModel model : allModels) {
+            SvtModelDto dtoForSelectize = sysblockModelMapper.getDtoForSelectize(model);
+            systemBlockModelsDtoes.add(dtoForSelectize);
+        }
 
         return systemBlockModelsDtoes;
     }
@@ -1050,7 +1104,7 @@ public class GetInfoController {
     @GetMapping("/modmotherboard")
     public List<SvtModelDto> getModelMotherboard() {
 
-        List<Motherboard> allModels = motherboardModelService.getAllModels();
+        List<Motherboard> allModels = motherboardModelService.getAllActualModels();
         List<SvtModelDto> motherboardModelsDtoes = svtModelMapper.getModelMotherboardModelsDtoes(allModels);
 
         return motherboardModelsDtoes;
@@ -1059,7 +1113,7 @@ public class GetInfoController {
      @GetMapping("/modcpu")
     public List<CpuModelDto> getModelCpu() {
 
-        List<Cpu> allModels = cpuModelService.getAllModels();
+        List<Cpu> allModels = cpuModelService.getAllActualModels();
         List<CpuModelDto> cpuDtoes = svtModelMapper.getCpuModelDtoes(allModels);
 
         return cpuDtoes;
@@ -1068,7 +1122,7 @@ public class GetInfoController {
     @GetMapping("/modram")
     public List<RamDto> getModelRam() {
 
-        List<Ram> allModels = ramModelService.getAllModels();
+        List<Ram> allModels = ramModelService.getAllActualModels();
         List<RamDto> ramDtoes = svtModelMapper.getRamDtoes(allModels);
 
         return ramDtoes;
@@ -1077,7 +1131,7 @@ public class GetInfoController {
     @GetMapping("/modhdd")
     public List<HddDto> getModelHdd() {
 
-        List<Hdd> allModels = hddModelService.getAllModels();
+        List<Hdd> allModels = hddModelService.getAllActualModels();
         List<HddDto> hddDtoes = svtModelMapper.getHddDtoes(allModels);
 
         return hddDtoes;
@@ -1086,7 +1140,7 @@ public class GetInfoController {
      @GetMapping("/modvideo")
     public List<SvtModelDto> getModelVideoCard() {
 
-        List<VideoCard> allModels = videoCardModelService.getAllModels();
+        List<VideoCard> allModels = videoCardModelService.getAllActualModels();
         List<SvtModelDto> videoCardDtoes = svtModelMapper.getVideoCardDtoes(allModels);
 
         return videoCardDtoes;
@@ -1095,7 +1149,7 @@ public class GetInfoController {
        @GetMapping("/modcddrive")
     public List<SvtModelDto> getModelCdDrive() {
 
-        List<CdDrive> allModels = cdDriveModelService.getAllModels();
+        List<CdDrive> allModels = cdDriveModelService.getAllActualModels();
         List<SvtModelDto> cdDriveDtoes = svtModelMapper.getCdDriveDtoes(allModels);
 
         return cdDriveDtoes;
@@ -1104,7 +1158,7 @@ public class GetInfoController {
     @GetMapping("/modscard")
     public List<SvtModelDto> getModelSoundCard() {
 
-        List<SoundCard> allModels = soundCardModelService.getAllModels();
+        List<SoundCard> allModels = soundCardModelService.getAllActualModels();
         List<SvtModelDto> soundCardDtoes = svtModelMapper.getSoundCardDtoes(allModels);
 
         return soundCardDtoes;
@@ -1113,7 +1167,7 @@ public class GetInfoController {
      @GetMapping("/modlcard")
     public List<SvtModelDto> getModelLanCard() {
 
-        List<LanCard> allModels = lanCardModelService.getAllModels();
+        List<LanCard> allModels = lanCardModelService.getAllActualModels();
         List<SvtModelDto> lanCardDtoes = svtModelMapper.getLanCardDtoes(allModels);
 
         return lanCardDtoes;
@@ -1122,7 +1176,7 @@ public class GetInfoController {
        @GetMapping("/modkeyboard")
     public List<SvtModelDto> getModelKeyboard() {
 
-        List<Keyboard> allModels = keyboardModelService.getAllModels();
+        List<Keyboard> allModels = keyboardModelService.getAllActualModels();
         List<SvtModelDto> keyboardDtoes = svtModelMapper.getKeyboardDtoes(allModels);
 
         return keyboardDtoes;
@@ -1131,7 +1185,7 @@ public class GetInfoController {
      @GetMapping("/modmouse")
     public List<SvtModelDto> getModelMouse() {
 
-        List<Mouse> allModels = mouseModelService.getAllModels();
+        List<Mouse> allModels = mouseModelService.getAllActualModels();
         List<SvtModelDto> mouseDtoes = svtModelMapper.getMouseDtoes(allModels);
 
         return mouseDtoes;
@@ -1148,7 +1202,7 @@ public class GetInfoController {
       @GetMapping("/modspeakers")
     public List<SvtModelDto> getModelSpeakers() {
 
-        List<Speakers> allModels = speakersModelService.getAllModels();
+        List<Speakers> allModels = speakersModelService.getAllActualModels();
         List<SvtModelDto> speakersDtoes = svtModelMapper.getSpeakersDtoes(allModels);
 
         return speakersDtoes;
@@ -1157,7 +1211,7 @@ public class GetInfoController {
      @GetMapping("/typebatups")
     public List<BatteryTypeDto> getBatteryTypeUps() {
 
-        List<BatteryType> allBatteryTypes = batteryTypeService.getAllBatteryTypes();
+        List<BatteryType> allBatteryTypes = batteryTypeService.getAllActualBatteryTypes();
         List<BatteryTypeDto> batteryTypeDtoesList = batteryTypeMapper.getBatteryTypeDtoesList(allBatteryTypes);
 
         return batteryTypeDtoesList;

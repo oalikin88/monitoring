@@ -11,6 +11,7 @@ const modalAdd = document.getElementById('addBtnModal');
 const modalError = document.getElementById('modalError');
 const modalErrorParent = document.getElementById('modalErrorContent');
 let manufacturerChoise;
+let modelLink;
 
 function beep() {
    
@@ -101,6 +102,8 @@ let handleClickUpdateBtn = function (name, id) {
     case "mats":
     case "mconditioner":
     case "minfomat":
+    case "mserver":
+    case "msysblock":
         dto.manufacturerName = document.querySelector('#manufacturer').innerText;
         dto.manufacturerId = $('#manufacturer')[0].selectize.getValue();
         break;
@@ -165,6 +168,8 @@ let handleClickSaveBtn = function (name) {
             case "mats":
             case "mconditioner":
             case "minfomat":
+            case "mserver":
+            case "msysblock":
                 dto.manufacturerName = document.querySelector('#manufacturer').innerText;
                 dto.manufacturerId = $('#manufacturer')[0].selectize.getValue();
                 break;
@@ -227,9 +232,6 @@ let handleClickSaveBtn = function (name) {
                 delete dto.model;
                 dto.model = document.querySelector('#model').value;
                 dto.license = $("#licenseFlag")[0].checked;
-                break;
-            case "mserver":
-                link = "/mserver/";
                 break;
             case "mswitch":
                 link = "/mswitch/";
@@ -337,16 +339,40 @@ let modalContentLoad = function(eventReason, dto) {
     let divContainerBody = document.createElement("div");
     divContainerBody.className = "container";
     divContainerBody.id = "modalContent";
-    divContainerBody.innerHTML = '<div class="row mt-2" id="manufacturerRow">' +
-            '<div class="col">Производитель</div>' +
-            '<div class="col">' +
-            '<select class="form-select form-select-sm"  placeholder="выберите производителя" aria-label="model" id="manufacturer">' +
-            '</select></div></div>' + 
-            '<div class="row mt-2" id="modelRow">' +
-            '<div class="col">Наименование</div>' +
-            '<div class="col">' +
-            '<select class="form-select form-select-sm" placeholder="выберите модель" aria-label="model" id="model">' +
-            '</select></div>';
+    switch (attribute) {
+        case "mphones":
+            case "mfax":
+            case "mmonitors":
+            case "mscanner":
+            case "mswitch":
+            case "mrouter":
+            case "mats":
+            case "mconditioner":
+            case "minfomat":
+            case "mserver":
+            case "msysblock":
+                divContainerBody.innerHTML = '<div class="row mt-2" id="manufacturerRow">' +
+                    '<div class="col">Производитель</div>' +
+                    '<div class="col">' +
+                    '<select class="form-select form-select-sm"  placeholder="выберите производителя" aria-label="model" id="manufacturer">' +
+                    '</select></div></div>' + 
+                    '<div class="row mt-2" id="modelRow">' +
+                    '<div class="col">Наименование</div>' +
+                    '<div class="col">' +
+                    '<select class="form-select form-select-sm" placeholder="выберите модель" aria-label="model" id="model">' +
+                    '</select></div>';
+                break;
+            default :
+                divContainerBody.innerHTML = '<div class="row mt-2" id="modelRow">' +
+                    '<div class="col">Наименование</div>' +
+                    '<div class="col">' +
+                    '<select class="form-select form-select-sm" placeholder="выберите модель" aria-label="model" id="model">' +
+                    '</select></div>';
+                break;
+                
+                
+    }
+    
  
     divModalBody.appendChild(divContainerBody);
     
@@ -613,6 +639,7 @@ let modalContentLoad = function(eventReason, dto) {
     }
     
     if($("#model").length > 0) {
+        
         $("#model").selectize({
         preload: true,
         persist: true,
@@ -623,8 +650,38 @@ let modalContentLoad = function(eventReason, dto) {
         sortField: 'model',
         searchField: ["id", "model"],
         onInitialize: function () {
+            
+            if($('#manufacturer')[0] != null) {
+                modelLink = modelsByManufacturerLink + $('#manufacturer')[0].selectize.getValue();
+            } else {
+                
+                switch (attribute) {
+                case "mlcard":
+                    modelLink = "/modlcard/";
+                break;
+                case "mmotherboard":
+                    modelLink = "/modmotherboard/";
+                break;
+                case "mcpu":
+                    modelLink = "/modcpu/";
+                break;
+                case "mram":
+                    modelLink = "/modram/";
+                break;
+                case "mhdd":
+                    modelLink = "/modhdd/";
+                break;
+                case "mvideo":
+                    modelLink = "/modvideo/";
+                break;
+                case "mcddrive":
+                    modelLink = "/modcddrive/";
+                break;
+            }
+                
+            }
             $.ajax({
-                url: modelsByManufacturerLink + $('#manufacturer')[0].selectize.getValue(),
+                url: modelLink,
                 type: 'GET',
                 async: false,
                 dataType: 'json',

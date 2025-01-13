@@ -98,6 +98,7 @@ import ru.gov.sfr.aos.monitoring.mappers.SwitchHubMapper;
 import ru.gov.sfr.aos.monitoring.mappers.SwitchHubModelMapper;
 import ru.gov.sfr.aos.monitoring.mappers.SwitchingUnitMapper;
 import ru.gov.sfr.aos.monitoring.mappers.SystemBlockMapper;
+import ru.gov.sfr.aos.monitoring.mappers.SystemblockModelMapper;
 import ru.gov.sfr.aos.monitoring.mappers.TerminalMapper;
 import ru.gov.sfr.aos.monitoring.mappers.ThermoprinterMapper;
 import ru.gov.sfr.aos.monitoring.mappers.UpsMapper;
@@ -395,6 +396,8 @@ public class SvtViewController {
     private ConditionerModelMapper conditionerModelMapper;
     @Autowired
     private InfomatModelMapper infomatModelMapper;
+    @Autowired
+    private SystemblockModelMapper sysblockModelMapper;
     
 //  @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
     @GetMapping("/svt")
@@ -1156,10 +1159,13 @@ public class SvtViewController {
     public String getModelSystemblock(Model model) {
 
         List<SystemBlockModel> systemBlockModels = systemBlockModelService.getAllActualModels();
-        List<SvtModelDto> systemBlockModelsDtoes = svtModelMapper.getSystemBlockModelsDtoes(systemBlockModels);
+        List<SvtModelDto> systemBlockModelsDtoes = sysblockModelMapper.getListDtoes(systemBlockModels);
         model.addAttribute("dtoes", systemBlockModelsDtoes);
         model.addAttribute("namePage", "Модели системных блоков");
         model.addAttribute("attribute", "msysblock");
+        model.addAttribute("manufacturersSaveLink", "/save-sysblock-manufacturer");
+        model.addAttribute("modelsByManufacturerLink", "/get-sysblock-modelsby-manufacturer?id=");
+        model.addAttribute("manufacturersLink", "/get-sysblock-manufacturers");
         return "models";
     }
     
@@ -1167,7 +1173,7 @@ public class SvtViewController {
  //   @Log
     @PostMapping("/msysblock")
     public ResponseEntity<String> saveModelSystemBlock(@RequestBody SvtModelDto dto) throws ObjectAlreadyExists {
-        SystemBlockModel systemBlockModel = svtModelMapper.getSystemBlockModel(dto);
+        SystemBlockModel systemBlockModel = sysblockModelMapper.getModel(dto);
         try{
             systemBlockModelService.saveModel(systemBlockModel);
         }catch(Exception e) {
@@ -1178,7 +1184,7 @@ public class SvtViewController {
 
     @PutMapping("/msysblockupd")
     public ResponseEntity<String> updateModelSystemBlock(@RequestBody SvtModelDto dto) throws ObjectAlreadyExists {
-        SystemBlockModel systemBlockModel = svtModelMapper.getSystemBlockModel(dto);
+        SystemBlockModel systemBlockModel = sysblockModelMapper.getModel(dto);
         try{
             systemBlockModelService.update(systemBlockModel);
         }catch(Exception e) {

@@ -31,6 +31,8 @@ public abstract class MonitorMapper implements SvtMapper<Monitor, SvtDTO> {
     @Mapping(source = "baseType", target = "baseType")
     @Mapping(source = "nameFromeOneC", target = "nameFromOneC")
     @Mapping(source = "numberRoom", target = "numberRoom")
+    @Mapping(source = "monitorModel.manufacturer.name", target = "manufacturerName")
+    @Mapping(source = "monitorModel.manufacturer.id", target = "manufacturerId")
     public abstract SvtDTO getDto(Monitor monitor);
     
     @Mapping(target = "contract", expression = "java(monitorRepo.findById(dto.getId()).get().getContract())")

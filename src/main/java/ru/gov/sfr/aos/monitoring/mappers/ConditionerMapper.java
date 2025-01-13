@@ -41,6 +41,8 @@ public abstract class ConditionerMapper implements SvtMapper<Conditioner, SvtCon
     @Mapping(source = "splitSystem", target = "splitSystem")
     @Mapping(source = "winterKit", target = "winterKit")
     @Mapping(source = "havePomp", target = "havePomp")
+    @Mapping(source = "conditionerModel.manufacturer.name", target = "manufacturerName")
+    @Mapping(source = "conditionerModel.manufacturer.id", target = "manufacturerId")
     @Override
     public abstract SvtConditionerDTO getDto(Conditioner conditioner);
     

@@ -20,7 +20,7 @@ import javax.persistence.OneToMany;
 
 @Entity
 public class ServerModel extends SvtModel {
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @ManyToOne(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
     private ServerManufacturer manufacturer;
     @OneToMany(targetEntity = Server.class, mappedBy = "serverModel", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<Server> servers = new HashSet<>();

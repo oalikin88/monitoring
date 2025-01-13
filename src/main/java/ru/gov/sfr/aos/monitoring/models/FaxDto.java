@@ -27,6 +27,8 @@ public class FaxDto extends MainSvtDto {
     protected String nameFromOneC;
     protected String numberRoom;
     protected String ipAdress;
+    protected String manufacturerName;
+    protected Long manufacturerId;
 
     public FaxDto() {
     }
@@ -231,6 +233,28 @@ public class FaxDto extends MainSvtDto {
     public void setIpAdress(String ipAdress) {
         this.ipAdress = ipAdress;
     }
+
+    public String getManufacturerName() {
+        String result = "не указан";
+        if(manufacturerName != null) {
+            result = manufacturerName;
+        }
+        return result;
+    }
+
+    public void setManufacturerName(String manufacturerName) {
+        this.manufacturerName = manufacturerName;
+    }
+
+    public Long getManufacturerId() {
+        return manufacturerId;
+    }
+
+    public void setManufacturerId(Long manufacturerId) {
+        this.manufacturerId = manufacturerId;
+    }
+    
+    
 
     @Override
     public String toString() {

@@ -31,6 +31,8 @@ public abstract class UpsMapper implements SvtMapper<Ups, SvtDTO>{
     @Mapping(source = "place.location.id", target = "locationId")
     @Mapping(source = "numberRoom", target = "numberRoom")
     @Mapping(source = "nameFromOneC", target = "nameFromOneC")
+    @Mapping(source = "upsModel.manufacturer.name", target = "manufacturerName")
+    @Mapping(source = "upsModel.manufacturer.id", target = "manufacturerId")
     public abstract SvtDTO getDto(Ups ups);
     
     @Mapping(target = "contract", expression = "java(upsRepo.findById(dto.getId()).get().getContract())")
