@@ -159,27 +159,26 @@ public class SwitchHubService extends SvtObjService<SwitchHub, SwitchHubRepo, Sv
             }
             
             if(switchHubRepo.existsByInventaryNumberIgnoreCase(dto.getInventaryNumber().trim())) {
-                SwitchHub checkInventary = switchHubRepo.findByInventaryNumberIgnoreCase(dto.getInventaryNumber().trim()).get(0);
-                if(checkInventary.getId() != dto.getId()) {
+                List<SwitchHub> checkInventary = switchHubRepo.findByInventaryNumberIgnoreCase(dto.getInventaryNumber().trim());
+                for(SwitchHub el : checkInventary) {
+                    if(el.getId() != dto.getId()) {
                     throw new ObjectAlreadyExists(switchHubTypeRus + " с таким инвентарным номером уже есть в базе данных");
-                } else {
-                    switchHub.setInventaryNumber(dto.getInventaryNumber().trim());
                 }
-            } else {
-                switchHub.setInventaryNumber(dto.getInventaryNumber().trim());
-            }
+                }
+            } 
+            switchHub.setInventaryNumber(dto.getInventaryNumber().trim());
+            
             
             if(switchHubRepo.existsBySerialNumberIgnoreCase(dto.getSerialNumber().trim())) {
-                SwitchHub checkSerial = switchHubRepo.findBySerialNumberIgnoreCase(dto.getSerialNumber().trim()).get(0);
-                if(checkSerial.getId() != dto.getId()) {
+                List<SwitchHub> checkSerial = switchHubRepo.findBySerialNumberIgnoreCase(dto.getSerialNumber().trim());
+                for(SwitchHub el : checkSerial) {
+                    if(el.getId() != dto.getId()) {
                     throw new ObjectAlreadyExists(switchHubTypeRus + " с таким серийным номером уже есть в базе данных");
-                } else {
-                    switchHub.setSerialNumber(dto.getSerialNumber().trim());
                 }
-            } else {
-                switchHub.setSerialNumber(dto.getSerialNumber().trim());
-            }
+                }
+            } 
             
+            switchHub.setSerialNumber(dto.getSerialNumber().trim());
             switchHub.setPlace(place);
             switchHub.setYearCreated(dto.getYearCreated());
             switchHub.setSwitchHubModel(switchHubModel);

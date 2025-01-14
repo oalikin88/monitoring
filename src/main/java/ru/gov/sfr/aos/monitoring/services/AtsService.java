@@ -141,27 +141,28 @@ public class AtsService extends SvtObjService <Ats, AtsRepo, SvtAtsDTO> {
                 atsModel = atsModelRepo.findById(dto.getModelId()).get();
             }
             
-            if(atsRepo.existsByInventaryNumberIgnoreCase(dto.getInventaryNumber().trim())) {
-                Ats checkInventary = atsRepo.findByInventaryNumberIgnoreCase(dto.getInventaryNumber().trim()).get(0);
-                if(checkInventary.getId() != dto.getId()) {
-                    throw new ObjectAlreadyExists("АТС с таким инвентарным номером уже есть в базе данных");
-                } else {
-                    ats.setInventaryNumber(dto.getInventaryNumber().trim());
+            if (atsRepo.existsByInventaryNumberIgnoreCase(dto.getInventaryNumber().trim())) {
+            List<Ats> checkInventary = atsRepo.findByInventaryNumberIgnoreCase(dto.getInventaryNumber().trim());
+                for(Ats el : checkInventary) {
+                    if (el.getId() != dto.getId()) {
+                        throw new ObjectAlreadyExists("АТС с таким инвентарным номером уже есть в базе данных");
+                    }
                 }
-            } else {
-                ats.setInventaryNumber(dto.getInventaryNumber().trim());
-            }
-            
-            if(atsRepo.existsBySerialNumberIgnoreCase(dto.getSerialNumber().trim())) {
-                Ats checkSerial = atsRepo.findBySerialNumberIgnoreCase(dto.getSerialNumber().trim()).get(0);
-                if(checkSerial.getId() != dto.getId()) {
+            }         
+        ats.setInventaryNumber(dto.getInventaryNumber().trim());
+
+            if (atsRepo.existsBySerialNumberIgnoreCase(dto.getSerialNumber().trim())) {
+            List<Ats> checkSerial = atsRepo.findBySerialNumberIgnoreCase(dto.getSerialNumber().trim());
+            for (Ats el : checkSerial) {
+                if (el.getId() != dto.getId()) {
                     throw new ObjectAlreadyExists("АТС с таким серийным номером уже есть в базе данных");
-                } else {
-                    ats.setSerialNumber(dto.getSerialNumber().trim());
                 }
-            } else {
-                ats.setSerialNumber(dto.getSerialNumber().trim());
             }
+
+        } 
+            
+            ats.setSerialNumber(dto.getSerialNumber().trim());
+            
             ats.setPlace(place);
              ats.setAtsModel(atsModel);
              switch (dto.getStatus()) {

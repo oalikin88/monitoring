@@ -152,27 +152,27 @@ public class FaxService extends SvtObjService<Fax, FaxRepo, FaxDto>  {
                 fax.setStatus(Status.DEFECTIVE);
                 break;
         }
-        if(faxRepo.existsByInventaryNumberIgnoreCase(dto.getInventaryNumber().trim())) {
-            Fax checkInventary = faxRepo.findByInventaryNumberIgnoreCase(dto.getInventaryNumber().trim()).get(0);
-            if(checkInventary.getId() != dto.getId()) {
-                throw new ObjectAlreadyExists("Факс с таким инвентарным номером уже есть в базе данных");
-            } else {
-                 fax.setInventaryNumber(dto.getInventaryNumber().trim());
+        if (faxRepo.existsByInventaryNumberIgnoreCase(dto.getInventaryNumber().trim())) {
+            List<Fax> checkInventary = faxRepo.findByInventaryNumberIgnoreCase(dto.getInventaryNumber().trim());
+            for (Fax el : checkInventary) {
+                if (el.getId() != dto.getId()) {
+                    throw new ObjectAlreadyExists("Факс с таким инвентарным номером уже есть в базе данных");
+                }
             }
-        } else {
-             fax.setInventaryNumber(dto.getInventaryNumber().trim());
+
         }
+        fax.setInventaryNumber(dto.getInventaryNumber().trim());
+        
        
-        if(faxRepo.existsBySerialNumberIgnoreCase(dto.getSerialNumber().trim())) {
-            Fax checkSerial = faxRepo.findBySerialNumberIgnoreCase(dto.getSerialNumber().trim()).get(0);
-            if(checkSerial.getId() != dto.getId()) {
-                throw new ObjectAlreadyExists("Факс с таким серийным номером уже есть в базе данных");
-            } else {
-                 fax.setSerialNumber(dto.getSerialNumber().trim());
+        if (faxRepo.existsBySerialNumberIgnoreCase(dto.getSerialNumber().trim())) {
+            List<Fax> checkSerial = faxRepo.findBySerialNumberIgnoreCase(dto.getSerialNumber().trim());
+            for (Fax el : checkSerial) {
+                if (el.getId() != dto.getId()) {
+                    throw new ObjectAlreadyExists("Факс с таким серийным номером уже есть в базе данных");
+                }
             }
-        } else {
-             fax.setSerialNumber(dto.getSerialNumber().trim());
-        }
+        } 
+        fax.setSerialNumber(dto.getSerialNumber().trim());
         fax.setYearCreated(dto.getYearCreated());
         fax.setDateExploitationBegin(dto.getDateExploitationBegin());
         fax.setNameFromeOneC(dto.getNameFromOneC());

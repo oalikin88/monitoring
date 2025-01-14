@@ -1020,7 +1020,7 @@ public class SvtViewController {
  //  @UpdLog
     @PutMapping("/phonetostor")
     public ResponseEntity<String> sendToStorage (@RequestBody SvtDTO dto) throws ObjectAlreadyExists {
-        Phone phone = phoneMapper.getEntityFromDto(dto);
+        Phone phone = phoneService.getById(dto.getId());
         phoneService.sendToStorage(phone);
         return new ResponseEntity(HttpStatus.ACCEPTED);
         
@@ -1030,7 +1030,8 @@ public class SvtViewController {
   //  @UpdLog
     @PutMapping("/upstostor")
     public ResponseEntity<String> sendToStorageUps (@RequestBody SvtDTO dto) throws ObjectAlreadyExists {
-        Ups ups = upsMapper.getEntityFromDto(dto);
+        
+        Ups ups = upsService.getById(dto.getId());
         upsService.sendToStorage(ups);
         return new ResponseEntity(HttpStatus.ACCEPTED);
         
@@ -1040,7 +1041,7 @@ public class SvtViewController {
   //  @UpdLog
     @PutMapping("/monitortostor")
     public ResponseEntity<String> sendToStorageMonitor (@RequestBody SvtDTO dto) throws ObjectAlreadyExists {
-        Monitor monitor = monitorMapper.getEntityFromDto(dto);
+        Monitor monitor = monitorService.getById(dto.getId());
         monitorService.sendToStorage(monitor);
         return new ResponseEntity(HttpStatus.ACCEPTED);
         
@@ -1146,7 +1147,7 @@ public class SvtViewController {
     
  //   @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
   //  @SendArchive
-    @PutMapping("/phonesarchived")
+    @DeleteMapping("/phonesarchived")
     public ResponseEntity<String> sendPhoneToArchive(@RequestBody ArchivedDto dto) throws ObjectAlreadyExists {
         phoneService.svtObjToArchive(dto);
         return new ResponseEntity(HttpStatus.ACCEPTED);
@@ -1310,8 +1311,7 @@ public class SvtViewController {
   //  @UpdLog
     @PutMapping("/sysblockstostor")
     public ResponseEntity<String> sendToStorageSystemblock (@RequestBody SvtSystemBlockDTO dto) throws ObjectAlreadyExists {
-           // SystemBlock findById = sysrepo.findById(dto.getId()).get();
-            SystemBlock systemblock = systemblockMapper.getEntityFromDto(dto);
+        SystemBlock systemblock = systemblockService.getById(dto.getId());
         systemblockService.sendToStorage(systemblock);
         return new ResponseEntity(HttpStatus.ACCEPTED);
         
@@ -2061,8 +2061,7 @@ public class SvtViewController {
   //  @UpdLog
     @PutMapping("/scannertostor")
     public ResponseEntity<String> sendToStorageScanner (@RequestBody SvtScannerDTO dto) throws ObjectAlreadyExists {
-           // SystemBlock findById = sysrepo.findById(dto.getId()).get();
-            Scanner scanner = scannerMapper.getEntityFromDto(dto);
+        Scanner scanner = scannerService.getById(dto.getId());
         scannerService.sendToStorage(scanner);
         return new ResponseEntity(HttpStatus.ACCEPTED);
         
@@ -2238,8 +2237,7 @@ public class SvtViewController {
   //  @UpdLog
     @PostMapping("/servertostor")
     public ResponseEntity<String> sendToStorageServer (@RequestBody SvtServerDTO dto) throws ObjectAlreadyExists {
-            // SystemBlock findById = sysrepo.findById(dto.getId()).get();
-            Server server = serverMapper.getEntityFromDto(dto);
+            Server server = serverService.getById(dto.getId());
         serverService.sendToStorage(server);
         return new ResponseEntity(HttpStatus.ACCEPTED);
         
@@ -2412,7 +2410,7 @@ public class SvtViewController {
  //   @UpdLog
     @PutMapping("/switchtostor")
     public ResponseEntity<String> sendToStorageSwitchHub (@RequestBody SvtSwitchHubDTO dto) throws ObjectAlreadyExists {
-            SwitchHub switchHub = switchHubMapper.getEntityFromDto(dto);
+            SwitchHub switchHub = switchHubService.getById(dto.getId());
         switchHubService.sendToStorage(switchHub);
         return new ResponseEntity(HttpStatus.ACCEPTED);
         
@@ -2579,7 +2577,7 @@ public class SvtViewController {
  //   @UpdLog
     @PutMapping("/routertostor")
     public ResponseEntity<String> sendToStorageRouter(@RequestBody SvtSwitchHubDTO dto) throws ObjectAlreadyExists {
-            Router router = routerMapper.getEntityFromDto(dto);
+            Router router = routerService.getById(dto.getId());
         routerService.sendToStorage(router);
         return new ResponseEntity(HttpStatus.ACCEPTED);
         
@@ -2757,7 +2755,7 @@ public class SvtViewController {
  //   @UpdLog
     @PutMapping("/atstostor")
     public ResponseEntity<String> sendToStorageAts(@RequestBody SvtAtsDTO dto) throws ObjectAlreadyExists {
-            Ats ats = atsMapper.getEntityFromDto(dto);
+            Ats ats = atsService.getById(dto.getId());
         atsService.sendToStorage(ats);
         return new ResponseEntity(HttpStatus.ACCEPTED);
         
@@ -2925,7 +2923,7 @@ public class SvtViewController {
  //   @UpdLog
     @PutMapping("/conditionertostor")
     public ResponseEntity<String> sendToStorageConditioner(@RequestBody SvtConditionerDTO dto) throws ObjectAlreadyExists {
-            Conditioner conditioner = conditionerMapper.getEntityFromDto(dto);
+            Conditioner conditioner = conditionerService.getById(dto.getId());
         conditionerService.sendToStorage(conditioner);
         return new ResponseEntity(HttpStatus.ACCEPTED);
         
@@ -3099,8 +3097,7 @@ public class SvtViewController {
  //   @UpdLog
     @DeleteMapping("/faxtostor")
     public ResponseEntity<String> sendToStorageFax(@RequestBody FaxDto dto) throws ObjectAlreadyExists {
-            // SystemBlock findById = sysrepo.findById(dto.getId()).get();
-            Fax fax = faxMapper.getEntityFromDto(dto);
+            Fax fax = faxService.getById(dto.getId());
         faxService.sendToStorage(fax);
         return new ResponseEntity(HttpStatus.ACCEPTED);
         
@@ -3270,7 +3267,7 @@ public class SvtViewController {
  //   @UpdLog
     @DeleteMapping("/infomattostor")
     public ResponseEntity<String> sendToStorageInfomat(@RequestBody SvtDTO dto) throws ObjectAlreadyExists {
-            Infomat infomat = infomatMapper.getEntityFromDto(dto);
+        Infomat infomat = infomatService.getById(dto.getId());
         infomatService.sendToStorage(infomat);
         return new ResponseEntity(HttpStatus.ACCEPTED);
         
@@ -3377,7 +3374,7 @@ public class SvtViewController {
  //   @UpdLog
     @PutMapping("/terminaltostor")
     public ResponseEntity<String> sendToStorageTerminal(@RequestBody SvtDTO dto) throws ObjectAlreadyExists {
-        Terminal terminal = terminalMapper.getEntityFromDto(dto);
+        Terminal terminal = terminalService.getById(dto.getId());
         terminalService.sendToStorage(terminal);
         return new ResponseEntity(HttpStatus.ACCEPTED);
         
@@ -3481,7 +3478,7 @@ public class SvtViewController {
  //   @UpdLog
     @PutMapping("/thermoprintertostor")
     public ResponseEntity<String> sendToStorageThermoprinter(@RequestBody SvtDTO dto) throws ObjectAlreadyExists {
-            ThermoPrinter thermoprinter = thermoprinterMapper.getEntityFromDto(dto);
+            ThermoPrinter thermoprinter = thermoprinterService.getById(dto.getId());
         thermoprinterService.sendToStorage(thermoprinter);
         return new ResponseEntity(HttpStatus.ACCEPTED);
         
@@ -3582,7 +3579,7 @@ public class SvtViewController {
  //   @UpdLog
     @DeleteMapping("/displaytostor")
     public ResponseEntity<String> sendToStorageDisplay(@RequestBody SvtDTO dto) throws ObjectAlreadyExists {
-            Display display = displayMapper.getEntityFromDto(dto);
+            Display display = displayService.getById(dto.getId());
         displayService.sendToStorage(display);
         return new ResponseEntity(HttpStatus.ACCEPTED);
         
@@ -3684,7 +3681,7 @@ public class SvtViewController {
 //    @UpdLog
     @DeleteMapping("/swunittostor")
     public ResponseEntity<String> sendToStorageSwunit(@RequestBody SvtDTO dto) throws ObjectAlreadyExists {
-            SwitchingUnit swunit = swunitMapper.getEntityFromDto(dto);
+            SwitchingUnit swunit = swunitService.getById(dto.getId());
         swunitService.sendToStorage(swunit);
         return new ResponseEntity(HttpStatus.ACCEPTED);
         
@@ -3786,7 +3783,7 @@ public class SvtViewController {
  //   @UpdLog
     @PutMapping("/asuotostor")
     public ResponseEntity<String> sendToStorageAsuo(@RequestBody AsuoDTO dto) throws ObjectAlreadyExists {
-        Asuo asuo = asuoMapper.getEntityFromDto(dto);
+        Asuo asuo = asuoService.getById(dto.getId());
         asuoService.sendToStorage(asuo);
         return new ResponseEntity(HttpStatus.ACCEPTED);
         

@@ -290,27 +290,27 @@ public class ServerService extends SvtObjService <Server, ServerRepo, SvtServerD
                 server.setOperationSystems(operatingSystemList);
                 
                 if(serverRepo.existsBySerialNumberIgnoreCase(dto.getSerialNumber())) {
-                Server checkSerial = serverRepo.findBySerialNumberIgnoreCase(dto.getSerialNumber()).get(0);
-                if(dto.getId() != checkSerial.getId()) {
+                List<Server> checkSerial = serverRepo.findBySerialNumberIgnoreCase(dto.getSerialNumber());
+                for(Server el : checkSerial) {
+                    if(dto.getId() != el.getId()) {
                     throw new ObjectAlreadyExists("Сервер с таким серийным номером уже есть в базе данных");
-                } else {
-                   server.setSerialNumber(dto.getSerialNumber());
                 }
-            } else {
-                server.setSerialNumber(dto.getSerialNumber());
+                }
+                 
             } 
-                
+                server.setSerialNumber(dto.getSerialNumber());
                 
                 if(serverRepo.existsByInventaryNumberIgnoreCase(dto.getInventaryNumber())) {
-                Server checkInventary = serverRepo.findByInventaryNumberIgnoreCase(dto.getInventaryNumber()).get(0);
-                if(dto.getId() != checkInventary.getId()) {
+                List<Server> checkInventary = serverRepo.findByInventaryNumberIgnoreCase(dto.getInventaryNumber());
+                for(Server el : checkInventary) {
+                    if(dto.getId() != el.getId()) {
                     throw new ObjectAlreadyExists("Сервер с таким инвентарным номером уже есть в базе данных");
-                } else {
-                   server.setInventaryNumber(dto.getInventaryNumber());
                 }
-            } else {
-                server.setInventaryNumber(dto.getInventaryNumber());
+                }
+                 
             } 
+                server.setInventaryNumber(dto.getInventaryNumber());
+             
                 
                 server.setServerModel(serverModel);
                 server.setRam(ram);

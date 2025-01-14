@@ -137,27 +137,29 @@ public class UpsService extends SvtObjService<Ups, UpsRepo, SvtDTO>{
             }
        
         upsFromDB.setYearCreated(dto.getYearCreated());
-        if(upsRepo.existsByInventaryNumberIgnoreCase(dto.getInventaryNumber().trim())) {
-            Ups checkInventary = upsRepo.findByInventaryNumberIgnoreCase(dto.getInventaryNumber().trim()).get(0);
-            if(checkInventary.getId() != dto.getId()) {
-                throw new ObjectAlreadyExists("ИБП с таким инвентарным номером уже есть в базе данных");
-            } else {
-                upsFromDB.setInventaryNumber(dto.getInventaryNumber().trim());
+        if (upsRepo.existsByInventaryNumberIgnoreCase(dto.getInventaryNumber().trim())) {
+            List<Ups> checkInventary = upsRepo.findByInventaryNumberIgnoreCase(dto.getInventaryNumber().trim());
+            for (Ups el : checkInventary) {
+                if (el.getId() != dto.getId()) {
+                    throw new ObjectAlreadyExists("ИБП с таким инвентарным номером уже есть в базе данных");
+                }
             }
-        } else {
+
+        } 
             upsFromDB.setInventaryNumber(dto.getInventaryNumber().trim());
-        }
+        
         
         if(upsRepo.existsBySerialNumberIgnoreCase(dto.getSerialNumber().trim())) {
-            Ups checkSerial = upsRepo.findBySerialNumberIgnoreCase(dto.getSerialNumber().trim()).get(0);
-            if(checkSerial.getId() != dto.getId()) {
+            List<Ups> checkSerial = upsRepo.findBySerialNumberIgnoreCase(dto.getSerialNumber().trim());
+            for(Ups el : checkSerial) {
+               if(el.getId() != dto.getId()) {
                 throw new ObjectAlreadyExists("ИБП с таким серийным номером уже есть в базе данных");
-            }else {
-                upsFromDB.setSerialNumber(dto.getSerialNumber().trim());
+            } 
             }
-        } else {
+           
+        } 
             upsFromDB.setSerialNumber(dto.getSerialNumber().trim());
-        }
+        
         
         upsFromDB.setYearReplacement(dto.getYearReplacement());
         upsFromDB.setPlace(placeFromDB);

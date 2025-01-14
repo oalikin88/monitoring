@@ -552,26 +552,29 @@ public class SystemBlockService extends SvtObjService <SystemBlock, SystemBlockR
         }
             
             if(systemBlockRepo.existsBySerialNumberIgnoreCase(dto.getSerialNumber())) {
-                SystemBlock checkSerial = systemBlockRepo.findBySerialNumberIgnoreCase(dto.getSerialNumber()).get(0);
-                if(dto.getId() != checkSerial.getId()) {
+                List<SystemBlock> checkSerial = systemBlockRepo.findBySerialNumberIgnoreCase(dto.getSerialNumber());
+                for(SystemBlock el : checkSerial) {
+                    if(dto.getId() != el.getId()) {
                     throw new ObjectAlreadyExists("Системный блок с таким серийным номером уже есть в базе данных");
-                } else {
-                   systemBlock.setSerialNumber(dto.getSerialNumber());
                 }
-            } else {
-                systemBlock.setSerialNumber(dto.getSerialNumber());
-            } 
+                }
+                
+            }
+             systemBlock.setSerialNumber(dto.getSerialNumber());
+             
                 
             if(systemBlockRepo.existsByInventaryNumberIgnoreCase(dto.getInventaryNumber())) {
-                SystemBlock checkInventary = systemBlockRepo.findByInventaryNumberIgnoreCase(dto.getInventaryNumber()).get(0);
-                if(dto.getId() != checkInventary.getId()) {
+                List<SystemBlock> checkInventary = systemBlockRepo.findByInventaryNumberIgnoreCase(dto.getInventaryNumber());
+                for(SystemBlock el : checkInventary) {
+                   if(dto.getId() != el.getId()) {
                     throw new ObjectAlreadyExists("Системный блок с таким инвентарным номером уже есть в базе данных");
-                } else {
-                   systemBlock.setInventaryNumber(dto.getInventaryNumber());
+                } 
                 }
-            } else {
-                systemBlock.setInventaryNumber(dto.getInventaryNumber());
+                 
             } 
+            
+            systemBlock.setInventaryNumber(dto.getInventaryNumber());
+            
             
             systemBlock.setYearCreated(dto.getYearCreated());
             systemBlock.setDateExploitationBegin(dto.getDateExploitationBegin());

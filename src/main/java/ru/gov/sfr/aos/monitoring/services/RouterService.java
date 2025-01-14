@@ -129,26 +129,26 @@ public class RouterService extends SvtObjService<Router, RouterRepo, SvtSwitchHu
             }
             
             if(routerRepo.existsByInventaryNumberIgnoreCase(dto.getInventaryNumber().trim())) {
-                Router checkInventary = routerRepo.findByInventaryNumberIgnoreCase(dto.getInventaryNumber().trim()).get(0);
-                if(checkInventary.getId() != dto.getId()) {
+                List<Router> checkInventary = routerRepo.findByInventaryNumberIgnoreCase(dto.getInventaryNumber().trim());
+               for (Router el : checkInventary) {
+                if (el.getId() != dto.getId()) {
                     throw new ObjectAlreadyExists("Маршрутизатор с таким инвентарным номером уже есть в базе данных");
-                } else {
-                    router.setInventaryNumber(dto.getInventaryNumber().trim());
                 }
-            } else {
-                router.setInventaryNumber(dto.getInventaryNumber().trim());
             }
+        }
+                router.setInventaryNumber(dto.getInventaryNumber().trim());
+            
             
             if(routerRepo.existsBySerialNumberIgnoreCase(dto.getSerialNumber().trim())) {
-                Router checkSerial = routerRepo.findBySerialNumberIgnoreCase(dto.getSerialNumber().trim()).get(0);
-                if(checkSerial.getId() != dto.getId()) {
+                List<Router> checkSerial = routerRepo.findBySerialNumberIgnoreCase(dto.getSerialNumber().trim());
+                for(Router el : checkSerial) {
+                    if(el.getId() != dto.getId()) {
                     throw new ObjectAlreadyExists("Маршрутизатор с таким серийным номером уже есть в базе данных");
-                } else {
-                    router.setSerialNumber(dto.getSerialNumber().trim());
                 }
-            } else {
-                router.setSerialNumber(dto.getSerialNumber().trim());
-            }
+                }
+            } 
+            router.setSerialNumber(dto.getSerialNumber().trim());
+            
             
             router.setYearCreated(dto.getYearCreated());
             router.setPlace(place);

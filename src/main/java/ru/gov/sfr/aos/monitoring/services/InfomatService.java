@@ -124,27 +124,30 @@ public class InfomatService extends SvtObjService<Infomat, InfomatRepo, SvtDTO> 
                 infomatModel = infomatModelRepo.findById(dto.getModelId()).get();
             }
             
-            if(infomatRepo.existsByInventaryNumberIgnoreCase(dto.getInventaryNumber().trim())) {
-                Infomat checkInventary = infomatRepo.findByInventaryNumberIgnoreCase(dto.getInventaryNumber().trim()).get(0);
-                if(checkInventary.getId() != dto.getId()) {
+           if (infomatRepo.existsByInventaryNumberIgnoreCase(dto.getInventaryNumber().trim())) {
+            List<Infomat> checkInventary = infomatRepo.findByInventaryNumberIgnoreCase(dto.getInventaryNumber().trim());
+            for (Infomat el : checkInventary) {
+                if (el.getId() != dto.getId()) {
                     throw new ObjectAlreadyExists("Инфомат с таким инвентарным номером уже есть в базе данных");
-                } else {
-                    infomat.setInventaryNumber(dto.getInventaryNumber().trim());
                 }
-            } else {
-                infomat.setInventaryNumber(dto.getInventaryNumber().trim());
             }
+
+        } 
+            
+            infomat.setInventaryNumber(dto.getInventaryNumber().trim());
+            
             
             if(infomatRepo.existsBySerialNumberIgnoreCase(dto.getSerialNumber().trim())) {
-                Infomat checkSerial = infomatRepo.findBySerialNumberIgnoreCase(dto.getSerialNumber().trim()).get(0);
-                if(checkSerial.getId() != dto.getId()) {
+                List<Infomat> checkSerial = infomatRepo.findBySerialNumberIgnoreCase(dto.getSerialNumber().trim());
+                for(Infomat el : checkSerial) {
+                    if(el.getId() != dto.getId()) {
                     throw new ObjectAlreadyExists("Инфомат с таким серийным номером уже есть в базе данных");
-                } else {
-                    infomat.setSerialNumber(dto.getSerialNumber().trim());
                 }
-            } else {
-                infomat.setSerialNumber(dto.getSerialNumber().trim());
-            }
+                }
+                 
+            } 
+            infomat.setSerialNumber(dto.getSerialNumber().trim());
+            
             
             infomat.setPlace(place);
             

@@ -133,27 +133,27 @@ public class PhoneService extends SvtObjService<Phone, PhoneRepo, SvtDTO>{
                 phoneModel = phoneModelRepo.findById(dto.getModelId()).get();
             }
         phoneFromDB.setDateExploitationBegin(dto.getDateExploitationBegin());
-        if(phoneRepo.existsByInventaryNumberIgnoreCase(dto.getInventaryNumber().trim())) {
-            Phone checkInventary = phoneRepo.findByInventaryNumberIgnoreCase(dto.getInventaryNumber().trim()).get(0);
-            if(checkInventary.getId() != dto.getId()) {
-                throw new ObjectAlreadyExists("Телефон с таким инвентарным номером уже есть в базе данных");
-            } else {
-                phoneFromDB.setInventaryNumber(dto.getInventaryNumber().trim());
+        if (phoneRepo.existsByInventaryNumberIgnoreCase(dto.getInventaryNumber().trim())) {
+            List<Phone> findByInventaryNumberIgnoreCase = phoneRepo.findByInventaryNumberIgnoreCase(dto.getInventaryNumber().trim());
+            for (Phone phone : findByInventaryNumberIgnoreCase) {
+                if (phone.getId() != dto.getId()) {
+                    throw new ObjectAlreadyExists("Телефон с таким инвентарным номером уже есть в базе данных");
+                }
             }
-        } else {
-            phoneFromDB.setInventaryNumber(dto.getInventaryNumber().trim());
         }
+        phoneFromDB.setInventaryNumber(dto.getInventaryNumber().trim());
         
-        if(phoneRepo.existsBySerialNumberIgnoreCase(dto.getSerialNumber().trim())) {
-            Phone checkSerial = phoneRepo.findBySerialNumberIgnoreCase(dto.getSerialNumber().trim()).get(0);
-            if(checkSerial.getId() != dto.getId()) {
-                throw new ObjectAlreadyExists("Телефон с таким серийным номером уже есть в базе данных");
-            } else {
-                phoneFromDB.setSerialNumber(dto.getSerialNumber().trim());
+        
+        if (phoneRepo.existsBySerialNumberIgnoreCase(dto.getSerialNumber().trim())) {
+            List<Phone> checkSerial = phoneRepo.findBySerialNumberIgnoreCase(dto.getSerialNumber().trim());
+            for (Phone phone : checkSerial) {
+                if (phone.getId() != dto.getId()) {
+                    throw new ObjectAlreadyExists("Телефон с таким серийным номером уже есть в базе данных");
+                }
             }
-        } else {
-            phoneFromDB.setSerialNumber(dto.getSerialNumber().trim());
         }
+        phoneFromDB.setSerialNumber(dto.getSerialNumber().trim());
+        
         
         phoneFromDB.setPhoneNumber(dto.getPhoneNumber());
         phoneFromDB.setPlace(placeFromDto);

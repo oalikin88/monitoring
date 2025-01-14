@@ -153,26 +153,29 @@ public class ConditionerService extends SvtObjService<Conditioner, ConditionerRe
         conditioner.setConditionerModel(conditionerModel);
         
         if(conditionerRepo.existsBySerialNumberIgnoreCase(dto.getSerialNumber().trim())) {
-            Conditioner checkSerial = conditionerRepo.findBySerialNumberIgnoreCase(dto.getSerialNumber().trim()).get(0);
-            if(checkSerial.getId() != dto.getId()) {
+            List<Conditioner> checkSerial = conditionerRepo.findBySerialNumberIgnoreCase(dto.getSerialNumber().trim());
+            for(Conditioner el : checkSerial) {
+                if(el.getId() != dto.getId()) {
                 throw new ObjectAlreadyExists("Кондиционер с таким серийным номеров уже есть в базе данных");
-            } else {
-                conditioner.setSerialNumber(dto.getSerialNumber().trim());
             }
-        } else {
-            conditioner.setSerialNumber(dto.getSerialNumber().trim());
+            }
+             
         } 
         
-        if(conditionerRepo.existsByInventaryNumberIgnoreCase(dto.getInventaryNumber().trim())) {
-            Conditioner checkInventary = conditionerRepo.findByInventaryNumberIgnoreCase(dto.getInventaryNumber().trim()).get(0);
-            if(checkInventary.getId() != dto.getId()) {
-                throw new ObjectAlreadyExists("Кондиционер с таким инвентарным номеров уже есть в базе данных");
-            } else {
-                conditioner.setInventaryNumber(dto.getInventaryNumber().trim());
+        conditioner.setSerialNumber(dto.getSerialNumber().trim());
+        
+        
+        if (conditionerRepo.existsByInventaryNumberIgnoreCase(dto.getInventaryNumber().trim())) {
+            List<Conditioner> checkInventary = conditionerRepo.findByInventaryNumberIgnoreCase(dto.getInventaryNumber().trim());
+            for (Conditioner el : checkInventary) {
+                if (el.getId() != dto.getId()) {
+                    throw new ObjectAlreadyExists("Кондиционер с таким инвентарным номеров уже есть в базе данных");
+                }
             }
-        } else {
-            conditioner.setInventaryNumber(dto.getInventaryNumber().trim());
-        }
+
+        } 
+        conditioner.setInventaryNumber(dto.getInventaryNumber().trim());
+        
         
         conditioner.setYearCreated(dto.getYearCreated());
         conditioner.setDescription(dto.getDescription());

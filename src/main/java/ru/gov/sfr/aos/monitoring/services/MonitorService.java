@@ -151,26 +151,27 @@ public class MonitorService extends SvtObjService <Monitor, MonitorRepo, SvtDTO>
         monitorFromDB.setDateExploitationBegin(dto.getDateExploitationBegin());
         
         if (monitorRepo.existsByInventaryNumberIgnoreCase(dto.getInventaryNumber().trim())) {
-            Monitor checkInventary = monitorRepo.findByInventaryNumberIgnoreCase(dto.getInventaryNumber()).get(0);
-            if (checkInventary.getId() != dto.getId()) {
-                throw new ObjectAlreadyExists("Монитор с таким инвентарным номером уже есть в базе данных");
-            } else {
-                monitorFromDB.setInventaryNumber(dto.getInventaryNumber().trim());
+            List<Monitor> checkInventary = monitorRepo.findByInventaryNumberIgnoreCase(dto.getInventaryNumber());
+            for (Monitor el : checkInventary) {
+                if (el.getId() != dto.getId()) {
+                    throw new ObjectAlreadyExists("Монитор с таким инвентарным номером уже есть в базе данных");
+                }
             }
-        } else {
-            monitorFromDB.setInventaryNumber(dto.getInventaryNumber().trim());
         }
+        
+        monitorFromDB.setInventaryNumber(dto.getInventaryNumber().trim());
+        
     
         if(monitorRepo.existsBySerialNumberIgnoreCase(dto.getSerialNumber().trim())) {
-            Monitor checkSerial = monitorRepo.findBySerialNumberIgnoreCase(dto.getSerialNumber().trim()).get(0);
-            if(checkSerial.getId() != dto.getId()) {
+            List<Monitor> checkSerial = monitorRepo.findBySerialNumberIgnoreCase(dto.getSerialNumber().trim());
+            for(Monitor el : checkSerial) {
+                if(el.getId() != dto.getId()) {
                 throw new ObjectAlreadyExists("Монитор с таким серийным номером уже есть в базе данных");
-            } else {
-                monitorFromDB.setSerialNumber(dto.getSerialNumber().trim());
             }
-        } else {
-             monitorFromDB.setSerialNumber(dto.getSerialNumber().trim());
-        }
+            }
+        } 
+        monitorFromDB.setSerialNumber(dto.getSerialNumber().trim());
+        
         
         monitorFromDB.setNameFromeOneC(dto.getNameFromOneC());
         monitorFromDB.setPlace(placeFromDto);

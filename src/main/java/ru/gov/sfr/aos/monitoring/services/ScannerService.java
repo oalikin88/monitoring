@@ -167,26 +167,30 @@ public class ScannerService extends SvtObjService<Scanner, ScannerRepo, SvtScann
         }
         scanner.setContract(contract);
         if(scannerRepo.existsBySerialNumberIgnoreCase(dto.getSerialNumber().trim())) {
-            Scanner checkSerial = scannerRepo.findBySerialNumberIgnoreCase(dto.getSerialNumber().trim()).get(0);
-            if(checkSerial.getId() != dto.getId()) {
+            List<Scanner> checkSerial = scannerRepo.findBySerialNumberIgnoreCase(dto.getSerialNumber().trim());
+            for(Scanner el : checkSerial) {
+                if(el.getId() != dto.getId()) {
                 throw new ObjectAlreadyExists("Сканер с таким серийным номером уже есть в базе данных");
-            } else {
-                scanner.setSerialNumber(dto.getSerialNumber().trim());
             }
-        } else {
-             scanner.setSerialNumber(dto.getSerialNumber().trim());
-        }
+            }
+             
+        } 
+        
+        scanner.setSerialNumber(dto.getSerialNumber().trim());
+        
        
         if(scannerRepo.existsByInventaryNumberIgnoreCase(dto.getInventaryNumber().trim())) {
-            Scanner checkInventary = scannerRepo.findByInventaryNumberIgnoreCase(dto.getInventaryNumber().trim()).get(0);
-            if(dto.getId() != checkInventary.getId()) {
+            List<Scanner> checkInventary = scannerRepo.findByInventaryNumberIgnoreCase(dto.getInventaryNumber().trim());
+            for(Scanner el : checkInventary) {
+                if(dto.getId() != el.getId()) {
                 throw new ObjectAlreadyExists("Сканер с таким инвентарным номером уже есть в базе данных");
-            } else {
-                scanner.setInventaryNumber(dto.getInventaryNumber().trim());
             }
-        } else {
-            scanner.setInventaryNumber(dto.getInventaryNumber().trim());
-        }
+            }
+            
+        } 
+        
+        scanner.setInventaryNumber(dto.getInventaryNumber().trim());
+        
         
         scanner.setYearCreated(dto.getYearCreated());
         scanner.setNumberRoom(dto.getNumberRoom());
