@@ -49,7 +49,7 @@ public class PrintersList implements Report<PrinterListReportParameters> {
             findPrinters = printerRepo.findByLocationAndDeviceType(params.getIdLocation(), params.getDeviceType());
         } 
           List<Row> rows = new ArrayList<>();
-          Block blo = null;
+          Block block = null;
           int count = 1;
           try {
                for(Printer p : findPrinters) {
@@ -57,11 +57,14 @@ public class PrintersList implements Report<PrinterListReportParameters> {
                     List<ListenerOperation> findByPrinterIdLastDayCartridgeInstall = listenerOperationRepo.findByPrinterIdLastDayCartridgeInstall(p.getId());
                     String employee = null;
                 if(!findByPrinterIdLastDayCartridgeInstall.isEmpty()) {
-                    
                         String employeeToSetDevice = findByPrinterIdLastDayCartridgeInstall.get(0).getEmployeeToSetDevice();
-                        DictionaryEmployee employeeByCode = employeeClient.getEmployeeByCode(employeeToSetDevice);
-                       employee = employeeByCode.getSurname() + " " + employeeByCode.getName().substring(0, 1) + ". " + employeeByCode.getMiddlename().substring(0, 1) + ".";
-                    
+                        DictionaryEmployee employeeByCode = null;
+                        try {
+                            employeeByCode =  employeeClient.getEmployeeByCode(employeeToSetDevice);
+                            employee = employeeByCode.getSurname() + " " + employeeByCode.getName().substring(0, 1) + ". " + employeeByCode.getMiddlename().substring(0, 1) + ".";
+                        } catch(Exception e) {
+                            employee = findByPrinterIdLastDayCartridgeInstall.get(0).getEmployeeToSetDevice();
+                        }
                 } else {
                     employee = "Отсутствует";
                 }
@@ -89,8 +92,8 @@ public class PrintersList implements Report<PrinterListReportParameters> {
           Block.BlockBuilder footer = Block.builder();
           footer
                   .parameter(new Parameter("location", findPrinters.get(0).getLocation().getName()));
-          blo = Block.builder().name("dataBlock").rows(rows).build();
-                Record rec = Record.builder().block(blo).build();
+          block = Block.builder().name("dataBlock").rows(rows).build();
+                Record rec = Record.builder().block(block).build();
                 Request.builder().record(rec).build();
 //       Block dataBlock = Block.builder().name("dataBlock").row(row.build()).build();
 //        Record record = Record.builder().block(dataBlock).build();

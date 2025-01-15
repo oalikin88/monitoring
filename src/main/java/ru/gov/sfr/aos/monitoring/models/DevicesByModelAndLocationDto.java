@@ -46,10 +46,6 @@ public class DevicesByModelAndLocationDto {
         return contractNumber;
     }
 
-    public void setContractNumber(String contractNumber) {
-        this.contractNumber = contractNumber;
-    }
-
     public String getInventaryNumber() {
         return inventaryNumber;
     }
@@ -57,7 +53,12 @@ public class DevicesByModelAndLocationDto {
     public void setInventaryNumber(String inventaryNumber) {
         this.inventaryNumber = inventaryNumber;
     }
+
     
+    
+    public void setContractNumber(String contractNumber) {
+        this.contractNumber = contractNumber;
+    }
     
     
 }

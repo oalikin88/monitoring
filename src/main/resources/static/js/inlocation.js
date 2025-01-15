@@ -487,7 +487,7 @@ window.onload = function () {
              var id = input[0].locationId;
              let arrOut = new Array();
              arrOut.push(id);
-             arrOut.push(arrRequest.deviceType);
+             arrOut.push(dtype);
              actInstallReport(arrOut);
 
         });

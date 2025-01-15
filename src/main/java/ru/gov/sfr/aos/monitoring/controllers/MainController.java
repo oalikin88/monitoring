@@ -253,6 +253,7 @@ public class MainController {
         model.addAttribute("locationInfo", locationById);
         model.addAttribute("pageable", paging);
         model.addAttribute("direction", direction);
+        model.addAttribute("dtype", deviceType);
         return "devices";
     }
 
