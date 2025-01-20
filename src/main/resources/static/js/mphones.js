@@ -12,6 +12,27 @@ const modalError = document.getElementById('modalError');
 const modalErrorParent = document.getElementById('modalErrorContent');
 let manufacturerChoise;
 let modelLink;
+const models = $(".models")[0];
+const elements = [...document.querySelectorAll('.element')];
+
+let searchModel = function() {
+        let query = $("#searchModelInput")[0].value;
+        models.innerHTML = "";
+        count = 1;
+        elements.forEach(item => {
+            if(item.childNodes[3].innerText.toLowerCase().includes(query)) {
+                
+                let el = document.createElement("div");
+                el.className = "row element pb-2 mb-2 mt-2 pt-2";
+                item.childNodes[1].innerHTML = count;
+                el = item;
+                models.appendChild(el);
+                count++;
+            }
+        });   
+        
+    };
+
 
 function beep() {
    
@@ -65,11 +86,23 @@ let getModalError = function(textError) {
 
 let handleClickUpdateBtn = function (name, id) {
     let requestLink = "/" + name + "upd";
-    let dto = {
+    let dto;
+    if(attribute == "mupsbat") {
+        
+        dto = {
+        id: id,
+        type: document.querySelector('#batteryTypeInput').value,
+    };
+        
+    } else {
+        dto = {
         id: id,
         model: $("#model")[0].innerText,
         manufacturer: $("#manufacturer")[0].value,
     };
+        
+    }
+    
     switch(attribute) {
         case "os":
         dto.license = $("#licenseFlag")[0].checked;
@@ -105,8 +138,11 @@ let handleClickUpdateBtn = function (name, id) {
     case "mserver":
     case "msysblock":
         dto.manufacturerName = document.querySelector('#manufacturer').innerText;
-        dto.manufacturerId = $('#manufacturer')[0].selectize.getValue();
+        dto.manufacturerId = $('#manufacturer').selectize.getValue();
         break;
+    case "mupsbat":
+
+    break;
     }
     
     $.ajax({
@@ -176,10 +212,10 @@ let handleClickSaveBtn = function (name) {
             case "mupsbat":
                 link = "/mupsbat/";
                 delete dto.model;
-                dto.type = document.querySelector('#model').value;
+                dto.type = document.querySelector('#batteryTypeInput')[0].value;
                 break;
             case "mups":
-                link = "/mups/";
+          //      link = "/mups/";
                 
                 dto.batteryType = $('#batteryType')[0].selectize.getValue();
                 dto.manufacturerId = $('#manufacturer')[0].selectize.getValue();
@@ -316,7 +352,12 @@ let modalContentLoad = function(eventReason, dto) {
     titleModal.className = "modal-title";
     if (null != dto) {
         titleAction = "Редактировать";
-        titleModal.innerText = titleAction + " " + namePage[0].toLowerCase() + namePage.slice(1) + ": " + dto.model;
+        if(attribute == "mupsbat") {
+            titleModal.innerText = titleAction + " " + namePage[0].toLowerCase() + namePage.slice(1) + ": " + dto.type;
+        } else {
+            titleModal.innerText = titleAction + " " + namePage[0].toLowerCase() + namePage.slice(1) + ": " + dto.model;
+        }
+        
         
     } else {
         titleAction = "Добавить";
@@ -362,6 +403,41 @@ let modalContentLoad = function(eventReason, dto) {
                     '<select class="form-select form-select-sm" placeholder="выберите модель" aria-label="model" id="model">' +
                     '</select></div>';
                 break;
+            case "mups":
+            divContainerBody.innerHTML = '<div class="row mt-2" id="manufacturerRow">' +
+                    '<div class="col">Производитель</div>' +
+                    '<div class="col">' +
+                    '<select class="form-select form-select-sm"  placeholder="выберите производителя" aria-label="model" id="manufacturer">' +
+                    '</select></div></div>' + 
+                    '<div class="row mt-2" id="modelRow">' +
+                    '<div class="col">Наименование</div>' +
+                    '<div class="col">' +
+                    '<select class="form-select form-select-sm" placeholder="выберите модель" aria-label="model" id="model">' +
+                    '</select></div></div>' +
+                     '  <div class="row mt-2">' +
+                '<div class="col">Тип батареи</div>' +
+                '<div class="col">' +
+                    '<div class="input-group input-group-sm">' + 
+                        '<select class="form-select form-select-sm" id="batteryType" placeholder="тип батареи"></select>' + 
+                    '</div>' + 
+                '</div>' +
+            '<div class="row mt-2">' + 
+                '<div class="col">Количество батарей</div>' +
+                '<div class="col">' +
+                    '<div class="input-group input-group-sm">' + 
+                        '<input class="form-control form-control-sm" id="batteryAmount" type="number" value="1" min="1" max="99" placeholder="количество батарей"/>' +
+                    '</div></div>' +
+                '</div>';
+
+            break;
+        case "mupsbat":
+        divContainerBody.innerHTML = '<div class="row mt-2" id="modelRow">' +
+                    '<div class="col">Наименование</div>' +
+                    '<div class="col">' +
+                    '<div class="input-group input-group-sm">' + 
+                        '<input class="form-control form-control-sm" id="batteryTypeInput" type="text"  placeholder="Тип батареи"/>' +
+                    '</div></div></div>';
+        break;
             default :
                 divContainerBody.innerHTML = '<div class="row mt-2" id="modelRow">' +
                     '<div class="col">Наименование</div>' +
@@ -486,30 +562,6 @@ let modalContentLoad = function(eventReason, dto) {
             
             );
             break;
-        case "mups":
-               divContainerBody.insertAdjacentHTML('beforeend', 
-            '  <div class="row mt-2">' +
-                '<div class="col">Тип батареи</div>' +
-                '<div class="col">' +
-                    '<div class="input-group input-group-sm">' + 
-                        '<select class="form-select form-select-sm" id="batteryType" placeholder="тип батареи"></select>' + 
-                    '</div>' + 
-                '</div>' +
-            '</div>' +
-
-            '<div class="row mt-2">' + 
-                '<div class="col">Количество батарей</div>' +
-                '<div class="col">' +
-                    '<div class="input-group input-group-sm">' + 
-                        '<input class="form-control form-control-sm" id="batteryAmount" type="number" value="1" min="1" max="99" placeholder="количество батарей"/>' +
-                    '</div>' +
-                '</div>' +
-            '</div>' +
-        '</div>' 
-            
-            
-            );
-            break;
     }
     
            
@@ -562,6 +614,9 @@ let modalContentLoad = function(eventReason, dto) {
                 break;
             case "mups":
                 $("#batteryAmount")[0].value = dto.batteryAmount;
+                break;
+            case "mupsbat":
+                $("#batteryTypeInput")[0].value = dto.type;
                 break;
             
         }
@@ -750,6 +805,18 @@ let modalContentLoad = function(eventReason, dto) {
 
 
 $(document).ready(function() {
+    
+    
+    
+    $("#searchSvtObjBtn")[0].addEventListener("click", searchModel);
+    
+     $("#searchModelInput")[0].addEventListener("keypress", function(e) {
+         
+         if(13 === e.keyCode) {
+             searchModel();
+         }
+         
+     });
     
     for(i = 0; i < document.getElementsByClassName('element').length; i++) {
         document.getElementsByClassName('element')[i].addEventListener('click', function() {

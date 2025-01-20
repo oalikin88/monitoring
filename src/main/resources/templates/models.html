@@ -73,7 +73,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                     </div>
                 </div>
                 <div class="content" id="content"  th:if="${dtoes.size}> 0"> 
-                    <div class="models">
+                    
                         <th:block th:switch="${attribute}">
                             <div class="row fw-bold" th:case="'mcpu'">
                                 <div class="col-1">№ п/п</div>
@@ -107,6 +107,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                                 <div class="col-11 text-start">Наименование модели</div>
                             </div>
                         </th:block>
+                       <div class="models">
                         <th:block th:switch="${attribute}" th:each="dto, stat : ${dtoes}">
                             <div class = "row element pb-2 mb-2 mt-2 pt-2" th:attr="id = ${dto.id}" data-bs-toggle="modal" data-bs-target="#addBtnModal" th:case="os">
                                 <div class="col-1" th:text="${stat.count}"></div>
@@ -240,6 +241,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
 
 
                         </th:block>
+                           
 
                     </div>
                 </div>
