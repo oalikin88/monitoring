@@ -5,6 +5,7 @@
 package ru.gov.sfr.aos.monitoring.entities;
 
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -67,6 +68,48 @@ public class UpsModel extends SvtModel {
     public void setBatteryAmount(int batteryAmount) {
         this.batteryAmount = batteryAmount;
     }
+
+    @Override
+    public int hashCode() {
+        int hash = super.hashCode();
+        hash = 97 * hash + Objects.hashCode(this.manufacturer);
+        hash = 97 * hash + Objects.hashCode(this.batteryType);
+        hash = 97 * hash + this.batteryAmount;
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final UpsModel other = (UpsModel) obj;
+        
+        if (this.batteryAmount != other.batteryAmount) {
+            return false;
+        }
+        
+         if (!Objects.equals(this.id, other.id)) {
+            return false;
+        }
+        
+        if (!Objects.equals(this.archived, other.archived)) {
+            return false;
+        }
+        if (!Objects.equals(this.model, other.model)) {
+            return false;
+        }
+        
+        return Objects.equals(this.manufacturer, other.manufacturer);
+    }
+    
+    
     
     
     

@@ -41,7 +41,6 @@ public class SystemBlock extends ObjectBuingWithSerialAndInventary implements Se
     private Date dateUpgrade;
     private String numberRoom;
     private String ipAdress;
-    @NotNull(message = "Поле \"Материнская плата\" не должно быть пустым")
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Motherboard motherBoard;
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
