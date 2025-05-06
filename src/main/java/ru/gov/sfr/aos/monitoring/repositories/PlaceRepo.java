@@ -22,6 +22,7 @@ public interface PlaceRepo extends JpaRepository<Place, Long> {
     List<Place> findByDepartmentCodeAndArchivedFalse(String departmentCode);
     List<Place> findByLocationIdAndDepartmentCodeAndPlaceTypeAndArchivedFalse(Long locationId, String departmentCode, PlaceType placeType);
     List<Place> findByPlaceTypeAndArchivedFalse(PlaceType placetype);
+    List<Place> findByPlaceTypeAndDepartmentCodeAndArchivedFalse(PlaceType placetype, String departmentCode);
     List<Place> findByLocationIdAndPlaceTypeAndArchivedFalse(Long locationId, PlaceType placeType);
     List<Place> findByUsernameContainingAndArchivedFalse(String username);
     List<Place> findByPlaceTypeAndLocationIdAndArchivedFalse(PlaceType placeType, Long idLocation);

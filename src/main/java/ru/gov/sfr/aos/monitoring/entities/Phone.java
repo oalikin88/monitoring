@@ -34,20 +34,6 @@ public class Phone extends ObjectBuingWithSerialAndInventary implements Serializ
      public Phone() {
     }
  
-
-    public Phone(PhoneModel phoneModel, Status status, String inventaryNumber,
-            String serialNumber, int yearCreated, Date dateExploitationBegin, String phoneNumber, String nameFromeOneC, Contract contract, boolean archived) {
-        super(status, inventaryNumber, serialNumber, contract);
-        this.phoneModel = phoneModel;
-        this.status = status;
-        this.inventaryNumber = inventaryNumber;
-        this.serialNumber = serialNumber;
-        this.yearCreated = yearCreated;
-        this.dateExploitationBegin = dateExploitationBegin;
-        this.phoneNumber = phoneNumber;
-        this.nameFromeOneC = nameFromeOneC;
-    }
-    
     
 
     public PhoneModel getPhoneModel() {

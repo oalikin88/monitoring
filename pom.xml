@@ -14,7 +14,7 @@
     <name>monitoring</name>
     <description>Monitor printers and account for consumables</description>
     <properties>
-        <java.version>11</java.version>
+        <java.version>21</java.version>
         <org.mapstruct.version>1.5.5.Final</org.mapstruct.version>
     </properties>
     <dependencies>

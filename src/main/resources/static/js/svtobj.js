@@ -3,7 +3,7 @@
 const addPlaceBtn = document.querySelector('#addPlaceBtn');
 const modalError = document.getElementById('modalError');
 const modalErrorParent = document.getElementById('modalErrorContent');
-const pathSvg = document.createElementNS('http://www.w3.org/2000/svg',  'path');
+const pathSvg = document.createElementNS('http://www.w3.org/2000/svg', 'path');
 let parent = document.querySelector('.tree');
 const modalAddPhone = document.getElementById('addPlaceModal');
 const modalRepair = document.getElementById('repairModal');
@@ -73,25 +73,37 @@ let havePomp;
 let price;
 let description;
 let switchListId;
-let switchList;
-let terminalId;
-let thermoprinterId;
+let hubs;
+let terminals;
 let subDisplayModelId;
 let switchingUnitId;
 let subDisplayAmount;
-let displayId;
+let displays;
 let fff = window.location.href;
 var curDep;
 var curLoc;
+let divRowYearCreated;
+let divRowDateStartExp;
+let screenSize;
+let terminalDisplayId;
+let terminalPrinterId;
+let terminalSensorId;
+let terminalServerId;
+let terminalUpsId;
+let programSoftware;
 
 
-
-
-
+let attribArray = new Array();
+attribArray.push("asuo");
+attribArray.push("terminalDisplay");
+attribArray.push("terminalServer");
+attribArray.push("terminalSensor");
+attribArray.push("terminalPrinter");
+attribArray.push("terminalUps");
 
 let handleDeleteRepair = function (svtObjId) {
     let deleteRequest = new XMLHttpRequest();
-    deleteRequest.open('DELETE', '/repairs?id=' +  $(event.target).closest('.row').attr("repairId"), false);
+    deleteRequest.open('DELETE', '/repairs?id=' + $(event.target).closest('.row').attr("repairId"), false);
     deleteRequest.send();
     if (deleteRequest.status != 200) {
         alert(deleteRequest.status + ': ' + deleteRequest.statusText);
@@ -105,7 +117,7 @@ let handleDeleteRepair = function (svtObjId) {
 
 let handleDeleteTransfer = function (svtObjId) {
     let deleteRequest = new XMLHttpRequest();
-    deleteRequest.open('DELETE', '/transfers?id=' +  $(event.target).closest('.row').attr("transferId"), false);
+    deleteRequest.open('DELETE', '/transfers?id=' + $(event.target).closest('.row').attr("transferId"), false);
     deleteRequest.send();
     if (deleteRequest.status != 200) {
         alert(deleteRequest.status + ': ' + deleteRequest.statusText);
@@ -118,9 +130,6 @@ let handleDeleteTransfer = function (svtObjId) {
 
 
 let handleEditRepair = function (svtObjId) {
-    console.log(this);
-
-
 
     let datepick = document.createElement("input");
     datepick.className = "form-control form-control-sm";
@@ -208,7 +217,7 @@ let handleEditTransfer = function (svtObjId) {
     transferInventaryNumberOldInput.value = $(event.target).closest('.transferRow').find('.col')[2].innerHTML;
     $(event.target).closest('.transferRow').find('.col')[2].innerHTML = "";
     $(event.target).closest('.transferRow').find('.col')[2].appendChild(transferInventaryNumberOldInput);
-    
+
     let transferInventaryNumberNewInput = document.createElement("input");
     transferInventaryNumberNewInput.className = "form-control form-control-sm";
     transferInventaryNumberNewInput.type = "text";
@@ -216,7 +225,7 @@ let handleEditTransfer = function (svtObjId) {
     transferInventaryNumberNewInput.value = $(event.target).closest('.transferRow').find('.col')[3].innerHTML;
     $(event.target).closest('.transferRow').find('.col')[3].innerHTML = "";
     $(event.target).closest('.transferRow').find('.col')[3].appendChild(transferInventaryNumberNewInput);
-    
+
     let transferFromInput = document.createElement("input");
     transferFromInput.className = "form-control form-control-sm";
     transferFromInput.type = "text";
@@ -224,7 +233,7 @@ let handleEditTransfer = function (svtObjId) {
     transferFromInput.value = $(event.target).closest('.transferRow').find('.col')[4].innerHTML;
     $(event.target).closest('.transferRow').find('.col')[4].innerHTML = "";
     $(event.target).closest('.transferRow').find('.col')[4].appendChild(transferFromInput);
-    
+
     let transferToInput = document.createElement("input");
     transferToInput.className = "form-control form-control-sm";
     transferToInput.type = "text";
@@ -241,7 +250,7 @@ let handleEditTransfer = function (svtObjId) {
     $(event.target).closest('.transferRow').find('.col')[6].innerHTML = "";
     $(event.target).closest('.transferRow').find('.col')[6].appendChild(docNumberEdit);
 
- 
+
 
     let saveResultLink = document.createElement("button");
     saveResultLink.style = "border: none; background: transparent;";
@@ -303,13 +312,12 @@ let handleSaveEditTransfer = function (svtObjId) {
     xhr.onreadystatechange = () => {
         if (xhr.readyState == 4) {                  // если запрос завершен
             if (xhr.status == 200) {                // если код ответа 200
-                console.log(xhr.statusText);
-               
+
             }
-            
+
         }
     };
-     xhr.send(json);
+    xhr.send(json);
     reloadModalTransfer(svtObjId);
 };
 
@@ -332,120 +340,120 @@ let handleSaveEditRepair = function (svtObjId) {
         if (xhr.readyState == 4) {                  // если запрос завершен
             if (xhr.status == 200) {                // если код ответа 200
                 console.log(xhr.statusText);
-               
+
             }
-            
+
         }
     };
-     xhr.send(json);
+    xhr.send(json);
     reloadModalRepair(svtObjId);
 };
 
 
-let reloadModalTransfer = function(svtObjId) {
-    
-     $("#containerTransferContent")[0].innerHTML = "";
-            
-            //перерисовка модального окна 
-            
-            let getTransfers = new XMLHttpRequest();
-            getTransfers.open('GET', '/transfers?id=' + svtObjId, false);
-            getTransfers.send();
-            let transfersResult;
-            if(getTransfers.status != 200) {
-                alert(getTransfers.status + ': ' + getTransfers.statusText);
-            } else {
-                console.log(getTransfers.response);
-                transfersResult = JSON.parse(getTransfers.response);
-            }
-            
-             if(transfersResult.length > 0) {
-            let transferLabelRow = document.createElement("div");
-            transferLabelRow.className = "row fw-bold mb-3";
-           
-            let transferLabelNum = document.createElement("div");
-            transferLabelNum.className = "col col-1";
-            transferLabelNum.innerText = "№";
-           
-            let transferLabelDate = document.createElement("div");
-            transferLabelDate.className = "col col-2";
-            transferLabelDate.innerText = "Дата";
-            
-            
-            let transferLabelInventaryOld = document.createElement("div");
-            transferLabelInventaryOld.className = "col col-2";
-            transferLabelInventaryOld.innerText = "Инвентарный №, старый";
-            
-            let transferLabelInventaryNew = document.createElement("div");
-            transferLabelInventaryNew.className = "col col-2";
-            transferLabelInventaryNew.innerText = "Инвентарный №, новый";
-            
-            let transferLabelFrom = document.createElement("div");
-            transferLabelFrom.className = "col col-1";
-            transferLabelFrom.innerText = "Откуда";
-            
-            let transferLabelTo = document.createElement("div");
-            transferLabelTo.className = "col col-1";
-            transferLabelTo.innerText = "Куда";
-            
-            let transferLabelDocumentNumber = document.createElement("div");
-            transferLabelDocumentNumber.className = "col col-2";
-            transferLabelDocumentNumber.innerText = "№ док-та";
-            
-            let transferLabelBtn = document.createElement("div");
-            transferLabelBtn.className = "col col-1";
-            
-            transferLabelRow.appendChild(transferLabelNum);
-            transferLabelRow.appendChild(transferLabelDate);
-            transferLabelRow.appendChild(transferLabelInventaryOld);
-            transferLabelRow.appendChild(transferLabelInventaryNew);
-            transferLabelRow.appendChild(transferLabelFrom);
-            transferLabelRow.appendChild(transferLabelTo);
-            transferLabelRow.appendChild(transferLabelDocumentNumber);
-            transferLabelRow.appendChild(transferLabelBtn);
-            
+let reloadModalTransfer = function (svtObjId) {
 
-            $("#containerTransferContent")[0].appendChild(transferLabelRow);
-        
-        for(i = 0; i < transfersResult.length; i++) {
+    $("#containerTransferContent")[0].innerHTML = "";
+
+    //перерисовка модального окна 
+
+    let getTransfers = new XMLHttpRequest();
+    getTransfers.open('GET', '/transfers?id=' + svtObjId, false);
+    getTransfers.send();
+    let transfersResult;
+    if (getTransfers.status != 200) {
+        alert(getTransfers.status + ': ' + getTransfers.statusText);
+    } else {
+        console.log(getTransfers.response);
+        transfersResult = JSON.parse(getTransfers.response);
+    }
+
+    if (transfersResult.length > 0) {
+        let transferLabelRow = document.createElement("div");
+        transferLabelRow.className = "row fw-bold mb-3";
+
+        let transferLabelNum = document.createElement("div");
+        transferLabelNum.className = "col col-1";
+        transferLabelNum.innerText = "№";
+
+        let transferLabelDate = document.createElement("div");
+        transferLabelDate.className = "col col-2";
+        transferLabelDate.innerText = "Дата";
+
+
+        let transferLabelInventaryOld = document.createElement("div");
+        transferLabelInventaryOld.className = "col col-2";
+        transferLabelInventaryOld.innerText = "Инвентарный №, старый";
+
+        let transferLabelInventaryNew = document.createElement("div");
+        transferLabelInventaryNew.className = "col col-2";
+        transferLabelInventaryNew.innerText = "Инвентарный №, новый";
+
+        let transferLabelFrom = document.createElement("div");
+        transferLabelFrom.className = "col col-1";
+        transferLabelFrom.innerText = "Откуда";
+
+        let transferLabelTo = document.createElement("div");
+        transferLabelTo.className = "col col-1";
+        transferLabelTo.innerText = "Куда";
+
+        let transferLabelDocumentNumber = document.createElement("div");
+        transferLabelDocumentNumber.className = "col col-2";
+        transferLabelDocumentNumber.innerText = "№ док-та";
+
+        let transferLabelBtn = document.createElement("div");
+        transferLabelBtn.className = "col col-1";
+
+        transferLabelRow.appendChild(transferLabelNum);
+        transferLabelRow.appendChild(transferLabelDate);
+        transferLabelRow.appendChild(transferLabelInventaryOld);
+        transferLabelRow.appendChild(transferLabelInventaryNew);
+        transferLabelRow.appendChild(transferLabelFrom);
+        transferLabelRow.appendChild(transferLabelTo);
+        transferLabelRow.appendChild(transferLabelDocumentNumber);
+        transferLabelRow.appendChild(transferLabelBtn);
+
+
+        $("#containerTransferContent")[0].appendChild(transferLabelRow);
+
+        for (i = 0; i < transfersResult.length; i++) {
 //            let getDate = this.parentNode.parentNode.childNodes[1].innerHTML.split(".");
 //                    datepick.value = getDate[2] + "-" + getDate[1] + "-" + getDate[0];
             let parseDate = Date.parse(transfersResult[i].dateTransfer);
             let dateTransferParsed = new Date(parseDate);
             let dateTransferFormat = dateTransferParsed.toLocaleDateString('ru');
-            
-            
-             let transferRow = document.createElement("div");
+
+
+            let transferRow = document.createElement("div");
             transferRow.className = "row transferRow mt-3";
             transferRow.setAttribute("transferId", transfersResult[i].id);
             let transferNum = document.createElement("div");
             transferNum.className = "col col-1";
             transferNum.innerText = i + 1;
-            
+
             let transferDate = document.createElement("div");
             transferDate.className = "col col-2";
             transferDate.innerText = dateTransferFormat;
-            
+
             let transferInventaryNumberOld = document.createElement("div");
             transferInventaryNumberOld.className = "col col-2";
             transferInventaryNumberOld.innerText = transfersResult[i].inventaryNumberOld;
-            
+
             let transferInventaryNumberNew = document.createElement("div");
             transferInventaryNumberNew.className = "col col-2";
             transferInventaryNumberNew.innerText = transfersResult[i].inventaryNumberNew;
-            
+
             let transferFrom = document.createElement("div");
             transferFrom.className = "col col-1";
             transferFrom.innerText = transfersResult[i].transferFrom;
-            
+
             let transferTo = document.createElement("div");
             transferTo.className = "col col-1";
             transferTo.innerText = transfersResult[i].transferTo;
-            
+
             let transferDocumentNumber = document.createElement("div");
             transferDocumentNumber.className = "col col-2";
             transferDocumentNumber.innerText = transfersResult[i].documentNumber;
-            
+
             transferRow.appendChild(transferNum);
             transferRow.appendChild(transferDate);
             transferRow.appendChild(transferInventaryNumberOld);
@@ -454,80 +462,80 @@ let reloadModalTransfer = function(svtObjId) {
             transferRow.appendChild(transferTo);
             transferRow.appendChild(transferDocumentNumber);
 
-            
+
             let deleteBtnLink = document.createElement("button");
             deleteBtnLink.className = "deleteLink px-1";
             deleteBtnLink.style = "border: none; background: transparent;";
             deleteBtnLink.setAttribute("data-tooltip", "Удалить сведения о перемещении");
-            
-            let deleteTransferIcon = document.createElementNS("http://www.w3.org/2000/svg","svg");
-            deleteTransferIcon.setAttribute("class","bi bi-trash delete-icon");
+
+            let deleteTransferIcon = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+            deleteTransferIcon.setAttribute("class", "bi bi-trash delete-icon");
             deleteTransferIcon.setAttribute("width", "16");
             deleteTransferIcon.setAttribute("height", "16");
             deleteTransferIcon.setAttribute("viewbox", "0 0 16 16");
 
-            let iconDeletePath1 = document.createElementNS("http://www.w3.org/2000/svg","path");
+            let iconDeletePath1 = document.createElementNS("http://www.w3.org/2000/svg", "path");
             iconDeletePath1.setAttribute("d", "M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z");
-            let iconDeletePath2 = document.createElementNS("http://www.w3.org/2000/svg","path");
-            iconDeletePath2.setAttribute("fill-rule","evenodd");
+            let iconDeletePath2 = document.createElementNS("http://www.w3.org/2000/svg", "path");
+            iconDeletePath2.setAttribute("fill-rule", "evenodd");
             iconDeletePath2.setAttribute("d", "M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z");
             deleteTransferIcon.appendChild(iconDeletePath1);
             deleteTransferIcon.appendChild(iconDeletePath2);
             deleteBtnLink.appendChild(deleteTransferIcon);
-            
-            
-            
+
+
+
             let editBtnLink = document.createElement("button");
             editBtnLink.className = "editLink px-1";
             editBtnLink.style = "border: none; background: transparent;";
             editBtnLink.setAttribute("data-tooltip", "Редактировать запись о перемещении");
-            
-            let editBtnIcon = document.createElementNS("http://www.w3.org/2000/svg","svg");
+
+            let editBtnIcon = document.createElementNS("http://www.w3.org/2000/svg", "svg");
             editBtnIcon.setAttribute("class", "bi bi-pencil-square edit-icon");
             editBtnIcon.setAttribute("width", "16");
             editBtnIcon.setAttribute("height", "16");
             editBtnIcon.setAttribute("viewbox", "0 0 16 16");
-            
-            let iconEditPath1 = document.createElementNS("http://www.w3.org/2000/svg","path");
+
+            let iconEditPath1 = document.createElementNS("http://www.w3.org/2000/svg", "path");
             iconEditPath1.setAttribute("d", "M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z");
-            let iconEditPath2 = document.createElementNS("http://www.w3.org/2000/svg","path");
-            iconEditPath2.setAttribute("fill-rule","evenodd");
+            let iconEditPath2 = document.createElementNS("http://www.w3.org/2000/svg", "path");
+            iconEditPath2.setAttribute("fill-rule", "evenodd");
             iconEditPath2.setAttribute("d", "M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z");
-            
+
             let transferBtnsCol = document.createElement("div");
             transferBtnsCol.className = "col col-1";
-            
+
             editBtnIcon.appendChild(iconEditPath1);
             editBtnIcon.appendChild(iconEditPath2);
             editBtnLink.appendChild(editBtnIcon);
-           transferBtnsCol.appendChild(deleteBtnLink);
+            transferBtnsCol.appendChild(deleteBtnLink);
             transferBtnsCol.appendChild(editBtnLink);
-            
-            
-     
+
+
+
             transferRow.appendChild(transferBtnsCol);
-            editBtnLink.addEventListener("click", function(){
-             handleEditTransfer(svtObjId);
-         });
-         deleteBtnLink.addEventListener("click", function() {
+            editBtnLink.addEventListener("click", function () {
+                handleEditTransfer(svtObjId);
+            });
+            deleteBtnLink.addEventListener("click", function () {
                 handleDeleteTransfer(svtObjId);
-         });
-            if(i == transfersResult.length - 1) {
-               
+            });
+            if (i == transfersResult.length - 1) {
+
                 let addNewTransferLink = document.createElement("button");
                 addNewTransferLink.style = "border: none; background: transparent;";
                 addNewTransferLink.setAttribute("data-tooltip", "Внести сведения о перемещении");
                 addNewTransferLink.id = "add-transfer-btn";
                 addNewTransferLink.className = " px-1";
-                let addNewTransferIcon = document.createElementNS("http://www.w3.org/2000/svg","svg");
-                addNewTransferIcon.id="add-icon";
+                let addNewTransferIcon = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+                addNewTransferIcon.id = "add-icon";
                 addNewTransferIcon.className = "bi bi-plus-circle";
                 addNewTransferIcon.setAttribute("width", "16");
                 addNewTransferIcon.setAttribute("height", "16");
                 addNewTransferIcon.setAttribute("viewbox", "0 0 16 16");
-                let iconPath1 = document.createElementNS("http://www.w3.org/2000/svg","path");
+                let iconPath1 = document.createElementNS("http://www.w3.org/2000/svg", "path");
                 iconPath1.setAttribute("d", "M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z");
-                let iconPath2 = document.createElementNS("http://www.w3.org/2000/svg","path");
+                let iconPath2 = document.createElementNS("http://www.w3.org/2000/svg", "path");
                 iconPath2.setAttribute("d", "M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z");
                 addNewTransferIcon.appendChild(iconPath1);
                 addNewTransferIcon.appendChild(iconPath2);
@@ -536,82 +544,82 @@ let reloadModalTransfer = function(svtObjId) {
             }
             $("#containerTransferContent")[0].appendChild(transferRow);
         }
-        
-    } else {
-      
-            $("#containerTransferContent")[0].innerHTML = ' <div class="row mt-2"><div class="col"><div>Перемещений не было.</div></div><div class="row mt-3 text-center"><div class="col"><button data-tooltip="Внести сведения о ремонте" id="add-transfer-btn" style = "border: none; background: transparent;">' +
-       ' <svg id="add-icon" class="bi bi-plus-circle" width="42" height="42" viewBox="0 0 16 16">' +
-          '  <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>' +
-           ' <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>' +
-       ' </svg>' +
-    ' </button></div></div></div>';
 
-        }
-        
-        
-         $("#add-transfer-btn")[0].addEventListener("click",  function(){
-             handleAddTransferBtn(svtObjId);
-         });
- 
+    } else {
+
+        $("#containerTransferContent")[0].innerHTML = ' <div class="row mt-2"><div class="col"><div>Перемещений не было.</div></div><div class="row mt-3 text-center"><div class="col"><button data-tooltip="Внести сведения о ремонте" id="add-transfer-btn" style = "border: none; background: transparent;">' +
+                ' <svg id="add-icon" class="bi bi-plus-circle" width="42" height="42" viewBox="0 0 16 16">' +
+                '  <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>' +
+                ' <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>' +
+                ' </svg>' +
+                ' </button></div></div></div>';
+
+    }
+
+
+    $("#add-transfer-btn")[0].addEventListener("click", function () {
+        handleAddTransferBtn(svtObjId);
+    });
+
 };
 
-let reloadModalRepair = function(svtObjId) {
-    
-     $("#containerRepairContent")[0].innerHTML = "";
-            
-            //перерисовка модального окна 
-            
-            let getRepairs = new XMLHttpRequest();
-            getRepairs.open('GET', '/repairs?id=' + svtObjId, false);
-            getRepairs.send();
-            let repairsResult;
-            if(getRepairs.status != 200) {
-                alert(getRepairs.status + ': ' + getRepairs.statusText);
-            } else {
-                console.log(getRepairs.response);
-                repairsResult = JSON.parse(getRepairs.response);
-            }
-            
-             if(repairsResult.length > 0) {
-            let repairLabelRow = document.createElement("div");
-            repairLabelRow.className = "row fw-bold mb-3";
-           
-            let repairLabelNum = document.createElement("div");
-            repairLabelNum.className = "col col-1";
-            repairLabelNum.innerText = "№";
-           
-            let repairLabelDate = document.createElement("div");
-            repairLabelDate.className = "col col-3";
-            repairLabelDate.innerText = "Дата";
-            
-            let repairLabelDocumentNumber = document.createElement("div");
-            repairLabelDocumentNumber.className = "col col-3";
-            repairLabelDocumentNumber.innerText = "№ док-та";
-            
-            
-            let repairLabelDefinition = document.createElement("div");
-            repairLabelDefinition.className = "col col-4";
-            repairLabelDefinition.innerText = "Перечень работ";
-            repairLabelRow.appendChild(repairLabelNum);
-            repairLabelRow.appendChild(repairLabelDate);
-            repairLabelRow.appendChild(repairLabelDocumentNumber);
-            repairLabelRow.appendChild(repairLabelDefinition);
-            $("#containerRepairContent")[0].appendChild(repairLabelRow);
-        
-        for(i = 0; i < repairsResult.length; i++) {
+let reloadModalRepair = function (svtObjId) {
+
+    $("#containerRepairContent")[0].innerHTML = "";
+
+    //перерисовка модального окна 
+
+    let getRepairs = new XMLHttpRequest();
+    getRepairs.open('GET', '/repairs?id=' + svtObjId, false);
+    getRepairs.send();
+    let repairsResult;
+    if (getRepairs.status != 200) {
+        alert(getRepairs.status + ': ' + getRepairs.statusText);
+    } else {
+        console.log(getRepairs.response);
+        repairsResult = JSON.parse(getRepairs.response);
+    }
+
+    if (repairsResult.length > 0) {
+        let repairLabelRow = document.createElement("div");
+        repairLabelRow.className = "row fw-bold mb-3";
+
+        let repairLabelNum = document.createElement("div");
+        repairLabelNum.className = "col col-1";
+        repairLabelNum.innerText = "№";
+
+        let repairLabelDate = document.createElement("div");
+        repairLabelDate.className = "col col-3";
+        repairLabelDate.innerText = "Дата";
+
+        let repairLabelDocumentNumber = document.createElement("div");
+        repairLabelDocumentNumber.className = "col col-3";
+        repairLabelDocumentNumber.innerText = "№ док-та";
+
+
+        let repairLabelDefinition = document.createElement("div");
+        repairLabelDefinition.className = "col col-4";
+        repairLabelDefinition.innerText = "Перечень работ";
+        repairLabelRow.appendChild(repairLabelNum);
+        repairLabelRow.appendChild(repairLabelDate);
+        repairLabelRow.appendChild(repairLabelDocumentNumber);
+        repairLabelRow.appendChild(repairLabelDefinition);
+        $("#containerRepairContent")[0].appendChild(repairLabelRow);
+
+        for (i = 0; i < repairsResult.length; i++) {
 //            let getDate = this.parentNode.parentNode.childNodes[1].innerHTML.split(".");
 //                    datepick.value = getDate[2] + "-" + getDate[1] + "-" + getDate[0];
             let parseDate = Date.parse(repairsResult[i].dateRepair);
             let dateRepairParsed = new Date(parseDate);
             let dateRepairFormat = dateRepairParsed.toLocaleDateString('ru');
-            
+
             let repairRow = document.createElement("div");
             repairRow.className = "row repairRow mt-3";
             repairRow.setAttribute("repairId", repairsResult[i].id);
             let repairNum = document.createElement("div");
             repairNum.className = "col col-1";
             repairNum.innerText = i + 1;
-            
+
             let repairDate = document.createElement("div");
             repairDate.className = "col col-3";
             repairDate.innerText = dateRepairFormat;
@@ -621,84 +629,84 @@ let reloadModalRepair = function(svtObjId) {
             let repairDefinition = document.createElement("div");
             repairDefinition.className = "col col-4";
             repairDefinition.innerText = repairsResult[i].definition;
-            
-            
+
+
             let deleteBtnLink = document.createElement("button");
             deleteBtnLink.className = "deleteLink px-1";
             deleteBtnLink.style = "border: none; background: transparent;";
             deleteBtnLink.setAttribute("data-tooltip", "Удалить сведения о ремонте");
-            
-            let deleteRepairIcon = document.createElementNS("http://www.w3.org/2000/svg","svg");
-            deleteRepairIcon.setAttribute("class","bi bi-trash delete-icon");
+
+            let deleteRepairIcon = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+            deleteRepairIcon.setAttribute("class", "bi bi-trash delete-icon");
             deleteRepairIcon.setAttribute("width", "16");
             deleteRepairIcon.setAttribute("height", "16");
             deleteRepairIcon.setAttribute("viewbox", "0 0 16 16");
 
-            let iconDeletePath1 = document.createElementNS("http://www.w3.org/2000/svg","path");
+            let iconDeletePath1 = document.createElementNS("http://www.w3.org/2000/svg", "path");
             iconDeletePath1.setAttribute("d", "M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z");
-            let iconDeletePath2 = document.createElementNS("http://www.w3.org/2000/svg","path");
-            iconDeletePath2.setAttribute("fill-rule","evenodd");
+            let iconDeletePath2 = document.createElementNS("http://www.w3.org/2000/svg", "path");
+            iconDeletePath2.setAttribute("fill-rule", "evenodd");
             iconDeletePath2.setAttribute("d", "M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z");
             deleteRepairIcon.appendChild(iconDeletePath1);
             deleteRepairIcon.appendChild(iconDeletePath2);
             deleteBtnLink.appendChild(deleteRepairIcon);
-            
-            
-            
+
+
+
             let editBtnLink = document.createElement("button");
             editBtnLink.className = "editLink px-1";
             editBtnLink.style = "border: none; background: transparent;";
             editBtnLink.setAttribute("data-tooltip", "Редактировать запись о ремонте");
-            
-            let editBtnIcon = document.createElementNS("http://www.w3.org/2000/svg","svg");
+
+            let editBtnIcon = document.createElementNS("http://www.w3.org/2000/svg", "svg");
             editBtnIcon.setAttribute("class", "bi bi-pencil-square edit-icon");
             editBtnIcon.setAttribute("width", "16");
             editBtnIcon.setAttribute("height", "16");
             editBtnIcon.setAttribute("viewbox", "0 0 16 16");
-            
-            let iconEditPath1 = document.createElementNS("http://www.w3.org/2000/svg","path");
+
+            let iconEditPath1 = document.createElementNS("http://www.w3.org/2000/svg", "path");
             iconEditPath1.setAttribute("d", "M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z");
-            let iconEditPath2 = document.createElementNS("http://www.w3.org/2000/svg","path");
-            iconEditPath2.setAttribute("fill-rule","evenodd");
+            let iconEditPath2 = document.createElementNS("http://www.w3.org/2000/svg", "path");
+            iconEditPath2.setAttribute("fill-rule", "evenodd");
             iconEditPath2.setAttribute("d", "M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z");
-            
+
             let repairBtnsCol = document.createElement("div");
             repairBtnsCol.className = "col col-1";
-            
+
             editBtnIcon.appendChild(iconEditPath1);
             editBtnIcon.appendChild(iconEditPath2);
             editBtnLink.appendChild(editBtnIcon);
-           repairBtnsCol.appendChild(deleteBtnLink);
+            repairBtnsCol.appendChild(deleteBtnLink);
             repairBtnsCol.appendChild(editBtnLink);
-            
-            
+
+
             repairRow.appendChild(repairNum);
             repairRow.appendChild(repairDate);
             repairRow.appendChild(repairDocumentNumber);
             repairRow.appendChild(repairDefinition);
             repairRow.appendChild(repairBtnsCol);
-            editBtnLink.addEventListener("click", function(){
-             handleEditRepair(svtObjId);
-         });
-         deleteBtnLink.addEventListener("click", function() {
+            editBtnLink.addEventListener("click", function () {
+                handleEditRepair(svtObjId);
+            });
+            deleteBtnLink.addEventListener("click", function () {
                 handleDeleteRepair(svtObjId);
-         });
-            if(i == repairsResult.length - 1) {
-               
+            });
+            if (i == repairsResult.length - 1) {
+
                 let addNewRepairLink = document.createElement("button");
                 addNewRepairLink.style = "border: none; background: transparent;";
                 addNewRepairLink.setAttribute("data-tooltip", "Внести сведения о ремонте");
                 addNewRepairLink.id = "add-repair-btn";
                 addNewRepairLink.className = " px-1";
-                let addNewRepairIcon = document.createElementNS("http://www.w3.org/2000/svg","svg");
-                addNewRepairIcon.id="add-icon";
+                let addNewRepairIcon = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+                addNewRepairIcon.id = "add-icon";
                 addNewRepairIcon.className = "bi bi-plus-circle";
                 addNewRepairIcon.setAttribute("width", "16");
                 addNewRepairIcon.setAttribute("height", "16");
                 addNewRepairIcon.setAttribute("viewbox", "0 0 16 16");
-                let iconPath1 = document.createElementNS("http://www.w3.org/2000/svg","path");
+                let iconPath1 = document.createElementNS("http://www.w3.org/2000/svg", "path");
                 iconPath1.setAttribute("d", "M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z");
-                let iconPath2 = document.createElementNS("http://www.w3.org/2000/svg","path");
+                let iconPath2 = document.createElementNS("http://www.w3.org/2000/svg", "path");
                 iconPath2.setAttribute("d", "M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z");
                 addNewRepairIcon.appendChild(iconPath1);
                 addNewRepairIcon.appendChild(iconPath2);
@@ -707,25 +715,25 @@ let reloadModalRepair = function(svtObjId) {
             }
             $("#containerRepairContent")[0].appendChild(repairRow);
         }
-        
-    } else {
-      
-            $("#containerRepairContent")[0].innerHTML = ' <div class="row mt-2"><div class="col"><div>В ремонте не был.</div></div><div class="row mt-3 text-center"><div class="col"><button  data-tooltip="Внести сведения о ремонте" id="add-repair-btn" style = "border: none; background: transparent;">' +
-       ' <svg id="add-icon" class="bi bi-plus-circle" width="42" height="42" viewBox="0 0 16 16">' +
-          '  <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>' +
-           ' <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>' +
-       ' </svg>' +
-    ' </button></div></div></div>';
 
-        }
-        
-        
-         $("#add-repair-btn")[0].addEventListener("click",  function(){
-             handleAddBtn(svtObjId);
-         });
-         
-      
-         
+    } else {
+
+        $("#containerRepairContent")[0].innerHTML = ' <div class="row mt-2"><div class="col"><div>В ремонте не был.</div></div><div class="row mt-3 text-center"><div class="col"><button  data-tooltip="Внести сведения о ремонте" id="add-repair-btn" style = "border: none; background: transparent;">' +
+                ' <svg id="add-icon" class="bi bi-plus-circle" width="42" height="42" viewBox="0 0 16 16">' +
+                '  <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>' +
+                ' <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>' +
+                ' </svg>' +
+                ' </button></div></div></div>';
+
+    }
+
+
+    $("#add-repair-btn")[0].addEventListener("click", function () {
+        handleAddBtn(svtObjId);
+    });
+
+
+
 };
 
 
@@ -746,7 +754,7 @@ let handleAddTransferBtn = function (svtObjId) {
                 '<div class="col col-1">Куда</div>' +
                 '<div class="col col-2">№ док-та</div>');
     }
-    
+
     $("#containerTransferContent").append('</div><div class="row mt-3 inputRow">' +
             '<div class="col col-1">' + ($('.transferRow').length + 1) + '</div>' +
             '<div class="col col-2"><input type="date" class="form-control form-control-sm" name="transfer-date" id="transfer-date"></div>' +
@@ -768,9 +776,9 @@ let handleAddTransferBtn = function (svtObjId) {
         for (i = editBtns.length - 1; i >= 0; i--) {
             editBtns[i].parentNode.removeChild(editBtns[i]);
         }
-       
+
     }
-     $("#transferFooter").append('<button class="btn btn-primary btn-sm" id="btnTransferSave">Сохранить</button>');
+    $("#transferFooter").append('<button class="btn btn-primary btn-sm" id="btnTransferSave">Сохранить</button>');
     $("#btnTransferSave")[0].addEventListener("click", function (event) {
         console.log("send");
         var xhr = new XMLHttpRequest();
@@ -817,85 +825,85 @@ let handleAddTransferBtn = function (svtObjId) {
 };
 
 
-let handleAddBtn = function(svtObjId) {
-             
-        console.log("click");
-        
-          //$('[data-bs-toggle="tooltip"]').tooltip('hide');
-          
-        if($(".repairRow").length == 0) {
+let handleAddBtn = function (svtObjId) {
+
+    console.log("click");
+
+    //$('[data-bs-toggle="tooltip"]').tooltip('hide');
+
+    if ($(".repairRow").length == 0) {
         $("#containerRepairContent")[0].innerHTML = "";
         $("#containerRepairContent").append('<div class="row fw-bold mb-3">' +
-                '<div class="col col-1">№</div>' + 
+                '<div class="col col-1">№</div>' +
                 '<div class="col col-3">Дата</div>' +
                 '<div class="col col-3">№ док-та</div>' +
                 '<div class="col col-4">Перечень работ</div>');
     }
-        $("#containerRepairContent").append('</div><div class="row mt-3 inputRow" id="inputRow">' +
-                '<div class="col col-1">'+ ($('.repairRow').length + 1) +'</div>' +
-                '<div class="col col-3"><input type="date" class="form-control form-control-sm" id="repair-date"></div>' +
-                '<div class="col col-3"><input type="text" class="form-control form-control-sm" id="repair-document"></div>' +
-                '<div class="col col-4"><textarea class="form-control form-control-sm" rows="3" id="repair-definition"></textarea></div>' +
-                '</div>');
-        
-        if($(".inputRow").length > 1) {
-          let addBut = document.getElementById("add-repair-btn");
-          addBut.parentNode.removeChild(addBut);
-          let delBtns = document.getElementsByClassName('deleteLink');
-          let editBtns = document.getElementsByClassName('editLink');
-          for(i = delBtns.length - 1; i >= 0; i--) {
-              delBtns[i].parentNode.removeChild(delBtns[i]);
-          }
-          for(i = editBtns.length - 1; i >= 0; i--) {
-              editBtns[i].parentNode.removeChild(editBtns[i]);
-          }
-          
+    $("#containerRepairContent").append('</div><div class="row mt-3 inputRow" id="inputRow">' +
+            '<div class="col col-1">' + ($('.repairRow').length + 1) + '</div>' +
+            '<div class="col col-3"><input type="date" class="form-control form-control-sm" id="repair-date"></div>' +
+            '<div class="col col-3"><input type="text" class="form-control form-control-sm" id="repair-document"></div>' +
+            '<div class="col col-4"><textarea class="form-control form-control-sm" rows="3" id="repair-definition"></textarea></div>' +
+            '</div>');
+
+    if ($(".inputRow").length > 1) {
+        let addBut = document.getElementById("add-repair-btn");
+        addBut.parentNode.removeChild(addBut);
+        let delBtns = document.getElementsByClassName('deleteLink');
+        let editBtns = document.getElementsByClassName('editLink');
+        for (i = delBtns.length - 1; i >= 0; i--) {
+            delBtns[i].parentNode.removeChild(delBtns[i]);
         }
-        $("#repairFooter").append('<button class="btn btn-primary btn-sm" id="btnRepairSave">Сохранить</button>');
-        $("#btnRepairSave")[0].addEventListener("click", function(event) {
-            console.log("send");
-            var xhr = new XMLHttpRequest();
-
-            var json = JSON.stringify({
-              id: null,
-              dateRepair: $("#repair-date")[0].value,
-              documentNumber: $("#repair-document")[0].value,
-              definition: $("#repair-definition")[0].value,
-              idObjectBuing: svtObjId
-            });
-
-            xhr.open("POST", '/repairs', false);
-            xhr.setRequestHeader('Content-type', 'application/json; charset=utf-8');
-
-            xhr.onreadystatechange = () => {
-    if (xhr.readyState == 4) {                  // если запрос завершен
-        if (xhr.status == 200) {                // если код ответа 200
-            console.log(xhr.responseText);      // выводим полученный ответ на консоль браузера
-            $("#containerRepairContent")[0].innerHTML = "";
-            
-            //перерисовка модального окна 
-            
-        reloadModalRepair(svtObjId);
-
-            
-        } else {                                // иначе выводим текст статуса
-            console.log("Server response: ", xhr.statusText);
-            alert("Упс, что-то пошло не так..");
+        for (i = editBtns.length - 1; i >= 0; i--) {
+            editBtns[i].parentNode.removeChild(editBtns[i]);
         }
-        
-                }
-            };
 
-            xhr.send(json);
-            let btnSave = $("#btnRepairSave")[0];
-            btnSave.parentNode.removeChild(btnSave);
+    }
+    $("#repairFooter").append('<button class="btn btn-primary btn-sm" id="btnRepairSave">Сохранить</button>');
+    $("#btnRepairSave")[0].addEventListener("click", function (event) {
+        console.log("send");
+        var xhr = new XMLHttpRequest();
+
+        var json = JSON.stringify({
+            id: null,
+            dateRepair: $("#repair-date")[0].value,
+            documentNumber: $("#repair-document")[0].value,
+            definition: $("#repair-definition")[0].value,
+            idObjectBuing: svtObjId
         });
-        
-        
-    };
+
+        xhr.open("POST", '/repairs', false);
+        xhr.setRequestHeader('Content-type', 'application/json; charset=utf-8');
+
+        xhr.onreadystatechange = () => {
+            if (xhr.readyState == 4) {                  // если запрос завершен
+                if (xhr.status == 200) {                // если код ответа 200
+                    console.log(xhr.responseText);      // выводим полученный ответ на консоль браузера
+                    $("#containerRepairContent")[0].innerHTML = "";
+
+                    //перерисовка модального окна 
+
+                    reloadModalRepair(svtObjId);
+
+
+                } else {                                // иначе выводим текст статуса
+                    console.log("Server response: ", xhr.statusText);
+                    alert("Упс, что-то пошло не так..");
+                }
+
+            }
+        };
+
+        xhr.send(json);
+        let btnSave = $("#btnRepairSave")[0];
+        btnSave.parentNode.removeChild(btnSave);
+    });
+
+
+};
 
 function beep() {
-   
+
     var context = new AudioContext();
     var oscillator = context.createOscillator();
     oscillator.type = "sine";
@@ -905,18 +913,19 @@ function beep() {
     // Beep for 500 milliseconds
     setTimeout(function () {
         oscillator.stop();
-    }, 500); 
-};
+    }, 500);
+}
+;
 
-let linkCreate = function(attribute, toLink) {
+let linkCreate = function (attribute, toLink) {
     var result = '/';
     result = result + attribute + toLink;
     return result;
-    
+
 }
 
-let getModalError = function(textError) {
-      
+let getModalError = function (textError) {
+
     //if you have another AudioContext class use that one, as some browsers have a limit
     modalHeader = document.createElement('div');
     modalHeader.className = 'modal-header modalHeaderError';
@@ -951,29 +960,29 @@ let getModalError = function(textError) {
     return new bootstrap.Modal(modalError).show();
 };
 
-let getStatus = function(input) {
+let getStatus = function (input) {
     var result;
     switch (input) {
-            case "REPAIR":
-                result = "Ремонт";
-                break;
-            case "MONITORING":
-                result = "Списание";
-                break;
-            case "UTILIZATION":
-                result = "Утилизирован";
-                break;
-            case "OK":
-                result = "Исправен";
-                break;
-            case "DEFECTIVE":
-                result = "Неисправен";
-                break;
-        }
-        return result;
-} 
+        case "REPAIR":
+            result = "Ремонт";
+            break;
+        case "MONITORING":
+            result = "Списание";
+            break;
+        case "UTILIZATION":
+            result = "Утилизирован";
+            break;
+        case "OK":
+            result = "Исправен";
+            break;
+        case "DEFECTIVE":
+            result = "Неисправен";
+            break;
+    }
+    return result;
+}
 
-let getConditionerType = function(input) {
+let getConditionerType = function (input) {
     var result;
     switch (input) {
         case "WINDOW":
@@ -1000,6 +1009,24 @@ let handleClickArchivedBtn = function () {
         id: idSvtObj,
     };
     
+    switch (attrib) {
+        case "terminalUps":
+            requestLink = "/terminal-ups-archived";
+            break;
+        case "terminalPrinter":
+            requestLink = "/terminal-printer-archived";
+            break;
+        case "terminalDisplay":
+            requestLink = "/terminal-display-archived";
+            break;
+        case "terminalServer":
+            requestLink = "/terminal-server-archived";
+            break;
+        case "terminalSensor":
+            requestLink = "/terminal-sensor-archived";
+            break;
+    }
+
     $.ajax({
         type: "DELETE",
         url: requestLink,
@@ -1024,18 +1051,18 @@ let handleClickSendToStorageBtn = function () {
         id: idSvtObj,
         locationId: locationId,
     };
-        if(attrib != "asuo") {
+    if (attrib != "asuo") {
         dto.model = document.querySelector('#modelSelect').innerText;
         dto.modelId = document.querySelector('#modelSelect').value;
         dto.status = document.querySelector('#statusSelect').value;
         dto.inventaryNumber = document.querySelector('#inventaryNumber').value;
-        dto.serialNumber = document.querySelector('#serialNumber').value;
-        
+
+
     }
-     if(null != $('#startExploitation')[0]) {
+    if (null != $('#startExploitation')[0]) {
         dto.dateExploitationBegin = document.querySelector('#startExploitation').value;
     }
-    if(null != $('#dateCreateSelect')[0]) {
+    if (null != $('#dateCreateSelect')[0]) {
         dto.yearCreated = document.querySelector('#dateCreateSelect').value;
     }
     switch (attrib) {
@@ -1103,8 +1130,8 @@ let handleClickSendToStorageBtn = function () {
             dto.portAmount = $("#portAmount")[0].value;
             dto.nameFromOneC = $("#nameFromOneC")[0].value;
             dto.numberRoom = $("#numberRoom")[0].value;
-            if($("#switchRadio")[0].checked) {
-               dto.switchHubType = "SWITCH";
+            if ($("#switchRadio")[0].checked) {
+                dto.switchHubType = "SWITCH";
             } else {
                 dto.switchHubType = "HUB";
             }
@@ -1143,26 +1170,30 @@ let handleClickSendToStorageBtn = function () {
         case "terminal":
             requestLink = "/terminaltostor";
             break;
-        case "thermoprinter":
-            requestLink = "/thermoprintertostor";
-            break;
+
         case "display":
             requestLink = "/displaytostor";
             break;
-        case "swunit":
-            requestLink = "/swunittostor";
-            break;
         case "asuo":
             requestLink = "/asuotostor";
-            dto.displayId = $("#displaySelect")[0].selectize.getValue();
-            dto.terminalId = $("#terminalSelect")[0].selectize.getValue();
-            dto.thermoprinterId = $("#thermoprinterSelect")[0].selectize.getValue();
+            displays = new Array();
+            for(let i = 0; i < $('.display-row').find('.selectized').length; i++) {
+                displays.push($('.display-row').find('.selectized')[i].value);
+            }
+            terminals = new Array();
+            for(let i = 0; i < $('.terminal-row').find('.selectized').length; i++) {
+                terminals.push($('.terminal-row').find('.selectized')[i].value);
+            }
+            hubs = new Array();
+            for(let i = 0; i < $('.hub-row').find('.selectized').length; i++) {
+                hubs.push($('.hub-row').find('.selectized')[i].value);
+            }
+            dto.displays = displays;
+            dto.terminals = terminals;
             dto.subDisplayModelId = $("#subDisplaySelect")[0].selectize.getValue();
-            dto.switchingUnitId = $("#switchingUnitSelect")[0].selectize.getValue();
-            dto.switchId = $("#switchSelect")[0].selectize.getValue();
+            dto.hubs = hubs;
             dto.subDisplayAmount = $("#subDisplayAmount")[0].value;
             dto.nameFromOneC = $("#nameFromOneC")[0].value;
-            dto.numberRoom = $("#numberRoom")[0].value;
             break;
     }
     $.ajax({
@@ -1188,17 +1219,20 @@ let handleClickUpdateBtn = function () {
         placeId: document.querySelector('#placeSelect').value,
         id: idSvtObj,
     };
-        if(attrib != "asuo") {
+    if (attrib != "asuo") {
         dto.model = document.querySelector('#modelSelect').innerText;
         dto.modelId = document.querySelector('#modelSelect').value;
         dto.status = document.querySelector('#statusSelect').value;
-        dto.inventaryNumber = document.querySelector('#inventaryNumber').value;
+        if($("#inventaryNumber").length > 0) {
+          dto.inventaryNumber = document.querySelector('#inventaryNumber').value;  
+        }
+        
         dto.serialNumber = document.querySelector('#serialNumber').value;
     }
-    if(null != $('#startExploitation')[0]) {
+    if (null != $('#startExploitation')[0]) {
         dto.dateExploitationBegin = document.querySelector('#startExploitation').value;
     }
-    if(null != $('#dateCreateSelect')[0]) {
+    if (null != $('#dateCreateSelect')[0]) {
         dto.yearCreated = document.querySelector('#dateCreateSelect').value;
     }
     switch (attrib) {
@@ -1274,12 +1308,17 @@ let handleClickUpdateBtn = function () {
             dto.portAmount = $("#portAmount")[0].value;
             dto.nameFromOneC = $("#nameFromOneC")[0].value;
             dto.numberRoom = $("#numberRoom")[0].value;
-            if($("#switchRadio")[0].checked) {
-               dto.switchHubType = "SWITCH";
+            if ($("#switchRadio")[0].checked) {
+                dto.switchHubType = "SWITCH";
             } else {
                 dto.switchHubType = "HUB";
             }
             break;
+        case "hub":
+            dto.portAmount = $("#portAmount")[0].value;
+            dto.nameFromOneC = $("#nameFromOneC")[0].value;
+            requestLink = "/hub";
+        break;
         case "router":
             requestLink = "/updrouter";
             dto.portAmount = $("#portAmount")[0].value;
@@ -1312,28 +1351,46 @@ let handleClickUpdateBtn = function () {
             dto.nameFromOneC = $("#nameFromOneC")[0].value;
             break;
         case "terminal":
-            requestLink = "/updterminal";
+            dto.terminalDisplayId = $("#terminalDisplaySelect")[0].selectize.getValue();
+            dto.terminalPrinterId = $("#terminalPrinterSelect")[0].selectize.getValue();
+            dto.terminalSensorId = $("#terminalSensorSelect")[0].selectize.getValue();
+            dto.terminalServerId = $("#terminalServerSelect")[0].selectize.getValue();
+            dto.terminalUpsId = $("#terminalUpsSelect")[0].selectize.getValue();
+            requestLink = "/terminal";
             break;
-        case "thermoprinter":
-            requestLink = "/updthermoprinter";
-            break;
+
         case "display":
             requestLink = "/upddisplay";
             break;
-        case "swunit":
-            requestLink = "/updswunit";
-            break;
         case "asuo":
-            requestLink = "/updasuo";
-            dto.displayId = $("#displaySelect")[0].selectize.getValue();
-            dto.terminalId = $("#terminalSelect")[0].selectize.getValue();
-            dto.thermoprinterId = $("#thermoprinterSelect")[0].selectize.getValue();
+            requestLink = "/asuo";
+            
+             displays = new Array();
+            for(let i = 0; i < $("#displaySelect-1")[0].selectize.getValue().length; i++) {
+                displays.push({id: $("#displaySelect-1")[0].selectize.getValue()[i], hasInstalled: true});
+            }
+            terminals = new Array();
+            for(let i = 0; i < $("#terminalSelect-1")[0].selectize.getValue().length; i++) {
+                terminals.push({id: $("#terminalSelect-1")[0].selectize.getValue()[i], hasInstalled: true});
+            }
+            hubs = new Array();
+            for(let i = 0; i < $("#hubSelect-1")[0].selectize.getValue().length; i++) {
+                hubs.push({id: $("#hubSelect-1")[0].selectize.getValue()[i], hasInstalled: true});
+            }
+            
+            dto.displays = displays;
+            dto.terminals = terminals;
             dto.subDisplayModelId = $("#subDisplaySelect")[0].selectize.getValue();
-            dto.switchingUnitId = $("#switchingUnitSelect")[0].selectize.getValue();
-            dto.switchId = $("#switchSelect")[0].selectize.getValue();
+            dto.hubs = hubs;
             dto.subDisplayAmount = $("#subDisplayAmount")[0].value;
             dto.nameFromOneC = $("#nameFromOneC")[0].value;
-            dto.numberRoom = $("#numberRoom")[0].value;
+            dto.inventaryNumber = $("#inventaryNumber")[0].value;
+            dto.status = $("#statusSelect")[0].value;
+            dto.programSoftware = $("#poSelect")[0].value;
+            break;
+        case "terminalDisplay":
+            dto.screenDiagonal = $("#screenSizeInput")[0].value;
+            requestLink = "/terminal-display";
             break;
     }
     $.ajax({
@@ -1342,7 +1399,7 @@ let handleClickUpdateBtn = function () {
         data: JSON.stringify(dto),
         async: false,
         success: function () {
-           window.location.reload();
+            window.location.reload();
         },
         error: function (callback) {
             beep();
@@ -1397,14 +1454,8 @@ let handleClickSearchSvtObject = function (field, input) {
         case "terminal":
             request = "/terminal?" + field + "=";
             break;
-        case "thermoprinter":
-            request = "/thermoprinter?" + field + "=";
-            break;
         case "display":
             request = "/display?" + field + "=";
-            break;
-        case "swunit":
-            request = "/swunit?" + field + "=";
             break;
         case "asuo":
             request = "/asuo?" + field + "=";
@@ -1419,18 +1470,20 @@ let handleClickSavePhoneBtn = function () {
         placeId: document.querySelector('#placeSelect').value,
         id: idSvtObj,
     };
-    if(attrib != "asuo") {
+    if (attrib != "asuo") {
         dto.model = document.querySelector('#modelSelect').innerText;
         dto.modelId = document.querySelector('#modelSelect').value;
         dto.status = document.querySelector('#statusSelect').value;
-        dto.inventaryNumber = document.querySelector('#inventaryNumber').value;
+        if ($('#inventaryNumber').length > 0) {
+            dto.inventaryNumber = document.querySelector('#inventaryNumber').value;
+        }
         dto.serialNumber = document.querySelector('#serialNumber').value;
     }
-    
-    if(null != $('#startExploitation')[0]) {
+
+    if (null != $('#startExploitation')[0]) {
         dto.dateExploitationBegin = document.querySelector('#startExploitation').value;
     }
-    if(null != $('#dateCreateSelect')[0]) {
+    if (null != $('#dateCreateSelect')[0]) {
         dto.yearCreated = document.querySelector('#dateCreateSelect').value;
     }
     switch (attrib) {
@@ -1446,15 +1499,28 @@ let handleClickSavePhoneBtn = function () {
             break;
         case "asuo":
             requestLink = "/asuo";
-            dto.displayId = $("#displaySelect")[0].selectize.getValue();
-            dto.terminalId = $("#terminalSelect")[0].selectize.getValue();
-            dto.thermoprinterId = $("#thermoprinterSelect")[0].selectize.getValue();
+            displays = new Array();
+              displays = new Array();
+            for(let i = 0; i < $("#displaySelect-1")[0].selectize.getValue().length; i++) {
+                displays.push({id: $("#displaySelect-1")[0].selectize.getValue()[i], hasInstalled: true});
+            }
+            terminals = new Array();
+            for(let i = 0; i < $("#terminalSelect-1")[0].selectize.getValue().length; i++) {
+                terminals.push({id: $("#terminalSelect-1")[0].selectize.getValue()[i], hasInstalled: true});
+            }
+            hubs = new Array();
+            for(let i = 0; i < $("#hubSelect-1")[0].selectize.getValue().length; i++) {
+                hubs.push({id: $("#hubSelect-1")[0].selectize.getValue()[i], hasInstalled: true});
+            }
+            dto.displays = displays;
+            dto.terminals = terminals;
             dto.subDisplayModelId = $("#subDisplaySelect")[0].selectize.getValue();
-            dto.switchingUnitId = $("#switchingUnitSelect")[0].selectize.getValue();
-            dto.switchId = $("#switchSelect")[0].selectize.getValue();
+            dto.hubs = hubs;
             dto.subDisplayAmount = $("#subDisplayAmount")[0].value;
             dto.nameFromOneC = $("#nameFromOneC")[0].value;
-            dto.numberRoom = $("#numberRoom")[0].value;
+            dto.programSoftware = $("#poSelect")[0].value;
+            dto.inventaryNumber = $("#inventaryNumber")[0].value;
+            dto.status = $("#statusSelect")[0].value;
             break;
         case "monitors":
             dto.nameFromOneC = document.querySelector('#nameFromOneC').value;
@@ -1524,18 +1590,24 @@ let handleClickSavePhoneBtn = function () {
             dto.portAmount = $("#portAmount")[0].value;
             dto.nameFromOneC = $("#nameFromOneC")[0].value;
             dto.numberRoom = $("#numberRoom")[0].value;
-            if($("#switchRadio")[0].checked) {
-               dto.switchHubType = "SWITCH";
+            if ($("#switchRadio")[0].checked) {
+                dto.switchHubType = "SWITCH";
             } else {
                 dto.switchHubType = "HUB";
             }
+            break;
+        case "hub":
+            requestLink = "/hub";
+            dto.portAmount = $("#portAmount")[0].value;
+            dto.nameFromOneC = $("#nameFromOneC")[0].value;
+
             break;
         case "router":
             requestLink = "/router";
             dto.portAmount = $("#portAmount")[0].value;
             dto.nameFromOneC = $("#nameFromOneC")[0].value;
             dto.numberRoom = $("#numberRoom")[0].value;
-           
+
             break;
         case "ats":
             requestLink = "/ats";
@@ -1562,17 +1634,24 @@ let handleClickSavePhoneBtn = function () {
             dto.numberRoom = $("#numberRoom")[0].value;
             dto.nameFromOneC = $("#nameFromOneC")[0].value;
             break;
-        case "terminal":
-            requestLink = "/terminal";
+        case "terminalDisplay":
+            delete dto.inventaryNumber;
+            dto.screenDiagonal = $("#screenSizeInput")[0].value;
+            requestLink = "/terminal-display";
             break;
-        case "thermoprinter":
-            requestLink = "/thermoprinter";
+        case "terminal":
+            dto.terminalDisplayId = $("#terminalDisplaySelect")[0].selectize.getValue();
+            dto.terminalPrinterId = $("#terminalPrinterSelect")[0].selectize.getValue();
+            dto.terminalSensorId = $("#terminalSensorSelect")[0].selectize.getValue();
+            dto.terminalServerId = $("#terminalServerSelect")[0].selectize.getValue();
+            dto.terminalUpsId = $("#terminalUpsSelect")[0].selectize.getValue();
+            requestLink = "/terminal";
             break;
         case "display":
             requestLink = "/display";
             break;
-        case "swunit":
-            requestLink = "/swunit";
+         case "hub":
+            requestLink = "/hub";
             break;
     }
     $.ajax({
@@ -1627,155 +1706,154 @@ let requestToEnableStorage = function () {
 
 
 window.onload = function () {
-    
-
-    if($("#getReport")[0] != null) {
-    if(dtoes.length == 0) {
-        $("#getReport")[0].disabled = true;
-    } else {
-    $("#getReport")[0].addEventListener("click", function() {
-        let fileName;
-        let lin;
-        switch(attrib) {
-            case "ups":
-                lin = fff.replace("/ups", "/get-doc/get-ups");
-                fileName = "docReportUps.xlsx";    
-                break;
-            case "upsforserver":
-                lin = fff.replace("/upsforserver", "/get-doc/upsforserver");
-                fileName = "docReportUpsForServer.xlsx";    
-                break;
-            case "systemblock": 
-                lin = fff.replace("/sysblocks", "/get-doc/sysblocks");
-                fileName = "docReportSysBlocks.xlsx";    
-                break;
-            case "monitors": 
-                lin = fff.replace("/monitors", "/get-doc/monitors");
-                fileName = "docReportMonitors.xlsx";    
-                break;
-            case "scanner": 
-                lin = fff.replace("/scanner", "/get-doc/scanner");
-                fileName = "docReportScanners.xlsx";    
-                break;
-            case "phones": 
-                lin = fff.replace("/phones", "/get-doc/phones");
-                fileName = "docReportPhones.xlsx";    
-                break;
-            case "server": 
-                lin = fff.replace("/server", "/get-doc/server");
-                fileName = "docReportServers.xlsx";    
-                break;
-            case "switch": 
-                lin = fff.replace("/switch", "/get-doc/switch");
-                fileName = "docReportSwitches.xlsx";    
-                break;
-            case "router": 
-                lin = fff.replace("/router", "/get-doc/router");
-                fileName = "docReportSwitches.xlsx";    
-                break;
-            case "upsforserver": 
-                lin = fff.replace("/upsforserver", "/get-doc/upsforserver");
-                fileName = "docReportUpsForServer.xlsx";    
-                break;
-            case "ats": 
-                lin = fff.replace("/ats", "/get-doc/ats");
-                fileName = "docReportAts.xlsx";    
-                break;
-            case "conditioner": 
-                lin = fff.replace("/conditioner", "/get-doc/conditioner");
-                fileName = "docReportConditioners.xlsx";    
-                break;
-            case "fax": 
-                lin = fff.replace("/fax", "/get-doc/fax");
-                fileName = "docReportFaxes.xlsx";    
-                break;
-            case "infomat": 
-                lin = fff.replace("/infomat", "/get-doc/infomat");
-                fileName = "docReportInfomat.xlsx";    
-                break;
-        }
-    
-
-        
-         $.ajax({
-        url: lin,
-        cache: false,
-        xhr: function () {
-            var xhr = new XMLHttpRequest();
-            
-            xhr.onreadystatechange = function () {
-                if (xhr.readyState == 2) {
-                    if (xhr.status == 200) {
-                        xhr.responseType = "blob";
-                    } else {
-                        xhr.responseType = "text";
-                    }
+    if ($("#getReport")[0] != null) {
+        if (dtoes.length == 0) {
+            $("#getReport")[0].disabled = true;
+        } else {
+            $("#getReport")[0].addEventListener("click", function () {
+                let fileName;
+                let lin;
+                switch (attrib) {
+                    case "ups":
+                        lin = fff.replace("/ups", "/get-doc/get-ups");
+                        fileName = "docReportUps.xlsx";
+                        break;
+                    case "upsforserver":
+                        lin = fff.replace("/upsforserver", "/get-doc/upsforserver");
+                        fileName = "docReportUpsForServer.xlsx";
+                        break;
+                    case "systemblock":
+                        lin = fff.replace("/sysblocks", "/get-doc/sysblocks");
+                        fileName = "docReportSysBlocks.xlsx";
+                        break;
+                    case "monitors":
+                        lin = fff.replace("/monitors", "/get-doc/monitors");
+                        fileName = "docReportMonitors.xlsx";
+                        break;
+                    case "scanner":
+                        lin = fff.replace("/scanner", "/get-doc/scanner");
+                        fileName = "docReportScanners.xlsx";
+                        break;
+                    case "phones":
+                        lin = fff.replace("/phones", "/get-doc/phones");
+                        fileName = "docReportPhones.xlsx";
+                        break;
+                    case "server":
+                        lin = fff.replace("/server", "/get-doc/server");
+                        fileName = "docReportServers.xlsx";
+                        break;
+                    case "switch":
+                        lin = fff.replace("/switch", "/get-doc/switch");
+                        fileName = "docReportSwitches.xlsx";
+                        break;
+                    case "router":
+                        lin = fff.replace("/router", "/get-doc/router");
+                        fileName = "docReportSwitches.xlsx";
+                        break;
+                    case "upsforserver":
+                        lin = fff.replace("/upsforserver", "/get-doc/upsforserver");
+                        fileName = "docReportUpsForServer.xlsx";
+                        break;
+                    case "ats":
+                        lin = fff.replace("/ats", "/get-doc/ats");
+                        fileName = "docReportAts.xlsx";
+                        break;
+                    case "conditioner":
+                        lin = fff.replace("/conditioner", "/get-doc/conditioner");
+                        fileName = "docReportConditioners.xlsx";
+                        break;
+                    case "fax":
+                        lin = fff.replace("/fax", "/get-doc/fax");
+                        fileName = "docReportFaxes.xlsx";
+                        break;
+                    case "infomat":
+                        lin = fff.replace("/infomat", "/get-doc/infomat");
+                        fileName = "docReportInfomat.xlsx";
+                        break;
                 }
-            };
-            return xhr;
-        },
-        success: function (data) {
-            var blob = new Blob([data], { type: "application/octetstream" });
 
-            var isIE = false || !!document.documentMode;
-            if (isIE) {
-                window.navigator.msSaveBlob(blob, fileName);
-            } else {
-                var url = window.URL || window.webkitURL;
-                link = url.createObjectURL(blob);
-                var a = $("<a />");
-                a.attr("download", fileName);
-                a.attr("href", link);
-                $("body").append(a);
-                a[0].click();
-                $("body").remove(a);
-            }
+                $.ajax({
+                    url: lin,
+                    cache: false,
+                    xhr: function () {
+                        var xhr = new XMLHttpRequest();
+
+                        xhr.onreadystatechange = function () {
+                            if (xhr.readyState == 2) {
+                                if (xhr.status == 200) {
+                                    xhr.responseType = "blob";
+                                } else {
+                                    xhr.responseType = "text";
+                                }
+                            }
+                        };
+                        return xhr;
+                    },
+                    success: function (data) {
+                        var blob = new Blob([data], {type: "application/octetstream"});
+
+                        var isIE = false || !!document.documentMode;
+                        if (isIE) {
+                            window.navigator.msSaveBlob(blob, fileName);
+                        } else {
+                            var url = window.URL || window.webkitURL;
+                            link = url.createObjectURL(blob);
+                            var a = $("<a />");
+                            a.attr("download", fileName);
+                            a.attr("href", link);
+                            $("body").append(a);
+                            a[0].click();
+                            $("body").remove(a);
+                        }
+                    }
+                });
+
+            });
         }
-    });
-    
-    });
-}
-}
-     
-     $("#searchChoise")[0].addEventListener("change", function() {
-         switch($("#searchChoise")[0].value) {
-             
-             case "fio":
+    }
+
+    $("#searchChoise")[0].addEventListener("change", function () {
+        switch ($("#searchChoise")[0].value) {
+
+            case "fio":
                 $("#searchSvtObjInput")[0].placeholder = "поиск по ФИО";
                 break;
             case "inventaryNumber":
                 $("#searchSvtObjInput")[0].placeholder = "поиск по инвентарному номеру";
                 break;
-             
-         }
-     });
-     
-      $('#searchSvtObjInput').keyup(function(event) {
-    if (event.keyCode === 13) {
-       $("#searchSvtObjBtn")[0].click();
+            case "serialNumber":
+                $("#searchSvtObjInput")[0].placeholder = "поиск по серийному номеру";
+                break;
+
+        }
+    });
+
+    $('#searchSvtObjInput').keyup(function (event) {
+        if (event.keyCode === 13) {
+            $("#searchSvtObjBtn")[0].click();
+        }
+    });
+
+    if ($('#filter-btn').length > 0) {
+
+
+
+
+
+        $('#filter-btn')[0].addEventListener('click', function () {
+
+
+
+            window.location.href = window.location.pathname + "?model=" + document.querySelector('#filter-model').value +
+                    "&status=" + document.querySelector('#filter-status').value + "&yearCreatedOne=" + document.querySelector('#dateBegin').value +
+                    "&yearCreatedTwo=" + document.querySelector('#dateEnd').value + "&location=" + document.querySelector('#filter-location').value;
+
+
+        });
     }
-});
 
-   if($('#filter-btn').length > 0) {
-       
 
-    
-    
-       
-        $('#filter-btn')[0].addEventListener('click', function() {
-            
-
-            
-    window.location.href = window.location.pathname + "?model=" +  document.querySelector('#filter-model').value + 
-            "&status=" + document.querySelector('#filter-status').value + "&yearCreatedOne=" + document.querySelector('#dateBegin').value + 
-            "&yearCreatedTwo=" + document.querySelector('#dateEnd').value + "&location=" + document.querySelector('#filter-location').value;
-
-       
-   });
-   }
-  
-   
-   $('#filter-location').selectize({
+    $('#filter-location').selectize({
         preload: true,
         valueField: 'id',
         labelField: 'name',
@@ -1792,7 +1870,7 @@ window.onload = function () {
                         success: callback
                     });
                     break;
-                    case "officeequipment":
+                case "officeequipment":
                     $.ajax({
                         url: '/locplacetype?placeType=OFFICEEQUIPMENT',
                         type: 'GET',
@@ -1813,11 +1891,11 @@ window.onload = function () {
                     });
                     break;
             }
-             
+
 
         }
-        });
-   
+    });
+
     $('#filter-model').selectize({
         preload: true,
         valueField: 'id',
@@ -1868,15 +1946,10 @@ window.onload = function () {
                 case "terminal":
                     requestLink = "/modterminal";
                     break;
-                case "thermoprinter":
-                    requestLink = "/modthermoprinter";
-                    break;
                 case "display":
                     requestLink = "/moddisplay";
                     break;
-                case "swunit":
-                    requestLink = "/modswunit";
-                    break;
+
             }
             $.ajax({
                 url: requestLink,
@@ -1886,54 +1959,53 @@ window.onload = function () {
                 error: callback,
                 success: callback
             });
-          
+
         }
     });
-   
+
     $("#searchSvtObjBtn")[0].addEventListener("click", function () {
         handleClickSearchSvtObject($("#searchChoise")[0].value, $("#searchSvtObjInput")[0].value);
     });
+    
     let elem = document.querySelectorAll('.element');
     addPlaceBtn.addEventListener('click', function () {
-       
+
         modalContentLoad($(this)[0].className);
-        if(attrib == "asuo") {
-            if($("#modelRow")[0] != null) {
+        if (attrib == "asuo") {
+            $("#department_row")[0].remove();
+            if ($("#modelRow")[0] != null) {
                 $("#modelRow")[0].remove();
-                $("#inventaryNumberRow")[0].remove();
                 $("#serialNumberRow")[0].remove();
-                $("#statusRow")[0].remove();
             }
         }
     });
     for (let i = 0; i < elem.length; i++) {
         elem[i].addEventListener("click", function (event) {
             modalContentLoad($(this)[0].className, $(this)[0].id);
-            if(attrib == "asuo") {
-            if($("#modelRow")[0] != null) {
-                $("#modelRow")[0].remove();
-                $("#inventaryNumberRow")[0].remove();
-                $("#serialNumberRow")[0].remove();
-                $("#statusRow")[0].remove();
+            if (attrib == "asuo") {
+                $("#department_row")[0].remove();
+                if ($("#modelRow")[0] != null) {
+                    $("#modelRow")[0].remove();
+                    $("#serialNumberRow")[0].remove();
+                }
             }
-        }
-      });
+        });
     }
-    
-     modalError.addEventListener('hidden.bs.modal', function (event) {
-         modalErrorParent.innerHTML = "";
-     });      
-    
+
+    modalError.addEventListener('hidden.bs.modal', function (event) {
+        modalErrorParent.innerHTML = "";
+    });
+
 };
-let modalTransferContentLoad = function(svtObjId, title) {
-    if(modalTransferParent.childNodes.length > 1) {
+let modalTransferContentLoad = function (svtObjId, title) {
+    if (modalTransferParent.childNodes.length > 1) {
         modalTransferParent.innerHTML = "";
     }
     let xhr = new XMLHttpRequest();
     xhr.open('GET', '/transfers?id=' + svtObjId, false);
     xhr.send();
     let requestResult;
-    if(xhr.status != 200) {
+    if (xhr.status != 200) {
         alert(xhr.status + ': ' + xhr.statusText);
     } else {
         console.log(xhr.response);
@@ -1959,90 +2031,90 @@ let modalTransferContentLoad = function(svtObjId, title) {
     let divContainerBody = document.createElement("div");
     divContainerBody.className = "container-fluid";
     divContainerBody.id = "containerTransferContent";
-    
-    if(requestResult.length > 0) {
-            let transferLabelRow = document.createElement("div");
-            transferLabelRow.className = "row fw-bold mb-3";
-            transferLabelRow.id = "rowTransferLabels";
-           
-            let transferLabelNum = document.createElement("div");
-            transferLabelNum.className = "col col-1";
-            transferLabelNum.innerText = "№";
-           
-            let transferLabelDate = document.createElement("div");
-            transferLabelDate.className = "col col-2";
-            transferLabelDate.innerText = "Дата";
-            
-            let transferLabelInventaryOld = document.createElement("div");
-            transferLabelInventaryOld.className = "col col-2";
-            transferLabelInventaryOld.innerText = "Инвентарный №, старый";
-            
-            let transferLabelInventaryNew = document.createElement("div");
-            transferLabelInventaryNew.className = "col col-2";
-            transferLabelInventaryNew.innerText = "Инвентарный №, новый";
-            
-            let transferLabelFrom = document.createElement("div");
-            transferLabelFrom.className = "col col-1";
-            transferLabelFrom.innerText = "Откуда";
-            
-            let transferLabelTo = document.createElement("div");
-            transferLabelTo.className = "col col-1";
-            transferLabelTo.innerText = "Куда";
-            
-            let transferLabelDocumentNumber = document.createElement("div");
-            transferLabelDocumentNumber.className = "col col-2";
-            transferLabelDocumentNumber.innerText = "№ док-та";
-            
-            let transferLabelBtn = document.createElement("div");
-            transferLabelBtn.className = "col col-1";
-            
-            transferLabelRow.appendChild(transferLabelNum);
-            transferLabelRow.appendChild(transferLabelDate);
-            transferLabelRow.appendChild(transferLabelInventaryOld);
-            transferLabelRow.appendChild(transferLabelInventaryNew);
-            transferLabelRow.appendChild(transferLabelFrom);
-            transferLabelRow.appendChild(transferLabelTo);
-            transferLabelRow.appendChild(transferLabelDocumentNumber);
-            transferLabelRow.appendChild(transferLabelBtn);
-           
-            divContainerBody.appendChild(transferLabelRow);
-        
-        for(i = 0; i < requestResult.length; i++) {
+
+    if (requestResult.length > 0) {
+        let transferLabelRow = document.createElement("div");
+        transferLabelRow.className = "row fw-bold mb-3";
+        transferLabelRow.id = "rowTransferLabels";
+
+        let transferLabelNum = document.createElement("div");
+        transferLabelNum.className = "col col-1";
+        transferLabelNum.innerText = "№";
+
+        let transferLabelDate = document.createElement("div");
+        transferLabelDate.className = "col col-2";
+        transferLabelDate.innerText = "Дата";
+
+        let transferLabelInventaryOld = document.createElement("div");
+        transferLabelInventaryOld.className = "col col-2";
+        transferLabelInventaryOld.innerText = "Инвентарный №, старый";
+
+        let transferLabelInventaryNew = document.createElement("div");
+        transferLabelInventaryNew.className = "col col-2";
+        transferLabelInventaryNew.innerText = "Инвентарный №, новый";
+
+        let transferLabelFrom = document.createElement("div");
+        transferLabelFrom.className = "col col-1";
+        transferLabelFrom.innerText = "Откуда";
+
+        let transferLabelTo = document.createElement("div");
+        transferLabelTo.className = "col col-1";
+        transferLabelTo.innerText = "Куда";
+
+        let transferLabelDocumentNumber = document.createElement("div");
+        transferLabelDocumentNumber.className = "col col-2";
+        transferLabelDocumentNumber.innerText = "№ док-та";
+
+        let transferLabelBtn = document.createElement("div");
+        transferLabelBtn.className = "col col-1";
+
+        transferLabelRow.appendChild(transferLabelNum);
+        transferLabelRow.appendChild(transferLabelDate);
+        transferLabelRow.appendChild(transferLabelInventaryOld);
+        transferLabelRow.appendChild(transferLabelInventaryNew);
+        transferLabelRow.appendChild(transferLabelFrom);
+        transferLabelRow.appendChild(transferLabelTo);
+        transferLabelRow.appendChild(transferLabelDocumentNumber);
+        transferLabelRow.appendChild(transferLabelBtn);
+
+        divContainerBody.appendChild(transferLabelRow);
+
+        for (i = 0; i < requestResult.length; i++) {
             let parseDate = Date.parse(requestResult[i].dateTransfer);
             let dateTransferParsed = new Date(parseDate);
             let dateTransferFormat = dateTransferParsed.toLocaleDateString('ru');
-            
+
             let transferRow = document.createElement("div");
             transferRow.className = "row transferRow mt-3";
             transferRow.setAttribute("transferId", requestResult[i].id);
             let transferNum = document.createElement("div");
             transferNum.className = "col col-1";
             transferNum.innerText = i + 1;
-            
+
             let transferDate = document.createElement("div");
             transferDate.className = "col col-2";
             transferDate.innerText = dateTransferFormat;
-            
+
             let transferInventaryNumberOld = document.createElement("div");
             transferInventaryNumberOld.className = "col col-2";
             transferInventaryNumberOld.innerText = requestResult[i].inventaryNumberOld;
-            
+
             let transferInventaryNumberNew = document.createElement("div");
             transferInventaryNumberNew.className = "col col-2";
             transferInventaryNumberNew.innerText = requestResult[i].inventaryNumberNew;
-            
+
             let transferFrom = document.createElement("div");
             transferFrom.className = "col col-1";
             transferFrom.innerText = requestResult[i].transferFrom;
-            
+
             let transferTo = document.createElement("div");
             transferTo.className = "col col-1";
             transferTo.innerText = requestResult[i].transferTo;
-            
+
             let transferDocumentNumber = document.createElement("div");
             transferDocumentNumber.className = "col col-2";
             transferDocumentNumber.innerText = requestResult[i].documentNumber;
-            
+
             transferRow.appendChild(transferNum);
             transferRow.appendChild(transferDate);
             transferRow.appendChild(transferInventaryNumberOld);
@@ -2052,107 +2124,107 @@ let modalTransferContentLoad = function(svtObjId, title) {
             transferRow.appendChild(transferDocumentNumber);
             let addNewTransferCol = document.createElement("div");
             addNewTransferCol.className = "col col-1";
-            
+
             let deleteBtnLink = document.createElement("button");
             deleteBtnLink.className = "deleteLink px-1";
             deleteBtnLink.style = "border: none; background: transparent;";
             deleteBtnLink.setAttribute("data-tooltip", "Удалить сведения о перемещении");
-            
-            let deleteTransferIcon = document.createElementNS("http://www.w3.org/2000/svg","svg");
-            deleteTransferIcon.setAttribute("class","bi bi-trash delete-icon");
+
+            let deleteTransferIcon = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+            deleteTransferIcon.setAttribute("class", "bi bi-trash delete-icon");
             deleteTransferIcon.setAttribute("width", "16");
             deleteTransferIcon.setAttribute("height", "16");
             deleteTransferIcon.setAttribute("viewbox", "0 0 16 16");
 
-            let iconDeletePath1 = document.createElementNS("http://www.w3.org/2000/svg","path");
+            let iconDeletePath1 = document.createElementNS("http://www.w3.org/2000/svg", "path");
             iconDeletePath1.setAttribute("d", "M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z");
-            let iconDeletePath2 = document.createElementNS("http://www.w3.org/2000/svg","path");
-            iconDeletePath2.setAttribute("fill-rule","evenodd");
+            let iconDeletePath2 = document.createElementNS("http://www.w3.org/2000/svg", "path");
+            iconDeletePath2.setAttribute("fill-rule", "evenodd");
             iconDeletePath2.setAttribute("d", "M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z");
             deleteTransferIcon.appendChild(iconDeletePath1);
             deleteTransferIcon.appendChild(iconDeletePath2);
             deleteBtnLink.appendChild(deleteTransferIcon);
             addNewTransferCol.appendChild(deleteBtnLink);
-            
-            
+
+
             let editBtnLink = document.createElement("button");
             editBtnLink.className = "editLink px-1";
             editBtnLink.style = "border: none; background: transparent;";
             editBtnLink.setAttribute("data-tooltip", "Редактировать запись о перемещении");
-            
-            let editBtnIcon = document.createElementNS("http://www.w3.org/2000/svg","svg");
+
+            let editBtnIcon = document.createElementNS("http://www.w3.org/2000/svg", "svg");
             editBtnIcon.setAttribute("class", "bi bi-pencil-square edit-icon");
             editBtnIcon.setAttribute("width", "16");
             editBtnIcon.setAttribute("height", "16");
             editBtnIcon.setAttribute("viewbox", "0 0 16 16");
-            
-            let iconEditPath1 = document.createElementNS("http://www.w3.org/2000/svg","path");
+
+            let iconEditPath1 = document.createElementNS("http://www.w3.org/2000/svg", "path");
             iconEditPath1.setAttribute("d", "M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z");
-            let iconEditPath2 = document.createElementNS("http://www.w3.org/2000/svg","path");
-            iconEditPath2.setAttribute("fill-rule","evenodd");
+            let iconEditPath2 = document.createElementNS("http://www.w3.org/2000/svg", "path");
+            iconEditPath2.setAttribute("fill-rule", "evenodd");
             iconEditPath2.setAttribute("d", "M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z");
-            
+
             editBtnIcon.appendChild(iconEditPath1);
             editBtnIcon.appendChild(iconEditPath2);
             editBtnLink.appendChild(editBtnIcon);
             addNewTransferCol.appendChild(editBtnLink);
             transferRow.appendChild(addNewTransferCol);
-                deleteBtnLink.addEventListener("click", function() {
-                    handleDeleteTransfer(svtObjId);
-                });
-                
-                editBtnLink.addEventListener("click", function () {
-                    handleEditTransfer(svtObjId);
-                });
-                if(i == requestResult.length - 1) {
-              
+            deleteBtnLink.addEventListener("click", function () {
+                handleDeleteTransfer(svtObjId);
+            });
+
+            editBtnLink.addEventListener("click", function () {
+                handleEditTransfer(svtObjId);
+            });
+            if (i == requestResult.length - 1) {
+
                 let addNewTransferLink = document.createElement("button");
                 addNewTransferLink.style = "border: none;  background: transparent;";
                 addNewTransferLink.className = "px-1";
                 addNewTransferLink.id = "add-transfer-btn";
                 addNewTransferLink.setAttribute("data-tooltip", "Внести сведения о перемещении");
-                
-              
-                let addNewTransferIcon = document.createElementNS("http://www.w3.org/2000/svg","svg");
-                addNewTransferIcon.setAttribute("class","bi bi-plus-circle add-icon");
+
+
+                let addNewTransferIcon = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+                addNewTransferIcon.setAttribute("class", "bi bi-plus-circle add-icon");
                 addNewTransferIcon.setAttribute("width", "16");
                 addNewTransferIcon.setAttribute("height", "16");
                 addNewTransferIcon.setAttribute("viewbox", "0 0 16 16");
-                
-                let iconPath1 = document.createElementNS("http://www.w3.org/2000/svg","path");
+
+                let iconPath1 = document.createElementNS("http://www.w3.org/2000/svg", "path");
                 iconPath1.setAttribute("d", "M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z");
-                let iconPath2 = document.createElementNS("http://www.w3.org/2000/svg","path");
+                let iconPath2 = document.createElementNS("http://www.w3.org/2000/svg", "path");
                 iconPath2.setAttribute("d", "M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z");
                 addNewTransferIcon.appendChild(iconPath1);
                 addNewTransferIcon.appendChild(iconPath2);
-               
+
                 addNewTransferLink.appendChild(addNewTransferIcon);
-                
+
                 addNewTransferCol.appendChild(addNewTransferLink);
                 transferRow.appendChild(addNewTransferCol);
-                
+
             }
             divContainerBody.appendChild(transferRow);
         }
     } else {
-      
-        divContainerBody.innerHTML = ' <div class="row mt-2"><div class="col"><div>Перемещений не было.</div></div><div class="row mt-3 text-center"><div class="col"><button  data-tooltip="Внести сведения о перемещении" id="add-transfer-btn" style="border: none; background: transparent;">' +
-   ' <svg id="add-icon" class="bi bi-plus-circle" width="42" height="42" viewBox="0 0 16 16">' +
-      '  <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>' +
-       ' <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>' +
-   ' </svg>' +
-' </button></div></div></div>';
-    
 
-    
+        divContainerBody.innerHTML = ' <div class="row mt-2"><div class="col"><div>Перемещений не было.</div></div><div class="row mt-3 text-center"><div class="col"><button  data-tooltip="Внести сведения о перемещении" id="add-transfer-btn" style="border: none; background: transparent;">' +
+                ' <svg id="add-icon" class="bi bi-plus-circle" width="42" height="42" viewBox="0 0 16 16">' +
+                '  <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>' +
+                ' <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>' +
+                ' </svg>' +
+                ' </button></div></div></div>';
+
+
+
     }
     divModalBody.appendChild(divContainerBody);
     modalTransferParent.appendChild(divModalBody);
-    
 
-         $("#add-transfer-btn")[0].addEventListener("click",  function(){
-             handleAddTransferBtn(svtObjId);
-         });
+
+    $("#add-transfer-btn")[0].addEventListener("click", function () {
+        handleAddTransferBtn(svtObjId);
+    });
 
     //сборка футера
     let divModalFooter = document.createElement("div");
@@ -2168,21 +2240,21 @@ let modalTransferContentLoad = function(svtObjId, title) {
 //    footerBtnSave.className = "btn btn-primary btn-sm";
 //    footerBtnSave.id = "btnTransferSave";
 //    footerBtnSave.innerText = "Сохранить";
-    
+
     divModalFooter.appendChild(footerBtnCancel);
-  //  divModalFooter.appendChild(footerBtnSave);
+    //  divModalFooter.appendChild(footerBtnSave);
     modalTransferParent.appendChild(divModalFooter);
 };
 
 let modalRepairContentLoad = function (svtObjId, title) {
-    if(modalRepairParent.childNodes.length > 1) {
+    if (modalRepairParent.childNodes.length > 1) {
         modalRepairParent.innerHTML = "";
     }
     let xhr = new XMLHttpRequest();
     xhr.open('GET', '/repairs?id=' + svtObjId, false);
     xhr.send();
     let requestResult;
-    if(xhr.status != 200) {
+    if (xhr.status != 200) {
         alert(xhr.status + ': ' + xhr.statusText);
     } else {
         console.log(xhr.response);
@@ -2208,46 +2280,46 @@ let modalRepairContentLoad = function (svtObjId, title) {
     let divContainerBody = document.createElement("div");
     divContainerBody.className = "container";
     divContainerBody.id = "containerRepairContent";
-    
-    if(requestResult.length > 0) {
-            let repairLabelRow = document.createElement("div");
-            repairLabelRow.className = "row fw-bold mb-3";
-            repairLabelRow.id = "rowRepairLabels";
-           
-            let repairLabelNum = document.createElement("div");
-            repairLabelNum.className = "col col-1";
-            repairLabelNum.innerText = "№";
-           
-            let repairLabelDate = document.createElement("div");
-            repairLabelDate.className = "col col-3";
-            repairLabelDate.innerText = "Дата";
-            
-            let repairLabelDocumentNumber = document.createElement("div");
-            repairLabelDocumentNumber.className = "col col-3";
-            repairLabelDocumentNumber.innerText = "№ док-та";
-            
-            
-            let repairLabelDefinition = document.createElement("div");
-            repairLabelDefinition.className = "col col-4";
-            repairLabelDefinition.innerText = "Перечень работ";
-            repairLabelRow.appendChild(repairLabelNum);
-            repairLabelRow.appendChild(repairLabelDate);
-            repairLabelRow.appendChild(repairLabelDocumentNumber);
-            repairLabelRow.appendChild(repairLabelDefinition);
-            divContainerBody.appendChild(repairLabelRow);
-        
-        for(i = 0; i < requestResult.length; i++) {
+
+    if (requestResult.length > 0) {
+        let repairLabelRow = document.createElement("div");
+        repairLabelRow.className = "row fw-bold mb-3";
+        repairLabelRow.id = "rowRepairLabels";
+
+        let repairLabelNum = document.createElement("div");
+        repairLabelNum.className = "col col-1";
+        repairLabelNum.innerText = "№";
+
+        let repairLabelDate = document.createElement("div");
+        repairLabelDate.className = "col col-3";
+        repairLabelDate.innerText = "Дата";
+
+        let repairLabelDocumentNumber = document.createElement("div");
+        repairLabelDocumentNumber.className = "col col-3";
+        repairLabelDocumentNumber.innerText = "№ док-та";
+
+
+        let repairLabelDefinition = document.createElement("div");
+        repairLabelDefinition.className = "col col-4";
+        repairLabelDefinition.innerText = "Перечень работ";
+        repairLabelRow.appendChild(repairLabelNum);
+        repairLabelRow.appendChild(repairLabelDate);
+        repairLabelRow.appendChild(repairLabelDocumentNumber);
+        repairLabelRow.appendChild(repairLabelDefinition);
+        divContainerBody.appendChild(repairLabelRow);
+
+        for (i = 0; i < requestResult.length; i++) {
             let parseDate = Date.parse(requestResult[i].dateRepair);
             let dateRepairParsed = new Date(parseDate);
             let dateRepairFormat = dateRepairParsed.toLocaleDateString('ru');
-            
+
             let repairRow = document.createElement("div");
             repairRow.className = "row repairRow mt-3";
             repairRow.setAttribute("repairId", requestResult[i].id);
             let repairNum = document.createElement("div");
             repairNum.className = "col col-1";
             repairNum.innerText = i + 1;
-            
+
             let repairDate = document.createElement("div");
             repairDate.className = "col col-3";
             repairDate.innerText = dateRepairFormat;
@@ -2263,107 +2335,107 @@ let modalRepairContentLoad = function (svtObjId, title) {
             repairRow.appendChild(repairDefinition);
             let addNewRepairCol = document.createElement("div");
             addNewRepairCol.className = "col col-1";
-            
+
             let deleteBtnLink = document.createElement("button");
             deleteBtnLink.className = "deleteLink px-1";
             deleteBtnLink.style = "border: none; background: transparent;";
             deleteBtnLink.setAttribute("data-tooltip", "Удалить сведения о ремонте");
-            
-            let deleteRepairIcon = document.createElementNS("http://www.w3.org/2000/svg","svg");
-            deleteRepairIcon.setAttribute("class","bi bi-trash delete-icon");
+
+            let deleteRepairIcon = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+            deleteRepairIcon.setAttribute("class", "bi bi-trash delete-icon");
             deleteRepairIcon.setAttribute("width", "16");
             deleteRepairIcon.setAttribute("height", "16");
             deleteRepairIcon.setAttribute("viewbox", "0 0 16 16");
 
-            let iconDeletePath1 = document.createElementNS("http://www.w3.org/2000/svg","path");
+            let iconDeletePath1 = document.createElementNS("http://www.w3.org/2000/svg", "path");
             iconDeletePath1.setAttribute("d", "M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z");
-            let iconDeletePath2 = document.createElementNS("http://www.w3.org/2000/svg","path");
-            iconDeletePath2.setAttribute("fill-rule","evenodd");
+            let iconDeletePath2 = document.createElementNS("http://www.w3.org/2000/svg", "path");
+            iconDeletePath2.setAttribute("fill-rule", "evenodd");
             iconDeletePath2.setAttribute("d", "M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z");
             deleteRepairIcon.appendChild(iconDeletePath1);
             deleteRepairIcon.appendChild(iconDeletePath2);
             deleteBtnLink.appendChild(deleteRepairIcon);
             addNewRepairCol.appendChild(deleteBtnLink);
-            
-            
+
+
             let editBtnLink = document.createElement("button");
             editBtnLink.style = "border: none; background: transparent;";
             editBtnLink.className = "editLink px-1";
             editBtnLink.setAttribute("data-tooltip", "Редактировать запись о ремонте");
-            
-            let editBtnIcon = document.createElementNS("http://www.w3.org/2000/svg","svg");
+
+            let editBtnIcon = document.createElementNS("http://www.w3.org/2000/svg", "svg");
             editBtnIcon.setAttribute("class", "bi bi-pencil-square edit-icon");
             editBtnIcon.setAttribute("width", "16");
             editBtnIcon.setAttribute("height", "16");
             editBtnIcon.setAttribute("viewbox", "0 0 16 16");
-            
-            let iconEditPath1 = document.createElementNS("http://www.w3.org/2000/svg","path");
+
+            let iconEditPath1 = document.createElementNS("http://www.w3.org/2000/svg", "path");
             iconEditPath1.setAttribute("d", "M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z");
-            let iconEditPath2 = document.createElementNS("http://www.w3.org/2000/svg","path");
-            iconEditPath2.setAttribute("fill-rule","evenodd");
+            let iconEditPath2 = document.createElementNS("http://www.w3.org/2000/svg", "path");
+            iconEditPath2.setAttribute("fill-rule", "evenodd");
             iconEditPath2.setAttribute("d", "M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z");
-            
+
             editBtnIcon.appendChild(iconEditPath1);
             editBtnIcon.appendChild(iconEditPath2);
             editBtnLink.appendChild(editBtnIcon);
             addNewRepairCol.appendChild(editBtnLink);
             repairRow.appendChild(addNewRepairCol);
-                deleteBtnLink.addEventListener("click", function() {
-                    handleDeleteRepair(svtObjId);
-                });
-                
-                editBtnLink.addEventListener("click", function () {
-                    handleEditRepair(svtObjId);
-                });
-                if(i == requestResult.length - 1) {
-              
+            deleteBtnLink.addEventListener("click", function () {
+                handleDeleteRepair(svtObjId);
+            });
+
+            editBtnLink.addEventListener("click", function () {
+                handleEditRepair(svtObjId);
+            });
+            if (i == requestResult.length - 1) {
+
                 let addNewRepairLink = document.createElement("button");
                 addNewRepairLink.className = "px-1";
                 addNewRepairLink.style = "border: none; background: transparent;";
                 addNewRepairLink.id = "add-repair-btn";
                 addNewRepairLink.setAttribute("data-tooltip", "Внести сведения о ремонте");
-                
-              
-                let addNewRepairIcon = document.createElementNS("http://www.w3.org/2000/svg","svg");
-                addNewRepairIcon.setAttribute("class","bi bi-plus-circle add-icon");
+
+
+                let addNewRepairIcon = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+                addNewRepairIcon.setAttribute("class", "bi bi-plus-circle add-icon");
                 addNewRepairIcon.setAttribute("width", "16");
                 addNewRepairIcon.setAttribute("height", "16");
                 addNewRepairIcon.setAttribute("viewbox", "0 0 16 16");
-                
-                let iconPath1 = document.createElementNS("http://www.w3.org/2000/svg","path");
+
+                let iconPath1 = document.createElementNS("http://www.w3.org/2000/svg", "path");
                 iconPath1.setAttribute("d", "M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z");
-                let iconPath2 = document.createElementNS("http://www.w3.org/2000/svg","path");
+                let iconPath2 = document.createElementNS("http://www.w3.org/2000/svg", "path");
                 iconPath2.setAttribute("d", "M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z");
                 addNewRepairIcon.appendChild(iconPath1);
                 addNewRepairIcon.appendChild(iconPath2);
-               
+
                 addNewRepairLink.appendChild(addNewRepairIcon);
-                
+
                 addNewRepairCol.appendChild(addNewRepairLink);
                 repairRow.appendChild(addNewRepairCol);
-                
+
             }
             divContainerBody.appendChild(repairRow);
         }
     } else {
-      
-        divContainerBody.innerHTML = ' <div class="row mt-2"><div class="col"><div>В ремонте не был.</div></div><div class="row mt-3 text-center"><div class="col"><button  data-tooltip="Внести сведения о ремонте" id="add-repair-btn" style = "border: none; background: transparent;">' +
-   ' <svg id="add-icon" class="bi bi-plus-circle" width="42" height="42" viewBox="0 0 16 16">' +
-      '  <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>' +
-       ' <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>' +
-   ' </svg>' +
-' </button></div></div></div>';
-    
 
-    
+        divContainerBody.innerHTML = ' <div class="row mt-2"><div class="col"><div>В ремонте не был.</div></div><div class="row mt-3 text-center"><div class="col"><button  data-tooltip="Внести сведения о ремонте" id="add-repair-btn" style = "border: none; background: transparent;">' +
+                ' <svg id="add-icon" class="bi bi-plus-circle" width="42" height="42" viewBox="0 0 16 16">' +
+                '  <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>' +
+                ' <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>' +
+                ' </svg>' +
+                ' </button></div></div></div>';
+
+
+
     }
     divModalBody.appendChild(divContainerBody);
     modalRepairParent.appendChild(divModalBody);
-    
 
-         $("#add-repair-btn")[0].addEventListener("click",  function(){
-             handleAddBtn(svtObjId);
-         });
+
+    $("#add-repair-btn")[0].addEventListener("click", function () {
+        handleAddBtn(svtObjId);
+    });
 
     //сборка футера
     let divModalFooter = document.createElement("div");
@@ -2379,17 +2451,17 @@ let modalRepairContentLoad = function (svtObjId, title) {
 //    footerBtnSave.className = "btn btn-primary btn-sm";
 //    footerBtnSave.id = "btnRepairSave";
 //    footerBtnSave.innerText = "Сохранить";
-    
+
     divModalFooter.appendChild(footerBtnCancel);
-  //  divModalFooter.appendChild(footerBtnSave);
+    //  divModalFooter.appendChild(footerBtnSave);
     modalRepairParent.appendChild(divModalFooter);
 
 };
 
 // Модальное окно добавления/редактирования телефона
 let modalContentLoad = function (eventReason, svtObjId) {
-    
-    if(modalParent.childNodes.length > 1) {
+
+    if (modalParent.childNodes.length > 1) {
         modalParent.innerHTML = "";
     }
     let requestLink;
@@ -2427,8 +2499,11 @@ let modalContentLoad = function (eventReason, svtObjId) {
         case "server":
             titleModal.innerText = titleAction + " сервер";
             break;
-         case "switch":
+        case "switch":
             titleModal.innerText = titleAction + " коммутатор/концентратор";
+            break;
+        case "hub":
+            titleModal.innerText = titleAction + " коммутатор";
             break;
         case "router":
             titleModal.innerText = titleAction + " маршрутизатор";
@@ -2445,22 +2520,20 @@ let modalContentLoad = function (eventReason, svtObjId) {
         case "terminal":
             titleModal.innerText = titleAction + " терминал";
             break;
-         case "thermoprinter":
-            titleModal.innerText = titleAction + " термопринтер";
-            break;
         case "display":
             titleModal.innerText = titleAction + " главное табло";
-            break;
-        case "swunit":
-            titleModal.innerText = titleAction + " блок коммутации";
             break;
         case "asuo":
             titleModal.innerText = titleAction + " электронная очередь";
             break;
-        case "fax":       
+        case "fax":
             titleModal.innerText = titleAction + " факс";
-        
             break;
+        default:
+            
+            titleModal.innerText = titleAction + " " + namePage[0].toLowerCase() + namePage.slice(1, namePage.length);
+            break;
+                
     }
     divModalHeader.appendChild(titleModal);
     let headerCloseBtn = document.createElement("button");
@@ -2476,12 +2549,12 @@ let modalContentLoad = function (eventReason, svtObjId) {
     let divContainerBody = document.createElement("div");
     divContainerBody.className = "container";
     divContainerBody.id = "containerContent";
-    divContainerBody.innerHTML = ' <div class="row mt-2">' +
+    divContainerBody.innerHTML = ' <div class="row mt-2" id="location_row">' +
             '<div class="col">Район</div>' +
             '<div class="col">' +
             '<select class="form-select form-select-sm" id="locationSelect" aria-label="Default select example" ></select>' +
             '</div></div>' +
-            '<div class="row mt-2">' +
+            '<div class="row mt-2 department_row" id="department_row">' +
             '<div class="col">Отдел</div>' +
             '<div class="col">' +
             '<select class="form-select form-select-sm" id="departmentSelect" aria-label="Default select example" ></select>' +
@@ -2517,28 +2590,24 @@ let modalContentLoad = function (eventReason, svtObjId) {
             '<div class="col">' +
             '<input class="form-control form-control-sm" type="text" placeholder="введите серийный номер" aria-label="serialNumber" id="serialNumber">' +
             '</div></div>';
-    
+
     switch (attrib) {
         case "switch":
-            
+
             break;
         case "router":
-            
-        break;
-        break;
+
+            break;
+            break;
         case "terminal":
-            
-        break;
-        case "thermoprinter":
-            
-        break;
+
+            break;
+
         case "display":
-            
-        break;
-        case "swunit":
-            
-        break;
-        
+
+            break;
+
+
         case "ats":
             let divRowYearExplAts = document.createElement("div");
             divRowYearExplAts.className = "row mt-2";
@@ -2556,7 +2625,7 @@ let modalContentLoad = function (eventReason, svtObjId) {
             divRowYearExplAts.appendChild(divColSelectYearExplAts);
             divContainerBody.appendChild(divRowYearExplAts);
             break;
-             case "conditioner":
+        case "conditioner":
             let divRowYearExplConditioner = document.createElement("div");
             divRowYearExplConditioner.className = "row mt-2";
             let divColLabelYearExplConditioner = document.createElement("div");
@@ -2573,7 +2642,7 @@ let modalContentLoad = function (eventReason, svtObjId) {
             divRowYearExplConditioner.appendChild(divColSelectYearExplConditioner);
             divContainerBody.appendChild(divRowYearExplConditioner);
             break;
-             case "infomat":
+        case "infomat":
             let divRowYearExplInfomat = document.createElement("div");
             divRowYearExplInfomat.className = "row mt-2";
             let divColLabelYearExplInfomat = document.createElement("div");
@@ -2623,10 +2692,11 @@ let modalContentLoad = function (eventReason, svtObjId) {
             divRowNameFromOneCInfomat.appendChild(divColInputNameFromOneCInfomat);
             divContainerBody.appendChild(divRowNameFromOneCInfomat);
             break;
-            
+
         default:
-            let divRowYearCreated = document.createElement("div");
+            divRowYearCreated = document.createElement("div");
             divRowYearCreated.className = "row mt-2";
+            divRowYearCreated.id = "year-created-row";
             let divColLabelYearCreated = document.createElement("div");
             divColLabelYearCreated.className = "col";
             divColLabelYearCreated.innerText = "Год выпуска";
@@ -2640,9 +2710,10 @@ let modalContentLoad = function (eventReason, svtObjId) {
             divRowYearCreated.appendChild(divColLabelYearCreated);
             divRowYearCreated.appendChild(divColSelectYearCreated);
             divContainerBody.appendChild(divRowYearCreated);
-            
-            let divRowDateStartExp = document.createElement("div");
+
+            divRowDateStartExp = document.createElement("div");
             divRowDateStartExp.className = "row mt-2";
+            divRowDateStartExp.id = "date-start-exp-row";
             let divColLabelDateStartExp = document.createElement("div");
             divColLabelDateStartExp.className = "col";
             divColLabelDateStartExp.innerText = "Дата ввода в эксплуатацию";
@@ -2789,9 +2860,9 @@ let modalContentLoad = function (eventReason, svtObjId) {
             divRowDateReplaceBattery.appendChild(divColLabelDateReplaceBattery);
             divRowDateReplaceBattery.appendChild(divColDateReplaceBatterySelect);
             divContainerBody.appendChild(divRowDateReplaceBattery);
-           
+
             break;
-            case "upsforserver":
+        case "upsforserver":
             let divRowNumberRoomUpsForServer = document.createElement("div");
             divRowNumberRoomUpsForServer.className = "row mt-2";
             let divColLabelNumberRoomUpsForServer = document.createElement("div");
@@ -2840,7 +2911,7 @@ let modalContentLoad = function (eventReason, svtObjId) {
             divRowDateReplaceBatteryUpsForServer.appendChild(divColLabelDateReplaceBatteryUpsForServer);
             divRowDateReplaceBatteryUpsForServer.appendChild(divColDateReplaceBatterySelectUpsForServer);
             divContainerBody.appendChild(divRowDateReplaceBatteryUpsForServer);
-            
+
             break;
         case "scanner":
             let divRowIpAdress = document.createElement("div");
@@ -3046,8 +3117,8 @@ let modalContentLoad = function (eventReason, svtObjId) {
             divRowHddSelect.appendChild(divColLabelHddSelect);
             divRowHddSelect.appendChild(divColHddSelect);
             divContainerBody.appendChild(divRowHddSelect);
-            
-            
+
+
             let accordionFlushSysBlock = document.createElement("div");
             accordionFlushSysBlock.className = "accordion accordion-flush mt-3";
             accordionFlushSysBlock.id = "accordionFlushExample";
@@ -3079,8 +3150,8 @@ let modalContentLoad = function (eventReason, svtObjId) {
             accordionItemSysBlock.appendChild(accordionFlushCollapseSysBlock);
             accordionFlushCollapseSysBlock.appendChild(accordionBodySysBlock);
             divContainerBody.appendChild(accordionFlushSysBlock);
-            
-            
+
+
             let divRowVideoCardSelect = document.createElement("div");
             divRowVideoCardSelect.className = "row mt-2";
             let divColLabelVideoCardSelect = document.createElement("div");
@@ -3186,8 +3257,6 @@ let modalContentLoad = function (eventReason, svtObjId) {
             divRowSpeakersSelect.appendChild(divColLabelSpeakersSelect);
             divRowSpeakersSelect.appendChild(divColSpeakersSelect);
             accordionBodySysBlock.appendChild(divRowSpeakersSelect);
-            
-         
             break;
         case "fax":
             let divRowNumberRoomFax = document.createElement("div");
@@ -3408,17 +3477,17 @@ let modalContentLoad = function (eventReason, svtObjId) {
             let divSwitchHubRadio = document.createElement("div");
             divSwitchHubRadio.className = "form-check";
             divSwitchHubRadio.innerHTML = '<input class="form-check-input" type="radio" name="switchHubRadio" id="switchRadio" checked>' +
-                                          '<label class="form-check-label" for="switchRadio">Коммутатор</label></div>';
+                    '<label class="form-check-label" for="switchRadio">Коммутатор</label></div>';
             let divSwitchHubRadio2 = document.createElement("div");
             divSwitchHubRadio2.className = "form-check";
             divSwitchHubRadio2.innerHTML = '<input class="form-check-input" type="radio" name="switchHubRadio" id="hubRadio" >' +
-                                          '<label class="form-check-label" for="hubRadio">Концентратор</label></div>';
+                    '<label class="form-check-label" for="hubRadio">Концентратор</label></div>';
             divColSwitch.appendChild(divSwitchHubRadio);
             divColHub.appendChild(divSwitchHubRadio2);
             divSwitchHubRow.appendChild(divColSwitch);
             divSwitchHubRow.appendChild(divColHub);
             divContainerBody.appendChild(divSwitchHubRow);
-            
+
             let divRowNumberRoomSwitch = document.createElement("div");
             divRowNumberRoomSwitch.className = "row mt-2";
             let divColLabelNumberRoomSwitch = document.createElement("div");
@@ -3426,7 +3495,7 @@ let modalContentLoad = function (eventReason, svtObjId) {
             divColLabelNumberRoomSwitch.innerText = "Кабинет";
             let divColInputNumberRoomSwitch = document.createElement("div");
             divColInputNumberRoomSwitch.className = "col";
-            
+
             let inputNumberRoomSwitch = document.createElement("input");
             inputNumberRoomSwitch.className = "form-control form-control-sm";
             inputNumberRoomSwitch.type = "text";
@@ -3437,7 +3506,7 @@ let modalContentLoad = function (eventReason, svtObjId) {
             divRowNumberRoomSwitch.appendChild(divColLabelNumberRoomSwitch);
             divRowNumberRoomSwitch.appendChild(divColInputNumberRoomSwitch);
             divContainerBody.appendChild(divRowNumberRoomSwitch);
-            
+
             let portAmountSwitchRow = document.createElement("div");
             portAmountSwitchRow.className = "row mt-2";
             let divColLabelSwitchPortAmount = document.createElement("div");
@@ -3456,7 +3525,7 @@ let modalContentLoad = function (eventReason, svtObjId) {
             portAmountSwitchRow.appendChild(divColLabelSwitchPortAmount);
             portAmountSwitchRow.appendChild(divColInputSwitchPortAmount);
             divContainerBody.appendChild(portAmountSwitchRow);
-            
+
             let yearCreatedSwitchRow = document.createElement("div");
             yearCreatedSwitchRow.className = "row mt-2";
             let divColLabelSwitchYearCreated = document.createElement("div");
@@ -3474,9 +3543,9 @@ let modalContentLoad = function (eventReason, svtObjId) {
             yearCreatedSwitchRow.appendChild(divColLabelSwitchYearCreated);
             yearCreatedSwitchRow.appendChild(divColInputSwitchYearCreated);
             divContainerBody.appendChild(yearCreatedSwitchRow);
-            
-            
-             let divRowNameFromOneCSwitch = document.createElement("div");
+
+
+            let divRowNameFromOneCSwitch = document.createElement("div");
             divRowNameFromOneCSwitch.className = "row mt-2";
             let divColLabelNameFromOneCSwitch = document.createElement("div");
             divColLabelNameFromOneCSwitch.className = "col";
@@ -3493,15 +3562,53 @@ let modalContentLoad = function (eventReason, svtObjId) {
             divRowNameFromOneCSwitch.appendChild(divColInputNameFromOneCSwitch);
             divContainerBody.appendChild(divRowNameFromOneCSwitch);
             break;
+        case "hub":
+ 
+            let portAmountHubRow = document.createElement("div");
+            portAmountHubRow.className = "row mt-2";
+            let divColLabelHubPortAmount = document.createElement("div");
+            divColLabelHubPortAmount.className = "col";
+            divColLabelHubPortAmount.innerText = "Количество портов";
+            let divColInputHubPortAmount = document.createElement("div");
+            divColInputHubPortAmount.className = "col";
+            let inputHubPortAmount = document.createElement("input");
+            inputHubPortAmount.className = "form-control form-control-sm";
+            inputHubPortAmount.type = "number";
+            inputHubPortAmount.min = 1;
+            inputHubPortAmount.max = 99;
+            inputHubPortAmount.value = 1;
+            inputHubPortAmount.id = "portAmount";
+            divColInputHubPortAmount.appendChild(inputHubPortAmount);
+            portAmountHubRow.appendChild(divColLabelHubPortAmount);
+            portAmountHubRow.appendChild(divColInputHubPortAmount);
+            divContainerBody.appendChild(portAmountHubRow);
+
+            let divRowNameFromOneCHub = document.createElement("div");
+            divRowNameFromOneCHub.className = "row mt-2";
+            let divColLabelNameFromOneCHub = document.createElement("div");
+            divColLabelNameFromOneCHub.className = "col";
+            divColLabelNameFromOneCHub.innerText = "Наименование в ведомости ОС";
+            let divColInputNameFromOneCHub = document.createElement("div");
+            divColInputNameFromOneCHub.className = "col";
+            let inputNameFromOneCHub = document.createElement("textarea");
+            inputNameFromOneCHub.className = "form-control form-control-sm";
+            inputNameFromOneCHub.placeholder = "введите наименование";
+            inputNameFromOneCHub.id = "nameFromOneC";
+            inputNameFromOneCHub.setAttribute("aria-label", "nameFromOneC");
+            divColInputNameFromOneCHub.appendChild(inputNameFromOneCHub);
+            divRowNameFromOneCHub.appendChild(divColLabelNameFromOneCHub);
+            divRowNameFromOneCHub.appendChild(divColInputNameFromOneCHub);
+            divContainerBody.appendChild(divRowNameFromOneCHub);
+            break;
         case "router":
-             let divRowNumberRoomRouter = document.createElement("div");
+            let divRowNumberRoomRouter = document.createElement("div");
             divRowNumberRoomRouter.className = "row mt-2";
             let divColLabelNumberRoomRouter = document.createElement("div");
             divColLabelNumberRoomRouter.className = "col";
             divColLabelNumberRoomRouter.innerText = "Кабинет";
             let divColInputNumberRoomRouter = document.createElement("div");
             divColInputNumberRoomRouter.className = "col";
-            
+
             let inputNumberRoomRouter = document.createElement("input");
             inputNumberRoomRouter.className = "form-control form-control-sm";
             inputNumberRoomRouter.type = "text";
@@ -3512,7 +3619,7 @@ let modalContentLoad = function (eventReason, svtObjId) {
             divRowNumberRoomRouter.appendChild(divColLabelNumberRoomRouter);
             divRowNumberRoomRouter.appendChild(divColInputNumberRoomRouter);
             divContainerBody.appendChild(divRowNumberRoomRouter);
-            
+
             let portAmountRouterRow = document.createElement("div");
             portAmountRouterRow.className = "row mt-2";
             let divColLabelRouterPortAmount = document.createElement("div");
@@ -3531,7 +3638,7 @@ let modalContentLoad = function (eventReason, svtObjId) {
             portAmountRouterRow.appendChild(divColLabelRouterPortAmount);
             portAmountRouterRow.appendChild(divColInputRouterPortAmount);
             divContainerBody.appendChild(portAmountRouterRow);
-            
+
             let yearCreatedRouterRow = document.createElement("div");
             yearCreatedRouterRow.className = "row mt-2";
             let divColLabelRouterYearCreated = document.createElement("div");
@@ -3549,9 +3656,9 @@ let modalContentLoad = function (eventReason, svtObjId) {
             yearCreatedRouterRow.appendChild(divColLabelRouterYearCreated);
             yearCreatedRouterRow.appendChild(divColInputRouterYearCreated);
             divContainerBody.appendChild(yearCreatedRouterRow);
-            
-            
-             let divRowNameFromOneCRouter = document.createElement("div");
+
+
+            let divRowNameFromOneCRouter = document.createElement("div");
             divRowNameFromOneCRouter.className = "row mt-2";
             let divColLabelNameFromOneCRouter = document.createElement("div");
             divColLabelNameFromOneCRouter.className = "col";
@@ -3568,15 +3675,15 @@ let modalContentLoad = function (eventReason, svtObjId) {
             divRowNameFromOneCRouter.appendChild(divColInputNameFromOneCRouter);
             divContainerBody.appendChild(divRowNameFromOneCRouter);
             break;
-            case "ats":
-             let divRowNumberRoomAts = document.createElement("div");
+        case "ats":
+            let divRowNumberRoomAts = document.createElement("div");
             divRowNumberRoomAts.className = "row mt-2";
             let divColLabelNumberRoomAts = document.createElement("div");
             divColLabelNumberRoomAts.className = "col";
             divColLabelNumberRoomAts.innerText = "Кабинет";
             let divColInputNumberRoomAts = document.createElement("div");
             divColInputNumberRoomAts.className = "col";
-            
+
             let inputNumberRoomAts = document.createElement("input");
             inputNumberRoomAts.className = "form-control form-control-sm";
             inputNumberRoomAts.type = "text";
@@ -3587,8 +3694,8 @@ let modalContentLoad = function (eventReason, svtObjId) {
             divRowNumberRoomAts.appendChild(divColLabelNumberRoomAts);
             divRowNumberRoomAts.appendChild(divColInputNumberRoomAts);
             divContainerBody.appendChild(divRowNumberRoomAts);
-            
-              let divRowNameFromOneCAts = document.createElement("div");
+
+            let divRowNameFromOneCAts = document.createElement("div");
             divRowNameFromOneCAts.className = "row mt-2";
             let divColLabelNameFromOneCAts = document.createElement("div");
             divColLabelNameFromOneCAts.className = "col";
@@ -3604,7 +3711,7 @@ let modalContentLoad = function (eventReason, svtObjId) {
             divRowNameFromOneCAts.appendChild(divColLabelNameFromOneCAts);
             divRowNameFromOneCAts.appendChild(divColInputNameFromOneCAts);
             divContainerBody.appendChild(divRowNameFromOneCAts);
-            
+
             let divRowAtsOuterTypeConnectionsSelect = document.createElement("div");
             divRowAtsOuterTypeConnectionsSelect.className = "row mt-2";
             let divColLabelAtsOuterTypeConnectionsSelect = document.createElement("div");
@@ -3616,23 +3723,23 @@ let modalContentLoad = function (eventReason, svtObjId) {
             selectAtsOuterTypeConnections.className = "form-select form-select-sm";
             selectAtsOuterTypeConnections.id = "outerConnectionType";
             selectAtsOuterTypeConnections.setAttribute("aria-label", "outerConnectionType");
-            
+
             let optionSipOuterTypeConnection = document.createElement("option");
             optionSipOuterTypeConnection.value = "SIP";
             optionSipOuterTypeConnection.innerText = "SIP";
-            
+
             let optionE1OuterTypeConnection = document.createElement("option");
             optionE1OuterTypeConnection.value = "E1";
             optionE1OuterTypeConnection.innerText = "E1";
-            
+
             selectAtsOuterTypeConnections.appendChild(optionSipOuterTypeConnection);
             selectAtsOuterTypeConnections.appendChild(optionE1OuterTypeConnection);
-            
+
             divColAtsOuterTypeConnectionsSelect.appendChild(selectAtsOuterTypeConnections);
             divRowAtsOuterTypeConnectionsSelect.appendChild(divColLabelAtsOuterTypeConnectionsSelect);
             divRowAtsOuterTypeConnectionsSelect.appendChild(divColAtsOuterTypeConnectionsSelect);
             divContainerBody.appendChild(divRowAtsOuterTypeConnectionsSelect);
-            
+
             let cityNumbersAmountAtsRow = document.createElement("div");
             cityNumbersAmountAtsRow.className = "row mt-2";
             let divColLabelCityNumbersAmountAts = document.createElement("div");
@@ -3651,29 +3758,29 @@ let modalContentLoad = function (eventReason, svtObjId) {
             cityNumbersAmountAtsRow.appendChild(divColLabelCityNumbersAmountAts);
             cityNumbersAmountAtsRow.appendChild(divColInputCityNumbersAmountAts);
             divContainerBody.appendChild(cityNumbersAmountAtsRow);
-            
+
             let innerConnectionsAmountRow = document.createElement("div");
             innerConnectionsAmountRow.className = "row mt-2";
-            
+
             let divColLabelConnectionsAmount = document.createElement("div")
             divColLabelConnectionsAmount.className = "col-3";
             divColLabelConnectionsAmount.innerText = "Внутренние подключения";
-            
-            
+
+
             let divColConteinerForRowsInputs = document.createElement("div");
             divColConteinerForRowsInputs.className = "col-9";
-            
-            
+
+
             let innerConnectionsIpAmountRow = document.createElement("div");
             innerConnectionsIpAmountRow.className = "row";
-            
+
             let divColLabelInnerConnectionsIpAmount = document.createElement("div");
             divColLabelInnerConnectionsIpAmount.className = "col-4";
             divColLabelInnerConnectionsIpAmount.innerText = "ip";
-            
+
             let divColInputInnerConnectionsIpAmount = document.createElement("div");
             divColInputInnerConnectionsIpAmount.className = "col-8";
-            
+
             let inputInnerConnectionsIpAmount = document.createElement("input");
             inputInnerConnectionsIpAmount.className = "form-control form-control-sm";
             inputInnerConnectionsIpAmount.type = "number";
@@ -3681,17 +3788,17 @@ let modalContentLoad = function (eventReason, svtObjId) {
             inputInnerConnectionsIpAmount.max = 999;
             inputInnerConnectionsIpAmount.value = 1;
             inputInnerConnectionsIpAmount.id = "innerConnectionIp";
-            
+
             let innerConnectionsAnalogAmountRow = document.createElement("div");
             innerConnectionsAnalogAmountRow.className = "row mt-2";
-            
+
             let divColLabelInnerConnectionsAnalogAmount = document.createElement("div");
             divColLabelInnerConnectionsAnalogAmount.className = "col-4";
             divColLabelInnerConnectionsAnalogAmount.innerText = "аналоговые";
-            
+
             let divColInputInnerConnectionsAnalogAmount = document.createElement("div");
             divColInputInnerConnectionsAnalogAmount.className = "col-8";
-            
+
             let inputInnerConnectionsAnalogAmount = document.createElement("input");
             inputInnerConnectionsAnalogAmount.className = "form-control form-control-sm";
             inputInnerConnectionsAnalogAmount.type = "number";
@@ -3699,7 +3806,7 @@ let modalContentLoad = function (eventReason, svtObjId) {
             inputInnerConnectionsAnalogAmount.min = 1;
             inputInnerConnectionsAnalogAmount.max = 999;
             inputInnerConnectionsAnalogAmount.value = 1;
-            
+
             divColInputInnerConnectionsIpAmount.appendChild(inputInnerConnectionsIpAmount);
             divColInputInnerConnectionsAnalogAmount.appendChild(inputInnerConnectionsAnalogAmount);
             innerConnectionsAnalogAmountRow.appendChild(divColLabelInnerConnectionsAnalogAmount);
@@ -3713,24 +3820,6 @@ let modalContentLoad = function (eventReason, svtObjId) {
             divContainerBody.appendChild(innerConnectionsAmountRow);
             break;
         case "asuo":
-            
-            let divRowNumberRoomAsuo = document.createElement("div");
-            divRowNumberRoomAsuo.className = "row mt-2";
-            let divColLabelNumberRoomAsuo = document.createElement("div");
-            divColLabelNumberRoomAsuo.className = "col";
-            divColLabelNumberRoomAsuo.innerText = "Кабинет";
-            let divColInputNumberRoomAsuo = document.createElement("div");
-            divColInputNumberRoomAsuo.className = "col";
-            let inputNumberRoomAsuo = document.createElement("input");
-            inputNumberRoomAsuo.className = "form-control form-control-sm";
-            inputNumberRoomAsuo.type = "text";
-            inputNumberRoomAsuo.placeholder = "укажите расположение";
-            inputNumberRoomAsuo.id = "numberRoom";
-            inputNumberRoomAsuo.name = "numberRoom";
-            divColInputNumberRoomAsuo.appendChild(inputNumberRoomAsuo);
-            divRowNumberRoomAsuo.appendChild(divColLabelNumberRoomAsuo);
-            divRowNumberRoomAsuo.appendChild(divColInputNumberRoomAsuo);
-            divContainerBody.appendChild(divRowNumberRoomAsuo);
             let divRowNameFromOneCAsuo = document.createElement("div");
             divRowNameFromOneCAsuo.className = "row mt-2";
             let divColLabelNameFromOneCAsuo = document.createElement("div");
@@ -3748,87 +3837,70 @@ let modalContentLoad = function (eventReason, svtObjId) {
             divRowNameFromOneCAsuo.appendChild(divColInputNameFromOneCAsuo);
             divContainerBody.appendChild(divRowNameFromOneCAsuo);
             
+            let divDisplaysContainer = document.createElement("div");
+            divDisplaysContainer.id = "display-container";
+            divContainerBody.appendChild(divDisplaysContainer);
+            
             let divRowDisplaySelect = document.createElement("div");
-            divRowDisplaySelect.className = "row mt-2";
+            divRowDisplaySelect.className = "row mt-2 display-row";
             let divColLabelDisplaySelect = document.createElement("div");
-            divColLabelDisplaySelect.className = "col";
+            divColLabelDisplaySelect.className = "col display-label";
             divColLabelDisplaySelect.innerText = "Главное табло";
+            divColLabelDisplaySelect.id = "display_label_1";
             let divColDisplaySelect = document.createElement("div");
             divColDisplaySelect.className = "col";
             let selectDisplay = document.createElement("select");
-            selectDisplay.className = "form-select form-select-sm";
-            selectDisplay.id = "displaySelect";
+            selectDisplay.className = "form-select form-select-sm display-select";
+            selectDisplay.id = "displaySelect-1";
             selectDisplay.setAttribute("aria-label", "displaySelect");
             divColDisplaySelect.appendChild(selectDisplay);
             divRowDisplaySelect.appendChild(divColLabelDisplaySelect);
             divRowDisplaySelect.appendChild(divColDisplaySelect);
-            divContainerBody.appendChild(divRowDisplaySelect);
-            
+            divDisplaysContainer.appendChild(divRowDisplaySelect);
+           
+           
+            let divTerminalContainer = document.createElement("div");
+            divTerminalContainer.id = "terminal-container";
+            divContainerBody.appendChild(divTerminalContainer);
+           
             let divRowTerminalSelect = document.createElement("div");
-            divRowTerminalSelect.className = "row mt-2";
+            divRowTerminalSelect.className = "row mt-2 terminal-row";
             let divColLabelTerminalSelect = document.createElement("div");
-            divColLabelTerminalSelect.className = "col";
-            divColLabelTerminalSelect.innerText = "Терминал";
+            divColLabelTerminalSelect.className = "col terminal-label";
+            divColLabelTerminalSelect.innerText = "Регистрационный терминал";
             let divColTerminalSelect = document.createElement("div");
             divColTerminalSelect.className = "col";
             let selectTerminal = document.createElement("select");
-            selectTerminal.className = "form-select form-select-sm";
-            selectTerminal.id = "terminalSelect";
-            selectTerminal.setAttribute("aria-label", "terminalSelect");
+            selectTerminal.className = "form-select form-select-sm terminal-select";
+            selectTerminal.id = "terminalSelect-1";
             divColTerminalSelect.appendChild(selectTerminal);
             divRowTerminalSelect.appendChild(divColLabelTerminalSelect);
             divRowTerminalSelect.appendChild(divColTerminalSelect);
-            divContainerBody.appendChild(divRowTerminalSelect);
+            divTerminalContainer.appendChild(divRowTerminalSelect);
+
+
+            let divHubContainer = document.createElement("div");
+            divHubContainer.id = "hub-container";
+            divContainerBody.appendChild(divHubContainer);
             
-            let divRowThermoprinterSelect = document.createElement("div");
-            divRowThermoprinterSelect.className = "row mt-2";
-            let divColLabelThermoprinterSelect = document.createElement("div");
-            divColLabelThermoprinterSelect.className = "col";
-            divColLabelThermoprinterSelect.innerText = "Термопринтер";
-            let divColThermoprinterSelect = document.createElement("div");
-            divColThermoprinterSelect.className = "col";
-            let selectThermoprinter = document.createElement("select");
-            selectThermoprinter.className = "form-select form-select-sm";
-            selectThermoprinter.id = "thermoprinterSelect";
-            selectThermoprinter.setAttribute("aria-label", "thermoprinterSelect");
-            divColThermoprinterSelect.appendChild(selectThermoprinter);
-            divRowThermoprinterSelect.appendChild(divColLabelThermoprinterSelect);
-            divRowThermoprinterSelect.appendChild(divColThermoprinterSelect);
-            divContainerBody.appendChild(divRowThermoprinterSelect);
+            let divRowHubSelect = document.createElement("div");
+            divRowHubSelect.className = "row mt-2 hub-row";
+            let divColLabelHubSelect = document.createElement("div");
+            divColLabelHubSelect.className = "col hub-label";
+            divColLabelHubSelect.innerText = "Коммутатор";
+            let divColHubSelect = document.createElement("div");
+            divColHubSelect.className = "col";
+            let selectHub = document.createElement("select");
+            selectHub.className = "form-select form-select-sm hub-select";
+            selectHub.id = "hubSelect-1";
+            selectHub.setAttribute("aria-label", "hubSelect");
+            divColHubSelect.appendChild(selectHub);
+            divRowHubSelect.appendChild(divColLabelHubSelect);
+            divRowHubSelect.appendChild(divColHubSelect);
             
-            
-            let divRowSwitchSelect = document.createElement("div");
-            divRowSwitchSelect.className = "row mt-2";
-            let divColLabelSwitchSelect = document.createElement("div");
-            divColLabelSwitchSelect.className = "col";
-            divColLabelSwitchSelect.innerText = "Свитч";
-            let divColSwitchSelect = document.createElement("div");
-            divColSwitchSelect.className = "col";
-            let selectSwitch = document.createElement("select");
-            selectSwitch.className = "form-select form-select-sm";
-            selectSwitch.id = "switchSelect";
-            selectSwitch.setAttribute("aria-label", "switchSelect");
-            divColSwitchSelect.appendChild(selectSwitch);
-            divRowSwitchSelect.appendChild(divColLabelSwitchSelect);
-            divRowSwitchSelect.appendChild(divColSwitchSelect);
-            divContainerBody.appendChild(divRowSwitchSelect);
-            
-            let divRowSwitchingUnitSelect = document.createElement("div");
-            divRowSwitchingUnitSelect.className = "row mt-2";
-            let divColLabelSwitchingUnitSelect = document.createElement("div");
-            divColLabelSwitchingUnitSelect.className = "col";
-            divColLabelSwitchingUnitSelect.innerText = "Блок коммутации";
-            let divColSwitchingUnitSelect = document.createElement("div");
-            divColSwitchingUnitSelect.className = "col";
-            let selectSwitchingUnit = document.createElement("select");
-            selectSwitchingUnit.className = "form-select form-select-sm";
-            selectSwitchingUnit.id = "switchingUnitSelect";
-            selectSwitchingUnit.setAttribute("aria-label", "switchingUnitSelect");
-            divColSwitchingUnitSelect.appendChild(selectSwitchingUnit);
-            divRowSwitchingUnitSelect.appendChild(divColLabelSwitchingUnitSelect);
-            divRowSwitchingUnitSelect.appendChild(divColSwitchingUnitSelect);
-            divContainerBody.appendChild(divRowSwitchingUnitSelect);
-            
+            divHubContainer.appendChild(divRowHubSelect);
+
+
             let divRowSubDisplaySelect = document.createElement("div");
             divRowSubDisplaySelect.className = "row mt-2";
             let divColLabelSubDisplaySelect = document.createElement("div");
@@ -3851,14 +3923,142 @@ let modalContentLoad = function (eventReason, svtObjId) {
             inputSubDisplayAmount.value = 1;
             inputSubDisplayAmount.id = "subDisplayAmount";
             divColSubDisplayAmount.appendChild(inputSubDisplayAmount);
-            
             divColSubDisplaySelect.appendChild(selectSubDisplay);
             divRowSubDisplaySelect.appendChild(divColLabelSubDisplaySelect);
             divRowSubDisplaySelect.appendChild(divColSubDisplaySelect);
             divRowSubDisplaySelect.appendChild(divColSubDisplayAmount);
             divContainerBody.appendChild(divRowSubDisplaySelect);
             
-          
+            
+            let divRowPOSelect = document.createElement("div");
+            divRowPOSelect.className = "row mt-2";
+            let divColLabelPOSelect = document.createElement("div");
+            divColLabelPOSelect.className = "col po-label";
+            divColLabelPOSelect.innerText = "Програмное обеспечение";
+            let divColPOSelect = document.createElement("div");
+            divColPOSelect.className = "col";
+            let selectPO = document.createElement("select");
+            selectPO.className = "form-select form-select-sm po-select";
+            selectPO.id = "poSelect";
+            selectPO.setAttribute("aria-label", "poSelect");
+            divColPOSelect.appendChild(selectPO);
+            divRowPOSelect.appendChild(divColLabelPOSelect);
+            divRowPOSelect.appendChild(divColPOSelect);
+            divContainerBody.appendChild(divRowPOSelect);
+            break;
+        case "terminal":
+            let divRowTerminalDisplaySelect = document.createElement("div");
+            divRowTerminalDisplaySelect.className = "row mt-2";
+            let divColLabelTerminalDisplaySelect = document.createElement("div");
+            divColLabelTerminalDisplaySelect.className = "col terminalDisplay-label";
+            divColLabelTerminalDisplaySelect.innerText = "Экран";
+            let divColTerminalDisplaySelect = document.createElement("div");
+            divColTerminalDisplaySelect.className = "col";
+            let selectTerminalDisplay = document.createElement("select");
+            selectTerminalDisplay.className = "form-select form-select-sm terminalDisplay-select";
+            selectTerminalDisplay.id = "terminalDisplaySelect";
+            selectTerminalDisplay.setAttribute("aria-label", "terminalDisplaySelect");
+            divColTerminalDisplaySelect.appendChild(selectTerminalDisplay);
+            divRowTerminalDisplaySelect.appendChild(divColLabelTerminalDisplaySelect);
+            divRowTerminalDisplaySelect.appendChild(divColTerminalDisplaySelect);
+            divContainerBody.appendChild(divRowTerminalDisplaySelect);
+            
+            let divRowTerminalSensorSelect = document.createElement("div");
+            divRowTerminalSensorSelect.className = "row mt-2";
+            let divColLabelTerminalSensorSelect = document.createElement("div");
+            divColLabelTerminalSensorSelect.className = "col terminalSensor-label";
+            divColLabelTerminalSensorSelect.innerText = "Сенсор";
+            let divColTerminalSensorSelect = document.createElement("div");
+            divColTerminalSensorSelect.className = "col";
+            let selectTerminalSensor = document.createElement("select");
+            selectTerminalSensor.className = "form-select form-select-sm terminalSensor-select";
+            selectTerminalSensor.id = "terminalSensorSelect";
+            selectTerminalSensor.setAttribute("aria-label", "terminalSensorSelect");
+            divColTerminalSensorSelect.appendChild(selectTerminalSensor);
+            divRowTerminalSensorSelect.appendChild(divColLabelTerminalSensorSelect);
+            divRowTerminalSensorSelect.appendChild(divColTerminalSensorSelect);
+            divContainerBody.appendChild(divRowTerminalSensorSelect);
+            
+            let divRowTerminalServerSelect = document.createElement("div");
+            divRowTerminalServerSelect.className = "row mt-2";
+            let divColLabelTerminalServerSelect = document.createElement("div");
+            divColLabelTerminalServerSelect.className = "col terminalServer-label";
+            divColLabelTerminalServerSelect.innerText = "Сервер";
+            let divColTerminalServerSelect = document.createElement("div");
+            divColTerminalServerSelect.className = "col";
+            let selectTerminalServer = document.createElement("select");
+            selectTerminalServer.className = "form-select form-select-sm terminalServer-select";
+            selectTerminalServer.id = "terminalServerSelect";
+            selectTerminalServer.setAttribute("aria-label", "terminalServerSelect");
+            divColTerminalServerSelect.appendChild(selectTerminalServer);
+            divRowTerminalServerSelect.appendChild(divColLabelTerminalServerSelect);
+            divRowTerminalServerSelect.appendChild(divColTerminalServerSelect);
+            divContainerBody.appendChild(divRowTerminalServerSelect);
+            
+            let divRowTerminalPrinterSelect = document.createElement("div");
+            divRowTerminalPrinterSelect.className = "row mt-2";
+            let divColLabelTerminalPrinterSelect = document.createElement("div");
+            divColLabelTerminalPrinterSelect.className = "col terminalPrinter-label";
+            divColLabelTerminalPrinterSelect.innerText = "Принтер";
+            let divColTerminalPrinterSelect = document.createElement("div");
+            divColTerminalPrinterSelect.className = "col";
+            let selectTerminalPrinter = document.createElement("select");
+            selectTerminalPrinter.className = "form-select form-select-sm terminalPrinter-select";
+            selectTerminalPrinter.id = "terminalPrinterSelect";
+            selectTerminalPrinter.setAttribute("aria-label", "terminalPrinterSelect");
+            divColTerminalPrinterSelect.appendChild(selectTerminalPrinter);
+            divRowTerminalPrinterSelect.appendChild(divColLabelTerminalPrinterSelect);
+            divRowTerminalPrinterSelect.appendChild(divColTerminalPrinterSelect);
+            divContainerBody.appendChild(divRowTerminalPrinterSelect);
+            
+            let divRowTerminalUpsSelect = document.createElement("div");
+            divRowTerminalUpsSelect.className = "row mt-2";
+            let divColLabelTerminalUpsSelect = document.createElement("div");
+            divColLabelTerminalUpsSelect.className = "col terminalUps-label";
+            divColLabelTerminalUpsSelect.innerText = "ИБП";
+            let divColTerminalUpsSelect = document.createElement("div");
+            divColTerminalUpsSelect.className = "col";
+            let selectTerminalUps = document.createElement("select");
+            selectTerminalUps.className = "form-select form-select-sm terminalUps-select";
+            selectTerminalUps.id = "terminalUpsSelect";
+            selectTerminalUps.setAttribute("aria-label", "terminalUpsSelect");
+            divColTerminalUpsSelect.appendChild(selectTerminalUps);
+            divRowTerminalUpsSelect.appendChild(divColLabelTerminalUpsSelect);
+            divRowTerminalUpsSelect.appendChild(divColTerminalUpsSelect);
+            divContainerBody.appendChild(divRowTerminalUpsSelect);
+            
+            break;
+        case "terminalUps":
+        case "terminalSensor":
+        case "terminalServer":
+        case "terminalPrinter":
+            divContainerBody.removeChild(divRowYearCreated);
+            divContainerBody.removeChild(divRowDateStartExp);
+            $($(divContainerBody).find('#department_row')).remove();
+            $($(divContainerBody).find('#inventaryNumberRow')).remove();
+        break;
+        case "terminalDisplay":
+            divContainerBody.removeChild(divRowYearCreated);
+            divContainerBody.removeChild(divRowDateStartExp);
+            $($(divContainerBody).find('#department_row')).remove();
+            $($(divContainerBody).find('#inventaryNumberRow')).remove();
+            
+            let divRowScreenSizeRow = document.createElement("div");
+            divRowScreenSizeRow.className = "row mt-2 screenSizeRow";
+            let divColLabelScreenSize = document.createElement("div");
+            divColLabelScreenSize.className = "col";
+            divColLabelScreenSize.innerText = "Диагональ экрана";
+            let divColInputScreenSize = document.createElement("div");
+            divColInputScreenSize.className = "col";
+            let inputScreenSize = document.createElement("input");
+            inputScreenSize.className = "form-control form-control-sm";
+            inputScreenSize.type = "text";
+            inputScreenSize.placeholder = "указать размер экрана";
+            inputScreenSize.id = "screenSizeInput";
+            divColInputScreenSize.appendChild(inputScreenSize);
+            divRowScreenSizeRow.appendChild(divColLabelScreenSize);
+            divRowScreenSizeRow.appendChild(divColInputScreenSize);
+            divContainerBody.appendChild(divRowScreenSizeRow);
             break;
         case "conditioner":
             let divRowNameFromOneCConditioner = document.createElement("div");
@@ -3878,15 +4078,14 @@ let modalContentLoad = function (eventReason, svtObjId) {
             divRowNameFromOneCConditioner.appendChild(divColLabelNameFromOneCConditioner);
             divRowNameFromOneCConditioner.appendChild(divColInputNameFromOneCConditioner);
             divContainerBody.appendChild(divRowNameFromOneCConditioner);
-            
-             let divRowNumberRoomConditioner = document.createElement("div");
+
+            let divRowNumberRoomConditioner = document.createElement("div");
             divRowNumberRoomConditioner.className = "row mt-2";
             let divColLabelNumberRoomConditioner = document.createElement("div");
             divColLabelNumberRoomConditioner.className = "col";
             divColLabelNumberRoomConditioner.innerText = "Кабинет";
             let divColInputNumberRoomConditioner = document.createElement("div");
             divColInputNumberRoomConditioner.className = "col";
-            
             let inputNumberRoomConditioner = document.createElement("input");
             inputNumberRoomConditioner.className = "form-control form-control-sm";
             inputNumberRoomConditioner.type = "text";
@@ -3897,7 +4096,7 @@ let modalContentLoad = function (eventReason, svtObjId) {
             divRowNumberRoomConditioner.appendChild(divColLabelNumberRoomConditioner);
             divRowNumberRoomConditioner.appendChild(divColInputNumberRoomConditioner);
             divContainerBody.appendChild(divRowNumberRoomConditioner);
-            
+
             let divRowConditionerTypeSelect = document.createElement("div");
             divRowConditionerTypeSelect.className = "row mt-2";
             let divColLabelConditionerTypeSelect = document.createElement("div");
@@ -3909,33 +4108,33 @@ let modalContentLoad = function (eventReason, svtObjId) {
             selectConditionerType.className = "form-select form-select-sm";
             selectConditionerType.id = "conditionerTypeSelect";
             selectConditionerType.setAttribute("aria-label", "conditionerType");
-            
+
             let optionConditionerTypeWindow = document.createElement("option");
             optionConditionerTypeWindow.value = "WINDOW";
             optionConditionerTypeWindow.innerText = "Оконный";
-            
+
             let optionConditionerTypeWall = document.createElement("option");
             optionConditionerTypeWall.value = "WALL";
             optionConditionerTypeWall.innerText = "Настенный";
-            
+
             let optionConditionerTypeCeiling = document.createElement("option");
             optionConditionerTypeCeiling.value = "CEILING";
             optionConditionerTypeCeiling.innerText = "Потолочный";
-            
+
             let optionConditionerTypeFloor = document.createElement("option");
             optionConditionerTypeFloor.value = "FLOOR";
             optionConditionerTypeFloor.innerText = "Напольный";
-            
+
             selectConditionerType.appendChild(optionConditionerTypeWindow);
             selectConditionerType.appendChild(optionConditionerTypeWall);
             selectConditionerType.appendChild(optionConditionerTypeCeiling);
             selectConditionerType.appendChild(optionConditionerTypeFloor);
-            
+
             divColConditionerTypeSelect.appendChild(selectConditionerType);
             divRowConditionerTypeSelect.appendChild(divColLabelConditionerTypeSelect);
             divRowConditionerTypeSelect.appendChild(divColConditionerTypeSelect);
             divContainerBody.appendChild(divRowConditionerTypeSelect);
-            
+
             let divSplitSystemRow = document.createElement("div");
             divSplitSystemRow.className = "row mt-2";
             let divColLabelSplitSystem = document.createElement("div");
@@ -3948,19 +4147,19 @@ let modalContentLoad = function (eventReason, svtObjId) {
             let radioSplitSystemTrue = document.createElement("div");
             radioSplitSystemTrue.className = "form-check checkRadio";
             radioSplitSystemTrue.innerHTML = '<input class="form-check-input" type="radio" name="splitSystemRadio" id="splitSystemTrue" >' +
-                                          '<label class="form-check-label" for="splitSystemTrue">Да</label></div>';
+                    '<label class="form-check-label" for="splitSystemTrue">Да</label></div>';
             let radioSplitSystemFalse = document.createElement("div");
             radioSplitSystemFalse.className = "form-check";
             radioSplitSystemFalse.innerHTML = '<input class="form-check-input" type="radio" name="splitSystemRadio" id="splitSystemFalse" checked>' +
-                                          '<label class="form-check-label" for="splitSystemFalse">Нет</label></div>';
+                    '<label class="form-check-label" for="splitSystemFalse">Нет</label></div>';
             divColSplitSystemTrue.appendChild(radioSplitSystemTrue);
             divColSplitSystemFalse.appendChild(radioSplitSystemFalse);
             divSplitSystemRow.appendChild(divColLabelSplitSystem);
             divSplitSystemRow.appendChild(divColSplitSystemTrue);
             divSplitSystemRow.appendChild(divColSplitSystemFalse);
             divContainerBody.appendChild(divSplitSystemRow);
-            
-             let divRowConditionerDescription = document.createElement("div");
+
+            let divRowConditionerDescription = document.createElement("div");
             divRowConditionerDescription.className = "row mt-2";
             let divColLabelConditionerDescription = document.createElement("div");
             divColLabelConditionerDescription.className = "col";
@@ -3976,8 +4175,8 @@ let modalContentLoad = function (eventReason, svtObjId) {
             divRowConditionerDescription.appendChild(divColLabelConditionerDescription);
             divRowConditionerDescription.appendChild(divColInputConditionerDescription);
             divContainerBody.appendChild(divRowConditionerDescription);
-            
-             let divWinterKitRow = document.createElement("div");
+
+            let divWinterKitRow = document.createElement("div");
             divWinterKitRow.className = "row mt-2";
             let divColLabelWinterKit = document.createElement("div");
             divColLabelWinterKit.className = "col-6";
@@ -3989,19 +4188,19 @@ let modalContentLoad = function (eventReason, svtObjId) {
             let radioWinterKitTrue = document.createElement("div");
             radioWinterKitTrue.className = "form-check checkRadio";
             radioWinterKitTrue.innerHTML = '<input class="form-check-input" type="radio" name="winterKitRadio" id="winterKitTrue" >' +
-                                          '<label class="form-check-label" for="winterKitTrue">Да</label></div>';
+                    '<label class="form-check-label" for="winterKitTrue">Да</label></div>';
             let radioWinterKitFalse = document.createElement("div");
             radioWinterKitFalse.className = "form-check";
             radioWinterKitFalse.innerHTML = '<input class="form-check-input" type="radio" name="winterKitRadio" id="winterKitFalse" checked>' +
-                                          '<label class="form-check-label" for="winterKitFalse">Нет</label></div>';
+                    '<label class="form-check-label" for="winterKitFalse">Нет</label></div>';
             divColWinterKitTrue.appendChild(radioWinterKitTrue);
             divColWinterKitFalse.appendChild(radioWinterKitFalse);
             divWinterKitRow.appendChild(divColLabelWinterKit);
             divWinterKitRow.appendChild(divColWinterKitTrue);
             divWinterKitRow.appendChild(divColWinterKitFalse);
             divContainerBody.appendChild(divWinterKitRow);
-            
-             let divPompRow = document.createElement("div");
+
+            let divPompRow = document.createElement("div");
             divPompRow.className = "row mt-2";
             let divColLabelPomp = document.createElement("div");
             divColLabelPomp.className = "col-6";
@@ -4013,19 +4212,19 @@ let modalContentLoad = function (eventReason, svtObjId) {
             let radioPompTrue = document.createElement("div");
             radioPompTrue.className = "form-check checkRadio";
             radioPompTrue.innerHTML = '<input class="form-check-input" type="radio" name="pompRadio" id="pompTrue" >' +
-                                          '<label class="form-check-label" for="pompTrue">Да</label></div>';
+                    '<label class="form-check-label" for="pompTrue">Да</label></div>';
             let radioPompFalse = document.createElement("div");
             radioPompFalse.className = "form-check";
             radioPompFalse.innerHTML = '<input class="form-check-input" type="radio" name="pompRadio" id="pompFalse" checked>' +
-                                          '<label class="form-check-label" for="pompFalse">Нет</label></div>';
+                    '<label class="form-check-label" for="pompFalse">Нет</label></div>';
             divColPompTrue.appendChild(radioPompTrue);
             divColPompFalse.appendChild(radioPompFalse);
             divPompRow.appendChild(divColLabelPomp);
             divPompRow.appendChild(divColPompTrue);
             divPompRow.appendChild(divColPompFalse);
             divContainerBody.appendChild(divPompRow);
-            
-            
+
+
             let conditionerPriceRow = document.createElement("div");
             conditionerPriceRow.className = "row mt-2";
             let divColLabelConditionerPrice = document.createElement("div");
@@ -4091,6 +4290,9 @@ let modalContentLoad = function (eventReason, svtObjId) {
             case "switch":
                 requestLink = "/getswitch?switchId=";
                 break;
+            case "hub":
+                requestLink = "/gethub?hubId=";
+                break;
             case "router":
                 requestLink = "/getrouter?routerId=";
                 break;
@@ -4106,26 +4308,36 @@ let modalContentLoad = function (eventReason, svtObjId) {
             case "terminal":
                 requestLink = "/getterminal?terminalId=";
                 break;
-            case "thermoprinter":
-                requestLink = "/getthermoprinter?thermoprinterId=";
-                break;
             case "display":
                 requestLink = "/getdisplay?displayId=";
-                break;
-            case "swunit":
-                requestLink = "/getswunit?swunitId=";
                 break;
             case "asuo":
                 requestLink = "/getasuo?asuoId=";
                 break;
+            case "terminalDisplay":
+                requestLink = "/get-terminal-display?id=";
+                break;
+            case "terminalPrinter":
+                requestLink = "/get-terminal-printer?id=";
+                break;
+            case "terminalSensor":
+                requestLink = "/get-terminal-sensor?id=";
+                break;
+            case "terminalServer":
+                requestLink = "/get-terminal-server?id=";
+                break;
+            case "terminalUps":
+                requestLink = "/get-terminal-ups?id=";
+                break;
         }
+       
         $.ajax({
             url: requestLink + svtObjId,
             type: 'GET',
             async: false,
             dataType: 'json',
             success: function (callback) {
-                $("#modalTitle")[0].innerText =  $("#modalTitle")[0].innerText + ": " + callback.model;
+                $("#modalTitle")[0].innerText = $("#modalTitle")[0].innerText + ": " + callback.model;
                 idPlace = callback.placeId;
                 codeDepartment = callback.departmentCode;
                 modelId = callback.modelId;
@@ -4158,20 +4370,19 @@ let modalContentLoad = function (eventReason, svtObjId) {
                     speakersId = callback.speakersId;
                     ipAdress = callback.ipAdress;
                     dateUpgrade = callback.dateUpgrade;
-                } else if(attrib == "fax") {
+                } else if (attrib == "fax") {
                     ipAdress = callback.ipAdress;
                 } else if (attrib == "scanner") {
                     ipAdress = callback.ipAdress;
-                } else if(attrib == "asuo") {
-                  
-                    switchList = callback.switches;
-                    terminalId = callback.terminalId;
-                    displayId = callback.displayId;
-                    thermoprinterId = callback.thermoprinterId;
+                } else if (attrib == "asuo") {
+                    hubs = callback.hubs;
+                    terminals= callback.terminals;
+                    displays = callback.displays;
                     subDisplayModelId = callback.subDisplayModelId;
                     subDisplayAmount = callback.subDisplayAmount;
                     switchingUnitId = callback.switchingUnitId;
-                    
+                    programSoftware = callback.programSoftware;
+
                 } else if (attrib == "server") {
                     operationSystemId = callback.operationSystemId;
                     cpuId = callback.cpuId;
@@ -4180,9 +4391,11 @@ let modalContentLoad = function (eventReason, svtObjId) {
                     hddListId = callback.hddIdList;
                     ipAdress = callback.ipAdress;
                     dateUpgrade = callback.dateUpgrade;
-                }else if (attrib == "switch") {
+                } else if (attrib == "switch") {
                     portAmount = callback.portAmount;
                     switchHubType = callback.switchHubType;
+                } else if(attrib == "hub") {
+                    portAmount = callback.portAmount;
                 } else if (attrib == "router") {
                     portAmount = callback.portAmount;
                 } else if (attrib == "ats") {
@@ -4197,13 +4410,21 @@ let modalContentLoad = function (eventReason, svtObjId) {
                     winterKit = callback.winterKit;
                     havePomp = callback.havePomp;
                     price = callback.price;
+                } else if(attrib == 'terminalDisplay') {
+                    screenSize = callback.screenDiagonal;
+                } else if(attrib == 'terminal') {
+                    terminalDisplayId = callback.terminalDisplayId;
+                    terminalPrinterId = callback.terminalPrinterId;
+                    terminalSensorId = callback.terminalSensorId;
+                    terminalServerId = callback.terminalServerId;
+                    terminalUpsId = callback.terminalUpsId;
                 }
             }
         });
-        if(parseStartDate) {
-        startDate = new Date(parseStartDate);
-        startExploitation = startDate.toISOString().slice(0, 10);
-    }
+        if (parseStartDate) {
+            startDate = new Date(parseStartDate);
+            startExploitation = startDate.toISOString().slice(0, 10);
+        }
         switch (status) {
             case "REPAIR":
                 $("#statusSelect")[0].value = "REPAIR";
@@ -4221,12 +4442,17 @@ let modalContentLoad = function (eventReason, svtObjId) {
                 $("#statusSelect")[0].value = "DEFECTIVE";
                 break;
         }
-        $("#inventaryNumber")[0].value = inventary;
-        $("#serialNumber")[0].value = serial;
-        if(null != $("#startExploitation")[0]) {
-            $("#startExploitation")[0].value = startExploitation;
+        if($("#inventaryNumber").length > 0) {
+          $("#inventaryNumber")[0].value = inventary;  
+        }
+        if($("#serialNumber").length > 0) {
+            $("#serialNumber")[0].value = serial;
         }
         
+        if (null != $("#startExploitation")[0]) {
+            $("#startExploitation")[0].value = startExploitation;
+        }
+
         switch (attrib) {
             case "phones":
                 requestLink = "/getphone?phoneId=";
@@ -4288,7 +4514,7 @@ let modalContentLoad = function (eventReason, svtObjId) {
                 $("#portAmount")[0].value = portAmount;
                 switch (switchHubType) {
                     case "SWITCH":
-                        $("#switchRadio")[0].checked = true;    
+                        $("#switchRadio")[0].checked = true;
                         break;
                     case "HUB":
                         $("#hubRadio")[0].checked = true;
@@ -4308,42 +4534,51 @@ let modalContentLoad = function (eventReason, svtObjId) {
                 $("#cityNumberAmount")[0].value = cityNumberAmount;
                 $("#outerConnectionType")[0].value = outerConnectionType;
                 break;
-             case "conditioner":
+            case "conditioner":
                 $("#nameFromOneC")[0].value = nameFromOneC;
                 $("#numberRoom")[0].value = numberRoom;
                 $("#descriptionInput")[0].value = description;
                 $("#price")[0].value = price;
                 $("#conditionerTypeSelect")[0].value = conditionerTypeSelect;
-                if(splitSystem) {
+                if (splitSystem) {
                     $("#splitSystemTrue")[0].checked = true;
                 }
-                if(winterKit) {
+                if (winterKit) {
                     $("#winterKitTrue")[0].checked = true;
                 }
-                if(havePomp) {
+                if (havePomp) {
                     $("#pompTrue")[0].checked = true;
                 }
                 break;
-                case "infomat":
+            case "infomat":
                 $("#nameFromOneC")[0].value = nameFromOneC;
                 $("#numberRoom")[0].value = numberRoom;
-               
+
                 break;
             case "asuo":
                 $("#nameFromOneC")[0].value = nameFromOneC;
-                $("#numberRoom")[0].value = numberRoom;
                 $("#subDisplayAmount")[0].value = subDisplayAmount;
+                break;
+            case "terminalDisplay":
+                $('#screenSizeInput')[0].value = screenSize;
+                break;
+            case "hub":
+                $("#nameFromOneC")[0].value = nameFromOneC;
+                $("#portAmount")[0].value = portAmount;
                 break;
         }
         if (eventReason.indexOf("storage") >= 0) {
             stor = true;
             $('#statusSelect')[0].disabled = true;
-            $("#inventaryNumber")[0].disabled = true;
-            $("#serialNumber")[0].disabled = true;
-            if(null != $("#startExploitation")[0]) {
-                $("#startExploitation")[0].disabled = true;
+            if($("#inventaryNumber").length > 0) {
+                $("#inventaryNumber")[0].disabled = true;
             }
             
+            $("#serialNumber")[0].disabled = true;
+            if (null != $("#startExploitation")[0]) {
+                $("#startExploitation")[0].disabled = true;
+            }
+
             switch (attrib) {
                 case "phones":
                     $("#innerCallNumber")[0].disabled = true;
@@ -4352,18 +4587,16 @@ let modalContentLoad = function (eventReason, svtObjId) {
                     $("#nameFromOneC")[0].disabled = true;
                     $("#baseTypeSelect")[0].disabled = true;
                     break;
-                     case "asuo":
-               
-                $("#numberRoom")[0].disabled = true;
-                $("#nameFromOneC")[0].disabled = true;
-                $("#subDisplayAmount")[0].disabled = true;
-            
-            break;
+                case "asuo":
+                    $("#nameFromOneC")[0].disabled = true;
+                    $("#subDisplayAmount")[0].disabled = true;
+
+                    break;
                 case "ups":
                     $("#dateReplaceSelect")[0].disabled = true;
                     $("#batteryAmount")[0].disabled = true;
                     break;
-                 case "upsforserver":
+                case "upsforserver":
                     $("#dateReplaceSelect")[0].disabled = true;
                     $("#batteryAmount")[0].disabled = true;
                     break;
@@ -4381,47 +4614,50 @@ let modalContentLoad = function (eventReason, svtObjId) {
                     $("#dateUpgrade")[0].disabled = true;
                     break;
                 case "switch":
-                $("#nameFromOneC")[0].value = nameFromOneC;
-                $("#numberRoom")[0].value = numberRoom;
-                $("#portAmount")[0].value = portAmount;
-                switch (switchHubType) {
-                    case "SWITCH":
-                        $("#switchRadio")[0].checked = true;    
-                        break;
-                    case "HUB":
-                        $("#hubRadio")[0].checked = true;
-                        break;
-                }
-                break;
+                    $("#nameFromOneC")[0].value = nameFromOneC;
+                    $("#numberRoom")[0].value = numberRoom;
+                    $("#portAmount")[0].value = portAmount;
+                    switch (switchHubType) {
+                        case "SWITCH":
+                            $("#switchRadio")[0].checked = true;
+                            break;
+                        case "HUB":
+                            $("#hubRadio")[0].checked = true;
+                            break;
+                    }
+                    break;
                 case "router":
-                $("#nameFromOneC")[0].value = nameFromOneC;
-                $("#numberRoom")[0].value = numberRoom;
-                $("#portAmount")[0].value = portAmount;
-                break;
+                    $("#nameFromOneC")[0].value = nameFromOneC;
+                    $("#numberRoom")[0].value = numberRoom;
+                    $("#portAmount")[0].value = portAmount;
+                    break;
                 case "ats":
-                $("#nameFromOneC")[0].value = nameFromOneC;
-                $("#numberRoom")[0].value = numberRoom;
-                $("#innerConnectionAnalog")[0].value = innerConnectionAnalog;
-                $("#innerConnectionIp")[0].value = innerConnectionIp;
-                $("#cityNumberAmount")[0].value = cityNumberAmount;
-                $("#outerConnectionType")[0].value = outerConnectionType;
-                break;
+                    $("#nameFromOneC")[0].value = nameFromOneC;
+                    $("#numberRoom")[0].value = numberRoom;
+                    $("#innerConnectionAnalog")[0].value = innerConnectionAnalog;
+                    $("#innerConnectionIp")[0].value = innerConnectionIp;
+                    $("#cityNumberAmount")[0].value = cityNumberAmount;
+                    $("#outerConnectionType")[0].value = outerConnectionType;
+                    break;
                 case "conditioner":
-                $("#nameFromOneC")[0].value = nameFromOneC;
-                $("#numberRoom")[0].value = numberRoom;
-                $("#descriptionInput")[0].value = description;
-                $("#price")[0].value = price;
-                $("#conditionerTypeSelect")[0].value = conditionerTypeSelect;
-                if(splitSystem) {
-                    $("#splitSystemTrue")[0].checked = true;
-                }
-                if(winterKit) {
-                    $("#winterKitTrue")[0].checked = true;
-                }
-                if(havePomp) {
-                    $("#havePompTrue")[0].checked = true;
-                }
-                break;
+                    $("#nameFromOneC")[0].value = nameFromOneC;
+                    $("#numberRoom")[0].value = numberRoom;
+                    $("#descriptionInput")[0].value = description;
+                    $("#price")[0].value = price;
+                    $("#conditionerTypeSelect")[0].value = conditionerTypeSelect;
+                    if (splitSystem) {
+                        $("#splitSystemTrue")[0].checked = true;
+                    }
+                    if (winterKit) {
+                        $("#winterKitTrue")[0].checked = true;
+                    }
+                    if (havePomp) {
+                        $("#havePompTrue")[0].checked = true;
+                    }
+                    break;
+                case "terminalDisplay":
+                    $("#screenSizeInput")[0].value = screenSize;
+                    break;
             }
         }
     }
@@ -4487,7 +4723,30 @@ let modalContentLoad = function (eventReason, svtObjId) {
         onChange: function (value) {
             if (value !== '' && value != curLoc) {
                 let placeType = "EMPLOYEE";
+                if(attribArray.includes(attrib)) {
+                        placeType = "OFFICEEQUIPMENT";
+                        
+                        
+                         $.ajax({
+                            url: '/place-by-loc-and-placetype?locationId=' + $("#locationSelect")[0].selectize.getValue() + '&placeType=' + placeType,
+                            type: 'GET',
+                            async: false,
+                            dataType: 'json',
+                            success: function (res) {
+                                let keys = Object.keys($('#placeSelect')[0].selectize.options);
+                                for (let i = 0; i < keys.length; i++) {
+                                    $('#placeSelect')[0].selectize.removeOption(keys[i]);
+                                }
+                                res.forEach(model => {
+                                    $('#placeSelect')[0].selectize.addOption(model);
+                                    $('#placeSelect')[0].selectize.addItem(model);
+                                });
+                                $('#placeSelect')[0].selectize.setValue($('#placeSelect')[0].selectize.search(0).items[0].id);
+                            }
 
+                        });
+                        
+                    } else {
                 switch (placeAttrib) {
                     case "serverroom":
                         placeType = "SERVERROOM";
@@ -4537,10 +4796,9 @@ let modalContentLoad = function (eventReason, svtObjId) {
 
                 });
 
-
+            }
                 curLoc = value;
             }
-
         }
     });
 
@@ -4549,7 +4807,7 @@ let modalContentLoad = function (eventReason, svtObjId) {
     } else {
         $('#locationSelect')[0].selectize.enable();
     }
-    
+
     $('#departmentSelect').selectize({
         preload: true,
         persist: true,
@@ -4559,95 +4817,97 @@ let modalContentLoad = function (eventReason, svtObjId) {
         searchField: ["code", "name"],
         placeholder: 'выберите отдел',
         onInitialize: function () {
-            
-            
-             let placeType = "EMPLOYEE";
 
-                switch (placeAttrib) {
-                    case "serverroom":
-                        placeType = "SERVERROOM";
-                        break;
-                    case "officeequipment":
-                        placeType = "OFFICEEQUIPMENT";
-                        break;
-                    default:
-                        placeType = "EMPLOYEE";
-                        break;
-                }
-                $.ajax({
-                    url: '/deplocplacetype?placeType=' + placeType + '&idLocation=' + $("#locationSelect")[0].selectize.getValue(),
-                    type: 'GET',
-                    async: false,
-                    dataType: 'json',
-                    success: function (res) {
-                        let keys = Object.keys($('#departmentSelect')[0].selectize.options);
-                        for (let i = 0; i < keys.length; i++) {
-                            $('#departmentSelect')[0].selectize.removeOption(keys[i]);
-                        }
-                        res.forEach(model => {
-                            $('#departmentSelect')[0].selectize.addOption(model);
-                            $('#departmentSelect')[0].selectize.addItem(model);
-                        });
-                        if(null != svtObjId) {
-                            curDep = $('#departmentSelect')[0].selectize.search(codeDepartment).items[0].id;
-                        $('#departmentSelect')[0].selectize.setValue($('#departmentSelect')[0].selectize.search(codeDepartment).items[0].id);
-                        } else {
-                        curDep = $('#departmentSelect')[0].selectize.search(0).items[0].id;
-                        $('#departmentSelect')[0].selectize.setValue($('#departmentSelect')[0].selectize.search(0).items[0].id);
-                    }
-                    }
-                });
 
-        },
-        onChange: function (value) {
-            if ((value !== '' && value != curDep) || (value !== '' && value != curDep && $('#locationSelect')[0].selectize.getValue() != curLoc)) {
-            let urlReq = "placebydepandloc";
-            let placetype = "EMPLOYEE";
+            let placeType = "EMPLOYEE";
 
             switch (placeAttrib) {
-                case 'serverroom':
-                    urlReq = "placeserverbydepandloc";
-                    placetype = "SERVERROOM";
+                case "serverroom":
+                    placeType = "SERVERROOM";
                     break;
-                case 'officeequipment':
-                    urlReq = "placeserverbydepandloc";
-                    placetype = "OFFICEEQUIPMENT";
+                case "officeequipment":
+                    placeType = "OFFICEEQUIPMENT";
                     break;
                 default:
-                    urlReq = "placebydepandloc";
-                    placetype = "EMPLOYEE";
+                    placeType = "EMPLOYEE";
                     break;
             }
             $.ajax({
-                url: '/' + urlReq + '?locationId=' + $('#locationSelect')[0].selectize.getValue() + '&departmentCode=' + $('#departmentSelect')[0].selectize.getValue() + '&placetype=' + placetype,
+                url: '/deplocplacetype?placeType=' + placeType + '&idLocation=' + $("#locationSelect")[0].selectize.getValue(),
                 type: 'GET',
                 async: false,
                 dataType: 'json',
                 success: function (res) {
-                    let keys = Object.keys($('#placeSelect')[0].selectize.options);
+                    let keys = Object.keys($('#departmentSelect')[0].selectize.options);
                     for (let i = 0; i < keys.length; i++) {
-                        $('#placeSelect')[0].selectize.removeOption(keys[i]);
+                        $('#departmentSelect')[0].selectize.removeOption(keys[i]);
                     }
                     res.forEach(model => {
-                        $('#placeSelect')[0].selectize.addOption(model);
-                        $('#placeSelect')[0].selectize.addItem(model);
+                        $('#departmentSelect')[0].selectize.addOption(model);
+                        $('#departmentSelect')[0].selectize.addItem(model);
                     });
-
-                    $('#placeSelect')[0].selectize.setValue($('#placeSelect')[0].selectize.search(0).items[0].id);
+                    if (null != svtObjId) {
+                        curDep = $('#departmentSelect')[0].selectize.search(codeDepartment).items[0].id;
+                        $('#departmentSelect')[0].selectize.setValue($('#departmentSelect')[0].selectize.search(codeDepartment).items[0].id);
+                    } else {
+                        curDep = $('#departmentSelect')[0].selectize.search(0).items[0].id;
+                        $('#departmentSelect')[0].selectize.setValue($('#departmentSelect')[0].selectize.search(0).items[0].id);
+                    }
                 }
             });
+
+        },
+        onChange: function (value) {
+            if ((value !== '' && value != curDep) || (value !== '' && value != curDep && $('#locationSelect')[0].selectize.getValue() != curLoc)) {
+                let urlReq = "placebydepandloc";
+                let placetype = "EMPLOYEE";
+
+                switch (placeAttrib) {
+                    case 'serverroom':
+                        urlReq = "placeserverbydepandloc";
+                        placetype = "SERVERROOM";
+                        break;
+                    case 'officeequipment':
+                        urlReq = "placeserverbydepandloc";
+                        placetype = "OFFICEEQUIPMENT";
+                        break;
+                    default:
+                        urlReq = "placebydepandloc";
+                        placetype = "EMPLOYEE";
+                        break;
+                }
+                $.ajax({
+                    url: '/' + urlReq + '?locationId=' + $('#locationSelect')[0].selectize.getValue() + '&departmentCode=' + $('#departmentSelect')[0].selectize.getValue() + '&placetype=' + placetype,
+                    type: 'GET',
+                    async: false,
+                    dataType: 'json',
+                    success: function (res) {
+                        let keys = Object.keys($('#placeSelect')[0].selectize.options);
+                        for (let i = 0; i < keys.length; i++) {
+                            $('#placeSelect')[0].selectize.removeOption(keys[i]);
+                        }
+                        res.forEach(model => {
+                            $('#placeSelect')[0].selectize.addOption(model);
+                            $('#placeSelect')[0].selectize.addItem(model);
+                        });
+
+                        $('#placeSelect')[0].selectize.setValue($('#placeSelect')[0].selectize.search(0).items[0].id);
+                    }
+                });
+            }
+        }
+
+    });
+    if (eventReason.indexOf("storage") >= 0) {
+        $('#departmentSelect')[0].selectize.disable();
+    } else {
+        if ($('#departmentSelect').length > 0) {
+            $('#departmentSelect')[0].selectize.enable();
         }
     }
 
-    });
-        if (eventReason.indexOf("storage") >= 0) {
-            $('#departmentSelect')[0].selectize.disable();
-        } else {
-            $('#departmentSelect')[0].selectize.enable();
-        }
-    
 
-    
+
     $('#placeSelect').selectize({
         valueField: 'placeId',
         labelField: 'username',
@@ -4656,8 +4916,35 @@ let modalContentLoad = function (eventReason, svtObjId) {
         sortField: 'username',
         placeholder: 'выберите рабочее место',
         onInitialize: function () {
+
             let urlReq = "placebydepandloc";
             let placetype = "EMPLOYEE";
+
+            if(attribArray.includes(attrib)) {
+                
+               placeType = "OFFICEEQUIPMENT";
+                    
+                    $.ajax({
+                    url: '/place-by-loc-and-placetype?locationId=' + $("#locationSelect")[0].selectize.getValue() + '&placeType=' + placeType,
+                    type: 'GET',
+                    async: false,
+                    dataType: 'json',
+                    success: function (res) {
+                        let keys = Object.keys($('#placeSelect')[0].selectize.options);
+                        for (let i = 0; i < keys.length; i++) {
+                            $('#placeSelect')[0].selectize.removeOption(keys[i]);
+                        }
+                        res.forEach(model => {
+                            $('#placeSelect')[0].selectize.addOption(model);
+                            $('#placeSelect')[0].selectize.addItem(model);
+                        });
+
+                        $('#placeSelect')[0].selectize.setValue($('#placeSelect')[0].selectize.search(0).items[0].id);
+                    }
+                });
+                
+            } else {
+
 
             switch (placeAttrib) {
                 case 'serverroom':
@@ -4688,22 +4975,22 @@ let modalContentLoad = function (eventReason, svtObjId) {
                         $('#placeSelect')[0].selectize.addOption(model);
                         $('#placeSelect')[0].selectize.addItem(model);
                     });
-                    
-                          if (eventReason.indexOf("storage") >= 0) {
-                            $.ajax({
-                                url: '/placebyid?placeId=' + idPlace,
-                                type: 'GET',
-                                async: false,
-                                dataType: 'json',
-                                error: function (callback) {
-                                    console.log(callback);
-                                },
-                                success: function (callback) {
-                                    $('#placeSelect')[0].selectize.addOption(callback);
-                                }
-                            });
-                        }
-                    
+
+                    if (eventReason.indexOf("storage") >= 0) {
+                        $.ajax({
+                            url: '/placebyid?placeId=' + idPlace,
+                            type: 'GET',
+                            async: false,
+                            dataType: 'json',
+                            error: function (callback) {
+                                console.log(callback);
+                            },
+                            success: function (callback) {
+                                $('#placeSelect')[0].selectize.addOption(callback);
+                            }
+                        });
+                    }
+
                     if (null != svtObjId) {
                         $('#placeSelect')[0].selectize.setValue($('#placeSelect')[0].selectize.search(idPlace).items[0].id);
                     } else {
@@ -4711,133 +4998,189 @@ let modalContentLoad = function (eventReason, svtObjId) {
                     }
                 }
             });
-      
+        }
         },
     });
 
-  
-        if (eventReason.indexOf("storage") >= 0) {
-            $('#placeSelect')[0].selectize.disable();
-        } else {
-            $('#placeSelect')[0].selectize.enable();
-        }
-    
-    
-    if(attrib != "asuo") {
-        
-    $('#modelSelect').selectize({
-        preload: true,
-        persist: true,
-        placeholder: "выберите модель",
-        valueField: 'id',
-        labelField: 'model',
-        sortField: 'model',
-        searchField: ["id", "model"],
-        onInitialize: function () {
-            let requestLink;
-            switch (attrib) {
-                case "phones":
-                    requestLink = "/modphones";
-                    break;
-                case "fax":
-                    requestLink = "/modfax";
-                    break;
-                case "monitors":
-                    requestLink = "/modmonitors";
-                    break;
-                case "ups":
-                    requestLink = "/modups";
-                    break;
-                case "upsforserver":
-                    requestLink = "/modups";
-                    break;
-                case "systemblock":
-                    requestLink = "/modsysblock";
-                    break;
-                case "scanner":
-                    requestLink = "/modscanner";
-                    break;
-                case "server":
-                    requestLink = "/modserver";
-                    break;
-                case "switch":
-                    requestLink = "/modswitch";
-                    break;
-                case "router":
-                    requestLink = "/modrouter";
-                    break;
-                case "ats":
-                    requestLink = "/modats";
-                    break;
-                case "conditioner":
-                    requestLink = "/modconditioner";
-                    break;
-                case "infomat":
-                    requestLink = "/modinfomat";
-                    break;
-                case "terminal":
-                    requestLink = "/modterminal";
-                    break;
-                case "thermoprinter":
-                    requestLink = "/modthermoprinter";
-                    break;
-                case "display":
-                    requestLink = "/moddisplay";
-                    break;
-                case "swunit":
-                    requestLink = "/modswunit";
-                    break;
-            }
-            $.ajax({
-                url: requestLink,
-                type: 'GET',
-                async: false,
-                dataType: 'json',
-                success: function(res) {
-                    
-                            res.forEach(model => {
-                                $('#modelSelect')[0].selectize.addOption(model);
-                                $('#modelSelect')[0].selectize.addItem(model);
-                            });
-                             if (null != svtObjId) {
-                            $('#modelSelect')[0].selectize.setValue($('#modelSelect')[0].selectize.search(modelId).items[0].id);
-                        } else {
-                            $('#modelSelect')[0].selectize.setValue($('#modelSelect')[0].selectize.search("не указано").items[0].id);
-                        }
+
+    if (eventReason.indexOf("storage") >= 0) {
+        $('#placeSelect')[0].selectize.disable();
+    } else {
+        $('#placeSelect')[0].selectize.enable();
+    }
+
+
+    if (attrib != "asuo") {
+
+        $('#modelSelect').selectize({
+            preload: true,
+            persist: true,
+            placeholder: "выберите модель",
+            valueField: 'id',
+            labelField: 'model',
+            sortField: 'model',
+            searchField: ["id", "model"],
+            onInitialize: function () {
+                let requestLink;
+                switch (attrib) {
+                    case "phones":
+                        requestLink = "/modphones";
+                        break;
+                    case "fax":
+                        requestLink = "/modfax";
+                        break;
+                    case "monitors":
+                        requestLink = "/modmonitors";
+                        break;
+                    case "ups":
+                        requestLink = "/modups";
+                        break;
+                    case "upsforserver":
+                        requestLink = "/modups";
+                        break;
+                    case "systemblock":
+                        requestLink = "/modsysblock";
+                        break;
+                    case "scanner":
+                        requestLink = "/modscanner";
+                        break;
+                    case "server":
+                        requestLink = "/modserver";
+                        break;
+                    case "switch":
+                        requestLink = "/modswitch";
+                        break;
+                    case "router":
+                        requestLink = "/modrouter";
+                        break;
+                    case "ats":
+                        requestLink = "/modats";
+                        break;
+                    case "conditioner":
+                        requestLink = "/modconditioner";
+                        break;
+                    case "infomat":
+                        requestLink = "/modinfomat";
+                        break;
+                    case "terminal":
+                        requestLink = "/modterminal";
+                        break;
+                    case "display":
+                        requestLink = "/moddisplay";
+                        break;
+                    case "terminalDisplay":
+                        requestLink = "/get-models-terminal-display-all";
+                        break;
+                    case "terminalSensor":
+                        requestLink = "/get-models-terminal-sensor-all";
+                        break;
+                    case "terminalPrinter":
+                        requestLink = "/get-models-terminal-printer-all";
+                        break;
+                    case "terminalServer":
+                        requestLink = "/get-models-terminal-server-all";
+                        break;
+                    case "terminalUps":
+                        requestLink = "/get-models-terminal-ups-all";
+                        break;
+                    case "hub":
+                        requestLink = "/get-models-hub-all";
+                        break;
                 }
-            });
-        },
-        
-    });
+                $.ajax({
+                    url: requestLink,
+                    type: 'GET',
+                    async: false,
+                    dataType: 'json',
+                    success: function (res) {
+
+                        res.forEach(model => {
+                            $('#modelSelect')[0].selectize.addOption(model);
+                            $('#modelSelect')[0].selectize.addItem(model);
+                        });
+                       
+                    }
+                });
+                
+                if (null != svtObjId) {
+                    $('#modelSelect')[0].selectize.setValue($('#modelSelect')[0].selectize.search(modelId).items[0].id);
+                } else {
+                    $('#modelSelect')[0].selectize.setValue($('#modelSelect')[0].selectize.search("не указано").items[0].id);
+                }
+
+            },
+             render: {
+                    option: function (item, escape) {
+                        return '<div style="margin:0px 2px 5px 2px; padding:8px; padding-right:10px; border-radius:5px;">'
+                                + escape(item.manufacturerName) + ' ' + escape(item.model)
+                                + '</div>';
+                    },
+                    item: function (item, escape) {
+                        return '<div>'
+                                + escape(item.manufacturerName) + ' ' + escape(item.model)
+                                + '</div>';
+                    }
+                }
+
+        });
         if (eventReason.indexOf("storage") >= 0) {
             $('#modelSelect')[0].selectize.disable();
         } else {
             $('#modelSelect')[0].selectize.enable();
         }
-}
+    }
+    
+    
     switch (attrib) {
         case "asuo":
             let displayLink = "/getalldisplay";
             let terminalLink = "/getallterminal";
-            let thermoprinterLink = "/getallthermoprinter";
-            let swunitLink = "/getallswunit";
-            let switchLink = "/getallswitch";
+            let poLink = "/get-all-po";
+            let hubLink = "/get-hubs";
             if (eventReason.indexOf("element") >= 0 || eventReason.indexOf("storage") >= 0) {
                 displayLink = "/getdisplays";
                 terminalLink = "/getterminals";
-                thermoprinterLink = "/getthermoprinters";
-                swunitLink = "/getswunits";
-                switchLink = "/getswitches";
+                hubLink = "/get-hubs";
                 
-                
-                switchListId = new Array();
-                switchList.forEach(item => {
-                switchListId.push(item.id);
-            });
-                
-            }
 
-            $("#displaySelect").selectize({
+                switchListId = new Array();
+                switchListId.forEach(item => {
+                    switchListId.push(item.id);
+                });
+
+            }
+            
+            
+            $("#poSelect").selectize({
+                placeholder: "Выберите из списка",
+                preload: true,
+                valueField: 'id',
+                labelField: "name",
+                searchField: ["id", "name"],
+                load: function (query, callback) {
+                    $.ajax({
+                        url: poLink,
+                        type: 'GET',
+                        async: false,
+                        dataType: 'json',
+                        error: callback,
+                        success: callback
+                    });
+                    if (null != svtObjId && programSoftware != null) {
+                        
+                            $('#poSelect')[0].selectize.setValue($('#poSelect')[0].selectize.search(programSoftware).items[0].id);
+                        
+                    } 
+                },
+            
+            });
+            
+
+            $("#displaySelect-1").selectize({
+                plugins: ["remove_button"],
+                delimiter: ",",
+                persist: true,
+                maxItems: null,
                 placeholder: "Выберите из списка",
                 preload: true,
                 valueField: 'id',
@@ -4850,16 +5193,35 @@ let modalContentLoad = function (eventReason, svtObjId) {
                         async: false,
                         dataType: 'json',
                         error: callback,
-                        success: callback
-                    });
-                       if (eventReason.indexOf("element") >= 0 || eventReason.indexOf("storage") >= 0) {
-                        $('#displaySelect')[0].selectize.setValue($('#displaySelect')[0].selectize.search(displayId).items[0].id);
-                        if (eventReason.indexOf("storage") >= 0) {
-                            $('#displaySelect')[0].selectize.disable();
-                        } else {
-                            $('#displaySelect')[0].selectize.enable();
+                        success: function(res) {
+                            
+                           res.forEach(model => {
+                               if(svtObjId == model.asuoId || model.hasInstalled == false) {
+                                    $('#displaySelect-1')[0].selectize.addOption(model);
+                                    $('#displaySelect-1')[0].selectize.addItem(model);
+                               }
+                                
+                            });
                         }
-                    }
+                    });
+                    if (null != svtObjId) {
+                        let disp = new Array();
+                        for (let r = 0; r < displays.length; r++) {
+                            disp.push(displays[r].id);
+                        }
+                        $('#displaySelect-1')[0].selectize.setValue(disp);
+
+                    } 
+                },
+                onInitialize: function() {
+                                this.trigger('change', this.getValue(), true);
+                },
+                onChange: function(value, isOnInitialize) {
+                    var curentDisplayLabel = this.$wrapper.closest('.row')
+                            .children('.display-label')[0];
+                    
+                  
+
                 },
                 render: {
                     option: function (item, escape) {
@@ -4880,20 +5242,16 @@ let modalContentLoad = function (eventReason, svtObjId) {
                                 + '</div>';
                     }
                 }
-    
+
             });
-       
-       if ($('#displaySelect')[0].selectize.getValue() == "" && $('#displaySelect')[0].selectize.order > 0) {
-                $('#displaySelect')[0].selectize.setValue($('#displaySelect')[0].selectize.search(displayId).items[0].id);
-                if (eventReason.indexOf("storage") >= 0) {
-                    $('#displaySelect')[0].selectize.disable();
-                } else {
-                    $('#displaySelect')[0].selectize.enable();
-                }
-            }
             
-            $("#terminalSelect").selectize({
+
+            $("#terminalSelect-1").selectize({
+                plugins: ["remove_button"],
                 placeholder: "Выберите из списка",
+                delimiter: ",",
+                persist: true,
+                maxItems: null,
                 preload: true,
                 valueField: 'id',
                 labelField: "model",
@@ -4905,17 +5263,36 @@ let modalContentLoad = function (eventReason, svtObjId) {
                         async: false,
                         dataType: 'json',
                         error: callback,
-                        success: callback
-                    });
-                         if (eventReason.indexOf("element") >= 0 || eventReason.indexOf("storage") >= 0) {
-                        $('#terminalSelect')[0].selectize.setValue($('#terminalSelect')[0].selectize.search(terminalId).items[0].id);
-                        if (eventReason.indexOf("storage") >= 0) {
-                            $('#terminalSelect')[0].selectize.disable();
-                        } else {
-                            $('#terminalSelect')[0].selectize.enable();
+                        success: function(res) {
+                              res.forEach(model => {
+                               if(model.asuos == svtObjId || model.asuos.length == 0) {
+                                    $('#terminalSelect-1')[0].selectize.addOption(model);
+                                    $('#terminalSelect-1')[0].selectize.addItem(model);
+                               }
+                                
+                            });
                         }
-                    }
+                    });
+                 
+                 
+                    if (null != svtObjId) {
+
+                            forTerminals = new Array();
+                            for (let r = 0; r < terminals.length; r++) {
+                                forTerminals.push(terminals[r].id);
+                            }
+                            $('#terminalSelect-1')[0].selectize.setValue(forTerminals);
+                        
+                    } 
+
+                 
                 },
+                onInitialize: function(query, callback) {
+                                this.trigger('change', this.getValue(), true);
+                                
+
+                },
+
                 render: {
                     option: function (item, escape) {
                         return '<div style="margin-left:2px; padding-left:10px; margin-right:2px;padding-right:10px; border-radius:5px;">'
@@ -4937,16 +5314,12 @@ let modalContentLoad = function (eventReason, svtObjId) {
                 }
             });
             
-            if ($('#terminalSelect')[0].selectize.getValue() == "" && $('#terminalSelect')[0].selectize.order > 0) {
-                $('#terminalSelect')[0].selectize.setValue($('#terminalSelect')[0].selectize.search(terminalId).items[0].id);
-                if (eventReason.indexOf("storage") >= 0) {
-                    $('#terminalSelect')[0].selectize.disable();
-                } else {
-                    $('#terminalSelect')[0].selectize.enable();
-                }
-            }
             
-            $("#thermoprinterSelect").selectize({
+              $("#hubSelect-1").selectize({
+                plugins: ["remove_button"],
+                delimiter: ",",
+                persist: true,
+                maxItems: null,
                 placeholder: "Выберите из списка",
                 preload: true,
                 valueField: 'id',
@@ -4954,21 +5327,40 @@ let modalContentLoad = function (eventReason, svtObjId) {
                 searchField: ["id", "model"],
                 load: function (query, callback) {
                     $.ajax({
-                        url: thermoprinterLink,
+                        url: hubLink,
                         type: 'GET',
                         async: false,
                         dataType: 'json',
                         error: callback,
-                        success: callback
-                    });
-                          if (eventReason.indexOf("element") >= 0 || eventReason.indexOf("storage") >= 0) {
-                        $('#thermoprinterSelect')[0].selectize.setValue($('#thermoprinterSelect')[0].selectize.search(thermoprinterId).items[0].id);
-                        if (eventReason.indexOf("storage") >= 0) {
-                            $('#thermoprinterSelect')[0].selectize.disable();
-                        } else {
-                            $('#thermoprinterSelect')[0].selectize.enable();
+                        success: function(res) {
+                              res.forEach(model => {
+                               if(model.asuoId == svtObjId || model.asuoId == null) {
+                                    $('#hubSelect-1')[0].selectize.addOption(model);
+                                    $('#hubSelect-1')[0].selectize.addItem(model);
+                               }
+                                
+                            });
                         }
-                    }
+                    });
+                 
+                    if (null != svtObjId) {
+                        let hubArr = new Array();
+                        for (let r = 0; r < hubs.length; r++) {
+                            hubArr.push(hubs[r].id);
+                        }
+                        $('#hubSelect-1')[0].selectize.setValue(hubArr);
+                    } 
+                 
+                },
+                onInitialize: function() {
+                                this.trigger('change', this.getValue(), true);
+                },
+                onChange: function(value, isOnInitialize) {
+                    var curentHubLabel = this.$wrapper.closest('.row')
+                            .children('.hub-label')[0];
+                    
+                   
+
                 },
                 render: {
                     option: function (item, escape) {
@@ -4992,66 +5384,23 @@ let modalContentLoad = function (eventReason, svtObjId) {
             });
             
             
-             if ($('#thermoprinterSelect')[0].selectize.getValue() == "" && $('#thermoprinterSelect')[0].selectize.order > 0) {
-                $('#thermoprinterSelect')[0].selectize.setValue($('#thermoprinterSelect')[0].selectize.search(thermoprinterId).items[0].id);
-                if (eventReason.indexOf("storage") >= 0) {
-                    $('#thermoprinterSelect')[0].selectize.disable();
-                } else {
-                    $('#thermoprinterSelect')[0].selectize.enable();
-                }
-            }
-            $("#switchingUnitSelect").selectize({
-                placeholder: "Выберите из списка",
-                preload: true,
-                valueField: 'id',
-                labelField: "model",
-                searchField: ["id", "model"],
-                load: function (query, callback) {
-                    $.ajax({
-                        url: swunitLink,
-                        type: 'GET',
-                        async: false,
-                        dataType: 'json',
-                        error: callback,
-                        success: callback
-                    });
-                            if (eventReason.indexOf("element") >= 0 || eventReason.indexOf("storage") >= 0) {
-                        $('#switchingUnitSelect')[0].selectize.setValue($('#switchingUnitSelect')[0].selectize.search(switchingUnitId).items[0].id);
-                        if (eventReason.indexOf("storage") >= 0) {
-                            $('#switchingUnitSelect')[0].selectize.disable();
-                        } else {
-                            $('#switchingUnitSelect')[0].selectize.enable();
-                        }
-                    }
-                },
-                render: {
-                    option: function (item, escape) {
-                        return '<div style="margin-left:2px; padding-left:10px; margin-right:2px;padding-right:10px; border-radius:5px;">'
-                                + '<strong>'
-                                + escape(item.model) + ' - '
-                                + '</strong>'
-                                + ' инв №: '
-                                + escape(item.serialNumber) + ', сер №: '
-                                + escape(item.inventaryNumber)
-                                + '</div>';
-                    },
-                    item: function (item, escape) {
-                        return '<div>'
-                                + escape(item.model) + ', инв №:'
-                                + escape(item.serialNumber) + ', сер №:'
-                                + escape(item.inventaryNumber)
-                                + '</div>';
-                    }
-                }
-            });
-            if ($('#switchingUnitSelect')[0].selectize.getValue() == "" && $('#switchingUnitSelect')[0].selectize.order > 0) {
-                $('#switchingUnitSelect')[0].selectize.setValue($('#switchingUnitSelect')[0].selectize.search(switchingUnitId).items[0].id);
-                if (eventReason.indexOf("storage") >= 0) {
-                    $('#switchingUnitSelect')[0].selectize.disable();
-                } else {
-                    $('#switchingUnitSelect')[0].selectize.enable();
-                }
-            }
+            
+            
+            
+            
+
+//            if ($('#terminalSelect')[0].selectize.getValue() == "" && $('#terminalSelect')[0].selectize.order > 0) {
+//                $('#terminalSelect')[0].selectize.setValue($('#terminalSelect')[0].selectize.search(terminalId).items[0].id);
+//                if (eventReason.indexOf("storage") >= 0) {
+//                    $('#terminalSelect')[0].selectize.disable();
+//                } else {
+//                    $('#terminalSelect')[0].selectize.enable();
+//                }
+//            }
+
+
+
+
             $("#subDisplaySelect").selectize({
                 placeholder: "Выберите из списка",
                 preload: true,
@@ -5067,7 +5416,7 @@ let modalContentLoad = function (eventReason, svtObjId) {
                         error: callback,
                         success: callback
                     });
-                         if (eventReason.indexOf("element") >= 0 || eventReason.indexOf("storage") >= 0) {
+                    if (eventReason.indexOf("element") >= 0 || eventReason.indexOf("storage") >= 0) {
                         $('#subDisplaySelect')[0].selectize.setValue($('#subDisplaySelect')[0].selectize.search(subDisplayModelId).items[0].id);
                         if (eventReason.indexOf("storage") >= 0) {
                             $('#subDisplaySelect')[0].selectize.disable();
@@ -5076,7 +5425,7 @@ let modalContentLoad = function (eventReason, svtObjId) {
                         }
                     }
                 }
-                
+
             });
             if ($('#subDisplaySelect')[0].selectize.getValue() == "" && $('#subDisplaySelect')[0].selectize.order > 0) {
                 $('#subDisplaySelect')[0].selectize.setValue($('#subDisplaySelect')[0].selectize.search(subDisplayModelId).items[0].id);
@@ -5086,11 +5435,15 @@ let modalContentLoad = function (eventReason, svtObjId) {
                     $('#subDisplaySelect')[0].selectize.enable();
                 }
             }
-            $("#switchSelect").selectize({
-                plugins: ["remove_button"],
-                delimiter: ",",
-                persist: true,
-                maxItems: null,
+          
+
+
+
+            break;
+
+        case "terminal":
+        
+        $("#terminalDisplaySelect").selectize({
                 placeholder: "Выберите из списка",
                 preload: true,
                 valueField: 'id',
@@ -5098,98 +5451,271 @@ let modalContentLoad = function (eventReason, svtObjId) {
                 searchField: ["id", "model"],
                 load: function (query, callback) {
                     $.ajax({
-                        url: switchLink,
+                        url: "/get-terminal-displays",
                         type: 'GET',
                         async: false,
                         dataType: 'json',
                         error: callback,
-                        success: callback
-                    });
-                  if (eventReason.indexOf("element") >= 0 || eventReason.indexOf("storage") >= 0) {
-                        forSwitchArray = new Array();
-                        for (let r = 0; r < switchListId.length; r++) {
-                            forSwitchArray.push($('#switchSelect')[0].selectize.search(switchListId[r]).items[0].id);
+                        success: function (res) {
+                               res.forEach(model => {
+                                   if(model.hasInstalled == false || model.terminalId == svtObjId) {
+                                $('#terminalDisplaySelect')[0].selectize.addOption(model);
+                                $('#terminalDisplaySelect')[0].selectize.addItem(model);
+                            }
+                            });
+                            
                         }
-                        $('#switchSelect')[0].selectize.setValue(forSwitchArray);
+                    });
+                    if (eventReason.indexOf("element") >= 0 || eventReason.indexOf("storage") >= 0) {
+                        $('#terminalDisplaySelect')[0].selectize.setValue($('#terminalDisplaySelect')[0].selectize.search(terminalDisplayId).items[0].id);
                         if (eventReason.indexOf("storage") >= 0) {
-                            $('#switchSelect')[0].selectize.disable();
+                            $('#terminalDisplaySelect')[0].selectize.disable();
                         } else {
-                            $('#switchSelect')[0].selectize.enable();
+                            $('#terminalDisplaySelect')[0].selectize.enable();
                         }
                     }
                 },
                 render: {
                     option: function (item, escape) {
-                        return '<div style="margin-left:3px; padding-left:10px; margin-right:3px;padding-right:10px; border-radius:5px;">'
+                        return '<div>'
                                 + '<strong>'
-                                + escape(item.model) + '- '
-                                + '</strong>' + ' инв: ' +
-                                + escape(item.inventaryNumber) + ', сер: '
-                                + escape(item.serialNumber) 
+                                + escape(item.manufacturer) + ' ' + escape(item.model) + '- '
+                                + '</strong><br>'
+                                + 'Серийный номер: ' +  escape(item.serialNumber)  + ', <br>'
+                                + 'Статус: ' +  escape(getStatus(item.status))
                                 + '</div>';
                     },
                     item: function (item, escape) {
                         return '<div>'
-                                + escape(item.model) + ', инв:'
-                                + escape(item.inventaryNumber) + ', сер: '
-                                + escape(item.serialNumber)
+                                + escape(item.manufacturer) + ' ' + escape(item.model) + ', <br>'
+                                + 'Серийный номер: ' +  escape(item.serialNumber)  + ', <br>'
+                                + 'Статус: ' +  escape(getStatus(item.status))
                                 + '</div>';
                     }
                 }
+
             });
             
-            if ($('#switchSelect')[0].selectize.getValue() == "" && $('#switchSelect')[0].selectize.order > 0) {
-                forSwitchArray = new Array();
-                for (let r = 0; r < switchListId.length; r++) {
-                    forSwitchArray.push($('#switchSelect')[0].selectize.search(switchListId[r]).items[0].id);
+            
+            $("#terminalSensorSelect").selectize({
+                placeholder: "Выберите из списка",
+                preload: true,
+                valueField: 'id',
+                labelField: "model",
+                searchField: ["id", "model"],
+                load: function (query, callback) {
+                    $.ajax({
+                        url: "/get-terminal-sensors",
+                        type: 'GET',
+                        async: false,
+                        dataType: 'json',
+                        error: callback,
+                        success: function (res) {
+                               res.forEach(model => {
+                                   if(model.hasInstalled == false || model.terminalId == svtObjId) {
+                                $('#terminalSensorSelect')[0].selectize.addOption(model);
+                                $('#terminalSensorSelect')[0].selectize.addItem(model);
+                            }
+                            });
+                            
+                        }
+                    });
+                    if (eventReason.indexOf("element") >= 0 || eventReason.indexOf("storage") >= 0) {
+                        $('#terminalSensorSelect')[0].selectize.setValue($('#terminalSensorSelect')[0].selectize.search(terminalSensorId).items[0].id);
+                        if (eventReason.indexOf("storage") >= 0) {
+                            $('#terminalSensorSelect')[0].selectize.disable();
+                        } else {
+                            $('#terminalSensorSelect')[0].selectize.enable();
+                        }
+                    }
+                },
+                render: {
+                    option: function (item, escape) {
+                        return '<div>'
+                                + '<strong>'
+                                + escape(item.manufacturer) + ' ' + escape(item.model) + '- '
+                                + '</strong><br>'
+                                + 'Серийный номер: ' +  escape(item.serialNumber)  + ', <br>'
+                                + 'Статус: ' +  escape(getStatus(item.status))
+                                + '</div>';
+                    },
+                    item: function (item, escape) {
+                        return '<div>'
+                                + escape(item.manufacturer) + ' ' + escape(item.model) + ', <br>'
+                                + 'Серийный номер: ' +  escape(item.serialNumber)  + ', <br>'
+                                + 'Статус: ' +  escape(getStatus(item.status))
+                                + '</div>';
+                    }
                 }
-                if (eventReason.indexOf("storage") >= 0) {
-                    $('#switchSelect')[0].selectize.disable();
-                } else {
-                    $('#switchSelect')[0].selectize.enable();
+
+            });
+            
+            $("#terminalServerSelect").selectize({
+                placeholder: "Выберите из списка",
+                preload: true,
+                valueField: 'id',
+                labelField: "model",
+                searchField: ["id", "model"],
+                load: function (query, callback) {
+                    $.ajax({
+                        url: "/get-terminal-servers",
+                        type: 'GET',
+                        async: false,
+                        dataType: 'json',
+                        error: callback,
+                        success: function (res) {
+                               res.forEach(model => {
+                                   if(model.hasInstalled == false || model.terminalId == svtObjId) {
+                                $('#terminalServerSelect')[0].selectize.addOption(model);
+                                $('#terminalServerSelect')[0].selectize.addItem(model);
+                            }
+                            });
+                            
+                        }
+                    });
+                    if (eventReason.indexOf("element") >= 0 || eventReason.indexOf("storage") >= 0) {
+                        $('#terminalServerSelect')[0].selectize.setValue($('#terminalServerSelect')[0].selectize.search(terminalServerId).items[0].id);
+                        if (eventReason.indexOf("storage") >= 0) {
+                            $('#terminalServerSelect')[0].selectize.disable();
+                        } else {
+                            $('#terminalServerSelect')[0].selectize.enable();
+                        }
+                    }
+                },
+                render: {
+                    option: function (item, escape) {
+                        return '<div>'
+                                + '<strong>'
+                                + escape(item.manufacturer) + ' ' + escape(item.model) + '- '
+                                + '</strong><br>'
+                                + 'Серийный номер: ' +  escape(item.serialNumber)  + ', <br>'
+                                + 'Статус: ' +  escape(getStatus(item.status))
+                                + '</div>';
+                    },
+                    item: function (item, escape) {
+                        return '<div>'
+                                + escape(item.manufacturer) + ' ' + escape(item.model) + ', <br>'
+                                + 'Серийный номер: ' +  escape(item.serialNumber)  + ', <br>'
+                                + 'Статус: ' +  escape(getStatus(item.status))
+                                + '</div>';
+                    }
                 }
-            }
+
+            });
+            
+            $("#terminalPrinterSelect").selectize({
+                placeholder: "Выберите из списка",
+                preload: true,
+                valueField: 'id',
+                labelField: "model",
+                searchField: ["id", "model"],
+                load: function (query, callback) {
+                    $.ajax({
+                        url: "/get-terminal-printers",
+                        type: 'GET',
+                        async: false,
+                        dataType: 'json',
+                        error: callback,
+                        success: function (res) {
+                               res.forEach(model => {
+                                   if(model.hasInstalled == false || model.terminalId == svtObjId) {
+                                $('#terminalPrinterSelect')[0].selectize.addOption(model);
+                                $('#terminalPrinterSelect')[0].selectize.addItem(model);
+                            }
+                            });
+                            
+                        }
+                    });
+                    if (eventReason.indexOf("element") >= 0 || eventReason.indexOf("storage") >= 0) {
+                        $('#terminalPrinterSelect')[0].selectize.setValue($('#terminalPrinterSelect')[0].selectize.search(terminalPrinterId).items[0].id);
+                        if (eventReason.indexOf("storage") >= 0) {
+                            $('#terminalPrinterSelect')[0].selectize.disable();
+                        } else {
+                            $('#terminalPrinterSelect')[0].selectize.enable();
+                        }
+                    }
+                },
+                render: {
+                    option: function (item, escape) {
+                        return '<div>'
+                                + '<strong>'
+                                + escape(item.manufacturer) + ' ' + escape(item.model) + '- '
+                                + '</strong><br>'
+                                + 'Серийный номер: ' +  escape(item.serialNumber)  + ', <br>'
+                                + 'Статус: ' +  escape(getStatus(item.status))
+                                + '</div>';
+                    },
+                    item: function (item, escape) {
+                        return '<div>'
+                                + escape(item.manufacturer) + ' ' + escape(item.model) + ', <br>'
+                                + 'Серийный номер: ' +  escape(item.serialNumber)  + ', <br>'
+                                + 'Статус: ' +  escape(getStatus(item.status))
+                                + '</div>';
+                    }
+                }
+
+            });
+        
+        
+            $("#terminalUpsSelect").selectize({
+                placeholder: "Выберите из списка",
+                preload: true,
+                valueField: 'id',
+                labelField: "model",
+                searchField: ["id", "model"],
+                load: function (query, callback) {
+                    $.ajax({
+                        url: "/get-terminal-upses",
+                        type: 'GET',
+                        async: false,
+                        dataType: 'json',
+                        error: callback,
+                        success: function (res) {
+                               res.forEach(model => {
+                                   if(model.hasInstalled == false || model.terminalId == svtObjId) {
+                                $('#terminalUpsSelect')[0].selectize.addOption(model);
+                                $('#terminalUpsSelect')[0].selectize.addItem(model);
+                            }
+                            });
+                            
+                        }
+                    });
+                    if (eventReason.indexOf("element") >= 0 || eventReason.indexOf("storage") >= 0) {
+                        $('#terminalUpsSelect')[0].selectize.setValue($('#terminalUpsSelect')[0].selectize.search(terminalUpsId).items[0].id);
+                        if (eventReason.indexOf("storage") >= 0) {
+                            $('#terminalUpsSelect')[0].selectize.disable();
+                        } else {
+                            $('#terminalUpsSelect')[0].selectize.enable();
+                        }
+                    }
+                },
+                render: {
+                    option: function (item, escape) {
+                        return '<div>'
+                                + '<strong>'
+                                + escape(item.manufacturer) + ' ' + escape(item.model) + '- '
+                                + '</strong><br>'
+                                + 'Серийный номер: ' +  escape(item.serialNumber)  + ', <br>'
+                                + 'Статус: ' +  escape(getStatus(item.status))
+                                + '</div>';
+                    },
+                    item: function (item, escape) {
+                        return '<div>'
+                                + escape(item.manufacturer) + ' ' + escape(item.model) + ', <br>'
+                                + 'Серийный номер: ' +  escape(item.serialNumber)  + ', <br>'
+                                + 'Статус: ' +  escape(getStatus(item.status))
+                                + '</div>';
+                    }
+                }
+
+            });
+            
             
             break;
-            
+
         case "ups":
-//            $('#batteryTypeSelect').selectize({
-//                persist: true,
-//                valueField: 'id',
-//                sortField: 'type',
-//                labelField: 'type',
-//                searchField: ["id", "type"],
-//                onInitialize: function () {
-//                    $.ajax({
-//                        url: "/typebatups",
-//                        type: 'GET',
-//                        async: false,
-//                        dataType: 'json',
-//                        error: function(res) {
-//                            console.log(res);
-//                        },
-//                        success: function(res) {
-//                          
-//                            res.forEach(model => {
-//                                $('#batteryTypeSelect')[0].selectize.addOption(model);
-//                                $('#batteryTypeSelect')[0].selectize.addItem(model);
-//                            });
-//                             if (null != svtObjId) {
-//                            $('#batteryTypeSelect')[0].selectize.setValue($('#batteryTypeSelect')[0].selectize.search(batteryTypeId).items[0].id);
-//                        } else {
-//                            $('#batteryTypeSelect')[0].selectize.setValue($('#batteryTypeSelect')[0].selectize.search(0).items[0].id);
-//                        }
-//                        }
-//                    });
-//
-//                        if (eventReason.indexOf("storage") >= 0) {
-//                            $('#batteryTypeSelect')[0].selectize.disable();
-//                        } else {
-//                            $('#batteryTypeSelect')[0].selectize.enable();
-//                        }
-//                }
-//            });
-     
+
+
             let dateReplaceSelect = document.querySelector('#dateReplaceSelect');
             option = document.createElement('option');
             option.innerHTML = "Нет";
@@ -5204,7 +5730,7 @@ let modalContentLoad = function (eventReason, svtObjId) {
             if (dateReplaceBattery > 0) {
                 dateReplaceSelect.value = dateReplaceBattery;
             }
-             if (eventReason.indexOf("storage") >= 0) {
+            if (eventReason.indexOf("storage") >= 0) {
                 $("#nameFromOneC")[0].disabled = true;
                 $("#numberRoom")[0].disabled = true;
             } else {
@@ -5212,7 +5738,7 @@ let modalContentLoad = function (eventReason, svtObjId) {
                 $("#numberRoom")[0].disabled = false;
             }
             break;
-            case "upsforserver":
+        case "upsforserver":
             $('#batteryTypeSelect').selectize({
                 persist: true,
                 valueField: 'id',
@@ -5225,27 +5751,27 @@ let modalContentLoad = function (eventReason, svtObjId) {
                         type: 'GET',
                         async: false,
                         dataType: 'json',
-                        error: function(res) {
+                        error: function (res) {
                             console.log(res);
                         },
-                        success: function(res) {
+                        success: function (res) {
                             res.forEach(model => {
                                 $('#batteryTypeSelect')[0].selectize.addOption(model);
                                 $('#batteryTypeSelect')[0].selectize.addItem(model);
                             });
-                             if (null != svtObjId) {
-                            $('#batteryTypeSelect')[0].selectize.setValue($('#batteryTypeSelect')[0].selectize.search(batteryTypeId).items[0].id);
-                        } else {
-                            $('#batteryTypeSelect')[0].selectize.setValue($('#batteryTypeSelect')[0].selectize.search(0).items[0].id);
-                        }
+                            if (null != svtObjId) {
+                                $('#batteryTypeSelect')[0].selectize.setValue($('#batteryTypeSelect')[0].selectize.search(batteryTypeId).items[0].id);
+                            } else {
+                                $('#batteryTypeSelect')[0].selectize.setValue($('#batteryTypeSelect')[0].selectize.search(0).items[0].id);
+                            }
                         }
                     });
 
-                        if (eventReason.indexOf("storage") >= 0) {
-                            $('#batteryTypeSelect')[0].selectize.disable();
-                        } else {
-                            $('#batteryTypeSelect')[0].selectize.enable();
-                        }
+                    if (eventReason.indexOf("storage") >= 0) {
+                        $('#batteryTypeSelect')[0].selectize.disable();
+                    } else {
+                        $('#batteryTypeSelect')[0].selectize.enable();
+                    }
                 }
             });
 
@@ -5263,7 +5789,7 @@ let modalContentLoad = function (eventReason, svtObjId) {
             if (dateReplaceSelectUpsForServer > 0) {
                 dateReplaceSelect.value = dateReplaceSelectUpsForServer;
             }
-             if (eventReason.indexOf("storage") >= 0) {
+            if (eventReason.indexOf("storage") >= 0) {
                 $("#nameFromOneC")[0].disabled = true;
                 $("#numberRoom")[0].disabled = true;
             } else {
@@ -5286,8 +5812,8 @@ let modalContentLoad = function (eventReason, svtObjId) {
                 $("#ipAdress")[0].value = ipAdress;
             }
             $('#ipAdress').mask('0ZZ.0ZZ.0ZZ.0ZZ', {translation: {'Z': {pattern: /[0-9]/, optional: true}}});
-            
-            
+
+
             $("#osSelect").selectize({
                 plugins: ["remove_button"],
                 delimiter: ",",
@@ -5304,16 +5830,16 @@ let modalContentLoad = function (eventReason, svtObjId) {
                         type: 'GET',
                         async: false,
                         dataType: 'json',
-                        error: function(res) {
+                        error: function (res) {
                             console.log(res);
                         },
-                        success: function(res) {
-                              res.forEach(model => {
+                        success: function (res) {
+                            res.forEach(model => {
                                 $('#osSelect')[0].selectize.addOption(model);
                                 $('#osSelect')[0].selectize.addItem(model);
                             });
-                             if (null != svtObjId) {
-                                 
+                            if (null != svtObjId) {
+
                                 if (operationSystemId.length == 0) {
                                     $('#osSelect')[0].selectize.setValue($('#osSelect')[0].selectize.search("не указано").items[0].id);
                                 } else {
@@ -5330,18 +5856,18 @@ let modalContentLoad = function (eventReason, svtObjId) {
                     });
 
                 }});
-           
-            
-              
-             
-                if (eventReason.indexOf("storage") >= 0) {
-                    $('#osSelect')[0].selectize.disable();
-                } else {
-                    $('#osSelect')[0].selectize.enable();
-                }
-                
-                
-            
+
+
+
+
+            if (eventReason.indexOf("storage") >= 0) {
+                $('#osSelect')[0].selectize.disable();
+            } else {
+                $('#osSelect')[0].selectize.enable();
+            }
+
+
+
             $("#motherboardSelect").selectize({
                 preload: true,
                 persist: true,
@@ -5356,15 +5882,15 @@ let modalContentLoad = function (eventReason, svtObjId) {
                         type: 'GET',
                         async: false,
                         dataType: 'json',
-                        error: function(res) {
+                        error: function (res) {
                             console.log(res);
                         },
-                        success: function(res) {
+                        success: function (res) {
                             res.forEach(model => {
                                 $('#motherboardSelect')[0].selectize.addOption(model);
                                 $('#motherboardSelect')[0].selectize.addItem(model);
                             });
-                             if (null != svtObjId) {
+                            if (null != svtObjId) {
                                 if (null == motherboardId) {
                                     $('#motherboardSelect')[0].selectize.setValue($('#motherboardSelect')[0].selectize.search("не указано").items[0].id);
                                 } else {
@@ -5379,7 +5905,7 @@ let modalContentLoad = function (eventReason, svtObjId) {
 
                 }});
             if ($('#motherboardSelect')[0].selectize.getValue() == "" && $('#motherboardSelect')[0].selectize.order > 0) {
-               // $('#motherboardSelect')[0].selectize.setValue($('#motherboardSelect')[0].selectize.search(motherboardId).items[0].id);
+                // $('#motherboardSelect')[0].selectize.setValue($('#motherboardSelect')[0].selectize.search(motherboardId).items[0].id);
                 if (eventReason.indexOf("storage") >= 0) {
                     $('#motherboardSelect')[0].selectize.disable();
                 } else {
@@ -5400,15 +5926,15 @@ let modalContentLoad = function (eventReason, svtObjId) {
                         type: 'GET',
                         async: false,
                         dataType: 'json',
-                        error: function(res) {
+                        error: function (res) {
                             console.log(res);
                         },
-                        success: function(res) {
+                        success: function (res) {
                             res.forEach(model => {
                                 $('#cpuSelect')[0].selectize.addOption(model);
                                 $('#cpuSelect')[0].selectize.addItem(model);
                             });
-                             if (null != svtObjId) {
+                            if (null != svtObjId) {
                                 if (null == cpuId) {
                                     $('#cpuSelect')[0].selectize.setValue($('#cpuSelect')[0].selectize.search("не указано").items[0].id);
                                 } else {
@@ -5418,17 +5944,17 @@ let modalContentLoad = function (eventReason, svtObjId) {
                                 $('#cpuSelect')[0].selectize.setValue($('#cpuSelect')[0].selectize.search("не указано").items[0].id);
                             }
                         }
-                        
+
                     });
 
                 }});
 
-                if (eventReason.indexOf("storage") >= 0) {
-                    $('#cpuSelect')[0].selectize.disable();
-                } else {
-                    $('#cpuSelect')[0].selectize.enable();
-                }
-            
+            if (eventReason.indexOf("storage") >= 0) {
+                $('#cpuSelect')[0].selectize.disable();
+            } else {
+                $('#cpuSelect')[0].selectize.enable();
+            }
+
             $("#ramSelect").selectize({
                 preload: true,
                 persist: true,
@@ -5443,15 +5969,15 @@ let modalContentLoad = function (eventReason, svtObjId) {
                         type: 'GET',
                         async: false,
                         dataType: 'json',
-                        error: function(res) {
+                        error: function (res) {
                             console.log(res);
                         },
-                        success: function(res) {
+                        success: function (res) {
                             res.forEach(model => {
                                 $('#ramSelect')[0].selectize.addOption(model);
                                 $('#ramSelect')[0].selectize.addItem(model);
                             });
-                             if (null != svtObjId) {
+                            if (null != svtObjId) {
                                 if (null == ramId) {
                                     $('#ramSelect')[0].selectize.setValue($('#ramSelect')[0].selectize.search("не указано").items[0].id);
                                 } else {
@@ -5482,13 +6008,13 @@ let modalContentLoad = function (eventReason, svtObjId) {
                 }
             });
 
-                if (eventReason.indexOf("storage") >= 0) {
-                    $('#ramSelect')[0].selectize.disable();
-                } else {
-                    $('#ramSelect')[0].selectize.enable();
-                }
-            
-            
+            if (eventReason.indexOf("storage") >= 0) {
+                $('#ramSelect')[0].selectize.disable();
+            } else {
+                $('#ramSelect')[0].selectize.enable();
+            }
+
+
             $("#hddSelect").selectize({
                 plugins: ["remove_button"],
                 delimiter: ",",
@@ -5506,16 +6032,16 @@ let modalContentLoad = function (eventReason, svtObjId) {
                         type: 'GET',
                         async: false,
                         dataType: 'json',
-                        error: function(res) {
+                        error: function (res) {
                             console.log(res);
                         },
-                        success: function(res) {
-                              res.forEach(model => {
+                        success: function (res) {
+                            res.forEach(model => {
                                 $('#hddSelect')[0].selectize.addOption(model);
                                 $('#hddSelect')[0].selectize.addItem(model);
                             });
-                             if (null != svtObjId) {
-                                 
+                            if (null != svtObjId) {
+
                                 if (hddListId.length == 0) {
                                     $('#hddSelect')[0].selectize.setValue($('#hddSelect')[0].selectize.search("не указано").items[0].id);
                                 } else {
@@ -5551,17 +6077,17 @@ let modalContentLoad = function (eventReason, svtObjId) {
                     }
                 }
             });
-         
-          
-                if (eventReason.indexOf("storage") >= 0) {
-                    $('#hddSelect')[0].selectize.disable();
-                } else {
-                    $('#hddSelect')[0].selectize.enable();
-                }
-            
-            
-            
-            
+
+
+            if (eventReason.indexOf("storage") >= 0) {
+                $('#hddSelect')[0].selectize.disable();
+            } else {
+                $('#hddSelect')[0].selectize.enable();
+            }
+
+
+
+
             $("#videoCardSelect").selectize({
                 preload: true,
                 persist: true,
@@ -5576,15 +6102,15 @@ let modalContentLoad = function (eventReason, svtObjId) {
                         type: 'GET',
                         async: false,
                         dataType: 'json',
-                        error: function(res) {
+                        error: function (res) {
                             console.log(res);
                         },
-                        success: function(res) {
-                             res.forEach(model => {
+                        success: function (res) {
+                            res.forEach(model => {
                                 $('#videoCardSelect')[0].selectize.addOption(model);
                                 $('#videoCardSelect')[0].selectize.addItem(model);
                             });
-                             if (null != svtObjId) {
+                            if (null != svtObjId) {
                                 if (null == videoCardId) {
                                     $('#videoCardSelect')[0].selectize.setValue($('#videoCardSelect')[0].selectize.search("не указано").items[0].id);
                                 } else {
@@ -5597,12 +6123,12 @@ let modalContentLoad = function (eventReason, svtObjId) {
                     });
 
                 }});
-                if (eventReason.indexOf("storage") >= 0) {
-                    $('#videoCardSelect')[0].selectize.disable();
-                } else {
-                    $('#videoCardSelect')[0].selectize.enable();
-                }
-            
+            if (eventReason.indexOf("storage") >= 0) {
+                $('#videoCardSelect')[0].selectize.disable();
+            } else {
+                $('#videoCardSelect')[0].selectize.enable();
+            }
+
             $("#soundCardSelect").selectize({
                 preload: true,
                 persist: true,
@@ -5616,15 +6142,15 @@ let modalContentLoad = function (eventReason, svtObjId) {
                         type: 'GET',
                         async: false,
                         dataType: 'json',
-                        error: function(res) {
+                        error: function (res) {
                             console.log(res);
                         },
-                        success: function(res) {
-                               res.forEach(model => {
+                        success: function (res) {
+                            res.forEach(model => {
                                 $('#soundCardSelect')[0].selectize.addOption(model);
                                 $('#soundCardSelect')[0].selectize.addItem(model);
                             });
-                             if (null != svtObjId) {
+                            if (null != svtObjId) {
                                 if (null == soundCardId) {
                                     $('#soundCardSelect')[0].selectize.setValue($('#soundCardSelect')[0].selectize.search("не указано").items[0].id);
                                 } else {
@@ -5638,13 +6164,13 @@ let modalContentLoad = function (eventReason, svtObjId) {
 
                 }});
 
-   
-                if (eventReason.indexOf("storage") >= 0) {
-                    $('#soundCardSelect')[0].selectize.disable();
-                } else {
-                    $('#soundCardSelect')[0].selectize.enable();
-                }
-            
+
+            if (eventReason.indexOf("storage") >= 0) {
+                $('#soundCardSelect')[0].selectize.disable();
+            } else {
+                $('#soundCardSelect')[0].selectize.enable();
+            }
+
             $("#lanCardSelect").selectize({
                 preload: true,
                 persist: true,
@@ -5659,10 +6185,10 @@ let modalContentLoad = function (eventReason, svtObjId) {
                         type: 'GET',
                         async: false,
                         dataType: 'json',
-                        error: function(res) {
+                        error: function (res) {
                             console.log(res);
                         },
-                        success: function(res) {
+                        success: function (res) {
                             res.forEach(model => {
                                 $('#lanCardSelect')[0].selectize.addOption(model);
                                 $('#lanCardSelect')[0].selectize.addItem(model);
@@ -5682,13 +6208,13 @@ let modalContentLoad = function (eventReason, svtObjId) {
 
                 }});
 
-                if (eventReason.indexOf("storage") >= 0) {
-                    $('#lanCardSelect')[0].selectize.disable();
-                } else {
-                    $('#lanCardSelect')[0].selectize.enable();
-                }
-            
-            
+            if (eventReason.indexOf("storage") >= 0) {
+                $('#lanCardSelect')[0].selectize.disable();
+            } else {
+                $('#lanCardSelect')[0].selectize.enable();
+            }
+
+
             $("#cdDriveSelect").selectize({
                 preload: true,
                 persist: true,
@@ -5703,10 +6229,10 @@ let modalContentLoad = function (eventReason, svtObjId) {
                         type: 'GET',
                         async: false,
                         dataType: 'json',
-                        error: function(res) {
+                        error: function (res) {
                             console.log(res);
                         },
-                        success: function(res) {
+                        success: function (res) {
                             res.forEach(model => {
                                 $('#cdDriveSelect')[0].selectize.addOption(model);
                                 $('#cdDriveSelect')[0].selectize.addItem(model);
@@ -5725,12 +6251,12 @@ let modalContentLoad = function (eventReason, svtObjId) {
 
                 }});
 
-                if (eventReason.indexOf("storage") >= 0) {
-                    $('#cdDriveSelect')[0].selectize.disable();
-                } else {
-                    $('#cdDriveSelect')[0].selectize.enable();
-                }
-            
+            if (eventReason.indexOf("storage") >= 0) {
+                $('#cdDriveSelect')[0].selectize.disable();
+            } else {
+                $('#cdDriveSelect')[0].selectize.enable();
+            }
+
             $("#keyboardSelect").selectize({
                 preload: true,
                 persist: true,
@@ -5745,10 +6271,10 @@ let modalContentLoad = function (eventReason, svtObjId) {
                         type: 'GET',
                         async: false,
                         dataType: 'json',
-                        error: function(res) {
+                        error: function (res) {
                             console.log(res);
                         },
-                        success: function(res) {
+                        success: function (res) {
                             res.forEach(model => {
                                 $('#keyboardSelect')[0].selectize.addOption(model);
                                 $('#keyboardSelect')[0].selectize.addItem(model);
@@ -5767,12 +6293,12 @@ let modalContentLoad = function (eventReason, svtObjId) {
 
                 }});
 
-                if (eventReason.indexOf("storage") >= 0) {
-                    $('#keyboardSelect')[0].selectize.disable();
-                } else {
-                    $('#keyboardSelect')[0].selectize.enable();
-                }
-            
+            if (eventReason.indexOf("storage") >= 0) {
+                $('#keyboardSelect')[0].selectize.disable();
+            } else {
+                $('#keyboardSelect')[0].selectize.enable();
+            }
+
             $("#mouseSelect").selectize({
                 preload: true,
                 persist: true,
@@ -5787,11 +6313,11 @@ let modalContentLoad = function (eventReason, svtObjId) {
                         type: 'GET',
                         async: false,
                         dataType: 'json',
-                        error: function(res) {
+                        error: function (res) {
                             console.log(res);
                         },
-                        success: function(res) {
-                               res.forEach(model => {
+                        success: function (res) {
+                            res.forEach(model => {
                                 $('#mouseSelect')[0].selectize.addOption(model);
                                 $('#mouseSelect')[0].selectize.addItem(model);
                             });
@@ -5809,12 +6335,12 @@ let modalContentLoad = function (eventReason, svtObjId) {
 
                 }});
 
-                if (eventReason.indexOf("storage") >= 0) {
-                    $('#mouseSelect')[0].selectize.disable();
-                } else {
-                    $('#mouseSelect')[0].selectize.enable();
-                }
-            
+            if (eventReason.indexOf("storage") >= 0) {
+                $('#mouseSelect')[0].selectize.disable();
+            } else {
+                $('#mouseSelect')[0].selectize.enable();
+            }
+
             $("#speakersSelect").selectize({
                 preload: true,
                 persist: true,
@@ -5829,11 +6355,11 @@ let modalContentLoad = function (eventReason, svtObjId) {
                         type: 'GET',
                         async: false,
                         dataType: 'json',
-                        error: function(res) {
+                        error: function (res) {
                             console.log(res);
                         },
-                        success: function(res) {
-                               res.forEach(model => {
+                        success: function (res) {
+                            res.forEach(model => {
                                 $('#speakersSelect')[0].selectize.addOption(model);
                                 $('#speakersSelect')[0].selectize.addItem(model);
                             });
@@ -5851,12 +6377,12 @@ let modalContentLoad = function (eventReason, svtObjId) {
 
                 }});
 
-                if (eventReason.indexOf("storage") >= 0) {
-                    $('#speakersSelect')[0].selectize.disable();
-                } else {
-                    $('#speakersSelect')[0].selectize.enable();
-                }
-            
+            if (eventReason.indexOf("storage") >= 0) {
+                $('#speakersSelect')[0].selectize.disable();
+            } else {
+                $('#speakersSelect')[0].selectize.enable();
+            }
+
             break;
         case "scanner":
             if (eventReason.indexOf("storage") >= 0) {
@@ -5875,8 +6401,8 @@ let modalContentLoad = function (eventReason, svtObjId) {
                 $("#ipAdress")[0].value = ipAdress;
             }
             $('#ipAdress').mask('0ZZ.0ZZ.0ZZ.0ZZ', {translation: {'Z': {pattern: /[0-9]/, optional: true}}});
-            
-            
+
+
             $("#osSelect").selectize({
                 plugins: ["remove_button"],
                 delimiter: ",",
@@ -5894,16 +6420,16 @@ let modalContentLoad = function (eventReason, svtObjId) {
                         type: 'GET',
                         async: false,
                         dataType: 'json',
-                        error: function(res) {
+                        error: function (res) {
                             console.log(res);
                         },
-                        success: function(res) {
-                              res.forEach(model => {
+                        success: function (res) {
+                            res.forEach(model => {
                                 $('#osSelect')[0].selectize.addOption(model);
                                 $('#osSelect')[0].selectize.addItem(model);
                             });
-                             if (null != svtObjId) {
-                                 
+                            if (null != svtObjId) {
+
                                 if (operationSystemId.length == 0) {
                                     $('#osSelect')[0].selectize.setValue($('#osSelect')[0].selectize.search("не указано").items[0].id);
                                 } else {
@@ -5920,16 +6446,16 @@ let modalContentLoad = function (eventReason, svtObjId) {
                     });
 
                 }});
-           
-                
-                if (eventReason.indexOf("storage") >= 0) {
-                    $('#osSelect')[0].selectize.disable();
-                } else {
-                    $('#osSelect')[0].selectize.enable();
-                }
-            
-            
-            
+
+
+            if (eventReason.indexOf("storage") >= 0) {
+                $('#osSelect')[0].selectize.disable();
+            } else {
+                $('#osSelect')[0].selectize.enable();
+            }
+
+
+
             $("#cpuSelect").selectize({
                 preload: true,
                 persist: true,
@@ -5939,20 +6465,20 @@ let modalContentLoad = function (eventReason, svtObjId) {
                 labelField: 'model',
                 searchField: ["id", "model"],
                 onInitialize: function () {
-                  $.ajax({
+                    $.ajax({
                         url: "/modcpu",
                         type: 'GET',
                         async: false,
                         dataType: 'json',
-                        error: function(res) {
+                        error: function (res) {
                             console.log(res);
                         },
-                        success: function(res) {
+                        success: function (res) {
                             res.forEach(model => {
                                 $('#cpuSelect')[0].selectize.addOption(model);
                                 $('#cpuSelect')[0].selectize.addItem(model);
                             });
-                             if (null != svtObjId) {
+                            if (null != svtObjId) {
                                 if (null == cpuId) {
                                     $('#cpuSelect')[0].selectize.setValue($('#cpuSelect')[0].selectize.search("не указано").items[0].id);
                                 } else {
@@ -5962,16 +6488,16 @@ let modalContentLoad = function (eventReason, svtObjId) {
                                 $('#cpuSelect')[0].selectize.setValue($('#cpuSelect')[0].selectize.search("не указано").items[0].id);
                             }
                         }
-                        
+
                     });
                 }});
-            
-                if (eventReason.indexOf("storage") >= 0) {
-                    $('#cpuSelect')[0].selectize.disable();
-                } else {
-                    $('#cpuSelect')[0].selectize.enable();
-                }
-            
+
+            if (eventReason.indexOf("storage") >= 0) {
+                $('#cpuSelect')[0].selectize.disable();
+            } else {
+                $('#cpuSelect')[0].selectize.enable();
+            }
+
             $("#ramSelect").selectize({
                 preload: true,
                 persist: true,
@@ -5986,15 +6512,15 @@ let modalContentLoad = function (eventReason, svtObjId) {
                         type: 'GET',
                         async: false,
                         dataType: 'json',
-                        error: function(res) {
+                        error: function (res) {
                             console.log(res);
                         },
-                        success: function(res) {
+                        success: function (res) {
                             res.forEach(model => {
                                 $('#ramSelect')[0].selectize.addOption(model);
                                 $('#ramSelect')[0].selectize.addItem(model);
                             });
-                             if (null != svtObjId) {
+                            if (null != svtObjId) {
                                 if (null == ramId) {
                                     $('#ramSelect')[0].selectize.setValue($('#ramSelect')[0].selectize.search("не указано").items[0].id);
                                 } else {
@@ -6024,15 +6550,15 @@ let modalContentLoad = function (eventReason, svtObjId) {
                     }
                 }
             });
-           
-               
-                if (eventReason.indexOf("storage") >= 0) {
-                    $('#ramSelect')[0].selectize.disable();
-                } else {
-                    $('#ramSelect')[0].selectize.enable();
-                }
-            
-            
+
+
+            if (eventReason.indexOf("storage") >= 0) {
+                $('#ramSelect')[0].selectize.disable();
+            } else {
+                $('#ramSelect')[0].selectize.enable();
+            }
+
+
             $("#hddSelect").selectize({
                 plugins: ["remove_button"],
                 delimiter: ",",
@@ -6050,16 +6576,16 @@ let modalContentLoad = function (eventReason, svtObjId) {
                         type: 'GET',
                         async: false,
                         dataType: 'json',
-                        error: function(res) {
+                        error: function (res) {
                             console.log(res);
                         },
-                        success: function(res) {
-                              res.forEach(model => {
+                        success: function (res) {
+                            res.forEach(model => {
                                 $('#hddSelect')[0].selectize.addOption(model);
                                 $('#hddSelect')[0].selectize.addItem(model);
                             });
-                             if (null != svtObjId) {
-                                 
+                            if (null != svtObjId) {
+
                                 if (hddListId.length == 0) {
                                     $('#hddSelect')[0].selectize.setValue($('#hddSelect')[0].selectize.search("не указано").items[0].id);
                                 } else {
@@ -6095,14 +6621,14 @@ let modalContentLoad = function (eventReason, svtObjId) {
                     }
                 }
             });
-          
-              
-                if (eventReason.indexOf("storage") >= 0) {
-                    $('#hddSelect')[0].selectize.disable();
-                } else {
-                    $('#hddSelect')[0].selectize.enable();
-                }
-            
+
+
+            if (eventReason.indexOf("storage") >= 0) {
+                $('#hddSelect')[0].selectize.disable();
+            } else {
+                $('#hddSelect')[0].selectize.enable();
+            }
+
             break;
         case "switch":
             if (eventReason.indexOf("storage") >= 0) {
@@ -6119,7 +6645,7 @@ let modalContentLoad = function (eventReason, svtObjId) {
                 $("#switchRadio")[0].disabled = false;
             }
             break;
-          case "router":
+        case "router":
             if (eventReason.indexOf("storage") >= 0) {
                 $("#numberRoom")[0].disabled = true;
                 $("#portAmount")[0].disabled = true;
@@ -6174,72 +6700,72 @@ let modalContentLoad = function (eventReason, svtObjId) {
                 $("#pompFalse")[0].disabled = false;
             }
             break;
-            case "infomat":
+        case "infomat":
             if (eventReason.indexOf("storage") >= 0) {
                 $("#numberRoom")[0].disabled = true;
                 $("#nameFromOneC")[0].disabled = true;
             } else {
                 $("#numberRoom")[0].disabled = false;
                 $("#nameFromOneC")[0].disabled = false;
-     
+
             }
             break;
-   
+
     }
-    if(null != $("#dateCreateSelect")[0]) {
+    if (null != $("#dateCreateSelect")[0]) {
         var dateCreate = $("#dateCreateSelect")[0];
-    for (i = 2000; i <= currentYear; i++) {
-        option = document.createElement('option');
-        option.value = i;
-        option.innerHTML = i;
-        dateCreate.appendChild(option);
+        for (i = 2000; i <= currentYear; i++) {
+            option = document.createElement('option');
+            option.value = i;
+            option.innerHTML = i;
+            dateCreate.appendChild(option);
+        }
+        if (yearCreated) {
+            dateCreate.value = yearCreated;
+        } else {
+            dateCreate.value = 2000;
+        }
     }
-    if (yearCreated) {
-        dateCreate.value = yearCreated;
-    } else {
-        dateCreate.value = 2000;
-    }
-    }
-    
+
     if (eventReason.indexOf("element") >= 0 || eventReason.indexOf("storage") >= 0) {
-         $('#btnSave')[0].addEventListener('click', handleClickUpdateBtn);
-        $("#containerContent").append('<div class="row mt-3"><div class="col"><button class="btn btn-primary btn-sm" id="repairBtn"  data-bs-toggle="modal" data-bs-target="#repairModal">' + 
+        $('#btnSave')[0].addEventListener('click', handleClickUpdateBtn);
+        $("#containerContent").append('<div class="row mt-3"><div class="col"><button class="btn btn-primary btn-sm" id="repairBtn"  data-bs-toggle="modal" data-bs-target="#repairModal">' +
                 '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-wrench" viewBox="0 0 16 16">' +
-                  '<path d="M.102 2.223A3.004 3.004 0 0 0 3.78 5.897l6.341 6.252A3.003 3.003 0 0 0 13 16a3 3 0 1 0-.851-5.878L5.897 3.781A3.004 3.004 0 0 0 2.223.1l2.141 2.142L4 4l-1.757.364zm13.37 9.019.528.026.287.445.445.287.026.529L15 13l-.242.471-.026.529-.445.287-.287.445-.529.026L13 15l-.471-.242-.529-.026-.287-.445-.445-.287-.026-.529L11 13l.242-.471.026-.529.445-.287.287-.445.529-.026L13 11z"/>' +
-                    '</svg>' +
+                '<path d="M.102 2.223A3.004 3.004 0 0 0 3.78 5.897l6.341 6.252A3.003 3.003 0 0 0 13 16a3 3 0 1 0-.851-5.878L5.897 3.781A3.004 3.004 0 0 0 2.223.1l2.141 2.142L4 4l-1.757.364zm13.37 9.019.528.026.287.445.445.287.026.529L15 13l-.242.471-.026.529-.445.287-.287.445-.529.026L13 15l-.471-.242-.529-.026-.287-.445-.445-.287-.026-.529L11 13l.242-.471.026-.529.445-.287.287-.445.529-.026L13 11z"/>' +
+                '</svg>' +
                 ' Ремонт</button>' + " " + '<button class="btn btn-primary btn-sm" id="transferBtn"  data-bs-toggle="modal" data-bs-target="#transferModal">Перемещения</button></div><div class="col"></div></div>');
-          $("#repairBtn")[0].addEventListener("click", function () {
-           
+        $("#repairBtn")[0].addEventListener("click", function () {
+
             modalRepairContentLoad(svtObjId, document.querySelector('#modelSelect').innerText);
-            
+
             modalRepair.addEventListener('hidden.bs.modal', function (event) {
                 modalRepairParent.innerHTML = "";
                 modalParent.innerHTML = "";
                 modalContentLoad("element", svtObjId);
             });
         });
-        
-        
-         $("#transferBtn")[0].addEventListener("click", function () {
-           
+
+
+        $("#transferBtn")[0].addEventListener("click", function () {
+
             modalTransferContentLoad(svtObjId, document.querySelector('#modelSelect').innerText);
-            
+
             modalTransfer.addEventListener('hidden.bs.modal', function (event) {
-                
+
                 modalTransferParent.innerHTML = "";
                 modalParent.innerHTML = "";
                 modalContentLoad("element", svtObjId);
-                
+
             });
         });
-        
-        
+
+
         if (eventReason.indexOf("storage") >= 0) {
-            if(null != $("#dateCreateSelect")[0]) {
+            if (null != $("#dateCreateSelect")[0]) {
                 dateCreate.disabled = true;
             }
-            
-           
+
+
             // $('#archivedBtn')[0].removeEventListener('click', handleClickArchivedBtn);
             $('.svtObjModalFooter')[0].innerHTML = "";
             $('.svtObjModalFooter').append('<button type="button" class="btn btn-danger btn-sm" id="archivedBtn"  data-bs-dismiss="modal">Удалить</button> ' +
@@ -6247,7 +6773,7 @@ let modalContentLoad = function (eventReason, svtObjId) {
                     '<button type="button" class="btn btn-secondary btn-sm"  data-bs-dismiss="modal">Отменить</button>' +
                     '<button type="button" class="btn btn-primary btn-sm" id="btnSave" >Применить</button>');
             $('#btnSave')[0].disabled = true;
-            
+
             $('#archivedBtn')[0].addEventListener('click', handleClickArchivedBtn);
             //логика после нажатия кнопки "Вернуть со склада"
             $('#backFromStorageBtn')[0].addEventListener('click', function () {
@@ -6260,12 +6786,12 @@ let modalContentLoad = function (eventReason, svtObjId) {
                         modalParent.innerHTML = '';
                     }
                     modalContentLoad("element backtostor", svtObjId);
-                    if(attrib == "asuo") {
-                    if($("#modelRow")[0] != null) {
-                        $("#modelRow")[0].remove();
-                        $("#inventaryNumberRow")[0].remove();
-                        $("#serialNumberRow")[0].remove();
-                        $("#statusRow")[0].remove();
+                    if (attrib == "asuo") {
+                        $("#department_row")[0].remove();
+                        if ($("#modelRow")[0] != null) {
+                            $("#modelRow")[0].remove();
+                            $("#serialNumberRow")[0].remove();
+                            $("#statusRow")[0].remove();
                         }
                     }
                     $('#placeSelect')[0].selectize.enable();
@@ -6276,10 +6802,10 @@ let modalContentLoad = function (eventReason, svtObjId) {
                     $('#statusSelect')[0].disabled = false;
                     $("#inventaryNumber")[0].disabled = false;
                     $("#serialNumber")[0].disabled = false;
-                    if(null != $("#startExploitation")[0]) {
+                    if (null != $("#startExploitation")[0]) {
                         $("#startExploitation")[0].disabled = false;
                     }
-                    
+
                     switch (attrib) {
                         case "phones":
                             $("#innerCallNumber")[0].disabled = false;
@@ -6317,10 +6843,10 @@ let modalContentLoad = function (eventReason, svtObjId) {
                             $("#speakersSelect")[0].selectize.enable();
                             break;
                     }
-                    if(null != $("#dateCreateSelect")[0]) {
+                    if (null != $("#dateCreateSelect")[0]) {
                         dateCreate.disabled = false;
                     }
-                    
+
                     Object.entries($('#placeSelect')[0].selectize.options).forEach(option => {
                         if (option[1].placeType == "Склад") {
                             $('#placeSelect')[0].selectize.removeOption(option[0]);
@@ -6332,12 +6858,12 @@ let modalContentLoad = function (eventReason, svtObjId) {
             requestToEnableStorage();
         }
     } else {
-       
+
         $('.svtObjModalFooter')[0].innerHTML = "";
         $('.svtObjModalFooter').append(
                 '<button type="button" class="btn btn-secondary btn-sm"  data-bs-dismiss="modal">Отменить</button>' +
                 '<button type="button" class="btn btn-primary btn-sm" id="btnSave" >Сохранить</button>');
-         $('#btnSave')[0].addEventListener('click', handleClickSavePhoneBtn);
+        $('#btnSave')[0].addEventListener('click', handleClickSavePhoneBtn);
     }
 
 
@@ -6390,19 +6916,19 @@ let modalContentLoad = function (eventReason, svtObjId) {
     });
     //$('#btnSave')[0].addEventListener('click', handleClickSavePhoneBtn);
     stor = false;
-  
+
 };
 
 document.addEventListener("DOMContentLoaded", function () {
     let treeLocations = [...document.querySelectorAll('.location')];
-  
+
     for (j = 0; j < storageDtoes.length; j++) {
         let addDepartmentFlag = false;
         for (i = 0; i < treeLocations.length; i++) {
             if (treeLocations[i].childNodes[1].innerText == storageDtoes[j].locationName) {
-             
-              
-                
+
+
+
                 liItem = document.createElement('li');
                 liItem.className = "department";
                 liItem.innerHTML = "<details> <summary>Склад</summary>";
@@ -6424,117 +6950,103 @@ document.addEventListener("DOMContentLoaded", function () {
                     case "upsforserver":
                         dynamicLabel = "Год замены";
                         break;
-                        }
-                
-                
-                switch(attrib) {
+                }
+
+
+                switch (attrib) {
                     case "switch":
-                     headerElement.innerHTML = '<div class="col">Модель</div>' +
-                            '<div class="col">ФИО</div>' +
-                            '<div class="col">Серийный номер</div>' +
-                            '<div class="col">Инвентарный номер</div>' +
-                            '<div class="col">Тип</div>' +
-                            '<div class="col">Кол-во портов</div>' +
-                            '<div class="col">Состояние</div>';
+                        headerElement.innerHTML = '<div class="col">Модель</div>' +
+                                '<div class="col">ФИО</div>' +
+                                '<div class="col">Серийный номер</div>' +
+                                '<div class="col">Инвентарный номер</div>' +
+                                '<div class="col">Тип</div>' +
+                                '<div class="col">Кол-во портов</div>' +
+                                '<div class="col">Состояние</div>';
                         break;
-                        case "router":
-                     headerElement.innerHTML = '<div class="col">Модель</div>' +
-                            '<div class="col">ФИО</div>' +
-                            '<div class="col">Серийный номер</div>' +
-                            '<div class="col">Инвентарный номер</div>' +
-                            '<div class="col">Расположение</div>' +
-                            '<div class="col">Кол-во портов</div>' +
-                            '<div class="col">Состояние</div>';
+                    case "router":
+                        headerElement.innerHTML = '<div class="col">Модель</div>' +
+                                '<div class="col">ФИО</div>' +
+                                '<div class="col">Серийный номер</div>' +
+                                '<div class="col">Инвентарный номер</div>' +
+                                '<div class="col">Расположение</div>' +
+                                '<div class="col">Кол-во портов</div>' +
+                                '<div class="col">Состояние</div>';
                         break;
-                           case "ats":
-                     headerElement.innerHTML = '<div class="col">Модель</div>' +
-                            '<div class="col">ФИО</div>' +
-                            '<div class="col">Серийный номер</div>' +
-                            '<div class="col">Инвентарный номер</div>' +
-                            '<div class="col">Год ввода в экспл</div>' +
-                            '<div class="col">Кол-во город. номеров</div>' +
-                            '<div class="col">Состояние</div>';
+                    case "ats":
+                        headerElement.innerHTML = '<div class="col">Модель</div>' +
+                                '<div class="col">ФИО</div>' +
+                                '<div class="col">Серийный номер</div>' +
+                                '<div class="col">Инвентарный номер</div>' +
+                                '<div class="col">Год ввода в экспл</div>' +
+                                '<div class="col">Кол-во город. номеров</div>' +
+                                '<div class="col">Состояние</div>';
                         break;
-                        case "conditioner":
-                     headerElement.innerHTML = '<div class="col">Модель</div>' +
-                            '<div class="col">ФИО</div>' +
-                            '<div class="col">Серийный номер</div>' +
-                            '<div class="col">Инвентарный номер</div>' +
-                            '<div class="col">Год ввода в экспл</div>' +
-                            '<div class="col">Тип</div>' +
-                            '<div class="col">Состояние</div>';
+                    case "conditioner":
+                        headerElement.innerHTML = '<div class="col">Модель</div>' +
+                                '<div class="col">ФИО</div>' +
+                                '<div class="col">Серийный номер</div>' +
+                                '<div class="col">Инвентарный номер</div>' +
+                                '<div class="col">Год ввода в экспл</div>' +
+                                '<div class="col">Тип</div>' +
+                                '<div class="col">Состояние</div>';
                         break;
-                         case "infomat":
-                     headerElement.innerHTML = '<div class="col">Модель</div>' +
-                            '<div class="col">ФИО</div>' +
-                            '<div class="col">Серийный номер</div>' +
-                            '<div class="col">Инвентарный номер</div>' +
-                            '<div class="col">Кабинет</div>' +
-                            '<div class="col">Год выпуска</div>' +
-                            '<div class="col">Состояние</div>';
+                    case "infomat":
+                        headerElement.innerHTML = '<div class="col">Модель</div>' +
+                                '<div class="col">ФИО</div>' +
+                                '<div class="col">Серийный номер</div>' +
+                                '<div class="col">Инвентарный номер</div>' +
+                                '<div class="col">Кабинет</div>' +
+                                '<div class="col">Год выпуска</div>' +
+                                '<div class="col">Состояние</div>';
                         break;
-                        case "terminal":
-                     headerElement.innerHTML = '<div class="col">Модель</div>' +
-                            '<div class="col">ФИО</div>' +
-                            '<div class="col">Серийный номер</div>' +
-                            '<div class="col">Инвентарный номер</div>' +
-                            '<div class="col">Состояние</div>';
+                    case "terminal":
+                        headerElement.innerHTML = '<div class="col">Модель</div>' +
+                                '<div class="col">ФИО</div>' +
+                                '<div class="col">Серийный номер</div>' +
+                                '<div class="col">Инвентарный номер</div>' +
+                                '<div class="col">Состояние</div>';
                         break;
-                        case "thermoprinter":
-                     headerElement.innerHTML = '<div class="col">Модель</div>' +
-                            '<div class="col">ФИО</div>' +
-                            '<div class="col">Серийный номер</div>' +
-                            '<div class="col">Инвентарный номер</div>' +
-                            '<div class="col">Состояние</div>';
+
+                    case "display":
+                        headerElement.innerHTML = '<div class="col">Модель</div>' +
+                                '<div class="col">ФИО</div>' +
+                                '<div class="col">Серийный номер</div>' +
+                                '<div class="col">Инвентарный номер</div>' +
+                                '<div class="col">Состояние</div>';
                         break;
-                        case "display":
-                     headerElement.innerHTML = '<div class="col">Модель</div>' +
-                            '<div class="col">ФИО</div>' +
-                            '<div class="col">Серийный номер</div>' +
-                            '<div class="col">Инвентарный номер</div>' +
-                            '<div class="col">Состояние</div>';
-                        break;
-                           case "swunit":
-                     headerElement.innerHTML = '<div class="col">Модель</div>' +
-                            '<div class="col">ФИО</div>' +
-                            '<div class="col">Серийный номер</div>' +
-                            '<div class="col">Инвентарный номер</div>' +
-                            '<div class="col">Состояние</div>';
-                        break;
+
                     case "asuo":
                         headerElement.innerHTML = '<div class="col">Наименование в ведомости ОС</div>' +
-                            '<div class="col">ФИО</div>' +
-                            '<div class="col">Главное табло</div>' +
-                            '<div class="col">Терминал</div>' +
-                            '<div class="col">Термопринтер</div>' +
-                            '<div class="col">Блок коммутации</div>' +
-                            '<div class="col">Свитч</div>' +
-                            '<div class="col">Электронное табло на кабинки и кабинеты</div>';
-                    break;
-                    default:
-                       headerElement.className = "row fw-bold mt-3 mb-3";
-                if (dynamicLabel != null) {
-                    headerElement.innerHTML = '<div class="col">Модель</div>' +
-                            '<div class="col">ФИО</div>' +
-                            '<div class="col">Серийный номер</div>' +
-                            '<div class="col">Инвентарный номер</div>' +
-                            '<div class="col">Дата ввода в экспл</div>' +
-                            '<div class="col">Состояние</div>' +
-                            '<div class="col">Год выпуска</div>' +
-                            '<div class="col">' + dynamicLabel + '</div>';
-                } else {
-                    headerElement.innerHTML = '<div class="col">Модель</div>' +
-                            '<div class="col">ФИО</div>' +
-                            '<div class="col">Серийный номер</div>' +
-                            '<div class="col">Инвентарный номер</div>' +
-                            '<div class="col">Дата ввода в экспл</div>' +
-                            '<div class="col">Состояние</div>' +
-                            '<div class="col">Год выпуска</div>';
-                }
+                                '<div class="col">ФИО</div>' +
+                                '<div class="col">Инвентарный номер</div>' +
+                                '<div class="col">Год выпуска</div>' +
+                                '<div class="col">Дата ввода в эксплуатацию</div>' +
+                                '<div class="col">Статус</div>';
                         break;
-                       
+                    default:
+                        headerElement.className = "row fw-bold mt-3 mb-3";
+                        if (dynamicLabel != null) {
+                            headerElement.innerHTML = '<div class="col">Модель</div>' +
+                                    '<div class="col">ФИО</div>' +
+                                    '<div class="col">Серийный номер</div>' +
+                                    '<div class="col">Инвентарный номер</div>' +
+                                    '<div class="col">Дата ввода в экспл</div>' +
+                                    '<div class="col">Состояние</div>' +
+                                    '<div class="col">Год выпуска</div>' +
+                                    '<div class="col">' + dynamicLabel + '</div>';
+                        } else {
+                            headerElement.innerHTML = '<div class="col">Модель</div>' +
+                                    '<div class="col">ФИО</div>' +
+                                    '<div class="col">Серийный номер</div>' +
+                                    '<div class="col">Инвентарный номер</div>' +
+                                    '<div class="col">Дата ввода в экспл</div>' +
+                                    '<div class="col">Состояние</div>' +
+                                    '<div class="col">Год выпуска</div>';
+                        }
+                        break;
+
                 }
-                
+
                 liItem.childNodes[0].append(headerElement);
                 for (d = 0; d < storageDtoes[j].departments.length; d++) {
                     for (t = 0; t < storageDtoes[j].departments[d].dtoes.length; t++) {
@@ -6546,41 +7058,41 @@ document.addEventListener("DOMContentLoaded", function () {
                         elDepartment.setAttribute("data-bs-target", "#addPlaceModal");
                         let dateBegin = new Date(storageDtoes[j].departments[d].dtoes[t].dateExploitationBegin);
                         let formatedDate = dateBegin.toLocaleDateString('ru');
-                        
-                          switch (attrib) {
-                    case "phones":
-                        dynamicLabel = "Внутренний номер";
-                        dynamicField = storageDtoes[j].departments[d].dtoes[t].phoneNumber;
-                        break;
-                    case "monitors":
-                        dynamicLabel = "По ведомости ОС";
-                        if(storageDtoes[j].departments[d].dtoes[t].baseType == "SINGLE") {
-                            dynamicField = "Отдельно";
-                        } else {
-                            dynamicField = "В составе АРМ";
+
+                        switch (attrib) {
+                            case "phones":
+                                dynamicLabel = "Внутренний номер";
+                                dynamicField = storageDtoes[j].departments[d].dtoes[t].phoneNumber;
+                                break;
+                            case "monitors":
+                                dynamicLabel = "По ведомости ОС";
+                                if (storageDtoes[j].departments[d].dtoes[t].baseType == "SINGLE") {
+                                    dynamicField = "Отдельно";
+                                } else {
+                                    dynamicField = "В составе АРМ";
+                                }
+                                break;
+                            case "ups":
+                                dynamicLabel = "Год замены";
+                                if (storageDtoes[j].departments[d].dtoes[t].yearReplacement == 0) {
+                                    dynamicField = "нет";
+                                } else {
+                                    dynamicField = storageDtoes[j].departments[d].dtoes[t].yearReplacement;
+                                }
+
+                                break;
+                            case "upsforserver":
+                                dynamicLabel = "Год замены";
+                                if (storageDtoes[j].departments[d].dtoes[t].yearReplacement == 0) {
+                                    dynamicField = "нет";
+                                } else {
+                                    dynamicField = storageDtoes[j].departments[d].dtoes[t].yearReplacement;
+                                }
+
+                                break;
                         }
-                        break;
-                    case "ups":
-                        dynamicLabel = "Год замены";
-                        if(storageDtoes[j].departments[d].dtoes[t].yearReplacement == 0) {
-                          dynamicField = "нет";  
-                        } else {
-                            dynamicField = storageDtoes[j].departments[d].dtoes[t].yearReplacement;
-                        }
-                        
-                        break;
-                      case "upsforserver":
-                        dynamicLabel = "Год замены";
-                        if(storageDtoes[j].departments[d].dtoes[t].yearReplacement == 0) {
-                          dynamicField = "нет";  
-                        } else {
-                            dynamicField = storageDtoes[j].departments[d].dtoes[t].yearReplacement;
-                        }
-                        
-                        break;
-                }
-                        
-                        
+
+
                         switch (attrib) {
 
 
@@ -6608,131 +7120,113 @@ document.addEventListener("DOMContentLoaded", function () {
                                 break;
                             case "server":
                                 elDepartment.innerHTML = '<div class="row mb-2 d-flex align-items-center text-start">' +
-                                    '<div class="col">' + count + '. ' + storageDtoes[j].departments[d].dtoes[t].model + '</div>' +
-                                    '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].placeName + '</div>' +
-                                    '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].serialNumber + '</div>' +
-                                    '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].inventaryNumber + '</div>' +
-                                    '<div class="col">' + formatedDate + '</div>' +
-                                    '<div class="col">' + getStatus(storageDtoes[j].departments[d].dtoes[t].status) + '</div>' +
-                                    '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].yearCreated + '</div>' +
-                                    '</div>';
+                                        '<div class="col">' + count + '. ' + storageDtoes[j].departments[d].dtoes[t].model + '</div>' +
+                                        '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].placeName + '</div>' +
+                                        '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].serialNumber + '</div>' +
+                                        '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].inventaryNumber + '</div>' +
+                                        '<div class="col">' + formatedDate + '</div>' +
+                                        '<div class="col">' + getStatus(storageDtoes[j].departments[d].dtoes[t].status) + '</div>' +
+                                        '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].yearCreated + '</div>' +
+                                        '</div>';
                                 break;
-                                case "switch":
+                            case "switch":
                                 elDepartment.innerHTML = '<div class="row mb-2 d-flex align-items-center text-start">' +
-                                    '<div class="col">' + count + '. ' + storageDtoes[j].departments[d].dtoes[t].model + '</div>' +
-                                    '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].placeName + '</div>' +
-                                    '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].serialNumber + '</div>' +
-                                    '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].inventaryNumber + '</div>' +
-                                    '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].switchHubType + '</div>' +
-                                    '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].portAmount + '</div>' +
-                                    '<div class="col">' + getStatus(storageDtoes[j].departments[d].dtoes[t].status) + '</div>' +
-                                    '</div>';
+                                        '<div class="col">' + count + '. ' + storageDtoes[j].departments[d].dtoes[t].model + '</div>' +
+                                        '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].placeName + '</div>' +
+                                        '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].serialNumber + '</div>' +
+                                        '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].inventaryNumber + '</div>' +
+                                        '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].switchHubType + '</div>' +
+                                        '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].portAmount + '</div>' +
+                                        '<div class="col">' + getStatus(storageDtoes[j].departments[d].dtoes[t].status) + '</div>' +
+                                        '</div>';
                                 break;
-                                case "router":
+                            case "router":
                                 elDepartment.innerHTML = '<div class="row mb-2 d-flex align-items-center text-start">' +
-                                    '<div class="col">' + count + '. ' + storageDtoes[j].departments[d].dtoes[t].model + '</div>' +
-                                    '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].placeName + '</div>' +
-                                    '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].serialNumber + '</div>' +
-                                    '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].inventaryNumber + '</div>' +
-                                    '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].numberRoom + '</div>' +
-                                    '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].portAmount + '</div>' +
-                                    '<div class="col">' + getStatus(storageDtoes[j].departments[d].dtoes[t].status) + '</div>' +
-                                    '</div>';
+                                        '<div class="col">' + count + '. ' + storageDtoes[j].departments[d].dtoes[t].model + '</div>' +
+                                        '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].placeName + '</div>' +
+                                        '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].serialNumber + '</div>' +
+                                        '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].inventaryNumber + '</div>' +
+                                        '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].numberRoom + '</div>' +
+                                        '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].portAmount + '</div>' +
+                                        '<div class="col">' + getStatus(storageDtoes[j].departments[d].dtoes[t].status) + '</div>' +
+                                        '</div>';
                                 break;
-                                case "ats":
+                            case "ats":
                                 elDepartment.innerHTML = '<div class="row mb-2 d-flex align-items-center text-start">' +
-                                    '<div class="col">' + count + '. ' + storageDtoes[j].departments[d].dtoes[t].model + '</div>' +
-                                    '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].placeName + '</div>' +
-                                    '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].serialNumber + '</div>' +
-                                    '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].inventaryNumber + '</div>' +
-                                    '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].yearCreated + '</div>' +
-                                    '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].cityNumberAmount + '</div>' +
-                                    '<div class="col">' + getStatus(storageDtoes[j].departments[d].dtoes[t].status) + '</div>' +
-                                    '</div>';
+                                        '<div class="col">' + count + '. ' + storageDtoes[j].departments[d].dtoes[t].model + '</div>' +
+                                        '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].placeName + '</div>' +
+                                        '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].serialNumber + '</div>' +
+                                        '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].inventaryNumber + '</div>' +
+                                        '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].yearCreated + '</div>' +
+                                        '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].cityNumberAmount + '</div>' +
+                                        '<div class="col">' + getStatus(storageDtoes[j].departments[d].dtoes[t].status) + '</div>' +
+                                        '</div>';
                                 break;
-                                case "conditioner":
+                            case "conditioner":
                                 elDepartment.innerHTML = '<div class="row mb-2 d-flex align-items-center text-start">' +
-                                    '<div class="col">' + count + '. ' + storageDtoes[j].departments[d].dtoes[t].model + '</div>' +
-                                    '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].placeName + '</div>' +
-                                    '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].serialNumber + '</div>' +
-                                    '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].inventaryNumber + '</div>' +
-                                    '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].yearCreated + '</div>' +
-                                    '<div class="col">' + getConditionerType(storageDtoes[j].departments[d].dtoes[t].conditionerType) + '</div>' +
-                                    '<div class="col">' + getStatus(storageDtoes[j].departments[d].dtoes[t].status) + '</div>' +
-                                    '</div>';
+                                        '<div class="col">' + count + '. ' + storageDtoes[j].departments[d].dtoes[t].model + '</div>' +
+                                        '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].placeName + '</div>' +
+                                        '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].serialNumber + '</div>' +
+                                        '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].inventaryNumber + '</div>' +
+                                        '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].yearCreated + '</div>' +
+                                        '<div class="col">' + getConditionerType(storageDtoes[j].departments[d].dtoes[t].conditionerType) + '</div>' +
+                                        '<div class="col">' + getStatus(storageDtoes[j].departments[d].dtoes[t].status) + '</div>' +
+                                        '</div>';
                                 break;
-                                case "infomat":
+                            case "infomat":
                                 elDepartment.innerHTML = '<div class="row mb-2 d-flex align-items-center text-start">' +
-                                    '<div class="col">' + count + '. ' + storageDtoes[j].departments[d].dtoes[t].model + '</div>' +
-                                    '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].placeName + '</div>' +
-                                    '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].serialNumber + '</div>' +
-                                    '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].inventaryNumber + '</div>' +
-                                    '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].numberRoom + '</div>' +
-                                    '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].yearCreated + '</div>' +
-                                    '<div class="col">' + getStatus(storageDtoes[j].departments[d].dtoes[t].status) + '</div>' +
-                                    '</div>';
+                                        '<div class="col">' + count + '. ' + storageDtoes[j].departments[d].dtoes[t].model + '</div>' +
+                                        '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].placeName + '</div>' +
+                                        '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].serialNumber + '</div>' +
+                                        '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].inventaryNumber + '</div>' +
+                                        '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].numberRoom + '</div>' +
+                                        '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].yearCreated + '</div>' +
+                                        '<div class="col">' + getStatus(storageDtoes[j].departments[d].dtoes[t].status) + '</div>' +
+                                        '</div>';
                                 break;
-                                case "terminal":
+                            case "terminal":
                                 elDepartment.innerHTML = '<div class="row mb-2 d-flex align-items-center text-start">' +
-                                    '<div class="col">' + count + '. ' + storageDtoes[j].departments[d].dtoes[t].model + '</div>' +
-                                    '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].placeName + '</div>' +
-                                    '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].serialNumber + '</div>' +
-                                    '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].inventaryNumber + '</div>' +
-                                    '<div class="col">' + getStatus(storageDtoes[j].departments[d].dtoes[t].status) + '</div>' +
-                                    '</div>';
+                                        '<div class="col">' + count + '. ' + storageDtoes[j].departments[d].dtoes[t].model + '</div>' +
+                                        '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].placeName + '</div>' +
+                                        '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].serialNumber + '</div>' +
+                                        '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].inventaryNumber + '</div>' +
+                                        '<div class="col">' + getStatus(storageDtoes[j].departments[d].dtoes[t].status) + '</div>' +
+                                        '</div>';
                                 break;
-                                case "thermoprinter":
+
+                            case "display":
                                 elDepartment.innerHTML = '<div class="row mb-2 d-flex align-items-center text-start">' +
-                                    '<div class="col">' + count + '. ' + storageDtoes[j].departments[d].dtoes[t].model + '</div>' +
-                                    '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].placeName + '</div>' +
-                                    '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].serialNumber + '</div>' +
-                                    '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].inventaryNumber + '</div>' +
-                                    '<div class="col">' + getStatus(storageDtoes[j].departments[d].dtoes[t].status) + '</div>' +
-                                    '</div>';
+                                        '<div class="col">' + count + '. ' + storageDtoes[j].departments[d].dtoes[t].model + '</div>' +
+                                        '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].placeName + '</div>' +
+                                        '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].serialNumber + '</div>' +
+                                        '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].inventaryNumber + '</div>' +
+                                        '<div class="col">' + getStatus(storageDtoes[j].departments[d].dtoes[t].status) + '</div>' +
+                                        '</div>';
                                 break;
-                                case "display":
-                                elDepartment.innerHTML = '<div class="row mb-2 d-flex align-items-center text-start">' +
-                                    '<div class="col">' + count + '. ' + storageDtoes[j].departments[d].dtoes[t].model + '</div>' +
-                                    '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].placeName + '</div>' +
-                                    '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].serialNumber + '</div>' +
-                                    '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].inventaryNumber + '</div>' +
-                                    '<div class="col">' + getStatus(storageDtoes[j].departments[d].dtoes[t].status) + '</div>' +
-                                    '</div>';
+
+                            case "asuo":
+                                  elDepartment.innerHTML = '<div class="row mb-2 d-flex align-items-center text-start">' +
+                                  '<div class="col">' + count + '. ' + storageDtoes[j].departments[d].dtoes[t].nameFromOneC + '</div>' +
+                                  '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].placeName + '</div>' +
+                                  '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].inventaryNumber + '</div>' +
+                                  '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].yearCreated + '</div>' +
+                                  '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].dateExploitationBegin + '</div>' +
+                                  '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].status + '</div>' +
+                                  '</div>';
                                 break;
-                                case "swunit":
-                                elDepartment.innerHTML = '<div class="row mb-2 d-flex align-items-center text-start">' +
-                                    '<div class="col">' + count + '. ' + storageDtoes[j].departments[d].dtoes[t].model + '</div>' +
-                                    '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].placeName + '</div>' +
-                                    '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].serialNumber + '</div>' +
-                                    '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].inventaryNumber + '</div>' +
-                                    '<div class="col">' + getStatus(storageDtoes[j].departments[d].dtoes[t].status) + '</div>' +
-                                    '</div>';
-                                break;
-                                 case "asuo":
-                                elDepartment.innerHTML = '<div class="row mb-2 d-flex align-items-center text-start">' +
-                                    '<div class="col">' + count + '. ' + storageDtoes[j].departments[d].dtoes[t].nameFromOneC + '</div>' +
-                                    '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].placeName + '</div>' +
-                                    '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].displayModel + '</div>' +
-                                    '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].terminalModel + '</div>' +
-                                    '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].thermoprinterModel + '</div>' +
-                                    '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].switchingUnitModel + '</div>' +
-                                    '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].switches.length + ' ед.' + '</div>' +
-                                    '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].subDisplayModel + '</div>' +
-                                    '</div>';
-                                break;
-                                default:
-                                if(dynamicLabel != null) {
-                                elDepartment.innerHTML = '<div class="row mb-2 d-flex align-items-center text-start">' +
-                                    '<div class="col">' + count + '. ' + storageDtoes[j].departments[d].dtoes[t].model + '</div>' +
-                                    '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].placeName + '</div>' +
-                                    '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].serialNumber + '</div>' +
-                                    '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].inventaryNumber + '</div>' +
-                                    '<div class="col">' + formatedDate + '</div>' +
-                                    '<div class="col">' + getStatus(storageDtoes[j].departments[d].dtoes[t].status) + '</div>' +
-                                    '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].yearCreated + '</div>' +
-                                    '<div class="col">' + dynamicField + '</div>' +
-                                    '</div>';
-                        }
+                            default:
+                                if (dynamicLabel != null) {
+                                    elDepartment.innerHTML = '<div class="row mb-2 d-flex align-items-center text-start">' +
+                                            '<div class="col">' + count + '. ' + storageDtoes[j].departments[d].dtoes[t].model + '</div>' +
+                                            '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].placeName + '</div>' +
+                                            '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].serialNumber + '</div>' +
+                                            '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].inventaryNumber + '</div>' +
+                                            '<div class="col">' + formatedDate + '</div>' +
+                                            '<div class="col">' + getStatus(storageDtoes[j].departments[d].dtoes[t].status) + '</div>' +
+                                            '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].yearCreated + '</div>' +
+                                            '<div class="col">' + dynamicField + '</div>' +
+                                            '</div>';
+                                }
                                 break;
                         }
                         liItem.childNodes[0].append(elDepartment);
@@ -6764,22 +7258,22 @@ document.addEventListener("DOMContentLoaded", function () {
             liLocation.childNodes[0].childNodes[2].append(liItem);
             headerElement = document.createElement('div');
             headerElement.className = "row fw-bold mt-3 mb-3";
-            
-               switch (attrib) {
-                            case "phones":
-                                dynamicLabel = "Внутренний номер";
-                                break;
-                            case "monitors":
-                                dynamicLabel = "По ведомости ОС";
-                                break;
-                            case "ups":
-                                dynamicLabel = "Год замены";
-                                break;
-                             case "upsforserver":
-                                dynamicLabel = "Год замены";
-                                break;
-                        }
-            
+
+            switch (attrib) {
+                case "phones":
+                    dynamicLabel = "Внутренний номер";
+                    break;
+                case "monitors":
+                    dynamicLabel = "По ведомости ОС";
+                    break;
+                case "ups":
+                    dynamicLabel = "Год замены";
+                    break;
+                case "upsforserver":
+                    dynamicLabel = "Год замены";
+                    break;
+            }
+
             switch (attrib) {
                 case "switch":
                     headerElement.innerHTML = '<div class="col">Модель</div>' +
@@ -6810,61 +7304,48 @@ document.addEventListener("DOMContentLoaded", function () {
                             '<div class="col">Кол-во город. номеров</div>' +
                             '<div class="col">Состояние</div>';
                     break;
-                    case "conditioner":
-                     headerElement.innerHTML = '<div class="col">Модель</div>' +
+                case "conditioner":
+                    headerElement.innerHTML = '<div class="col">Модель</div>' +
                             '<div class="col">ФИО</div>' +
                             '<div class="col">Серийный номер</div>' +
                             '<div class="col">Инвентарный номер</div>' +
                             '<div class="col">Год ввода в экспл</div>' +
                             '<div class="col">Тип</div>' +
                             '<div class="col">Состояние</div>';
-                        break;
-                        case "infomat":
-                     headerElement.innerHTML = '<div class="col">Модель</div>' +
+                    break;
+                case "infomat":
+                    headerElement.innerHTML = '<div class="col">Модель</div>' +
                             '<div class="col">ФИО</div>' +
                             '<div class="col">Серийный номер</div>' +
                             '<div class="col">Инвентарный номер</div>' +
                             '<div class="col">Кабинет</div>' +
                             '<div class="col">Год выпуска</div>' +
                             '<div class="col">Состояние</div>';
-                        break;
-                         case "terminal":
-                     headerElement.innerHTML = '<div class="col">Модель</div>' +
+                    break;
+                case "terminal":
+                    headerElement.innerHTML = '<div class="col">Модель</div>' +
                             '<div class="col">ФИО</div>' +
                             '<div class="col">Серийный номер</div>' +
                             '<div class="col">Инвентарный номер</div>' +
                             '<div class="col">Состояние</div>';
-                        break;
-                        case "thermoprinter":
-                     headerElement.innerHTML = '<div class="col">Модель</div>' +
+                    break;
+
+                case "display":
+                    headerElement.innerHTML = '<div class="col">Модель</div>' +
                             '<div class="col">ФИО</div>' +
                             '<div class="col">Серийный номер</div>' +
                             '<div class="col">Инвентарный номер</div>' +
                             '<div class="col">Состояние</div>';
-                        break;
-                        case "display":
-                     headerElement.innerHTML = '<div class="col">Модель</div>' +
+                    break;
+
+                case "asuo":
+                    headerElement.innerHTML = '<div class="col">Наименование в ведомости ОС</div>' +
                             '<div class="col">ФИО</div>' +
-                            '<div class="col">Серийный номер</div>' +
                             '<div class="col">Инвентарный номер</div>' +
-                            '<div class="col">Состояние</div>';
-                        break;
-                         case "swunit":
-                     headerElement.innerHTML = '<div class="col">Модель</div>' +
-                            '<div class="col">ФИО</div>' +
-                            '<div class="col">Серийный номер</div>' +
-                            '<div class="col">Инвентарный номер</div>' +
-                            '<div class="col">Состояние</div>';
-                        break;
-                        case "asuo":
-                        headerElement.innerHTML = '<div class="col">Наименование в ведомости ОС</div>' +
-                            '<div class="col">ФИО</div>' +
-                            '<div class="col">Главное табло</div>' +
-                            '<div class="col">Терминал</div>' +
-                            '<div class="col">Термопринтер</div>' +
-                            '<div class="col">Блок коммутации</div>' +
-                            '<div class="col">Свитч</div>' +
-                            '<div class="col">Электронное табло на кабинки и кабинеты</div>';
+                            '<div class="col">Год выпуска</div>' +
+                            '<div class="col">Дата ввода в эксплуатацию</div>' ;
+                            '<div class="col">Статус</div>' ;
+
                     break;
                 default:
                     headerElement.className = "row fw-bold mt-3 mb-3";
@@ -6890,42 +7371,42 @@ document.addEventListener("DOMContentLoaded", function () {
             }
             liItem.childNodes[0].append(headerElement);
             for (d = 0; d < storageDtoes[j].departments.length; d++) {
-                
+
                 for (t = 0; t < storageDtoes[j].departments[d].dtoes.length; t++) {
-                    
-                   switch (attrib) {
-                    case "phones":
-                        dynamicLabel = "Внутренний номер";
-                        dynamicField = storageDtoes[j].departments[d].dtoes[t].phoneNumber;
-                        break;
-                    case "monitors":
-                        dynamicLabel = "По ведомости ОС";
-                        if(storageDtoes[j].departments[d].dtoes[t].baseType == "SINGLE") {
-                            dynamicField = "Отдельно";
-                        } else {
-                            dynamicField = "В составе АРМ";
-                        }
-                        break;
-                    case "ups":
-                        dynamicLabel = "Год замены";
-                        if(storageDtoes[j].departments[d].dtoes[t].yearReplacement == 0) {
-                          dynamicField = "нет";  
-                        } else {
-                            dynamicField = storageDtoes[j].departments[d].dtoes[t].yearReplacement;
-                        }
-                        
-                        break;
-                    case "upsforserver":
-                        dynamicLabel = "Год замены";
-                        if(storageDtoes[j].departments[d].dtoes[t].yearReplacement == 0) {
-                          dynamicField = "нет";  
-                        } else {
-                            dynamicField = storageDtoes[j].departments[d].dtoes[t].yearReplacement;
-                        }
-                        
-                        break;
-                }
-                    
+
+                    switch (attrib) {
+                        case "phones":
+                            dynamicLabel = "Внутренний номер";
+                            dynamicField = storageDtoes[j].departments[d].dtoes[t].phoneNumber;
+                            break;
+                        case "monitors":
+                            dynamicLabel = "По ведомости ОС";
+                            if (storageDtoes[j].departments[d].dtoes[t].baseType == "SINGLE") {
+                                dynamicField = "Отдельно";
+                            } else {
+                                dynamicField = "В составе АРМ";
+                            }
+                            break;
+                        case "ups":
+                            dynamicLabel = "Год замены";
+                            if (storageDtoes[j].departments[d].dtoes[t].yearReplacement == 0) {
+                                dynamicField = "нет";
+                            } else {
+                                dynamicField = storageDtoes[j].departments[d].dtoes[t].yearReplacement;
+                            }
+
+                            break;
+                        case "upsforserver":
+                            dynamicLabel = "Год замены";
+                            if (storageDtoes[j].departments[d].dtoes[t].yearReplacement == 0) {
+                                dynamicField = "нет";
+                            } else {
+                                dynamicField = storageDtoes[j].departments[d].dtoes[t].yearReplacement;
+                            }
+
+                            break;
+                    }
+
                     count = t + 1;
                     elDepartment = document.createElement("li");
                     elDepartment.className = "element storage";
@@ -6958,7 +7439,7 @@ document.addEventListener("DOMContentLoaded", function () {
                                     '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].yearCreated + '</div>' +
                                     '</div>';
                             break;
-                            case "server":
+                        case "server":
                             elDepartment.innerHTML = '<div class="row mb-2 d-flex align-items-center text-start">' +
                                     '<div class="col">' + count + '. ' + storageDtoes[j].departments[d].dtoes[t].model + '</div>' +
                                     '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].placeName + '</div>' +
@@ -6969,9 +7450,9 @@ document.addEventListener("DOMContentLoaded", function () {
                                     '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].yearCreated + '</div>' +
                                     '</div>';
                             break;
-                            case "switch":
-                                
-                                elDepartment.innerHTML = '<div class="row mb-2 d-flex align-items-center text-start">' +
+                        case "switch":
+
+                            elDepartment.innerHTML = '<div class="row mb-2 d-flex align-items-center text-start">' +
                                     '<div class="col">' + count + '. ' + storageDtoes[j].departments[d].dtoes[t].model + '</div>' +
                                     '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].placeName + '</div>' +
                                     '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].serialNumber + '</div>' +
@@ -6981,10 +7462,10 @@ document.addEventListener("DOMContentLoaded", function () {
                                     '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].yearCreated + '</div>' +
                                     '<div class="col">' + getStatus(storageDtoes[j].departments[d].dtoes[t].status) + '</div>' +
                                     '</div>';
-                                break;
-                                case "router":
-                                
-                                elDepartment.innerHTML = '<div class="row mb-2 d-flex align-items-center text-start">' +
+                            break;
+                        case "router":
+
+                            elDepartment.innerHTML = '<div class="row mb-2 d-flex align-items-center text-start">' +
                                     '<div class="col">' + count + '. ' + storageDtoes[j].departments[d].dtoes[t].model + '</div>' +
                                     '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].placeName + '</div>' +
                                     '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].serialNumber + '</div>' +
@@ -6994,9 +7475,9 @@ document.addEventListener("DOMContentLoaded", function () {
                                     '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].yearCreated + '</div>' +
                                     '<div class="col">' + getStatus(storageDtoes[j].departments[d].dtoes[t].status) + '</div>' +
                                     '</div>';
-                                break;
-                                case "ats":
-                                elDepartment.innerHTML = '<div class="row mb-2 d-flex align-items-center text-start">' +
+                            break;
+                        case "ats":
+                            elDepartment.innerHTML = '<div class="row mb-2 d-flex align-items-center text-start">' +
                                     '<div class="col">' + count + '. ' + storageDtoes[j].departments[d].dtoes[t].model + '</div>' +
                                     '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].placeName + '</div>' +
                                     '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].serialNumber + '</div>' +
@@ -7005,9 +7486,9 @@ document.addEventListener("DOMContentLoaded", function () {
                                     '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].cityNumberAmount + '</div>' +
                                     '<div class="col">' + getStatus(storageDtoes[j].departments[d].dtoes[t].status) + '</div>' +
                                     '</div>';
-                                break;
-                                case "conditioner":
-                                elDepartment.innerHTML = '<div class="row mb-2 d-flex align-items-center text-start">' +
+                            break;
+                        case "conditioner":
+                            elDepartment.innerHTML = '<div class="row mb-2 d-flex align-items-center text-start">' +
                                     '<div class="col">' + count + '. ' + storageDtoes[j].departments[d].dtoes[t].model + '</div>' +
                                     '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].placeName + '</div>' +
                                     '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].serialNumber + '</div>' +
@@ -7016,9 +7497,9 @@ document.addEventListener("DOMContentLoaded", function () {
                                     '<div class="col">' + getConditionerType(storageDtoes[j].departments[d].dtoes[t].conditionerType) + '</div>' +
                                     '<div class="col">' + getStatus(storageDtoes[j].departments[d].dtoes[t].status) + '</div>' +
                                     '</div>';
-                                break;
-                                case "infomat":
-                                elDepartment.innerHTML = '<div class="row mb-2 d-flex align-items-center text-start">' +
+                            break;
+                        case "infomat":
+                            elDepartment.innerHTML = '<div class="row mb-2 d-flex align-items-center text-start">' +
                                     '<div class="col">' + count + '. ' + storageDtoes[j].departments[d].dtoes[t].model + '</div>' +
                                     '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].placeName + '</div>' +
                                     '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].serialNumber + '</div>' +
@@ -7027,69 +7508,51 @@ document.addEventListener("DOMContentLoaded", function () {
                                     '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].yearCreated + '</div>' +
                                     '<div class="col">' + getStatus(storageDtoes[j].departments[d].dtoes[t].status) + '</div>' +
                                     '</div>';
-                                break;
-                                   case "terminal":
-                                elDepartment.innerHTML = '<div class="row mb-2 d-flex align-items-center text-start">' +
+                            break;
+                        case "terminal":
+                            elDepartment.innerHTML = '<div class="row mb-2 d-flex align-items-center text-start">' +
                                     '<div class="col">' + count + '. ' + storageDtoes[j].departments[d].dtoes[t].model + '</div>' +
                                     '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].placeName + '</div>' +
                                     '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].serialNumber + '</div>' +
                                     '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].inventaryNumber + '</div>' +
                                     '<div class="col">' + getStatus(storageDtoes[j].departments[d].dtoes[t].status) + '</div>' +
                                     '</div>';
-                                break;
-                                case "thermoprinter":
-                                elDepartment.innerHTML = '<div class="row mb-2 d-flex align-items-center text-start">' +
+                            break;
+
+                        case "display":
+                            elDepartment.innerHTML = '<div class="row mb-2 d-flex align-items-center text-start">' +
                                     '<div class="col">' + count + '. ' + storageDtoes[j].departments[d].dtoes[t].model + '</div>' +
                                     '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].placeName + '</div>' +
                                     '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].serialNumber + '</div>' +
                                     '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].inventaryNumber + '</div>' +
                                     '<div class="col">' + getStatus(storageDtoes[j].departments[d].dtoes[t].status) + '</div>' +
                                     '</div>';
-                                break;
-                                case "display":
-                                elDepartment.innerHTML = '<div class="row mb-2 d-flex align-items-center text-start">' +
-                                    '<div class="col">' + count + '. ' + storageDtoes[j].departments[d].dtoes[t].model + '</div>' +
-                                    '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].placeName + '</div>' +
-                                    '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].serialNumber + '</div>' +
-                                    '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].inventaryNumber + '</div>' +
-                                    '<div class="col">' + getStatus(storageDtoes[j].departments[d].dtoes[t].status) + '</div>' +
-                                    '</div>';
-                                break;
-                                case "swunit":
-                                elDepartment.innerHTML = '<div class="row mb-2 d-flex align-items-center text-start">' +
-                                    '<div class="col">' + count + '. ' + storageDtoes[j].departments[d].dtoes[t].model + '</div>' +
-                                    '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].placeName + '</div>' +
-                                    '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].serialNumber + '</div>' +
-                                    '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].inventaryNumber + '</div>' +
-                                    '<div class="col">' + getStatus(storageDtoes[j].departments[d].dtoes[t].status) + '</div>' +
-                                    '</div>';
-                                break;
-                                 case "asuo":
-                                elDepartment.innerHTML = '<div class="row mb-2 d-flex align-items-center text-start">' +
+                            break;
+
+                        case "asuo":
+                            elDepartment.innerHTML = '<div class="row mb-2 d-flex align-items-center text-start">' +
                                     '<div class="col">' + count + '. ' + storageDtoes[j].departments[d].dtoes[t].nameFromOneC + '</div>' +
                                     '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].placeName + '</div>' +
-                                    '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].displayModel + '</div>' +
-                                    '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].terminalModel + '</div>' +
-                                    '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].thermoprinterModel + '</div>' +
-                                    '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].switchingUnitModel + '</div>' +
-                                    '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].switches.length + ' ед.' + '</div>' +
-                                    '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].subDisplayModel + '</div>' +
-                                    '</div>';
-                                break;
-                            default:
-                                if(dynamicLabel != null) {
-                                elDepartment.innerHTML = '<div class="row mb-2 d-flex align-items-center text-start">' +
-                                    '<div class="col">' + count + '. ' + storageDtoes[j].departments[d].dtoes[t].model + '</div>' +
-                                    '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].placeName + '</div>' +
-                                    '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].serialNumber + '</div>' +
                                     '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].inventaryNumber + '</div>' +
-                                    '<div class="col">' + formatedDate + '</div>' +
-                                    '<div class="col">' + getStatus(storageDtoes[j].departments[d].dtoes[t].status) + '</div>' +
                                     '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].yearCreated + '</div>' +
-                                    '<div class="col">' + dynamicField + '</div>' +
+                                    '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].dateExploitationBegin + '</div>' +
+                                    '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].status + '</div>' +
                                     '</div>';
-                        }
-                                break;
+                            break;
+                        default:
+                            if (dynamicLabel != null) {
+                                elDepartment.innerHTML = '<div class="row mb-2 d-flex align-items-center text-start">' +
+                                        '<div class="col">' + count + '. ' + storageDtoes[j].departments[d].dtoes[t].model + '</div>' +
+                                        '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].placeName + '</div>' +
+                                        '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].serialNumber + '</div>' +
+                                        '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].inventaryNumber + '</div>' +
+                                        '<div class="col">' + formatedDate + '</div>' +
+                                        '<div class="col">' + getStatus(storageDtoes[j].departments[d].dtoes[t].status) + '</div>' +
+                                        '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].yearCreated + '</div>' +
+                                        '<div class="col">' + dynamicField + '</div>' +
+                                        '</div>';
+                            }
+                            break;
                     }
                     liItem.childNodes[0].append(elDepartment);
                 }
@@ -7097,87 +7560,219 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
-     // Получение строки о результате поиска или фильтра
-     
-     if(null != filterLocation || null != filterModel || null != filterStatus || null != filterDateBegin || null != filterDateEnd || null != searchFIO || null != searchInventary) {
-     let arr = new Array();
-     if(null != searchFIO || null != searchInventary) {
-       arr.push("показан результат поиска по ");
-       if(null != searchFIO && searchFIO != "") {
-           arr.push("фамилии: " + searchFIO);
-       }
-       if(null != searchInventary && searchInventary != "") {
-           arr.push("инвентарному номеру: " + searchInventary);
-       }
-         
-     }
-     if(null != filterLocation || null != filterModel || null != filterStatus || null != filterDateBegin || null != filterDateEnd) {
-         
-         arr.push("показан результат фильтра по ");
-         if(null != filterLocation && filterLocation != ""){
-             arr.push("локации: " + filterLocation);
-         }
-         if(null != filterModel && filterModel != "") {
-             if(arr.length > 1) {
-                 arr.push(", ");
-             }
-             arr.push("модели: " + filterModel);
-         }
-         if(null != filterStatus && filterStatus != "") {
-             if(arr.length > 1) {
-                 arr.push(", ");
-             }
-             arr.push("статусу: " + filterStatus);
-         }
-          if((null != filterDateBegin && filterDateBegin != "") && (null != filterDateEnd && filterDateEnd != "")) {
-              if(arr.length > 1) {
-                 arr.push(", ");
-             }
-             arr.push("году выпуска с " + filterDateBegin + ", до " + filterDateEnd);
-         }
-         if(null != filterDateBegin && filterDateBegin != "") {
-             if(arr.length > 1) {
-                 arr.push(", ");
-             }
-             arr.push("году выпуска с " + filterDateBegin);
-         }
-         if(null != filterDateEnd && filterDateEnd != "") {
-             if(arr.length > 1) {
-                 arr.push(", ");
-             }
-             arr.push("году выпуска до " + filterDateEnd);
-             
-             
-         }
-      
-         
-         
-     }
-     
+    // Получение строки о результате поиска или фильтра
+
+    if (null != filterLocation || null != filterModel || null != filterStatus || null != filterDateBegin || null != filterDateEnd || null != searchFIO || null != searchInventary) {
+        let arr = new Array();
+        if (null != searchFIO || null != searchInventary) {
+            arr.push("показан результат поиска по ");
+            if (null != searchFIO && searchFIO != "") {
+                arr.push("фамилии: " + searchFIO);
+            }
+            if (null != searchInventary && searchInventary != "") {
+                arr.push("инвентарному номеру: " + searchInventary);
+            }
+            if (null != searchSerial && searchSerial != "") {
+                arr.push("серийному номеру: " + searchSerial);
+            }
+
+        }
+        if (null != filterLocation || null != filterModel || null != filterStatus || null != filterDateBegin || null != filterDateEnd) {
+
+            arr.push("показан результат фильтра по ");
+            if (null != filterLocation && filterLocation != "") {
+                arr.push("локации: " + filterLocation);
+            }
+            if (null != filterModel && filterModel != "") {
+                if (arr.length > 1) {
+                    arr.push(", ");
+                }
+                arr.push("модели: " + filterModel);
+            }
+            if (null != filterStatus && filterStatus != "") {
+                if (arr.length > 1) {
+                    arr.push(", ");
+                }
+                arr.push("статусу: " + filterStatus);
+            }
+            if ((null != filterDateBegin && filterDateBegin != "") && (null != filterDateEnd && filterDateEnd != "")) {
+                if (arr.length > 1) {
+                    arr.push(", ");
+                }
+                arr.push("году выпуска с " + filterDateBegin + ", до " + filterDateEnd);
+            }
+            if (null != filterDateBegin && filterDateBegin != "") {
+                if (arr.length > 1) {
+                    arr.push(", ");
+                }
+                arr.push("году выпуска с " + filterDateBegin);
+            }
+            if (null != filterDateEnd && filterDateEnd != "") {
+                if (arr.length > 1) {
+                    arr.push(", ");
+                }
+                arr.push("году выпуска до " + filterDateEnd);
+
+
+            }
+
+        }
+
         arr.push(", найдено " + amountDevice + " записей.");
-         
-         
-         $("#mesage")[0].style = "margin-left: 40px; margin-bottom: 15px; font-weight: 800;";
-         let result = "";
-         for(i = 0; i < arr.length; i++) {
-             result = result + arr[i];
-         }
-         $("#mesage")[0].innerHTML = result;
-     
-     }
 
 
-    
+        $("#mesage")[0].style = "margin-left: 40px; margin-bottom: 15px; font-weight: 800;";
+        let result = "";
+        for (i = 0; i < arr.length; i++) {
+            result = result + arr[i];
+        }
+        $("#mesage")[0].innerHTML = result;
+
+    }
 
 });
 
 
+let removeLinkDisplayAction = function (event) {
+    $(event.target).closest('.row')[0].remove();
+    if ($('.display-row').length > 1 && $($('.display-row')[$('.display-row').length - 1]).children('.remove-link').length == 0) {
+        let removeLink = document.createElement('a');
+        removeLink.href = "#";
+        removeLink.className = "remove-link";
+        removeLink.innerText = "Удалить";
+        removeLink.style = "font-size: 11px; margin-top: 0; padding-top: 0;";
+        $($('.display-row')[$('.display-row').length - 1]).children('.display-label').append(removeLink);
+        $(removeLink).on("click", function(event) {
+            removeLinkDisplayAction(event);
+        });
+    }
+    if ($($('.display-row')[$('.display-row').length - 1]).find('.selectized')[0].value != 0) {
+        let aHref = document.createElement('a');
+        aHref.style = "font-size: 11px; margin-top: 0; margin-left:15px; padding-top: 0;";
+        aHref.innerText = "Добавить ещё";
+        aHref.className = "add-Link";
+        aHref.href = "#";
+
+        $($('.display-row')[$('.display-row').length - 1]).find('.display-label')[0].append(aHref);
+        $(aHref).on('click', function (event) {
+            addDisplayRow(event);
+            $(aHref).remove();
+        });
+    }
+};
 
 
+let addDisplayRow = function(event) {
+    let divRowDisplaySelectAdd = document.createElement("div");
+    divRowDisplaySelectAdd.className = "row mt-2 display-row";
+    let divColLabelDisplaySelectAdd = document.createElement("div");
+    divColLabelDisplaySelectAdd.className = "col display-label";
+    divColLabelDisplaySelectAdd.id = "display_label_" + (parseInt($(".display-row").length) + 1);
+    let divColDisplaySelectAdd = document.createElement("div");
+    divColDisplaySelectAdd.className = "col";
+    let selectDisplayAdd = document.createElement("select");
+    selectDisplayAdd.className = "form-select form-select-sm display-select";
+    selectDisplayAdd.id = "displaySelect-" + (parseInt($(".display-row").length) + 1);
+    selectDisplayAdd.setAttribute("aria-label", "displaySelect");
+    divColDisplaySelectAdd.appendChild(selectDisplayAdd);
+    divRowDisplaySelectAdd.appendChild(divColLabelDisplaySelectAdd);
 
+    let displayLabelAdd = document.createElement("span");
+    displayLabelAdd.innerText = "Главное табло";
+    let br = document.createElement("br");
+    let removeHref = document.createElement("a");
+    removeHref.href = "#";
+    removeHref.className = "remove-link";
+    removeHref.innerText = "Удалить";
+    removeHref.style = "font-size: 11px; margin-top: 0; padding-top: 0;";
+    divColLabelDisplaySelectAdd.appendChild(displayLabelAdd);
+    divColLabelDisplaySelectAdd.appendChild(br);
+    divColLabelDisplaySelectAdd.appendChild(removeHref);
+    divRowDisplaySelectAdd.appendChild(divColDisplaySelectAdd);
+    $('#display-container')[0].appendChild(divRowDisplaySelectAdd);
+    $($(event.target).closest('.row')).find('.remove-link').remove();
 
+    removeHref.addEventListener("click", function (event) {
+        removeLinkDisplayAction(event);
+    });
 
+    $(selectDisplayAdd).selectize({
+        placeholder: "Выберите из списка",
+        preload: true,
+        valueField: 'id',
+        labelField: "model",
+        searchField: ["id", "model"],
+        load: function (query, callback) {
+            $.ajax({
+                url: "/getdisplays",
+                type: 'GET',
+                async: false,
+                dataType: 'json',
+                error: callback,
+                success: function (callback) {
+                    var displaySelectized = $(".display-row").find('.selectized');
+                    for (let i = 0; i < displaySelectized.length; i++) {
+                        for (let j = 0; j < callback.length; j++) {
+                            if (displaySelectized[i].value == callback[j].id) {
+                                callback.splice(j, 1);
+                            }
+                        }
+                    }
+                    callback.forEach(model => {
+                        $(selectDisplayAdd)[0].selectize.addOption(model);
+                        $(selectDisplayAdd)[0].selectize.addItem(model);
+                    });
+                },
+            });
+        },
+        onInitialize: function () {
+            this.trigger('change', this.getValue(), true);
+        },
+        onChange: function (value, isOnInitialize) {
+            if (value != '' && $(this.$wrapper.closest('.row')).find('.add-Link').length == 0) {
+                var curentDisplayLabel = this.$wrapper.closest('.row')
+                        .children('.display-label')[0];
+                let aHref = document.createElement('a');
+                aHref.style = "font-size: 11px; margin-top: 0; margin-left:15px; padding-top: 0;";
+                aHref.innerText = "Добавить ещё";
+                aHref.href = "#";
+                aHref.className = "add-Link";
+                $(curentDisplayLabel).append(aHref);
+                aHref.addEventListener('click', function (event) {
+                    $(curentDisplayLabel).children('.remove-link').remove();
+                    aHref.remove();
+                    addDisplayRow(event);
+                });
 
+            } else {
+                if ($(curentDisplayLabel).children('.add-link').length > 0) {
+                    $(curentDisplayLabel).children('.add-link').remove();
+                }
+            }
+
+        },
+        render: {
+            option: function (item, escape) {
+                return '<div style="margin-left:2px; padding-left:10px; margin-right:2px;padding-right:10px; border-radius:5px;">'
+                        + '<strong>'
+                        + escape(item.model) + ' - '
+                        + '</strong>'
+                        + ' инв №: '
+                        + escape(item.serialNumber) + ', сер №: '
+                        + escape(item.inventaryNumber)
+                        + '</div>';
+            },
+            item: function (item, escape) {
+                return '<div>'
+                        + escape(item.model) + ', инв №:'
+                        + escape(item.serialNumber) + ', сер №:'
+                        + escape(item.inventaryNumber)
+                        + '</div>';
+            }
+        }
+
+    });  
+};
 
 
 

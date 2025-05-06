@@ -4,6 +4,8 @@
  */
 package ru.gov.sfr.aos.monitoring.services;
 
+import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.gov.sfr.aos.monitoring.entities.DisplayModel;
 import ru.gov.sfr.aos.monitoring.repositories.DisplayModelRepo;
@@ -15,5 +17,11 @@ import ru.gov.sfr.aos.monitoring.repositories.DisplayModelRepo;
  */
 @Service
 public class DisplayModelService extends SvtModelService<DisplayModel, DisplayModelRepo> {
+   
+    @Autowired
+   private DisplayModelRepo repo;
     
+    public List<DisplayModel> getModelsByManufacturerId(Long id) {
+        return repo.findByManufacturerId(id);
+    }
 }

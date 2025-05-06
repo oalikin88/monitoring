@@ -40,13 +40,6 @@ public class Ups extends ObjectBuingWithSerialAndInventary implements Serializab
     public Ups() {
     }
 
-    public Ups(UpsModel upsModel, Status status, String inventaryNumber, String serialNumber, int yearCreated,
-            int yearReplacement, Date dateExploitationBegin, Contract contract, boolean archived) {
-        super(status, inventaryNumber, serialNumber, contract);
-        this.upsModel = upsModel;
-        this.yearReplacement = yearReplacement;
-        this.dateExploitationBegin = dateExploitationBegin;
-    }
 
     public String getNameFromOneC() {
         return nameFromOneC;

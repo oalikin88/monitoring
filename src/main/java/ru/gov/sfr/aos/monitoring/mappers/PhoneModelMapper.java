@@ -17,7 +17,7 @@ import ru.gov.sfr.aos.monitoring.models.SvtModelDto;
  * @author Alikin Oleg
  */
 @Component
-public class PhoneModelMapper implements ModelMapper<PhoneModel>{
+public class PhoneModelMapper implements ModelMapper<PhoneModel, SvtModelDto>{
 
     
     @Override

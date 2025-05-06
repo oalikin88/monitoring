@@ -30,7 +30,7 @@ public class ManufacturerModel<E> {
     protected Long id;
     protected String name;
     protected boolean archived;
-    @OneToMany(mappedBy = "manufacturer", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "manufacturer", cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
     protected Set<E> models = new HashSet<E>();
     
 

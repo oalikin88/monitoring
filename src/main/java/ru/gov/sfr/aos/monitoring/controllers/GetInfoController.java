@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 import org.opfr.springBootStarterDictionary.fallback.FallbackOrganizationClient;
 import org.opfr.springBootStarterDictionary.models.DictionaryEmployee;
 import org.opfr.springBootStarterDictionary.models.DictionaryOrganization;
@@ -35,11 +34,15 @@ import ru.gov.sfr.aos.monitoring.entities.ConditionerManufacturer;
 import ru.gov.sfr.aos.monitoring.entities.ConditionerModel;
 import ru.gov.sfr.aos.monitoring.entities.Cpu;
 import ru.gov.sfr.aos.monitoring.entities.Display;
+import ru.gov.sfr.aos.monitoring.entities.DisplayManufacturer;
 import ru.gov.sfr.aos.monitoring.entities.DisplayModel;
 import ru.gov.sfr.aos.monitoring.entities.Fax;
 import ru.gov.sfr.aos.monitoring.entities.FaxManufacturer;
 import ru.gov.sfr.aos.monitoring.entities.FaxModel;
 import ru.gov.sfr.aos.monitoring.entities.Hdd;
+import ru.gov.sfr.aos.monitoring.entities.Hub;
+import ru.gov.sfr.aos.monitoring.entities.HubManufacturer;
+import ru.gov.sfr.aos.monitoring.entities.HubModel;
 import ru.gov.sfr.aos.monitoring.entities.Infomat;
 import ru.gov.sfr.aos.monitoring.entities.InfomatManufacturer;
 import ru.gov.sfr.aos.monitoring.entities.InfomatModel;
@@ -54,6 +57,7 @@ import ru.gov.sfr.aos.monitoring.entities.OperationSystem;
 import ru.gov.sfr.aos.monitoring.entities.Phone;
 import ru.gov.sfr.aos.monitoring.entities.PhoneManufacturer;
 import ru.gov.sfr.aos.monitoring.entities.PhoneModel;
+import ru.gov.sfr.aos.monitoring.entities.ProgramSoftware;
 import ru.gov.sfr.aos.monitoring.entities.Ram;
 import ru.gov.sfr.aos.monitoring.entities.Router;
 import ru.gov.sfr.aos.monitoring.entities.RouterManufacturer;
@@ -70,15 +74,27 @@ import ru.gov.sfr.aos.monitoring.entities.SubDisplayModel;
 import ru.gov.sfr.aos.monitoring.entities.SwitchHub;
 import ru.gov.sfr.aos.monitoring.entities.SwitchHubManufacturer;
 import ru.gov.sfr.aos.monitoring.entities.SwitchHubModel;
-import ru.gov.sfr.aos.monitoring.entities.SwitchingUnit;
-import ru.gov.sfr.aos.monitoring.entities.SwitchingUnitModel;
 import ru.gov.sfr.aos.monitoring.entities.SystemBlock;
 import ru.gov.sfr.aos.monitoring.entities.SystemBlockManufacturer;
 import ru.gov.sfr.aos.monitoring.entities.SystemBlockModel;
 import ru.gov.sfr.aos.monitoring.entities.Terminal;
+import ru.gov.sfr.aos.monitoring.entities.TerminalDisplay;
+import ru.gov.sfr.aos.monitoring.entities.TerminalDisplayManufacturer;
+import ru.gov.sfr.aos.monitoring.entities.TerminalDisplayModel;
+import ru.gov.sfr.aos.monitoring.entities.TerminalManufacturer;
 import ru.gov.sfr.aos.monitoring.entities.TerminalModel;
-import ru.gov.sfr.aos.monitoring.entities.ThermoPrinter;
-import ru.gov.sfr.aos.monitoring.entities.ThermoPrinterModel;
+import ru.gov.sfr.aos.monitoring.entities.TerminalPrinter;
+import ru.gov.sfr.aos.monitoring.entities.TerminalPrinterManufacturer;
+import ru.gov.sfr.aos.monitoring.entities.TerminalPrinterModel;
+import ru.gov.sfr.aos.monitoring.entities.TerminalSensor;
+import ru.gov.sfr.aos.monitoring.entities.TerminalSensorManufacturer;
+import ru.gov.sfr.aos.monitoring.entities.TerminalSensorModel;
+import ru.gov.sfr.aos.monitoring.entities.TerminalServer;
+import ru.gov.sfr.aos.monitoring.entities.TerminalServerManufacturer;
+import ru.gov.sfr.aos.monitoring.entities.TerminalServerModel;
+import ru.gov.sfr.aos.monitoring.entities.TerminalUps;
+import ru.gov.sfr.aos.monitoring.entities.TerminalUpsManufacturer;
+import ru.gov.sfr.aos.monitoring.entities.TerminalUpsModel;
 import ru.gov.sfr.aos.monitoring.entities.Ups;
 import ru.gov.sfr.aos.monitoring.entities.UpsManufacturer;
 import ru.gov.sfr.aos.monitoring.entities.UpsModel;
@@ -92,10 +108,15 @@ import ru.gov.sfr.aos.monitoring.mappers.BatteryTypeMapper;
 import ru.gov.sfr.aos.monitoring.mappers.ConditionerManufacturerMapper;
 import ru.gov.sfr.aos.monitoring.mappers.ConditionerMapper;
 import ru.gov.sfr.aos.monitoring.mappers.ConditionerModelMapper;
+import ru.gov.sfr.aos.monitoring.mappers.DisplayManufacturerMapper;
 import ru.gov.sfr.aos.monitoring.mappers.DisplayMapper;
+import ru.gov.sfr.aos.monitoring.mappers.DisplayModelMapper;
 import ru.gov.sfr.aos.monitoring.mappers.FaxManufacturerMapper;
 import ru.gov.sfr.aos.monitoring.mappers.FaxMapper;
 import ru.gov.sfr.aos.monitoring.mappers.FaxModelMapper;
+import ru.gov.sfr.aos.monitoring.mappers.HubManufacturerMapper;
+import ru.gov.sfr.aos.monitoring.mappers.HubMapper;
+import ru.gov.sfr.aos.monitoring.mappers.HubModelMapper;
 import ru.gov.sfr.aos.monitoring.mappers.InfomatManufacturerMapper;
 import ru.gov.sfr.aos.monitoring.mappers.InfomatMapper;
 import ru.gov.sfr.aos.monitoring.mappers.InfomatModelMapper;
@@ -133,12 +154,27 @@ import ru.gov.sfr.aos.monitoring.mappers.ServerModelMapper;
 import ru.gov.sfr.aos.monitoring.mappers.SwitchHubManufacturerMapper;
 import ru.gov.sfr.aos.monitoring.mappers.SwitchHubMapper;
 import ru.gov.sfr.aos.monitoring.mappers.SwitchHubModelMapper;
-import ru.gov.sfr.aos.monitoring.mappers.SwitchingUnitMapper;
 import ru.gov.sfr.aos.monitoring.mappers.SystemBlockMapper;
 import ru.gov.sfr.aos.monitoring.mappers.SystemblockManufacturerMapper;
 import ru.gov.sfr.aos.monitoring.mappers.SystemblockModelMapper;
+import ru.gov.sfr.aos.monitoring.mappers.TerminalDisplayManufacturerMapper;
+import ru.gov.sfr.aos.monitoring.mappers.TerminalDisplayMapper;
+import ru.gov.sfr.aos.monitoring.mappers.TerminalDisplayModelMapper;
+import ru.gov.sfr.aos.monitoring.mappers.TerminalManufacturerMapper;
 import ru.gov.sfr.aos.monitoring.mappers.TerminalMapper;
-import ru.gov.sfr.aos.monitoring.mappers.ThermoprinterMapper;
+import ru.gov.sfr.aos.monitoring.mappers.TerminalModelMapper;
+import ru.gov.sfr.aos.monitoring.mappers.TerminalPrinterManufacturerMapper;
+import ru.gov.sfr.aos.monitoring.mappers.TerminalPrinterMapper;
+import ru.gov.sfr.aos.monitoring.mappers.TerminalPrinterModelMapper;
+import ru.gov.sfr.aos.monitoring.mappers.TerminalSensorManufacturerMapper;
+import ru.gov.sfr.aos.monitoring.mappers.TerminalSensorMapper;
+import ru.gov.sfr.aos.monitoring.mappers.TerminalSensorModelMapper;
+import ru.gov.sfr.aos.monitoring.mappers.TerminalServerManufacturerMapper;
+import ru.gov.sfr.aos.monitoring.mappers.TerminalServerMapper;
+import ru.gov.sfr.aos.monitoring.mappers.TerminalServerModelMapper;
+import ru.gov.sfr.aos.monitoring.mappers.TerminalUpsManufacturerMapper;
+import ru.gov.sfr.aos.monitoring.mappers.TerminalUpsMapper;
+import ru.gov.sfr.aos.monitoring.mappers.TerminalUpsModelMapper;
 import ru.gov.sfr.aos.monitoring.mappers.UpsManufacturerMapper;
 import ru.gov.sfr.aos.monitoring.mappers.UpsMapper;
 import ru.gov.sfr.aos.monitoring.mappers.UpsModelMapper;
@@ -146,11 +182,14 @@ import ru.gov.sfr.aos.monitoring.models.AsuoDTO;
 import ru.gov.sfr.aos.monitoring.models.BatteryTypeDto;
 import ru.gov.sfr.aos.monitoring.models.CpuModelDto;
 import ru.gov.sfr.aos.monitoring.models.DepDto;
+import ru.gov.sfr.aos.monitoring.models.DisplayDto;
 import ru.gov.sfr.aos.monitoring.models.FaxDto;
 import ru.gov.sfr.aos.monitoring.models.HddDto;
+import ru.gov.sfr.aos.monitoring.models.HubDto;
 import ru.gov.sfr.aos.monitoring.models.ManufacturerDTO;
 import ru.gov.sfr.aos.monitoring.models.OperationSystemDto;
 import ru.gov.sfr.aos.monitoring.models.PhoneManufacturerDto;
+import ru.gov.sfr.aos.monitoring.models.ProgramSoftwareDto;
 import ru.gov.sfr.aos.monitoring.models.RamDto;
 import ru.gov.sfr.aos.monitoring.models.RepairDto;
 import ru.gov.sfr.aos.monitoring.models.SvtAtsDTO;
@@ -159,11 +198,13 @@ import ru.gov.sfr.aos.monitoring.models.SvtScannerDTO;
 import ru.gov.sfr.aos.monitoring.models.SvtServerDTO;
 import ru.gov.sfr.aos.monitoring.models.SvtSwitchHubDTO;
 import ru.gov.sfr.aos.monitoring.models.SvtSystemBlockDTO;
+import ru.gov.sfr.aos.monitoring.models.TerminalComponentDto;
+import ru.gov.sfr.aos.monitoring.models.TerminalDisplayDto;
+import ru.gov.sfr.aos.monitoring.models.TerminalDto;
 import ru.gov.sfr.aos.monitoring.models.TransferDto;
 import ru.gov.sfr.aos.monitoring.models.UpsManufacturerDto;
 import ru.gov.sfr.aos.monitoring.models.UpsModelDto;
 import ru.gov.sfr.aos.monitoring.repositories.AsuoRepo;
-import ru.gov.sfr.aos.monitoring.repositories.BatteryTypeRepo;
 import ru.gov.sfr.aos.monitoring.services.AsuoService;
 import ru.gov.sfr.aos.monitoring.services.AtsManufacturerService;
 import ru.gov.sfr.aos.monitoring.services.AtsModelService;
@@ -175,12 +216,16 @@ import ru.gov.sfr.aos.monitoring.services.ConditionerManufacturerService;
 import ru.gov.sfr.aos.monitoring.services.ConditionerModelService;
 import ru.gov.sfr.aos.monitoring.services.ConditionerService;
 import ru.gov.sfr.aos.monitoring.services.CpuModelService;
+import ru.gov.sfr.aos.monitoring.services.DisplayManufacturerService;
 import ru.gov.sfr.aos.monitoring.services.DisplayModelService;
 import ru.gov.sfr.aos.monitoring.services.DisplayService;
 import ru.gov.sfr.aos.monitoring.services.FaxManufacturerService;
 import ru.gov.sfr.aos.monitoring.services.FaxModelService;
 import ru.gov.sfr.aos.monitoring.services.FaxService;
 import ru.gov.sfr.aos.monitoring.services.HddModelService;
+import ru.gov.sfr.aos.monitoring.services.HubManufacturerService;
+import ru.gov.sfr.aos.monitoring.services.HubModelService;
+import ru.gov.sfr.aos.monitoring.services.HubService;
 import ru.gov.sfr.aos.monitoring.services.InfomatManufacturerService;
 import ru.gov.sfr.aos.monitoring.services.InfomatModelService;
 import ru.gov.sfr.aos.monitoring.services.InfomatService;
@@ -209,15 +254,28 @@ import ru.gov.sfr.aos.monitoring.services.SubDisplayModelService;
 import ru.gov.sfr.aos.monitoring.services.SwitchHubManufacturerService;
 import ru.gov.sfr.aos.monitoring.services.SwitchHubModelService;
 import ru.gov.sfr.aos.monitoring.services.SwitchHubService;
-import ru.gov.sfr.aos.monitoring.services.SwitchingUnitModelService;
-import ru.gov.sfr.aos.monitoring.services.SwitchingUnitService;
 import ru.gov.sfr.aos.monitoring.services.SystemBlockModelService;
 import ru.gov.sfr.aos.monitoring.services.SystemBlockService;
 import ru.gov.sfr.aos.monitoring.services.SystemblockManufacturerService;
+import ru.gov.sfr.aos.monitoring.services.TerminalDisplayManufacturerService;
+import ru.gov.sfr.aos.monitoring.services.TerminalDisplayModelService;
+import ru.gov.sfr.aos.monitoring.services.TerminalDisplayService;
+import ru.gov.sfr.aos.monitoring.services.TerminalManufacturerService;
 import ru.gov.sfr.aos.monitoring.services.TerminalModelService;
+import ru.gov.sfr.aos.monitoring.services.TerminalPrinterManufacturerService;
+import ru.gov.sfr.aos.monitoring.services.TerminalPrinterModelService;
+import ru.gov.sfr.aos.monitoring.services.TerminalPrinterService;
+import ru.gov.sfr.aos.monitoring.services.TerminalProgramSoftwareService;
+import ru.gov.sfr.aos.monitoring.services.TerminalSensorManufacturerService;
+import ru.gov.sfr.aos.monitoring.services.TerminalSensorModelService;
+import ru.gov.sfr.aos.monitoring.services.TerminalSensorService;
+import ru.gov.sfr.aos.monitoring.services.TerminalServerManufacturerService;
+import ru.gov.sfr.aos.monitoring.services.TerminalServerModelService;
+import ru.gov.sfr.aos.monitoring.services.TerminalServerService;
 import ru.gov.sfr.aos.monitoring.services.TerminalService;
-import ru.gov.sfr.aos.monitoring.services.ThermoprinterModelService;
-import ru.gov.sfr.aos.monitoring.services.ThermoprinterService;
+import ru.gov.sfr.aos.monitoring.services.TerminalUpsManufacturerService;
+import ru.gov.sfr.aos.monitoring.services.TerminalUpsModelService;
+import ru.gov.sfr.aos.monitoring.services.TerminalUpsService;
 import ru.gov.sfr.aos.monitoring.services.TransferInfoService;
 import ru.gov.sfr.aos.monitoring.services.UpsManufacturerService;
 import ru.gov.sfr.aos.monitoring.services.UpsModelService;
@@ -263,8 +321,6 @@ public class GetInfoController {
     private UpsService upsService;
     @Autowired
     private UpsModelService upsModelService;
-    @Autowired 
-    private BatteryTypeRepo batteryTypeRepo;
     @Autowired
     private BatteryTypeService batteryTypeService;
     @Autowired
@@ -349,24 +405,13 @@ public class GetInfoController {
     private TerminalMapper terminalMapper;
     @Autowired
     private TerminalService terminalService;
-    @Autowired
-    private ThermoprinterModelService thermoprinterModelService;
-    @Autowired
-    private ThermoprinterMapper thermoprinterMapper;
-    @Autowired
-    private ThermoprinterService thermoprinterService;
+
     @Autowired
     private DisplayMapper displayMapper;
     @Autowired
     private DisplayService displayService;
     @Autowired
     private DisplayModelService displayModelService;
-    @Autowired
-    private SwitchingUnitMapper swunitMapper;
-    @Autowired
-    private SwitchingUnitService swunitService;
-    @Autowired
-    private SwitchingUnitModelService swunitModelService;
     @Autowired
     private AsuoRepo asuoRepo;
     @Autowired
@@ -459,6 +504,97 @@ public class GetInfoController {
     private SystemblockManufacturerService sysblockManufacturerService;
     @Autowired
     private SystemblockModelMapper sysblockModelMapper;
+    @Autowired
+    private TerminalDisplayManufacturerService terminalDisplayManufacturerService;
+    @Autowired
+    private TerminalDisplayModelMapper terminalDisplayModelMapper;
+    @Autowired
+    private TerminalPrinterManufacturerService terminalPrinterManufacturerService;
+    @Autowired
+    private TerminalPrinterModelMapper terminalPrinterModelMapper;
+    @Autowired
+    private TerminalServerManufacturerService terminalServerManufacturerService;
+    @Autowired
+    private TerminalServerModelMapper terminalServerModelMapper;
+    @Autowired
+    private TerminalUpsManufacturerService terminalUpsManufacturerService;
+    @Autowired
+    private TerminalUpsModelMapper terminalUpsModelMapper;
+    @Autowired
+    private TerminalSensorManufacturerService terminalSensorManufacturerService;
+    @Autowired
+    private TerminalSensorModelMapper terminalSensorModelMapper;
+    @Autowired
+    private TerminalPrinterManufacturerMapper terminalPrinterManufacturerMapper;
+    @Autowired
+    private TerminalSensorManufacturerMapper terminalSensorManufacturerMapper;
+    @Autowired
+    private TerminalUpsManufacturerMapper terminalUpsManufacturerMapper;
+    @Autowired
+    private TerminalServerManufacturerMapper terminalServerManufacturerMapper;
+    @Autowired
+    private TerminalDisplayManufacturerMapper terminalDisplayManufacturerMapper;
+    @Autowired
+    private TerminalDisplayModelService terminalDisplayModelService;
+    @Autowired
+    private TerminalDisplayService terminalDisplayService;
+    @Autowired
+    private TerminalDisplayMapper terminalDisplayMapper;
+    @Autowired
+    private TerminalSensorModelService terminalSensorModelService;
+    @Autowired
+    private TerminalServerModelService terminalServerModelService;
+    @Autowired
+    private TerminalPrinterModelService terminalPrinterModelService;
+    @Autowired
+    private TerminalUpsModelService terminalUpsModelService;
+    @Autowired
+    private TerminalManufacturerService terminalManufacturerService;
+    @Autowired
+    private TerminalManufacturerMapper terminalManufacturerMapper;
+    @Autowired
+    private TerminalModelMapper terminalModelMapper;
+    @Autowired
+    private TerminalSensorService terminalSensorService;
+    @Autowired
+    private TerminalSensorMapper terminalSensorMapper;
+    @Autowired
+    private TerminalServerService terminalServerService;
+    @Autowired
+    private TerminalServerMapper terminalServerMapper;
+    @Autowired
+    private TerminalPrinterService terminalPrinterService;
+    @Autowired
+    private TerminalPrinterMapper terminalPrinterMapper;
+    @Autowired
+    private TerminalUpsService terminalUpsService;
+    @Autowired
+    private TerminalUpsMapper terminalUpsMapper;
+    @Autowired
+    private HubService hubService;
+    @Autowired
+    private HubMapper hubMapper;
+    @Autowired
+    private HubManufacturerService hubManufacturerService;
+    @Autowired
+    private HubManufacturerMapper hubManufacturerMapper;
+    @Autowired
+    private HubModelService hubModelService;
+    @Autowired
+    private HubModelMapper hubModelMapper;
+    @Autowired
+    private TerminalProgramSoftwareService terminalProgramSoftwareService;
+    @Autowired
+    private DisplayManufacturerService displayManufacturerService;
+    @Autowired
+    private DisplayManufacturerMapper displayManufacturerMapper;
+    @Autowired
+    private DisplayModelMapper displayModelMapper;
+    
+    
+  
+    
+    
     
     @GetMapping("/batterytype")
     public List<BatteryTypeDto> getBatteryTypes(@RequestParam(value="id", required = false) Long id) {
@@ -490,18 +626,19 @@ public class GetInfoController {
         return ResponseEntity.ok(dto);
     }
     
-    @PostMapping("/save-fax-manufacturer")
-    public ResponseEntity<?> saveFaxManufacturer(String name) throws ObjectAlreadyExists {
-        FaxManufacturer savedManufacturer = null;
-        FaxManufacturer potencialManufacturer = new FaxManufacturer();
+
+    @PostMapping("/save-display-manufacturer")
+    public ResponseEntity<?> saveDisplayManufacturer(String name) throws ObjectAlreadyExists {
+        DisplayManufacturer savedManufacturer = null;
+        DisplayManufacturer potencialManufacturer = new DisplayManufacturer();
         potencialManufacturer.setName(name);
         try{
-            savedManufacturer = faxManufacturerService.save(potencialManufacturer);
+            savedManufacturer = displayManufacturerService.save(potencialManufacturer);
         } catch(Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
         
-        ManufacturerDTO dto = faxManufacturerMapper.getDto(savedManufacturer);
+        ManufacturerDTO dto = displayManufacturerMapper.getDto(savedManufacturer);
         
         return ResponseEntity.ok(dto);
     }
@@ -564,6 +701,24 @@ public class GetInfoController {
         ManufacturerDTO dto = switchHubManufacturerMapper.getDto(savedManufacturer);
         return ResponseEntity.ok(dto);
     }
+    
+    
+    @PostMapping("/save-hub-manufacturer")
+    public ResponseEntity<?> saveHubManufacturer(String name) throws ObjectAlreadyExists {
+        HubManufacturer savedManufacturer = null;
+        HubManufacturer potencialManufacturer = new HubManufacturer();
+        potencialManufacturer.setName(name);
+        try{
+            savedManufacturer = hubManufacturerService.save(potencialManufacturer);
+        } catch(Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+        ManufacturerDTO dto = hubManufacturerMapper.getDto(savedManufacturer);
+        return ResponseEntity.ok(dto);
+    }
+    
+    
+    
     
     @PostMapping("/save-router-manufacturer")
     public ResponseEntity<?> saveRouterHubManufacturer(String name) throws ObjectAlreadyExists {
@@ -636,6 +791,90 @@ public class GetInfoController {
         return ResponseEntity.ok(dto);
     }
     
+    @PostMapping("/save-terminal-display-manufacturer")
+    public ResponseEntity<?> saveTerminalDisplayManufacturer(String name) throws ObjectAlreadyExists {
+        TerminalDisplayManufacturer savedManufacturer = null;
+        TerminalDisplayManufacturer potencialManufacturer = new TerminalDisplayManufacturer();
+        potencialManufacturer.setName(name);
+        try{
+            savedManufacturer = terminalDisplayManufacturerService.save(potencialManufacturer);
+        } catch(Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+        ManufacturerDTO dto = terminalDisplayManufacturerMapper.getDto(savedManufacturer);
+        return ResponseEntity.ok(dto);
+    }
+    
+    
+    @PostMapping("/save-terminal-printer-manufacturer")
+    public ResponseEntity<?> saveTerminalPrinterManufacturer(String name) throws ObjectAlreadyExists {
+        TerminalPrinterManufacturer savedManufacturer = null;
+        TerminalPrinterManufacturer potencialManufacturer = new TerminalPrinterManufacturer();
+        potencialManufacturer.setName(name);
+        try{
+            savedManufacturer = terminalPrinterManufacturerService.save(potencialManufacturer);
+        } catch(Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+        ManufacturerDTO dto = terminalPrinterManufacturerMapper.getDto(savedManufacturer);
+        return ResponseEntity.ok(dto);
+    }
+    
+    @PostMapping("/save-terminal-server-manufacturer")
+    public ResponseEntity<?> saveTerminalServerManufacturer(String name) throws ObjectAlreadyExists {
+        TerminalServerManufacturer savedManufacturer = null;
+        TerminalServerManufacturer potencialManufacturer = new TerminalServerManufacturer();
+        potencialManufacturer.setName(name);
+        try{
+            savedManufacturer = terminalServerManufacturerService.save(potencialManufacturer);
+        } catch(Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+        ManufacturerDTO dto = terminalServerManufacturerMapper.getDto(savedManufacturer);
+        return ResponseEntity.ok(dto);
+    }
+    
+    @PostMapping("/save-terminal-ups-manufacturer")
+    public ResponseEntity<?> saveTerminalUpsManufacturer(String name) throws ObjectAlreadyExists {
+        TerminalUpsManufacturer savedManufacturer = null;
+        TerminalUpsManufacturer potencialManufacturer = new TerminalUpsManufacturer();
+        potencialManufacturer.setName(name);
+        try{
+            savedManufacturer = terminalUpsManufacturerService.save(potencialManufacturer);
+        } catch(Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+        ManufacturerDTO dto = terminalUpsManufacturerMapper.getDto(savedManufacturer);
+        return ResponseEntity.ok(dto);
+    }
+    
+     @PostMapping("/save-terminal-manufacturer")
+    public ResponseEntity<?> saveTerminalManufacturer(String name) throws ObjectAlreadyExists {
+        TerminalManufacturer savedManufacturer = null;
+        TerminalManufacturer potencialManufacturer = new TerminalManufacturer();
+        potencialManufacturer.setName(name);
+        try{
+            savedManufacturer = terminalManufacturerService.save(potencialManufacturer);
+        } catch(Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+        ManufacturerDTO dto = terminalManufacturerMapper.getDto(savedManufacturer);
+        return ResponseEntity.ok(dto);
+    }
+    
+    @PostMapping("/save-terminal-sensor-manufacturer")
+    public ResponseEntity<?> saveTerminalSensorManufacturer(String name) throws ObjectAlreadyExists {
+        TerminalSensorManufacturer savedManufacturer = null;
+        TerminalSensorManufacturer potencialManufacturer = new TerminalSensorManufacturer();
+        potencialManufacturer.setName(name);
+        try{
+            savedManufacturer = terminalSensorManufacturerService.save(potencialManufacturer);
+        } catch(Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+        ManufacturerDTO dto = terminalSensorManufacturerMapper.getDto(savedManufacturer);
+        return ResponseEntity.ok(dto);
+    }
     
         @PostMapping("/save-phone-manufacturer")
     public ResponseEntity<?> savePhoneManufacturer(String name) throws ObjectAlreadyExists {
@@ -772,12 +1011,102 @@ public class GetInfoController {
         return out;
     }
     
+    
+    @GetMapping("/get-hub-manufacturers")
+    public List<ManufacturerDTO> getHubManufacturers() {
+        List<HubManufacturer> allManufacturers = hubManufacturerService.getAllManufacturers();
+        List<ManufacturerDTO> out = new ArrayList<>();
+        for(HubManufacturer el : allManufacturers) {
+            ManufacturerDTO dto = hubManufacturerMapper.getDto(el);
+            out.add(dto);
+        }
+        return out;
+    }
+    
     @GetMapping("/get-phone-manufacturers")
     public List<PhoneManufacturerDto> getPhoneManufacturers() {
         List<PhoneManufacturer> allManufacturers = phoneManufacturerService.getAllManufacturers();
         List<PhoneManufacturerDto> out = phoneManufacturerMapper.getListDtoes(allManufacturers);
         return out;
     }
+    
+    @GetMapping("/get-terminal-printer-manufacturers")
+    public List<ManufacturerDTO> getTerminalPrinterManufacturers() {
+        List<TerminalPrinterManufacturer> allManufacturers = terminalPrinterManufacturerService.getAllManufacturers();
+        List<ManufacturerDTO> out = terminalPrinterManufacturerMapper.getDtoes(allManufacturers);
+        return out;
+    }
+    
+    @GetMapping("/get-display-manufacturers")
+    public List<ManufacturerDTO> getDisplayManufacturers() {
+        List<DisplayManufacturer> allManufacturers = displayManufacturerService.getAllManufacturers();
+        List<ManufacturerDTO> out = displayManufacturerMapper.getDtoes(allManufacturers);
+        return out;
+    }
+    
+    @GetMapping("/get-terminal-sensor-manufacturers")
+    public List<ManufacturerDTO> getTerminalSensorManufacturers() {
+        List<TerminalSensorManufacturer> allManufacturers = terminalSensorManufacturerService.getAllManufacturers();
+        List<ManufacturerDTO> out = terminalSensorManufacturerMapper.getDtoes(allManufacturers);
+        return out;
+    }
+    
+    @GetMapping("/get-terminal-ups-manufacturers")
+    public List<ManufacturerDTO> getTerminalUpsManufacturers() {
+        List<TerminalUpsManufacturer> allManufacturers = terminalUpsManufacturerService.getAllManufacturers();
+        List<ManufacturerDTO> out = terminalUpsManufacturerMapper.getDtoes(allManufacturers);
+        return out;
+    }
+    
+      @GetMapping("/get-terminal-server-manufacturers")
+    public List<ManufacturerDTO> getTerminalServerManufacturers() {
+        List<TerminalServerManufacturer> allManufacturers = terminalServerManufacturerService.getAllManufacturers();
+        List<ManufacturerDTO> out = terminalServerManufacturerMapper.getDtoes(allManufacturers);
+        return out;
+    }
+    
+       @GetMapping("/get-terminal-display-manufacturers")
+    public List<ManufacturerDTO> getTerminalDisplayManufacturers() {
+        List<TerminalDisplayManufacturer> allManufacturers = terminalDisplayManufacturerService.getAllManufacturers();
+        List<ManufacturerDTO> out = terminalDisplayManufacturerMapper.getDtoes(allManufacturers);
+        return out;
+    }
+    
+    
+      @GetMapping("/get-terminal-manufacturers")
+    public List<ManufacturerDTO> getTerminalManufacturers() {
+        List<TerminalManufacturer> allManufacturers = terminalManufacturerService.getAllManufacturers();
+        List<ManufacturerDTO> out = terminalManufacturerMapper.getDtoes(allManufacturers);
+        return out;
+    }
+    
+    
+    @GetMapping("/get-terminal-display")
+    public TerminalDisplayDto getTerminalDisplayById(Long id) {
+        TerminalDisplay byId = terminalDisplayService.getById(id);
+        return terminalDisplayMapper.getDto(byId);
+    }
+    @GetMapping("/get-terminal-sensor")
+    public TerminalComponentDto getTerminalSensorById(Long id) {
+        TerminalSensor byId = terminalSensorService.getById(id);
+        return terminalSensorMapper.getDto(byId);
+    }
+    @GetMapping("/get-terminal-server")
+    public TerminalComponentDto getTerminalServerById(Long id) {
+        TerminalServer byId = terminalServerService.getById(id);
+        return terminalServerMapper.getDto(byId);
+    }
+    @GetMapping("/get-terminal-printer")
+    public TerminalComponentDto getTerminalPrinterById(Long id) {
+        TerminalPrinter byId = terminalPrinterService.getById(id);
+        return terminalPrinterMapper.getDto(byId);
+    }
+    @GetMapping("/get-terminal-ups")
+    public TerminalComponentDto getTerminalUpsById(Long id) {
+        TerminalUps byId = terminalUpsService.getById(id);
+        return terminalUpsMapper.getDto(byId);
+    }
+    
     
     @GetMapping("/get-modelsby-manufacturer")
     public List<UpsModelDto> getUpsModelsByManufacturer(@RequestParam(value="id", required = true) Long id) {
@@ -790,6 +1119,177 @@ public class GetInfoController {
         }
         return out;
     }
+    
+    @GetMapping("/get-models-terminal-display-by-manufacturer")
+    public List<SvtModelDto> getTerminalDisplayModelsByManufacturer(@RequestParam(value="id", required = true) Long id) {
+        List<TerminalDisplayModel> terminalDisplayModelList = terminalDisplayModelService.getModelsByManufacturerId(id);
+        List<SvtModelDto> out = new ArrayList<>();
+        for(TerminalDisplayModel model : terminalDisplayModelList) {
+            SvtModelDto modeDto = terminalDisplayModelMapper.getDto(model);
+            out.add(modeDto);
+        }
+        return out;
+    }
+    
+     @GetMapping("/get-models-display-by-manufacturer")
+    public List<SvtModelDto> getDisplayModelsByManufacturer(@RequestParam(value="id", required = true) Long id) {
+        List<DisplayModel> displayModelList = displayModelService.getModelsByManufacturerId(id);
+        List<SvtModelDto> out = new ArrayList<>();
+        for(DisplayModel model : displayModelList) {
+            SvtModelDto modeDto = displayModelMapper.getDto(model);
+            out.add(modeDto);
+        }
+        return out;
+    }
+    
+    
+    @GetMapping("/get-models-terminal-by-manufacturer")
+    public List<SvtModelDto> getTerminalModelsByManufacturer(@RequestParam(value="id", required = true) Long id) {
+        List<TerminalModel> terminalModelList = terminalModelService.getModelsByManufacturerId(id);
+        List<SvtModelDto> out = new ArrayList<>();
+        for(TerminalModel model : terminalModelList) {
+            SvtModelDto modeDto = terminalModelMapper.getDto(model);
+            out.add(modeDto);
+        }
+        return out;
+    }
+    
+    
+    @GetMapping("/get-hub-modelsby-manufacturer")
+    public List<SvtModelDto> getHubModelsByManufacturer(@RequestParam(value="id", required = true) Long id) {
+        List<HubModel> modelList = hubModelService.getModelsByManufacturerId(id);
+        List<SvtModelDto> out = new ArrayList<>();
+        for(HubModel model : modelList) {
+            SvtModelDto modeDto = hubModelMapper.getDto(model);
+            out.add(modeDto);
+        }
+        return out;
+    }
+    
+    
+    
+      @GetMapping("/get-models-terminal-display-all")
+    public List<SvtModelDto> getTerminalDisplayModelsAll() {
+        List<TerminalDisplayModel> terminalDisplayModelList = terminalDisplayModelService.getAllActualModels();
+        List<SvtModelDto> out = new ArrayList<>();
+        for(TerminalDisplayModel model : terminalDisplayModelList) {
+            SvtModelDto modeDto = terminalDisplayModelMapper.getDto(model);
+            out.add(modeDto);
+        }
+        return out;
+    }
+    
+      @GetMapping("/get-models-terminal-sensor-all")
+    public List<SvtModelDto> getTerminalSensorModelsAll() {
+        List<TerminalSensorModel> terminalSensorModelList = terminalSensorModelService.getAllActualModels();
+        List<SvtModelDto> out = new ArrayList<>();
+        for(TerminalSensorModel model : terminalSensorModelList) {
+            SvtModelDto modeDto = terminalSensorModelMapper.getDto(model);
+            out.add(modeDto);
+        }
+        return out;
+    }
+    
+      @GetMapping("/get-models-terminal-printer-all")
+    public List<SvtModelDto> getTerminalPrinterModelsAll() {
+        List<TerminalPrinterModel> modelList = terminalPrinterModelService.getAllActualModels();
+        List<SvtModelDto> out = new ArrayList<>();
+        for(TerminalPrinterModel model : modelList) {
+            SvtModelDto modeDto = terminalPrinterModelMapper.getDto(model);
+            out.add(modeDto);
+        }
+        return out;
+    }
+    
+      @GetMapping("/get-models-terminal-server-all")
+    public List<SvtModelDto> getTerminalServerModelsAll() {
+        List<TerminalServerModel> modelList = terminalServerModelService.getAllActualModels();
+        List<SvtModelDto> out = new ArrayList<>();
+        for(TerminalServerModel model : modelList) {
+            SvtModelDto modeDto = terminalServerModelMapper.getDto(model);
+            out.add(modeDto);
+        }
+        return out;
+    }
+    
+         @GetMapping("/get-models-hub-all")
+    public List<SvtModelDto> getHubModelsAll() {
+        List<HubModel> modelList = hubModelService.getAllActualModels();
+        List<SvtModelDto> out = new ArrayList<>();
+        for(HubModel model : modelList) {
+            SvtModelDto modeDto = hubModelMapper.getDto(model);
+            out.add(modeDto);
+        }
+        return out;
+    }
+    
+    
+        @GetMapping("/get-all-po")
+    public List<ProgramSoftwareDto> getPoAll() {
+        List<ProgramSoftware> programSoftwares = terminalProgramSoftwareService.getProgramSoftwares();
+        List<ProgramSoftwareDto> out = new ArrayList<>();
+        return terminalProgramSoftwareService.getProgramSoftwareDtoesList(programSoftwares);
+    }
+    
+      @GetMapping("/get-models-terminal-ups-all")
+    public List<SvtModelDto> getTerminalUpsModelsAll() {
+        List<TerminalUpsModel> modelList = terminalUpsModelService.getAllActualModels();
+        List<SvtModelDto> out = new ArrayList<>();
+        for(TerminalUpsModel model : modelList) {
+            SvtModelDto modeDto = terminalUpsModelMapper.getDto(model);
+            out.add(modeDto);
+        }
+        return out;
+    }
+    
+    
+    @GetMapping("/get-models-terminal-printer-by-manufacturer")
+    public List<SvtModelDto> getTerminalPrinterModelsByManufacturer(@RequestParam(value="id", required = true) Long id) {
+        List<TerminalPrinterModel> terminalPrinterModelList = terminalPrinterModelService.getModelsByManufacturerId(id);
+        List<SvtModelDto> out = new ArrayList<>();
+        for(TerminalPrinterModel model : terminalPrinterModelList) {
+            SvtModelDto modeDto = terminalPrinterModelMapper.getDto(model);
+            out.add(modeDto);
+        }
+        return out;
+    }
+    
+    
+    @GetMapping("/get-models-terminal-server-by-manufacturer")
+    public List<SvtModelDto> getTerminalServerModelsByManufacturer(@RequestParam(value="id", required = true) Long id) {
+        List<TerminalServerModel> terminalServerModelList = terminalServerModelService.getModelsByManufacturerId(id);
+        List<SvtModelDto> out = new ArrayList<>();
+        for(TerminalServerModel model : terminalServerModelList) {
+            SvtModelDto modeDto = terminalServerModelMapper.getDto(model);
+            out.add(modeDto);
+        }
+        return out;
+    }
+    
+     @GetMapping("/get-models-terminal-ups-by-manufacturer")
+    public List<SvtModelDto> getTerminalUpsModelsByManufacturer(@RequestParam(value="id", required = true) Long id) {
+        List<TerminalUpsModel> terminalUpsModelList = terminalUpsModelService.getModelsByManufacturerId(id);
+        List<SvtModelDto> out = new ArrayList<>();
+        for(TerminalUpsModel model : terminalUpsModelList) {
+            SvtModelDto modeDto = terminalUpsModelMapper.getDto(model);
+            out.add(modeDto);
+        }
+        return out;
+    }
+    
+    
+     @GetMapping("/get-models-terminal-sensor-by-manufacturer")
+    public List<SvtModelDto> getTerminalSensorModelsByManufacturer(@RequestParam(value="id", required = true) Long id) {
+        List<TerminalSensorModel> modelsByManufacturerId = terminalSensorModelService.getModelsByManufacturerId(id);
+        List<SvtModelDto> out = new ArrayList<>();
+        for(TerminalSensorModel model : modelsByManufacturerId) {
+            SvtModelDto modeDto = terminalSensorModelMapper.getDto(model);
+            out.add(modeDto);
+        }
+        return out;
+    }
+    
+    
     
     @GetMapping("/get-monitor-modelsby-manufacturer")
     public List<SvtModelDto> getMonitorModelsByManufacturer(@RequestParam(value="id", required = true) Long id) {
@@ -967,22 +1467,7 @@ public class GetInfoController {
 //
     @GetMapping("/locplacetype")
     public List<LocationDTO> getLocByPlaceType(String placeType) {
-        PlaceType currentPlaceType = null;
-        switch (placeType) {
-            case "EMPLOYEE":
-                currentPlaceType = PlaceType.EMPLOYEE;
-                break;
-            case "SERVERROOM":
-                currentPlaceType = PlaceType.SERVERROOM;
-                break;
-            case "STORAGE":
-                currentPlaceType = PlaceType.STORAGE;
-                break;
-            case "OFFICEEQUIPMENT":
-                currentPlaceType = PlaceType.OFFICEEQUIPMENT;
-                break;
-
-        }
+        PlaceType currentPlaceType = PlaceService.getPlaceType(placeType);
         List<LocationDTO> dtoes = placeService.getLocationByPlaceType(currentPlaceType);
         return dtoes;
 
@@ -1008,6 +1493,12 @@ public class GetInfoController {
     }
         List<DepDto> dtoes = placeService.getDepartmentsByPlaceTypeAndLocation(currentPlaceType, idLocation);
         return dtoes;
+    }
+    
+    @GetMapping("/place-by-loc-and-placetype")
+    public List<PlaceDTO> getPlacesByLocationAndPlaceType(Long locationId, String placeType) {
+        PlaceType curentPlaceType = PlaceService.getPlaceType(placeType);
+        return placeService.getPlacesByLocationAndPlaceType(locationId, curentPlaceType);
     }
     
     @GetMapping("/placelocdepplacetype")
@@ -1048,6 +1539,13 @@ public class GetInfoController {
     @GetMapping("/placeserver")
     public List<PlaceDTO> getPlacesServer() {
         List<PlaceDTO> places = placeService.getPlacesByPlaceType(PlaceType.SERVERROOM);
+        return places;
+    }
+    
+    @GetMapping("/placebyplacetype")
+    public List<PlaceDTO> getPlacesByPlaceType(String placeType) {
+        PlaceType curentType = PlaceService.getPlaceType(placeType);
+        List<PlaceDTO> places = placeService.getPlacesByPlaceType(curentType);
         return places;
     }
 
@@ -1475,20 +1973,7 @@ public class GetInfoController {
         return dto;
     }
     
-        @GetMapping("/modthermoprinter")
-    public List<SvtModelDto> getModelThermoprinter() {
-        List<ThermoPrinterModel> allModels = thermoprinterModelService.getAllModels();
-        List<SvtModelDto> dtoes = svtModelMapper.getModelThermoprinterDtoes(allModels);
-        return dtoes;
-    }
-    
-    @GetMapping("/getthermoprinter")
-    public SvtDTO getThermoprinterById(Long thermoprinterId) {
-        ThermoPrinter thermoprinter = thermoprinterService.getById(thermoprinterId);
-        SvtDTO dto = thermoprinterMapper.getDto(thermoprinter);
-        return dto;
-    }
-    
+
          @GetMapping("/moddisplay")
     public List<SvtModelDto> getModelDisplay() {
         List<DisplayModel> allModels = displayModelService.getAllModels();
@@ -1497,58 +1982,40 @@ public class GetInfoController {
     }
     
     @GetMapping("/getdisplay")
-    public SvtDTO getDisplayById(Long displayId) {
+    public DisplayDto getDisplayById(Long displayId) {
         Display display = displayService.getById(displayId);
-        SvtDTO dto = displayMapper.getDto(display);
+        DisplayDto dto = displayMapper.getDto(display);
         return dto;
     }
     
     @GetMapping("/getalldisplay")
-    public List<SvtDTO> getAllDisplay() {
+    public List<DisplayDto> getAllDisplay() {
         List<Display> allDisplays = displayService.getAllDisplays();
-        List<SvtDTO> dtoes = new ArrayList<>();
+        List<DisplayDto> dtoes = new ArrayList<>();
         List<Asuo> asuos = asuoRepo.findAll();
         for(Display disp : allDisplays) {
-            boolean anyMatch = asuos.stream().anyMatch(e -> e.getDisplay().getId() == disp.getId());
-            if(!anyMatch) {
-                SvtDTO dto = displayMapper.getDto(disp);
+                DisplayDto dto = displayMapper.getDto(disp);
                  dtoes.add(dto);
-            }
-            
-           
         }
         return dtoes;
     }
     
     @GetMapping("/getdisplays")
-    public List<SvtDTO> getDisplays() {
+    public List<DisplayDto> getDisplays() {
         List<Display> allDisplays = displayService.getAllDisplays();
-        List<SvtDTO> dtoes = new ArrayList<>();
+        List<DisplayDto> dtoes = new ArrayList<>();
         List<Asuo> asuos = asuoRepo.findAll();
         for(Display disp : allDisplays) {
-                SvtDTO dto = displayMapper.getDto(disp);
+                DisplayDto dto = displayMapper.getDto(disp);
                  dtoes.add(dto);
         }
         return dtoes;
     }
-    
-         @GetMapping("/modswunit")
-    public List<SvtModelDto> getModelSwunit() {
-        List<SwitchingUnitModel> allModels = swunitModelService.getAllModels();
-        List<SvtModelDto> dtoes = svtModelMapper.getModelSwunitDtoes(allModels);
-        return dtoes;
-    }
-    
-    @GetMapping("/getswunit")
-    public SvtDTO getSwunitById(Long swunitId) {
-        SwitchingUnit swunit = swunitService.getById(swunitId);
-        SvtDTO dto = swunitMapper.getDto(swunit);
-        return dto;
-    }
+
     
      @GetMapping("/modsubdisplay")
     public List<SvtModelDto> getModelSubDisplay() {
-        List<SubDisplayModel> allModels = subDisplayModelService.getAllModels();
+        List<SubDisplayModel> allModels = subDisplayModelService.getAllActualModels();
         List<SvtModelDto> dtoes = svtModelMapper.getModelSubDisplayDtoes(allModels);
         return dtoes;
     }
@@ -1557,96 +2024,78 @@ public class GetInfoController {
     public List<SvtDTO> getAllTerminal() {
         List<Terminal> allTerminal = terminalService.getAllTerminal();
         List<SvtDTO> dtoes = new ArrayList<>();
-        List<Asuo> asuos = asuoRepo.findAll();
-        for(Terminal terminal : allTerminal) {
-            boolean anyMatch = asuos.stream().anyMatch(e -> e.getTerminal().getId() == terminal.getId());
-            if(!anyMatch) {
-                SvtDTO dto = terminalMapper.getDto(terminal);
-                dtoes.add(dto);
-            }
+        for(Terminal el : allTerminal) {
+           SvtDTO dto = terminalMapper.getDto(el);
+           dtoes.add(dto); 
         }
         return dtoes;
     }
     
      @GetMapping("/getterminals")
-    public List<SvtDTO> getTerminals() {
+    public List<TerminalDto> getTerminals() {
         List<Terminal> allTerminal = terminalService.getAllTerminal();
-        List<SvtDTO> dtoes = new ArrayList<>();
+        List<TerminalDto> dtoes = new ArrayList<>();
         for(Terminal terminal : allTerminal) {
-                SvtDTO dto = terminalMapper.getDto(terminal);
+                TerminalDto dto = terminalMapper.getDto(terminal);
                 dtoes.add(dto);
         }
         return dtoes;
     }
     
-    @GetMapping("/getallthermoprinter")
-    public List<SvtDTO> getAllThermoprinter() {
-        List<ThermoPrinter> allThermoprinter = thermoprinterService.getAllThermoprinter();
-        List<SvtDTO> dtoes = new ArrayList<>();
-        List<Asuo> asuos = asuoRepo.findAll();
-        for(ThermoPrinter thermoprinter : allThermoprinter) {
-            boolean anyMatch = asuos.stream().anyMatch(e -> e.getThermoPrinter().getId() == thermoprinter.getId());
-            if(!anyMatch) {
-                SvtDTO dto = thermoprinterMapper.getDto(thermoprinter);
-                dtoes.add(dto);
-            }
-        }
-        return dtoes;
-    }
-    
-    
-     @GetMapping("/getthermoprinters")
-    public List<SvtDTO> getThermoprinters() {
-        List<ThermoPrinter> allThermoprinter = thermoprinterService.getAllThermoprinter();
-        List<SvtDTO> dtoes = new ArrayList<>();
-        for(ThermoPrinter thermoprinter : allThermoprinter) {
-                SvtDTO dto = thermoprinterMapper.getDto(thermoprinter);
+    @GetMapping("/get-terminal-displays")
+    public List<TerminalComponentDto> getTerminalDisplays() {
+        List<TerminalDisplay> list = terminalDisplayService.getAll();
+        List<TerminalComponentDto> dtoes = new ArrayList<>();
+        for(TerminalDisplay el : list) {
+                TerminalComponentDto dto = terminalDisplayMapper.getDto(el);
                 dtoes.add(dto);
         }
         return dtoes;
     }
     
     
-       @GetMapping("/getallswunit")
-    public List<SvtDTO> getAllSwitchingUnit() {
-        List<SwitchingUnit> allSwitchingUnits = swunitService.getAllSwitchingUnit();
-        List<SvtDTO> dtoes = new ArrayList<>();
-        List<Asuo> asuos = asuoRepo.findAll();
-        for(SwitchingUnit switchingUnit : allSwitchingUnits) {
-            boolean anyMatch = asuos.stream().anyMatch(e -> e.getSwitchingUnit().getId() == switchingUnit.getId());
-            if(!anyMatch) {
-                SvtDTO dto = swunitMapper.getDto(switchingUnit);
-                dtoes.add(dto);
-            }
-        }
-        return dtoes;
-    }
-    
-         @GetMapping("/getswunits")
-    public List<SvtDTO> getSwitchingUnits() {
-        List<SwitchingUnit> allSwitchingUnits = swunitService.getAllSwitchingUnit();
-        List<SvtDTO> dtoes = new ArrayList<>();
-        for(SwitchingUnit switchingUnit : allSwitchingUnits) {
-                SvtDTO dto = swunitMapper.getDto(switchingUnit);
+     @GetMapping("/get-terminal-printers")
+    public List<TerminalComponentDto> getTerminalPrinters() {
+        List<TerminalPrinter> list = terminalPrinterService.getAll();
+        List<TerminalComponentDto> dtoes = new ArrayList<>();
+        for(TerminalPrinter el : list) {
+                TerminalComponentDto dto = terminalPrinterMapper.getDto(el);
                 dtoes.add(dto);
         }
         return dtoes;
     }
     
-       @GetMapping("/getallswitch")
-    public List<SvtDTO> getAllSwitch() {
-        List<SwitchHub> allSwitches = switchHubService.getAllSwitch();
-        List<SvtDTO> dtoes = new ArrayList<>();
-        List<Asuo> asuos = asuoRepo.findAll();
-        for(SwitchHub switchHub : allSwitches) {
-            boolean anyMatch = asuos.stream().anyMatch(e -> e.getSwitchHubSet().contains(switchHub));
-            if(!anyMatch) {
-                SvtDTO dto = switchHubMapper.getDto(switchHub);
+    @GetMapping("/get-terminal-sensors")
+    public List<TerminalComponentDto> getTerminalSensors() {
+        List<TerminalSensor> list = terminalSensorService.getAll();
+        List<TerminalComponentDto> dtoes = new ArrayList<>();
+        for(TerminalSensor el : list) {
+                TerminalComponentDto dto = terminalSensorMapper.getDto(el);
                 dtoes.add(dto);
-            }
         }
         return dtoes;
     }
+    @GetMapping("/get-terminal-servers")
+    public List<TerminalComponentDto> getTerminalServers() {
+        List<TerminalServer> list = terminalServerService.getAll();
+        List<TerminalComponentDto> dtoes = new ArrayList<>();
+        for(TerminalServer el : list) {
+                TerminalComponentDto dto = terminalServerMapper.getDto(el);
+                dtoes.add(dto);
+        }
+        return dtoes;
+    }
+    @GetMapping("/get-terminal-upses")
+    public List<TerminalComponentDto> getTerminalUpses() {
+        List<TerminalUps> list = terminalUpsService.getAll();
+        List<TerminalComponentDto> dtoes = new ArrayList<>();
+        for(TerminalUps el : list) {
+                TerminalComponentDto dto = terminalUpsMapper.getDto(el);
+                dtoes.add(dto);
+        }
+        return dtoes;
+    }
+    
     
       @GetMapping("/getswitches")
     public List<SvtDTO> getSwitches() {
@@ -1659,10 +2108,29 @@ public class GetInfoController {
         return dtoes;
     }
     
+    
+       @GetMapping("/get-hubs")
+    public List<HubDto> getHubs() {
+        List<Hub> list = hubService.getAll();
+        List<HubDto> dtoes = new ArrayList<>();
+        for(Hub el : list) {
+                HubDto dto = hubMapper.getDto(el);
+                dtoes.add(dto);
+        }
+        return dtoes;
+    }
+    
       @GetMapping("/getasuo")
     public AsuoDTO getAsuoById(Long asuoId) {
         Asuo asuo = asuoService.getById(asuoId);
         AsuoDTO dto = asuoMapper.getDto(asuo);
+        return dto;
+    }
+    
+    @GetMapping("/gethub")
+    public HubDto getHubById(Long hubId) {
+        Hub hub = hubService.getById(hubId);
+        HubDto dto = hubMapper.getDto(hub);
         return dto;
     }
     

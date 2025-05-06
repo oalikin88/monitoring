@@ -17,7 +17,7 @@ import ru.gov.sfr.aos.monitoring.models.SvtModelDto;
  * @author Alikin Oleg
  */
 @Component
-public class ConditionerModelMapper implements ModelMapper<ConditionerModel> {
+public class ConditionerModelMapper implements ModelMapper<ConditionerModel, SvtModelDto> {
 
     @Override
     public ConditionerModel getModel(SvtModelDto dto) {

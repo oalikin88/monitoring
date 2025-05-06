@@ -5,12 +5,11 @@
 package ru.gov.sfr.aos.monitoring.services;
 
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -93,13 +92,13 @@ public class ScannerService extends SvtObjService<Scanner, ScannerRepo, SvtScann
             }
             if (contractRepo.existsByContractNumberIgnoreCase("00000000")) {
                 contract = contractRepo.findByContractNumberIgnoreCase("00000000").get();
-                Set<ObjectBuing> objectBuingFromContractDB = contract.getObjectBuing();
+                List<ObjectBuing> objectBuingFromContractDB = contract.getObjectBuing();
                 objectBuingFromContractDB.add(scanner);
             } else {
                 contract = new Contract();
                 contract.setDateEndContract(Date.from(Instant.now()));
                 contract.setDateStartContract(Date.from(Instant.now()));
-                contract.setObjectBuing(new HashSet<>(Arrays.asList(scanner)));
+                contract.setObjectBuing(new ArrayList<>(Arrays.asList(scanner)));
                 contract.setContractNumber("00000000");
 
             }
@@ -155,13 +154,13 @@ public class ScannerService extends SvtObjService<Scanner, ScannerRepo, SvtScann
         }
         if (contractRepo.existsByContractNumberIgnoreCase("00000000")) {
             contract = contractRepo.findByContractNumberIgnoreCase("00000000").get();
-            Set<ObjectBuing> objectBuingFromContractDB = contract.getObjectBuing();
+            List<ObjectBuing> objectBuingFromContractDB = contract.getObjectBuing();
             objectBuingFromContractDB.add(scanner);
         } else {
             contract = new Contract();
             contract.setDateEndContract(Date.from(Instant.now()));
             contract.setDateStartContract(Date.from(Instant.now()));
-            contract.setObjectBuing(new HashSet<>(Arrays.asList(scanner)));
+            contract.setObjectBuing(new ArrayList<>(Arrays.asList(scanner)));
             contract.setContractNumber("00000000");
 
         }

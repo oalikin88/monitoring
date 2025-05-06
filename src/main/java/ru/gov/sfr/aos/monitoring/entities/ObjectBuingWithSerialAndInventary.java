@@ -4,6 +4,7 @@
  */
 package ru.gov.sfr.aos.monitoring.entities;
 
+import java.util.Objects;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.MappedSuperclass;
@@ -25,21 +26,6 @@ public abstract class ObjectBuingWithSerialAndInventary extends ObjectBuing {
         super();
     }
     
-
-    protected ObjectBuingWithSerialAndInventary(Status status, String inventaryNumber, String serialNumber) {
-        this.status = status;
-        this.inventaryNumber = inventaryNumber;
-        this.serialNumber = serialNumber;
-
-    }
-
-    protected ObjectBuingWithSerialAndInventary(Status status, String inventaryNumber, String serialNumber, Contract contract) {
-        super(contract);
-        this.status = status;
-        this.inventaryNumber = inventaryNumber;
-        this.serialNumber = serialNumber;
-
-    }
 
     public Status getStatus() {
         return status;
@@ -65,7 +51,8 @@ public abstract class ObjectBuingWithSerialAndInventary extends ObjectBuing {
         this.serialNumber = serialNumber;
     }
 
-  
 
+  
+    
  
 }

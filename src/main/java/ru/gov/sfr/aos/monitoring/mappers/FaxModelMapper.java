@@ -17,7 +17,7 @@ import ru.gov.sfr.aos.monitoring.models.SvtModelDto;
  * @author Alikin Oleg
  */
 @Component
-public class FaxModelMapper implements ModelMapper<FaxModel>{
+public class FaxModelMapper implements ModelMapper<FaxModel, SvtModelDto> {
      @Override
      public FaxModel getModel(SvtModelDto dto) {
         FaxManufacturer manufacturer = new FaxManufacturer();

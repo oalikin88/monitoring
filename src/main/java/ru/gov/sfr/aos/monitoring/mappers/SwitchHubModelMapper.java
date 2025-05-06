@@ -17,7 +17,7 @@ import ru.gov.sfr.aos.monitoring.models.SvtModelDto;
  * @author Alikin Oleg
  */
 @Component
-public class SwitchHubModelMapper implements ModelMapper<SwitchHubModel> {
+public class SwitchHubModelMapper implements ModelMapper<SwitchHubModel, SvtModelDto> {
 
     @Override
     public SwitchHubModel getModel(SvtModelDto dto) {

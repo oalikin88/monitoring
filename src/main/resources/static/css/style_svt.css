@@ -22,6 +22,14 @@ li {
     list-style: none;
 }
 
+#sidebar.expand .sidebar-nav > li   {
+    padding-left:0px;
+}
+
+#sidebar.expand ul > li {
+    padding-left:15px;
+}
+
 
 
 h1 {
@@ -158,6 +166,14 @@ aside {
   
 }
 
+
+#sidebar.expand > #wrap {
+    position:sticky;
+    top:0;
+    overflow-y: scroll;
+    max-height: 100vh;
+}::-webkit-scrollbar { width: 0 !important }
+
 #wrap {
     position:sticky;
     top:0;
@@ -173,8 +189,10 @@ aside {
     background-color: #0e223e;
     height: 100%;
     user-select: none;
-    
-    
+}
+#title {
+    font-size: 18px;
+    font-weight: 800;
 }
 
 #sidebar.expand {
@@ -210,6 +228,9 @@ aside {
     display: none;
 }
 
+
+
+
 .sidebar-nav {
     padding: 2rem 0;
     flex: 1 1 auto;
@@ -217,7 +238,7 @@ aside {
 }
 
 a.sidebar-link {
-    padding: .625rem 1.625rem;
+    padding: .625rem 1.625rem .625rem 5px;
     color: #FFF;
     display: block;
     font-size: 0.9rem;
@@ -262,6 +283,16 @@ a.sidebar-link:hover {
     min-width: 15rem;
     display: none;
 }
+
+#sidebar:not(.expand) a.sidebar-link {
+    padding: .625rem 1.625rem;
+    color: #FFF;
+    display: block;
+    font-size: 0.9rem;
+    white-space: nowrap;
+    border-left: 3px solid transparent;
+}
+
 
 
 #sidebar:not(.expand)  .third-level-menu  {
@@ -341,6 +372,7 @@ a.sidebar-link:hover {
     font-weight: 600;
     margin-top: 15px;
     padding-top: 25px;
+    padding-left: 15px;
 }
 .models {
     padding-left: 30px;

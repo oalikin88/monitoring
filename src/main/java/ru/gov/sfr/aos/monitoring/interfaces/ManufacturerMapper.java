@@ -5,7 +5,9 @@
 package ru.gov.sfr.aos.monitoring.interfaces;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 import ru.gov.sfr.aos.monitoring.entities.ManufacturerModel;
 import ru.gov.sfr.aos.monitoring.entities.SvtModel;
 import ru.gov.sfr.aos.monitoring.models.ManufacturerDTO;
@@ -16,7 +18,7 @@ import ru.gov.sfr.aos.monitoring.models.SvtModelDto;
  * @author Alikin Oleg
  */
 
-public interface ManufacturerMapper<R extends ManufacturerModel<M>, E extends ManufacturerDTO, M extends SvtModel> {
+public interface ManufacturerMapper<R extends ManufacturerModel, E extends ManufacturerDTO, M extends SvtModel> {
    
     default R getEntity(E dto){
         R r = (R)new ManufacturerModel();
@@ -31,7 +33,8 @@ public interface ManufacturerMapper<R extends ManufacturerModel<M>, E extends Ma
         Set<SvtModelDto> modelDtoes = new HashSet<>();
         dto.setId(entity.getId());
         dto.setName(entity.getName());
-        for(M el : entity.getModels()) {
+       
+        for(M el : (Set<M>)entity.getModels()) {
             SvtModelDto modelDto = new SvtModelDto();
             modelDto.setModel(el.getModel());
             modelDto.setId(el.getId());
@@ -40,5 +43,9 @@ public interface ManufacturerMapper<R extends ManufacturerModel<M>, E extends Ma
         dto.setModels(modelDtoes);
         return dto;
     }
+     
+     default List<E> getDtoes(List<R> inputList) {
+         return inputList.stream().map(e -> getDto(e)).collect(Collectors.toList());
+     }
     
 }

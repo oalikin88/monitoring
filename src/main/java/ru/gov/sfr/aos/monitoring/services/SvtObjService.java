@@ -15,7 +15,6 @@ import ru.gov.sfr.aos.monitoring.entities.Place;
 import ru.gov.sfr.aos.monitoring.exceptions.ObjectAlreadyExists;
 import ru.gov.sfr.aos.monitoring.models.ArchivedDto;
 import ru.gov.sfr.aos.monitoring.models.MainSvtDto;
-import ru.gov.sfr.aos.monitoring.models.SvtDTO;
 import ru.gov.sfr.aos.monitoring.repositories.ObjectBuingWithSerialAndInventaryRepo;
 import ru.gov.sfr.aos.monitoring.repositories.PlaceRepo;
 
@@ -24,6 +23,7 @@ import ru.gov.sfr.aos.monitoring.repositories.PlaceRepo;
  * @author 041AlikinOS
  * @param <T>
  * @param <E>
+ * @param <D>
  */
 
 
@@ -110,8 +110,22 @@ public abstract class SvtObjService <E extends ObjectBuingWithSerialAndInventary
         return collect;
 }
           
+          public Map<Location, List<E>> getSvtObjectsBySerialNumberAndPlace(String serialNumber, PlaceType placeType) {
+             Map<Location, List<E>> collect = (Map<Location, List<E>>) repository.findBySerialNumberContainingAndPlacePlaceTypeLikeAndArchivedFalse(serialNumber, placeType)
+                .stream()
+                .collect(Collectors
+                        .groupingBy((E el) -> el.getPlace()
+                                .getLocation()));
+        
+        return collect;
+}
+          
         public abstract void createSvtObj(D dto) throws ObjectAlreadyExists;
         
         public abstract void updateSvtObj(D dto) throws ObjectAlreadyExists;
     
+        
+        public List<E> getAll() {
+            return repository.findByArchivedFalse();
+        }
 }

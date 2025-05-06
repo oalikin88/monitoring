@@ -44,6 +44,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                              <select class="form-select form-select-sm customSelect" id="searchChoise">
                                   <option value="username">ФИО</option>
                                   <option value="inventaryNumber">инвентарный номер</option>
+                                  <option value="serialNumber">серийный номер</option>
                                 </select>
                             <input type="text" class="form-control form-control-sm" placeholder="поиск по ФИО" aria-label="searchModel" aria-describedby="basic-addon1" id="searchSvtObjInput">
                             <span class="input-group-text" id="searchSvtObjBtn">
@@ -250,12 +251,41 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                                             <div class="row fw-bold mt-3 mb-3" th:case="asuo">
                                                     <div class="col">Наименование в ведомости ОС</div>
                                                     <div class="col">ФИО</div>
-                                                    <div class="col">Главное табло</div>
-                                                    <div class="col">Терминал</div>
-                                                    <div class="col">Термопринтер</div>
-                                                    <div class="col">Блок коммутации</div>
-                                                    <div class="col">Свитч</div>
-                                                    <div class="col">Электронное табло на кабинки и кабинеты</div>
+                                                    <div class="col">Инвентарный номер</div>
+                                                    <div class="col">Год выпуска</div>
+                                                    <div class="col">Дата ввода в эксплуатацию</div>
+                                                    <div class="col">Статус</div>
+                                                </div>
+                                            <div class="row fw-bold mt-3 mb-3" th:case="terminalDisplay">
+                                                    <div class="col">Модель</div>
+                                                    <div class="col">ФИО</div>
+                                                    <div class="col">Серийный номер</div>
+                                                    <div class="col">Диагональ экрана</div>
+                                                    <div class="col">Состояние</div>
+                                                </div>
+                                            <div class="row fw-bold mt-3 mb-3" th:case="terminalSensor">
+                                                    <div class="col">Модель</div>
+                                                    <div class="col">ФИО</div>
+                                                    <div class="col">Серийный номер</div>
+                                                    <div class="col">Состояние</div>
+                                                </div>
+                                            <div class="row fw-bold mt-3 mb-3" th:case="terminalServer">
+                                                    <div class="col">Модель</div>
+                                                    <div class="col">ФИО</div>
+                                                    <div class="col">Серийный номер</div>
+                                                    <div class="col">Состояние</div>
+                                                </div>
+                                            <div class="row fw-bold mt-3 mb-3" th:case="terminalPrinter">
+                                                    <div class="col">Модель</div>
+                                                    <div class="col">ФИО</div>
+                                                    <div class="col">Серийный номер</div>
+                                                    <div class="col">Состояние</div>
+                                                </div>
+                                            <div class="row fw-bold mt-3 mb-3" th:case="terminalUps">
+                                                    <div class="col">Модель</div>
+                                                    <div class="col">ФИО</div>
+                                                    <div class="col">Серийный номер</div>
+                                                    <div class="col">Состояние</div>
                                                 </div>
                                             <div class="row fw-bold mt-3 mb-3" th:case="*">
                                                     <div class="col">Модель</div>
@@ -395,7 +425,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                                                 </th:block>
                                              </div>
                                                 <div class="row mb-2 d-flex align-items-center text-start phone" th:case="display">
-                                                <div class="col" th:text="${stat.count} + '. ' + ${inInnerDto.model}"></div>
+                                                <div class="col" th:text="${stat.count} + '. '+ ${inInnerDto.manufacturer} + ' ' + ${inInnerDto.model}"></div>
                                                 <div class="col" th:text="${inInnerDto.placeName}"></div>
                                                 <div class="col" th:text="${inInnerDto.serialNumber}"></div>
                                                 <div class="col" th:text="${inInnerDto.inventaryNumber}"></div>
@@ -423,14 +453,51 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                                                  <div class="row mb-2 d-flex align-items-center text-start phone" th:case="asuo">
                                                 <div class="col" th:text="${stat.count} + '. ' + ${inInnerDto.nameFromOneC}"></div>
                                                 <div class="col" th:text="${inInnerDto.placeName}"></div>
-                                                <div class="col" th:text="${inInnerDto.displayModel}"></div>
-                                                <div class="col" th:text="${inInnerDto.terminalModel}"></div>
-                                                <div class="col" th:text="${inInnerDto.thermoprinterModel}"></div>
-                                                <div class="col" th:text="${inInnerDto.switchingUnitModel}"></div>
-                                                <div class="col" th:text="${inInnerDto.switches.size + ' ед.'}"></div>
-                                                <div class="col" th:text="${inInnerDto.subDisplayModel}"></div>
-                                                
+                                                <div class="col" th:text="${inInnerDto.inventaryNumber}"></div>
+                                                <div class="col" th:text="${inInnerDto.yearCreated}"></div>
+                                                <div class="col" th:text="${inInnerDto.dateExploitationBegin}"></div>
+                                                <div class="col" th:text="${inInnerDto.status}"></div>
                                              </div>
+                                                 
+                                                <div class="row mb-2 d-flex align-items-center text-start phone" th:case="terminalDisplay">
+                                                <div class="col" th:text="${stat.count} + '. ' + ${inInnerDto.model}"></div>
+                                                <div class="col" th:text="${inInnerDto.placeName}"></div>
+                                                <div class="col" th:text="${inInnerDto.serialNumber}"></div>
+                                                <div class="col" th:text="${inInnerDto.screenDiagonal}"></div>
+                                                <div class="col" th:text="${inInnerDto.status}"></div>
+
+                                             </div>
+                                                <div class="row mb-2 d-flex align-items-center text-start phone" th:case="terminalSensor">
+                                                <div class="col" th:text="${stat.count} + '. ' + ${inInnerDto.manufacturer} + ' ' + ${inInnerDto.model}"></div>
+                                                <div class="col" th:text="${inInnerDto.placeName}"></div>
+                                                <div class="col" th:text="${inInnerDto.serialNumber}"></div>
+                                                <div class="col" th:text="${inInnerDto.status}"></div>
+
+                                             </div>
+                                                     
+                                                      <div class="row mb-2 d-flex align-items-center text-start phone" th:case="terminalServer">
+                                                <div class="col" th:text="${stat.count} + '. ' + ${inInnerDto.manufacturer} + ' ' + ${inInnerDto.model}"></div>
+                                                <div class="col" th:text="${inInnerDto.placeName}"></div>
+                                                <div class="col" th:text="${inInnerDto.serialNumber}"></div>
+                                                <div class="col" th:text="${inInnerDto.status}"></div>
+
+                                             </div>
+                                                      <div class="row mb-2 d-flex align-items-center text-start phone" th:case="terminalPrinter">
+                                                <div class="col" th:text="${stat.count} + '. ' + ${inInnerDto.manufacturer} + ' ' + ${inInnerDto.model}"></div>
+                                                <div class="col" th:text="${inInnerDto.placeName}"></div>
+                                                <div class="col" th:text="${inInnerDto.serialNumber}"></div>
+                                                <div class="col" th:text="${inInnerDto.status}"></div>
+
+                                             </div>
+                                                      <div class="row mb-2 d-flex align-items-center text-start phone" th:case="terminalUps">
+                                                <div class="col" th:text="${stat.count} + '. ' + ${inInnerDto.manufacturer} + ' ' + ${inInnerDto.model}"></div>
+                                                <div class="col" th:text="${inInnerDto.placeName}"></div>
+                                                <div class="col" th:text="${inInnerDto.serialNumber}"></div>
+                                                <div class="col" th:text="${inInnerDto.status}"></div>
+
+                                             </div>
+                                                  
+                                                     
                                                 <div class="row mb-2 d-flex align-items-center text-start phone" th:case="*">
                                                 <div class="col" th:text="${stat.count} + '. ' + ${inInnerDto.manufacturerName} + ' ' + ${inInnerDto.model}"></div>
                                                 <div class="col" th:text="${inInnerDto.placeName}"></div>
@@ -583,6 +650,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                                 let filterDateEnd = [[${filterDateEnd}]];
                                 let searchFIO = [[${searchFIO}]];
                                 let searchInventary = [[${searchInventary}]];
+                                let namePage = [[${namePage}]];
                 </script>
         
         

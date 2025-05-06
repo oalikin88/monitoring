@@ -21,5 +21,6 @@ public interface ObjectBuingRepo <E extends ObjectBuing> extends JpaRepository<E
     List<E> findByPlacePlaceTypeLikeAndArchivedFalse(PlaceType placetype);
     List<E> findByPlaceUsernameContainingAndPlacePlaceTypeLikeAndArchivedFalse(String username, PlaceType placetype);
     List<E> findByPlaceArchivedFalse();
+    List<E> findByArchivedFalse();
     Optional<E> findById(Long id);
 }

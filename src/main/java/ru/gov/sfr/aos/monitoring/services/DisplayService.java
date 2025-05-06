@@ -5,17 +5,20 @@
 package ru.gov.sfr.aos.monitoring.services;
 
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
+import java.util.Map;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import ru.gov.sfr.aos.monitoring.dictionaries.PlaceType;
 import ru.gov.sfr.aos.monitoring.dictionaries.Status;
 import ru.gov.sfr.aos.monitoring.entities.Contract;
 import ru.gov.sfr.aos.monitoring.entities.Display;
 import ru.gov.sfr.aos.monitoring.entities.DisplayModel;
+import ru.gov.sfr.aos.monitoring.entities.Location;
 import ru.gov.sfr.aos.monitoring.entities.ObjectBuing;
 import ru.gov.sfr.aos.monitoring.entities.Place;
 import ru.gov.sfr.aos.monitoring.exceptions.ObjectAlreadyExists;
@@ -57,13 +60,13 @@ public class DisplayService extends SvtObjService<Display, DisplayRepo, SvtDTO> 
             Contract contract = null;
             if (contractRepo.existsByContractNumberIgnoreCase("00000000")) {
                 contract = contractRepo.findByContractNumberIgnoreCase("00000000").get();
-                Set<ObjectBuing> objectBuingFromContractDB = contract.getObjectBuing();
+                List<ObjectBuing> objectBuingFromContractDB = contract.getObjectBuing();
                 objectBuingFromContractDB.add(display);
             } else {
                 contract = new Contract();
                 contract.setDateEndContract(Date.from(Instant.now()));
                 contract.setDateStartContract(Date.from(Instant.now()));
-                contract.setObjectBuing(new HashSet<>(Arrays.asList(display)));
+                contract.setObjectBuing(new ArrayList<>(Arrays.asList(display)));
                 contract.setContractNumber("00000000");
 
             }
@@ -123,5 +126,8 @@ public class DisplayService extends SvtObjService<Display, DisplayRepo, SvtDTO> 
         List<Display> displays = displayRepo.findAll();
         return displays;
     }
+    
+    
+   
     
 }

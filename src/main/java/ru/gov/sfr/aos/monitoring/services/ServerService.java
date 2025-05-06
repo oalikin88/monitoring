@@ -5,11 +5,13 @@
 package ru.gov.sfr.aos.monitoring.services;
 
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +30,7 @@ import ru.gov.sfr.aos.monitoring.entities.Server;
 import ru.gov.sfr.aos.monitoring.entities.ServerModel;
 import ru.gov.sfr.aos.monitoring.enums.UnitHdd;
 import ru.gov.sfr.aos.monitoring.exceptions.ObjectAlreadyExists;
+import ru.gov.sfr.aos.monitoring.models.ArchivedDto;
 import ru.gov.sfr.aos.monitoring.models.FilterDto;
 import ru.gov.sfr.aos.monitoring.models.SvtServerDTO;
 import ru.gov.sfr.aos.monitoring.repositories.ContractRepo;
@@ -173,13 +176,13 @@ public class ServerService extends SvtObjService <Server, ServerRepo, SvtServerD
                 
                 if(contractRepo.existsByContractNumberIgnoreCase("00000000")) {
                 contract = contractRepo.findByContractNumberIgnoreCase("00000000").get();
-                Set<ObjectBuing> objectBuingFromContractDB = contract.getObjectBuing();
+                List<ObjectBuing> objectBuingFromContractDB = contract.getObjectBuing();
                 objectBuingFromContractDB.add(server);
             } else {
                 contract = new Contract();
                 contract.setDateEndContract(Date.from(Instant.now()));
                 contract.setDateStartContract(Date.from(Instant.now()));
-                contract.setObjectBuing(new HashSet<>(Arrays.asList(server)));
+                contract.setObjectBuing(new ArrayList<>(Arrays.asList(server)));
                 contract.setContractNumber("00000000");
                 
             }
@@ -316,13 +319,13 @@ public class ServerService extends SvtObjService <Server, ServerRepo, SvtServerD
                 server.setRam(ram);
                 if(contractRepo.existsByContractNumberIgnoreCase("00000000")) {
                 contract = contractRepo.findByContractNumberIgnoreCase("00000000").get();
-                Set<ObjectBuing> objectBuingFromContractDB = contract.getObjectBuing();
+                List<ObjectBuing> objectBuingFromContractDB = contract.getObjectBuing();
                 objectBuingFromContractDB.add(server);
             } else {
                 contract = new Contract();
                 contract.setDateEndContract(Date.from(Instant.now()));
                 contract.setDateStartContract(Date.from(Instant.now()));
-                contract.setObjectBuing(new HashSet<>(Arrays.asList(server)));
+                contract.setObjectBuing(new ArrayList<>(Arrays.asList(server)));
                 contract.setContractNumber("00000000");
                 
             }
@@ -359,6 +362,21 @@ public class ServerService extends SvtObjService <Server, ServerRepo, SvtServerD
                         .getLocation()));
 
         return collect;
+    }
+
+    @Override
+    public void svtObjToArchive(ArchivedDto dto) {
+        Optional<Server> serverOptional = serverRepo.findById(dto.getId());
+        if(serverOptional.isPresent()) {
+            Server server = serverOptional.get();
+            if (server.getHdd().size() > 0) {
+                Set<Hdd> hddSetArchivedOn = server.getHdd().stream().filter(el -> !el.getModel().equalsIgnoreCase("не указано")).peek(e -> e.setArchived(true)).collect(Collectors.toSet());
+                server.setHdd(hddSetArchivedOn);
+            }
+            server.setArchived(true);
+            serverRepo.save(server);
+            
+        }
     }
 
     

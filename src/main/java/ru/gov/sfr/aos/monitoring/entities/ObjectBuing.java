@@ -6,6 +6,7 @@ package ru.gov.sfr.aos.monitoring.entities;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -49,9 +50,6 @@ public abstract class ObjectBuing {
     protected ObjectBuing() {
     }
 
-    protected ObjectBuing(Contract contract) {
-        this.contract = contract;
-    }
 
     public Long getId() {
         return id;
@@ -100,7 +98,8 @@ public abstract class ObjectBuing {
     public void setTransfers(List<Transfer> transfers) {
         this.transfers = transfers;
     }
-    
+
+
     
     
 }

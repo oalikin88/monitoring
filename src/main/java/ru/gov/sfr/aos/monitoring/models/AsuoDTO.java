@@ -5,12 +5,14 @@
 package ru.gov.sfr.aos.monitoring.models;
 
 import java.util.Date;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  *
  * @author Alikin Oleg
  */
+
 public class AsuoDTO extends MainSvtDto{
     private Long id;
     private Long placeId;
@@ -18,29 +20,21 @@ public class AsuoDTO extends MainSvtDto{
     private String nameFromOneC;
     private Date dateExploitationBegin;
     private int yearCreated;
-    private String numberRoom;
-    private Long displayId;
-    private String displayModel;
-    private String displaySerial;
-    private String displayInventary;
-    private Long terminalId;
-    private String terminalModel;
-    private String terminalSerial;
-    private String terminalInventary;
+    private Set<AsuoComponentDto> displays = new HashSet<>();
+    private Set <AsuoComponentDto> terminals = new HashSet<>();
     private Long thermoprinterId;
     private String thermoprinterModel;
     private String thermoprinterSerial;
     private String thermoprinterInventary;
-    private List<SwitchHubDto> switches;
-    private List<Long> switchId;
+    private Set<AsuoComponentDto> hubs = new HashSet<>();
+    private Long programSoftware;
+    private String programSoftwareVersion;
     private Long subDisplayModelId;
     private String subDisplayModel;
     private int subDisplayAmount;
-    private Long switchingUnitId;   
-    private String switchingUnitModel;   
-    private String switchingUnitInventary;   
-    private String switchingUnitSerial;   
     private Long locationId;
+    private String inventaryNumber;
+    private String status;
     
     public AsuoDTO() {
     }
@@ -59,6 +53,14 @@ public class AsuoDTO extends MainSvtDto{
 
     public void setPlaceId(Long placeId) {
         this.placeId = placeId;
+    }
+
+    public String getPlaceName() {
+        return placeName;
+    }
+
+    public void setPlaceName(String placeName) {
+        this.placeName = placeName;
     }
 
     public String getNameFromOneC() {
@@ -85,28 +87,20 @@ public class AsuoDTO extends MainSvtDto{
         this.yearCreated = yearCreated;
     }
 
-    public String getNumberRoom() {
-        return numberRoom;
+    public Set<AsuoComponentDto> getDisplays() {
+        return displays;
     }
 
-    public void setNumberRoom(String numberRoom) {
-        this.numberRoom = numberRoom;
+    public void setDisplays(Set<AsuoComponentDto> displays) {
+        this.displays = displays;
     }
 
-    public Long getDisplayId() {
-        return displayId;
+    public Set<AsuoComponentDto> getTerminals() {
+        return terminals;
     }
 
-    public void setDisplayId(Long displayId) {
-        this.displayId = displayId;
-    }
-
-    public Long getTerminalId() {
-        return terminalId;
-    }
-
-    public void setTerminalId(Long terminalId) {
-        this.terminalId = terminalId;
+    public void setTerminals(Set<AsuoComponentDto> terminals) {
+        this.terminals = terminals;
     }
 
     public Long getThermoprinterId() {
@@ -115,95 +109,6 @@ public class AsuoDTO extends MainSvtDto{
 
     public void setThermoprinterId(Long thermoprinterId) {
         this.thermoprinterId = thermoprinterId;
-    }
-
-    public List<SwitchHubDto> getSwitches() {
-        return switches;
-    }
-
-    public void setSwitches(List<SwitchHubDto> switches) {
-        this.switches = switches;
-    }
-
-
-    public Long getSubDisplayModelId() {
-        return subDisplayModelId;
-    }
-
-    public void setSubDisplayModelId(Long subDisplayModelId) {
-        this.subDisplayModelId = subDisplayModelId;
-    }
-
-    public int getSubDisplayAmount() {
-        return subDisplayAmount;
-    }
-
-    public void setSubDisplayAmount(int subDisplayAmount) {
-        this.subDisplayAmount = subDisplayAmount;
-    }
-
-    public Long getSwitchingUnitId() {
-        return switchingUnitId;
-    }
-
-    public void setSwitchingUnitId(Long switchingUnitId) {
-        this.switchingUnitId = switchingUnitId;
-    }
-
-    public String getPlaceName() {
-        return placeName;
-    }
-
-    public void setPlaceName(String placeName) {
-        this.placeName = placeName;
-    }
-
-    public String getDisplayModel() {
-        return displayModel;
-    }
-
-    public void setDisplayModel(String displayModel) {
-        this.displayModel = displayModel;
-    }
-
-    public String getDisplaySerial() {
-        return displaySerial;
-    }
-
-    public void setDisplaySerial(String displaySerial) {
-        this.displaySerial = displaySerial;
-    }
-
-    public String getDisplayInventary() {
-        return displayInventary;
-    }
-
-    public void setDisplayInventary(String displayInventary) {
-        this.displayInventary = displayInventary;
-    }
-
-    public String getTerminalModel() {
-        return terminalModel;
-    }
-
-    public void setTerminalModel(String terminalModel) {
-        this.terminalModel = terminalModel;
-    }
-
-    public String getTerminalSerial() {
-        return terminalSerial;
-    }
-
-    public void setTerminalSerial(String terminalSerial) {
-        this.terminalSerial = terminalSerial;
-    }
-
-    public String getTerminalInventary() {
-        return terminalInventary;
-    }
-
-    public void setTerminalInventary(String terminalInventary) {
-        this.terminalInventary = terminalInventary;
     }
 
     public String getThermoprinterModel() {
@@ -230,6 +135,38 @@ public class AsuoDTO extends MainSvtDto{
         this.thermoprinterInventary = thermoprinterInventary;
     }
 
+    public Set<AsuoComponentDto> getHubs() {
+        return hubs;
+    }
+
+    public void setHubs(Set<AsuoComponentDto> hubs) {
+        this.hubs = hubs;
+    }
+
+    public Long getProgramSoftware() {
+        return programSoftware;
+    }
+
+    public void setProgramSoftware(Long programSoftware) {
+        this.programSoftware = programSoftware;
+    }
+
+    public String getProgramSoftwareVersion() {
+        return programSoftwareVersion;
+    }
+
+    public void setProgramSoftwareVersion(String programSoftwareVersion) {
+        this.programSoftwareVersion = programSoftwareVersion;
+    }
+
+    public Long getSubDisplayModelId() {
+        return subDisplayModelId;
+    }
+
+    public void setSubDisplayModelId(Long subDisplayModelId) {
+        this.subDisplayModelId = subDisplayModelId;
+    }
+
     public String getSubDisplayModel() {
         return subDisplayModel;
     }
@@ -238,28 +175,12 @@ public class AsuoDTO extends MainSvtDto{
         this.subDisplayModel = subDisplayModel;
     }
 
-    public String getSwitchingUnitModel() {
-        return switchingUnitModel;
+    public int getSubDisplayAmount() {
+        return subDisplayAmount;
     }
 
-    public void setSwitchingUnitModel(String switchingUnitModel) {
-        this.switchingUnitModel = switchingUnitModel;
-    }
-
-    public String getSwitchingUnitInventary() {
-        return switchingUnitInventary;
-    }
-
-    public void setSwitchingUnitInventary(String switchingUnitInventary) {
-        this.switchingUnitInventary = switchingUnitInventary;
-    }
-
-    public String getSwitchingUnitSerial() {
-        return switchingUnitSerial;
-    }
-
-    public void setSwitchingUnitSerial(String switchingUnitSerial) {
-        this.switchingUnitSerial = switchingUnitSerial;
+    public void setSubDisplayAmount(int subDisplayAmount) {
+        this.subDisplayAmount = subDisplayAmount;
     }
 
     public Long getLocationId() {
@@ -270,19 +191,22 @@ public class AsuoDTO extends MainSvtDto{
         this.locationId = locationId;
     }
 
-    public List<Long> getSwitchId() {
-        return switchId;
+    public String getInventaryNumber() {
+        return inventaryNumber;
     }
 
-    public void setSwitchId(List<Long> switchId) {
-        this.switchId = switchId;
+    public void setInventaryNumber(String inventaryNumber) {
+        this.inventaryNumber = inventaryNumber;
     }
 
-    @Override
-    public String toString() {
-        return "AsuoDTO{" + "id=" + id + ", placeId=" + placeId + ", placeName=" + placeName + ", nameFromOneC=" + nameFromOneC + ", dateExploitationBegin=" + dateExploitationBegin + ", yearCreated=" + yearCreated + ", numberRoom=" + numberRoom + ", displayId=" + displayId + ", displayModel=" + displayModel + ", displaySerial=" + displaySerial + ", displayInventary=" + displayInventary + ", terminalId=" + terminalId + ", terminalModel=" + terminalModel + ", terminalSerial=" + terminalSerial + ", terminalInventary=" + terminalInventary + ", thermoprinterId=" + thermoprinterId + ", thermoprinterModel=" + thermoprinterModel + ", thermoprinterSerial=" + thermoprinterSerial + ", thermoprinterInventary=" + thermoprinterInventary + ", switches=" + switches + ", switchId=" + switchId + ", subDisplayModelId=" + subDisplayModelId + ", subDisplayModel=" + subDisplayModel + ", subDisplayAmount=" + subDisplayAmount + ", switchingUnitId=" + switchingUnitId + ", switchingUnitModel=" + switchingUnitModel + ", switchingUnitInventary=" + switchingUnitInventary + ", switchingUnitSerial=" + switchingUnitSerial + ", locationId=" + locationId + '}';
+    public String getStatus() {
+        return status;
     }
-    
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
     
     
 }

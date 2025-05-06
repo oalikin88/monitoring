@@ -18,10 +18,8 @@ import ru.gov.sfr.aos.monitoring.entities.Router;
 import ru.gov.sfr.aos.monitoring.entities.Scanner;
 import ru.gov.sfr.aos.monitoring.entities.Server;
 import ru.gov.sfr.aos.monitoring.entities.SwitchHub;
-import ru.gov.sfr.aos.monitoring.entities.SwitchingUnit;
 import ru.gov.sfr.aos.monitoring.entities.SystemBlock;
 import ru.gov.sfr.aos.monitoring.entities.Terminal;
-import ru.gov.sfr.aos.monitoring.entities.ThermoPrinter;
 import ru.gov.sfr.aos.monitoring.entities.Ups;
 import ru.gov.sfr.aos.monitoring.enums.ObjectBuingType;
 
@@ -71,17 +69,11 @@ public class ObjectBuingFactory {
             case SWITCHHUB:
                 ob = new SwitchHub();
                 break;
-            case SWITCHHUBUNIT:
-                ob = new SwitchingUnit();
-                break;
             case SYSTEMBLOCK:
                 ob = new SystemBlock();
                 break;
             case TERMINAL:
                 ob = new Terminal();
-                break;
-            case THERMOPRINTER:
-                ob = new ThermoPrinter();
                 break;
             case UPS:
                 ob = new Ups();

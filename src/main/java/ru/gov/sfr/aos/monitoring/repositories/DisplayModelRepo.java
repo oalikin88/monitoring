@@ -4,6 +4,7 @@
  */
 package ru.gov.sfr.aos.monitoring.repositories;
 
+import java.util.List;
 import org.springframework.stereotype.Repository;
 import ru.gov.sfr.aos.monitoring.entities.DisplayModel;
 
@@ -13,5 +14,5 @@ import ru.gov.sfr.aos.monitoring.entities.DisplayModel;
  */
 @Repository
 public interface DisplayModelRepo extends SvtModelsRepo<DisplayModel> {
-    
+   List<DisplayModel> findByManufacturerId(Long id);
 }

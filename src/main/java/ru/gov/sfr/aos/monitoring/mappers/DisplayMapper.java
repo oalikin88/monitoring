@@ -8,7 +8,8 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.springframework.beans.factory.annotation.Autowired;
 import ru.gov.sfr.aos.monitoring.entities.Display;
-import ru.gov.sfr.aos.monitoring.models.SvtDTO;
+import ru.gov.sfr.aos.monitoring.models.DisplayDto;
+import ru.gov.sfr.aos.monitoring.repositories.AsuoRepo;
 import ru.gov.sfr.aos.monitoring.repositories.DisplayModelRepo;
 import ru.gov.sfr.aos.monitoring.repositories.DisplayRepo;
 
@@ -17,12 +18,16 @@ import ru.gov.sfr.aos.monitoring.repositories.DisplayRepo;
  * @author Alikin Oleg
  */
 @Mapper(componentModel = "spring")
-public abstract class DisplayMapper implements SvtMapper<Display, SvtDTO> {
+public abstract class DisplayMapper implements SvtMapper<Display, DisplayDto> {
     @Autowired
     protected DisplayRepo displayRepo;
     @Autowired
     protected DisplayModelRepo displayModelRepo;
+    @Autowired
+    protected AsuoRepo asuoRepo;
 
+
+    @Mapping(source = "displayModel.manufacturer.name", target = "manufacturer")
     @Mapping(source = "displayModel.model", target = "model")
     @Mapping(source = "displayModel.id", target = "modelId")
     @Mapping(source = "place.id", target = "placeId")
@@ -30,8 +35,10 @@ public abstract class DisplayMapper implements SvtMapper<Display, SvtDTO> {
     @Mapping(source = "place.placeType", target = "placeType")
     @Mapping(source = "place.departmentCode", target = "departmentCode")
     @Mapping(source = "place.location.id", target = "locationId")
+    @Mapping(expression = "java(entity.getAsuo().stream().findFirst().isPresent() ? entity.getAsuo().stream().findFirst().get().getId() : null)", target = "asuoId")
+    @Mapping(expression = "java(entity.getAsuo().size() == 0 ? false : true)", target = "hasInstalled")
     @Override
-    public abstract SvtDTO getDto(Display entity);
+    public abstract DisplayDto getDto(Display entity);
 
     @Mapping(target = "contract", expression = "java(displayRepo.findById(dto.getId()).get().getContract())")
     @Mapping(target = "displayModel", expression = "java(displayModelRepo.findById(dto.getModelId()).get())")
@@ -42,7 +49,8 @@ public abstract class DisplayMapper implements SvtMapper<Display, SvtDTO> {
     @Mapping(target = "place.placeType", source = "placeType")
     @Mapping(target = "place.departmentCode", source = "departmentCode")
     @Mapping(target = "place.location.id", source = "locationId")
+    @Mapping(expression = "java(null == dto.asuoId ? null : asuoRepo.findById(dto.asuoId).stream().collect(java.util.stream.Collectors.toSet()))", target = "asuo")
     @Override
-    public abstract Display getEntityFromDto(SvtDTO dto);
+    public abstract Display getEntityFromDto(DisplayDto dto);
     
 }

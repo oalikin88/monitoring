@@ -21,7 +21,11 @@ import ru.gov.sfr.aos.monitoring.repositories.PlaceRepo;
 /**
  *
  * @author Alikin Oleg
+ * @param <E>
+ * @param <T>
+ * @param <D>
  */
+
 public abstract class SvtObjectBuingService <E extends ObjectBuing, T extends ObjectBuingRepo, D extends MainSvtDto> {
     
     @Autowired

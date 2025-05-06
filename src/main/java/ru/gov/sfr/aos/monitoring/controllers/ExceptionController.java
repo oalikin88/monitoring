@@ -103,10 +103,12 @@ public class ExceptionController implements ErrorController {
 
             }
             map.addAttribute("exception", message);
-            System.out.println(exception.getCause().fillInStackTrace());
-            exception.getClass().getConstructors();
-            exception.getCause().getClass();
-            exception.getLocalizedMessage();
+            if(exception != null) {
+                exception.getClass().getConstructors();
+                exception.getCause().getClass();
+                exception.getLocalizedMessage();
+            }
+            
             return "page500";
 
         }

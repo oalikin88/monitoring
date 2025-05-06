@@ -31,14 +31,6 @@ public class Router extends ObjectBuingWithSerialAndInventary implements Seriali
     public Router() {
     }
 
-    public Router(RouterModel routerModel, String nameFromOneC, int portAmount, String numberRoom, Status status, String inventaryNumber, String serialNumber, Contract contract, boolean archived) {
-        super(status, inventaryNumber, serialNumber, contract);
-        this.routerModel = routerModel;
-        this.nameFromOneC = nameFromOneC;
-        this.portAmount = portAmount;
-        this.numberRoom = numberRoom;
-    }
-
     public RouterModel getRouterModel() {
         return routerModel;
     }

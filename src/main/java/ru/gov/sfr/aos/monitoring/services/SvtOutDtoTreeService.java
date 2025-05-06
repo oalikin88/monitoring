@@ -13,7 +13,6 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import ru.gov.sfr.aos.monitoring.entities.Location;
 import ru.gov.sfr.aos.monitoring.entities.ObjectBuingWithSerialAndInventary;
-import ru.gov.sfr.aos.monitoring.entities.Ups;
 import ru.gov.sfr.aos.monitoring.mappers.SvtMapper;
 import ru.gov.sfr.aos.monitoring.models.DepartmentTreeDto;
 import ru.gov.sfr.aos.monitoring.models.LocationByTreeDto;

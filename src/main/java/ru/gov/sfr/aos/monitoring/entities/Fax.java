@@ -33,15 +33,6 @@ public class Fax extends ObjectBuingWithSerialAndInventary implements Serializab
     public Fax() {
     }
 
-    public Fax(FaxModel model, Date dateExploitationBegin, int yearCreated, String ipAdress, String nameFromeOneC, String numberRoom, Status status, String inventaryNumber, String serialNumber) {
-        super(status, inventaryNumber, serialNumber);
-        this.model = model;
-        this.dateExploitationBegin = dateExploitationBegin;
-        this.yearCreated = yearCreated;
-        this.ipAdress = ipAdress;
-        this.nameFromeOneC = nameFromeOneC;
-        this.numberRoom = numberRoom;
-    }
 
     public FaxModel getModel() {
         return model;

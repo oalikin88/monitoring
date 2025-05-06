@@ -4,7 +4,9 @@
  */
 package ru.gov.sfr.aos.monitoring.repositories;
 
+import java.util.List;
 import org.springframework.stereotype.Repository;
+import ru.gov.sfr.aos.monitoring.dictionaries.PlaceType;
 import ru.gov.sfr.aos.monitoring.entities.Asuo;
 
 /**
@@ -13,5 +15,5 @@ import ru.gov.sfr.aos.monitoring.entities.Asuo;
  */
 @Repository
 public interface AsuoRepo extends ObjectBuingRepo<Asuo>{
-    
+    List<Asuo> findByInventaryNumberContainingAndPlacePlaceTypeLikeAndArchivedFalse(String inventaryNumber, PlaceType placetype);
 }

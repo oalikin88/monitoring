@@ -23,40 +23,9 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
             <div class="main">
                 <div class="row mb-2" id="top-panel">
                     <div class="col-2">
-                        <th:block th:switch="${attribute}">
-                            <h1 th:case="'mphones'">Справочник моделей телефонов</h1>
-                            <h1 th:case="'mfax'">Справочник моделей факсов</h1>
-                            <h1 th:case="'mmonitors'">Справочник моделей мониторов</h1>
-                            <h1 th:case="'mups'">Справочник моделей ИБП</h1>
-                            <h1 th:case="'mupsbat'">Справочник типов батарей для ИБП</h1>
-                            <h1 th:case="'systemBlock'">Справочник моделей системных блоков</h1>
-                            <h1 th:case="'mmotherboard'">Справочник моделей материнских плат</h1>
-                            <h1 th:case="'mcpu'">Справочник моделей процессоров</h1>
-                            <h1 th:case="'mram'">Справочник моделей ОЗУ</h1>
-                            <h1 th:case="'mhdd'">Справочник моделей НЖМД</h1>
-                            <h1 th:case="'mvideo'">Справочник моделей видеоадаптеров</h1>
-                            <h1 th:case="'mcddrive'">Справочник моделей приводов</h1>
-                            <h1 th:case="'mscard'">Справочник моделей звуковых карт</h1>
-                            <h1 th:case="'mlcard'">Справочник моделей сетевых карт</h1>
-                            <h1 th:case="'mkeyboard'">Справочник моделей клавиатур</h1>
-                            <h1 th:case="'mmouse'">Справочник моделей мышей</h1>
-                            <h1 th:case="'mspeakers'">Справочник моделей колонок</h1>
-                            <h1 th:case="'os'">Справочник операционных систем</h1>
-                            <h1 th:case="'mscanner'">Справочник моделей сканеров</h1>
-                            <h1 th:case="'mserver'">Справочник моделей серверов</h1>
-                            <h1 th:case="'mswitch'">Справочник моделей коммутаторов/концентраторов</h1>
-                            <h1 th:case="'mrouter'">Справочник моделей маршрутизаторов</h1>
-                            <h1 th:case="'mats'">Справочник моделей АТС</h1>
-                            <h1 th:case="'mconditioner'">Справочник моделей кондиционеров</h1>
-                            <h1 th:case="'minfomat'">Справочник моделей инфоматов</h1>
-                            <h1 th:case="'mterminal'">Справочник моделей терминалов</h1>
-                            <h1 th:case="'mthermoprinter'">Справочник моделей термопринтеров</h1>
-                            <h1 th:case="'mdisplay'">Справочник моделей главного табло</h1>
-                            <h1 th:case="'mswunit'">Справочник моделей блоков коммутации</h1>
-                            <h1 th:case="'msubdisplay'">Справочник моделей электронного табло</h1>
-                            <h1 th:case="'msysblock'">Справочник моделей системных блоков</h1>
-
-                        </th:block>
+                        <span id="title">
+                        [[${namePage}]]
+                        </span>
                     </div>
                     <div class="col-1 text-end">
                         <!-- Button trigger modal add place-->
@@ -101,6 +70,11 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                             <div class="row fw-bold" th:case="'mupsbat'">
                                 <div class="col-1">№ п/п</div>
                                 <div class="col-11 text-start">Тип батареи</div>
+                            </div>
+                            <div class="row fw-bold" th:case="'programSoftware'">
+                                <div class="col-1">№ п/п</div>
+                                <div class="col-6 text-start">Наименование</div>
+                                <div class="col-5 text-start">Версия</div>
                             </div>
                             <div class="row fw-bold" th:case="*">
                                 <div class="col-1">№ п/п</div>
@@ -229,6 +203,23 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                                 <div class="col-1" th:text="${stat.count}"></div>
                                 <div class="col-11 text-start">
                                     <span th:text="${dto.manufacturer} + ' ' +  ${dto.model}"></span>
+                                </div>
+                            </div>
+                            
+                            <div class = "row element pb-2 mb-2 mt-2 pt-2" th:attr="id = ${dto.id}" data-bs-toggle="modal" data-bs-target="#addBtnModal" th:case="mdisplay">
+                                <div class="col-1" th:text="${stat.count}"></div>
+                                <div class="col-11 text-start">
+                                    <span th:text="${dto.manufacturerName} + ' ' +  ${dto.model}"></span>
+                                </div>
+                            </div>
+                            
+                            <div class = "row element pb-2 mb-2 mt-2 pt-2" th:attr="id = ${dto.id}" data-bs-toggle="modal" data-bs-target="#addBtnModal" th:case="programSoftware">
+                                <div class="col-1" th:text="${stat.count}"></div>
+                                <div class="col-6 text-start">
+                                    <span th:text="${dto.name}"></span>
+                                </div>
+                                <div class="col-5 text-start">
+                                    <span th:text="${dto.version}"></span>
                                 </div>
                             </div>
 

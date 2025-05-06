@@ -4,6 +4,7 @@
  */
 package ru.gov.sfr.aos.monitoring.repositories;
 
+import java.util.List;
 import org.springframework.stereotype.Repository;
 import ru.gov.sfr.aos.monitoring.entities.TerminalModel;
 
@@ -13,5 +14,5 @@ import ru.gov.sfr.aos.monitoring.entities.TerminalModel;
  */
 @Repository
 public interface TerminalModelRepo extends SvtModelsRepo<TerminalModel> {
-    
+    List<TerminalModel>findByManufacturerId(Long id);
 }

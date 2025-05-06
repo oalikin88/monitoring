@@ -11,8 +11,9 @@ import ru.gov.sfr.aos.monitoring.entities.Asuo;
 import ru.gov.sfr.aos.monitoring.models.AsuoDTO;
 import ru.gov.sfr.aos.monitoring.repositories.AsuoRepo;
 import ru.gov.sfr.aos.monitoring.repositories.ContractRepo;
+import ru.gov.sfr.aos.monitoring.repositories.HubRepo;
 import ru.gov.sfr.aos.monitoring.repositories.PlaceRepo;
-import ru.gov.sfr.aos.monitoring.repositories.SwitchHubRepo;
+import ru.gov.sfr.aos.monitoring.repositories.ProgramSoftwareRepo;
 
 /**
  *
@@ -29,36 +30,25 @@ public abstract class AsuoMapper implements SvtObjectBuingMapper<Asuo, AsuoDTO>{
     @Autowired
     protected ContractRepo contractRepo;
     @Autowired
-    protected SwitchHubRepo switchHubRepo;
+    protected HubRepo hubRepo;
+    @Autowired
+    protected ProgramSoftwareRepo programSoftwareRepo;
     
     
     @Mapping(source = "place.id", target = "placeId")
     @Mapping(source = "place.username", target = "placeName")
     @Mapping(source = "nameFromOneC", target = "nameFromOneC")
     @Mapping(source = "dateExploitationBegin", target = "dateExploitationBegin")
-    @Mapping(source = "numberRoom", target = "numberRoom")
     @Mapping(source = "yearCreated", target = "yearCreated")
     @Mapping(source = "subDisplayAmount", target = "subDisplayAmount")
-    @Mapping(source = "display.id", target = "displayId")
-    @Mapping(source = "display.displayModel.model", target = "displayModel")
-    @Mapping(source = "display.inventaryNumber", target = "displayInventary")
-    @Mapping(source = "display.serialNumber", target = "displaySerial")
-    @Mapping(source = "terminal.id", target = "terminalId")
-    @Mapping(source = "terminal.terminalModel.model", target = "terminalModel")
-    @Mapping(source = "terminal.inventaryNumber", target = "terminalInventary")
-    @Mapping(source = "terminal.serialNumber", target = "terminalSerial")
-    @Mapping(source = "thermoPrinter.id", target = "thermoprinterId")
-    @Mapping(source = "thermoPrinter.thermoPrinterModel.model", target = "thermoprinterModel")
-    @Mapping(source = "thermoPrinter.inventaryNumber", target = "thermoprinterInventary")
-    @Mapping(source = "thermoPrinter.serialNumber", target = "thermoprinterSerial")
+    @Mapping(expression = "java(entity.getDisplay().stream().map(e -> new  ru.gov.sfr.aos.monitoring.models.AsuoComponentDto(e.getId(), e.getAsuo().isEmpty() ? false : true)).collect(java.util.stream.Collectors.toSet()))", target = "displays")
+    @Mapping(expression = "java(entity.getTerminal().stream().map(e -> new  ru.gov.sfr.aos.monitoring.models.AsuoComponentDto(e.getId(), e.getAsuos().isEmpty() ? false : true)).collect(java.util.stream.Collectors.toSet()))", target = "terminals")
     @Mapping(source = "subDisplayModel.id", target = "subDisplayModelId")
     @Mapping(source = "subDisplayModel.model", target = "subDisplayModel")
-    @Mapping(source = "switchingUnit.id", target = "switchingUnitId")
-    @Mapping(source = "switchingUnit.switchingUnitModel.model", target = "switchingUnitModel")
-    @Mapping(source = "switchingUnit.inventaryNumber", target = "switchingUnitInventary")
-    @Mapping(source = "switchingUnit.serialNumber", target = "switchingUnitSerial")
     @Mapping(source = "place.location.id", target = "locationId")
-    @Mapping(source = "switchHubSet", target = "switches")
+    @Mapping(source = "programSoftware.id", target = "programSoftware")
+    @Mapping(source = "inventaryNumber", target = "inventaryNumber")
+    @Mapping(expression = "java(entity.getHubSet().stream().map(e -> new  ru.gov.sfr.aos.monitoring.models.AsuoComponentDto(e.getId(), e.getAsuo().isEmpty() ? false : true)).collect(java.util.stream.Collectors.toSet()))", target = "hubs")
     @Override
     public abstract AsuoDTO getDto(Asuo entity);
     
@@ -66,15 +56,14 @@ public abstract class AsuoMapper implements SvtObjectBuingMapper<Asuo, AsuoDTO>{
     @Mapping(target = "display", expression = "java(asuoRepo.findById(dto.getId()).get().getDisplay())")
     @Mapping(target = "nameFromOneC", source = "nameFromOneC")
     @Mapping(target = "dateExploitationBegin", source = "dateExploitationBegin")
-    @Mapping(target = "numberRoom", source = "numberRoom")
     @Mapping(target = "yearCreated", source = "yearCreated")
+    @Mapping(target = "inventaryNumber", source = "inventaryNumber")
     @Mapping(target = "subDisplayAmount", source = "subDisplayAmount")
     @Mapping(target = "terminal", expression = "java(asuoRepo.findById(dto.getId()).get().getTerminal())")
-    @Mapping(target = "thermoPrinter", expression = "java(asuoRepo.findById(dto.getId()).get().getThermoPrinter())")
+    @Mapping(target = "programSoftware", expression = "java(programSoftwareRepo.findById(dto.getProgramSoftware()).get())")
     @Mapping(target = "subDisplayModel", expression = "java(asuoRepo.findById(dto.getId()).get().getSubDisplayModel())")
-    @Mapping(target = "switchingUnit", expression = "java(asuoRepo.findById(dto.getId()).get().getSwitchingUnit())")
     @Mapping(target = "place.location.id", source = "locationId")
-    @Mapping(target = "switchHubSet", expression = "java(dto.getSwitchId().stream().map(e -> switchHubRepo.findById(e).get()).collect(java.util.stream.Collectors.toSet()))")
+    @Mapping(target = "hubSet", expression = "java(dto.getHubs().stream().map(e -> hubRepo.findById(e.getId()).get()).collect(java.util.stream.Collectors.toSet()))")
     @Mapping(target = "contract", expression = "java(asuoRepo.findById(dto.getId()).get().getContract())")
     @Override
     public abstract Asuo getEntityFromDto(AsuoDTO dto);

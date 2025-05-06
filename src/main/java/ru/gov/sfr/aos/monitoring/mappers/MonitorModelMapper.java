@@ -17,7 +17,7 @@ import ru.gov.sfr.aos.monitoring.models.SvtModelDto;
  * @author Alikin Oleg
  */
 @Component
-public class MonitorModelMapper implements ModelMapper<MonitorModel>{
+public class MonitorModelMapper implements ModelMapper<MonitorModel, SvtModelDto>{
 
     @Override
     public MonitorModel getModel(SvtModelDto dto) {

@@ -17,7 +17,7 @@ import ru.gov.sfr.aos.monitoring.models.SvtModelDto;
  * @author Alikin Oleg
  */
 @Component
-public class ScannerModelMapper implements ModelMapper<ScannerModel> {
+public class ScannerModelMapper implements ModelMapper<ScannerModel, SvtModelDto> {
 
     @Override
     public ScannerModel getModel(SvtModelDto dto) {

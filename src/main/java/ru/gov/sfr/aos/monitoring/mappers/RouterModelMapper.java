@@ -17,7 +17,7 @@ import ru.gov.sfr.aos.monitoring.models.SvtModelDto;
  * @author Alikin Oleg
  */
 @Component
-public class RouterModelMapper implements ModelMapper<RouterModel> {
+public class RouterModelMapper implements ModelMapper<RouterModel, SvtModelDto> {
 
     @Override
     public RouterModel getModel(SvtModelDto dto) {

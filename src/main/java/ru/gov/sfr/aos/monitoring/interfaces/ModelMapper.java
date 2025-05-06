@@ -11,11 +11,11 @@ import ru.gov.sfr.aos.monitoring.models.SvtModelDto;
  *
  * @author Alikin Oleg
  */
-public interface ModelMapper<T> {
+public interface ModelMapper<T, D extends SvtModelDto> {
     
-    T getModel(SvtModelDto dto);
-    SvtModelDto getDto(T entity);
-    List<SvtModelDto> getListDtoes(List<T> inputList);
-    SvtModelDto getDtoForSelectize(T entity);
+    T getModel(D dto);
+    D getDto(T entity);
+    List<D> getListDtoes(List<T> inputList);
+    D getDtoForSelectize(T entity);
     
 }

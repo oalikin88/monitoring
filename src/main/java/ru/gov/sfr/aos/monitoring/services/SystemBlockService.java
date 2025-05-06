@@ -5,11 +5,13 @@
 package ru.gov.sfr.aos.monitoring.services;
 
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +38,7 @@ import ru.gov.sfr.aos.monitoring.entities.SystemBlockModel;
 import ru.gov.sfr.aos.monitoring.entities.VideoCard;
 import ru.gov.sfr.aos.monitoring.enums.UnitHdd;
 import ru.gov.sfr.aos.monitoring.exceptions.ObjectAlreadyExists;
+import ru.gov.sfr.aos.monitoring.models.ArchivedDto;
 import ru.gov.sfr.aos.monitoring.models.FilterDto;
 import ru.gov.sfr.aos.monitoring.models.SvtSystemBlockDTO;
 import ru.gov.sfr.aos.monitoring.repositories.CdDriveRepo;
@@ -320,13 +323,13 @@ public class SystemBlockService extends SvtObjService <SystemBlock, SystemBlockR
             Contract contract = null;
             if(contractRepo.existsByContractNumberIgnoreCase("00000000")) {
                 contract = contractRepo.findByContractNumberIgnoreCase("00000000").get();
-                Set<ObjectBuing> objectBuingFromContractDB = contract.getObjectBuing();
+                List<ObjectBuing> objectBuingFromContractDB = contract.getObjectBuing();
                 objectBuingFromContractDB.add(systemBlock);
             } else {
                 contract = new Contract();
                 contract.setDateEndContract(Date.from(Instant.now()));
                 contract.setDateStartContract(Date.from(Instant.now()));
-                contract.setObjectBuing(new HashSet<>(Arrays.asList(systemBlock)));
+                contract.setObjectBuing(new ArrayList<>(Arrays.asList(systemBlock)));
                 contract.setContractNumber("00000000");
                 
             }
@@ -583,13 +586,13 @@ public class SystemBlockService extends SvtObjService <SystemBlock, SystemBlockR
             Contract contract = null;
             if(contractRepo.existsByContractNumberIgnoreCase("00000000")) {
                 contract = contractRepo.findByContractNumberIgnoreCase("00000000").get();
-                Set<ObjectBuing> objectBuingFromContractDB = contract.getObjectBuing();
+                List<ObjectBuing> objectBuingFromContractDB = contract.getObjectBuing();
                 objectBuingFromContractDB.add(systemBlock);
             } else {
                 contract = new Contract();
                 contract.setDateEndContract(Date.from(Instant.now()));
                 contract.setDateStartContract(Date.from(Instant.now()));
-                contract.setObjectBuing(new HashSet<>(Arrays.asList(systemBlock)));
+                contract.setObjectBuing(new ArrayList<>(Arrays.asList(systemBlock)));
                 contract.setContractNumber("00000000");
                 
             }
@@ -634,6 +637,22 @@ public class SystemBlockService extends SvtObjService <SystemBlock, SystemBlockR
         
         return collect;
     }
+
+    @Override
+    public void svtObjToArchive(ArchivedDto dto) {
+        Optional<SystemBlock> sysblockOptional = systemBlockRepo.findById(dto.getId());
+        if(sysblockOptional.isPresent()) {
+            SystemBlock systemBlock = sysblockOptional.get();
+            if (systemBlock.getHdd().size() > 0) {
+                Set<Hdd> hddSetArchivedOn = systemBlock.getHdd().stream().filter(el -> !el.getModel().equalsIgnoreCase("не указано")).peek(e -> e.setArchived(true)).collect(Collectors.toSet());
+                systemBlock.setHdd(hddSetArchivedOn);
+            }
+            systemBlock.setArchived(true);
+            systemBlockRepo.save(systemBlock);
+            
+        }
+    }
     
+          
     
 }

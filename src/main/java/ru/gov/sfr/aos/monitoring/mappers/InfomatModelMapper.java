@@ -17,7 +17,7 @@ import ru.gov.sfr.aos.monitoring.models.SvtModelDto;
  * @author Alikin Oleg
  */
 @Component
-public class InfomatModelMapper implements ModelMapper<InfomatModel>{
+public class InfomatModelMapper implements ModelMapper<InfomatModel, SvtModelDto>{
 
     @Override
     public InfomatModel getModel(SvtModelDto dto) {

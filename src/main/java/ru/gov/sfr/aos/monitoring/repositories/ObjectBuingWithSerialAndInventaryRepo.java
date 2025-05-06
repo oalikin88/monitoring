@@ -24,6 +24,8 @@ public interface ObjectBuingWithSerialAndInventaryRepo <E extends ObjectBuingWit
     List<E> findByPlacePlaceTypeLikeAndArchivedFalse(PlaceType placetype);
     List<E> findByPlaceUsernameContainingAndPlacePlaceTypeLikeAndArchivedFalse(String username, PlaceType placetype);
     List<E> findByInventaryNumberContainingAndPlacePlaceTypeLikeAndArchivedFalse(String inventaryNumber, PlaceType placetype);
+    List<E> findBySerialNumberContainingAndPlacePlaceTypeLikeAndArchivedFalse(String serialNumber, PlaceType placetype);
     List<E> findByPlaceArchivedFalse();
+    List<E> findByArchivedFalse();
     Optional<E> findById(Long id);
 }

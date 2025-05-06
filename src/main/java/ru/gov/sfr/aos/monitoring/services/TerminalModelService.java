@@ -4,6 +4,8 @@
  */
 package ru.gov.sfr.aos.monitoring.services;
 
+import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.gov.sfr.aos.monitoring.entities.TerminalModel;
 import ru.gov.sfr.aos.monitoring.repositories.TerminalModelRepo;
@@ -14,5 +16,10 @@ import ru.gov.sfr.aos.monitoring.repositories.TerminalModelRepo;
  */
 @Service
 public class TerminalModelService extends SvtModelService<TerminalModel, TerminalModelRepo> {
+    @Autowired
+    private TerminalModelRepo repo;
     
+    public List<TerminalModel> getModelsByManufacturerId(Long id) {
+        return repo.findByManufacturerId(id);
+    }
 }

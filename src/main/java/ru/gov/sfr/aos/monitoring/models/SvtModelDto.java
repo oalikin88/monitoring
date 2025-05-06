@@ -24,6 +24,18 @@ public class SvtModelDto {
         this.model = model;
     }
 
+    public SvtModelDto(String model, String manufacturerName) {
+        this.model = model;
+        this.manufacturerName = manufacturerName;
+    }
+
+    public SvtModelDto(Long id, String model) {
+        this.id = id;
+        this.model = model;
+    }
+    
+    
+
     public Long getId() {
         return id;
     }

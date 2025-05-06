@@ -17,7 +17,7 @@ import ru.gov.sfr.aos.monitoring.models.SvtModelDto;
  * @author Alikin Oleg
  */
 @Component
-public class SystemblockModelMapper implements ModelMapper<SystemBlockModel> {
+public class SystemblockModelMapper implements ModelMapper<SystemBlockModel, SvtModelDto> {
 
     @Override
     public SystemBlockModel getModel(SvtModelDto dto) {

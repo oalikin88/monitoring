@@ -35,6 +35,8 @@ import ru.gov.sfr.aos.monitoring.entities.DisplayModel;
 import ru.gov.sfr.aos.monitoring.entities.Fax;
 import ru.gov.sfr.aos.monitoring.entities.FaxModel;
 import ru.gov.sfr.aos.monitoring.entities.Hdd;
+import ru.gov.sfr.aos.monitoring.entities.Hub;
+import ru.gov.sfr.aos.monitoring.entities.HubModel;
 import ru.gov.sfr.aos.monitoring.entities.Infomat;
 import ru.gov.sfr.aos.monitoring.entities.InfomatModel;
 import ru.gov.sfr.aos.monitoring.entities.Keyboard;
@@ -47,6 +49,7 @@ import ru.gov.sfr.aos.monitoring.entities.Mouse;
 import ru.gov.sfr.aos.monitoring.entities.OperationSystem;
 import ru.gov.sfr.aos.monitoring.entities.Phone;
 import ru.gov.sfr.aos.monitoring.entities.PhoneModel;
+import ru.gov.sfr.aos.monitoring.entities.ProgramSoftware;
 import ru.gov.sfr.aos.monitoring.entities.Ram;
 import ru.gov.sfr.aos.monitoring.entities.Router;
 import ru.gov.sfr.aos.monitoring.entities.RouterModel;
@@ -59,27 +62,35 @@ import ru.gov.sfr.aos.monitoring.entities.Speakers;
 import ru.gov.sfr.aos.monitoring.entities.SubDisplayModel;
 import ru.gov.sfr.aos.monitoring.entities.SwitchHub;
 import ru.gov.sfr.aos.monitoring.entities.SwitchHubModel;
-import ru.gov.sfr.aos.monitoring.entities.SwitchingUnit;
-import ru.gov.sfr.aos.monitoring.entities.SwitchingUnitModel;
 import ru.gov.sfr.aos.monitoring.entities.SystemBlock;
 import ru.gov.sfr.aos.monitoring.entities.SystemBlockModel;
 import ru.gov.sfr.aos.monitoring.entities.Terminal;
+import ru.gov.sfr.aos.monitoring.entities.TerminalDisplay;
+import ru.gov.sfr.aos.monitoring.entities.TerminalDisplayModel;
 import ru.gov.sfr.aos.monitoring.entities.TerminalModel;
-import ru.gov.sfr.aos.monitoring.entities.ThermoPrinter;
-import ru.gov.sfr.aos.monitoring.entities.ThermoPrinterModel;
+import ru.gov.sfr.aos.monitoring.entities.TerminalPrinter;
+import ru.gov.sfr.aos.monitoring.entities.TerminalPrinterModel;
+import ru.gov.sfr.aos.monitoring.entities.TerminalSensor;
+import ru.gov.sfr.aos.monitoring.entities.TerminalSensorModel;
+import ru.gov.sfr.aos.monitoring.entities.TerminalServer;
+import ru.gov.sfr.aos.monitoring.entities.TerminalServerModel;
+import ru.gov.sfr.aos.monitoring.entities.TerminalUps;
+import ru.gov.sfr.aos.monitoring.entities.TerminalUpsModel;
 import ru.gov.sfr.aos.monitoring.entities.Ups;
 import ru.gov.sfr.aos.monitoring.entities.UpsModel;
 import ru.gov.sfr.aos.monitoring.entities.VideoCard;
 import ru.gov.sfr.aos.monitoring.exceptions.ObjectAlreadyExists;
-import ru.gov.sfr.aos.monitoring.mappers.AsuoMapper;
 import ru.gov.sfr.aos.monitoring.mappers.AtsMapper;
 import ru.gov.sfr.aos.monitoring.mappers.AtsModelMapper;
 import ru.gov.sfr.aos.monitoring.mappers.BatteryTypeMapper;
 import ru.gov.sfr.aos.monitoring.mappers.ConditionerMapper;
 import ru.gov.sfr.aos.monitoring.mappers.ConditionerModelMapper;
 import ru.gov.sfr.aos.monitoring.mappers.DisplayMapper;
+import ru.gov.sfr.aos.monitoring.mappers.DisplayModelMapper;
 import ru.gov.sfr.aos.monitoring.mappers.FaxMapper;
 import ru.gov.sfr.aos.monitoring.mappers.FaxModelMapper;
+import ru.gov.sfr.aos.monitoring.mappers.HubMapper;
+import ru.gov.sfr.aos.monitoring.mappers.HubModelMapper;
 import ru.gov.sfr.aos.monitoring.mappers.InfomatMapper;
 import ru.gov.sfr.aos.monitoring.mappers.InfomatModelMapper;
 import ru.gov.sfr.aos.monitoring.mappers.MonitorMapper;
@@ -96,11 +107,15 @@ import ru.gov.sfr.aos.monitoring.mappers.ServerModelMapper;
 import ru.gov.sfr.aos.monitoring.mappers.SvtModelMapper;
 import ru.gov.sfr.aos.monitoring.mappers.SwitchHubMapper;
 import ru.gov.sfr.aos.monitoring.mappers.SwitchHubModelMapper;
-import ru.gov.sfr.aos.monitoring.mappers.SwitchingUnitMapper;
 import ru.gov.sfr.aos.monitoring.mappers.SystemBlockMapper;
 import ru.gov.sfr.aos.monitoring.mappers.SystemblockModelMapper;
+import ru.gov.sfr.aos.monitoring.mappers.TerminalDisplayModelMapper;
 import ru.gov.sfr.aos.monitoring.mappers.TerminalMapper;
-import ru.gov.sfr.aos.monitoring.mappers.ThermoprinterMapper;
+import ru.gov.sfr.aos.monitoring.mappers.TerminalModelMapper;
+import ru.gov.sfr.aos.monitoring.mappers.TerminalPrinterModelMapper;
+import ru.gov.sfr.aos.monitoring.mappers.TerminalSensorModelMapper;
+import ru.gov.sfr.aos.monitoring.mappers.TerminalServerModelMapper;
+import ru.gov.sfr.aos.monitoring.mappers.TerminalUpsModelMapper;
 import ru.gov.sfr.aos.monitoring.mappers.UpsMapper;
 import ru.gov.sfr.aos.monitoring.mappers.UpsModelMapper;
 import ru.gov.sfr.aos.monitoring.models.ArchivedDto;
@@ -111,9 +126,11 @@ import ru.gov.sfr.aos.monitoring.models.DepartmentDTO;
 import ru.gov.sfr.aos.monitoring.models.FaxDto;
 import ru.gov.sfr.aos.monitoring.models.FilterDto;
 import ru.gov.sfr.aos.monitoring.models.HddDto;
+import ru.gov.sfr.aos.monitoring.models.HubDto;
 import ru.gov.sfr.aos.monitoring.models.LocationByTreeDto;
 import ru.gov.sfr.aos.monitoring.models.OperationSystemDto;
 import ru.gov.sfr.aos.monitoring.models.PlaceDTO;
+import ru.gov.sfr.aos.monitoring.models.ProgramSoftwareDto;
 import ru.gov.sfr.aos.monitoring.models.RamDto;
 import ru.gov.sfr.aos.monitoring.models.SvtAtsDTO;
 import ru.gov.sfr.aos.monitoring.models.SvtConditionerDTO;
@@ -123,6 +140,9 @@ import ru.gov.sfr.aos.monitoring.models.SvtScannerDTO;
 import ru.gov.sfr.aos.monitoring.models.SvtServerDTO;
 import ru.gov.sfr.aos.monitoring.models.SvtSwitchHubDTO;
 import ru.gov.sfr.aos.monitoring.models.SvtSystemBlockDTO;
+import ru.gov.sfr.aos.monitoring.models.TerminalComponentDto;
+import ru.gov.sfr.aos.monitoring.models.TerminalDisplayDto;
+import ru.gov.sfr.aos.monitoring.models.TerminalDto;
 import ru.gov.sfr.aos.monitoring.models.UpsModelDto;
 import ru.gov.sfr.aos.monitoring.services.AsuoOutDtoTreeService;
 import ru.gov.sfr.aos.monitoring.services.AsuoService;
@@ -143,6 +163,9 @@ import ru.gov.sfr.aos.monitoring.services.FaxModelService;
 import ru.gov.sfr.aos.monitoring.services.FaxOutDtoTreeService;
 import ru.gov.sfr.aos.monitoring.services.FaxService;
 import ru.gov.sfr.aos.monitoring.services.HddModelService;
+import ru.gov.sfr.aos.monitoring.services.HubModelService;
+import ru.gov.sfr.aos.monitoring.services.HubOutDtoTreeService;
+import ru.gov.sfr.aos.monitoring.services.HubService;
 import ru.gov.sfr.aos.monitoring.services.InfomatModelService;
 import ru.gov.sfr.aos.monitoring.services.InfomatOutDtoTreeService;
 import ru.gov.sfr.aos.monitoring.services.InfomatService;
@@ -175,18 +198,28 @@ import ru.gov.sfr.aos.monitoring.services.SubDisplayModelService;
 import ru.gov.sfr.aos.monitoring.services.SwitchHubModelService;
 import ru.gov.sfr.aos.monitoring.services.SwitchHubOutDtoTreeService;
 import ru.gov.sfr.aos.monitoring.services.SwitchHubService;
-import ru.gov.sfr.aos.monitoring.services.SwitchingUnitModelService;
-import ru.gov.sfr.aos.monitoring.services.SwitchingUnitOutDtoTreeService;
-import ru.gov.sfr.aos.monitoring.services.SwitchingUnitService;
 import ru.gov.sfr.aos.monitoring.services.SystemBlockModelService;
 import ru.gov.sfr.aos.monitoring.services.SystemBlockOutDtoTreeService;
 import ru.gov.sfr.aos.monitoring.services.SystemBlockService;
+import ru.gov.sfr.aos.monitoring.services.TerminalDisplayModelService;
+import ru.gov.sfr.aos.monitoring.services.TerminalDisplayOutDtoTreeService;
+import ru.gov.sfr.aos.monitoring.services.TerminalDisplayService;
 import ru.gov.sfr.aos.monitoring.services.TerminalModelService;
 import ru.gov.sfr.aos.monitoring.services.TerminalOutDtoTreeService;
+import ru.gov.sfr.aos.monitoring.services.TerminalPrinterModelService;
+import ru.gov.sfr.aos.monitoring.services.TerminalPrinterOutDtoTreeService;
+import ru.gov.sfr.aos.monitoring.services.TerminalPrinterService;
+import ru.gov.sfr.aos.monitoring.services.TerminalProgramSoftwareService;
+import ru.gov.sfr.aos.monitoring.services.TerminalSensorModelService;
+import ru.gov.sfr.aos.monitoring.services.TerminalSensorOutDtoTreeService;
+import ru.gov.sfr.aos.monitoring.services.TerminalSensorService;
+import ru.gov.sfr.aos.monitoring.services.TerminalServerModelService;
+import ru.gov.sfr.aos.monitoring.services.TerminalServerOutDtoTreeService;
+import ru.gov.sfr.aos.monitoring.services.TerminalServerService;
 import ru.gov.sfr.aos.monitoring.services.TerminalService;
-import ru.gov.sfr.aos.monitoring.services.ThermoprinterModelService;
-import ru.gov.sfr.aos.monitoring.services.ThermoprinterOutDtoTreeService;
-import ru.gov.sfr.aos.monitoring.services.ThermoprinterService;
+import ru.gov.sfr.aos.monitoring.services.TerminalUpsModelService;
+import ru.gov.sfr.aos.monitoring.services.TerminalUpsOutDtoTreeService;
+import ru.gov.sfr.aos.monitoring.services.TerminalUpsService;
 import ru.gov.sfr.aos.monitoring.services.UpsModelService;
 import ru.gov.sfr.aos.monitoring.services.UpsOutDtoTreeService;
 import ru.gov.sfr.aos.monitoring.services.UpsService;
@@ -331,39 +364,17 @@ public class SvtViewController {
     @Autowired
     private TerminalOutDtoTreeService terminalOutDtoTreeService;
     @Autowired
-    private TerminalMapper terminalMapper;
-    @Autowired
-    private ThermoprinterModelService thermoprinterModelService;
-    @Autowired
-    private ThermoprinterService thermoprinterService;
-    @Autowired
-    private ThermoprinterOutDtoTreeService thermoprinterOutDtoTreeService;
-    @Autowired
-    private ThermoprinterMapper thermoprinterMapper;
-    @Autowired
     private DisplayModelService displayModelService;
     @Autowired
     private DisplayService displayService;
     @Autowired
     private DisplayOutDtoTreeService displayOutDtoTreeService;
     @Autowired
-    private DisplayMapper displayMapper;
-    @Autowired
-    private SwitchingUnitModelService swunitModelService;
-    @Autowired
-    private SwitchingUnitService swunitService;
-    @Autowired
-    private SwitchingUnitOutDtoTreeService swunitOutDtoTreeService;
-    @Autowired
-    private SwitchingUnitMapper swunitMapper;
-    @Autowired
     private SubDisplayModelService subDisplayModelService;
     @Autowired
     private AsuoService asuoService;
     @Autowired
     private AsuoOutDtoTreeService asuoOutDtoTreeService;
-    @Autowired
-    private AsuoMapper asuoMapper;
     @Autowired
     private FaxModelService faxModelService;
     @Autowired
@@ -389,6 +400,8 @@ public class SvtViewController {
     @Autowired
     private SwitchHubModelMapper switchHubModelMapper;
     @Autowired
+    private HubModelMapper hubModelMapper;
+    @Autowired
     private RouterModelMapper routerModelMapper;
     @Autowired
     private AtsModelMapper atsModelMapper;
@@ -398,6 +411,60 @@ public class SvtViewController {
     private InfomatModelMapper infomatModelMapper;
     @Autowired
     private SystemblockModelMapper sysblockModelMapper;
+    @Autowired
+    private HubModelService hubModelService;
+    @Autowired
+    private HubService hubService;
+    @Autowired
+    private HubOutDtoTreeService hubOutDtoTreeService;
+    @Autowired
+    private HubMapper hubMapper;
+    @Autowired
+    private TerminalDisplayService terminalDisplayService;
+    @Autowired
+    private TerminalDisplayOutDtoTreeService terminalDisplayOutDtoTreeService;
+    @Autowired
+    private TerminalDisplayModelService terminalDisplayModelService;
+    @Autowired
+    private TerminalDisplayModelMapper terminalDisplayModelMapper;
+    @Autowired
+    private TerminalUpsService terminalUpsService;
+    @Autowired
+    private TerminalUpsOutDtoTreeService terminalUpsOutDtoTreeService;
+    @Autowired
+    private TerminalPrinterService terminalPrinterService;
+    @Autowired
+    private TerminalPrinterOutDtoTreeService terminalPrinterOutDtoTreeService;
+    @Autowired
+    private TerminalPrinterModelService terminalPrinterModelService;
+    @Autowired
+    private TerminalPrinterModelMapper terminalPrinterModelMapper;
+    @Autowired
+    private TerminalUpsModelService terminalUpsModelService;
+    @Autowired
+    private TerminalUpsModelMapper terminalUpsModelMapper;
+    @Autowired
+    private TerminalServerService terminalServerService;
+    @Autowired
+    private TerminalServerOutDtoTreeService terminalServerOutDtoTreeService;
+    @Autowired
+    private TerminalServerModelService terminalServerModelService;
+    @Autowired
+    private TerminalServerModelMapper terminalServerModelMapper;
+    @Autowired
+    private TerminalSensorService terminalSensorService;
+    @Autowired
+    private TerminalSensorOutDtoTreeService terminalSensorOutDtoTreeService;
+    @Autowired
+    private TerminalSensorModelService terminalSensorModelService;
+    @Autowired
+    private TerminalSensorModelMapper terminalSensorModelMapper;
+    @Autowired
+    private TerminalProgramSoftwareService terminalProgramSoftwareService;
+    @Autowired
+    private TerminalModelMapper terminalModelMapper;
+    @Autowired
+    private DisplayModelMapper displayModelMapper;
     
 //  @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
     @GetMapping("/svt")
@@ -666,6 +733,7 @@ public class SvtViewController {
     @GetMapping("/phones")
     public String getPhones(Model model, @RequestParam(value="username", required=false) String username, 
             @RequestParam(value="inventaryNumber", required = false) String inventaryNumber, 
+            @RequestParam(value="serialNumber", required = false) String serialNumber, 
             @ModelAttribute FilterDto dto) {
         
         List<SvtDTO> filter = null;
@@ -678,7 +746,9 @@ public class SvtViewController {
             svtObjectsByEmployee = phoneService.getSvtObjectsByName(username, PlaceType.EMPLOYEE);
         } else if(null != inventaryNumber) {
             svtObjectsByEmployee = phoneService.getSvtObjectsByInventaryNumberAndPlace(inventaryNumber, PlaceType.EMPLOYEE);
-        } else {
+        }else if(null != serialNumber) {
+            svtObjectsByEmployee = phoneService.getSvtObjectsBySerialNumberAndPlace(serialNumber, PlaceType.EMPLOYEE);
+        }else {
             svtObjectsByEmployee = phoneService.getSvtObjectsByPlaceType(PlaceType.EMPLOYEE);
         }
         
@@ -691,10 +761,10 @@ public class SvtViewController {
         if(null != username) {
             svtObjectsByStorage = phoneService.getSvtObjectsByName(username, PlaceType.STORAGE);
         }else if(null != inventaryNumber) {
-        
             svtObjectsByStorage = phoneService.getSvtObjectsByInventaryNumberAndPlace(inventaryNumber, PlaceType.STORAGE);
-        
-        } else {
+        }else if(null != serialNumber) {
+            svtObjectsByStorage = phoneService.getSvtObjectsBySerialNumberAndPlace(serialNumber, PlaceType.STORAGE);
+        }else {
             svtObjectsByStorage = phoneService.getSvtObjectsByPlaceType(PlaceType.STORAGE);
         }
         
@@ -740,6 +810,7 @@ public class SvtViewController {
         }
         model.addAttribute("searchFIO", username);
         model.addAttribute("searchInventary", inventaryNumber);
+        model.addAttribute("searchSerial", serialNumber);
         model.addAttribute("filterDateBegin", dto.getYearCreatedOne());
         model.addAttribute("filterDateEnd", dto.getYearCreatedTwo());
         model.addAttribute("filterStatus", dto.getStatus());
@@ -759,6 +830,7 @@ public class SvtViewController {
     @GetMapping("/ups")
     public String getUps(Model model, @RequestParam(value="username",required=false) String username, 
             @RequestParam(value="inventaryNumber", required = false) String inventaryNumber, 
+            @RequestParam(value="serialNumber", required = false) String serialNumber, 
             @ModelAttribute FilterDto dto) {
         
         Map<Location, List<Ups>> svtObjectsByEmployee = null;
@@ -771,7 +843,9 @@ public class SvtViewController {
             svtObjectsByEmployee = upsService.getSvtObjectsByName(username, PlaceType.EMPLOYEE);
         }else if(null != inventaryNumber) {
             svtObjectsByEmployee = upsService.getSvtObjectsByInventaryNumberAndPlace(inventaryNumber, PlaceType.EMPLOYEE);
-        } else {
+        }else if(null != serialNumber) {
+            svtObjectsByEmployee = upsService.getSvtObjectsBySerialNumberAndPlace(serialNumber, PlaceType.EMPLOYEE);
+        }else {
             svtObjectsByEmployee = upsService.getSvtObjectsByPlaceType(PlaceType.EMPLOYEE);
         }
          treeSvtDtoByEmployee = upsOutDtoTreeService.getTreeSvtDtoByPlaceType(svtObjectsByEmployee)
@@ -784,10 +858,11 @@ public class SvtViewController {
             svtObjectsByStorage = upsService.getSvtObjectsByName(username, PlaceType.STORAGE);
         }else if(null != inventaryNumber) {
             svtObjectsByStorage = upsService.getSvtObjectsByInventaryNumberAndPlace(inventaryNumber, PlaceType.STORAGE);
-        } else {
+        }else if(null != serialNumber) {
+            svtObjectsByStorage = upsService.getSvtObjectsBySerialNumberAndPlace(serialNumber, PlaceType.STORAGE);
+        }else {
            svtObjectsByStorage = upsService.getSvtObjectsByPlaceType(PlaceType.STORAGE); 
         }
-        
            treeSvtDtoByStorage = upsOutDtoTreeService.getTreeSvtDtoByPlaceType(svtObjectsByStorage)
                 .stream()
                 .sorted((o1, o2) -> o1.getLocationName().compareTo(o2.getLocationName()))
@@ -830,6 +905,7 @@ public class SvtViewController {
         }
         model.addAttribute("searchFIO", username);
         model.addAttribute("searchInventary", inventaryNumber);
+        model.addAttribute("searchSerial", serialNumber);
         model.addAttribute("filterDateBegin", dto.getYearCreatedOne());
         model.addAttribute("filterDateEnd", dto.getYearCreatedTwo());
         model.addAttribute("filterStatus", dto.getStatus());
@@ -864,6 +940,7 @@ public class SvtViewController {
     @GetMapping("/upsforserver")
     public String getServerUps(Model model, @RequestParam(value="username", required=false) String username, 
             @RequestParam(value="inventaryNumber", required = false) String inventaryNumber, 
+            @RequestParam(value="serialNumber", required = false) String serialNumber, 
             @ModelAttribute FilterDto dto) {
         Map<Location, List<Ups>> svtObjectsByEmployee = null;
         Map<Location, List<Ups>> svtObjectsByStorage = null;
@@ -875,7 +952,9 @@ public class SvtViewController {
             svtObjectsByEmployee = upsService.getSvtObjectsByName(username, PlaceType.SERVERROOM);
         }else if(null != inventaryNumber) {
             svtObjectsByEmployee = upsService.getSvtObjectsByInventaryNumberAndPlace(inventaryNumber, PlaceType.SERVERROOM);
-        } else {
+        }else if(null != serialNumber) {
+            svtObjectsByEmployee = upsService.getSvtObjectsBySerialNumberAndPlace(serialNumber, PlaceType.SERVERROOM);
+        }else {
             svtObjectsByEmployee = upsService.getSvtObjectsByPlaceType(PlaceType.SERVERROOM);
         }
         treeSvtDtoByEmployee = upsOutDtoTreeService.getTreeSvtDtoByPlaceType(svtObjectsByEmployee)
@@ -886,6 +965,10 @@ public class SvtViewController {
         
         if(null != username) {
             svtObjectsByStorage = upsService.getSvtObjectsByName(username, PlaceType.STORAGE);
+        }else if(null != inventaryNumber) {
+            svtObjectsByStorage = upsService.getSvtObjectsByInventaryNumberAndPlace(inventaryNumber, PlaceType.STORAGE);
+        }else if(null != serialNumber) {
+            svtObjectsByStorage = upsService.getSvtObjectsBySerialNumberAndPlace(serialNumber, PlaceType.STORAGE);
         } else {
            svtObjectsByStorage = upsService.getSvtObjectsByPlaceType(PlaceType.STORAGE); 
         }
@@ -933,6 +1016,7 @@ public class SvtViewController {
         }
         model.addAttribute("searchFIO", username);
         model.addAttribute("searchInventary", inventaryNumber);
+        model.addAttribute("searchSerial", serialNumber);
         model.addAttribute("filterDateBegin", dto.getYearCreatedOne());
         model.addAttribute("filterDateEnd", dto.getYearCreatedTwo());
         model.addAttribute("filterStatus", dto.getStatus());
@@ -1052,6 +1136,7 @@ public class SvtViewController {
     @GetMapping("/monitors")
     public String getMonitors(Model model, @RequestParam(value="username",required=false) String username, 
              @RequestParam(value="inventaryNumber", required = false) String inventaryNumber,
+             @RequestParam(value="serialNumber", required = false) String serialNumber,
             @ModelAttribute FilterDto dto) {
         Map<Location, List<Monitor>> svtObjectsByEmployee = null;
         List<LocationByTreeDto> treeSvtDtoByEmployee = null;
@@ -1063,6 +1148,8 @@ public class SvtViewController {
         svtObjectsByEmployee = monitorService.getSvtObjectsByName(username, PlaceType.EMPLOYEE);
             } else if(null != inventaryNumber) {
                 svtObjectsByEmployee = monitorService.getSvtObjectsByInventaryNumberAndPlace(inventaryNumber, PlaceType.EMPLOYEE);
+            }else if(null != serialNumber) {
+                svtObjectsByEmployee = monitorService.getSvtObjectsBySerialNumberAndPlace(serialNumber, PlaceType.EMPLOYEE);
             } else {
             svtObjectsByEmployee = monitorService.getSvtObjectsByPlaceType(PlaceType.EMPLOYEE);
             }
@@ -1074,6 +1161,8 @@ public class SvtViewController {
              svtObjectsByStorage = monitorService.getSvtObjectsByName(username, PlaceType.STORAGE);
          } else if(null != inventaryNumber) {
              svtObjectsByStorage = monitorService.getSvtObjectsByInventaryNumberAndPlace(inventaryNumber, PlaceType.STORAGE);
+         }else if(null != serialNumber) {
+             svtObjectsByStorage = monitorService.getSvtObjectsBySerialNumberAndPlace(serialNumber, PlaceType.STORAGE);
          } else {
             svtObjectsByStorage = monitorService.getSvtObjectsByPlaceType(PlaceType.STORAGE);
         }
@@ -1120,6 +1209,7 @@ public class SvtViewController {
         }
         model.addAttribute("searchFIO", username);
         model.addAttribute("searchInventary", inventaryNumber);
+        model.addAttribute("searchSerial", serialNumber);
         model.addAttribute("filterDateBegin", dto.getYearCreatedOne());
         model.addAttribute("filterDateEnd", dto.getYearCreatedTwo());
         model.addAttribute("filterStatus", dto.getStatus());
@@ -1210,6 +1300,7 @@ public class SvtViewController {
     @GetMapping("/sysblocks")
     public String getSysBlocks(Model model, @RequestParam(value="username",required=false) String username,  
             @RequestParam(value="inventaryNumber", required = false) String inventaryNumber,
+            @RequestParam(value="serialNumber", required = false) String serialNumber,
             @ModelAttribute FilterDto dto) {
         Map<Location, List<SystemBlock>> svtObjectsByEmployee = null;
          List<SvtDTO> filter = null;
@@ -1222,7 +1313,9 @@ public class SvtViewController {
             svtObjectsByEmployee = systemblockService.getSvtObjectsByName(username, PlaceType.EMPLOYEE);
         }else if(null != inventaryNumber) {
             svtObjectsByEmployee = systemblockService.getSvtObjectsByInventaryNumberAndPlace(inventaryNumber, PlaceType.EMPLOYEE);
-        } else {
+        }else if(null != serialNumber) {
+            svtObjectsByEmployee = systemblockService.getSvtObjectsBySerialNumberAndPlace(serialNumber, PlaceType.EMPLOYEE);
+        }else {
             svtObjectsByEmployee = systemblockService.getSvtObjectsByPlaceType(PlaceType.EMPLOYEE);
         }
         treeSvtDtoByEmployee = systemBlockOutDtoTreeService.getTreeSvtDtoByPlaceType(svtObjectsByEmployee)
@@ -1235,7 +1328,9 @@ public class SvtViewController {
             svtObjectsByStorage = systemblockService.getSvtObjectsByName(username, PlaceType.STORAGE);
         }else if(null != inventaryNumber) {
             svtObjectsByStorage = systemblockService.getSvtObjectsByInventaryNumberAndPlace(inventaryNumber, PlaceType.STORAGE);
-        } else {
+        }else if(null != serialNumber) {
+            svtObjectsByStorage = systemblockService.getSvtObjectsBySerialNumberAndPlace(serialNumber, PlaceType.STORAGE);
+        }else {
             svtObjectsByStorage = systemblockService.getSvtObjectsByPlaceType(PlaceType.STORAGE);
         }
         treeSvtDtoByStorage = systemBlockOutDtoTreeService.getTreeSvtDtoByPlaceType(svtObjectsByStorage)
@@ -1281,6 +1376,7 @@ public class SvtViewController {
         }
         model.addAttribute("searchFIO", username);
         model.addAttribute("searchInventary", inventaryNumber);
+        model.addAttribute("searchSerial", serialNumber);
         model.addAttribute("filterDateBegin", dto.getYearCreatedOne());
         model.addAttribute("filterDateEnd", dto.getYearCreatedTwo());
         model.addAttribute("filterStatus", dto.getStatus());
@@ -1962,6 +2058,7 @@ public class SvtViewController {
     @GetMapping("/scanner")
     public String getScanners(Model model, @RequestParam(value="username", required=false) String username, 
             @RequestParam(value="inventaryNumber", required = false) String inventaryNumber,
+            @RequestParam(value="serialNumber", required = false) String serialNumber,
             @ModelAttribute FilterDto dto) {
         
         Map<Location, List<Scanner>> svtObjectsByEmployee = null;
@@ -1974,6 +2071,8 @@ public class SvtViewController {
             svtObjectsByEmployee = scannerService.getSvtObjectsByName(username, PlaceType.EMPLOYEE);
         }else if(null != inventaryNumber) {
              svtObjectsByEmployee = scannerService.getSvtObjectsByInventaryNumberAndPlace(inventaryNumber, PlaceType.EMPLOYEE);
+        }else if(null != serialNumber) {
+             svtObjectsByEmployee = scannerService.getSvtObjectsBySerialNumberAndPlace(serialNumber, PlaceType.EMPLOYEE);
         } else {
             svtObjectsByEmployee = scannerService.getSvtObjectsByPlaceType(PlaceType.EMPLOYEE);
         }
@@ -1987,6 +2086,8 @@ public class SvtViewController {
             svtObjectsByStorage = scannerService.getSvtObjectsByName(username, PlaceType.STORAGE);
         } else if(null != inventaryNumber) {
             svtObjectsByStorage = scannerService.getSvtObjectsByInventaryNumberAndPlace(inventaryNumber, PlaceType.STORAGE);
+        }else if(null != serialNumber) {
+            svtObjectsByStorage = scannerService.getSvtObjectsBySerialNumberAndPlace(serialNumber, PlaceType.STORAGE);
         } else {
            svtObjectsByStorage = scannerService.getSvtObjectsByPlaceType(PlaceType.STORAGE); 
         }
@@ -2034,6 +2135,7 @@ public class SvtViewController {
         }
         model.addAttribute("searchFIO", username);
         model.addAttribute("searchInventary", inventaryNumber);
+        model.addAttribute("searchSerial", serialNumber);
         model.addAttribute("filterDateBegin", dto.getYearCreatedOne());
         model.addAttribute("filterDateEnd", dto.getYearCreatedTwo());
         model.addAttribute("filterStatus", dto.getStatus());
@@ -2138,6 +2240,7 @@ public class SvtViewController {
     @GetMapping("/server")
     public String getServers(Model model, @RequestParam(value="username",required=false) String username, 
             @RequestParam(value="inventaryNumber", required = false) String inventaryNumber,
+            @RequestParam(value="serialNumber", required = false) String serialNumber,
             @ModelAttribute FilterDto dto) {
         Map<Location, List<Server>> svtObjectsByEmployee = null;
         List<LocationByTreeDto> treeSvtDtoByEmployee = null;
@@ -2149,6 +2252,8 @@ public class SvtViewController {
             svtObjectsByEmployee = serverService.getSvtObjectsByName(username, PlaceType.SERVERROOM);
         }else if(null != inventaryNumber) {
             svtObjectsByEmployee = serverService.getSvtObjectsByInventaryNumberAndPlace(inventaryNumber, PlaceType.SERVERROOM);
+        }else if(null != serialNumber) {
+            svtObjectsByEmployee = serverService.getSvtObjectsBySerialNumberAndPlace(serialNumber, PlaceType.SERVERROOM);
         } else {
             svtObjectsByEmployee = serverService.getSvtObjectsByPlaceType(PlaceType.SERVERROOM);
         }
@@ -2162,6 +2267,8 @@ public class SvtViewController {
             svtObjectsByStorage = serverService.getSvtObjectsByName(username, PlaceType.STORAGE);
         }else if(null != inventaryNumber) {
             svtObjectsByStorage = serverService.getSvtObjectsByInventaryNumberAndPlace(inventaryNumber, PlaceType.STORAGE);
+        }else if(null != serialNumber) {
+            svtObjectsByStorage = serverService.getSvtObjectsBySerialNumberAndPlace(serialNumber, PlaceType.STORAGE);
         } else {
             svtObjectsByStorage = serverService.getSvtObjectsByPlaceType(PlaceType.STORAGE);
         }
@@ -2208,6 +2315,7 @@ public class SvtViewController {
         }
         model.addAttribute("searchFIO", username);
         model.addAttribute("searchInventary", inventaryNumber);
+        model.addAttribute("searchSerial", serialNumber);
         model.addAttribute("filterDateBegin", dto.getYearCreatedOne());
         model.addAttribute("filterDateEnd", dto.getYearCreatedTwo());
         model.addAttribute("filterStatus", dto.getStatus());
@@ -2277,6 +2385,24 @@ public class SvtViewController {
         return "models";
     }
     
+    
+    
+             //      @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
+    @GetMapping("/mhub")
+    public String getModelHub(Model model) {
+
+        List<HubModel> models = hubModelService.getAllActualModels();
+        List<SvtModelDto> modelDtoes = hubModelMapper.getListDtoes(models);
+        model.addAttribute("dtoes", modelDtoes);
+        model.addAttribute("namePage", "Модели коммутаторов");
+        model.addAttribute("attribute", "mhub");
+        model.addAttribute("manufacturersSaveLink", "/save-hub-manufacturer");
+        model.addAttribute("modelsByManufacturerLink", "/get-hub-modelsby-manufacturer?id=");
+        model.addAttribute("manufacturersLink", "/get-hub-manufacturers");
+        return "models";
+    }
+    
+    
 //    @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
  //   @Log
     @PostMapping("/mswitch")
@@ -2310,10 +2436,177 @@ public class SvtViewController {
     }
     
     
+    
+    
+    //    @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
+ //   @Log
+    @PostMapping("/mhub")
+    public ResponseEntity<String> saveModelHub(@RequestBody SvtModelDto dto) throws ObjectAlreadyExists {
+        HubModel hubModel = hubModelMapper.getModel(dto);
+        try{
+            hubModelService.saveModel(hubModel);
+        } catch(Exception e) {
+            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity(HttpStatus.ACCEPTED);
+    }
+    
+    
+    @PutMapping("/mhub")
+    public ResponseEntity<String> updateModelHub(@RequestBody SvtModelDto dto) throws ObjectAlreadyExists {
+        HubModel hubModel = hubModelMapper.getModel(dto);
+        try{
+            hubModelService.update(hubModel);
+        }catch(Exception e) {
+            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity(HttpStatus.ACCEPTED);
+    }
+    
+ //     @SendArchive
+    @DeleteMapping("/mhubarchived")
+    public ResponseEntity<String> sendModelHubToArchive(@RequestBody ArchivedDto dto) throws ObjectAlreadyExists {
+        hubModelService.sendModelToArchive(dto.getId());
+        return new ResponseEntity(HttpStatus.ACCEPTED);
+    }
+
+    
+     //  @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
+    @GetMapping("/hub")
+    public String getHub(Model model, @RequestParam(value="username",required=false) String username, 
+            @RequestParam(value="inventaryNumber", required = false) String inventaryNumber,
+            @RequestParam(value="serialNumber", required = false) String serialNumber,
+            @ModelAttribute FilterDto dto) {
+        Map<Location, List<Hub>> svtObjectsByEmployee = null;
+        List<LocationByTreeDto> treeSvtDtoByEmployee = null;
+        Map<Location, List<Hub>> svtObjectsByStorage = null;
+        List<LocationByTreeDto> treeSvtDtoByStorage = null;
+        List<HubDto> filter = null;
+        if(dto.model == null && dto.status == null && dto.yearCreatedOne == null && dto.yearCreatedTwo == null) {
+        if(null != username) {
+            svtObjectsByEmployee = hubService.getSvtObjectsByName(username, PlaceType.SERVERROOM);
+        }else if(null != inventaryNumber) {
+            svtObjectsByEmployee = hubService.getSvtObjectsByInventaryNumberAndPlace(inventaryNumber, PlaceType.SERVERROOM);
+        }else if(null != serialNumber) {
+            svtObjectsByEmployee = hubService.getSvtObjectsBySerialNumberAndPlace(serialNumber, PlaceType.SERVERROOM);
+        } else {
+            svtObjectsByEmployee = hubService.getSvtObjectsByPlaceType(PlaceType.SERVERROOM);
+        }
+        treeSvtDtoByEmployee = hubOutDtoTreeService.getTreeSvtDtoByPlaceType(svtObjectsByEmployee)
+                .stream()
+                .sorted((o1, o2) -> o1.getLocationName().compareTo(o2.getLocationName()))
+                .collect(Collectors.toList());
+        
+        
+        if(null != username) {
+            svtObjectsByStorage = hubService.getSvtObjectsByName(username, PlaceType.STORAGE);
+        } else if(null != inventaryNumber) {
+            svtObjectsByStorage = hubService.getSvtObjectsByInventaryNumberAndPlace(inventaryNumber, PlaceType.STORAGE);
+        }else if(null != serialNumber) {
+            svtObjectsByStorage = hubService.getSvtObjectsBySerialNumberAndPlace(serialNumber, PlaceType.STORAGE);
+        } else {
+            svtObjectsByStorage = hubService.getSvtObjectsByPlaceType(PlaceType.STORAGE);
+        }
+        treeSvtDtoByStorage = hubOutDtoTreeService.getTreeSvtDtoByPlaceType(svtObjectsByStorage)
+                .stream()
+                .sorted((o1, o2) -> o1.getLocationName().compareTo(o2.getLocationName()))
+                .collect(Collectors.toList());
+        } else {
+        
+            List<Hub> hubByFilter = hubService.getHubByFilter(dto);
+             filter = new ArrayList<>();
+            for(Hub p : hubByFilter) {
+                HubDto hubDto = hubMapper.getDto(p);
+                filter.add(hubDto);
+            }
+            
+            svtObjectsByEmployee = hubService.getHubByPlaceTypeAndFilter(PlaceType.SERVERROOM, hubByFilter);
+            treeSvtDtoByEmployee = hubOutDtoTreeService.getTreeSvtDtoByPlaceType(svtObjectsByEmployee)
+                .stream()
+                .sorted((o1, o2) -> o1.getLocationName().compareTo(o2.getLocationName()))
+                .collect(Collectors.toList());
+            
+            svtObjectsByStorage = hubService.getHubByPlaceTypeAndFilter(PlaceType.STORAGE, hubByFilter);
+               treeSvtDtoByStorage = hubOutDtoTreeService.getTreeSvtDtoByPlaceType(svtObjectsByStorage)
+                .stream()
+                .sorted((o1, o2) -> o1.getLocationName().compareTo(o2.getLocationName()))
+                .collect(Collectors.toList());
+            
+        }
+        
+        int amount = SvtViewController.getAmountDevices(treeSvtDtoByEmployee, treeSvtDtoByStorage);
+        String filterLocation = null;
+        if(null != dto.getLocation() && !dto.getLocation().isEmpty() && !dto.getLocation().isBlank()) {
+            filterLocation = locationService.getLocationById(Long.parseLong(dto.getLocation())).getName();
+        }
+        
+        String filterModel = null;
+        if(null != dto.getModel() && !dto.getModel().isBlank() && !dto.getModel().isEmpty()) {
+            Optional<HubModel> optModel = hubModelService.getById(Long.parseLong(dto.getModel()));
+            if(optModel.isPresent()) {
+                filterModel = optModel.get().getModel();
+            }
+            
+        }
+        model.addAttribute("searchFIO", username);
+        model.addAttribute("searchInventary", inventaryNumber);
+        model.addAttribute("searchSerial", serialNumber);
+        model.addAttribute("filterDateBegin", dto.getYearCreatedOne());
+        model.addAttribute("filterDateEnd", dto.getYearCreatedTwo());
+        model.addAttribute("filterStatus", dto.getStatus());
+        model.addAttribute("filterModel", filterModel);
+        model.addAttribute("filterLocation", filterLocation);
+        model.addAttribute("dtoes", treeSvtDtoByEmployee);
+        model.addAttribute("dtoesStorage", treeSvtDtoByStorage);
+        model.addAttribute("attribute", "hub");
+        model.addAttribute("placeAttribute", "serverroom");
+        model.addAttribute("namePage","Коммутаторы");
+        model.addAttribute("amountDevice", amount);
+        return "svtobj";
+    }
+    
+ //   @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
+ //   @Log
+    @PostMapping("/hub")
+    public ResponseEntity<String> saveHub(@RequestBody HubDto dto) throws ObjectAlreadyExists {
+        hubService.createSvtObj(dto);
+        return new ResponseEntity(HttpStatus.ACCEPTED);
+    }
+    
+           //      @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
+ //   @UpdLog
+    @PutMapping("/hubtostor")
+    public ResponseEntity<String> sendToStorageHub (@RequestBody HubDto dto) throws ObjectAlreadyExists {
+        Hub hub = hubService.getById(dto.getId());
+        hubService.sendToStorage(hub);
+        return new ResponseEntity(HttpStatus.ACCEPTED);
+        
+    }
+    
+
+ //   @UpdLog
+     @PutMapping("/hub")
+    public ResponseEntity<String> updateHub (@RequestBody HubDto dto) throws ObjectAlreadyExists {
+        hubService.updateSvtObj(dto);
+        return new ResponseEntity(HttpStatus.ACCEPTED);
+     
+    }
+    
+    //   @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
+ //   @SendArchive
+    @DeleteMapping("/hubarchived")
+    public ResponseEntity<String> sendHubToArchive(@RequestBody ArchivedDto dto) throws ObjectAlreadyExists {
+        hubService.svtObjToArchive(dto);
+        return new ResponseEntity(HttpStatus.ACCEPTED);
+    }
+    
+    
+    
      //  @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
     @GetMapping("/switch")
     public String getSwitchHub(Model model, @RequestParam(value="username",required=false) String username, 
             @RequestParam(value="inventaryNumber", required = false) String inventaryNumber,
+            @RequestParam(value="serialNumber", required = false) String serialNumber,
             @ModelAttribute FilterDto dto) {
         Map<Location, List<SwitchHub>> svtObjectsByEmployee = null;
         List<LocationByTreeDto> treeSvtDtoByEmployee = null;
@@ -2325,6 +2618,8 @@ public class SvtViewController {
             svtObjectsByEmployee = switchHubService.getSvtObjectsByName(username, PlaceType.SERVERROOM);
         }else if(null != inventaryNumber) {
             svtObjectsByEmployee = switchHubService.getSvtObjectsByInventaryNumberAndPlace(inventaryNumber, PlaceType.SERVERROOM);
+        }else if(null != serialNumber) {
+            svtObjectsByEmployee = switchHubService.getSvtObjectsBySerialNumberAndPlace(serialNumber, PlaceType.SERVERROOM);
         } else {
             svtObjectsByEmployee = switchHubService.getSvtObjectsByPlaceType(PlaceType.SERVERROOM);
         }
@@ -2338,6 +2633,8 @@ public class SvtViewController {
             svtObjectsByStorage = switchHubService.getSvtObjectsByName(username, PlaceType.STORAGE);
         } else if(null != inventaryNumber) {
             svtObjectsByStorage = switchHubService.getSvtObjectsByInventaryNumberAndPlace(inventaryNumber, PlaceType.STORAGE);
+        } else if(null != serialNumber) {
+            svtObjectsByStorage = switchHubService.getSvtObjectsBySerialNumberAndPlace(serialNumber, PlaceType.STORAGE);
         } else {
             svtObjectsByStorage = switchHubService.getSvtObjectsByPlaceType(PlaceType.STORAGE);
         }
@@ -2384,6 +2681,7 @@ public class SvtViewController {
         }
         model.addAttribute("searchFIO", username);
         model.addAttribute("searchInventary", inventaryNumber);
+        model.addAttribute("searchSerial", serialNumber);
         model.addAttribute("filterDateBegin", dto.getYearCreatedOne());
         model.addAttribute("filterDateEnd", dto.getYearCreatedTwo());
         model.addAttribute("filterStatus", dto.getStatus());
@@ -2485,6 +2783,7 @@ public class SvtViewController {
     @GetMapping("/router")
     public String getRouter(Model model, @RequestParam(value="username",required=false) String username, 
             @RequestParam(value="inventaryNumber", required = false) String inventaryNumber,
+            @RequestParam(value="serialNumber", required = false) String serialNumber,
             @ModelAttribute FilterDto dto) {
         Map<Location, List<Router>> svtObjectsByEmployee = null;
         List<LocationByTreeDto> treeSvtDtoByEmployee = null;
@@ -2496,7 +2795,9 @@ public class SvtViewController {
             svtObjectsByEmployee = routerService.getSvtObjectsByName(username, PlaceType.SERVERROOM);
         } else if(null != inventaryNumber) {
             svtObjectsByEmployee = routerService.getSvtObjectsByInventaryNumberAndPlace(inventaryNumber, PlaceType.SERVERROOM);
-        } else {
+        } else if(null != serialNumber) {
+            svtObjectsByEmployee = routerService.getSvtObjectsBySerialNumberAndPlace(serialNumber, PlaceType.SERVERROOM);
+        }else {
             svtObjectsByEmployee = routerService.getSvtObjectsByPlaceType(PlaceType.SERVERROOM);
         }
         treeSvtDtoByEmployee = routerOutDtoTreeService.getTreeSvtDtoByPlaceType(svtObjectsByEmployee)
@@ -2551,6 +2852,7 @@ public class SvtViewController {
         }
         model.addAttribute("searchFIO", username);
         model.addAttribute("searchInventary", inventaryNumber);
+        model.addAttribute("searchSerial", serialNumber);
         model.addAttribute("filterDateBegin", dto.getYearCreatedOne());
         model.addAttribute("filterDateEnd", dto.getYearCreatedTwo());
         model.addAttribute("filterStatus", dto.getStatus());
@@ -2653,6 +2955,7 @@ public class SvtViewController {
     @GetMapping("/ats")
     public String getAts(Model model, @RequestParam(value="username",required=false) String username, 
             @RequestParam(value="inventaryNumber", required = false) String inventaryNumber,
+            @RequestParam(value="serialNumber", required = false) String serialNumber,
             @ModelAttribute FilterDto dto) {
         Map<Location, List<Ats>> svtObjectsByEmployee = null;
         List<LocationByTreeDto> treeSvtDtoByEmployee = null;
@@ -2664,6 +2967,8 @@ public class SvtViewController {
             svtObjectsByEmployee = atsService.getSvtObjectsByName(username, PlaceType.SERVERROOM);
         }else if(null != inventaryNumber) {
         svtObjectsByEmployee = atsService.getSvtObjectsByInventaryNumberAndPlace(inventaryNumber, PlaceType.SERVERROOM);
+        }else if(null != serialNumber) {
+        svtObjectsByEmployee = atsService.getSvtObjectsBySerialNumberAndPlace(serialNumber, PlaceType.SERVERROOM);
         } else {
             svtObjectsByEmployee = atsService.getSvtObjectsByPlaceType(PlaceType.SERVERROOM);
         }
@@ -2677,6 +2982,8 @@ public class SvtViewController {
             svtObjectsByStorage = atsService.getSvtObjectsByName(username, PlaceType.STORAGE);
         }else if(null != inventaryNumber) {
             svtObjectsByStorage = atsService.getSvtObjectsByInventaryNumberAndPlace(inventaryNumber, PlaceType.STORAGE);
+        }else if(null != serialNumber) {
+            svtObjectsByStorage = atsService.getSvtObjectsBySerialNumberAndPlace(serialNumber, PlaceType.STORAGE);
         } else {
             svtObjectsByStorage = atsService.getSvtObjectsByPlaceType(PlaceType.STORAGE);
         }
@@ -2721,6 +3028,7 @@ public class SvtViewController {
         }
         model.addAttribute("searchFIO", username);
         model.addAttribute("searchInventary", inventaryNumber);
+        model.addAttribute("searchSerial", serialNumber);
         model.addAttribute("filterDateBegin", dto.getYearCreatedOne());
         model.addAttribute("filterDateEnd", dto.getYearCreatedTwo());
         model.addAttribute("filterStatus", dto.getStatus());
@@ -2822,6 +3130,7 @@ public class SvtViewController {
     @GetMapping("/conditioner")
     public String getConditioner(Model model, @RequestParam(value="username", required=false) String username,
             @RequestParam(value="inventaryNumber", required = false) String inventaryNumber,
+            @RequestParam(value="serialNumber", required = false) String serialNumber,
             @ModelAttribute FilterDto dto) {
         Map<Location, List<Conditioner>> svtObjectsByEmployee = null;
         List<LocationByTreeDto> treeSvtDtoByEmployee = null;
@@ -2833,6 +3142,8 @@ public class SvtViewController {
             svtObjectsByEmployee = conditionerService.getSvtObjectsByName(username, PlaceType.SERVERROOM);
         }else if(null != inventaryNumber) {
         svtObjectsByEmployee = conditionerService.getSvtObjectsByInventaryNumberAndPlace(inventaryNumber, PlaceType.SERVERROOM);
+        }else if(null != serialNumber) {
+        svtObjectsByEmployee = conditionerService.getSvtObjectsBySerialNumberAndPlace(serialNumber, PlaceType.SERVERROOM);
         } else {
             svtObjectsByEmployee = conditionerService.getSvtObjectsByPlaceType(PlaceType.SERVERROOM);
         }
@@ -2846,7 +3157,9 @@ public class SvtViewController {
             svtObjectsByStorage = conditionerService.getSvtObjectsByName(username, PlaceType.STORAGE);
         }else if(null != inventaryNumber) {
         svtObjectsByStorage = conditionerService.getSvtObjectsByInventaryNumberAndPlace(inventaryNumber, PlaceType.STORAGE);
-        } else {
+        } else if(null != serialNumber) {
+        svtObjectsByStorage = conditionerService.getSvtObjectsBySerialNumberAndPlace(serialNumber, PlaceType.STORAGE);
+        }else {
             svtObjectsByStorage = conditionerService.getSvtObjectsByPlaceType(PlaceType.STORAGE);
         }
         treeSvtDtoByStorage = conditionerOutDtoTreeService.getTreeSvtDtoByPlaceType(svtObjectsByStorage)
@@ -2891,6 +3204,7 @@ public class SvtViewController {
         }
         model.addAttribute("searchFIO", username);
         model.addAttribute("searchInventary", inventaryNumber);
+        model.addAttribute("searchSerial", serialNumber);
         model.addAttribute("filterDateBegin", dto.getYearCreatedOne());
         model.addAttribute("filterDateEnd", dto.getYearCreatedTwo());
         model.addAttribute("filterStatus", dto.getStatus());
@@ -2995,6 +3309,7 @@ public class SvtViewController {
     @GetMapping("/fax")
     public String getFax(Model model, @RequestParam(value="username", required=false) String username, 
             @RequestParam(value="inventaryNumber", required = false) String inventaryNumber,
+            @RequestParam(value="serialNumber", required = false) String serialNumber,
             @ModelAttribute FilterDto dto) {
         Map<Location, List<Fax>> svtObjectsByEmployee = null;
         List<LocationByTreeDto> treeSvtDtoByEmployee = null;
@@ -3006,6 +3321,8 @@ public class SvtViewController {
             svtObjectsByEmployee = faxService.getSvtObjectsByName(username, PlaceType.OFFICEEQUIPMENT);
         }else if(null != inventaryNumber) {
              svtObjectsByEmployee = faxService.getSvtObjectsByInventaryNumberAndPlace(inventaryNumber, PlaceType.OFFICEEQUIPMENT);
+        }else if(null != serialNumber) {
+             svtObjectsByEmployee = faxService.getSvtObjectsBySerialNumberAndPlace(serialNumber, PlaceType.OFFICEEQUIPMENT);
         } else {
             svtObjectsByEmployee = faxService.getSvtObjectsByPlaceType(PlaceType.OFFICEEQUIPMENT);
         }
@@ -3019,6 +3336,8 @@ public class SvtViewController {
             svtObjectsByStorage = faxService.getSvtObjectsByName(username, PlaceType.STORAGE);
         }else if(null != inventaryNumber) {
             svtObjectsByStorage = faxService.getSvtObjectsByInventaryNumberAndPlace(inventaryNumber, PlaceType.STORAGE);
+        }else if(null != serialNumber) {
+            svtObjectsByStorage = faxService.getSvtObjectsBySerialNumberAndPlace(serialNumber, PlaceType.STORAGE);
         } else {
             svtObjectsByStorage = faxService.getSvtObjectsByPlaceType(PlaceType.STORAGE);
         }
@@ -3064,6 +3383,7 @@ public class SvtViewController {
         }
         model.addAttribute("searchFIO", username);
         model.addAttribute("searchInventary", inventaryNumber);
+        model.addAttribute("searchSerial", serialNumber);
         model.addAttribute("filterDateBegin", dto.getYearCreatedOne());
         model.addAttribute("filterDateEnd", dto.getYearCreatedTwo());
         model.addAttribute("filterStatus", dto.getStatus());
@@ -3165,6 +3485,7 @@ public class SvtViewController {
     @GetMapping("/infomat")
     public String getInfomat(Model model, @RequestParam(value="username", required = false) String username, 
             @RequestParam(value="inventaryNumber", required = false) String inventaryNumber,
+            @RequestParam(value="serialNumber", required = false) String serialNumber,
             @ModelAttribute FilterDto dto) {
         Map<Location, List<Infomat>> svtObjectsByEmployee = null;
         List<LocationByTreeDto> treeSvtDtoByEmployee = null;
@@ -3176,7 +3497,9 @@ public class SvtViewController {
             svtObjectsByEmployee = infomatService.getSvtObjectsByName(username, PlaceType.OFFICEEQUIPMENT);
         }else if(null != inventaryNumber) {
         svtObjectsByEmployee = infomatService.getSvtObjectsByInventaryNumberAndPlace(inventaryNumber, PlaceType.OFFICEEQUIPMENT);
-        } else {
+        } else if(null != serialNumber) {
+        svtObjectsByEmployee = infomatService.getSvtObjectsBySerialNumberAndPlace(serialNumber, PlaceType.OFFICEEQUIPMENT);
+        }else {
             svtObjectsByEmployee = infomatService.getSvtObjectsByPlaceType(PlaceType.OFFICEEQUIPMENT);
         }
        treeSvtDtoByEmployee = infomatOutDtoTreeService.getTreeSvtDtoByPlaceType(svtObjectsByEmployee)
@@ -3189,7 +3512,9 @@ public class SvtViewController {
             svtObjectsByStorage = infomatService.getSvtObjectsByName(username, PlaceType.STORAGE);
         }else if(null != inventaryNumber) {
             svtObjectsByStorage = infomatService.getSvtObjectsByInventaryNumberAndPlace(inventaryNumber, PlaceType.STORAGE);
-        } else {
+        } else if(null != serialNumber) {
+            svtObjectsByStorage = infomatService.getSvtObjectsBySerialNumberAndPlace(serialNumber, PlaceType.STORAGE);
+        }else {
             svtObjectsByStorage = infomatService.getSvtObjectsByPlaceType(PlaceType.STORAGE);
         }
         treeSvtDtoByStorage = infomatOutDtoTreeService.getTreeSvtDtoByPlaceType(svtObjectsByStorage)
@@ -3234,6 +3559,7 @@ public class SvtViewController {
         }
         model.addAttribute("searchFIO", username);
         model.addAttribute("searchInventary", inventaryNumber);
+        model.addAttribute("searchSerial", serialNumber);
         model.addAttribute("filterDateBegin", dto.getYearCreatedOne());
         model.addAttribute("filterDateEnd", dto.getYearCreatedTwo());
         model.addAttribute("filterStatus", dto.getStatus());
@@ -3288,18 +3614,143 @@ public class SvtViewController {
     @GetMapping("/mterminal")
     public String getModelTerminal(Model model) {
         List<TerminalModel> terminalModels = terminalModelService.getAllActualModels();
-        List<SvtModelDto> getTerminalModelsDtoes = svtModelMapper.getModelTerminalDtoes(terminalModels);
+        List<SvtModelDto> getTerminalModelsDtoes = terminalModelMapper.getListDtoes(terminalModels);
         model.addAttribute("dtoes", getTerminalModelsDtoes);
         model.addAttribute("namePage", "Модели терминалов");
         model.addAttribute("attribute", "mterminal");
+        model.addAttribute("manufacturersSaveLink", "/save-terminal-manufacturer");
+        model.addAttribute("modelsByManufacturerLink", "/get-models-terminal-by-manufacturer?id=");
+        model.addAttribute("manufacturersLink", "/get-terminal-manufacturers");
         return "models";
     }
+    
+          //      @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
+    @GetMapping("/mterminal-printer")
+    public String getModelTerminalPrinter(Model model) {
+        List<TerminalPrinterModel> terminalModelsPrinter = terminalPrinterModelService.getAllActualModels();
+        List<SvtModelDto> getTerminalModelsDtoes = terminalPrinterModelMapper.getListDtoes(terminalModelsPrinter);
+        model.addAttribute("dtoes", getTerminalModelsDtoes);
+        model.addAttribute("namePage", "Модели принтеров терминала");
+        model.addAttribute("attribute", "mterminalPrinter");
+        model.addAttribute("manufacturersSaveLink", "/save-terminal-printer-manufacturer");
+        model.addAttribute("modelsByManufacturerLink", "/get-models-terminal-printer-by-manufacturer?id=");
+        model.addAttribute("manufacturersLink", "/get-terminal-printer-manufacturers");
+        return "models";
+    }
+    
+    
+             //      @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
+    @GetMapping("/mterminal-display")
+    public String getModelTerminalDisplay(Model model) {
+        List<TerminalDisplayModel> terminalDisplayModels = terminalDisplayModelService.getAllActualModels();
+        List<SvtModelDto> getTerminalModelsDtoes = terminalDisplayModelMapper.getListDtoes(terminalDisplayModels);
+        model.addAttribute("dtoes", getTerminalModelsDtoes);
+        model.addAttribute("namePage", "Модели экранов терминала");
+        model.addAttribute("attribute", "mterminalDisplay");
+        model.addAttribute("manufacturersSaveLink", "/save-terminal-display-manufacturer");
+        model.addAttribute("modelsByManufacturerLink", "/get-models-terminal-display-by-manufacturer?id=");
+        model.addAttribute("manufacturersLink", "/get-terminal-display-manufacturers");
+        return "models";
+    }
+    
+    
+              //      @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
+    @GetMapping("/mterminal-ups")
+    public String getModelTerminalUps(Model model) {
+        List<TerminalUpsModel> terminalUpsModels = terminalUpsModelService.getAllActualModels();
+        List<SvtModelDto> getTerminalModelsDtoes = terminalUpsModelMapper.getListDtoes(terminalUpsModels);
+        model.addAttribute("dtoes", getTerminalModelsDtoes);
+        model.addAttribute("namePage", "Модели ИБП терминала");
+        model.addAttribute("attribute", "mterminalUps");
+        model.addAttribute("manufacturersSaveLink", "/save-terminal-ups-manufacturer");
+        model.addAttribute("modelsByManufacturerLink", "/get-models-terminal-ups-by-manufacturer?id=");
+        model.addAttribute("manufacturersLink", "/get-terminal-ups-manufacturers");
+        return "models";
+    }
+    
+                  //      @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
+    @GetMapping("/mterminal-server")
+    public String getModelTerminalServer(Model model) {
+        List<TerminalServerModel> terminalServerModels = terminalServerModelService.getAllActualModels();
+        List<SvtModelDto> getTerminalModelsDtoes = terminalServerModelMapper.getListDtoes(terminalServerModels);
+        model.addAttribute("dtoes", getTerminalModelsDtoes);
+        model.addAttribute("namePage", "Модели серверов терминала");
+        model.addAttribute("attribute", "mterminalServer");
+        model.addAttribute("manufacturersSaveLink", "/save-terminal-server-manufacturer");
+        model.addAttribute("modelsByManufacturerLink", "/get-models-terminal-server-by-manufacturer?id=");
+        model.addAttribute("manufacturersLink", "/get-terminal-server-manufacturers");
+        return "models";
+    }
+    
+                  //      @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
+    @GetMapping("/mterminal-sensor")
+    public String getModelTerminalSensor(Model model) {
+        List<TerminalSensorModel> terminalSensorModels = terminalSensorModelService.getAllActualModels();
+        List<SvtModelDto> getTerminalModelsDtoes = terminalSensorModelMapper.getListDtoes(terminalSensorModels);
+        model.addAttribute("dtoes", getTerminalModelsDtoes);
+        model.addAttribute("namePage", "Модели сенсоров терминала");
+        model.addAttribute("attribute", "mterminalSensor");
+        model.addAttribute("manufacturersSaveLink", "/save-terminal-sensor-manufacturer");
+        model.addAttribute("modelsByManufacturerLink", "/get-models-terminal-sensor-by-manufacturer?id=");
+        model.addAttribute("manufacturersLink", "/get-terminal-sensor-manufacturers");
+        return "models";
+    }
+    
+    
+    @GetMapping("/po")
+    public String getProgramSoftwares(Model model) {
+        List<ProgramSoftware> programSoftwares = terminalProgramSoftwareService.getProgramSoftwares();
+        List<ProgramSoftwareDto> programSoftwareDtoesList = terminalProgramSoftwareService.getProgramSoftwareDtoesList(programSoftwares);
+
+        model.addAttribute("dtoes", programSoftwareDtoesList);
+        model.addAttribute("namePage", "Програмное обеспечение терминала");
+        model.addAttribute("attribute", "programSoftware");
+        return "models";
+    }
+    
+    
+        @PostMapping("/po")
+    public ResponseEntity<String> saveProgramSoftware(@RequestBody ProgramSoftwareDto dto) throws ObjectAlreadyExists {
+        try{
+            terminalProgramSoftwareService.createProgramSoftware(dto);
+        }catch(Exception e) {
+            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+        
+        return new ResponseEntity(HttpStatus.ACCEPTED);
+    }
+    
+    
+    @PutMapping("/po")
+    public ResponseEntity<String> updateProgramSoftware(@RequestBody ProgramSoftwareDto dto) throws ObjectAlreadyExists {
+        try{
+            terminalProgramSoftwareService.updateProgramSoftware(dto);
+        }catch(Exception e) {
+            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+        
+        return new ResponseEntity(HttpStatus.ACCEPTED);
+    }
+    
+    
+    @DeleteMapping("/po")
+    public ResponseEntity<String> deleteProgramSoftware(@RequestBody ArchivedDto dto) throws ObjectAlreadyExists {
+        try{
+            terminalProgramSoftwareService.deleteProgramSoftware(dto);
+        }catch(Exception e) {
+            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+        
+        return new ResponseEntity(HttpStatus.ACCEPTED);
+    }
+    
+    
     
 //    @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
  //   @Log
     @PostMapping("/mterminal")
     public ResponseEntity<String> saveModelTerminal(@RequestBody SvtModelDto dto) throws ObjectAlreadyExists {
-        TerminalModel terminalModel = svtModelMapper.getModelTerminal(dto);
+        TerminalModel terminalModel = terminalModelMapper.getModel(dto);
         try{
             terminalModelService.saveModel(terminalModel);
         }catch(Exception e) {
@@ -3309,6 +3760,160 @@ public class SvtViewController {
         return new ResponseEntity(HttpStatus.ACCEPTED);
     }
     
+    //    @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
+ //   @Log
+    @PostMapping("/mterminal-printer")
+    public ResponseEntity<String> saveModelTerminalPrinter(@RequestBody SvtModelDto dto) throws ObjectAlreadyExists {
+        TerminalPrinterModel terminalPrinterModel = terminalPrinterModelMapper.getModel(dto);
+        try{
+            terminalPrinterModelService.saveModel(terminalPrinterModel);
+        }catch(Exception e) {
+            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+        
+        return new ResponseEntity(HttpStatus.ACCEPTED);
+    }
+    
+    
+     @PutMapping("/mterminal-printer")
+    public ResponseEntity<String> updateModelTerminalPrinter(@RequestBody SvtModelDto dto) throws ObjectAlreadyExists {
+        TerminalPrinterModel terminalPrinterModel = terminalPrinterModelMapper.getModel(dto);
+        try{
+            terminalPrinterModelService.update(terminalPrinterModel);
+        }catch(Exception e) {
+            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+        
+        return new ResponseEntity(HttpStatus.ACCEPTED);
+    }
+    
+    
+    //    @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
+ //   @Log
+    @PostMapping("/mterminal-display")
+    public ResponseEntity<String> saveModelTerminalDisplay(@RequestBody SvtModelDto dto) throws ObjectAlreadyExists {
+        TerminalDisplayModel terminalDisplayModel = terminalDisplayModelMapper.getModel(dto);
+        try{
+            terminalDisplayModelService.saveModel(terminalDisplayModel);
+        }catch(Exception e) {
+            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+        
+        return new ResponseEntity(HttpStatus.ACCEPTED);
+    }
+    
+    
+    @PutMapping("/mterminal-display")
+    public ResponseEntity<String> updateModelTerminalDisplay(@RequestBody SvtModelDto dto) throws ObjectAlreadyExists {
+        TerminalDisplayModel terminalDisplayModel = terminalDisplayModelMapper.getModel(dto);
+        try{
+            terminalDisplayModelService.update(terminalDisplayModel);
+        }catch(Exception e) {
+            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+        
+        return new ResponseEntity(HttpStatus.ACCEPTED);
+    }
+    
+    @PutMapping("/mterminal")
+    public ResponseEntity<String> updateModelTerminal(@RequestBody SvtModelDto dto) throws ObjectAlreadyExists {
+        TerminalModel terminalModel = terminalModelMapper.getModel(dto);
+        try{
+            terminalModelService.update(terminalModel);
+        }catch(Exception e) {
+            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+        
+        return new ResponseEntity(HttpStatus.ACCEPTED);
+    }
+    
+    
+     //    @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
+ //   @Log
+    @PostMapping("/mterminal-ups")
+    public ResponseEntity<String> saveModelTerminalUps(@RequestBody SvtModelDto dto) throws ObjectAlreadyExists {
+        TerminalUpsModel terminalUpsModel = terminalUpsModelMapper.getModel(dto);
+        try{
+            terminalUpsModelService.saveModel(terminalUpsModel);
+        }catch(Exception e) {
+            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+        
+        return new ResponseEntity(HttpStatus.ACCEPTED);
+    }
+    
+    
+    @PutMapping("/mterminal-ups")
+    public ResponseEntity<String> updateModelTerminalUps(@RequestBody SvtModelDto dto) throws ObjectAlreadyExists {
+        TerminalUpsModel terminalUpsModel = terminalUpsModelMapper.getModel(dto);
+        try{
+            terminalUpsModelService.update(terminalUpsModel);
+        }catch(Exception e) {
+            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+        
+        return new ResponseEntity(HttpStatus.ACCEPTED);
+    }
+    
+    
+    
+       //    @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
+ //   @Log
+    @PostMapping("/mterminal-server")
+    public ResponseEntity<String> saveModelTerminalServer(@RequestBody SvtModelDto dto) throws ObjectAlreadyExists {
+        TerminalServerModel terminalServerModel = terminalServerModelMapper.getModel(dto);
+        try{
+            terminalServerModelService.saveModel(terminalServerModel);
+        }catch(Exception e) {
+            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+        
+        return new ResponseEntity(HttpStatus.ACCEPTED);
+    }
+    
+     @PutMapping("/mterminal-server")
+    public ResponseEntity<String> updateModelTerminalServer(@RequestBody SvtModelDto dto) throws ObjectAlreadyExists {
+        TerminalServerModel terminalServerModel = terminalServerModelMapper.getModel(dto);
+        try{
+            terminalServerModelService.update(terminalServerModel);
+        }catch(Exception e) {
+            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+        
+        return new ResponseEntity(HttpStatus.ACCEPTED);
+    }
+    
+    
+           //    @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
+ //   @Log
+    @PostMapping("/mterminal-sensor")
+    public ResponseEntity<String> saveModelTerminalSensor(@RequestBody SvtModelDto dto) throws ObjectAlreadyExists {
+        TerminalSensorModel terminalSensorModel = terminalSensorModelMapper.getModel(dto);
+        try{
+            terminalSensorModelService.saveModel(terminalSensorModel);
+        }catch(Exception e) {
+            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+        
+        return new ResponseEntity(HttpStatus.ACCEPTED);
+    }
+    
+    
+               //    @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
+ //   @Log
+    @PutMapping("/mterminal-sensor")
+    public ResponseEntity<String> updateModelTerminalSensor(@RequestBody SvtModelDto dto) throws ObjectAlreadyExists {
+        TerminalSensorModel terminalSensorModel = terminalSensorModelMapper.getModel(dto);
+        try{
+            terminalSensorModelService.update(terminalSensorModel);
+        }catch(Exception e) {
+            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+        
+        return new ResponseEntity(HttpStatus.ACCEPTED);
+    }
+    
+    
  //   @SendArchive
     @DeleteMapping("/mterminalarchived")
     public ResponseEntity<String> sendModelTerminalToArchive(@RequestBody ArchivedDto dto) throws ObjectAlreadyExists {
@@ -3316,12 +3921,61 @@ public class SvtViewController {
         return new ResponseEntity(HttpStatus.ACCEPTED);
     }
     
-                      //  @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
+    
+     //   @SendArchive
+    @DeleteMapping("/mterminal-display-archived")
+    public ResponseEntity<String> sendModelTerminalDisplayToArchive(@RequestBody ArchivedDto dto) throws ObjectAlreadyExists {
+        terminalDisplayModelService.sendModelToArchive(dto.getId());
+        return new ResponseEntity(HttpStatus.ACCEPTED);
+    }
+    
+        //   @SendArchive
+    @DeleteMapping("/mterminal-printer-archived")
+    public ResponseEntity<String> sendModelTerminalPrinterToArchive(@RequestBody ArchivedDto dto) throws ObjectAlreadyExists {
+        terminalPrinterModelService.sendModelToArchive(dto.getId());
+        return new ResponseEntity(HttpStatus.ACCEPTED);
+    }
+    
+    
+        //   @SendArchive
+    @DeleteMapping("/mterminal-ups-archived")
+    public ResponseEntity<String> sendModelTerminalUpsToArchive(@RequestBody ArchivedDto dto) throws ObjectAlreadyExists {
+        terminalUpsModelService.sendModelToArchive(dto.getId());
+        return new ResponseEntity(HttpStatus.ACCEPTED);
+    }
+    
+        //   @SendArchive
+    @DeleteMapping("/mterminal-server-archived")
+    public ResponseEntity<String> sendModelTerminalServerToArchive(@RequestBody ArchivedDto dto) throws ObjectAlreadyExists {
+        terminalServerModelService.sendModelToArchive(dto.getId());
+        return new ResponseEntity(HttpStatus.ACCEPTED);
+    }
+    
+     //   @SendArchive
+    @DeleteMapping("/mterminal-sensor-archived")
+    public ResponseEntity<String> sendModelTerminalSensorToArchive(@RequestBody ArchivedDto dto) throws ObjectAlreadyExists {
+        terminalSensorModelService.sendModelToArchive(dto.getId());
+        return new ResponseEntity(HttpStatus.ACCEPTED);
+    }
+    
+   
+    
+    
+    
+     //  @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
     @GetMapping("/terminal")
-    public String getTerminal(Model model, @RequestParam(value="username", required = false) String username) {
+    public String getTerminal(Model model,
+            @RequestParam(value="username", required = false) String username,
+            @RequestParam(value="inventaryNumber", required = false) String inventaryNumber,
+            @RequestParam(value="serialNumber", required = false) String serialNumber
+                                                                                            ) {
         Map<Location, List<Terminal>> svtObjectsByEmployee = null;
         if(null != username) {
             svtObjectsByEmployee = terminalService.getSvtObjectsByName(username, PlaceType.OFFICEEQUIPMENT);
+        }else if(null != inventaryNumber) {
+        svtObjectsByEmployee = terminalService.getSvtObjectsByInventaryNumberAndPlace(inventaryNumber, PlaceType.OFFICEEQUIPMENT);
+        } else if(null != serialNumber) {
+        svtObjectsByEmployee = terminalService.getSvtObjectsBySerialNumberAndPlace(serialNumber, PlaceType.OFFICEEQUIPMENT);
         } else {
             svtObjectsByEmployee = terminalService.getSvtObjectsByPlaceType(PlaceType.OFFICEEQUIPMENT);
         }
@@ -3333,6 +3987,10 @@ public class SvtViewController {
         
         if(null != username) {
             svtObjectsByStorage = terminalService.getSvtObjectsByName(username, PlaceType.STORAGE);
+        }else if(null != inventaryNumber) {
+        svtObjectsByStorage = terminalService.getSvtObjectsByInventaryNumberAndPlace(inventaryNumber, PlaceType.STORAGE);
+        } else if(null != serialNumber) {
+        svtObjectsByStorage = terminalService.getSvtObjectsBySerialNumberAndPlace(serialNumber, PlaceType.STORAGE);
         } else {
             svtObjectsByStorage = terminalService.getSvtObjectsByPlaceType(PlaceType.STORAGE);
         }
@@ -3340,7 +3998,9 @@ public class SvtViewController {
                 .stream()
                 .sorted((o1, o2) -> o1.getLocationName().compareTo(o2.getLocationName()))
                 .collect(Collectors.toList());
-        
+        model.addAttribute("searchFIO", username);
+        model.addAttribute("searchInventary", inventaryNumber);
+        model.addAttribute("searchSerial", serialNumber);
         model.addAttribute("dtoes", treeSvtDtoByEmployee);
         model.addAttribute("dtoesStorage", treeSvtDtoByStorage);
         model.addAttribute("attribute", "terminal");
@@ -3350,16 +4010,227 @@ public class SvtViewController {
         return "svtobj";
     }
     
+    @GetMapping("/terminal-display")
+    public String getTerminalDisplay(Model model, 
+            @RequestParam(value="username", required = false) String username,
+            @RequestParam(value="serialNumber", required = false) String serialNumber ) {
+        Map<Location, List<TerminalDisplay>> svtObjectsByEmployee = null;
+        if(null != username) {
+            svtObjectsByEmployee = terminalDisplayService.getSvtObjectsByName(username, PlaceType.OFFICEEQUIPMENT);
+        }else if(null != serialNumber) {
+        svtObjectsByEmployee = terminalDisplayService.getSvtObjectsBySerialNumberAndPlace(serialNumber, PlaceType.OFFICEEQUIPMENT);
+        } else {
+            svtObjectsByEmployee = terminalDisplayService.getSvtObjectsByPlaceType(PlaceType.OFFICEEQUIPMENT);
+        }
+        List<LocationByTreeDto> treeSvtDtoByEmployee = terminalDisplayOutDtoTreeService.getTreeSvtDtoByPlaceType(svtObjectsByEmployee)
+                .stream()
+                .sorted((o1, o2) -> o1.getLocationName().compareTo(o2.getLocationName()))
+                .collect(Collectors.toList());
+        Map<Location, List<TerminalDisplay>> svtObjectsByStorage = null;
+        
+        if(null != username) {
+            svtObjectsByStorage = terminalDisplayService.getSvtObjectsByName(username, PlaceType.STORAGE);
+        }else if(null != serialNumber) {
+            svtObjectsByStorage = terminalDisplayService.getSvtObjectsBySerialNumberAndPlace(serialNumber, PlaceType.STORAGE);
+        } else {
+            svtObjectsByStorage = terminalDisplayService.getSvtObjectsByPlaceType(PlaceType.STORAGE);
+        }
+        List<LocationByTreeDto> treeSvtDtoByStorage = terminalDisplayOutDtoTreeService.getTreeSvtDtoByPlaceType(svtObjectsByStorage)
+                .stream()
+                .sorted((o1, o2) -> o1.getLocationName().compareTo(o2.getLocationName()))
+                .collect(Collectors.toList());
+        model.addAttribute("searchFIO", username);
+        model.addAttribute("searchSerial", serialNumber);
+        model.addAttribute("dtoes", treeSvtDtoByEmployee);
+        model.addAttribute("dtoesStorage", treeSvtDtoByStorage);
+        model.addAttribute("attribute", "terminalDisplay");
+        model.addAttribute("placeAttribute", "officeequipment");
+        model.addAttribute("namePage","Экран для терминала");
+        
+        return "svtobj";
+    }
+    
+    
+    @GetMapping("/terminal-server")
+    public String getTerminalServer(Model model,
+            @RequestParam(value="username", required = false) String username,
+            @RequestParam(value="serialNumber", required = false) String serialNumber ) {
+        Map<Location, List<TerminalServer>> svtObjectsByEmployee = null;
+        if(null != username) {
+            svtObjectsByEmployee = terminalServerService.getSvtObjectsByName(username, PlaceType.OFFICEEQUIPMENT);
+        }else if(null != serialNumber) {
+        svtObjectsByEmployee = terminalServerService.getSvtObjectsBySerialNumberAndPlace(serialNumber, PlaceType.OFFICEEQUIPMENT);
+        } else {
+            svtObjectsByEmployee = terminalServerService.getSvtObjectsByPlaceType(PlaceType.OFFICEEQUIPMENT);
+        }
+        List<LocationByTreeDto> treeSvtDtoByEmployee = terminalServerOutDtoTreeService.getTreeSvtDtoByPlaceType(svtObjectsByEmployee)
+                .stream()
+                .sorted((o1, o2) -> o1.getLocationName().compareTo(o2.getLocationName()))
+                .collect(Collectors.toList());
+        Map<Location, List<TerminalServer>> svtObjectsByStorage = null;
+        
+        if(null != username) {
+            svtObjectsByStorage = terminalServerService.getSvtObjectsByName(username, PlaceType.STORAGE);
+        }else if(null != serialNumber) {
+        svtObjectsByStorage = terminalServerService.getSvtObjectsBySerialNumberAndPlace(serialNumber, PlaceType.OFFICEEQUIPMENT);
+        }  else {
+            svtObjectsByStorage = terminalServerService.getSvtObjectsByPlaceType(PlaceType.STORAGE);
+        }
+        List<LocationByTreeDto> treeSvtDtoByStorage = terminalServerOutDtoTreeService.getTreeSvtDtoByPlaceType(svtObjectsByStorage)
+                .stream()
+                .sorted((o1, o2) -> o1.getLocationName().compareTo(o2.getLocationName()))
+                .collect(Collectors.toList());
+        
+        model.addAttribute("searchFIO", username);
+        model.addAttribute("searchSerial", serialNumber);
+        model.addAttribute("dtoes", treeSvtDtoByEmployee);
+        model.addAttribute("dtoesStorage", treeSvtDtoByStorage);
+        model.addAttribute("attribute", "terminalServer");
+        model.addAttribute("placeAttribute", "officeequipment");
+        model.addAttribute("namePage","Сервер для терминала");
+        
+        return "svtobj";
+    }
+    
+    
+    
+     @GetMapping("/terminal-ups")
+    public String getTerminalUps(Model model, 
+            @RequestParam(value="username", required = false) String username,
+            @RequestParam(value="serialNumber", required = false) String serialNumber) {
+        Map<Location, List<TerminalUps>> svtObjectsByEmployee = null;
+        if(null != username) {
+            svtObjectsByEmployee = terminalUpsService.getSvtObjectsByName(username, PlaceType.OFFICEEQUIPMENT);
+        }else if(null != serialNumber) {
+        svtObjectsByEmployee = terminalUpsService.getSvtObjectsBySerialNumberAndPlace(serialNumber, PlaceType.OFFICEEQUIPMENT);
+        } else {
+            svtObjectsByEmployee = terminalUpsService.getSvtObjectsByPlaceType(PlaceType.OFFICEEQUIPMENT);
+        }
+        List<LocationByTreeDto> treeSvtDtoByEmployee = terminalUpsOutDtoTreeService.getTreeSvtDtoByPlaceType(svtObjectsByEmployee)
+                .stream()
+                .sorted((o1, o2) -> o1.getLocationName().compareTo(o2.getLocationName()))
+                .collect(Collectors.toList());
+        Map<Location, List<TerminalUps>> svtObjectsByStorage = null;
+        
+        if(null != username) {
+            svtObjectsByStorage = terminalUpsService.getSvtObjectsByName(username, PlaceType.STORAGE);
+        } else if(null != serialNumber) {
+        svtObjectsByStorage = terminalUpsService.getSvtObjectsBySerialNumberAndPlace(serialNumber, PlaceType.STORAGE);
+        }else {
+            svtObjectsByStorage = terminalUpsService.getSvtObjectsByPlaceType(PlaceType.STORAGE);
+        }
+        List<LocationByTreeDto> treeSvtDtoByStorage = terminalUpsOutDtoTreeService.getTreeSvtDtoByPlaceType(svtObjectsByStorage)
+                .stream()
+                .sorted((o1, o2) -> o1.getLocationName().compareTo(o2.getLocationName()))
+                .collect(Collectors.toList());
+        
+        model.addAttribute("searchFIO", username);
+        model.addAttribute("searchSerial", serialNumber);
+        model.addAttribute("dtoes", treeSvtDtoByEmployee);
+        model.addAttribute("dtoesStorage", treeSvtDtoByStorage);
+        model.addAttribute("attribute", "terminalUps");
+        model.addAttribute("placeAttribute", "officeequipment");
+        model.addAttribute("namePage","ИБП для терминала");
+        
+        return "svtobj";
+    }
+    
+    
+      @GetMapping("/terminal-printer")
+    public String getTerminalPrinter(Model model, 
+            @RequestParam(value="username", required = false) String username,
+            @RequestParam(value="serialNumber", required = false) String serialNumber) {
+        Map<Location, List<TerminalPrinter>> svtObjectsByEmployee = null;
+        if(null != username) {
+            svtObjectsByEmployee = terminalPrinterService.getSvtObjectsByName(username, PlaceType.OFFICEEQUIPMENT);
+        }else if(null != serialNumber) {
+        svtObjectsByEmployee = terminalPrinterService.getSvtObjectsBySerialNumberAndPlace(serialNumber, PlaceType.OFFICEEQUIPMENT);
+        } else {
+            svtObjectsByEmployee = terminalPrinterService.getSvtObjectsByPlaceType(PlaceType.OFFICEEQUIPMENT);
+        }
+        List<LocationByTreeDto> treeSvtDtoByEmployee = terminalPrinterOutDtoTreeService.getTreeSvtDtoByPlaceType(svtObjectsByEmployee)
+                .stream()
+                .sorted((o1, o2) -> o1.getLocationName().compareTo(o2.getLocationName()))
+                .collect(Collectors.toList());
+        Map<Location, List<TerminalPrinter>> svtObjectsByStorage = null;
+        
+        if(null != username) {
+            svtObjectsByStorage = terminalPrinterService.getSvtObjectsByName(username, PlaceType.STORAGE);
+        }else if(null != serialNumber) {
+        svtObjectsByStorage = terminalPrinterService.getSvtObjectsBySerialNumberAndPlace(serialNumber, PlaceType.STORAGE);
+        } else {
+            svtObjectsByStorage = terminalPrinterService.getSvtObjectsByPlaceType(PlaceType.STORAGE);
+        }
+        List<LocationByTreeDto> treeSvtDtoByStorage = terminalPrinterOutDtoTreeService.getTreeSvtDtoByPlaceType(svtObjectsByStorage)
+                .stream()
+                .sorted((o1, o2) -> o1.getLocationName().compareTo(o2.getLocationName()))
+                .collect(Collectors.toList());
+        
+        model.addAttribute("searchFIO", username);
+        model.addAttribute("searchSerial", serialNumber);
+        model.addAttribute("dtoes", treeSvtDtoByEmployee);
+        model.addAttribute("dtoesStorage", treeSvtDtoByStorage);
+        model.addAttribute("attribute", "terminalPrinter");
+        model.addAttribute("placeAttribute", "officeequipment");
+        model.addAttribute("namePage","Принтер для терминала");
+        
+        return "svtobj";
+    }
+    
+    
+    @GetMapping("/terminal-sensor")
+    public String getTerminalSensor(Model model,
+            @RequestParam(value="username", required = false) String username,
+            @RequestParam(value="serialNumber", required = false) String serialNumber) {
+        Map<Location, List<TerminalSensor>> svtObjectsByEmployee = null;
+        if(null != username) {
+            svtObjectsByEmployee = terminalSensorService.getSvtObjectsByName(username, PlaceType.OFFICEEQUIPMENT);
+        }else if(null != serialNumber) {
+        svtObjectsByEmployee = terminalSensorService.getSvtObjectsBySerialNumberAndPlace(serialNumber, PlaceType.OFFICEEQUIPMENT);
+        } else {
+            svtObjectsByEmployee = terminalSensorService.getSvtObjectsByPlaceType(PlaceType.OFFICEEQUIPMENT);
+        }
+        List<LocationByTreeDto> treeSvtDtoByEmployee = terminalSensorOutDtoTreeService.getTreeSvtDtoByPlaceType(svtObjectsByEmployee)
+                .stream()
+                .sorted((o1, o2) -> o1.getLocationName().compareTo(o2.getLocationName()))
+                .collect(Collectors.toList());
+        Map<Location, List<TerminalSensor>> svtObjectsByStorage = null;
+        
+        if(null != username) {
+            svtObjectsByStorage = terminalSensorService.getSvtObjectsByName(username, PlaceType.STORAGE);
+        }else if(null != serialNumber) {
+        svtObjectsByStorage = terminalSensorService.getSvtObjectsBySerialNumberAndPlace(serialNumber, PlaceType.STORAGE);
+        } else {
+            svtObjectsByStorage = terminalSensorService.getSvtObjectsByPlaceType(PlaceType.STORAGE);
+        }
+        List<LocationByTreeDto> treeSvtDtoByStorage = terminalSensorOutDtoTreeService.getTreeSvtDtoByPlaceType(svtObjectsByStorage)
+                .stream()
+                .sorted((o1, o2) -> o1.getLocationName().compareTo(o2.getLocationName()))
+                .collect(Collectors.toList());
+        
+        model.addAttribute("searchFIO", username);
+        model.addAttribute("searchSerial", serialNumber);
+        model.addAttribute("dtoes", treeSvtDtoByEmployee);
+        model.addAttribute("dtoesStorage", treeSvtDtoByStorage);
+        model.addAttribute("attribute", "terminalSensor");
+        model.addAttribute("placeAttribute", "officeequipment");
+        model.addAttribute("namePage","Сенсор для терминала");
+        
+        return "svtobj";
+    }
+    
+    
+    
  //   @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
 //    @Log
     @PostMapping("/terminal")
-    public ResponseEntity<String> saveTerminal(@RequestBody SvtDTO dto) throws ObjectAlreadyExists {
+    public ResponseEntity<String> saveTerminal(@RequestBody TerminalDto dto) throws ObjectAlreadyExists {
         terminalService.createSvtObj(dto);
         return new ResponseEntity(HttpStatus.ACCEPTED);
     }
   //        @UpdLog
-          @PutMapping("/updterminal")
-    public ResponseEntity<String> updateTerminal (@RequestBody SvtDTO dto) throws ObjectAlreadyExists {
+          @PutMapping("/terminal")
+    public ResponseEntity<String> updateTerminal (@RequestBody TerminalDto dto) throws ObjectAlreadyExists {
         try{
             terminalService.updateSvtObj(dto);
         }catch(Exception e) {
@@ -3370,12 +4241,179 @@ public class SvtViewController {
      
     }
     
+    
+     //   @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
+//    @Log
+    @PostMapping("/terminal-printer")
+    public ResponseEntity<String> saveTerminalPrinter(@RequestBody TerminalComponentDto dto) throws ObjectAlreadyExists {
+        terminalPrinterService.createSvtObj(dto);
+        return new ResponseEntity(HttpStatus.ACCEPTED);
+    }
+    
+    
+         //   @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
+//    @Log
+    @PostMapping("/terminal-server")
+    public ResponseEntity<String> saveTerminalServer(@RequestBody TerminalComponentDto dto) throws ObjectAlreadyExists {
+        terminalServerService.createSvtObj(dto);
+        return new ResponseEntity(HttpStatus.ACCEPTED);
+    }
+    
+    
+    
+         //   @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
+//    @Log
+    @PostMapping("/terminal-sensor")
+    public ResponseEntity<String> saveTerminalSensor(@RequestBody TerminalComponentDto dto) throws ObjectAlreadyExists {
+        terminalSensorService.createSvtObj(dto);
+        return new ResponseEntity(HttpStatus.ACCEPTED);
+    }
+    
+
+    
+     //   @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
+//    @Log
+    @PostMapping("/terminal-display")
+    public ResponseEntity<String> saveTerminalDisplay(@RequestBody TerminalDisplayDto dto) throws ObjectAlreadyExists {
+        terminalDisplayService.createSvtObj(dto);
+        return new ResponseEntity(HttpStatus.ACCEPTED);
+    }
+
+             //   @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
+//    @Log
+    @PostMapping("/terminal-ups")
+    public ResponseEntity<String> saveTerminalUps(@RequestBody TerminalComponentDto dto) throws ObjectAlreadyExists {
+        terminalUpsService.createSvtObj(dto);
+        return new ResponseEntity(HttpStatus.ACCEPTED);
+    }
+    
+      //        @UpdLog
+          @PutMapping("/terminal-printer")
+    public ResponseEntity<String> updateTerminalPrinter (@RequestBody TerminalComponentDto dto) throws ObjectAlreadyExists {
+        try{
+            terminalPrinterService.updateSvtObj(dto);
+        }catch(Exception e) {
+             return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+        
+        return new ResponseEntity(HttpStatus.ACCEPTED);
+     
+    }
+    
+          //        @UpdLog
+    @PutMapping("/terminal-server")
+    public ResponseEntity<String> updateTerminalServer (@RequestBody TerminalComponentDto dto) throws ObjectAlreadyExists {
+        try{
+            terminalServerService.updateSvtObj(dto);
+        }catch(Exception e) {
+             return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+        
+        return new ResponseEntity(HttpStatus.ACCEPTED);
+     
+    }
+    
+          //        @UpdLog
+    @PutMapping("/terminal-sensor")
+    public ResponseEntity<String> updateTerminalSensor (@RequestBody TerminalComponentDto dto) throws ObjectAlreadyExists {
+        try{
+            terminalSensorService.updateSvtObj(dto);
+        }catch(Exception e) {
+             return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+        
+        return new ResponseEntity(HttpStatus.ACCEPTED);
+     
+    }
+    
+    
+     //        @UpdLog
+          @PutMapping("/terminal-display")
+    public ResponseEntity<String> updateTerminalDisplay (@RequestBody TerminalDisplayDto dto) throws ObjectAlreadyExists {
+        try{
+            terminalDisplayService.updateSvtObj(dto);
+        }catch(Exception e) {
+             return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+        
+        return new ResponseEntity(HttpStatus.ACCEPTED);
+     
+    }
+    
+    
+      //        @UpdLog
+          @PutMapping("/terminal-ups")
+    public ResponseEntity<String> updateTerminalUps (@RequestBody TerminalComponentDto dto) throws ObjectAlreadyExists {
+        try{
+            terminalUpsService.updateSvtObj(dto);
+        }catch(Exception e) {
+             return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+        
+        return new ResponseEntity(HttpStatus.ACCEPTED);
+     
+    }
+    
+    
               //      @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
  //   @UpdLog
     @PutMapping("/terminaltostor")
     public ResponseEntity<String> sendToStorageTerminal(@RequestBody SvtDTO dto) throws ObjectAlreadyExists {
         Terminal terminal = terminalService.getById(dto.getId());
         terminalService.sendToStorage(terminal);
+        return new ResponseEntity(HttpStatus.ACCEPTED);
+        
+    }
+    
+                  //      @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
+ //   @UpdLog
+    @PutMapping("/terminal-printer-tostor")
+    public ResponseEntity<String> sendToStorageTerminalPrinter(@RequestBody TerminalComponentDto dto) throws ObjectAlreadyExists {
+        TerminalPrinter terminalPrinter = terminalPrinterService.getById(dto.getId());
+        terminalPrinterService.sendToStorage(terminalPrinter);
+        return new ResponseEntity(HttpStatus.ACCEPTED);
+        
+    }
+    
+    
+                  //      @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
+ //   @UpdLog
+    @PutMapping("/terminal-display-tostor")
+    public ResponseEntity<String> sendToStorageTerminalDisplay(@RequestBody TerminalDisplayDto dto) throws ObjectAlreadyExists {
+        TerminalDisplay terminalDisplay = terminalDisplayService.getById(dto.getId());
+        terminalDisplayService.sendToStorage(terminalDisplay);
+        return new ResponseEntity(HttpStatus.ACCEPTED);
+        
+    }
+    
+    
+                      //      @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
+ //   @UpdLog
+    @PutMapping("/terminal-ups-tostor")
+    public ResponseEntity<String> sendToStorageTerminalUps(@RequestBody TerminalComponentDto dto) throws ObjectAlreadyExists {
+        TerminalUps terminalUps = terminalUpsService.getById(dto.getId());
+        terminalUpsService.sendToStorage(terminalUps);
+        return new ResponseEntity(HttpStatus.ACCEPTED);
+        
+    }
+    
+    
+                          //      @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
+ //   @UpdLog
+    @PutMapping("/terminal-server-tostor")
+    public ResponseEntity<String> sendToStorageTerminalServer(@RequestBody TerminalComponentDto dto) throws ObjectAlreadyExists {
+        TerminalServer terminalServer = terminalServerService.getById(dto.getId());
+        terminalServerService.sendToStorage(terminalServer);
+        return new ResponseEntity(HttpStatus.ACCEPTED);
+        
+    }
+    
+                              //      @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
+ //   @UpdLog
+    @PutMapping("/terminal-sensor-tostor")
+    public ResponseEntity<String> sendToStorageTerminalSensor(@RequestBody TerminalComponentDto dto) throws ObjectAlreadyExists {
+        TerminalSensor terminalSensor = terminalSensorService.getById(dto.getId());
+        terminalSensorService.sendToStorage(terminalSensor);
         return new ResponseEntity(HttpStatus.ACCEPTED);
         
     }
@@ -3389,118 +4427,57 @@ public class SvtViewController {
         return new ResponseEntity(HttpStatus.ACCEPTED);
     }
     
-             //      @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
-    @GetMapping("/mthermoprinter")
-    public String getModelThermoprinter(Model model) {
-        List<ThermoPrinterModel> thermoprinterModels = thermoprinterModelService.getAllActualModels();
-        List<SvtModelDto> getThermoprinterModelsDtoes = svtModelMapper.getModelThermoprinterDtoes(thermoprinterModels);
-        model.addAttribute("dtoes", getThermoprinterModelsDtoes);
-        model.addAttribute("namePage", "Модели термопринтеров");
-        model.addAttribute("attribute", "mthermoprinter");
-        return "models";
-    }
     
-//    @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
-//    @Log
-    @PostMapping("/mthermoprinter")
-    public ResponseEntity<String> saveModelThermoprinter(@RequestBody SvtModelDto dto) throws ObjectAlreadyExists {
-        ThermoPrinterModel thermoprinterModel = svtModelMapper.getModelThermoprinter(dto);
-        try{
-            thermoprinterModelService.saveModel(thermoprinterModel);
-        }catch(Exception e) {
-            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
-        }
-        
+    //   @SendArchive
+    @DeleteMapping("/terminal-ups-archived")
+    public ResponseEntity<String> sendTerminalUpsToArchive(@RequestBody ArchivedDto dto) throws ObjectAlreadyExists {
+        terminalUpsService.svtObjToArchive(dto);
         return new ResponseEntity(HttpStatus.ACCEPTED);
     }
     
- //     @SendArchive
-    @DeleteMapping("/mthermoprinterarchived")
-    public ResponseEntity<String> sendModelThermoprinterToArchive(@RequestBody ArchivedDto dto) throws ObjectAlreadyExists {
-        thermoprinterModelService.sendModelToArchive(dto.getId());
+    
+    //   @SendArchive
+    @DeleteMapping("/terminal-printer-archived")
+    public ResponseEntity<String> sendTerminalPrinterToArchive(@RequestBody ArchivedDto dto) throws ObjectAlreadyExists {
+        terminalPrinterService.svtObjToArchive(dto);
         return new ResponseEntity(HttpStatus.ACCEPTED);
     }
     
-                         //  @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
-    @GetMapping("/thermoprinter")
-    public String getThermoprinter(Model model, @RequestParam(value="username", required = false) String username) {
-        Map<Location, List<ThermoPrinter>> svtObjectsByEmployee = null;
-        if(null != username) {
-            svtObjectsByEmployee = thermoprinterService.getSvtObjectsByName(username, PlaceType.OFFICEEQUIPMENT);
-        } else {
-            svtObjectsByEmployee = thermoprinterService.getSvtObjectsByPlaceType(PlaceType.OFFICEEQUIPMENT);
-        }
-        List<LocationByTreeDto> treeSvtDtoByEmployee = thermoprinterOutDtoTreeService.getTreeSvtDtoByPlaceType(svtObjectsByEmployee)
-                .stream()
-                .sorted((o1, o2) -> o1.getLocationName().compareTo(o2.getLocationName()))
-                .collect(Collectors.toList());
-        Map<Location, List<ThermoPrinter>> svtObjectsByStorage = null;
-        
-        if(null != username) {
-            svtObjectsByStorage = thermoprinterService.getSvtObjectsByName(username, PlaceType.STORAGE);
-        } else {
-            svtObjectsByStorage = thermoprinterService.getSvtObjectsByPlaceType(PlaceType.STORAGE);
-        }
-        List<LocationByTreeDto> treeSvtDtoByStorage = thermoprinterOutDtoTreeService.getTreeSvtDtoByPlaceType(svtObjectsByStorage)
-                .stream()
-                .sorted((o1, o2) -> o1.getLocationName().compareTo(o2.getLocationName()))
-                .collect(Collectors.toList());
-        
-        model.addAttribute("dtoes", treeSvtDtoByEmployee);
-        model.addAttribute("dtoesStorage", treeSvtDtoByStorage);
-        model.addAttribute("attribute", "thermoprinter");
-        model.addAttribute("placeAttribute", "officeequipment");
-        model.addAttribute("namePage","Термопринтеры");
-        
-        return "svtobj";
-    }
-    
- //   @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
- //   @Log
-    @PostMapping("/thermoprinter")
-    public ResponseEntity<String> saveThermoprinter(@RequestBody SvtDTO dto) throws ObjectAlreadyExists {
-        thermoprinterService.createSvtObj(dto);
-        return new ResponseEntity(HttpStatus.ACCEPTED);
-    }
-          @PutMapping("/updthermoprinter")
-    public ResponseEntity<String> updateThermoprinter (@RequestBody SvtDTO dto) throws ObjectAlreadyExists {
-        try{
-            thermoprinterService.updateSvtObj(dto);
-        }catch(Exception e) {
-             return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
-        }
-        
-        return new ResponseEntity(HttpStatus.ACCEPTED);
-     
-    }
-    
-              //      @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
- //   @UpdLog
-    @PutMapping("/thermoprintertostor")
-    public ResponseEntity<String> sendToStorageThermoprinter(@RequestBody SvtDTO dto) throws ObjectAlreadyExists {
-            ThermoPrinter thermoprinter = thermoprinterService.getById(dto.getId());
-        thermoprinterService.sendToStorage(thermoprinter);
-        return new ResponseEntity(HttpStatus.ACCEPTED);
-        
-    }
-    
-    
-          //   @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
-//    @SendArchive
-    @DeleteMapping("/thermoprinterarchived")
-    public ResponseEntity<String> sendThermoprinterToArchive(@RequestBody ArchivedDto dto) throws ObjectAlreadyExists {
-        thermoprinterService.svtObjToArchive(dto);
+       //   @SendArchive
+    @DeleteMapping("/terminal-server-archived")
+    public ResponseEntity<String> sendTerminalServerToArchive(@RequestBody ArchivedDto dto) throws ObjectAlreadyExists {
+        terminalServerService.svtObjToArchive(dto);
         return new ResponseEntity(HttpStatus.ACCEPTED);
     }
     
+    
+        //   @SendArchive
+    @DeleteMapping("/terminal-sensor-archived")
+    public ResponseEntity<String> sendTerminalSensorToArchive(@RequestBody ArchivedDto dto) throws ObjectAlreadyExists {
+        terminalSensorService.svtObjToArchive(dto);
+        return new ResponseEntity(HttpStatus.ACCEPTED);
+    }
+    
+    
+    //   @SendArchive
+    @DeleteMapping("/terminal-display-archived")
+    public ResponseEntity<String> sendTerminalDisplayToArchive(@RequestBody ArchivedDto dto) throws ObjectAlreadyExists {
+        terminalDisplayService.svtObjToArchive(dto);
+        return new ResponseEntity(HttpStatus.ACCEPTED);
+    }
+
+
     //      @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
     @GetMapping("/mdisplay")
     public String getModelDisplay(Model model) {
         List<DisplayModel> displayModels = displayModelService.getAllActualModels();
-        List<SvtModelDto> getDisplayModelsDtoes = svtModelMapper.getModelDisplayDtoes(displayModels);
+        List<SvtModelDto> getDisplayModelsDtoes = displayModelMapper.getListDtoes(displayModels);
         model.addAttribute("dtoes", getDisplayModelsDtoes);
         model.addAttribute("namePage", "Модели главного табло");
         model.addAttribute("attribute", "mdisplay");
+        model.addAttribute("manufacturersSaveLink", "/save-display-manufacturer");
+        model.addAttribute("modelsByManufacturerLink", "/get-models-display-by-manufacturer?id=");
+        model.addAttribute("manufacturersLink", "/get-display-manufacturers");
         return "models";
     }
     
@@ -3508,7 +4485,7 @@ public class SvtViewController {
  //   @Log
     @PostMapping("/mdisplay")
     public ResponseEntity<String> saveModelDisplay(@RequestBody SvtModelDto dto) throws ObjectAlreadyExists {
-        DisplayModel displayModel = svtModelMapper.getModelDisplay(dto);
+        DisplayModel displayModel = displayModelMapper.getModel(dto);
         try{
             displayModelService.saveModel(displayModel);
         } catch(Exception e) {
@@ -3517,6 +4494,20 @@ public class SvtViewController {
         
         return new ResponseEntity(HttpStatus.ACCEPTED);
     }
+    
+    
+        @PutMapping("/mdisplay")
+    public ResponseEntity<String> updateModelDisplay(@RequestBody SvtModelDto dto) throws ObjectAlreadyExists {
+        DisplayModel displayModel = displayModelMapper.getModel(dto);
+        try{
+            displayModelService.update(displayModel);
+        } catch(Exception e) {
+            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+        
+        return new ResponseEntity(HttpStatus.ACCEPTED);
+    }
+    
     
  //    @SendArchive
     @DeleteMapping("/mdisplayarchived")
@@ -3528,10 +4519,17 @@ public class SvtViewController {
     
                          //  @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
     @GetMapping("/display")
-    public String getDisplay(Model model, @RequestParam(value="username", required = false) String username) {
+    public String getDisplay(Model model, 
+            @RequestParam(value="username", required = false) String username,
+            @RequestParam(value="inventaryNumber", required = false) String inventaryNumber,
+            @RequestParam(value="serialNumber", required = false) String serialNumber) {
         Map<Location, List<Display>> svtObjectsByEmployee = null;
         if(null != username) {
             svtObjectsByEmployee = displayService.getSvtObjectsByName(username, PlaceType.OFFICEEQUIPMENT);
+        }else if(null != inventaryNumber) {
+        svtObjectsByEmployee = displayService.getSvtObjectsByInventaryNumberAndPlace(inventaryNumber, PlaceType.OFFICEEQUIPMENT);
+        } else if(null != serialNumber) {
+        svtObjectsByEmployee = displayService.getSvtObjectsBySerialNumberAndPlace(serialNumber, PlaceType.OFFICEEQUIPMENT);
         } else {
             svtObjectsByEmployee = displayService.getSvtObjectsByPlaceType(PlaceType.OFFICEEQUIPMENT);
         }
@@ -3543,6 +4541,10 @@ public class SvtViewController {
         
         if(null != username) {
             svtObjectsByStorage = displayService.getSvtObjectsByName(username, PlaceType.STORAGE);
+        }else if(null != inventaryNumber) {
+        svtObjectsByStorage = displayService.getSvtObjectsByInventaryNumberAndPlace(inventaryNumber, PlaceType.STORAGE);
+        } else if(null != serialNumber) {
+        svtObjectsByStorage = displayService.getSvtObjectsBySerialNumberAndPlace(serialNumber, PlaceType.STORAGE);
         } else {
             svtObjectsByStorage = displayService.getSvtObjectsByPlaceType(PlaceType.STORAGE);
         }
@@ -3551,6 +4553,9 @@ public class SvtViewController {
                 .sorted((o1, o2) -> o1.getLocationName().compareTo(o2.getLocationName()))
                 .collect(Collectors.toList());
         
+        model.addAttribute("searchFIO", username);
+        model.addAttribute("searchInventary", inventaryNumber);
+        model.addAttribute("searchSerial", serialNumber);
         model.addAttribute("dtoes", treeSvtDtoByEmployee);
         model.addAttribute("dtoesStorage", treeSvtDtoByStorage);
         model.addAttribute("attribute", "display");
@@ -3593,108 +4598,6 @@ public class SvtViewController {
         displayService.svtObjToArchive(dto);
         return new ResponseEntity(HttpStatus.ACCEPTED);
     }
-    
-    
-    //      @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
-    @GetMapping("/mswunit")
-    public String getModelSwunit(Model model) {
-        List<SwitchingUnitModel> swunitModels = swunitModelService.getAllActualModels();
-        List<SvtModelDto> getDisplayModelsDtoes = svtModelMapper.getModelSwunitDtoes(swunitModels);
-        model.addAttribute("dtoes", getDisplayModelsDtoes);
-        model.addAttribute("namePage", "Модели блоков коммутации");
-        model.addAttribute("attribute", "mswunit");
-        return "models";
-    }
-    
-//    @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
-//    @Log
-    @PostMapping("/mswunit")
-    public ResponseEntity<String> saveModelSwunit(@RequestBody SvtModelDto dto) throws ObjectAlreadyExists {
-        SwitchingUnitModel swunitModel = svtModelMapper.getModelSwunit(dto);
-        try{
-            swunitModelService.saveModel(swunitModel);
-        } catch(Exception e) {
-            return new ResponseEntity(HttpStatus.BAD_REQUEST);
-        }
-        
-        return new ResponseEntity(HttpStatus.ACCEPTED);
-    }
-    
-//     @SendArchive
-    @DeleteMapping("/mswunitarchived")
-    public ResponseEntity<String> sendModelSwunitToArchive(@RequestBody ArchivedDto dto) throws ObjectAlreadyExists {
-        swunitModelService.sendModelToArchive(dto.getId());
-        return new ResponseEntity(HttpStatus.ACCEPTED);
-    }
-    
-    
-              //  @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
-    @GetMapping("/swunit")
-    public String getSwunit(Model model, @RequestParam(value="username", required = false) String username) {
-        Map<Location, List<SwitchingUnit>> svtObjectsByEmployee = null;
-        if(null != username) {
-            svtObjectsByEmployee = swunitService.getSvtObjectsByName(username, PlaceType.OFFICEEQUIPMENT);
-        } else {
-            svtObjectsByEmployee = swunitService.getSvtObjectsByPlaceType(PlaceType.OFFICEEQUIPMENT);
-        }
-        List<LocationByTreeDto> treeSvtDtoByEmployee = swunitOutDtoTreeService.getTreeSvtDtoByPlaceType(svtObjectsByEmployee)
-                .stream()
-                .sorted((o1, o2) -> o1.getLocationName().compareTo(o2.getLocationName()))
-                .collect(Collectors.toList());
-        Map<Location, List<SwitchingUnit>> svtObjectsByStorage = null;
-        
-        if(null != username) {
-            svtObjectsByStorage = swunitService.getSvtObjectsByName(username, PlaceType.STORAGE);
-        } else {
-            svtObjectsByStorage = swunitService.getSvtObjectsByPlaceType(PlaceType.STORAGE);
-        }
-        List<LocationByTreeDto> treeSvtDtoByStorage = swunitOutDtoTreeService.getTreeSvtDtoByPlaceType(svtObjectsByStorage)
-                .stream()
-                .sorted((o1, o2) -> o1.getLocationName().compareTo(o2.getLocationName()))
-                .collect(Collectors.toList());
-        
-        model.addAttribute("dtoes", treeSvtDtoByEmployee);
-        model.addAttribute("dtoesStorage", treeSvtDtoByStorage);
-        model.addAttribute("placeAttribute", "officeequipment");
-        model.addAttribute("attribute", "swunit");
-        model.addAttribute("namePage","Блок коммутации");
-        
-        return "svtobj";
-    }
-    
- //   @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
- //   @Log
-    @PostMapping("/swunit")
-    public ResponseEntity<String> saveSwunit(@RequestBody SvtDTO dto) throws ObjectAlreadyExists {
-        swunitService.createSvtObj(dto);
-        return new ResponseEntity(HttpStatus.ACCEPTED);
-    }
-//          @UpdLog
-          @PutMapping("/updswunit")
-    public ResponseEntity<String> updateSwunit (@RequestBody SvtDTO dto) throws ObjectAlreadyExists {
-        swunitService.updateSvtObj(dto);
-        return new ResponseEntity(HttpStatus.ACCEPTED);
-     
-    }
-    
-              //      @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
-//    @UpdLog
-    @DeleteMapping("/swunittostor")
-    public ResponseEntity<String> sendToStorageSwunit(@RequestBody SvtDTO dto) throws ObjectAlreadyExists {
-            SwitchingUnit swunit = swunitService.getById(dto.getId());
-        swunitService.sendToStorage(swunit);
-        return new ResponseEntity(HttpStatus.ACCEPTED);
-        
-    }
-    
-    
-          //   @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
-//    @SendArchive
-    @DeleteMapping("/swunitarchived")
-    public ResponseEntity<String> sendSwunitToArchive(@RequestBody ArchivedDto dto) throws ObjectAlreadyExists {
-        swunitService.svtObjToArchive(dto);
-        return new ResponseEntity(HttpStatus.ACCEPTED);
-    }
 
       //      @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
     @GetMapping("/msubdisplay")
@@ -3717,7 +4620,17 @@ public class SvtViewController {
         }catch(Exception e) {
             return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
-        
+        return new ResponseEntity(HttpStatus.ACCEPTED);
+    }
+    
+      @PutMapping("/msubdisplay")
+    public ResponseEntity<String> updateModelSubDisplay(@RequestBody SvtModelDto dto) throws ObjectAlreadyExists {
+        SubDisplayModel subDisplayModel = svtModelMapper.getModelSubDisplay(dto);
+        try{
+            subDisplayModelService.update(subDisplayModel);
+        }catch(Exception e) {
+            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
         return new ResponseEntity(HttpStatus.ACCEPTED);
     }
     
@@ -3731,10 +4644,14 @@ public class SvtViewController {
 
             //  @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
     @GetMapping("/asuo")
-    public String getAsuo(Model model, @RequestParam(value="username", required = false) String username) {
+    public String getAsuo(Model model, 
+            @RequestParam(value="username", required = false) String username,
+            @RequestParam(value="inventaryNumber", required = false) String inventaryNumber) {
         Map<Location, List<Asuo>> svtObjectsByEmployee = null;
         if(null != username) {
             svtObjectsByEmployee = asuoService.getSvtObjectsByName(username, PlaceType.OFFICEEQUIPMENT);
+        }else if(null != inventaryNumber) {
+        svtObjectsByEmployee = asuoService.getSvtObjectsByInventaryNumberAndPlace(inventaryNumber, PlaceType.OFFICEEQUIPMENT);
         } else {
             svtObjectsByEmployee = asuoService.getSvtObjectsByPlaceType(PlaceType.OFFICEEQUIPMENT);
         }
@@ -3746,6 +4663,8 @@ public class SvtViewController {
         
         if(null != username) {
             svtObjectsByStorage = asuoService.getSvtObjectsByName(username, PlaceType.STORAGE);
+        }else if(null != inventaryNumber) {
+        svtObjectsByStorage = asuoService.getSvtObjectsByInventaryNumberAndPlace(inventaryNumber, PlaceType.STORAGE);
         } else {
             svtObjectsByStorage = asuoService.getSvtObjectsByPlaceType(PlaceType.STORAGE);
         }
@@ -3754,6 +4673,8 @@ public class SvtViewController {
                 .sorted((o1, o2) -> o1.getLocationName().compareTo(o2.getLocationName()))
                 .collect(Collectors.toList());
         
+        model.addAttribute("searchFIO", username);
+        model.addAttribute("searchInventary", inventaryNumber);
         model.addAttribute("dtoes", treeSvtDtoByEmployee);
         model.addAttribute("dtoesStorage", treeSvtDtoByStorage);
         model.addAttribute("placeAttribute", "officeequipment");
@@ -3771,9 +4692,8 @@ public class SvtViewController {
         return new ResponseEntity(HttpStatus.ACCEPTED);
     }
  //          @UpdLog
-          @PutMapping("/updasuo")
+          @PutMapping("/asuo")
     public ResponseEntity<String> updateAsuo (@RequestBody AsuoDTO dto) throws ObjectAlreadyExists {
-        Asuo asuo = asuoMapper.getEntityFromDto(dto);
         asuoService.updateSvtObj(dto);
         return new ResponseEntity(HttpStatus.ACCEPTED);
      

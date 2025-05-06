@@ -191,6 +191,7 @@ public class DocReportController {
     @GetMapping("/get-ups")
     public ResponseEntity<Resource>  getUpsDoc(@RequestParam(value="username",required=false) String username, 
             @RequestParam(value="inventaryNumber", required = false) String inventaryNumber, 
+            @RequestParam(value="serialNumber", required = false) String serialNumber, 
             FilterDto dto) throws IOException {
         Map<Location, List<Ups>> svtObjectsByEmployee = null;
         List<LocationByTreeDto> treeSvtDtoByEmployee = null;
@@ -202,7 +203,9 @@ public class DocReportController {
             svtObjectsByEmployee = upsService.getSvtObjectsByName(username, PlaceType.EMPLOYEE);
         }else if(null != inventaryNumber) {
             svtObjectsByEmployee = upsService.getSvtObjectsByInventaryNumberAndPlace(inventaryNumber, PlaceType.EMPLOYEE);
-        } else {
+        }else if(null != serialNumber) {
+            svtObjectsByEmployee = upsService.getSvtObjectsBySerialNumberAndPlace(serialNumber, PlaceType.EMPLOYEE);
+        }  else {
             svtObjectsByEmployee = upsService.getSvtObjectsByPlaceType(PlaceType.EMPLOYEE);
         }
          treeSvtDtoByEmployee = upsOutDtoTreeService.getTreeSvtDtoByPlaceType(svtObjectsByEmployee)
@@ -213,6 +216,8 @@ public class DocReportController {
             svtObjectsByStorage = upsService.getSvtObjectsByName(username, PlaceType.STORAGE);
         }else if(null != inventaryNumber) {
             svtObjectsByStorage = upsService.getSvtObjectsByInventaryNumberAndPlace(inventaryNumber, PlaceType.STORAGE);
+        }else if(null != serialNumber) {
+            svtObjectsByStorage = upsService.getSvtObjectsBySerialNumberAndPlace(serialNumber, PlaceType.STORAGE);
         } else {
            svtObjectsByStorage = upsService.getSvtObjectsByPlaceType(PlaceType.STORAGE); 
         }
@@ -265,7 +270,7 @@ public class DocReportController {
                     } else {
                         dateExp = elem.getDateExploitationBegin().toString();
                     }
-                    upsData.put(String.valueOf(p), new Object[] {elem.getModel(), elem.getPlaceName(), DocReportController.getPlaceTypeRus(elem.getPlaceType()), elem.getNameFromOneC(),
+                    upsData.put(String.valueOf(p), new Object[] {elem.getManufacturerName() + " " + elem.getModel(), elem.getPlaceName(), DocReportController.getPlaceTypeRus(elem.getPlaceType()), elem.getNameFromOneC(),
                     elem.getSerialNumber(), elem.getInventaryNumber(), dateExp.toString(), String.valueOf(elem.getYearCreated()),
                     String.valueOf(elem.getYearReplacement()), DocReportController.getStatusToRus(elem.getStatus()), elem.getNumberRoom(), elem.getBatteryType(), String.valueOf(elem.getBatteryAmount()), 
                     locationByTreeDto.getLocationName()});
@@ -288,7 +293,7 @@ public class DocReportController {
                     } else {
                         dateExp = elem.getDateExploitationBegin().toString();
                     }
-                    upsData.put(String.valueOf(p), new Object[] {elem.getModel(), elem.getPlaceName(), DocReportController.getPlaceTypeRus(elem.getPlaceType()), elem.getNameFromOneC(),
+                    upsData.put(String.valueOf(p), new Object[] {elem.getManufacturerName() + " " + elem.getModel(), elem.getPlaceName(), DocReportController.getPlaceTypeRus(elem.getPlaceType()), elem.getNameFromOneC(),
                     elem.getSerialNumber(), elem.getInventaryNumber(), dateExp, String.valueOf(elem.getYearCreated()),
                     String.valueOf(elem.getYearReplacement()), DocReportController.getStatusToRus(elem.getStatus()), elem.getNumberRoom(), elem.getBatteryType(), String.valueOf(elem.getBatteryAmount()), 
                     locationByTreeDto.getLocationName()});
@@ -332,6 +337,7 @@ public class DocReportController {
     @GetMapping("/sysblocks")
     public ResponseEntity<Resource> getSysBlocks(@RequestParam(value="username",required=false) String username,  
             @RequestParam(value="inventaryNumber", required = false) String inventaryNumber,
+            @RequestParam(value="serialNumber", required = false) String serialNumber,
             FilterDto dto) throws FileNotFoundException, IOException {
         Map<Location, List<SystemBlock>> svtObjectsByEmployee = null;
          List<SvtDTO> filter = null;
@@ -344,6 +350,8 @@ public class DocReportController {
             svtObjectsByEmployee = systemblockService.getSvtObjectsByName(username, PlaceType.EMPLOYEE);
         }else if(null != inventaryNumber) {
             svtObjectsByEmployee = systemblockService.getSvtObjectsByInventaryNumberAndPlace(inventaryNumber, PlaceType.EMPLOYEE);
+        } else if(null != serialNumber) {
+            svtObjectsByEmployee = systemblockService.getSvtObjectsBySerialNumberAndPlace(serialNumber, PlaceType.EMPLOYEE);
         } else {
             svtObjectsByEmployee = systemblockService.getSvtObjectsByPlaceType(PlaceType.EMPLOYEE);
         }
@@ -357,6 +365,8 @@ public class DocReportController {
             svtObjectsByStorage = systemblockService.getSvtObjectsByName(username, PlaceType.STORAGE);
         }else if(null != inventaryNumber) {
             svtObjectsByStorage = systemblockService.getSvtObjectsByInventaryNumberAndPlace(inventaryNumber, PlaceType.STORAGE);
+        }else if(null != serialNumber) {
+            svtObjectsByStorage = systemblockService.getSvtObjectsBySerialNumberAndPlace(serialNumber, PlaceType.STORAGE);
         } else {
             svtObjectsByStorage = systemblockService.getSvtObjectsByPlaceType(PlaceType.STORAGE);
         }
@@ -447,7 +457,7 @@ public class DocReportController {
                        sbOs.append("нет");
                    }
                     
-                    rowData.put(String.valueOf(p), new Object[] {elem.getModel(), elem.getPlaceName(), DocReportController.getPlaceTypeRus(elem.getPlaceType()), elem.getNameFromOneC(),
+                    rowData.put(String.valueOf(p), new Object[] {elem.getManufacturerName() + " " + elem.getModel(), elem.getPlaceName(), DocReportController.getPlaceTypeRus(elem.getPlaceType()), elem.getNameFromOneC(),
                     elem.getSerialNumber(), elem.getInventaryNumber(), dateExp.toString(), String.valueOf(elem.getYearCreated()),
                     dateUpgr, DocReportController.getStatusToRus(elem.getStatus()), elem.getNumberRoom(), elem.getIpAdress(), sbOs.toString(), elem.getMotherboardModel(), 
                     elem.getCpuModel(), elem.getRamModel(), sbHdd.toString(), locationByTreeDto.getLocationName()});
@@ -506,7 +516,7 @@ public class DocReportController {
                        sbOs.append("нет");
                    }
                     
-                    rowData.put(String.valueOf(p), new Object[] {elem.getModel(), elem.getPlaceName(), DocReportController.getPlaceTypeRus(elem.getPlaceType()), elem.getNameFromOneC(),
+                    rowData.put(String.valueOf(p), new Object[] {elem.getManufacturerName() + " " + elem.getModel(), elem.getPlaceName(), DocReportController.getPlaceTypeRus(elem.getPlaceType()), elem.getNameFromOneC(),
                     elem.getSerialNumber(), elem.getInventaryNumber(), dateExp.toString(), String.valueOf(elem.getYearCreated()),
                     dateUpgr, DocReportController.getStatusToRus(elem.getStatus()), elem.getNumberRoom(), elem.getIpAdress(), sbOs.toString(), elem.getMotherboardModel(), 
                     elem.getCpuModel(), elem.getRamModel(), sbHdd.toString(), locationByTreeDto.getLocationName()});
@@ -552,6 +562,7 @@ public class DocReportController {
      @GetMapping("/monitors")
     public ResponseEntity<Resource> getMonitors(@RequestParam(value="username",required=false) String username, 
              @RequestParam(value="inventaryNumber", required = false) String inventaryNumber,
+             @RequestParam(value="serialNumber", required = false) String serialNumber,
             FilterDto dto) throws FileNotFoundException, IOException {
         Map<Location, List<Monitor>> svtObjectsByEmployee = null;
         List<LocationByTreeDto> treeSvtDtoByEmployee = null;
@@ -563,6 +574,8 @@ public class DocReportController {
         svtObjectsByEmployee = monitorService.getSvtObjectsByName(username, PlaceType.EMPLOYEE);
             } else if(null != inventaryNumber) {
                 svtObjectsByEmployee = monitorService.getSvtObjectsByInventaryNumberAndPlace(inventaryNumber, PlaceType.EMPLOYEE);
+            } else if(null != serialNumber) {
+                svtObjectsByEmployee = monitorService.getSvtObjectsBySerialNumberAndPlace(serialNumber, PlaceType.EMPLOYEE);
             } else {
             svtObjectsByEmployee = monitorService.getSvtObjectsByPlaceType(PlaceType.EMPLOYEE);
             }
@@ -574,6 +587,8 @@ public class DocReportController {
              svtObjectsByStorage = monitorService.getSvtObjectsByName(username, PlaceType.STORAGE);
          } else if(null != inventaryNumber) {
              svtObjectsByStorage = monitorService.getSvtObjectsByInventaryNumberAndPlace(inventaryNumber, PlaceType.STORAGE);
+         }else if(null != serialNumber) {
+             svtObjectsByStorage = monitorService.getSvtObjectsBySerialNumberAndPlace(serialNumber, PlaceType.STORAGE);
          } else {
             svtObjectsByStorage = monitorService.getSvtObjectsByPlaceType(PlaceType.STORAGE);
         }
@@ -626,7 +641,7 @@ public class DocReportController {
                     } else {
                         dateExp = elem.getDateExploitationBegin().toString();
                     }
-                    rowData.put(String.valueOf(p), new Object[] {elem.getModel(), elem.getPlaceName(), DocReportController.getPlaceTypeRus(elem.getPlaceType()), elem.getNameFromOneC(),
+                    rowData.put(String.valueOf(p), new Object[] {elem.getManufacturerName() + " " + elem.getModel(), elem.getPlaceName(), DocReportController.getPlaceTypeRus(elem.getPlaceType()), elem.getNameFromOneC(),
                     elem.getSerialNumber(), elem.getInventaryNumber(), dateExp.toString(), String.valueOf(elem.getYearCreated()),
                     elem.getBaseType(), DocReportController.getStatusToRus(elem.getStatus()), elem.getNumberRoom(), 
                     locationByTreeDto.getLocationName()});
@@ -649,7 +664,7 @@ public class DocReportController {
                     } else {
                         dateExp = elem.getDateExploitationBegin().toString();
                     }
-                    rowData.put(String.valueOf(p), new Object[] {elem.getModel(), elem.getPlaceName(), DocReportController.getPlaceTypeRus(elem.getPlaceType()), elem.getNameFromOneC(),
+                    rowData.put(String.valueOf(p), new Object[] {elem.getManufacturerName() + " " + elem.getModel(), elem.getPlaceName(), DocReportController.getPlaceTypeRus(elem.getPlaceType()), elem.getNameFromOneC(),
                     elem.getSerialNumber(), elem.getInventaryNumber(), dateExp.toString(), String.valueOf(elem.getYearCreated()),
                     elem.getBaseType(), DocReportController.getStatusToRus(elem.getStatus()), elem.getNumberRoom(), 
                     locationByTreeDto.getLocationName()});
@@ -694,6 +709,7 @@ public class DocReportController {
     @GetMapping("/scanner")
     public ResponseEntity<Resource> getScanners(@RequestParam(value="username", required=false) String username, 
             @RequestParam(value="inventaryNumber", required = false) String inventaryNumber,
+            @RequestParam(value="serialNumber", required = false) String serialNumber,
             FilterDto dto) throws FileNotFoundException, IOException {
         
         Map<Location, List<Scanner>> svtObjectsByEmployee = null;
@@ -706,6 +722,8 @@ public class DocReportController {
             svtObjectsByEmployee = scannerService.getSvtObjectsByName(username, PlaceType.EMPLOYEE);
         }else if(null != inventaryNumber) {
              svtObjectsByEmployee = scannerService.getSvtObjectsByInventaryNumberAndPlace(inventaryNumber, PlaceType.EMPLOYEE);
+        }else if(null != serialNumber) {
+             svtObjectsByEmployee = scannerService.getSvtObjectsBySerialNumberAndPlace(serialNumber, PlaceType.EMPLOYEE);
         } else {
             svtObjectsByEmployee = scannerService.getSvtObjectsByPlaceType(PlaceType.EMPLOYEE);
         }
@@ -719,7 +737,9 @@ public class DocReportController {
             svtObjectsByStorage = scannerService.getSvtObjectsByName(username, PlaceType.STORAGE);
         } else if(null != inventaryNumber) {
             svtObjectsByStorage = scannerService.getSvtObjectsByInventaryNumberAndPlace(inventaryNumber, PlaceType.STORAGE);
-        } else {
+        } else if(null != serialNumber) {
+            svtObjectsByStorage = scannerService.getSvtObjectsBySerialNumberAndPlace(serialNumber, PlaceType.STORAGE);
+        }else {
            svtObjectsByStorage = scannerService.getSvtObjectsByPlaceType(PlaceType.STORAGE); 
         }
         
@@ -772,7 +792,7 @@ public class DocReportController {
                     } else {
                         dateExp = elem.getDateExploitationBegin().toString();
                     }
-                    rowData.put(String.valueOf(p), new Object[] {elem.getModel(), elem.getPlaceName(), DocReportController.getPlaceTypeRus(elem.getPlaceType()), elem.getNameFromOneC(),
+                    rowData.put(String.valueOf(p), new Object[] {elem.getManufacturerName() + " " + elem.getModel(), elem.getPlaceName(), DocReportController.getPlaceTypeRus(elem.getPlaceType()), elem.getNameFromOneC(),
                     elem.getSerialNumber(), elem.getInventaryNumber(), dateExp.toString(), String.valueOf(elem.getYearCreated()),
                     elem.getIpAdress(), DocReportController.getStatusToRus(elem.getStatus()), elem.getNumberRoom(), 
                     locationByTreeDto.getLocationName()});
@@ -795,7 +815,7 @@ public class DocReportController {
                     } else {
                         dateExp = elem.getDateExploitationBegin().toString();
                     }
-                    rowData.put(String.valueOf(p), new Object[] {elem.getModel(), elem.getPlaceName(), DocReportController.getPlaceTypeRus(elem.getPlaceType()), elem.getNameFromOneC(),
+                    rowData.put(String.valueOf(p), new Object[] {elem.getManufacturerName() + " " + elem.getModel(), elem.getPlaceName(), DocReportController.getPlaceTypeRus(elem.getPlaceType()), elem.getNameFromOneC(),
                     elem.getSerialNumber(), elem.getInventaryNumber(), dateExp.toString(), String.valueOf(elem.getYearCreated()),
                     elem.getIpAdress(), DocReportController.getStatusToRus(elem.getStatus()), elem.getNumberRoom(), 
                     locationByTreeDto.getLocationName()});
@@ -842,6 +862,7 @@ public class DocReportController {
       @GetMapping("/phones")
     public ResponseEntity<Resource> getPhones(@RequestParam(value="username", required=false) String username, 
             @RequestParam(value="inventaryNumber", required = false) String inventaryNumber, 
+            @RequestParam(value="serialNumber", required = false) String serialNumber, 
             FilterDto dto) throws FileNotFoundException, IOException {
         
         List<SvtDTO> filter = null;
@@ -854,6 +875,8 @@ public class DocReportController {
             svtObjectsByEmployee = phoneService.getSvtObjectsByName(username, PlaceType.EMPLOYEE);
         } else if(null != inventaryNumber) {
             svtObjectsByEmployee = phoneService.getSvtObjectsByInventaryNumberAndPlace(inventaryNumber, PlaceType.EMPLOYEE);
+        } else if(null != serialNumber) {
+            svtObjectsByEmployee = phoneService.getSvtObjectsBySerialNumberAndPlace(serialNumber, PlaceType.EMPLOYEE);
         } else {
             svtObjectsByEmployee = phoneService.getSvtObjectsByPlaceType(PlaceType.EMPLOYEE);
         }
@@ -867,9 +890,9 @@ public class DocReportController {
         if(null != username) {
             svtObjectsByStorage = phoneService.getSvtObjectsByName(username, PlaceType.STORAGE);
         }else if(null != inventaryNumber) {
-        
             svtObjectsByStorage = phoneService.getSvtObjectsByInventaryNumberAndPlace(inventaryNumber, PlaceType.STORAGE);
-        
+        } else if(null != serialNumber) {
+            svtObjectsByStorage = phoneService.getSvtObjectsBySerialNumberAndPlace(serialNumber, PlaceType.STORAGE);
         } else {
             svtObjectsByStorage = phoneService.getSvtObjectsByPlaceType(PlaceType.STORAGE);
         }
@@ -922,7 +945,7 @@ public class DocReportController {
                     } else {
                         dateExp = elem.getDateExploitationBegin().toString();
                     }
-                    rowData.put(String.valueOf(p), new Object[] {elem.getModel(), elem.getPlaceName(), DocReportController.getPlaceTypeRus(elem.getPlaceType()), elem.getNameFromOneC(),
+                    rowData.put(String.valueOf(p), new Object[] {elem.getManufacturerName() + " " + elem.getModel(), elem.getPlaceName(), DocReportController.getPlaceTypeRus(elem.getPlaceType()), elem.getNameFromOneC(),
                     elem.getSerialNumber(), elem.getInventaryNumber(), dateExp.toString(), String.valueOf(elem.getYearCreated()),
                     elem.getPhoneNumber(), DocReportController.getStatusToRus(elem.getStatus()), elem.getNumberRoom(), 
                     locationByTreeDto.getLocationName()});
@@ -945,7 +968,7 @@ public class DocReportController {
                     } else {
                         dateExp = elem.getDateExploitationBegin().toString();
                     }
-                    rowData.put(String.valueOf(p), new Object[] {elem.getModel(), elem.getPlaceName(), DocReportController.getPlaceTypeRus(elem.getPlaceType()), elem.getNameFromOneC(),
+                    rowData.put(String.valueOf(p), new Object[] {elem.getManufacturerName() + " " + elem.getModel(), elem.getPlaceName(), DocReportController.getPlaceTypeRus(elem.getPlaceType()), elem.getNameFromOneC(),
                     elem.getSerialNumber(), elem.getInventaryNumber(), dateExp.toString(), String.valueOf(elem.getYearCreated()),
                     elem.getPhoneNumber(), DocReportController.getStatusToRus(elem.getStatus()), elem.getNumberRoom(), 
                     locationByTreeDto.getLocationName()});
@@ -992,6 +1015,7 @@ public class DocReportController {
     @GetMapping("/server")
     public ResponseEntity<Resource> getServers(@RequestParam(value="username",required=false) String username, 
             @RequestParam(value="inventaryNumber", required = false) String inventaryNumber,
+            @RequestParam(value="serialNumber", required = false) String serialNumber,
             FilterDto dto) throws FileNotFoundException, IOException {
         Map<Location, List<Server>> svtObjectsByEmployee = null;
         List<LocationByTreeDto> treeSvtDtoByEmployee = null;
@@ -1003,6 +1027,8 @@ public class DocReportController {
             svtObjectsByEmployee = serverService.getSvtObjectsByName(username, PlaceType.SERVERROOM);
         }else if(null != inventaryNumber) {
             svtObjectsByEmployee = serverService.getSvtObjectsByInventaryNumberAndPlace(inventaryNumber, PlaceType.SERVERROOM);
+        } else if(null != serialNumber) {
+            svtObjectsByEmployee = serverService.getSvtObjectsBySerialNumberAndPlace(serialNumber, PlaceType.SERVERROOM);
         } else {
             svtObjectsByEmployee = serverService.getSvtObjectsByPlaceType(PlaceType.SERVERROOM);
         }
@@ -1016,7 +1042,9 @@ public class DocReportController {
             svtObjectsByStorage = serverService.getSvtObjectsByName(username, PlaceType.STORAGE);
         }else if(null != inventaryNumber) {
             svtObjectsByStorage = serverService.getSvtObjectsByInventaryNumberAndPlace(inventaryNumber, PlaceType.STORAGE);
-        } else {
+        }else if(null != serialNumber) {
+            svtObjectsByStorage = serverService.getSvtObjectsBySerialNumberAndPlace(serialNumber, PlaceType.STORAGE);
+        }  else {
             svtObjectsByStorage = serverService.getSvtObjectsByPlaceType(PlaceType.STORAGE);
         }
         treeSvtDtoByStorage = serverOutDtoTreeService.getTreeSvtDtoByPlaceType(svtObjectsByStorage)
@@ -1106,7 +1134,7 @@ public class DocReportController {
                        sbOs.append("нет");
                    }
                     
-                    rowData.put(String.valueOf(p), new Object[] {elem.getModel(), elem.getPlaceName(), DocReportController.getPlaceTypeRus(elem.getPlaceType()), elem.getNameFromOneC(),
+                    rowData.put(String.valueOf(p), new Object[] {elem.getManufacturerName() + " " + elem.getModel(), elem.getPlaceName(), DocReportController.getPlaceTypeRus(elem.getPlaceType()), elem.getNameFromOneC(),
                     elem.getSerialNumber(), elem.getInventaryNumber(), dateExp.toString(), String.valueOf(elem.getYearCreated()),
                     dateUpgr, DocReportController.getStatusToRus(elem.getStatus()), elem.getNumberRoom(), elem.getIpAdress(), sbOs.toString(),  
                     elem.getCpuModel(), elem.getRamModel(), sbHdd.toString(), locationByTreeDto.getLocationName()});
@@ -1165,7 +1193,7 @@ public class DocReportController {
                        sbOs.append("нет");
                    }
                     
-                    rowData.put(String.valueOf(p), new Object[] {elem.getModel(), elem.getPlaceName(), DocReportController.getPlaceTypeRus(elem.getPlaceType()), elem.getNameFromOneC(),
+                    rowData.put(String.valueOf(p), new Object[] {elem.getManufacturerName() + " " + elem.getModel(), elem.getPlaceName(), DocReportController.getPlaceTypeRus(elem.getPlaceType()), elem.getNameFromOneC(),
                     elem.getSerialNumber(), elem.getInventaryNumber(), dateExp.toString(), String.valueOf(elem.getYearCreated()),
                     dateUpgr, DocReportController.getStatusToRus(elem.getStatus()), elem.getNumberRoom(), elem.getIpAdress(), sbOs.toString(),  
                     elem.getCpuModel(), elem.getRamModel(), sbHdd.toString(), locationByTreeDto.getLocationName()});
@@ -1212,6 +1240,7 @@ public class DocReportController {
      @GetMapping("/switch")
     public ResponseEntity<Resource> getSwitchHub(@RequestParam(value="username",required=false) String username, 
             @RequestParam(value="inventaryNumber", required = false) String inventaryNumber,
+            @RequestParam(value="serialNumber", required = false) String serialNumber,
             FilterDto dto) throws FileNotFoundException, IOException {
         Map<Location, List<SwitchHub>> svtObjectsByEmployee = null;
         List<LocationByTreeDto> treeSvtDtoByEmployee = null;
@@ -1223,6 +1252,8 @@ public class DocReportController {
             svtObjectsByEmployee = switchHubService.getSvtObjectsByName(username, PlaceType.SERVERROOM);
         }else if(null != inventaryNumber) {
             svtObjectsByEmployee = switchHubService.getSvtObjectsByInventaryNumberAndPlace(inventaryNumber, PlaceType.SERVERROOM);
+        } else if(null != serialNumber) {
+            svtObjectsByEmployee = switchHubService.getSvtObjectsBySerialNumberAndPlace(serialNumber, PlaceType.SERVERROOM);
         } else {
             svtObjectsByEmployee = switchHubService.getSvtObjectsByPlaceType(PlaceType.SERVERROOM);
         }
@@ -1236,7 +1267,9 @@ public class DocReportController {
             svtObjectsByStorage = switchHubService.getSvtObjectsByName(username, PlaceType.STORAGE);
         } else if(null != inventaryNumber) {
             svtObjectsByStorage = switchHubService.getSvtObjectsByInventaryNumberAndPlace(inventaryNumber, PlaceType.STORAGE);
-        } else {
+        }  else if(null != serialNumber) {
+            svtObjectsByStorage = switchHubService.getSvtObjectsBySerialNumberAndPlace(serialNumber, PlaceType.STORAGE);
+        }else {
             svtObjectsByStorage = switchHubService.getSvtObjectsByPlaceType(PlaceType.STORAGE);
         }
         treeSvtDtoByStorage = switchHubOutDtoTreeService.getTreeSvtDtoByPlaceType(svtObjectsByStorage)
@@ -1286,7 +1319,7 @@ public class DocReportController {
                     } else {
                         switchHubType = "концентратор";
                     }
-                    rowData.put(String.valueOf(p), new Object[] {elem.getModel(), elem.getPlaceName(), DocReportController.getPlaceTypeRus(elem.getPlaceType()), elem.getNameFromOneC(),
+                    rowData.put(String.valueOf(p), new Object[] {elem.getManufacturerName() + " " + elem.getModel(), elem.getPlaceName(), DocReportController.getPlaceTypeRus(elem.getPlaceType()), elem.getNameFromOneC(),
                     elem.getSerialNumber(), elem.getInventaryNumber(), switchHubType, String.valueOf(elem.getPortAmount()), String.valueOf(elem.getYearCreated()),
                     DocReportController.getStatusToRus(elem.getStatus()), elem.getNumberRoom(), 
                     locationByTreeDto.getLocationName()});
@@ -1306,7 +1339,7 @@ public class DocReportController {
                     } else {
                         switchHubType = "концентратор";
                     }
-                    rowData.put(String.valueOf(p), new Object[] {elem.getModel(), elem.getPlaceName(), DocReportController.getPlaceTypeRus(elem.getPlaceType()), elem.getNameFromOneC(),
+                    rowData.put(String.valueOf(p), new Object[] {elem.getManufacturerName() + " " + elem.getModel(), elem.getPlaceName(), DocReportController.getPlaceTypeRus(elem.getPlaceType()), elem.getNameFromOneC(),
                     elem.getSerialNumber(), elem.getInventaryNumber(), switchHubType, String.valueOf(elem.getPortAmount()), String.valueOf(elem.getYearCreated()),
                     DocReportController.getStatusToRus(elem.getStatus()), elem.getNumberRoom(), 
                     locationByTreeDto.getLocationName()});
@@ -1352,6 +1385,7 @@ public class DocReportController {
     @GetMapping("/router")
     public ResponseEntity<Resource> getRouter(@RequestParam(value="username",required=false) String username, 
             @RequestParam(value="inventaryNumber", required = false) String inventaryNumber,
+            @RequestParam(value="serialNumber", required = false) String serialNumber,
             FilterDto dto) throws FileNotFoundException, IOException {
         Map<Location, List<Router>> svtObjectsByEmployee = null;
         List<LocationByTreeDto> treeSvtDtoByEmployee = null;
@@ -1363,6 +1397,8 @@ public class DocReportController {
             svtObjectsByEmployee = routerService.getSvtObjectsByName(username, PlaceType.SERVERROOM);
         } else if(null != inventaryNumber) {
             svtObjectsByEmployee = routerService.getSvtObjectsByInventaryNumberAndPlace(inventaryNumber, PlaceType.SERVERROOM);
+        }else if(null != serialNumber) {
+            svtObjectsByEmployee = routerService.getSvtObjectsBySerialNumberAndPlace(serialNumber, PlaceType.SERVERROOM);
         } else {
             svtObjectsByEmployee = routerService.getSvtObjectsByPlaceType(PlaceType.SERVERROOM);
         }
@@ -1374,6 +1410,8 @@ public class DocReportController {
             svtObjectsByStorage = routerService.getSvtObjectsByName(username, PlaceType.STORAGE);
         } else if(null != inventaryNumber) {
             svtObjectsByStorage = routerService.getSvtObjectsByInventaryNumberAndPlace(inventaryNumber, PlaceType.STORAGE);
+        }else if(null != serialNumber) {
+            svtObjectsByStorage = routerService.getSvtObjectsBySerialNumberAndPlace(serialNumber, PlaceType.STORAGE);
         } else {
             svtObjectsByStorage = routerService.getSvtObjectsByPlaceType(PlaceType.STORAGE);
         }
@@ -1416,7 +1454,7 @@ public class DocReportController {
                 if(departmentTreeDto.getDtoes().get(i) instanceof SvtSwitchHubDTO) {
                     SvtSwitchHubDTO elem = (SvtSwitchHubDTO)departmentTreeDto.getDtoes().get(i);
                     
-                    rowData.put(String.valueOf(p), new Object[] {elem.getModel(), elem.getPlaceName(), DocReportController.getPlaceTypeRus(elem.getPlaceType()), elem.getNameFromOneC(),
+                    rowData.put(String.valueOf(p), new Object[] {elem.getManufacturerName() + " " + elem.getModel(), elem.getPlaceName(), DocReportController.getPlaceTypeRus(elem.getPlaceType()), elem.getNameFromOneC(),
                     elem.getSerialNumber(), elem.getInventaryNumber(), String.valueOf(elem.getPortAmount()), String.valueOf(elem.getYearCreated()),
                     DocReportController.getStatusToRus(elem.getStatus()), elem.getNumberRoom(), 
                     locationByTreeDto.getLocationName()});
@@ -1432,7 +1470,7 @@ public class DocReportController {
                     
                     SvtSwitchHubDTO elem = (SvtSwitchHubDTO)departmentTreeDto.getDtoes().get(j);
                     
-                    rowData.put(String.valueOf(p), new Object[] {elem.getModel(), elem.getPlaceName(), DocReportController.getPlaceTypeRus(elem.getPlaceType()), elem.getNameFromOneC(),
+                    rowData.put(String.valueOf(p), new Object[] {elem.getManufacturerName() + " " + elem.getModel(), elem.getPlaceName(), DocReportController.getPlaceTypeRus(elem.getPlaceType()), elem.getNameFromOneC(),
                     elem.getSerialNumber(), elem.getInventaryNumber(), String.valueOf(elem.getPortAmount()), String.valueOf(elem.getYearCreated()),
                     DocReportController.getStatusToRus(elem.getStatus()), elem.getNumberRoom(), 
                     locationByTreeDto.getLocationName()});
@@ -1478,6 +1516,7 @@ public class DocReportController {
      @GetMapping("/upsforserver")
     public ResponseEntity<Resource> getServerUps(@RequestParam(value="username", required=false) String username, 
             @RequestParam(value="inventaryNumber", required = false) String inventaryNumber, 
+            @RequestParam(value="serialNumber", required = false) String serialNumber, 
             FilterDto dto) throws FileNotFoundException, IOException {
         Map<Location, List<Ups>> svtObjectsByEmployee = null;
         Map<Location, List<Ups>> svtObjectsByStorage = null;
@@ -1489,7 +1528,9 @@ public class DocReportController {
             svtObjectsByEmployee = upsService.getSvtObjectsByName(username, PlaceType.SERVERROOM);
         }else if(null != inventaryNumber) {
             svtObjectsByEmployee = upsService.getSvtObjectsByInventaryNumberAndPlace(inventaryNumber, PlaceType.SERVERROOM);
-        } else {
+        } else if(null != serialNumber) {
+            svtObjectsByEmployee = upsService.getSvtObjectsBySerialNumberAndPlace(serialNumber, PlaceType.SERVERROOM);
+        }else {
             svtObjectsByEmployee = upsService.getSvtObjectsByPlaceType(PlaceType.SERVERROOM);
         }
         treeSvtDtoByEmployee = upsOutDtoTreeService.getTreeSvtDtoByPlaceType(svtObjectsByEmployee)
@@ -1500,7 +1541,11 @@ public class DocReportController {
         
         if(null != username) {
             svtObjectsByStorage = upsService.getSvtObjectsByName(username, PlaceType.STORAGE);
-        } else {
+        } else if(null != inventaryNumber) {
+            svtObjectsByStorage = upsService.getSvtObjectsByInventaryNumberAndPlace(inventaryNumber, PlaceType.STORAGE);
+        } else if(null != serialNumber) {
+            svtObjectsByStorage = upsService.getSvtObjectsBySerialNumberAndPlace(serialNumber, PlaceType.STORAGE);
+        }else {
            svtObjectsByStorage = upsService.getSvtObjectsByPlaceType(PlaceType.STORAGE); 
         }
         
@@ -1553,7 +1598,7 @@ public class DocReportController {
                     } else {
                         dateExp = elem.getDateExploitationBegin().toString();
                     }
-                    upsData.put(String.valueOf(p), new Object[] {elem.getModel(), elem.getPlaceName(), DocReportController.getPlaceTypeRus(elem.getPlaceType()), elem.getNameFromOneC(),
+                    upsData.put(String.valueOf(p), new Object[] {elem.getManufacturerName() + " " + elem.getModel(), elem.getPlaceName(), DocReportController.getPlaceTypeRus(elem.getPlaceType()), elem.getNameFromOneC(),
                     elem.getSerialNumber(), elem.getInventaryNumber(), dateExp.toString(), String.valueOf(elem.getYearCreated()),
                     String.valueOf(elem.getYearReplacement()), DocReportController.getStatusToRus(elem.getStatus()), elem.getNumberRoom(), elem.getBatteryType(), String.valueOf(elem.getBatteryAmount()), 
                     locationByTreeDto.getLocationName()});
@@ -1576,7 +1621,7 @@ public class DocReportController {
                     } else {
                         dateExp = elem.getDateExploitationBegin().toString();
                     }
-                    upsData.put(String.valueOf(p), new Object[] {elem.getModel(), elem.getPlaceName(), DocReportController.getPlaceTypeRus(elem.getPlaceType()), elem.getNameFromOneC(),
+                    upsData.put(String.valueOf(p), new Object[] {elem.getManufacturerName() + " " + elem.getModel(), elem.getPlaceName(), DocReportController.getPlaceTypeRus(elem.getPlaceType()), elem.getNameFromOneC(),
                     elem.getSerialNumber(), elem.getInventaryNumber(), dateExp, String.valueOf(elem.getYearCreated()),
                     String.valueOf(elem.getYearReplacement()), DocReportController.getStatusToRus(elem.getStatus()), elem.getNumberRoom(), elem.getBatteryType(), String.valueOf(elem.getBatteryAmount()), 
                     locationByTreeDto.getLocationName()});
@@ -1624,6 +1669,7 @@ public class DocReportController {
      @GetMapping("/ats")
     public ResponseEntity<Resource> getAts(@RequestParam(value="username",required=false) String username, 
             @RequestParam(value="inventaryNumber", required = false) String inventaryNumber,
+            @RequestParam(value="serialNumber", required = false) String serialNumber,
             FilterDto dto) throws FileNotFoundException, IOException {
         Map<Location, List<Ats>> svtObjectsByEmployee = null;
         List<LocationByTreeDto> treeSvtDtoByEmployee = null;
@@ -1635,7 +1681,9 @@ public class DocReportController {
             svtObjectsByEmployee = atsService.getSvtObjectsByName(username, PlaceType.SERVERROOM);
         }else if(null != inventaryNumber) {
         svtObjectsByEmployee = atsService.getSvtObjectsByInventaryNumberAndPlace(inventaryNumber, PlaceType.SERVERROOM);
-        } else {
+        } else if(null != serialNumber) {
+        svtObjectsByEmployee = atsService.getSvtObjectsBySerialNumberAndPlace(serialNumber, PlaceType.SERVERROOM);
+        }else {
             svtObjectsByEmployee = atsService.getSvtObjectsByPlaceType(PlaceType.SERVERROOM);
         }
         treeSvtDtoByEmployee = atsOutDtoTreeService.getTreeSvtDtoByPlaceType(svtObjectsByEmployee)
@@ -1648,6 +1696,8 @@ public class DocReportController {
             svtObjectsByStorage = atsService.getSvtObjectsByName(username, PlaceType.STORAGE);
         }else if(null != inventaryNumber) {
             svtObjectsByStorage = atsService.getSvtObjectsByInventaryNumberAndPlace(inventaryNumber, PlaceType.STORAGE);
+        } else if(null != serialNumber) {
+            svtObjectsByStorage = atsService.getSvtObjectsBySerialNumberAndPlace(serialNumber, PlaceType.STORAGE);
         } else {
             svtObjectsByStorage = atsService.getSvtObjectsByPlaceType(PlaceType.STORAGE);
         }
@@ -1690,7 +1740,7 @@ public class DocReportController {
             for(int i = 0; i < departmentTreeDto.getDtoes().size(); i++) {
                 if(departmentTreeDto.getDtoes().get(i) instanceof SvtAtsDTO) {
                     SvtAtsDTO elem = (SvtAtsDTO)departmentTreeDto.getDtoes().get(i);
-                    rowData.put(String.valueOf(p), new Object[] {elem.getModel(), elem.getPlaceName(), DocReportController.getPlaceTypeRus(elem.getPlaceType()), elem.getNameFromOneC(),
+                    rowData.put(String.valueOf(p), new Object[] {elem.getManufacturerName() + " " + elem.getModel(), elem.getPlaceName(), DocReportController.getPlaceTypeRus(elem.getPlaceType()), elem.getNameFromOneC(),
                     elem.getSerialNumber(), elem.getInventaryNumber(), String.valueOf(elem.getYearCreated()),
                     DocReportController.getStatusToRus(elem.getStatus()), elem.getNumberRoom(), elem.getOuterConnectionType(), String.valueOf(elem.getCityNumberAmount()),
                     String.valueOf(elem.getInnerConnectionIp()), String.valueOf(elem.getInnerConnectionAnalog()), locationByTreeDto.getLocationName()});
@@ -1704,7 +1754,7 @@ public class DocReportController {
             for(int j = 0; j < departmentTreeDto.getDtoes().size(); j++) {
                 if(departmentTreeDto.getDtoes().get(j) instanceof SvtAtsDTO) {
                     SvtAtsDTO elem = (SvtAtsDTO)departmentTreeDto.getDtoes().get(j);
-                    rowData.put(String.valueOf(p), new Object[] {elem.getModel(), elem.getPlaceName(), DocReportController.getPlaceTypeRus(elem.getPlaceType()), elem.getNameFromOneC(),
+                    rowData.put(String.valueOf(p), new Object[] {elem.getManufacturerName() + " " + elem.getModel(), elem.getPlaceName(), DocReportController.getPlaceTypeRus(elem.getPlaceType()), elem.getNameFromOneC(),
                     elem.getSerialNumber(), elem.getInventaryNumber(), String.valueOf(elem.getYearCreated()),
                     DocReportController.getStatusToRus(elem.getStatus()), elem.getNumberRoom(), elem.getOuterConnectionType(), String.valueOf(elem.getCityNumberAmount()),
                     String.valueOf(elem.getInnerConnectionIp()), String.valueOf(elem.getInnerConnectionAnalog()), locationByTreeDto.getLocationName()});
@@ -1749,6 +1799,7 @@ public class DocReportController {
      @GetMapping("/conditioner")
     public ResponseEntity<Resource> getConditioner(@RequestParam(value="username", required=false) String username,
             @RequestParam(value="inventaryNumber", required = false) String inventaryNumber,
+            @RequestParam(value="serialNumber", required = false) String serialNumber,
             FilterDto dto) throws FileNotFoundException, IOException {
         Map<Location, List<Conditioner>> svtObjectsByEmployee = null;
         List<LocationByTreeDto> treeSvtDtoByEmployee = null;
@@ -1760,6 +1811,8 @@ public class DocReportController {
             svtObjectsByEmployee = conditionerService.getSvtObjectsByName(username, PlaceType.SERVERROOM);
         }else if(null != inventaryNumber) {
         svtObjectsByEmployee = conditionerService.getSvtObjectsByInventaryNumberAndPlace(inventaryNumber, PlaceType.SERVERROOM);
+        } else if(null != serialNumber) {
+        svtObjectsByEmployee = conditionerService.getSvtObjectsBySerialNumberAndPlace(serialNumber, PlaceType.SERVERROOM);
         } else {
             svtObjectsByEmployee = conditionerService.getSvtObjectsByPlaceType(PlaceType.SERVERROOM);
         }
@@ -1773,6 +1826,8 @@ public class DocReportController {
             svtObjectsByStorage = conditionerService.getSvtObjectsByName(username, PlaceType.STORAGE);
         }else if(null != inventaryNumber) {
         svtObjectsByStorage = conditionerService.getSvtObjectsByInventaryNumberAndPlace(inventaryNumber, PlaceType.STORAGE);
+        } else if(null != serialNumber) {
+        svtObjectsByStorage = conditionerService.getSvtObjectsBySerialNumberAndPlace(serialNumber, PlaceType.STORAGE);
         } else {
             svtObjectsByStorage = conditionerService.getSvtObjectsByPlaceType(PlaceType.STORAGE);
         }
@@ -1816,7 +1871,7 @@ public class DocReportController {
             for(int i = 0; i < departmentTreeDto.getDtoes().size(); i++) {
                 if(departmentTreeDto.getDtoes().get(i) instanceof SvtConditionerDTO) {
                     SvtConditionerDTO elem = (SvtConditionerDTO)departmentTreeDto.getDtoes().get(i);
-                    rowData.put(String.valueOf(p), new Object[] {elem.getModel(), elem.getPlaceName(), DocReportController.getPlaceTypeRus(elem.getPlaceType()), elem.getNameFromOneC(),
+                    rowData.put(String.valueOf(p), new Object[] {elem.getManufacturerName() + " " + elem.getModel(), elem.getPlaceName(), DocReportController.getPlaceTypeRus(elem.getPlaceType()), elem.getNameFromOneC(),
                     elem.getSerialNumber(), elem.getInventaryNumber(), String.valueOf(elem.getYearCreated()),
                     DocReportController.getStatusToRus(elem.getStatus()), elem.getNumberRoom(), DocReportController.conditionerTypeToRus(elem.getConditionerType()), DocReportController.booleanToRus(elem.isSplitSystem()), DocReportController.booleanToRus(elem.isWinterKit()),
                     DocReportController.booleanToRus(elem.isHavePomp()), String.valueOf(elem.getPrice()), locationByTreeDto.getLocationName()});
@@ -1830,7 +1885,7 @@ public class DocReportController {
             for(int j = 0; j < departmentTreeDto.getDtoes().size(); j++) {
                 if(departmentTreeDto.getDtoes().get(j) instanceof SvtConditionerDTO) {
                     SvtConditionerDTO elem = (SvtConditionerDTO)departmentTreeDto.getDtoes().get(j);
-                    rowData.put(String.valueOf(p), new Object[] {elem.getModel(), elem.getPlaceName(), DocReportController.getPlaceTypeRus(elem.getPlaceType()), elem.getNameFromOneC(),
+                    rowData.put(String.valueOf(p), new Object[] {elem.getManufacturerName() + " " + elem.getModel(), elem.getPlaceName(), DocReportController.getPlaceTypeRus(elem.getPlaceType()), elem.getNameFromOneC(),
                     elem.getSerialNumber(), elem.getInventaryNumber(), String.valueOf(elem.getYearCreated()),
                     DocReportController.getStatusToRus(elem.getStatus()), elem.getNumberRoom(), DocReportController.conditionerTypeToRus(elem.getConditionerType()), DocReportController.booleanToRus(elem.isSplitSystem()), DocReportController.booleanToRus(elem.isWinterKit()),
                     DocReportController.booleanToRus(elem.isHavePomp()), String.valueOf(elem.getPrice()), locationByTreeDto.getLocationName()});
@@ -1877,6 +1932,7 @@ public class DocReportController {
       @GetMapping("/fax")
     public ResponseEntity<Resource> getFax(@RequestParam(value="username", required=false) String username, 
             @RequestParam(value="inventaryNumber", required = false) String inventaryNumber,
+            @RequestParam(value="serialNumber", required = false) String serialNumber,
             FilterDto dto) throws FileNotFoundException, IOException {
         Map<Location, List<Fax>> svtObjectsByEmployee = null;
         List<LocationByTreeDto> treeSvtDtoByEmployee = null;
@@ -1888,6 +1944,8 @@ public class DocReportController {
             svtObjectsByEmployee = faxService.getSvtObjectsByName(username, PlaceType.OFFICEEQUIPMENT);
         }else if(null != inventaryNumber) {
              svtObjectsByEmployee = faxService.getSvtObjectsByInventaryNumberAndPlace(inventaryNumber, PlaceType.OFFICEEQUIPMENT);
+        } else if(null != serialNumber) {
+             svtObjectsByEmployee = faxService.getSvtObjectsBySerialNumberAndPlace(serialNumber, PlaceType.OFFICEEQUIPMENT);
         } else {
             svtObjectsByEmployee = faxService.getSvtObjectsByPlaceType(PlaceType.OFFICEEQUIPMENT);
         }
@@ -1901,6 +1959,8 @@ public class DocReportController {
             svtObjectsByStorage = faxService.getSvtObjectsByName(username, PlaceType.STORAGE);
         }else if(null != inventaryNumber) {
             svtObjectsByStorage = faxService.getSvtObjectsByInventaryNumberAndPlace(inventaryNumber, PlaceType.STORAGE);
+        } else if(null != serialNumber) {
+             svtObjectsByStorage = faxService.getSvtObjectsBySerialNumberAndPlace(serialNumber, PlaceType.STORAGE);
         } else {
             svtObjectsByStorage = faxService.getSvtObjectsByPlaceType(PlaceType.STORAGE);
         }
@@ -1953,7 +2013,7 @@ public class DocReportController {
                     } else {
                         dateExp = elem.getDateExploitationBegin().toString();
                     }
-                    rowData.put(String.valueOf(p), new Object[] {elem.getModel(), elem.getPlaceName(), DocReportController.getPlaceTypeRus(elem.getPlaceType()), elem.getNameFromOneC(),
+                    rowData.put(String.valueOf(p), new Object[] {elem.getManufacturerName() + " " + elem.getModel(), elem.getPlaceName(), DocReportController.getPlaceTypeRus(elem.getPlaceType()), elem.getNameFromOneC(),
                     elem.getSerialNumber(), elem.getInventaryNumber(), dateExp.toString(), String.valueOf(elem.getYearCreated()),
                     DocReportController.getStatusToRus(elem.getStatus()), elem.getIpAdress(), elem.getNumberRoom(), 
                     locationByTreeDto.getLocationName()});
@@ -1976,7 +2036,7 @@ public class DocReportController {
                     } else {
                         dateExp = elem.getDateExploitationBegin().toString();
                     }
-                    rowData.put(String.valueOf(p), new Object[] {elem.getModel(), elem.getPlaceName(), DocReportController.getPlaceTypeRus(elem.getPlaceType()), elem.getNameFromOneC(),
+                    rowData.put(String.valueOf(p), new Object[] {elem.getManufacturerName() + " " + elem.getModel(), elem.getPlaceName(), DocReportController.getPlaceTypeRus(elem.getPlaceType()), elem.getNameFromOneC(),
                     elem.getSerialNumber(), elem.getInventaryNumber(), dateExp.toString(), String.valueOf(elem.getYearCreated()),
                     DocReportController.getStatusToRus(elem.getStatus()), elem.getIpAdress(), elem.getNumberRoom(), 
                     locationByTreeDto.getLocationName()});
@@ -2022,6 +2082,7 @@ public class DocReportController {
     @GetMapping("/infomat")
     public ResponseEntity<Resource> getInfomat(@RequestParam(value="username", required = false) String username, 
             @RequestParam(value="inventaryNumber", required = false) String inventaryNumber,
+            @RequestParam(value="serialNumber", required = false) String serialNumber,
             FilterDto dto) throws FileNotFoundException, IOException {
         Map<Location, List<Infomat>> svtObjectsByEmployee = null;
         List<LocationByTreeDto> treeSvtDtoByEmployee = null;
@@ -2033,7 +2094,9 @@ public class DocReportController {
             svtObjectsByEmployee = infomatService.getSvtObjectsByName(username, PlaceType.OFFICEEQUIPMENT);
         }else if(null != inventaryNumber) {
         svtObjectsByEmployee = infomatService.getSvtObjectsByInventaryNumberAndPlace(inventaryNumber, PlaceType.OFFICEEQUIPMENT);
-        } else {
+        }else if(null != serialNumber) {
+        svtObjectsByEmployee = infomatService.getSvtObjectsBySerialNumberAndPlace(serialNumber, PlaceType.OFFICEEQUIPMENT);
+        }  else {
             svtObjectsByEmployee = infomatService.getSvtObjectsByPlaceType(PlaceType.OFFICEEQUIPMENT);
         }
        treeSvtDtoByEmployee = infomatOutDtoTreeService.getTreeSvtDtoByPlaceType(svtObjectsByEmployee)
@@ -2046,6 +2109,8 @@ public class DocReportController {
             svtObjectsByStorage = infomatService.getSvtObjectsByName(username, PlaceType.STORAGE);
         }else if(null != inventaryNumber) {
             svtObjectsByStorage = infomatService.getSvtObjectsByInventaryNumberAndPlace(inventaryNumber, PlaceType.STORAGE);
+        }else if(null != serialNumber) {
+        svtObjectsByStorage = infomatService.getSvtObjectsBySerialNumberAndPlace(serialNumber, PlaceType.STORAGE);
         } else {
             svtObjectsByStorage = infomatService.getSvtObjectsByPlaceType(PlaceType.STORAGE);
         }
@@ -2098,7 +2163,7 @@ public class DocReportController {
                     } else {
                         dateExp = elem.getDateExploitationBegin().toString();
                     }
-                    rowData.put(String.valueOf(p), new Object[] {elem.getModel(), elem.getPlaceName(), DocReportController.getPlaceTypeRus(elem.getPlaceType()), elem.getNameFromOneC(),
+                    rowData.put(String.valueOf(p), new Object[] {elem.getManufacturerName() + " " + elem.getModel(), elem.getPlaceName(), DocReportController.getPlaceTypeRus(elem.getPlaceType()), elem.getNameFromOneC(),
                     elem.getSerialNumber(), elem.getInventaryNumber(), dateExp.toString(), String.valueOf(elem.getYearCreated()),
                     DocReportController.getStatusToRus(elem.getStatus()), elem.getNumberRoom(), 
                     locationByTreeDto.getLocationName()});
@@ -2121,7 +2186,7 @@ public class DocReportController {
                     } else {
                         dateExp = elem.getDateExploitationBegin().toString();
                     }
-                    rowData.put(String.valueOf(p), new Object[] {elem.getModel(), elem.getPlaceName(), DocReportController.getPlaceTypeRus(elem.getPlaceType()), elem.getNameFromOneC(),
+                    rowData.put(String.valueOf(p), new Object[] {elem.getManufacturerName() + " " + elem.getModel(), elem.getPlaceName(), DocReportController.getPlaceTypeRus(elem.getPlaceType()), elem.getNameFromOneC(),
                     elem.getSerialNumber(), elem.getInventaryNumber(), dateExp.toString(), String.valueOf(elem.getYearCreated()),
                     DocReportController.getStatusToRus(elem.getStatus()), elem.getNumberRoom(), 
                     locationByTreeDto.getLocationName()});

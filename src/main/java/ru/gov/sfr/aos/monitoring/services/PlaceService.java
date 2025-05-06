@@ -74,7 +74,17 @@ public class PlaceService {
             place.setLocation(findLocationById.get());
         }
         
-        placeRepo.save(place);
+        List<Place> potencialDoublePlaceList = placeRepo.findByPlaceTypeAndDepartmentCodeAndArchivedFalse(place.getPlaceType(), place.getDepartmentCode());
+        List<Place> afterFilter = null;
+        if(!potencialDoublePlaceList.isEmpty()) {
+            afterFilter = potencialDoublePlaceList.stream().filter(el -> el.getUsername().trim().equalsIgnoreCase(place.getUsername().trim())).collect(Collectors.toList());
+        }
+        if(afterFilter == null || afterFilter.isEmpty()) {
+            placeRepo.save(place);
+        } else {
+            throw new ObjectAlreadyExists("Рабочее место: " + place.getUsername() +  ", тип рабочего места: " + place.getPlaceType().getType() + ", в отделе: " + place.getDepartment() + " уже есть в базе данных.");
+        }
+        
     }
 
     public void updatePlace(PlaceDTO dto) throws ObjectAlreadyExists {
@@ -134,6 +144,7 @@ public class PlaceService {
         List<PlaceDTO> dtoes = placeMapper.listPlaceDtoFromListPlace(places);
         return dtoes;
     }
+    
 
     public List<PlaceDTO> getPlaceByUsername(String username) {
         List<Place> places = placeRepo.findByUsernameContainingAndArchivedFalse(username);
@@ -242,4 +253,30 @@ public class PlaceService {
         }
         return dtoes;
     }
+    
+    public List<PlaceDTO> getPlacesByLocationAndPlaceType(Long locationId, PlaceType placeType) {
+        
+        List<Place> placesList = placeRepo.findByLocationIdAndPlaceTypeAndArchivedFalse(locationId, placeType);
+        return placeMapper.listPlaceDtoFromListPlace(placesList);
+    }
+    
+    public static PlaceType getPlaceType(String placeType) {
+        PlaceType curentType = null;
+        switch (placeType) {
+            case "SERVERROOM":
+                curentType = PlaceType.SERVERROOM;
+                break;
+            case "OFFICEEQUIPMENT":
+                curentType = PlaceType.OFFICEEQUIPMENT;
+                break;
+            case "EMPLOYEE":
+                curentType = PlaceType.EMPLOYEE;
+                break;
+            default:
+                curentType = PlaceType.EMPLOYEE;
+                break;
+    }
+        return curentType;
+    
+}
 }

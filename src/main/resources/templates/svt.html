@@ -2,294 +2,343 @@
     <body> 
         <aside id="sidebar" th:fragment="sidebar">
             <div class="wrap" id="wrap">
-            <div class="d-flex">
-                <button id="toggle-btn" type="button">
-                    <i class="lni lni-grid-alt"></i>
-                </button>
-                <div class="sidebar-logo">
-                    <a href="#">СВТ 2.0</a>
+                <div class="scrolling" id="scrolling">
+                    <div class="d-flex">
+                        <button id="toggle-btn" type="button">
+                            <i class="lni lni-grid-alt"></i>
+                        </button>
+                        <div class="sidebar-logo">
+                            <a href="#">СВТ 2.0</a>
+                        </div>
+                    </div>
+                    <ul class="sidebar-nav top-level-menu">
+                        <li class="sidebar-item" id="li-place">
+                            <a href="#" class="sidebar-link has-dropdown collapsed" data-bs-toggle="collapse" 
+                               data-bs-target="#place" aria-expanded="false" aria-controls="place">
+                                <i class="lni lni-laptop-phone"></i>
+                                <span>Рабочие места</span>
+                            </a>
+                            <ul id="place" class="sidebar-dropdown list-unstyled collapse second-level-menu" data-bs-parent="#sidebar">
+                                <li class="sidebar-item" id="li-sysblocks">
+                                    <a href="/sysblocks" class="sidebar-link">Системные блоки</a>
+                                </li>
+                                <li class="sidebar-item" id="li-monitors">
+                                    <a href="/monitors" class="sidebar-link">Мониторы</a>
+                                </li>
+                                <li class="sidebar-item">
+                                    <a href="http://10.41.30.43:8100/inventories" class="sidebar-link">Принтеры</a>
+                                </li>
+                                <li class="sidebar-item" id="li-scanner">
+                                    <a href="/scanner" class="sidebar-link">Сканеры</a>
+                                </li>
+                                <li class="sidebar-item" id="li-ups">
+                                    <a href="/ups" class="sidebar-link">ИБП</a>
+                                </li>
+                                <li class="sidebar-item" id="li-phones">
+                                    <a href="/phones" class="sidebar-link">Телефоны</a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="sidebar-item" id="li-server">
+                            <a href="#" class="sidebar-link has-dropdown collapsed" data-bs-toggle="collapse" 
+                               data-bs-target="#server" aria-expanded="false" aria-controls="server">
+                                <i class="lni lni-database"></i>
+                                <span>Серверная</span>
+                            </a>
+                            <ul id="server" class="sidebar-dropdown list-unstyled collapse second-level-menu" data-bs-parent="#sidebar">
+                                <li class="sidebar-item" id="li-servers">
+                                    <a href="/server" class="sidebar-link">Серверы</a>
+                                </li>
+                                <li class="sidebar-item" id="li-switch">
+                                    <a href="/switch" class="sidebar-link">Коммутаторы / Концентраторы</a>
+                                </li>
+                                <li class="sidebar-item" id="li-router">
+                                    <a href="/router" class="sidebar-link">Маршрутизаторы</a>
+                                </li>
+                                <li class="sidebar-item" id="li-upsforserver">
+                                    <a href="/upsforserver" class="sidebar-link">ИБП для серверов</a>
+                                </li>
+                                <li class="sidebar-item" id="li-ats">
+                                    <a href="/ats" class="sidebar-link">АТС</a>
+                                </li>
+                                <li class="sidebar-item" id="li-conditioner">
+                                    <a href="/conditioner" class="sidebar-link">Кондиционеры</a>
+                                </li>
+                            </ul>
+                        </li>
+
+                        <li class="sidebar-item" id="li-office">
+                            <a href="#" class="sidebar-link has-dropdown collapsed" data-bs-toggle="collapse" 
+                               data-bs-target="#officeEquipment" aria-expanded="false" aria-controls="officeEquipment">
+                                <i class="lni lni-printer"></i>
+                                <span>Оргтехника</span>
+                            </a>
+                            <ul id="officeEquipment" class="sidebar-dropdown list-unstyled collapse second-level-menu" data-bs-parent="#sidebar">
+                                <li class="sidebar-item">
+                                    <a href="http://10.41.30.43:8100/inventories" class="sidebar-link">Копиры</a>
+                                </li>
+                                <li class="sidebar-item">
+                                    <a href="http://10.41.30.43:8100/inventories" class="sidebar-link">МФУ</a>
+                                </li>
+                                <li class="sidebar-item">
+                                    <a href="/fax" class="sidebar-link">Факсы</a>
+                                </li>
+                                <li class="sidebar-item">
+                                    <a href="/infomat" class="sidebar-link">Инфоматы</a>
+                                </li>
+                                <li class="sidebar-item">
+                                    <a href="#" class="sidebar-link has-dropdown collapsed" data-bs-toggle="collapse" 
+                                       data-bs-target="#components-and-asuo" aria-expanded="false" aria-controls="components-and-asuo">
+                                        АСУО и компоненты
+                                    </a>
+                                    <ul id="components-and-asuo" class="sidebar-dropdown list-unstyled collapse third-level-menu">
+                                        <li class="sidebar-item">
+                                            <a href="/asuo" class="sidebar-link">АСУО</a>
+                                        </li>
+                                        <li class="sidebar-item">
+                                                    <a href="/po" class="sidebar-link">ПО</a>
+                                                </li>
+                                        <li class="sidebar-item">
+                                            <a href="#" class="sidebar-link collapsed" data-bs-toggle="collapse" 
+                                               data-bs-target="#components-asuo" aria-expanded="false" aria-controls="components-asuo">
+                                                Компоненты
+                                            </a>
+                                            <ul id="components-asuo" class="sidebar-dropdown list-unstyled collapse fourth-level-menu">
+                                                <li class="sidebar-item">
+                                                    <a href="/display" class="sidebar-link">Главное табло</a>
+                                                </li>
+
+                                                <li class="sidebar-item">
+                                                    <a href="#" class="sidebar-link collapsed" data-bs-toggle="collapse" 
+                                                       data-bs-target="#components-terminal" aria-expanded="false" aria-controls="components-terminal">
+                                                        Терминал и его компоненты
+                                                    </a>
+                                                    <ul id="components-terminal" class="sidebar-dropdown list-unstyled collapse fourth-level-menu">
+                                                        <li class="sidebar-item">
+                                                            <a href="/terminal" class="sidebar-link">Терминал</a>
+                                                        </li>
+                                                        <li class="sidebar-item">
+                                                            <a href="#" class="sidebar-link collapsed" data-bs-toggle="collapse" 
+                                                               data-bs-target="#components-terminal-inner" aria-expanded="false" aria-controls="components-terminal-inner">
+                                                                Компоненты терминала
+                                                            </a>
+                                                            <ul id="components-terminal-inner" class="sidebar-dropdown list-unstyled collapse fourth-level-menu">
+                                                                <li class="sidebar-item">
+                                                                    <a href="/terminal-display" class="sidebar-link">Экран</a>
+                                                                </li>
+                                                                <li class="sidebar-item">
+                                                                    <a href="/terminal-sensor" class="sidebar-link">Сенсор</a>
+                                                                </li>
+                                                                <li class="sidebar-item">
+                                                                    <a href="/terminal-server" class="sidebar-link">Сервер</a>
+                                                                </li>
+                                                                <li class="sidebar-item">
+                                                                    <a href="/terminal-printer" class="sidebar-link">Принтер</a>
+                                                                </li>
+                                                                <li class="sidebar-item">
+                                                                    <a href="/terminal-ups" class="sidebar-link">ИБП</a>
+                                                                </li>
+                                                            </ul>
+                                                        </li>
+                                                    </ul>
+                                                </li>
+                                                <li class="sidebar-item">
+                                                    <a href="/hub" class="sidebar-link">Коммутатор</a>
+                                                </li>
+                                            </ul>
+                                        </li>
+                                    </ul>
+                                </li>
+
+                            </ul>
+
+                        </li>
+
+                        <li class="sidebar-item" id="li-dictionaries">
+                            <a href="#" class="sidebar-link has-dropdown collapsed" data-bs-toggle="collapse" 
+                               data-bs-target="#dictionaries" aria-expanded="false" aria-controls="dictionaries">
+                                <i class="lni lni-library"></i>
+                                <span>Справочники</span>
+                            </a>
+                            <ul id="dictionaries" class="sidebar-dropdown list-unstyled collapse second-level-menu" data-bs-parent="#sidebar">
+
+                                <li class="sidebar-item">
+                                    <a href="/dep" class="sidebar-link">Отделы</a>
+                                </li>
+                                <li class="sidebar-item">
+                                    <a href="/places" class="sidebar-link">Рабочие места</a>
+                                </li>
+                                <li class="sidebar-item">
+                                    <a href="/msysblock" class="sidebar-link">Системные блоки</a>
+                                </li>
+                                <li class="sidebar-item">
+                                    <a href="/mmonitors" class="sidebar-link">Мониторы</a>
+                                </li>
+
+                                <li class="sidebar-item">
+                                    <a href="/mscanner" class="sidebar-link">Сканеры</a>
+                                </li>
+                                <li class="sidebar-item">
+                                    <a href="/mphones" class="sidebar-link">Телефоны</a>
+                                </li>
+                                <li class="sidebar-item">
+                                    <a href="/mfax" class="sidebar-link">Факсы</a>
+                                </li>
+                                <li class="sidebar-item">
+                                    <a href="/mserver" class="sidebar-link">Серверы</a>
+                                </li>
+                                <li class="sidebar-item">
+                                    <a href="/mswitch" class="sidebar-link">Коммутаторы/Концентраторы</a>
+                                </li>
+                                <li class="sidebar-item">
+                                    <a href="/mrouter" class="sidebar-link">Маршрутизаторы</a>
+                                </li>
+                                <li class="sidebar-item">
+                                    <a href="/mats" class="sidebar-link">АТС</a>
+                                </li>
+                                <li class="sidebar-item">
+                                    <a href="/mconditioner" class="sidebar-link">Кондиционеры</a>
+                                </li>
+                                <li class="sidebar-item">
+                                    <a href="#" class="sidebar-link">Оргтехника</a>
+                                </li>
+                                <li class="sidebar-item">
+                                    <a href="/minfomat" class="sidebar-link">Инфоматы</a>
+                                </li>
+
+                                <li class="sidebar-item">
+                                    <a href="/os" class="sidebar-link">Операционные системы</a>
+                                </li>
+                                 <li class="sidebar-item">
+                                            <a href="/mups" class="sidebar-link">ИБП</a>
+                                 </li>
+                                <li class="sidebar-item">
+                                    <a href="#" class="sidebar-link collapsed" data-bs-toggle="collapse" 
+                                       data-bs-target="#components" aria-expanded="false" aria-controls="components">
+                                        Комплектующие
+                                    </a>
+                                    <ul id="components" class="sidebar-dropdown list-unstyled collapse third-level-menu">
+                                        <li class="sidebar-item">
+                                            <a href="/mmotherboard" class="sidebar-link">Материнская плата</a>
+                                        </li>
+                                        <li class="sidebar-item">
+                                            <a href="/mcpu" class="sidebar-link">Процессор</a>
+                                        </li>
+                                        <li class="sidebar-item">
+                                            <a href="/mram" class="sidebar-link">ОЗУ</a>
+                                        </li>
+                                        <li class="sidebar-item">
+                                            <a href="/mhdd" class="sidebar-link">НЖМД</a>
+                                        </li>
+                                        <li class="sidebar-item">
+                                            <a href="/mvideo" class="sidebar-link">Видеоадаптер</a>
+                                        </li>
+                                        <li class="sidebar-item">
+                                            <a href="/mcddrive" class="sidebar-link">Привод</a>
+                                        </li>
+                                        <li class="sidebar-item">
+                                            <a href="/mscard" class="sidebar-link">Звуковая карта</a>
+                                        </li>
+                                        <li class="sidebar-item">
+                                            <a href="/mlcard" class="sidebar-link">Сетевая карта</a>
+                                        </li>
+                                        <li class="sidebar-item">
+                                            <a href="/mkeyboard" class="sidebar-link">Клавиатура</a>
+                                        </li>
+                                        <li class="sidebar-item">
+                                            <a href="/mmouse" class="sidebar-link">Мышь</a>
+                                        </li>
+                                        <li class="sidebar-item">
+                                            <a href="/mspeakers" class="sidebar-link">Колонки</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li class="sidebar-item">
+                                    <a href="#" class="sidebar-link collapsed" data-bs-toggle="collapse" 
+                                       data-bs-target="#components-asuo-model" aria-expanded="false" aria-controls="components-asuo-model">
+                                        АСУО и компоненты
+                                    </a>
+                                    <ul id="components-asuo-model" class="sidebar-dropdown list-unstyled collapse third-level-menu">
+
+                                        <li class="sidebar-item">
+                                            <a href="/mdisplay" class="sidebar-link">Главное табло</a>
+                                        </li>
+                                        <li class="sidebar-item">
+                                            <a href="/msubdisplay" class="sidebar-link">Электронное табло</a>
+                                        </li>
+                                        
+                                        <li class="sidebar-item">
+                                            <a href="/po" class="sidebar-link">ПО</a>
+                                        </li>
+
+
+                                        <li class="sidebar-item">
+                                            <a href="#" class="sidebar-link collapsed" data-bs-toggle="collapse" 
+                                               data-bs-target="#asuo-and-components-group" aria-expanded="false" aria-controls="asuo-and-components-group">
+                                                Модели терминалов и компоненты
+                                            </a>
+                                            <ul id="asuo-and-components-group" class="sidebar-dropdown list-unstyled collapse third-level-menu">
+                                                <li class="sidebar-item">
+                                                    <a href="/mterminal" class="sidebar-link">Модель терминала</a>
+                                                </li>
+
+                                                <li class="sidebar-item">
+                                                    <a href="#" class="sidebar-link collapsed" data-bs-toggle="collapse" 
+                                                       data-bs-target="#asuos-components" aria-expanded="false" aria-controls="asuos-components">
+                                                        Компоненты терминала
+                                                    </a>
+                                                    <ul id="asuos-components" class="sidebar-dropdown list-unstyled collapse third-level-menu">
+                                                        <li class="sidebar-item">
+                                                            <a href="/mterminal-display" class="sidebar-link">Модель экрана</a>
+                                                        </li>
+                                                        <li class="sidebar-item">
+                                                            <a href="/mterminal-sensor" class="sidebar-link">Модель сенсора</a>
+                                                        </li>
+
+                                                        <li class="sidebar-item">
+                                                            <a href="/mterminal-server" class="sidebar-link">Модель сервера</a>
+                                                        </li>
+
+                                                        <li class="sidebar-item">
+                                                            <a href="/mterminal-printer" class="sidebar-link">Модель принтера</a>
+                                                        </li>
+
+                                                        <li class="sidebar-item">
+                                                            <a href="/mterminal-ups" class="sidebar-link">Модель ИБП</a>
+                                                        </li>
+
+                                                    </ul>
+                                                </li>
+
+                                            </ul>
+                                        </li>
+
+                                        <li class="sidebar-item">
+                                            <a href="/mhub" class="sidebar-link">Коммутатор</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </li>
+
+                        <li class="sidebar-item" id="li-storage">
+                            <a href="#" class="sidebar-link has-dropdown collapsed" data-bs-toggle="collapse" 
+                               data-bs-target="#storage" aria-expanded="false" aria-controls="storage">
+                                <i class="lni lni-package"></i>
+                                <span>Склад</span>
+                            </a>
+                            <ul id="storage" class="sidebar-dropdown list-unstyled collapse second-level-menu" data-bs-parent="#sidebar">
+                                <li class="sidebar-item">
+                                    <a href="http://10.41.30.43:8100/inventories" class="sidebar-link">Расходные материалы</a>
+                                </li>
+                                <li class="sidebar-item">
+                                    <a href="http://10.41.30.43:8100/inventories" class="sidebar-link">Запасные части</a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
                 </div>
             </div>
-            <ul class="sidebar-nav top-level-menu">
-                <li class="sidebar-item" id="li-place">
-                    <a href="#" class="sidebar-link has-dropdown collapsed" data-bs-toggle="collapse" 
-                       data-bs-target="#place" aria-expanded="false" aria-controls="place">
-                        <i class="lni lni-laptop-phone"></i>
-                        <span>Рабочие места</span>
-                    </a>
-                    <ul id="place" class="sidebar-dropdown list-unstyled collapse second-level-menu" data-bs-parent="#sidebar">
-                        <li class="sidebar-item" id="li-sysblocks">
-                            <a href="/sysblocks" class="sidebar-link">Системные блоки</a>
-                        </li>
-                        <li class="sidebar-item" id="li-monitors">
-                            <a href="/monitors" class="sidebar-link">Мониторы</a>
-                        </li>
-                        <li class="sidebar-item">
-                            <a href="http://10.41.30.43:8100/inventories" class="sidebar-link">Принтеры</a>
-                        </li>
-                        <li class="sidebar-item" id="li-scanner">
-                            <a href="/scanner" class="sidebar-link">Сканеры</a>
-                        </li>
-                        <li class="sidebar-item" id="li-ups">
-                            <a href="/ups" class="sidebar-link">ИБП</a>
-                        </li>
-                        <li class="sidebar-item" id="li-phones">
-                            <a href="/phones" class="sidebar-link">Телефоны</a>
-                        </li>
-                    </ul>
-                </li>
-                <li class="sidebar-item" id="li-server">
-                    <a href="#" class="sidebar-link has-dropdown collapsed" data-bs-toggle="collapse" 
-                       data-bs-target="#server" aria-expanded="false" aria-controls="server">
-                        <i class="lni lni-database"></i>
-                        <span>Серверная</span>
-                    </a>
-                    <ul id="server" class="sidebar-dropdown list-unstyled collapse second-level-menu" data-bs-parent="#sidebar">
-                        <li class="sidebar-item" id="li-servers">
-                            <a href="/server" class="sidebar-link">Серверы</a>
-                        </li>
-                        <li class="sidebar-item" id="li-switch">
-                            <a href="/switch" class="sidebar-link">Коммутаторы / Концентраторы</a>
-                        </li>
-                        <li class="sidebar-item" id="li-router">
-                            <a href="/router" class="sidebar-link">Маршрутизаторы</a>
-                        </li>
-                        <li class="sidebar-item" id="li-upsforserver">
-                            <a href="/upsforserver" class="sidebar-link">ИБП для серверов</a>
-                        </li>
-                        <li class="sidebar-item" id="li-ats">
-                            <a href="/ats" class="sidebar-link">АТС</a>
-                        </li>
-                        <li class="sidebar-item" id="li-conditioner">
-                            <a href="/conditioner" class="sidebar-link">Кондиционеры</a>
-                        </li>
-                    </ul>
-                </li>
-
-                <li class="sidebar-item" id="li-office">
-                    <a href="#" class="sidebar-link has-dropdown collapsed" data-bs-toggle="collapse" 
-                       data-bs-target="#officeEquipment" aria-expanded="false" aria-controls="officeEquipment">
-                        <i class="lni lni-printer"></i>
-                        <span>Оргтехника</span>
-                    </a>
-                    <ul id="officeEquipment" class="sidebar-dropdown list-unstyled collapse second-level-menu" data-bs-parent="#sidebar">
-                        <li class="sidebar-item">
-                            <a href="http://10.41.30.43:8100/inventories" class="sidebar-link">Копиры</a>
-                        </li>
-                        <li class="sidebar-item">
-                            <a href="http://10.41.30.43:8100/inventories" class="sidebar-link">МФУ</a>
-                        </li>
-                        <li class="sidebar-item">
-                            <a href="/fax" class="sidebar-link">Факсы</a>
-                        </li>
-                        <li class="sidebar-item">
-                            <a href="/infomat" class="sidebar-link">Инфоматы</a>
-                        </li>
-                        <li class="sidebar-item">
-                               <a href="#" class="sidebar-link has-dropdown collapsed" data-bs-toggle="collapse" 
-                                data-bs-target="#components-and-asuo" aria-expanded="false" aria-controls="components-and-asuo">
-                                АСУО и компоненты
-                            </a>
-                                <ul id="components-and-asuo" class="sidebar-dropdown list-unstyled collapse third-level-menu">
-                                    <li class="sidebar-item">
-                                        <a href="/asuo" class="sidebar-link">АСУО</a>
-                                    </li>
-                                    <li class="sidebar-item">
-                               <a href="#" class="sidebar-link collapsed" data-bs-toggle="collapse" 
-                                data-bs-target="#components-asuo" aria-expanded="false" aria-controls="components-asuo">
-                                Компоненты
-                            </a>
-                                <ul id="components-asuo" class="sidebar-dropdown list-unstyled collapse fourth-level-menu">
-                                    <li class="sidebar-item">
-                                        <a href="/display" class="sidebar-link">Главное табло</a>
-                                    </li>
-
-                                    <li class="sidebar-item">
-                                        <a href="/terminal" class="sidebar-link">Терминал</a>
-                                    </li>
-                                    <li class="sidebar-item">
-                                        <a href="/thermoprinter" class="sidebar-link">Термопринтер</a>
-                                    </li>
-                                    <li class="sidebar-item">
-                                        <a href="/swunit" class="sidebar-link">Блок коммутации</a>
-                                    </li>
-                                    <li class="sidebar-item">
-                                        <a href="/switch" class="sidebar-link">Свитч</a>
-                                    </li>
-                                </ul>
-                            </li>
-                                </ul>
-                            </li>
-
-                    </ul>
-
-                </li>
-
-                <li class="sidebar-item" id="li-dictionaries">
-                    <a href="#" class="sidebar-link has-dropdown collapsed" data-bs-toggle="collapse" 
-                       data-bs-target="#dictionaries" aria-expanded="false" aria-controls="dictionaries">
-                        <i class="lni lni-library"></i>
-                        <span>Справочники</span>
-                    </a>
-                    <ul id="dictionaries" class="sidebar-dropdown list-unstyled collapse second-level-menu" data-bs-parent="#sidebar">
-                       
-                        <li class="sidebar-item">
-                            <a href="/dep" class="sidebar-link">Отделы</a>
-                        </li>
-                        <li class="sidebar-item">
-                            <a href="/places" class="sidebar-link">Рабочие места</a>
-                        </li>
-                        <li class="sidebar-item">
-                            <a href="/msysblock" class="sidebar-link">Системные блоки</a>
-                        </li>
-                        <li class="sidebar-item">
-                            <a href="/mmonitors" class="sidebar-link">Мониторы</a>
-                        </li>
-
-                        <li class="sidebar-item">
-                            <a href="/mscanner" class="sidebar-link">Сканнер</a>
-                        </li>
-                        <li class="sidebar-item">
-                            <a href="/mphones" class="sidebar-link">Телефоны</a>
-                        </li>
-                        <li class="sidebar-item">
-                            <a href="/mfax" class="sidebar-link">Факсы</a>
-                        </li>
-                        <li class="sidebar-item">
-                            <a href="/mserver" class="sidebar-link">Серверы</a>
-                        </li>
-                        <li class="sidebar-item">
-                            <a href="/mswitch" class="sidebar-link">Коммутаторы/Концентраторы</a>
-                        </li>
-                        <li class="sidebar-item">
-                            <a href="/mrouter" class="sidebar-link">Маршрутизаторы</a>
-                        </li>
-                        <li class="sidebar-item">
-                            <a href="/mats" class="sidebar-link">АТС</a>
-                        </li>
-                        <li class="sidebar-item">
-                            <a href="/mconditioner" class="sidebar-link">Кондиционеры</a>
-                        </li>
-                        <li class="sidebar-item">
-                            <a href="#" class="sidebar-link">Оргтехника</a>
-                        </li>
-                        <li class="sidebar-item">
-                            <a href="/minfomat" class="sidebar-link">Инфоматы</a>
-                        </li>
-
-                        <li class="sidebar-item">
-                            <a href="/os" class="sidebar-link">Операционные системы</a>
-                        </li>
-                        
-                        
-                          <li class="sidebar-item">
-                               <a href="#" class="sidebar-link collapsed" data-bs-toggle="collapse" 
-                                data-bs-target="#ups-list" aria-expanded="false" aria-controls="ups-list">
-                                ИБП
-                            </a>
-                                <ul id="ups-list" class="sidebar-dropdown list-unstyled collapse third-level-menu">
-                                    <li class="sidebar-item">
-                                        <a href="/mups" class="sidebar-link">Модель ИБП</a>
-                                    </li>
-                                    <li class="sidebar-item">
-                                        <a href="/mupsbat" class="sidebar-link">Тип батареи ИБП</a>
-                                    </li>
-                                    
-                                </ul>
-                            </li>
-                        
-
-                            <li class="sidebar-item">
-                               <a href="#" class="sidebar-link collapsed" data-bs-toggle="collapse" 
-                                data-bs-target="#components" aria-expanded="false" aria-controls="components">
-                                Комплектующие
-                            </a>
-                                <ul id="components" class="sidebar-dropdown list-unstyled collapse third-level-menu">
-                                    <li class="sidebar-item">
-                                        <a href="/mmotherboard" class="sidebar-link">Материнская плата</a>
-                                    </li>
-                                    <li class="sidebar-item">
-                                        <a href="/mcpu" class="sidebar-link">Процессор</a>
-                                    </li>
-                                    <li class="sidebar-item">
-                                        <a href="/mram" class="sidebar-link">ОЗУ</a>
-                                    </li>
-                                    <li class="sidebar-item">
-                                        <a href="/mhdd" class="sidebar-link">НЖМД</a>
-                                    </li>
-                                    <li class="sidebar-item">
-                                        <a href="/mvideo" class="sidebar-link">Видеоадаптер</a>
-                                    </li>
-                                    <li class="sidebar-item">
-                                        <a href="/mcddrive" class="sidebar-link">Привод</a>
-                                    </li>
-                                    <li class="sidebar-item">
-                                        <a href="/mscard" class="sidebar-link">Звуковая карта</a>
-                                    </li>
-                                    <li class="sidebar-item">
-                                        <a href="/mlcard" class="sidebar-link">Сетевая карта</a>
-                                    </li>
-                                    <li class="sidebar-item">
-                                        <a href="/mkeyboard" class="sidebar-link">Клавиатура</a>
-                                    </li>
-                                    <li class="sidebar-item">
-                                        <a href="/mmouse" class="sidebar-link">Мышь</a>
-                                    </li>
-                                    <li class="sidebar-item">
-                                        <a href="/mspeakers" class="sidebar-link">Колонки</a>
-                                    </li>
-                                </ul>
-                            </li>
-                            <li class="sidebar-item">
-                               <a href="#" class="sidebar-link collapsed" data-bs-toggle="collapse" 
-                                data-bs-target="#components-asuo-model" aria-expanded="false" aria-controls="components-asuo-model">
-                                АСУО и компоненты
-                            </a>
-                                <ul id="components-asuo-model" class="sidebar-dropdown list-unstyled collapse third-level-menu">
-                                    
-                                    <li class="sidebar-item">
-                                        <a href="/mdisplay" class="sidebar-link">Главное табло</a>
-                                    </li>
-                                    <li class="sidebar-item">
-                                        <a href="/msubdisplay" class="sidebar-link">Электронное табло</a>
-                                    </li>
-                                    <li class="sidebar-item">
-                                        <a href="/mterminal" class="sidebar-link">Терминал</a>
-                                    </li>
-                                    <li class="sidebar-item">
-                                        <a href="/mthermoprinter" class="sidebar-link">Термопринтер</a>
-                                    </li>
-                                    <li class="sidebar-item">
-                                        <a href="/mswunit" class="sidebar-link">Блок коммутации</a>
-                                    </li>
-                                    <li class="sidebar-item">
-                                        <a href="/mswitch" class="sidebar-link">Свитч</a>
-                                    </li>
-                                </ul>
-                            </li>
-                    </ul>
-                </li>
-
-                <li class="sidebar-item" id="li-storage">
-                    <a href="#" class="sidebar-link has-dropdown collapsed" data-bs-toggle="collapse" 
-                       data-bs-target="#storage" aria-expanded="false" aria-controls="storage">
-                        <i class="lni lni-package"></i>
-                        <span>Склад</span>
-                    </a>
-                    <ul id="storage" class="sidebar-dropdown list-unstyled collapse second-level-menu" data-bs-parent="#sidebar">
-                        <li class="sidebar-item">
-                            <a href="http://10.41.30.43:8100/inventories" class="sidebar-link">Расходные материалы</a>
-                        </li>
-                        <li class="sidebar-item">
-                            <a href="http://10.41.30.43:8100/inventories" class="sidebar-link">Запасные части</a>
-                        </li>
-                        
-                    </ul>
-                </li>
-            </ul>
-
-            </div>
         </aside>
-        
     </body>
 </html>

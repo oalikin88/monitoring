@@ -32,10 +32,8 @@ import ru.gov.sfr.aos.monitoring.entities.SoundCard;
 import ru.gov.sfr.aos.monitoring.entities.Speakers;
 import ru.gov.sfr.aos.monitoring.entities.SubDisplayModel;
 import ru.gov.sfr.aos.monitoring.entities.SwitchHubModel;
-import ru.gov.sfr.aos.monitoring.entities.SwitchingUnitModel;
 import ru.gov.sfr.aos.monitoring.entities.SystemBlockModel;
 import ru.gov.sfr.aos.monitoring.entities.TerminalModel;
-import ru.gov.sfr.aos.monitoring.entities.ThermoPrinterModel;
 import ru.gov.sfr.aos.monitoring.entities.UpsModel;
 import ru.gov.sfr.aos.monitoring.entities.VideoCard;
 import ru.gov.sfr.aos.monitoring.models.CpuModelDto;
@@ -171,20 +169,12 @@ public abstract class SvtModelMapper {
     public abstract List<TerminalModel> getModelTerminalList(List<SvtModelDto> dtoes);
     public abstract List<SvtModelDto> getModelTerminalDtoes (List<TerminalModel> modelTerminalList);
     
-    public abstract ThermoPrinterModel getModelThermoprinter (SvtModelDto dto);
-    public abstract SvtModelDto getModelThermoprinterDto(ThermoPrinterModel thermoprinterModel);
-    public abstract List<ThermoPrinterModel> getModelThermoprinterList(List<SvtModelDto> dtoes);
-    public abstract List<SvtModelDto> getModelThermoprinterDtoes (List<ThermoPrinterModel> modelThermoprinterList);
     
     public abstract DisplayModel getModelDisplay (SvtModelDto dto);
     public abstract SvtModelDto getModelDisplayDto(DisplayModel displayModel);
     public abstract List<DisplayModel> getModelDisplayList(List<SvtModelDto> dtoes);
     public abstract List<SvtModelDto> getModelDisplayDtoes (List<DisplayModel> modelDisplayList);
 
-    public abstract SwitchingUnitModel getModelSwunit (SvtModelDto dto);
-    public abstract SvtModelDto getModelSwunitDto(SwitchingUnitModel displayModel);
-    public abstract List<SwitchingUnitModel> getModelSwunitList(List<SvtModelDto> dtoes);
-    public abstract List<SvtModelDto> getModelSwunitDtoes (List<SwitchingUnitModel> modelDisplayList);
     
     public abstract SubDisplayModel getModelSubDisplay (SvtModelDto dto);
     public abstract SvtModelDto getModelSubDisplayDto(SubDisplayModel subDisplayModel);
