@@ -29,7 +29,7 @@ public class PlaceMapper {
     
     public PlaceDTO placeDtoFromPlace(Place place) {
         PlaceDTO placeDto = new PlaceDTO();
-        placeDto.setPlaceId(place.getId());
+        placeDto.setId(place.getId());
         placeDto.setDepartment(place.getDepartment());
         placeDto.setLocationId(place.getLocation().getId());
         placeDto.setLocationName(place.getLocation().getName());
@@ -42,9 +42,9 @@ public class PlaceMapper {
     
     public Place placeFromPlaceDto(PlaceDTO placeDto) {
         Place place = null;
-        boolean existsById = placeRepo.existsById(placeDto.getPlaceId());
+        boolean existsById = placeRepo.existsById(placeDto.getId());
         if(existsById) {
-        place = placeRepo.findById(placeDto.getPlaceId()).get();
+        place = placeRepo.findById(placeDto.getId()).get();
         } else {
             place = new Place();
             place.setDepartment(placeDto.getDepartment());
@@ -74,7 +74,7 @@ public class PlaceMapper {
         List<PlaceDTO> dtoes = new ArrayList<>();
         for(Place el : input) {
             PlaceDTO placeDto = new PlaceDTO();
-            placeDto.setPlaceId(el.getId());
+            placeDto.setId(el.getId());
             placeDto.setDepartment(el.getDepartment());
             placeDto.setLocationId(el.getLocation().getId());
             placeDto.setLocationName(el.getLocation().getName());

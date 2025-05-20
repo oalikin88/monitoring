@@ -24,6 +24,5 @@ public enum ObjectBuingType {
     SWITCHHUBUNIT,
     SYSTEMBLOCK,
     TERMINAL,
-    THERMOPRINTER,
     UPS;
 }

@@ -188,7 +188,15 @@ aside {
     flex-direction: column;
     background-color: #0e223e;
     height: 100%;
-    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+}
+
+#tableDevices {
+    -webkit-user-select: text;
+    -moz-user-select: text;
+    
+    
 }
 #title {
     font-size: 18px;

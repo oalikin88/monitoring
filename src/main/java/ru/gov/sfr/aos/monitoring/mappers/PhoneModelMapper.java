@@ -59,7 +59,7 @@ public class PhoneModelMapper implements ModelMapper<PhoneModel, SvtModelDto>{
     @Override
     public SvtModelDto getDtoForSelectize(PhoneModel entity) {
         SvtModelDto dto = new SvtModelDto();
-        dto.setModel(entity.getManufacturer().getName() + " " + entity.getModel());
+        dto.setModel(entity.getModel());
         dto.setManufacturerName(entity.getManufacturer().getName());
         dto.setManufacturerId(entity.getManufacturer().getId());
         dto.setId(entity.getId());

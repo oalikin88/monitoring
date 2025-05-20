@@ -56,7 +56,7 @@ public class ConditionerModelMapper implements ModelMapper<ConditionerModel, Svt
     @Override
     public SvtModelDto getDtoForSelectize(ConditionerModel entity) {
         SvtModelDto dto = new SvtModelDto();
-        dto.setModel(entity.getManufacturer().getName() + " " + entity.getModel());
+        dto.setModel(entity.getModel());
         dto.setManufacturerName(entity.getManufacturer().getName());
         dto.setManufacturerId(entity.getManufacturer().getId());
         dto.setId(entity.getId());

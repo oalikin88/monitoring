@@ -52,7 +52,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                     
                     <div class="row pb-2 mb-2 mt-2 pt-2" th:each="dto, stat : ${dtoes}">
                         <div class="col">
-                            <div class="row element" data-bs-toggle="modal" data-bs-target="#addPlaceModal" th:attr="id=${dto.placeId}">
+                            <div class="row element" data-bs-toggle="modal" data-bs-target="#addPlaceModal" th:attr="id=${dto.id}">
                                 <div class="col-1" th:text="${stat.count}"></div>
                                 <div class="col-2 text-start" th:text="${dto.locationName}"></div>
                                 <div class="col-4 text-start" th:text="${dto.department}"></div>

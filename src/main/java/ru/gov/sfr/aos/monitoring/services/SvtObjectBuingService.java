@@ -39,7 +39,9 @@ public abstract class SvtObjectBuingService <E extends ObjectBuing, T extends Ob
     }
      
      
-    
+      public List<E> findAllByPlaceId(Long id) {
+            return repository.findByPlaceIdAndArchivedFalse(id);
+        }
    
     public E getById(Long id) {
         E e = (E) repository.findById(id).get();

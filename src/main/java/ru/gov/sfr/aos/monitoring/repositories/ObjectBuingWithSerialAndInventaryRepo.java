@@ -28,4 +28,5 @@ public interface ObjectBuingWithSerialAndInventaryRepo <E extends ObjectBuingWit
     List<E> findByPlaceArchivedFalse();
     List<E> findByArchivedFalse();
     Optional<E> findById(Long id);
+    List<E> findByPlaceIdAndArchivedFalse(Long id);
 }

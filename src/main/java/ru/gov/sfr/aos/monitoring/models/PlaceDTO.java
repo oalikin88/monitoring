@@ -9,7 +9,7 @@ package ru.gov.sfr.aos.monitoring.models;
  * @author 041AlikinOS
  */
 public class PlaceDTO {
-    private Long placeId;
+    private Long id;
     private Long modelId;
     private String username;
     private String placeType;
@@ -21,8 +21,8 @@ public class PlaceDTO {
     public PlaceDTO() {
     }
 
-    public PlaceDTO(Long placeId, String username, String placeType, Long locationId, String locationName, String department) {
-        this.placeId = placeId;
+    public PlaceDTO(Long id, String username, String placeType, Long locationId, String locationName, String department) {
+        this.id = id;
         this.username = username;
         this.placeType = placeType;
         this.locationId = locationId;
@@ -30,12 +30,12 @@ public class PlaceDTO {
         this.department = department;
     }
 
-    public Long getPlaceId() {
-        return placeId;
+    public Long getId() {
+        return id;
     }
 
-    public void setPlaceId(Long placeId) {
-        this.placeId = placeId;
+    public void setId(Long id) {
+        this.id = id;
     }
     
     public String getUsername() {
@@ -99,7 +99,7 @@ public class PlaceDTO {
 
     @Override
     public String toString() {
-        return "PlaceDTO{" + "placeId=" + placeId + ", username=" + username + ", placeType=" + placeType + ", locationId=" + locationId + ", locationName=" + locationName + ", department=" + department + ", departmentCode=" + departmentCode + '}';
+        return "PlaceDTO{" + "placeId=" + id + ", username=" + username + ", placeType=" + placeType + ", locationId=" + locationId + ", locationName=" + locationName + ", department=" + department + ", departmentCode=" + departmentCode + '}';
     }
     
     

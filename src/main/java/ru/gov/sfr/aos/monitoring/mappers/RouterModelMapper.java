@@ -56,7 +56,7 @@ public class RouterModelMapper implements ModelMapper<RouterModel, SvtModelDto> 
     @Override
     public SvtModelDto getDtoForSelectize(RouterModel entity) {
         SvtModelDto dto = new SvtModelDto();
-        dto.setModel(entity.getManufacturer().getName() + " " + entity.getModel());
+        dto.setModel(entity.getModel());
         dto.setManufacturerName(entity.getManufacturer().getName());
         dto.setManufacturerId(entity.getManufacturer().getId());
         dto.setId(entity.getId());

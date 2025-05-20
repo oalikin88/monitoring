@@ -40,7 +40,9 @@ public abstract class SvtObjService <E extends ObjectBuingWithSerialAndInventary
     }
      
      
-    
+       public List<E> findAllByPlaceId(Long id) {
+            return repository.findByPlaceIdAndArchivedFalse(id);
+        }
    
     public E getById(Long id) {
         E e = (E) repository.findById(id).get();

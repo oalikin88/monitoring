@@ -49,6 +49,7 @@ import ru.gov.sfr.aos.monitoring.entities.Mouse;
 import ru.gov.sfr.aos.monitoring.entities.OperationSystem;
 import ru.gov.sfr.aos.monitoring.entities.Phone;
 import ru.gov.sfr.aos.monitoring.entities.PhoneModel;
+import ru.gov.sfr.aos.monitoring.entities.Place;
 import ru.gov.sfr.aos.monitoring.entities.ProgramSoftware;
 import ru.gov.sfr.aos.monitoring.entities.Ram;
 import ru.gov.sfr.aos.monitoring.entities.Router;
@@ -128,6 +129,7 @@ import ru.gov.sfr.aos.monitoring.models.FilterDto;
 import ru.gov.sfr.aos.monitoring.models.HddDto;
 import ru.gov.sfr.aos.monitoring.models.HubDto;
 import ru.gov.sfr.aos.monitoring.models.LocationByTreeDto;
+import ru.gov.sfr.aos.monitoring.models.LocationByTreePlaceDto;
 import ru.gov.sfr.aos.monitoring.models.OperationSystemDto;
 import ru.gov.sfr.aos.monitoring.models.PlaceDTO;
 import ru.gov.sfr.aos.monitoring.models.ProgramSoftwareDto;
@@ -822,6 +824,8 @@ public class SvtViewController {
         model.addAttribute("placeAttribute", "employee");
         model.addAttribute("namePage","Телефоны");
         model.addAttribute("amountDevice", amount);
+        model.addAttribute("haveFilter", true);
+        model.addAttribute("haveDownload", true);
         
         return "svtobj";
     }
@@ -917,6 +921,8 @@ public class SvtViewController {
         model.addAttribute("placeAttribute", "employee");
         model.addAttribute("namePage","ИБП");
         model.addAttribute("amountDevice", amount);
+        model.addAttribute("haveFilter", true);
+        model.addAttribute("haveDownload", true);
         return "svtobj";
     }
     
@@ -1028,6 +1034,8 @@ public class SvtViewController {
         model.addAttribute("placeAttribute", "serverroom");
         model.addAttribute("namePage","ИБП");
         model.addAttribute("amountDevice", amount);
+        model.addAttribute("haveFilter", true);
+        model.addAttribute("haveDownload", true);
         return "svtobj";
     }
     
@@ -1221,6 +1229,8 @@ public class SvtViewController {
         model.addAttribute("placeAttribute", "employee");
         model.addAttribute("namePage","Мониторы");
         model.addAttribute("amountDevice", amount);
+        model.addAttribute("haveFilter", true);
+        model.addAttribute("haveDownload", true);
         
         return "svtobj";
     }
@@ -1388,6 +1398,8 @@ public class SvtViewController {
         model.addAttribute("placeAttribute", "employee");
         model.addAttribute("namePage","Системные блоки");
         model.addAttribute("amountDevice", amount);
+        model.addAttribute("haveFilter", true);
+        model.addAttribute("haveDownload", true);
         
         return "svtobj";
     }
@@ -2147,6 +2159,8 @@ public class SvtViewController {
         model.addAttribute("placeAttribute", "employee");
         model.addAttribute("namePage","Сканеры");
         model.addAttribute("amountDevice", amount);
+        model.addAttribute("haveFilter", true);
+        model.addAttribute("haveDownload", true);
         return "svtobj";
     }
     
@@ -2327,6 +2341,8 @@ public class SvtViewController {
         model.addAttribute("placeAttribute", "serverroom");
         model.addAttribute("namePage","Серверы");
         model.addAttribute("amountDevice", amount);
+        model.addAttribute("haveFilter", true);
+        model.addAttribute("haveDownload", true);
         return "svtobj";
     }
     
@@ -2484,13 +2500,13 @@ public class SvtViewController {
         List<HubDto> filter = null;
         if(dto.model == null && dto.status == null && dto.yearCreatedOne == null && dto.yearCreatedTwo == null) {
         if(null != username) {
-            svtObjectsByEmployee = hubService.getSvtObjectsByName(username, PlaceType.SERVERROOM);
+            svtObjectsByEmployee = hubService.getSvtObjectsByName(username, PlaceType.OFFICEEQUIPMENT);
         }else if(null != inventaryNumber) {
-            svtObjectsByEmployee = hubService.getSvtObjectsByInventaryNumberAndPlace(inventaryNumber, PlaceType.SERVERROOM);
+            svtObjectsByEmployee = hubService.getSvtObjectsByInventaryNumberAndPlace(inventaryNumber, PlaceType.OFFICEEQUIPMENT);
         }else if(null != serialNumber) {
-            svtObjectsByEmployee = hubService.getSvtObjectsBySerialNumberAndPlace(serialNumber, PlaceType.SERVERROOM);
+            svtObjectsByEmployee = hubService.getSvtObjectsBySerialNumberAndPlace(serialNumber, PlaceType.OFFICEEQUIPMENT);
         } else {
-            svtObjectsByEmployee = hubService.getSvtObjectsByPlaceType(PlaceType.SERVERROOM);
+            svtObjectsByEmployee = hubService.getSvtObjectsByPlaceType(PlaceType.OFFICEEQUIPMENT);
         }
         treeSvtDtoByEmployee = hubOutDtoTreeService.getTreeSvtDtoByPlaceType(svtObjectsByEmployee)
                 .stream()
@@ -2520,7 +2536,7 @@ public class SvtViewController {
                 filter.add(hubDto);
             }
             
-            svtObjectsByEmployee = hubService.getHubByPlaceTypeAndFilter(PlaceType.SERVERROOM, hubByFilter);
+            svtObjectsByEmployee = hubService.getHubByPlaceTypeAndFilter(PlaceType.OFFICEEQUIPMENT, hubByFilter);
             treeSvtDtoByEmployee = hubOutDtoTreeService.getTreeSvtDtoByPlaceType(svtObjectsByEmployee)
                 .stream()
                 .sorted((o1, o2) -> o1.getLocationName().compareTo(o2.getLocationName()))
@@ -2559,9 +2575,11 @@ public class SvtViewController {
         model.addAttribute("dtoes", treeSvtDtoByEmployee);
         model.addAttribute("dtoesStorage", treeSvtDtoByStorage);
         model.addAttribute("attribute", "hub");
-        model.addAttribute("placeAttribute", "serverroom");
+        model.addAttribute("placeAttribute", "officeequipment");
         model.addAttribute("namePage","Коммутаторы");
         model.addAttribute("amountDevice", amount);
+        model.addAttribute("haveFilter", true);
+        model.addAttribute("haveDownload", true);
         return "svtobj";
     }
     
@@ -2693,6 +2711,8 @@ public class SvtViewController {
         model.addAttribute("placeAttribute", "serverroom");
         model.addAttribute("namePage","Коммутаторы/Концентраторы");
         model.addAttribute("amountDevice", amount);
+        model.addAttribute("haveFilter", true);
+        model.addAttribute("haveDownload", true);
         return "svtobj";
     }
     
@@ -2864,6 +2884,8 @@ public class SvtViewController {
         model.addAttribute("placeAttribute", "serverroom");
         model.addAttribute("namePage","Маршрутизаторы");
         model.addAttribute("amountDevice", amount);
+        model.addAttribute("haveFilter", true);
+        model.addAttribute("haveDownload", true);
         return "svtobj";
     }
     
@@ -3040,6 +3062,8 @@ public class SvtViewController {
         model.addAttribute("placeAttribute", "serverroom");
         model.addAttribute("namePage","АТС");
         model.addAttribute("amountDevice", amount);
+        model.addAttribute("haveFilter", false);
+        model.addAttribute("haveDownload", true);
         return "svtobj";
     }
     
@@ -3216,6 +3240,10 @@ public class SvtViewController {
         model.addAttribute("placeAttribute", "serverroom");
         model.addAttribute("namePage","Кондиционеры");
         model.addAttribute("amountDevice", amount);
+        model.addAttribute("haveFilter", true);
+        model.addAttribute("haveDownload", true);
+        model.addAttribute("haveFilter", true);
+        model.addAttribute("haveDownload", true);
         return "svtobj";
     }
     
@@ -3395,6 +3423,8 @@ public class SvtViewController {
         model.addAttribute("placeAttribute", "officeequipment");
         model.addAttribute("namePage","Факсы");
         model.addAttribute("amountDevice", amount);
+        model.addAttribute("haveFilter", true);
+        model.addAttribute("haveDownload", true);
         return "svtobj";
     }
     
@@ -3571,6 +3601,8 @@ public class SvtViewController {
         model.addAttribute("placeAttribute", "officeequipment");
         model.addAttribute("namePage","Инфоматы");
         model.addAttribute("amountDevice", amount);
+        model.addAttribute("haveFilter", true);
+        model.addAttribute("haveDownload", true);
         return "svtobj";
     }
     
@@ -3998,6 +4030,9 @@ public class SvtViewController {
                 .stream()
                 .sorted((o1, o2) -> o1.getLocationName().compareTo(o2.getLocationName()))
                 .collect(Collectors.toList());
+        
+        int amount = SvtViewController.getAmountDevices(treeSvtDtoByEmployee, treeSvtDtoByStorage);
+        
         model.addAttribute("searchFIO", username);
         model.addAttribute("searchInventary", inventaryNumber);
         model.addAttribute("searchSerial", serialNumber);
@@ -4006,6 +4041,9 @@ public class SvtViewController {
         model.addAttribute("attribute", "terminal");
         model.addAttribute("placeAttribute", "officeequipment");
         model.addAttribute("namePage","Терминалы");
+        model.addAttribute("amountDevice", amount);
+        model.addAttribute("haveFilter", false);
+        model.addAttribute("haveDownload", true);
         
         return "svtobj";
     }
@@ -4039,6 +4077,9 @@ public class SvtViewController {
                 .stream()
                 .sorted((o1, o2) -> o1.getLocationName().compareTo(o2.getLocationName()))
                 .collect(Collectors.toList());
+        
+        int amount = SvtViewController.getAmountDevices(treeSvtDtoByEmployee, treeSvtDtoByStorage);
+        
         model.addAttribute("searchFIO", username);
         model.addAttribute("searchSerial", serialNumber);
         model.addAttribute("dtoes", treeSvtDtoByEmployee);
@@ -4046,6 +4087,9 @@ public class SvtViewController {
         model.addAttribute("attribute", "terminalDisplay");
         model.addAttribute("placeAttribute", "officeequipment");
         model.addAttribute("namePage","Экран для терминала");
+        model.addAttribute("amountDevice", amount);
+        model.addAttribute("haveFilter", false);
+        model.addAttribute("haveDownload", true);
         
         return "svtobj";
     }
@@ -4081,6 +4125,8 @@ public class SvtViewController {
                 .sorted((o1, o2) -> o1.getLocationName().compareTo(o2.getLocationName()))
                 .collect(Collectors.toList());
         
+        int amount = SvtViewController.getAmountDevices(treeSvtDtoByEmployee, treeSvtDtoByStorage);
+        
         model.addAttribute("searchFIO", username);
         model.addAttribute("searchSerial", serialNumber);
         model.addAttribute("dtoes", treeSvtDtoByEmployee);
@@ -4088,6 +4134,9 @@ public class SvtViewController {
         model.addAttribute("attribute", "terminalServer");
         model.addAttribute("placeAttribute", "officeequipment");
         model.addAttribute("namePage","Сервер для терминала");
+        model.addAttribute("amountDevice", amount);
+        model.addAttribute("haveFilter", false);
+        model.addAttribute("haveDownload", true);
         
         return "svtobj";
     }
@@ -4124,6 +4173,8 @@ public class SvtViewController {
                 .sorted((o1, o2) -> o1.getLocationName().compareTo(o2.getLocationName()))
                 .collect(Collectors.toList());
         
+        int amount = SvtViewController.getAmountDevices(treeSvtDtoByEmployee, treeSvtDtoByStorage);
+        
         model.addAttribute("searchFIO", username);
         model.addAttribute("searchSerial", serialNumber);
         model.addAttribute("dtoes", treeSvtDtoByEmployee);
@@ -4131,6 +4182,9 @@ public class SvtViewController {
         model.addAttribute("attribute", "terminalUps");
         model.addAttribute("placeAttribute", "officeequipment");
         model.addAttribute("namePage","ИБП для терминала");
+        model.addAttribute("amountDevice", amount);
+        model.addAttribute("haveFilter", false);
+        model.addAttribute("haveDownload", true);
         
         return "svtobj";
     }
@@ -4166,6 +4220,8 @@ public class SvtViewController {
                 .sorted((o1, o2) -> o1.getLocationName().compareTo(o2.getLocationName()))
                 .collect(Collectors.toList());
         
+        int amount = SvtViewController.getAmountDevices(treeSvtDtoByEmployee, treeSvtDtoByStorage);
+        
         model.addAttribute("searchFIO", username);
         model.addAttribute("searchSerial", serialNumber);
         model.addAttribute("dtoes", treeSvtDtoByEmployee);
@@ -4173,6 +4229,9 @@ public class SvtViewController {
         model.addAttribute("attribute", "terminalPrinter");
         model.addAttribute("placeAttribute", "officeequipment");
         model.addAttribute("namePage","Принтер для терминала");
+        model.addAttribute("amountDevice", amount);
+        model.addAttribute("haveFilter", false);
+        model.addAttribute("haveDownload", true);
         
         return "svtobj";
     }
@@ -4208,6 +4267,8 @@ public class SvtViewController {
                 .sorted((o1, o2) -> o1.getLocationName().compareTo(o2.getLocationName()))
                 .collect(Collectors.toList());
         
+        int amount = SvtViewController.getAmountDevices(treeSvtDtoByEmployee, treeSvtDtoByStorage);
+        
         model.addAttribute("searchFIO", username);
         model.addAttribute("searchSerial", serialNumber);
         model.addAttribute("dtoes", treeSvtDtoByEmployee);
@@ -4215,6 +4276,9 @@ public class SvtViewController {
         model.addAttribute("attribute", "terminalSensor");
         model.addAttribute("placeAttribute", "officeequipment");
         model.addAttribute("namePage","Сенсор для терминала");
+        model.addAttribute("amountDevice", amount);
+        model.addAttribute("haveFilter", false);
+        model.addAttribute("haveDownload", true);
         
         return "svtobj";
     }
@@ -4553,6 +4617,8 @@ public class SvtViewController {
                 .sorted((o1, o2) -> o1.getLocationName().compareTo(o2.getLocationName()))
                 .collect(Collectors.toList());
         
+        int amount = SvtViewController.getAmountDevices(treeSvtDtoByEmployee, treeSvtDtoByStorage);
+        
         model.addAttribute("searchFIO", username);
         model.addAttribute("searchInventary", inventaryNumber);
         model.addAttribute("searchSerial", serialNumber);
@@ -4561,6 +4627,9 @@ public class SvtViewController {
         model.addAttribute("attribute", "display");
         model.addAttribute("placeAttribute", "officeequipment");
         model.addAttribute("namePage","Главное табло");
+        model.addAttribute("amountDevice", amount);
+        model.addAttribute("haveFilter", false);
+        model.addAttribute("haveDownload", true);
         
         return "svtobj";
     }
@@ -4673,6 +4742,8 @@ public class SvtViewController {
                 .sorted((o1, o2) -> o1.getLocationName().compareTo(o2.getLocationName()))
                 .collect(Collectors.toList());
         
+        int amount = SvtViewController.getAmountDevices(treeSvtDtoByEmployee, treeSvtDtoByStorage);
+        
         model.addAttribute("searchFIO", username);
         model.addAttribute("searchInventary", inventaryNumber);
         model.addAttribute("dtoes", treeSvtDtoByEmployee);
@@ -4680,9 +4751,46 @@ public class SvtViewController {
         model.addAttribute("placeAttribute", "officeequipment");
         model.addAttribute("attribute", "asuo");
         model.addAttribute("namePage","Электронные очереди");
+        model.addAttribute("amountDevice", amount);
+        model.addAttribute("haveFilter", false);
+        model.addAttribute("haveDownload", true);
         
         return "svtobj";
     }
+    
+    
+    @GetMapping("/all-places")
+    public String getAllPlaces(Model model, 
+            @RequestParam(value="username", required = false) String username) {
+        
+        List<LocationByTreePlaceDto> placeDtoByAllLocations = null;
+        
+        if (null != username) {
+            List<Place> placeByUsername = placeService.getPlaceListByUsername(username);
+            placeDtoByAllLocations = placeService.getPlaceDtoByAllLocations(placeByUsername);
+        } else {
+            List<Place> allPlaces = placeService.getAllPlaces();
+            placeDtoByAllLocations = placeService.getPlaceDtoByAllLocations(allPlaces);
+        }
+        
+        List<LocationByTreePlaceDto> out = placeDtoByAllLocations.stream()
+                .sorted((o1, o2) -> o1.getLocationName().compareTo(o2.getLocationName()))
+                .collect(Collectors.toList());
+        int amount = SvtViewController.getAmountDevicesByPlace(placeDtoByAllLocations);
+        
+        model.addAttribute("amountDevice", amount);
+        model.addAttribute("searchFIO", username);
+        model.addAttribute("dtoes", out);
+        model.addAttribute("placeAttribute", "all-places");
+        model.addAttribute("attribute", "places");
+        model.addAttribute("namePage","Оборудование по сотруднику");
+        
+        return "svtobj";
+    }
+    
+    
+    
+    
     
  //   @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
  //   @Log
@@ -4720,6 +4828,7 @@ public class SvtViewController {
     
     
     
+    
     public static int getAmountDevices(List<LocationByTreeDto> listNoStorage, List<LocationByTreeDto> listStorage) {
     int result = 0;
         for(LocationByTreeDto loc : listNoStorage) {
@@ -4731,6 +4840,14 @@ public class SvtViewController {
         return result;
     }
     
+     public static int getAmountDevicesByPlace(List<LocationByTreePlaceDto> list) {
+    int result = 0;
+        for(LocationByTreePlaceDto loc : list) {
+            result = result + loc.getAmount();
+        }
+    
+        return result;
+    }
     
 }
 

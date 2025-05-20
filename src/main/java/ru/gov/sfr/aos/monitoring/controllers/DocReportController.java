@@ -10,12 +10,18 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
 import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -25,15 +31,21 @@ import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import ru.gov.sfr.aos.monitoring.dictionaries.PlaceType;
 import ru.gov.sfr.aos.monitoring.entities.Ats;
+import ru.gov.sfr.aos.monitoring.entities.AtsModel;
 import ru.gov.sfr.aos.monitoring.entities.Conditioner;
+import ru.gov.sfr.aos.monitoring.entities.Display;
 import ru.gov.sfr.aos.monitoring.entities.Fax;
 import ru.gov.sfr.aos.monitoring.entities.Hdd;
+import ru.gov.sfr.aos.monitoring.entities.Hub;
+import ru.gov.sfr.aos.monitoring.entities.HubModel;
 import ru.gov.sfr.aos.monitoring.entities.Infomat;
 import ru.gov.sfr.aos.monitoring.entities.Location;
 import ru.gov.sfr.aos.monitoring.entities.Monitor;
@@ -44,11 +56,18 @@ import ru.gov.sfr.aos.monitoring.entities.Scanner;
 import ru.gov.sfr.aos.monitoring.entities.Server;
 import ru.gov.sfr.aos.monitoring.entities.SwitchHub;
 import ru.gov.sfr.aos.monitoring.entities.SystemBlock;
+import ru.gov.sfr.aos.monitoring.entities.Terminal;
+import ru.gov.sfr.aos.monitoring.entities.TerminalDisplay;
+import ru.gov.sfr.aos.monitoring.entities.TerminalPrinter;
+import ru.gov.sfr.aos.monitoring.entities.TerminalSensor;
+import ru.gov.sfr.aos.monitoring.entities.TerminalServer;
+import ru.gov.sfr.aos.monitoring.entities.TerminalUps;
 import ru.gov.sfr.aos.monitoring.entities.Ups;
 import ru.gov.sfr.aos.monitoring.mappers.AtsMapper;
 import ru.gov.sfr.aos.monitoring.mappers.ConditionerMapper;
 import ru.gov.sfr.aos.monitoring.mappers.FaxMapper;
 import ru.gov.sfr.aos.monitoring.mappers.HddMapper;
+import ru.gov.sfr.aos.monitoring.mappers.HubMapper;
 import ru.gov.sfr.aos.monitoring.mappers.InfomatMapper;
 import ru.gov.sfr.aos.monitoring.mappers.MonitorMapper;
 import ru.gov.sfr.aos.monitoring.mappers.OperationSystemMapper;
@@ -60,11 +79,15 @@ import ru.gov.sfr.aos.monitoring.mappers.SwitchHubMapper;
 import ru.gov.sfr.aos.monitoring.mappers.SystemBlockMapper;
 import ru.gov.sfr.aos.monitoring.mappers.UpsMapper;
 import ru.gov.sfr.aos.monitoring.models.DepartmentTreeDto;
+import ru.gov.sfr.aos.monitoring.models.DeviceDto;
+import ru.gov.sfr.aos.monitoring.models.DisplayDto;
 import ru.gov.sfr.aos.monitoring.models.FaxDto;
 import ru.gov.sfr.aos.monitoring.models.FilterDto;
 import ru.gov.sfr.aos.monitoring.models.HddDto;
+import ru.gov.sfr.aos.monitoring.models.HubDto;
 import ru.gov.sfr.aos.monitoring.models.LocationByTreeDto;
 import ru.gov.sfr.aos.monitoring.models.OperationSystemDto;
+import ru.gov.sfr.aos.monitoring.models.PlaceDTO;
 import ru.gov.sfr.aos.monitoring.models.SvtAtsDTO;
 import ru.gov.sfr.aos.monitoring.models.SvtConditionerDTO;
 import ru.gov.sfr.aos.monitoring.models.SvtDTO;
@@ -72,20 +95,33 @@ import ru.gov.sfr.aos.monitoring.models.SvtScannerDTO;
 import ru.gov.sfr.aos.monitoring.models.SvtServerDTO;
 import ru.gov.sfr.aos.monitoring.models.SvtSwitchHubDTO;
 import ru.gov.sfr.aos.monitoring.models.SvtSystemBlockDTO;
+import ru.gov.sfr.aos.monitoring.models.TerminalComponentDto;
+import ru.gov.sfr.aos.monitoring.models.TerminalDisplayDto;
+import ru.gov.sfr.aos.monitoring.models.TerminalDto;
+import ru.gov.sfr.aos.monitoring.services.AtsModelService;
 import ru.gov.sfr.aos.monitoring.services.AtsOutDtoTreeService;
 import ru.gov.sfr.aos.monitoring.services.AtsService;
 import ru.gov.sfr.aos.monitoring.services.ConditionerOutDtoTreeService;
 import ru.gov.sfr.aos.monitoring.services.ConditionerService;
+import ru.gov.sfr.aos.monitoring.services.DisplayModelService;
+import ru.gov.sfr.aos.monitoring.services.DisplayOutDtoTreeService;
+import ru.gov.sfr.aos.monitoring.services.DisplayService;
 import ru.gov.sfr.aos.monitoring.services.FaxOutDtoTreeService;
 import ru.gov.sfr.aos.monitoring.services.FaxService;
 import ru.gov.sfr.aos.monitoring.services.HddModelService;
+import ru.gov.sfr.aos.monitoring.services.HubOutDtoTreeService;
+import ru.gov.sfr.aos.monitoring.services.HubService;
 import ru.gov.sfr.aos.monitoring.services.InfomatOutDtoTreeService;
 import ru.gov.sfr.aos.monitoring.services.InfomatService;
+import ru.gov.sfr.aos.monitoring.services.LocationService;
 import ru.gov.sfr.aos.monitoring.services.MonitorOutDtoTreeService;
 import ru.gov.sfr.aos.monitoring.services.MonitorService;
+import ru.gov.sfr.aos.monitoring.services.ObjectBuingServiceImpl;
 import ru.gov.sfr.aos.monitoring.services.OperationSystemService;
 import ru.gov.sfr.aos.monitoring.services.PhoneOutDtoTreeService;
 import ru.gov.sfr.aos.monitoring.services.PhoneService;
+import ru.gov.sfr.aos.monitoring.services.PlaceService;
+import ru.gov.sfr.aos.monitoring.services.RegularOperation;
 import ru.gov.sfr.aos.monitoring.services.RouterOutDtoTreeService;
 import ru.gov.sfr.aos.monitoring.services.RouterService;
 import ru.gov.sfr.aos.monitoring.services.ScannerOutDtoTreeService;
@@ -96,6 +132,18 @@ import ru.gov.sfr.aos.monitoring.services.SwitchHubOutDtoTreeService;
 import ru.gov.sfr.aos.monitoring.services.SwitchHubService;
 import ru.gov.sfr.aos.monitoring.services.SystemBlockOutDtoTreeService;
 import ru.gov.sfr.aos.monitoring.services.SystemBlockService;
+import ru.gov.sfr.aos.monitoring.services.TerminalDisplayOutDtoTreeService;
+import ru.gov.sfr.aos.monitoring.services.TerminalDisplayService;
+import ru.gov.sfr.aos.monitoring.services.TerminalOutDtoTreeService;
+import ru.gov.sfr.aos.monitoring.services.TerminalPrinterOutDtoTreeService;
+import ru.gov.sfr.aos.monitoring.services.TerminalPrinterService;
+import ru.gov.sfr.aos.monitoring.services.TerminalSensorOutDtoTreeService;
+import ru.gov.sfr.aos.monitoring.services.TerminalSensorService;
+import ru.gov.sfr.aos.monitoring.services.TerminalServerOutDtoTreeService;
+import ru.gov.sfr.aos.monitoring.services.TerminalServerService;
+import ru.gov.sfr.aos.monitoring.services.TerminalService;
+import ru.gov.sfr.aos.monitoring.services.TerminalUpsOutDtoTreeService;
+import ru.gov.sfr.aos.monitoring.services.TerminalUpsService;
 import ru.gov.sfr.aos.monitoring.services.UpsOutDtoTreeService;
 import ru.gov.sfr.aos.monitoring.services.UpsService;
 
@@ -187,6 +235,622 @@ public class DocReportController {
     private InfomatOutDtoTreeService infomatOutDtoTreeService;
     @Autowired
     private InfomatMapper infomatMapper;
+    @Autowired
+    private ObjectBuingServiceImpl objectBuingServiceImpl;
+    @Autowired
+    private PlaceService placeService;
+    @Autowired
+    private DisplayService displayService;
+    @Autowired
+    private DisplayOutDtoTreeService displayOutDtoTreeService;
+    @Autowired
+    private HubService hubService;
+    @Autowired
+    private HubOutDtoTreeService hubOutDtoTreeService;
+    @Autowired
+    private LocationService locationService;
+    @Autowired
+    private HubMapper hubMapper;
+    @Autowired
+    private TerminalService terminalService;
+    @Autowired
+    private TerminalOutDtoTreeService terminalOutDtoTreeService;
+    @Autowired
+    private TerminalDisplayService terminalDisplayService;
+    @Autowired
+    private TerminalDisplayOutDtoTreeService terminalDisplayOutDtoTreeService;
+    @Autowired
+    private TerminalServerService terminalServerService;
+    @Autowired
+    private TerminalServerOutDtoTreeService terminalServerOutDtoTreeService;
+    @Autowired
+    private TerminalUpsService terminalUpsService;
+    @Autowired
+    private TerminalUpsOutDtoTreeService terminalUpsOutDtoTreeService;
+    @Autowired
+    private TerminalPrinterService terminalPrinterService;
+    @Autowired
+    private TerminalPrinterOutDtoTreeService terminalPrinterOutDtoTreeService;
+    @Autowired
+    private TerminalSensorService terminalSensorService;
+    @Autowired
+    private TerminalSensorOutDtoTreeService terminalSensorOutDtoTreeService;
+    
+    
+    
+      @GetMapping("/terminal-display")
+    public ResponseEntity<Resource> getTerminalDisplay(
+            @RequestParam(value="username", required = false) String username,
+            @RequestParam(value="serialNumber", required = false) String serialNumber ) throws FileNotFoundException, IOException {
+        Map<Location, List<TerminalDisplay>> svtObjectsByEmployee = null;
+        if(null != username) {
+            svtObjectsByEmployee = terminalDisplayService.getSvtObjectsByName(username, PlaceType.OFFICEEQUIPMENT);
+        }else if(null != serialNumber) {
+        svtObjectsByEmployee = terminalDisplayService.getSvtObjectsBySerialNumberAndPlace(serialNumber, PlaceType.OFFICEEQUIPMENT);
+        } else {
+            svtObjectsByEmployee = terminalDisplayService.getSvtObjectsByPlaceType(PlaceType.OFFICEEQUIPMENT);
+        }
+        List<LocationByTreeDto> treeSvtDtoByEmployee = terminalDisplayOutDtoTreeService.getTreeSvtDtoByPlaceType(svtObjectsByEmployee)
+                .stream()
+                .sorted((o1, o2) -> o1.getLocationName().compareTo(o2.getLocationName()))
+                .collect(Collectors.toList());
+        Map<Location, List<TerminalDisplay>> svtObjectsByStorage = null;
+        
+        if(null != username) {
+            svtObjectsByStorage = terminalDisplayService.getSvtObjectsByName(username, PlaceType.STORAGE);
+        }else if(null != serialNumber) {
+            svtObjectsByStorage = terminalDisplayService.getSvtObjectsBySerialNumberAndPlace(serialNumber, PlaceType.STORAGE);
+        } else {
+            svtObjectsByStorage = terminalDisplayService.getSvtObjectsByPlaceType(PlaceType.STORAGE);
+        }
+        List<LocationByTreeDto> treeSvtDtoByStorage = terminalDisplayOutDtoTreeService.getTreeSvtDtoByPlaceType(svtObjectsByStorage)
+                .stream()
+                .sorted((o1, o2) -> o1.getLocationName().compareTo(o2.getLocationName()))
+                .collect(Collectors.toList());
+        
+ 
+        
+        XSSFWorkbook workbook = new XSSFWorkbook();
+        
+        XSSFSheet spreadsheet = workbook.createSheet("Лист1");
+        XSSFRow row;
+        
+        Map<String, Object[]> upsData = new TreeMap<String, Object[]>(); 
+        
+        upsData.put("1", new Object[] {"Модель", "ФИО", "Тип рабочего места",  
+            "Серийный номер", "Диагональ", "Состояние", "Район"} );
+        
+        int p = 2;
+         for(LocationByTreeDto locationByTreeDto : treeSvtDtoByEmployee) {
+            for(DepartmentTreeDto departmentTreeDto : locationByTreeDto.getDepartments()) {
+            for(int i = 0; i < departmentTreeDto.getDtoes().size(); i++) {
+                if(departmentTreeDto.getDtoes().get(i) instanceof TerminalDisplayDto) {
+                    TerminalDisplayDto elem = (TerminalDisplayDto)departmentTreeDto.getDtoes().get(i);
+                    
+                    upsData.put(String.valueOf(p), new Object[] {elem.getManufacturer() + " " + elem.getModel(), elem.getPlaceName(), DocReportController.getPlaceTypeRus(elem.getPlaceType()), 
+                    elem.getSerialNumber(), elem.getScreenDiagonal(), DocReportController.getStatusToRus(elem.getStatus()), locationByTreeDto.getLocationName()});
+                }
+                p++;
+            }
+        }
+        
+        }
+        
+        for(LocationByTreeDto locationByTreeDto : treeSvtDtoByStorage) {
+            for(DepartmentTreeDto departmentTreeDto : locationByTreeDto.getDepartments()) {
+            for(int j = 0; j < departmentTreeDto.getDtoes().size(); j++) {
+                if(departmentTreeDto.getDtoes().get(j) instanceof TerminalDisplayDto) {
+                    
+                    TerminalDisplayDto elem = (TerminalDisplayDto)departmentTreeDto.getDtoes().get(j);
+                    
+                     upsData.put(String.valueOf(p), new Object[] {elem.getManufacturer() + " " + elem.getModel(), elem.getPlaceName(), DocReportController.getPlaceTypeRus(elem.getPlaceType()), 
+                    elem.getSerialNumber(), elem.getScreenDiagonal(), DocReportController.getStatusToRus(elem.getStatus()), locationByTreeDto.getLocationName()});
+                }
+                p++;
+            }
+        }
+        
+        }
+        
+        Set<String> keyid = upsData.keySet(); 
+        int rowid = 0;
+        
+        for(String key : keyid) {
+            row = spreadsheet.createRow(rowid++);
+            
+            Object[] objectArr = upsData.get(key);
+            int cellid = 0;
+            
+            for(Object obj : objectArr) {
+                Cell cell = row.createCell(cellid++);
+                cell.setCellValue((String) obj);
+            }
+        }
+        
+        File file = new File("./reports/docReportTerminalDisplay.xlsx");
+        FileOutputStream out = new FileOutputStream(file);
+        workbook.write(out);
+        out.close();
+        
+        InputStreamResource resource = new InputStreamResource(new FileInputStream(file));
+        HttpHeaders headers = new HttpHeaders(); 
+        headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; docReportTerminalDisplay.xlsx");
+         return ResponseEntity.ok()
+            .headers(headers)
+            .contentLength(file.length())
+            .contentType(MediaType.APPLICATION_OCTET_STREAM)
+            .body(resource);
+    }
+    
+    
+    
+    @GetMapping("/terminal-server")
+    public ResponseEntity<Resource> getTerminalServer(
+            @RequestParam(value="username", required = false) String username,
+            @RequestParam(value="serialNumber", required = false) String serialNumber ) throws FileNotFoundException, IOException {
+        Map<Location, List<TerminalServer>> svtObjectsByEmployee = null;
+        if(null != username) {
+            svtObjectsByEmployee = terminalServerService.getSvtObjectsByName(username, PlaceType.OFFICEEQUIPMENT);
+        }else if(null != serialNumber) {
+        svtObjectsByEmployee = terminalServerService.getSvtObjectsBySerialNumberAndPlace(serialNumber, PlaceType.OFFICEEQUIPMENT);
+        } else {
+            svtObjectsByEmployee = terminalServerService.getSvtObjectsByPlaceType(PlaceType.OFFICEEQUIPMENT);
+        }
+        List<LocationByTreeDto> treeSvtDtoByEmployee = terminalServerOutDtoTreeService.getTreeSvtDtoByPlaceType(svtObjectsByEmployee)
+                .stream()
+                .sorted((o1, o2) -> o1.getLocationName().compareTo(o2.getLocationName()))
+                .collect(Collectors.toList());
+        Map<Location, List<TerminalServer>> svtObjectsByStorage = null;
+        
+        if(null != username) {
+            svtObjectsByStorage = terminalServerService.getSvtObjectsByName(username, PlaceType.STORAGE);
+        }else if(null != serialNumber) {
+        svtObjectsByStorage = terminalServerService.getSvtObjectsBySerialNumberAndPlace(serialNumber, PlaceType.OFFICEEQUIPMENT);
+        }  else {
+            svtObjectsByStorage = terminalServerService.getSvtObjectsByPlaceType(PlaceType.STORAGE);
+        }
+        List<LocationByTreeDto> treeSvtDtoByStorage = terminalServerOutDtoTreeService.getTreeSvtDtoByPlaceType(svtObjectsByStorage)
+                .stream()
+                .sorted((o1, o2) -> o1.getLocationName().compareTo(o2.getLocationName()))
+                .collect(Collectors.toList());
+        
+        
+        
+        XSSFWorkbook workbook = new XSSFWorkbook();
+        
+        XSSFSheet spreadsheet = workbook.createSheet("Лист1");
+        XSSFRow row;
+        
+        Map<String, Object[]> upsData = new TreeMap<String, Object[]>(); 
+        
+        upsData.put("1", new Object[] {"Модель", "ФИО", "Тип рабочего места",  
+            "Серийный номер", "Состояние", "Район"} );
+        
+        int p = 2;
+         for(LocationByTreeDto locationByTreeDto : treeSvtDtoByEmployee) {
+            for(DepartmentTreeDto departmentTreeDto : locationByTreeDto.getDepartments()) {
+            for(int i = 0; i < departmentTreeDto.getDtoes().size(); i++) {
+                if(departmentTreeDto.getDtoes().get(i) instanceof TerminalComponentDto) {
+                    TerminalComponentDto elem = (TerminalComponentDto)departmentTreeDto.getDtoes().get(i);
+                    
+                    upsData.put(String.valueOf(p), new Object[] {elem.getManufacturer() + " " + elem.getModel(), elem.getPlaceName(), DocReportController.getPlaceTypeRus(elem.getPlaceType()), 
+                    elem.getSerialNumber(), DocReportController.getStatusToRus(elem.getStatus()), locationByTreeDto.getLocationName()});
+                }
+                p++;
+            }
+        }
+        
+        }
+        
+        for(LocationByTreeDto locationByTreeDto : treeSvtDtoByStorage) {
+            for(DepartmentTreeDto departmentTreeDto : locationByTreeDto.getDepartments()) {
+            for(int j = 0; j < departmentTreeDto.getDtoes().size(); j++) {
+                if(departmentTreeDto.getDtoes().get(j) instanceof TerminalComponentDto) {
+                    
+                    TerminalComponentDto elem = (TerminalComponentDto)departmentTreeDto.getDtoes().get(j);
+                    
+                    upsData.put(String.valueOf(p), new Object[] {elem.getManufacturer() + " " + elem.getModel(), elem.getPlaceName(), DocReportController.getPlaceTypeRus(elem.getPlaceType()), 
+                    elem.getSerialNumber(), DocReportController.getStatusToRus(elem.getStatus()), locationByTreeDto.getLocationName()});
+                }
+                p++;
+            }
+        }
+        
+        }
+        
+        Set<String> keyid = upsData.keySet(); 
+        int rowid = 0;
+        
+        for(String key : keyid) {
+            row = spreadsheet.createRow(rowid++);
+            
+            Object[] objectArr = upsData.get(key);
+            int cellid = 0;
+            
+            for(Object obj : objectArr) {
+                Cell cell = row.createCell(cellid++);
+                cell.setCellValue((String) obj);
+            }
+        }
+        
+        File file = new File("./reports/docReportTerminalServer.xlsx");
+        FileOutputStream out = new FileOutputStream(file);
+        workbook.write(out);
+        out.close();
+        
+        InputStreamResource resource = new InputStreamResource(new FileInputStream(file));
+        HttpHeaders headers = new HttpHeaders(); 
+        headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; docReportTerminalServer.xlsx");
+         return ResponseEntity.ok()
+            .headers(headers)
+            .contentLength(file.length())
+            .contentType(MediaType.APPLICATION_OCTET_STREAM)
+            .body(resource);
+    }
+    
+    
+    @GetMapping("/terminal-ups")
+    public ResponseEntity<Resource> getTerminalUps( 
+            @RequestParam(value="username", required = false) String username,
+            @RequestParam(value="serialNumber", required = false) String serialNumber) throws FileNotFoundException, IOException {
+        Map<Location, List<TerminalUps>> svtObjectsByEmployee = null;
+        if(null != username) {
+            svtObjectsByEmployee = terminalUpsService.getSvtObjectsByName(username, PlaceType.OFFICEEQUIPMENT);
+        }else if(null != serialNumber) {
+        svtObjectsByEmployee = terminalUpsService.getSvtObjectsBySerialNumberAndPlace(serialNumber, PlaceType.OFFICEEQUIPMENT);
+        } else {
+            svtObjectsByEmployee = terminalUpsService.getSvtObjectsByPlaceType(PlaceType.OFFICEEQUIPMENT);
+        }
+        List<LocationByTreeDto> treeSvtDtoByEmployee = terminalUpsOutDtoTreeService.getTreeSvtDtoByPlaceType(svtObjectsByEmployee)
+                .stream()
+                .sorted((o1, o2) -> o1.getLocationName().compareTo(o2.getLocationName()))
+                .collect(Collectors.toList());
+        Map<Location, List<TerminalUps>> svtObjectsByStorage = null;
+        
+        if(null != username) {
+            svtObjectsByStorage = terminalUpsService.getSvtObjectsByName(username, PlaceType.STORAGE);
+        } else if(null != serialNumber) {
+        svtObjectsByStorage = terminalUpsService.getSvtObjectsBySerialNumberAndPlace(serialNumber, PlaceType.STORAGE);
+        }else {
+            svtObjectsByStorage = terminalUpsService.getSvtObjectsByPlaceType(PlaceType.STORAGE);
+        }
+        List<LocationByTreeDto> treeSvtDtoByStorage = terminalUpsOutDtoTreeService.getTreeSvtDtoByPlaceType(svtObjectsByStorage)
+                .stream()
+                .sorted((o1, o2) -> o1.getLocationName().compareTo(o2.getLocationName()))
+                .collect(Collectors.toList());
+        
+        XSSFWorkbook workbook = new XSSFWorkbook();
+        
+        XSSFSheet spreadsheet = workbook.createSheet("Лист1");
+        XSSFRow row;
+        
+        Map<String, Object[]> upsData = new TreeMap<String, Object[]>(); 
+        
+        upsData.put("1", new Object[] {"Модель", "ФИО", "Тип рабочего места",  
+            "Серийный номер", "Состояние", "Район"} );
+        
+        int p = 2;
+         for(LocationByTreeDto locationByTreeDto : treeSvtDtoByEmployee) {
+            for(DepartmentTreeDto departmentTreeDto : locationByTreeDto.getDepartments()) {
+            for(int i = 0; i < departmentTreeDto.getDtoes().size(); i++) {
+                if(departmentTreeDto.getDtoes().get(i) instanceof TerminalComponentDto) {
+                    TerminalComponentDto elem = (TerminalComponentDto)departmentTreeDto.getDtoes().get(i);
+                    
+                    upsData.put(String.valueOf(p), new Object[] {elem.getManufacturer() + " " + elem.getModel(), elem.getPlaceName(), DocReportController.getPlaceTypeRus(elem.getPlaceType()), 
+                    elem.getSerialNumber(), DocReportController.getStatusToRus(elem.getStatus()), locationByTreeDto.getLocationName()});
+                }
+                p++;
+            }
+        }
+        
+        }
+        
+        for(LocationByTreeDto locationByTreeDto : treeSvtDtoByStorage) {
+            for(DepartmentTreeDto departmentTreeDto : locationByTreeDto.getDepartments()) {
+            for(int j = 0; j < departmentTreeDto.getDtoes().size(); j++) {
+                if(departmentTreeDto.getDtoes().get(j) instanceof TerminalComponentDto) {
+                    
+                    TerminalComponentDto elem = (TerminalComponentDto)departmentTreeDto.getDtoes().get(j);
+                    
+                    upsData.put(String.valueOf(p), new Object[] {elem.getManufacturer() + " " + elem.getModel(), elem.getPlaceName(), DocReportController.getPlaceTypeRus(elem.getPlaceType()), 
+                    elem.getSerialNumber(), DocReportController.getStatusToRus(elem.getStatus()), locationByTreeDto.getLocationName()});
+                }
+                p++;
+            }
+        }
+        
+        }
+        
+        Set<String> keyid = upsData.keySet(); 
+        int rowid = 0;
+        
+        for(String key : keyid) {
+            row = spreadsheet.createRow(rowid++);
+            
+            Object[] objectArr = upsData.get(key);
+            int cellid = 0;
+            
+            for(Object obj : objectArr) {
+                Cell cell = row.createCell(cellid++);
+                cell.setCellValue((String) obj);
+            }
+        }
+        
+        File file = new File("./reports/docReportTerminalUps.xlsx");
+        FileOutputStream out = new FileOutputStream(file);
+        workbook.write(out);
+        out.close();
+        
+        InputStreamResource resource = new InputStreamResource(new FileInputStream(file));
+        HttpHeaders headers = new HttpHeaders(); 
+        headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; docReportTerminalUps.xlsx");
+         return ResponseEntity.ok()
+            .headers(headers)
+            .contentLength(file.length())
+            .contentType(MediaType.APPLICATION_OCTET_STREAM)
+            .body(resource);
+    }
+    
+    
+    
+       @GetMapping("/terminal-printer")
+    public ResponseEntity<Resource> getTerminalPrinter( 
+            @RequestParam(value="username", required = false) String username,
+            @RequestParam(value="serialNumber", required = false) String serialNumber) throws FileNotFoundException, IOException, IOException {
+        Map<Location, List<TerminalPrinter>> svtObjectsByEmployee = null;
+        if(null != username) {
+            svtObjectsByEmployee = terminalPrinterService.getSvtObjectsByName(username, PlaceType.OFFICEEQUIPMENT);
+        }else if(null != serialNumber) {
+        svtObjectsByEmployee = terminalPrinterService.getSvtObjectsBySerialNumberAndPlace(serialNumber, PlaceType.OFFICEEQUIPMENT);
+        } else {
+            svtObjectsByEmployee = terminalPrinterService.getSvtObjectsByPlaceType(PlaceType.OFFICEEQUIPMENT);
+        }
+        List<LocationByTreeDto> treeSvtDtoByEmployee = terminalPrinterOutDtoTreeService.getTreeSvtDtoByPlaceType(svtObjectsByEmployee)
+                .stream()
+                .sorted((o1, o2) -> o1.getLocationName().compareTo(o2.getLocationName()))
+                .collect(Collectors.toList());
+        Map<Location, List<TerminalPrinter>> svtObjectsByStorage = null;
+        
+        if(null != username) {
+            svtObjectsByStorage = terminalPrinterService.getSvtObjectsByName(username, PlaceType.STORAGE);
+        }else if(null != serialNumber) {
+        svtObjectsByStorage = terminalPrinterService.getSvtObjectsBySerialNumberAndPlace(serialNumber, PlaceType.STORAGE);
+        } else {
+            svtObjectsByStorage = terminalPrinterService.getSvtObjectsByPlaceType(PlaceType.STORAGE);
+        }
+        List<LocationByTreeDto> treeSvtDtoByStorage = terminalPrinterOutDtoTreeService.getTreeSvtDtoByPlaceType(svtObjectsByStorage)
+                .stream()
+                .sorted((o1, o2) -> o1.getLocationName().compareTo(o2.getLocationName()))
+                .collect(Collectors.toList());
+        
+         XSSFWorkbook workbook = new XSSFWorkbook();
+        
+        XSSFSheet spreadsheet = workbook.createSheet("Лист1");
+        XSSFRow row;
+        
+        Map<String, Object[]> upsData = new TreeMap<String, Object[]>(); 
+        
+        upsData.put("1", new Object[] {"Модель", "ФИО", "Тип рабочего места",  
+            "Серийный номер", "Состояние", "Район"} );
+        
+        int p = 2;
+         for(LocationByTreeDto locationByTreeDto : treeSvtDtoByEmployee) {
+            for(DepartmentTreeDto departmentTreeDto : locationByTreeDto.getDepartments()) {
+            for(int i = 0; i < departmentTreeDto.getDtoes().size(); i++) {
+                if(departmentTreeDto.getDtoes().get(i) instanceof TerminalComponentDto) {
+                    TerminalComponentDto elem = (TerminalComponentDto)departmentTreeDto.getDtoes().get(i);
+                    
+                    upsData.put(String.valueOf(p), new Object[] {elem.getManufacturer() + " " + elem.getModel(), elem.getPlaceName(), DocReportController.getPlaceTypeRus(elem.getPlaceType()), 
+                    elem.getSerialNumber(), DocReportController.getStatusToRus(elem.getStatus()), locationByTreeDto.getLocationName()});
+                }
+                p++;
+            }
+        }
+        
+        }
+        
+        for(LocationByTreeDto locationByTreeDto : treeSvtDtoByStorage) {
+            for(DepartmentTreeDto departmentTreeDto : locationByTreeDto.getDepartments()) {
+            for(int j = 0; j < departmentTreeDto.getDtoes().size(); j++) {
+                if(departmentTreeDto.getDtoes().get(j) instanceof TerminalComponentDto) {
+                    
+                    TerminalComponentDto elem = (TerminalComponentDto)departmentTreeDto.getDtoes().get(j);
+                    
+                    upsData.put(String.valueOf(p), new Object[] {elem.getManufacturer() + " " + elem.getModel(), elem.getPlaceName(), DocReportController.getPlaceTypeRus(elem.getPlaceType()), 
+                    elem.getSerialNumber(), DocReportController.getStatusToRus(elem.getStatus()), locationByTreeDto.getLocationName()});
+                }
+                p++;
+            }
+        }
+        
+        }
+        
+        Set<String> keyid = upsData.keySet(); 
+        int rowid = 0;
+        
+        for(String key : keyid) {
+            row = spreadsheet.createRow(rowid++);
+            
+            Object[] objectArr = upsData.get(key);
+            int cellid = 0;
+            
+            for(Object obj : objectArr) {
+                Cell cell = row.createCell(cellid++);
+                cell.setCellValue((String) obj);
+            }
+        }
+        
+        File file = new File("./reports/docReportTerminalPrinter.xlsx");
+        FileOutputStream out = new FileOutputStream(file);
+        workbook.write(out);
+        out.close();
+        
+        InputStreamResource resource = new InputStreamResource(new FileInputStream(file));
+        HttpHeaders headers = new HttpHeaders(); 
+        headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; docReportTerminalPrinter.xlsx");
+         return ResponseEntity.ok()
+            .headers(headers)
+            .contentLength(file.length())
+            .contentType(MediaType.APPLICATION_OCTET_STREAM)
+            .body(resource);
+    }
+    
+    
+    @GetMapping("/terminal-sensor")
+    public ResponseEntity<Resource> getTerminalSensor(Model model,
+            @RequestParam(value="username", required = false) String username,
+            @RequestParam(value="serialNumber", required = false) String serialNumber) throws FileNotFoundException, IOException {
+        Map<Location, List<TerminalSensor>> svtObjectsByEmployee = null;
+        if(null != username) {
+            svtObjectsByEmployee = terminalSensorService.getSvtObjectsByName(username, PlaceType.OFFICEEQUIPMENT);
+        }else if(null != serialNumber) {
+        svtObjectsByEmployee = terminalSensorService.getSvtObjectsBySerialNumberAndPlace(serialNumber, PlaceType.OFFICEEQUIPMENT);
+        } else {
+            svtObjectsByEmployee = terminalSensorService.getSvtObjectsByPlaceType(PlaceType.OFFICEEQUIPMENT);
+        }
+        List<LocationByTreeDto> treeSvtDtoByEmployee = terminalSensorOutDtoTreeService.getTreeSvtDtoByPlaceType(svtObjectsByEmployee)
+                .stream()
+                .sorted((o1, o2) -> o1.getLocationName().compareTo(o2.getLocationName()))
+                .collect(Collectors.toList());
+        Map<Location, List<TerminalSensor>> svtObjectsByStorage = null;
+        
+        if(null != username) {
+            svtObjectsByStorage = terminalSensorService.getSvtObjectsByName(username, PlaceType.STORAGE);
+        }else if(null != serialNumber) {
+        svtObjectsByStorage = terminalSensorService.getSvtObjectsBySerialNumberAndPlace(serialNumber, PlaceType.STORAGE);
+        } else {
+            svtObjectsByStorage = terminalSensorService.getSvtObjectsByPlaceType(PlaceType.STORAGE);
+        }
+        List<LocationByTreeDto> treeSvtDtoByStorage = terminalSensorOutDtoTreeService.getTreeSvtDtoByPlaceType(svtObjectsByStorage)
+                .stream()
+                .sorted((o1, o2) -> o1.getLocationName().compareTo(o2.getLocationName()))
+                .collect(Collectors.toList());
+        
+         XSSFWorkbook workbook = new XSSFWorkbook();
+        
+        XSSFSheet spreadsheet = workbook.createSheet("Лист1");
+        XSSFRow row;
+        
+        Map<String, Object[]> upsData = new TreeMap<String, Object[]>(); 
+        
+        upsData.put("1", new Object[] {"Модель", "ФИО", "Тип рабочего места",  
+            "Серийный номер", "Состояние", "Район"} );
+        
+        int p = 2;
+         for(LocationByTreeDto locationByTreeDto : treeSvtDtoByEmployee) {
+            for(DepartmentTreeDto departmentTreeDto : locationByTreeDto.getDepartments()) {
+            for(int i = 0; i < departmentTreeDto.getDtoes().size(); i++) {
+                if(departmentTreeDto.getDtoes().get(i) instanceof TerminalComponentDto) {
+                    TerminalComponentDto elem = (TerminalComponentDto)departmentTreeDto.getDtoes().get(i);
+                    
+                    upsData.put(String.valueOf(p), new Object[] {elem.getManufacturer() + " " + elem.getModel(), elem.getPlaceName(), DocReportController.getPlaceTypeRus(elem.getPlaceType()), 
+                    elem.getSerialNumber(), DocReportController.getStatusToRus(elem.getStatus()), locationByTreeDto.getLocationName()});
+                }
+                p++;
+            }
+        }
+        
+        }
+        
+        for(LocationByTreeDto locationByTreeDto : treeSvtDtoByStorage) {
+            for(DepartmentTreeDto departmentTreeDto : locationByTreeDto.getDepartments()) {
+            for(int j = 0; j < departmentTreeDto.getDtoes().size(); j++) {
+                if(departmentTreeDto.getDtoes().get(j) instanceof TerminalComponentDto) {
+                    
+                    TerminalComponentDto elem = (TerminalComponentDto)departmentTreeDto.getDtoes().get(j);
+                    
+                    upsData.put(String.valueOf(p), new Object[] {elem.getManufacturer() + " " + elem.getModel(), elem.getPlaceName(), DocReportController.getPlaceTypeRus(elem.getPlaceType()), 
+                    elem.getSerialNumber(), DocReportController.getStatusToRus(elem.getStatus()), locationByTreeDto.getLocationName()});
+                }
+                p++;
+            }
+        }
+        
+        }
+        
+        Set<String> keyid = upsData.keySet(); 
+        int rowid = 0;
+        
+        for(String key : keyid) {
+            row = spreadsheet.createRow(rowid++);
+            
+            Object[] objectArr = upsData.get(key);
+            int cellid = 0;
+            
+            for(Object obj : objectArr) {
+                Cell cell = row.createCell(cellid++);
+                cell.setCellValue((String) obj);
+            }
+        }
+        
+        File file = new File("./reports/docReportTerminalSensor.xlsx");
+        FileOutputStream out = new FileOutputStream(file);
+        workbook.write(out);
+        out.close();
+        
+        InputStreamResource resource = new InputStreamResource(new FileInputStream(file));
+        HttpHeaders headers = new HttpHeaders(); 
+        headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; docReportTerminalSensor.xlsx");
+         return ResponseEntity.ok()
+            .headers(headers)
+            .contentLength(file.length())
+            .contentType(MediaType.APPLICATION_OCTET_STREAM)
+            .body(resource);
+    }
+    
+    
+    
+    @GetMapping("/all-devicespr")
+    public ResponseEntity<Resource> getAllDevicesByPlace(Long id) throws FileNotFoundException, IOException {
+        List<DeviceDto> allDevicesByPlaceId = objectBuingServiceImpl.getAllDevicesByPlaceId(id);
+        PlaceDTO placeById = placeService.getPlaceById(id);
+        
+        
+        
+            Workbook workbook = new XSSFWorkbook();
+            Sheet sheet = workbook.createSheet("Лист1");
+            Row row1 = sheet.createRow(0);
+            
+            row1.createCell(0).setCellValue("Список оборудования по сотруднику: " + placeById.getUsername() + " (" + placeById.getPlaceType() + ")");  // Ячейка A1 со словом «Привет»
+            //row1.createCell(1).setCellValue("World");  // И ячейка B1 с изложением «Мир»
+            
+            Row row2 = sheet.createRow(1);
+            row2.createCell(0).setCellValue("Модель");
+            row2.createCell(1).setCellValue("Инвентарный номер");
+            
+            Iterator<DeviceDto> iterator = allDevicesByPlaceId.iterator();
+            String deviceType = "";
+            int count = 2;
+            while(iterator.hasNext()) {
+            DeviceDto elem = iterator.next();
+                if(deviceType.equals("") || !elem.getDeviceType().toString().equals(deviceType)) {
+                Row rowLabel =  sheet.createRow(count);  
+                rowLabel.createCell(0).setCellValue(RegularOperation.getDeviceTypeRus(elem.getDeviceType()));
+                deviceType = elem.getDeviceType().toString();
+                count++;
+            }
+                Row rowN = sheet.createRow(count);
+                rowN.createCell(0).setCellValue(elem.getModel());
+                rowN.createCell(1).setCellValue(elem.getInventaryNumber());
+                count++;
+            }
+
+            File file = new File("./reports/docReportDeviceByPerson.xlsx");
+            FileOutputStream out = new FileOutputStream(file);
+            workbook.write(out);
+            out.close();
+
+        InputStreamResource resource = new InputStreamResource(new FileInputStream(file));
+        HttpHeaders headers = new HttpHeaders();
+        headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; docReportDeviceByPerson.xlsx");
+        return ResponseEntity.ok()
+                .headers(headers)
+                .contentLength(file.length())
+                .contentType(MediaType.APPLICATION_OCTET_STREAM)
+                .body(resource);
+
+    }
+    
     
     @GetMapping("/get-ups")
     public ResponseEntity<Resource>  getUpsDoc(@RequestParam(value="username",required=false) String username, 
@@ -333,6 +997,7 @@ public class DocReportController {
             .contentType(MediaType.APPLICATION_OCTET_STREAM)
             .body(resource);
 }
+
     
     @GetMapping("/sysblocks")
     public ResponseEntity<Resource> getSysBlocks(@RequestParam(value="username",required=false) String username,  
@@ -558,6 +1223,378 @@ public class DocReportController {
             .contentType(MediaType.APPLICATION_OCTET_STREAM)
             .body(resource);
     }
+    
+    
+     @GetMapping("/display")
+    public ResponseEntity<Resource> getDisplay(
+            @RequestParam(value="username", required = false) String username,
+            @RequestParam(value="inventaryNumber", required = false) String inventaryNumber,
+            @RequestParam(value="serialNumber", required = false) String serialNumber) throws FileNotFoundException, IOException, IOException, IOException {
+        Map<Location, List<Display>> svtObjectsByEmployee = null;
+        if(null != username) {
+            svtObjectsByEmployee = displayService.getSvtObjectsByName(username, PlaceType.OFFICEEQUIPMENT);
+        }else if(null != inventaryNumber) {
+        svtObjectsByEmployee = displayService.getSvtObjectsByInventaryNumberAndPlace(inventaryNumber, PlaceType.OFFICEEQUIPMENT);
+        } else if(null != serialNumber) {
+        svtObjectsByEmployee = displayService.getSvtObjectsBySerialNumberAndPlace(serialNumber, PlaceType.OFFICEEQUIPMENT);
+        } else {
+            svtObjectsByEmployee = displayService.getSvtObjectsByPlaceType(PlaceType.OFFICEEQUIPMENT);
+        }
+        List<LocationByTreeDto> treeSvtDtoByEmployee = displayOutDtoTreeService.getTreeSvtDtoByPlaceType(svtObjectsByEmployee)
+                .stream()
+                .sorted((o1, o2) -> o1.getLocationName().compareTo(o2.getLocationName()))
+                .collect(Collectors.toList());
+        Map<Location, List<Display>> svtObjectsByStorage = null;
+        
+        if(null != username) {
+            svtObjectsByStorage = displayService.getSvtObjectsByName(username, PlaceType.STORAGE);
+        }else if(null != inventaryNumber) {
+        svtObjectsByStorage = displayService.getSvtObjectsByInventaryNumberAndPlace(inventaryNumber, PlaceType.STORAGE);
+        } else if(null != serialNumber) {
+        svtObjectsByStorage = displayService.getSvtObjectsBySerialNumberAndPlace(serialNumber, PlaceType.STORAGE);
+        } else {
+            svtObjectsByStorage = displayService.getSvtObjectsByPlaceType(PlaceType.STORAGE);
+        }
+        List<LocationByTreeDto> treeSvtDtoByStorage = displayOutDtoTreeService.getTreeSvtDtoByPlaceType(svtObjectsByStorage)
+                .stream()
+                .sorted((o1, o2) -> o1.getLocationName().compareTo(o2.getLocationName()))
+                .collect(Collectors.toList());
+        
+       XSSFWorkbook workbook = new XSSFWorkbook();
+        
+        XSSFSheet spreadsheet = workbook.createSheet("Лист1");
+        XSSFRow row;
+        
+        Map<String, Object[]> rowData = new TreeMap<String, Object[]>(); 
+        
+        rowData.put("1", new Object[] {"Модель", "ФИО", "Тип рабочего места", 
+            "Серийный номер", "Инвентарный номер", "Состояние",  "Район"} );
+        int p = 2;
+         for(LocationByTreeDto locationByTreeDto : treeSvtDtoByEmployee) {
+            for(DepartmentTreeDto departmentTreeDto : locationByTreeDto.getDepartments()) {
+            for(int i = 0; i < departmentTreeDto.getDtoes().size(); i++) {
+                if(departmentTreeDto.getDtoes().get(i) instanceof DisplayDto) {
+                    DisplayDto elem = (DisplayDto)departmentTreeDto.getDtoes().get(i);
+                    
+                    rowData.put(String.valueOf(p), new Object[] {elem.getManufacturer() + " " + elem.getModel(), elem.getPlaceName(), DocReportController.getPlaceTypeRus(elem.getPlaceType()), 
+                    elem.getSerialNumber(), elem.getInventaryNumber(), DocReportController.getStatusToRus(elem.getStatus()),  
+                    locationByTreeDto.getLocationName()});
+                }
+                p++;
+            }
+        }
+        
+        }
+        
+        for(LocationByTreeDto locationByTreeDto : treeSvtDtoByStorage) {
+            for(DepartmentTreeDto departmentTreeDto : locationByTreeDto.getDepartments()) {
+            for(int j = 0; j < departmentTreeDto.getDtoes().size(); j++) {
+                if(departmentTreeDto.getDtoes().get(j) instanceof DisplayDto) {
+                    
+                    DisplayDto elem = (DisplayDto)departmentTreeDto.getDtoes().get(j);
+                    
+                    rowData.put(String.valueOf(p), new Object[] {elem.getManufacturer() + " " + elem.getModel(), elem.getPlaceName(), DocReportController.getPlaceTypeRus(elem.getPlaceType()), 
+                    elem.getSerialNumber(), elem.getInventaryNumber(), DocReportController.getStatusToRus(elem.getStatus()),  
+                    locationByTreeDto.getLocationName()});
+                }
+                p++;
+            }
+        }
+        
+        }
+        
+        Set<String> keyid = rowData.keySet(); 
+        int rowid = 0;
+        
+        for(String key : keyid) {
+            row = spreadsheet.createRow(rowid++);
+            
+            Object[] objectArr = rowData.get(key);
+            int cellid = 0;
+            
+            for(Object obj : objectArr) {
+                Cell cell = row.createCell(cellid++);
+                cell.setCellValue((String) obj);
+            }
+        }
+        
+        File file = new File("./reports/docReportDisplays.xlsx");
+        FileOutputStream out = new FileOutputStream(file);
+        workbook.write(out);
+        out.close();
+        
+        InputStreamResource resource = new InputStreamResource(new FileInputStream(file));
+        HttpHeaders headers = new HttpHeaders(); 
+        headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; docReportDisplays.xlsx");
+        
+        return ResponseEntity.ok()
+            .headers(headers)
+            .contentLength(file.length())
+            .contentType(MediaType.APPLICATION_OCTET_STREAM)
+            .body(resource);
+    }
+    
+    @GetMapping("/hub")
+    public ResponseEntity<Resource> getHub(@RequestParam(value="username",required=false) String username, 
+            @RequestParam(value="inventaryNumber", required = false) String inventaryNumber,
+            @RequestParam(value="serialNumber", required = false) String serialNumber,
+            @ModelAttribute FilterDto dto) throws FileNotFoundException, IOException {
+        Map<Location, List<Hub>> svtObjectsByEmployee = null;
+        List<LocationByTreeDto> treeSvtDtoByEmployee = null;
+        Map<Location, List<Hub>> svtObjectsByStorage = null;
+        List<LocationByTreeDto> treeSvtDtoByStorage = null;
+        List<HubDto> filter = null;
+        if(dto.model == null && dto.status == null && dto.yearCreatedOne == null && dto.yearCreatedTwo == null) {
+        if(null != username) {
+            svtObjectsByEmployee = hubService.getSvtObjectsByName(username, PlaceType.OFFICEEQUIPMENT);
+        }else if(null != inventaryNumber) {
+            svtObjectsByEmployee = hubService.getSvtObjectsByInventaryNumberAndPlace(inventaryNumber, PlaceType.OFFICEEQUIPMENT);
+        }else if(null != serialNumber) {
+            svtObjectsByEmployee = hubService.getSvtObjectsBySerialNumberAndPlace(serialNumber, PlaceType.OFFICEEQUIPMENT);
+        } else {
+            svtObjectsByEmployee = hubService.getSvtObjectsByPlaceType(PlaceType.OFFICEEQUIPMENT);
+        }
+        treeSvtDtoByEmployee = hubOutDtoTreeService.getTreeSvtDtoByPlaceType(svtObjectsByEmployee)
+                .stream()
+                .sorted((o1, o2) -> o1.getLocationName().compareTo(o2.getLocationName()))
+                .collect(Collectors.toList());
+        
+        
+        if(null != username) {
+            svtObjectsByStorage = hubService.getSvtObjectsByName(username, PlaceType.STORAGE);
+        } else if(null != inventaryNumber) {
+            svtObjectsByStorage = hubService.getSvtObjectsByInventaryNumberAndPlace(inventaryNumber, PlaceType.STORAGE);
+        }else if(null != serialNumber) {
+            svtObjectsByStorage = hubService.getSvtObjectsBySerialNumberAndPlace(serialNumber, PlaceType.STORAGE);
+        } else {
+            svtObjectsByStorage = hubService.getSvtObjectsByPlaceType(PlaceType.STORAGE);
+        }
+        treeSvtDtoByStorage = hubOutDtoTreeService.getTreeSvtDtoByPlaceType(svtObjectsByStorage)
+                .stream()
+                .sorted((o1, o2) -> o1.getLocationName().compareTo(o2.getLocationName()))
+                .collect(Collectors.toList());
+        } else {
+        
+            List<Hub> hubByFilter = hubService.getHubByFilter(dto);
+             filter = new ArrayList<>();
+            for(Hub p : hubByFilter) {
+                HubDto hubDto = hubMapper.getDto(p);
+                filter.add(hubDto);
+            }
+            
+            svtObjectsByEmployee = hubService.getHubByPlaceTypeAndFilter(PlaceType.SERVERROOM, hubByFilter);
+            treeSvtDtoByEmployee = hubOutDtoTreeService.getTreeSvtDtoByPlaceType(svtObjectsByEmployee)
+                .stream()
+                .sorted((o1, o2) -> o1.getLocationName().compareTo(o2.getLocationName()))
+                .collect(Collectors.toList());
+            
+            svtObjectsByStorage = hubService.getHubByPlaceTypeAndFilter(PlaceType.STORAGE, hubByFilter);
+               treeSvtDtoByStorage = hubOutDtoTreeService.getTreeSvtDtoByPlaceType(svtObjectsByStorage)
+                .stream()
+                .sorted((o1, o2) -> o1.getLocationName().compareTo(o2.getLocationName()))
+                .collect(Collectors.toList());
+
+    }
+        XSSFWorkbook workbook = new XSSFWorkbook();
+        
+        XSSFSheet spreadsheet = workbook.createSheet("Лист1");
+        XSSFRow row;
+        
+        Map<String, Object[]> rowData = new TreeMap<String, Object[]>(); 
+        
+        rowData.put("1", new Object[] {"Модель", "ФИО", "Тип рабочего места", "Наменование в ведомости ОС", 
+            "Серийный номер", "Инвентарный номер", "Кол-во портов", "Состояние", "Дата ввода в эксплуатацию", "Год выпуска",  "Район"} );
+        int p = 2;
+         for(LocationByTreeDto locationByTreeDto : treeSvtDtoByEmployee) {
+            for(DepartmentTreeDto departmentTreeDto : locationByTreeDto.getDepartments()) {
+            for(int i = 0; i < departmentTreeDto.getDtoes().size(); i++) {
+                if(departmentTreeDto.getDtoes().get(i) instanceof HubDto) {
+                    HubDto elem = (HubDto)departmentTreeDto.getDtoes().get(i);
+                    String dateExp;
+                    if(null == elem.getDateExploitationBegin()) {
+                        dateExp = "без даты";
+                    } else {
+                        dateExp = elem.getDateExploitationBegin().toString();
+                    }
+                    rowData.put(String.valueOf(p), new Object[] {elem.getManufacturerName() + " " + elem.getModel(), elem.getPlaceName(), DocReportController.getPlaceTypeRus(elem.getPlaceType()), 
+                    elem.getNameFromOneC(), elem.getSerialNumber(), elem.getInventaryNumber(), String.valueOf(elem.getPortAmount()), DocReportController.getStatusToRus(elem.getStatus()),  
+                    dateExp, String.valueOf(elem.getYearCreated()), locationByTreeDto.getLocationName()});
+                }
+                p++;
+            }
+        }
+        
+        }
+        
+        for(LocationByTreeDto locationByTreeDto : treeSvtDtoByStorage) {
+            for(DepartmentTreeDto departmentTreeDto : locationByTreeDto.getDepartments()) {
+            for(int j = 0; j < departmentTreeDto.getDtoes().size(); j++) {
+                if(departmentTreeDto.getDtoes().get(j) instanceof HubDto) {
+                    
+                    HubDto elem = (HubDto)departmentTreeDto.getDtoes().get(j);
+                    String dateExp;
+                    if(null == elem.getDateExploitationBegin()) {
+                        dateExp = "без даты";
+                    } else {
+                        dateExp = elem.getDateExploitationBegin().toString();
+                    }
+                    rowData.put(String.valueOf(p), new Object[] {elem.getManufacturerName() + " " + elem.getModel(), elem.getPlaceName(), DocReportController.getPlaceTypeRus(elem.getPlaceType()), 
+                    elem.getNameFromOneC(), elem.getSerialNumber(), elem.getInventaryNumber(), String.valueOf(elem.getPortAmount()), DocReportController.getStatusToRus(elem.getStatus()),  
+                    dateExp, String.valueOf(elem.getYearCreated()), locationByTreeDto.getLocationName()});
+                }
+                p++;
+            }
+        }
+        
+        }
+        
+        Set<String> keyid = rowData.keySet(); 
+        int rowid = 0;
+        
+        for(String key : keyid) {
+            row = spreadsheet.createRow(rowid++);
+            
+            Object[] objectArr = rowData.get(key);
+            int cellid = 0;
+            
+            for(Object obj : objectArr) {
+                Cell cell = row.createCell(cellid++);
+                cell.setCellValue((String) obj);
+            }
+        }
+        
+        File file = new File("./reports/docReportHubs.xlsx");
+        FileOutputStream out = new FileOutputStream(file);
+        workbook.write(out);
+        out.close();
+        
+        InputStreamResource resource = new InputStreamResource(new FileInputStream(file));
+        HttpHeaders headers = new HttpHeaders(); 
+        headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; docReportHubs.xlsx");
+        
+        return ResponseEntity.ok()
+            .headers(headers)
+            .contentLength(file.length())
+            .contentType(MediaType.APPLICATION_OCTET_STREAM)
+            .body(resource);
+            
+        }
+    
+    
+    
+    @GetMapping("/terminal")
+    public ResponseEntity<Resource> getTerminal(
+            @RequestParam(value="username", required = false) String username,
+            @RequestParam(value="inventaryNumber", required = false) String inventaryNumber,
+            @RequestParam(value="serialNumber", required = false) String serialNumber
+                                                                                            ) throws FileNotFoundException, IOException {
+        Map<Location, List<Terminal>> svtObjectsByEmployee = null;
+        if(null != username) {
+            svtObjectsByEmployee = terminalService.getSvtObjectsByName(username, PlaceType.OFFICEEQUIPMENT);
+        }else if(null != inventaryNumber) {
+        svtObjectsByEmployee = terminalService.getSvtObjectsByInventaryNumberAndPlace(inventaryNumber, PlaceType.OFFICEEQUIPMENT);
+        } else if(null != serialNumber) {
+        svtObjectsByEmployee = terminalService.getSvtObjectsBySerialNumberAndPlace(serialNumber, PlaceType.OFFICEEQUIPMENT);
+        } else {
+            svtObjectsByEmployee = terminalService.getSvtObjectsByPlaceType(PlaceType.OFFICEEQUIPMENT);
+        }
+        List<LocationByTreeDto> treeSvtDtoByEmployee = terminalOutDtoTreeService.getTreeSvtDtoByPlaceType(svtObjectsByEmployee)
+                .stream()
+                .sorted((o1, o2) -> o1.getLocationName().compareTo(o2.getLocationName()))
+                .collect(Collectors.toList());
+        Map<Location, List<Terminal>> svtObjectsByStorage = null;
+        
+        if(null != username) {
+            svtObjectsByStorage = terminalService.getSvtObjectsByName(username, PlaceType.STORAGE);
+        }else if(null != inventaryNumber) {
+        svtObjectsByStorage = terminalService.getSvtObjectsByInventaryNumberAndPlace(inventaryNumber, PlaceType.STORAGE);
+        } else if(null != serialNumber) {
+        svtObjectsByStorage = terminalService.getSvtObjectsBySerialNumberAndPlace(serialNumber, PlaceType.STORAGE);
+        } else {
+            svtObjectsByStorage = terminalService.getSvtObjectsByPlaceType(PlaceType.STORAGE);
+        }
+        List<LocationByTreeDto> treeSvtDtoByStorage = terminalOutDtoTreeService.getTreeSvtDtoByPlaceType(svtObjectsByStorage)
+                .stream()
+                .sorted((o1, o2) -> o1.getLocationName().compareTo(o2.getLocationName()))
+                .collect(Collectors.toList());
+        
+        
+        
+         XSSFWorkbook workbook = new XSSFWorkbook();
+        
+        XSSFSheet spreadsheet = workbook.createSheet("Лист1");
+        XSSFRow row;
+        
+        Map<String, Object[]> rowData = new TreeMap<String, Object[]>(); 
+        
+        rowData.put("1", new Object[] {"Модель", "ФИО", "Тип рабочего места",  
+            "Серийный номер", "Инвентарный номер", "Состояние",  "Район"} );
+        int p = 2;
+         for(LocationByTreeDto locationByTreeDto : treeSvtDtoByEmployee) {
+            for(DepartmentTreeDto departmentTreeDto : locationByTreeDto.getDepartments()) {
+            for(int i = 0; i < departmentTreeDto.getDtoes().size(); i++) {
+                if(departmentTreeDto.getDtoes().get(i) instanceof TerminalDto) {
+                    TerminalDto elem = (TerminalDto)departmentTreeDto.getDtoes().get(i);
+                   
+                    rowData.put(String.valueOf(p), new Object[] {elem.getManufacturerName() + " " + elem.getModel(), elem.getPlaceName(), DocReportController.getPlaceTypeRus(elem.getPlaceType()), 
+                    elem.getSerialNumber(), elem.getInventaryNumber(), DocReportController.getStatusToRus(elem.getStatus()), locationByTreeDto.getLocationName()});
+                }
+                p++;
+            }
+        }
+        
+        }
+        
+        for(LocationByTreeDto locationByTreeDto : treeSvtDtoByStorage) {
+            for(DepartmentTreeDto departmentTreeDto : locationByTreeDto.getDepartments()) {
+            for(int j = 0; j < departmentTreeDto.getDtoes().size(); j++) {
+                if(departmentTreeDto.getDtoes().get(j) instanceof TerminalDto) {
+                    
+                    TerminalDto elem = (TerminalDto)departmentTreeDto.getDtoes().get(j);
+                    
+                    rowData.put(String.valueOf(p), new Object[] {elem.getManufacturerName() + " " + elem.getModel(), elem.getPlaceName(), DocReportController.getPlaceTypeRus(elem.getPlaceType()), 
+                    elem.getSerialNumber(), elem.getInventaryNumber(), DocReportController.getStatusToRus(elem.getStatus()), locationByTreeDto.getLocationName()});
+                }
+                p++;
+            }
+        }
+        
+        }
+        
+        Set<String> keyid = rowData.keySet(); 
+        int rowid = 0;
+        
+        for(String key : keyid) {
+            row = spreadsheet.createRow(rowid++);
+            
+            Object[] objectArr = rowData.get(key);
+            int cellid = 0;
+            
+            for(Object obj : objectArr) {
+                Cell cell = row.createCell(cellid++);
+                cell.setCellValue((String) obj);
+            }
+        }
+        
+        File file = new File("./reports/docReportTerminals.xlsx");
+        FileOutputStream out = new FileOutputStream(file);
+        workbook.write(out);
+        out.close();
+        
+        InputStreamResource resource = new InputStreamResource(new FileInputStream(file));
+        HttpHeaders headers = new HttpHeaders(); 
+        headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; docReportTerminals.xlsx");
+        
+        return ResponseEntity.ok()
+            .headers(headers)
+            .contentLength(file.length())
+            .contentType(MediaType.APPLICATION_OCTET_STREAM)
+            .body(resource);
+        
+    }
+        
+       
+     
     
      @GetMapping("/monitors")
     public ResponseEntity<Resource> getMonitors(@RequestParam(value="username",required=false) String username, 

@@ -5,6 +5,7 @@
 package ru.gov.sfr.aos.monitoring.services;
 
 import ru.gov.sfr.aos.monitoring.dictionaries.Status;
+import ru.gov.sfr.aos.monitoring.enums.ObjectBuingType;
 
 /**
  *
@@ -38,6 +39,59 @@ public class RegularOperation {
                 break;
         }
         return result;
+    }
+    
+    public static String getDeviceTypeRus(ObjectBuingType objectBuingType) {
+        String result = null;
+
+        switch (objectBuingType) {
+        case ATS:
+            result = "АТС";
+            break;
+        case ASUO:
+            result = "Электронные очереди";
+            break;
+        case CONDITIONER:
+            result = "Кондиционеры";
+            break;
+        case DISPLAY:
+            result = "Телевизоры";
+            break;
+        case FAX:
+            result = "Факсы";
+            break;
+        case INFOMAT:
+            result = "Инфоматы";
+            break;
+        case MONITOR:
+            result = "Мониторы";
+            break;
+        case PHONE:
+            result = "Телефоны";
+            break;
+        case ROUTER:
+            result = "Маршрутизаторы";
+            break;
+        case SCANNER:
+            result = "Сканеры";
+            break;
+        case SERVER:
+            result = "Серверы";
+            break;
+        case SWITCHHUB:
+            result = "Коммутаторы/Концентарторы";
+            break;
+        case SYSTEMBLOCK:
+            result = "Системные блоки";
+            break;
+        case TERMINAL:
+            result = "Терминалы";
+            break;
+        case UPS:
+            result = "ИБП";
+            break;
+    }
+    return result;
     }
 
 }

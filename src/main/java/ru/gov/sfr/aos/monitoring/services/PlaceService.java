@@ -14,7 +14,9 @@ import ru.gov.sfr.aos.monitoring.entities.Location;
 import ru.gov.sfr.aos.monitoring.entities.Place;
 import ru.gov.sfr.aos.monitoring.exceptions.ObjectAlreadyExists;
 import ru.gov.sfr.aos.monitoring.models.DepDto;
+import ru.gov.sfr.aos.monitoring.models.DepartmentByTreePlaceDto;
 import ru.gov.sfr.aos.monitoring.models.DepartmentDTO;
+import ru.gov.sfr.aos.monitoring.models.LocationByTreePlaceDto;
 import ru.gov.sfr.aos.monitoring.models.LocationDTO;
 import ru.gov.sfr.aos.monitoring.models.PlaceDTO;
 import ru.gov.sfr.aos.monitoring.models.PlaceStatusDto;
@@ -45,20 +47,8 @@ public class PlaceService {
             place.setUsername(dto.getUsername());
         }
         
-        switch (dto.getPlaceType()) {
-            case "Сотрудник":
-                place.setPlaceType(PlaceType.EMPLOYEE);
-                break;
-            case "Серверная":
-                place.setPlaceType(PlaceType.SERVERROOM);
-                break;
-            case "Оргтехника":
-                place.setPlaceType(PlaceType.OFFICEEQUIPMENT);
-                break;
-            case "Склад":
-                place.setPlaceType(PlaceType.STORAGE);
-                break;
-        }
+        PlaceType placeType = getPlaceType(dto.getPlaceType());
+        place.setPlaceType(placeType);
         if(dto.getDepartment().isBlank() || dto.getDepartment().isEmpty()) {
             throw new ObjectAlreadyExists("поле \"Отдел\" не может быть пустым");
         } else {
@@ -88,7 +78,7 @@ public class PlaceService {
     }
 
     public void updatePlace(PlaceDTO dto) throws ObjectAlreadyExists {
-        Place placeFromDb = placeRepo.findById(dto.getPlaceId()).get();
+        Place placeFromDb = placeRepo.findById(dto.getId()).get();
         if(dto.getDepartment().isBlank() || dto.getDepartment().isEmpty()) {
             throw new ObjectAlreadyExists("поле \"Отдел\" не может быть пустым");
         } else {
@@ -105,20 +95,8 @@ public class PlaceService {
             
         
         
-        switch (dto.getPlaceType()) {
-            case "Сотрудник":
-                placeFromDb.setPlaceType(PlaceType.EMPLOYEE);
-                break;
-            case "Серверная":
-                placeFromDb.setPlaceType(PlaceType.SERVERROOM);
-                break;
-            case "Оргтехника":
-                placeFromDb.setPlaceType(PlaceType.OFFICEEQUIPMENT);
-                break;
-            case "Склад":
-                placeFromDb.setPlaceType(PlaceType.STORAGE);
-                break;
-        }
+        PlaceType placeType = getPlaceType(dto.getPlaceType());
+        placeFromDb.setPlaceType(placeType);
         if(dto.getUsername().isBlank() || dto.getUsername().isEmpty()) {
             throw new ObjectAlreadyExists("поле \"ФИО\" не может быть пустым");
         } else {
@@ -138,6 +116,12 @@ public class PlaceService {
         List<PlaceDTO> dtoes = placeMapper.listPlaceDtoFromListPlace(findAllPlaces);
         return dtoes;
     }
+    
+    
+    public List<Place> getAllPlaces() {
+        List<Place> findAllPlaces = placeRepo.findByArchivedFalse();
+        return findAllPlaces;
+    }
 
     public List<PlaceDTO> getPlacesByPlaceType(PlaceType placeType) {
         List<Place> places = placeRepo.findByPlaceTypeAndArchivedFalse(placeType);
@@ -152,6 +136,11 @@ public class PlaceService {
         return dtoes;
     }
 
+    public List<Place> getPlaceListByUsername(String username) {
+        List<Place> places = placeRepo.findByUsernameContainingAndArchivedFalse(username);
+        return places;
+    }
+    
     public PlaceDTO getPlaceById(Long placeId) {
         Place place = placeRepo.findById(placeId).get();
         PlaceDTO placeDto = placeMapper.placeDtoFromPlace(place);
@@ -260,6 +249,32 @@ public class PlaceService {
         return placeMapper.listPlaceDtoFromListPlace(placesList);
     }
     
+    
+    public List<LocationByTreePlaceDto> getPlaceDtoByAllLocations(List<Place> inputList) {
+        Map<Location, List<Place>> placesByLocations = inputList.stream().collect(Collectors.groupingBy(Place::getLocation));
+        List<LocationByTreePlaceDto> out = new ArrayList<>();
+        for(Map.Entry<Location, List<Place>> entry : placesByLocations.entrySet()) {
+            LocationByTreePlaceDto locationByTreePlaceDto = new LocationByTreePlaceDto();
+            locationByTreePlaceDto.setLocationId(entry.getKey().getId());
+            locationByTreePlaceDto.setLocationName(entry.getKey().getName());
+            List<DepartmentByTreePlaceDto> listDepartmentByTreePlaceDto = new ArrayList<>();
+            Map<String, List<Place>> placesByDepartmentMap = entry.getValue().stream().collect(Collectors.groupingBy(Place::getDepartment));
+            for(Map.Entry<String, List<Place>> innerEntry : placesByDepartmentMap.entrySet()) {
+                DepartmentByTreePlaceDto departmentByTreePlaceDto = new DepartmentByTreePlaceDto();
+                departmentByTreePlaceDto.setDepartment(innerEntry.getKey());
+                departmentByTreePlaceDto.setDtoes(placeMapper.listPlaceDtoFromListPlace(innerEntry.getValue()));
+                listDepartmentByTreePlaceDto.add(departmentByTreePlaceDto);
+            }
+            locationByTreePlaceDto.setDepartments(listDepartmentByTreePlaceDto);
+            out.add(locationByTreePlaceDto);
+        }
+        
+        return out;
+    }
+    
+    
+    
+    
     public static PlaceType getPlaceType(String placeType) {
         PlaceType curentType = null;
         switch (placeType) {
@@ -279,4 +294,23 @@ public class PlaceService {
         return curentType;
     
 }
+    
+    public static String getPlaceTypeRus(String placeType) {
+        String result = "";
+        switch (placeType) {
+            case "SERVERROOM":
+                result = "Серверная";
+                break;
+            case "OFFICEEQUIPMENT":
+                result = "Оргтехника";
+                break;
+            case "EMPLOYEE":
+                result = "Сотрудник";
+                break;
+            case "STORAGE":
+                result = "Склад";
+                break;
+    }
+        return result;
+    }
 }

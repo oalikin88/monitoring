@@ -182,6 +182,7 @@ import ru.gov.sfr.aos.monitoring.models.AsuoDTO;
 import ru.gov.sfr.aos.monitoring.models.BatteryTypeDto;
 import ru.gov.sfr.aos.monitoring.models.CpuModelDto;
 import ru.gov.sfr.aos.monitoring.models.DepDto;
+import ru.gov.sfr.aos.monitoring.models.DeviceDto;
 import ru.gov.sfr.aos.monitoring.models.DisplayDto;
 import ru.gov.sfr.aos.monitoring.models.FaxDto;
 import ru.gov.sfr.aos.monitoring.models.HddDto;
@@ -235,6 +236,7 @@ import ru.gov.sfr.aos.monitoring.services.MonitorManufacturerService;
 import ru.gov.sfr.aos.monitoring.services.MonitorService;
 import ru.gov.sfr.aos.monitoring.services.MotherboardModelService;
 import ru.gov.sfr.aos.monitoring.services.MouseModelService;
+import ru.gov.sfr.aos.monitoring.services.ObjectBuingServiceImpl;
 import ru.gov.sfr.aos.monitoring.services.OperationSystemService;
 import ru.gov.sfr.aos.monitoring.services.PhoneManufacturerService;
 import ru.gov.sfr.aos.monitoring.services.RamModelService;
@@ -590,7 +592,8 @@ public class GetInfoController {
     private DisplayManufacturerMapper displayManufacturerMapper;
     @Autowired
     private DisplayModelMapper displayModelMapper;
-    
+    @Autowired
+    private ObjectBuingServiceImpl objectBuingServiceImpl;
     
   
     
@@ -2201,5 +2204,11 @@ public class GetInfoController {
     public ResponseEntity<String> updateTransfer(@RequestBody TransferDto dto) throws IOException {
         clientDao.editTransfer(dto);
         return ResponseEntity.ok("Запись обновлена");
+    }
+    
+    @GetMapping("/all-devices")
+    public List<DeviceDto> getAllDevicesByPlace(Long id) {
+        List<DeviceDto> allDevicesByPlaceId = objectBuingServiceImpl.getAllDevicesByPlaceId(id);
+        return allDevicesByPlaceId;
     }
 }

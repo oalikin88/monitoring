@@ -51,7 +51,7 @@ public class TerminalUpsModelMapper implements ModelMapper<TerminalUpsModel, Svt
     @Override
     public SvtModelDto getDtoForSelectize(TerminalUpsModel entity) {
         SvtModelDto dto = new SvtModelDto();
-        dto.setModel(entity.getManufacturer().getName() + " " + entity.getModel());
+        dto.setModel(entity.getModel());
         dto.setManufacturerName(entity.getManufacturer().getName());
         dto.setManufacturerId(entity.getManufacturer().getId());
         dto.setId(entity.getId());

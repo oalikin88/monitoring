@@ -98,9 +98,16 @@ public abstract class ObjectBuingService <E extends ObjectBuing, R extends Objec
             return repository.findByArchivedFalse();
         }
  
+        
+       public List<E> findAllByPlaceId(Long id) {
+            return repository.findByPlaceIdAndArchivedFalse(id);
+        }
+        
           
         public abstract void createSvtObj(D dto) throws ObjectAlreadyExists;
         
         public abstract void updateSvtObj(D dto) throws ObjectAlreadyExists;
+        
+        
     
 }
