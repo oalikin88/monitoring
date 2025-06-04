@@ -5,7 +5,7 @@
 package ru.gov.sfr.aos.monitoring.interfaces;
 
 import java.util.List;
-import ru.gov.sfr.aos.monitoring.entities.Contract;
+import ru.gov.sfr.aos.monitoring.contract.Contract;
 import ru.gov.sfr.aos.monitoring.exceptions.ObjectAlreadyExists;
 
 /**

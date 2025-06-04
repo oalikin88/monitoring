@@ -1,0 +1,94 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+package ru.gov.sfr.aos.monitoring.switchhub;
+
+import ru.gov.sfr.aos.monitoring.switchhub.SwitchHubModel;
+import java.io.Serializable;
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.ManyToOne;
+import javax.persistence.PrimaryKeyJoinColumn;
+import javax.validation.constraints.NotNull;
+import ru.gov.sfr.aos.monitoring.dictionaries.Status;
+import ru.gov.sfr.aos.monitoring.svtobject.ObjectBuingWithSerialAndInventary;
+
+/**
+ *
+ * @author 041AlikinOS
+ */
+@Entity
+@PrimaryKeyJoinColumn(name = "SWITCH_HUB_ID")
+public class SwitchHub extends ObjectBuingWithSerialAndInventary implements Serializable {
+    @NotNull(message = "Поле \"Модель\" не должно быть пустым")
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private SwitchHubModel switchHubModel;
+    private SwitchHubType switchHubType;
+    private int portAmount;
+    private int yearCreated;
+    private String numberRoom;
+    private String nameFromOneC;
+    
+    public SwitchHub() {
+    }
+
+    public SwitchHubModel getSwitchHubModel() {
+        return switchHubModel;
+    }
+
+    public void setSwitchHubModel(SwitchHubModel switchHubModel) {
+        this.switchHubModel = switchHubModel;
+    }
+
+    public int getPortAmount() {
+        return portAmount;
+    }
+
+    public void setPortAmount(int portAmount) {
+        this.portAmount = portAmount;
+    }
+
+    public SwitchHubType getSwitchHubType() {
+        return switchHubType;
+    }
+
+    public void setSwitchHubType(SwitchHubType switchHubType) {
+        this.switchHubType = switchHubType;
+    }
+
+    public String getNumberRoom() {
+        return numberRoom;
+    }
+
+    public void setNumberRoom(String numberRoom) {
+        this.numberRoom = numberRoom;
+    }
+
+    public String getNameFromOneC() {
+        return nameFromOneC;
+    }
+
+    public void setNameFromOneC(String nameFromOneC) {
+        this.nameFromOneC = nameFromOneC;
+    }
+
+    public int getYearCreated() {
+        return yearCreated;
+    }
+
+    public void setYearCreated(int yearCreated) {
+        this.yearCreated = yearCreated;
+    }
+    
+    
+
+    @Override
+    public String toString() {
+        return "SwitchHub{" + "id=" + this.id + ", serial=" + this.serialNumber + ", inventary=" + this.inventaryNumber + "switchHubModel=" + switchHubModel + ", switchHubType=" + switchHubType + ", portAmount=" + portAmount + ", numberRoom=" + numberRoom + ", nameFromOneC=" + nameFromOneC + '}';
+    }
+    
+    
+    
+}

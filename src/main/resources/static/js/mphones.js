@@ -74,6 +74,7 @@ let getModalError = function (textError) {
     modalErrorParent.append(modalBody);
     modalFooter = document.createElement('div');
     modalFooter.className = 'modal-footer';
+    
     footerBtnClose = document.createElement('button');
     footerBtnClose.className = 'btn btn-secondary btn-sm';
     footerBtnClose.setAttribute('data-bs-dismiss', 'modal');
@@ -746,10 +747,10 @@ let modalContentLoad = function (eventReason, dto) {
     footerBtnSave.className = "btn btn-primary btn-sm";
     footerBtnSave.id = "btnSave";
     footerBtnSave.innerText = "Сохранить";
-
+    footerBtnSave.disabled = true;
     divModalFooter.appendChild(footerBtnSave);
     modalWindowContent.appendChild(divModalFooter);
-
+    
     if (dto != null) {
         switch (attribute) {
             case 'mram':
@@ -896,6 +897,8 @@ let modalContentLoad = function (eventReason, dto) {
                         case "msubdisplay":
                             modelLink = "/modsubdisplay";
                             break;
+//                        case "mdisplay":
+//                            modelLink = "/";
                     }
 
                 }
@@ -910,6 +913,9 @@ let modalContentLoad = function (eventReason, dto) {
                             $('#model')[0].selectize.addItem(model);
                         });
 
+                    },
+                    onChange: function(value) {
+                        console.log(value);
                     }
                 });
 
@@ -922,6 +928,9 @@ let modalContentLoad = function (eventReason, dto) {
                 }
             },
         });
+        
+       
+       
     }
 
 

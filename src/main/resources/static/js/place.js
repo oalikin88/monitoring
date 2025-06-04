@@ -427,7 +427,7 @@ let modalContentLoad = function (idPlace, placeName) {
     if($("#btnConfirm")[0] != null) {
         $("#btnConfirm")[0].addEventListener("click", function() {
             let outDto = {
-            placeId: idPlace,
+            id: idPlace,
             placeType : document.querySelector('#placeTypeSelect').value,
             locationId : document.querySelector('#locationSelect').value,
             departmentCode : document.querySelector('#departmentSelect').value,

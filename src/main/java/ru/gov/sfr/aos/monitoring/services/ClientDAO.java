@@ -11,8 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ru.gov.sfr.aos.monitoring.conf.DBConnection;
 import ru.gov.sfr.aos.monitoring.exceptions.DaoException;
-import ru.gov.sfr.aos.monitoring.models.RepairDto;
-import ru.gov.sfr.aos.monitoring.models.TransferDto;
+import ru.gov.sfr.aos.monitoring.repair.RepairDto;
+import ru.gov.sfr.aos.monitoring.transfer.TransferDto;
 
 /**
  *

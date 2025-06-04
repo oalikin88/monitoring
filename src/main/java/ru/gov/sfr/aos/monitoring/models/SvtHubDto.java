@@ -1,5 +1,7 @@
 package ru.gov.sfr.aos.monitoring.models;
 
+import ru.gov.sfr.aos.monitoring.svtobject.SvtDTO;
+
 /**
  *
  * @author Alikin Oleg

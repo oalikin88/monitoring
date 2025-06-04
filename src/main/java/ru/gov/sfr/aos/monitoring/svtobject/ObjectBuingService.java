@@ -1,0 +1,113 @@
+package ru.gov.sfr.aos.monitoring.svtobject;
+
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import org.springframework.beans.factory.annotation.Autowired;
+import ru.gov.sfr.aos.monitoring.place.PlaceType;
+import ru.gov.sfr.aos.monitoring.location.Location;
+import ru.gov.sfr.aos.monitoring.place.Place;
+import ru.gov.sfr.aos.monitoring.exceptions.ObjectAlreadyExists;
+import ru.gov.sfr.aos.monitoring.models.ArchivedDto;
+import ru.gov.sfr.aos.monitoring.place.PlaceRepo;
+
+/**
+ *
+ * @author Alikin Oleg
+ * @param <E>
+ * @param <R>
+ * @param <D>
+ */
+
+public abstract class ObjectBuingService <E extends ObjectBuing, R extends ObjectBuingRepo, D extends MainSvtDto> {
+
+    @Autowired
+    private R repository;
+    @Autowired
+    private PlaceRepo placeRepo;
+    
+     public void save(E e) {
+            repository.save(e);
+    }
+     
+     
+    
+   
+    public E getById(Long id) {
+        E e = (E) repository.findById(id).get();
+        return e;
+    }
+    
+      public void backFromStorage(E objectBuing, Long placeId) {
+        Place place = placeRepo.findById(placeId).get();
+        objectBuing.setPlace(place);
+        repository.save(objectBuing);
+        
+    }
+      
+      
+      
+        public void sendToStorage(E objectBuing) {
+       
+        List<Place> places = placeRepo.findByLocationIdAndPlaceTypeAndArchivedFalse(objectBuing.getPlace().getLocation().getId(), PlaceType.STORAGE);
+        Optional<Place> findFirst = places.stream().filter(e -> e.getUsername().equals(objectBuing.getPlace().getUsername())).findFirst();
+        if(findFirst.isPresent()) {
+            objectBuing.setPlace(findFirst.get());
+            repository.save(objectBuing);
+        }
+        
+        
+    }
+        
+        public Map<Location, List<E>> getSvtObjectsByPlace() {
+        Map<Location, List<E>> collect = (Map<Location, List<E>>) repository.findByPlaceArchivedFalse()
+                .stream()
+                .collect(Collectors
+                        .groupingBy((E el) -> el.getPlace()
+                                .getLocation()));
+        
+        return collect;
+    }
+          public Map<Location, List<E>> getSvtObjectsByPlaceType(PlaceType placeType) {
+        Map<Location, List<E>> collect = (Map<Location, List<E>>) repository.findByPlacePlaceTypeLikeAndArchivedFalse(placeType)
+                .stream()
+                .collect(Collectors
+                        .groupingBy((E el) -> el.getPlace()
+                                .getLocation()));
+        
+        return collect;
+    }
+        
+        public void svtObjToArchive(ArchivedDto dto) {
+            E e = (E)repository.findById(dto.getId()).get();
+            e.setArchived(true);
+            repository.save(e);
+        }
+        
+        public Map<Location, List<E>> getSvtObjectsByName(String nameEmployee, PlaceType placeType) {
+             Map<Location, List<E>> collect = (Map<Location, List<E>>) repository.findByPlaceUsernameContainingAndPlacePlaceTypeLikeAndArchivedFalse(nameEmployee, placeType)
+                .stream()
+                .collect(Collectors
+                        .groupingBy((E el) -> el.getPlace()
+                                .getLocation()));
+        
+        return collect;
+}
+        public List<E> getAll() {
+            return repository.findByArchivedFalse();
+        }
+ 
+        
+       public List<E> findAllByPlaceId(Long id) {
+            return repository.findByPlaceIdAndArchivedFalse(id);
+        }
+        
+          
+        public abstract void createSvtObj(D dto) throws ObjectAlreadyExists;
+        
+        public abstract void updateSvtObj(D dto) throws ObjectAlreadyExists;
+        
+        
+    
+}

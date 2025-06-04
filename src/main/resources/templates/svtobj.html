@@ -412,7 +412,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                                             <li  class="element" th:attr="id=${inInnerDto.id}" data-bs-toggle="modal" data-bs-target="#addPlaceModal">
                                                  <th:block th:switch="${attribute}">
                                                            <div class="row mb-2 d-flex align-items-center text-start phone" th:case="switch">
-                                                <div class="col" th:text="${stat.count} + '. ' + ${inInnerDto.model}"></div>
+                                                <div class="col" th:text="${stat.count} + '. '  + ${inInnerDto.manufacturerName} + ' ' + ${inInnerDto.model}"></div>
                                                 <div class="col" th:text="${inInnerDto.placeName}"></div>
                                                 <div class="col" th:text="${inInnerDto.serialNumber}"></div>
                                                 <div class="col" th:text="${inInnerDto.inventaryNumber}"></div>
@@ -431,7 +431,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                                                 </th:block>
                                              </div>
                                                 <div class="row mb-2 d-flex align-items-center text-start phone" th:case="router">
-                                                <div class="col" th:text="${stat.count} + '. ' + ${inInnerDto.model}"></div>
+                                                <div class="col" th:text="${stat.count} + '. ' + ${inInnerDto.manufacturerName} + ' ' + ${inInnerDto.model}"></div>
                                                 <div class="col" th:text="${inInnerDto.placeName}"></div>
                                                 <div class="col" th:text="${inInnerDto.serialNumber}"></div>
                                                 <div class="col" th:text="${inInnerDto.inventaryNumber}"></div>
@@ -447,7 +447,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                                                 </th:block>
                                              </div>
                                                 <div class="row mb-2 d-flex align-items-center text-start phone" th:case="ats">
-                                                <div class="col" th:text="${stat.count} + '. ' + ${inInnerDto.model}"></div>
+                                                <div class="col" th:text="${stat.count} + '. '  + ${inInnerDto.manufacturerName} + ' ' + ${inInnerDto.model}"></div>
                                                 <div class="col" th:text="${inInnerDto.placeName}"></div>
                                                 <div class="col" th:text="${inInnerDto.serialNumber}"></div>
                                                 <div class="col" th:text="${inInnerDto.inventaryNumber}"></div>
@@ -477,7 +477,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                                                 </th:block>
                                              </div>
                                                 <div class="row mb-2 d-flex align-items-center text-start phone" th:case="conditioner">
-                                                <div class="col" th:text="${stat.count} + '. ' + ${inInnerDto.model}"></div>
+                                                <div class="col" th:text="${stat.count} + '. '  + ${inInnerDto.manufacturerName} + ' ' + ${inInnerDto.model}"></div>
                                                 <div class="col" th:text="${inInnerDto.placeName}"></div>
                                                 <div class="col" th:text="${inInnerDto.serialNumber}"></div>
                                                 <div class="col" th:text="${inInnerDto.inventaryNumber}"></div>
@@ -497,7 +497,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                                                 </th:block>
                                              </div>
                                                  <div class="row mb-2 d-flex align-items-center text-start phone" th:case="terminal">
-                                                <div class="col" th:text="${stat.count} + '. ' + ${inInnerDto.model}"></div>
+                                                <div class="col" th:text="${stat.count} + '. '  + ${inInnerDto.manufacturerName} + ' ' + ${inInnerDto.model}"></div>
                                                 <div class="col" th:text="${inInnerDto.placeName}"></div>
                                                 <div class="col" th:text="${inInnerDto.serialNumber}"></div>
                                                 <div class="col" th:text="${inInnerDto.inventaryNumber}"></div>

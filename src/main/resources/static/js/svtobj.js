@@ -9,6 +9,7 @@ const modalAddPhone = document.getElementById('addPlaceModal');
 const modalRepair = document.getElementById('repairModal');
 const modalTransfer = document.getElementById('transferModal');
 var currentYear = new Date().getFullYear();
+let forceSave = false;
 var departmentSelect;
 var locationId;
 var oldPlaceId;
@@ -19,6 +20,7 @@ var oldDepartment;
 var innerCallNumber;
 let idSvtObj;
 let idPlace;
+let placeName;
 let codeDepartment;
 let modelId;
 let status;
@@ -95,7 +97,7 @@ let addPlaceBtn;
 if(document.querySelector('#addPlaceBtn') != null) {
     addPlaceBtn = document.querySelector('#addPlaceBtn');
 }
-
+let ipRegExp = new RegExp(`^\\d{3}-\\d{3}-\\d{3} \\d{2}$`);
 let attribArray = new Array();
 attribArray.push("asuo");
 attribArray.push("terminalDisplay");
@@ -103,6 +105,10 @@ attribArray.push("terminalServer");
 attribArray.push("terminalSensor");
 attribArray.push("terminalPrinter");
 attribArray.push("terminalUps");
+
+
+
+
 
 let handleDeleteRepair = function (svtObjId) {
     let deleteRequest = new XMLHttpRequest();
@@ -917,17 +923,15 @@ function beep() {
     setTimeout(function () {
         oscillator.stop();
     }, 500);
-}
-;
+};
 
 let linkCreate = function (attribute, toLink) {
     var result = '/';
     result = result + attribute + toLink;
     return result;
+};
 
-}
-
-let getModalError = function (textError) {
+let getModalError = function (typeMethod, statusCode, textError) {
 
     //if you have another AudioContext class use that one, as some browsers have a limit
     modalHeader = document.createElement('div');
@@ -952,13 +956,40 @@ let getModalError = function (textError) {
     modalErrorParent.append(modalBody);
     modalFooter = document.createElement('div');
     modalFooter.className = 'modal-footer';
+    if(statusCode == 418) {
+        footerConfirmBtn = document.createElement('button');
+        footerConfirmBtn.className = 'btn btn-danger btn-sm';
+        footerConfirmBtn.id = "confirmBtn";
+        footerConfirmBtn.style = "min-width: 72px";
+        footerConfirmBtn.innerText = 'Да'; 
+    }
+    
+    
+    
     footerBtnClose = document.createElement('button');
     footerBtnClose.className = 'btn btn-secondary btn-sm';
     footerBtnClose.setAttribute('data-bs-dismiss', 'modal');
     footerBtnClose.innerText = 'Закрыть';
 
     modalErrorParent.appendChild(modalFooter);
+    if(statusCode == 418) {
+        modalFooter.appendChild(footerConfirmBtn);
+    }
+    
     modalFooter.appendChild(footerBtnClose);
+    if(statusCode == 418) {
+         footerConfirmBtn.addEventListener("click", function() {
+        forceSave = true;
+        if(typeMethod == "POST") {
+           handleClickSavePhoneBtn(); 
+        } else {
+            handleClickUpdateBtn();
+        }
+        
+    });
+    }
+   
+    
     $("#modalBody").append(textError);
     return new bootstrap.Modal(modalError).show();
 };
@@ -1173,6 +1204,7 @@ let handleClickSendToStorageBtn = function () {
             dto.innerConnectionIp = $("#innerConnectionIp")[0].value;
             dto.innerConnectionAnalog = $("#innerConnectionAnalog")[0].value;
             dto.outerConnectionType = $("#outerConnectionType")[0].value;
+            dto.ipAdress = $("#ipAdress")[0].value;
             break;
         case "conditioner":
             requestLink = "/conditionertostor";
@@ -1357,6 +1389,7 @@ let handleClickUpdateBtn = function () {
             dto.innerConnectionIp = $("#innerConnectionIp")[0].value;
             dto.innerConnectionAnalog = $("#innerConnectionAnalog")[0].value;
             dto.outerConnectionType = $("#outerConnectionType")[0].value;
+            dto.ipAdress = $("#ipAdress")[0].value;
             break;
         case "conditioner":
             requestLink = "/updconditioner";
@@ -1417,6 +1450,9 @@ let handleClickUpdateBtn = function () {
             requestLink = "/terminal-display";
             break;
     }
+     if(forceSave == true) {
+        dto.ignoreCheck = true;
+    }
     $.ajax({
         type: "PUT",
         url: requestLink,
@@ -1427,7 +1463,7 @@ let handleClickUpdateBtn = function () {
         },
         error: function (callback) {
             beep();
-            getModalError(callback.responseText);
+            getModalError(this.type, callback.status, callback.responseText);
         },
         processData: false,
         contentType: 'application/json'
@@ -1660,6 +1696,7 @@ let handleClickSavePhoneBtn = function () {
             dto.innerConnectionIp = $("#innerConnectionIp")[0].value;
             dto.innerConnectionAnalog = $("#innerConnectionAnalog")[0].value;
             dto.outerConnectionType = $("#outerConnectionType")[0].value;
+            dto.ipAdress = $("#ipAdress")[0].value;
             break;
         case "conditioner":
             requestLink = "/conditioner";
@@ -1697,6 +1734,9 @@ let handleClickSavePhoneBtn = function () {
             requestLink = "/hub";
             break;
     }
+    if(forceSave == true) {
+        dto.ignoreCheck = true;
+    }
     $.ajax({
         type: "POST",
         url: requestLink,
@@ -1707,7 +1747,7 @@ let handleClickSavePhoneBtn = function () {
         },
         error: function (callback) {
             beep();
-            getModalError(callback.responseText);
+            getModalError(this.type, callback.status, callback.responseText);
         },
         processData: false,
         contentType: 'application/json'
@@ -1715,10 +1755,10 @@ let handleClickSavePhoneBtn = function () {
 };
 
 // Запрос на активацию/деактивацию кнопки "Отправить на склад"
-let requestToEnableStorage = function () {
+let requestToEnableStorage = function (username, location) {
     $('.svtObjModalFooter')[0].innerHTML = "";
     $.ajax({
-        url: '/getstor?locationId=' + locationId,
+        url: '/getstorage?username=' + username + '&locationId=' + location,
         type: 'GET',
         async: false,
         dataType: 'json',
@@ -2538,6 +2578,7 @@ let modalRepairContentLoad = function (svtObjId, title) {
 
 // Модальное окно добавления/редактирования телефона
 let modalContentLoad = function (eventReason, svtObjId) {
+    forceSave = false;
     if (modalParent.childNodes.length > 1) {
         modalParent.innerHTML = "";
     }
@@ -4076,6 +4117,25 @@ let modalContentLoad = function (eventReason, svtObjId) {
             innerConnectionsAmountRow.appendChild(divColLabelConnectionsAmount);
             innerConnectionsAmountRow.appendChild(divColConteinerForRowsInputs);
             divContainerBody.appendChild(innerConnectionsAmountRow);
+            
+            let divRowAtsIpAdress = document.createElement("div");
+            divRowAtsIpAdress.className = "row mt-2";
+            let divColLabelAtsIpAdress = document.createElement("div");
+            divColLabelAtsIpAdress.className = "col";
+            divColLabelAtsIpAdress.innerText = "ip адрес";
+            let divColInputAtsIpAdress = document.createElement("div");
+            divColInputAtsIpAdress.className = "col";
+            let inputAtsIpAdress = document.createElement("input");
+            inputAtsIpAdress.className = "form-control form-control-sm ipAddressValidate";
+            inputAtsIpAdress.type = "text";
+            inputAtsIpAdress.name = "ipAdress";
+            inputAtsIpAdress.placeholder = "xxx.xxx.xxx.xxx";
+            inputAtsIpAdress.id = "ipAdress";
+            inputAtsIpAdress.pattern = "\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}";
+            divColInputAtsIpAdress.appendChild(inputAtsIpAdress);
+            divRowAtsIpAdress.appendChild(divColLabelAtsIpAdress);
+            divRowAtsIpAdress.appendChild(divColInputAtsIpAdress);
+            divContainerBody.appendChild(divRowAtsIpAdress);
             break;
         case "asuo":
             let divRowNameFromOneCAsuo = document.createElement("div");
@@ -4597,6 +4657,7 @@ let modalContentLoad = function (eventReason, svtObjId) {
             success: function (callback) {
                 $("#modalTitle")[0].innerText = $("#modalTitle")[0].innerText + ": " + callback.model;
                 idPlace = callback.placeId;
+                placeName = callback.placeName;
                 codeDepartment = callback.departmentCode;
                 modelId = callback.modelId;
                 status = callback.status;
@@ -4661,6 +4722,7 @@ let modalContentLoad = function (eventReason, svtObjId) {
                     innerConnectionIp = callback.innerConnectionIp;
                     cityNumberAmount = callback.cityNumberAmount;
                     outerConnectionType = callback.outerConnectionType;
+                    ipAdress = callback.ipAdress;
                 } else if (attrib == "conditioner") {
                     conditionerTypeSelect = callback.conditionerType;
                     description = callback.description;
@@ -4792,6 +4854,7 @@ let modalContentLoad = function (eventReason, svtObjId) {
                 $("#innerConnectionIp")[0].value = innerConnectionIp;
                 $("#cityNumberAmount")[0].value = cityNumberAmount;
                 $("#outerConnectionType")[0].value = outerConnectionType;
+                $("#ipAdress")[0].value = ipAdress;
                 break;
             case "conditioner":
                 $("#nameFromOneC")[0].value = nameFromOneC;
@@ -4846,6 +4909,7 @@ let modalContentLoad = function (eventReason, svtObjId) {
                 case "monitors":
                     $("#nameFromOneC")[0].disabled = true;
                     $("#baseTypeSelect")[0].disabled = true;
+                    $("#numberRoom")[0].disabled = true;
                     break;
                 case "asuo":
                     $("#nameFromOneC")[0].disabled = true;
@@ -4898,6 +4962,7 @@ let modalContentLoad = function (eventReason, svtObjId) {
                     $("#innerConnectionIp")[0].value = innerConnectionIp;
                     $("#cityNumberAmount")[0].value = cityNumberAmount;
                     $("#outerConnectionType")[0].value = outerConnectionType;
+                    $("#ipAdress")[0].value = ipAdress;
                     break;
                 case "conditioner":
                     $("#nameFromOneC")[0].value = nameFromOneC;
@@ -5246,7 +5311,8 @@ let modalContentLoad = function (eventReason, svtObjId) {
                                 console.log(callback);
                             },
                             success: function (callback) {
-                                $('#placeSelect')[0].selectize.addOption(callback);
+                                $('#placeSelect')[0].selectize.addOption({placeId: callback.id, username: callback.username});
+                                $('#placeSelect')[0].selectize.addItem(callback.id);
                             }
                         });
                     }
@@ -5256,10 +5322,27 @@ let modalContentLoad = function (eventReason, svtObjId) {
                     } else {
                         $('#placeSelect')[0].selectize.setValue($('#placeSelect')[0].selectize.search(0).items[0].id);
                     }
-                }
+                },
+                
             });
         }
         },
+        onChange: function (value) {
+            //placebyid
+            
+             $.ajax({
+                    url: '/placebyid?placeId=' + value,
+                    type: 'GET',
+                    async: false,
+                    dataType: 'json',
+                    success: function (callback) {
+                      requestToEnableStorage(callback.username, callback.locationId);
+                    }
+                });
+            
+            
+                
+        }
     });
 
 
@@ -6924,6 +7007,7 @@ let modalContentLoad = function (eventReason, svtObjId) {
                 $("#innerConnectionIp")[0].disabled = true;
                 $("#innerConnectionAnalog")[0].disabled = true;
                 $("#outerConnectionType")[0].disabled = true;
+                $("#ipAdress")[0].disabled = true;
             } else {
                 $("#numberRoom")[0].disabled = false;
                 $("#cityNumberAmount")[0].disabled = false;
@@ -6931,6 +7015,7 @@ let modalContentLoad = function (eventReason, svtObjId) {
                 $("#innerConnectionIp")[0].disabled = false;
                 $("#innerConnectionAnalog")[0].disabled = false;
                 $("#outerConnectionType")[0].disabled = false;
+                $("#ipAdress")[0].disabled = false;
             }
             break;
         case "conditioner":
@@ -7116,7 +7201,7 @@ let modalContentLoad = function (eventReason, svtObjId) {
                 });
             });
         } else {
-            requestToEnableStorage();
+            requestToEnableStorage(placeName, locationId);
         }
     } else {
 
@@ -7133,6 +7218,7 @@ let modalContentLoad = function (eventReason, svtObjId) {
         idSvtObj = null;
         innerCallNumber = null;
         idPlace = null;
+        placeName = null;
         codeDepartment = null;
         modelId = null;
         status = null;
@@ -7242,7 +7328,7 @@ let modalContentLoad = function (eventReason, svtObjId) {
     });
     }
 
-   
+
 
 };
 
