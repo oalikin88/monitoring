@@ -28,7 +28,8 @@ public interface ManufacturerMapper<R extends ManufacturerModel, E extends Manuf
     
     
      default E getDto(R entity) {
-        E dto = (E)new ManufacturerDTO<>();
+       
+        E dto = (E)new ManufacturerDTO();
         Set<SvtModelDto> modelDtoes = new HashSet<>();
         dto.setId(entity.getId());
         dto.setName(entity.getName());

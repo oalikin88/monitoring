@@ -35,7 +35,7 @@ public interface PhoneRepo extends ObjectBuingWithSerialAndInventaryRepo <Phone>
    + "AND ((?3 is NULL or ?3 = '') or (phone.year_created >= ?3)) "
    + "AND ((?4 is NULL or ?4 = '') or (phone.year_created <= ?4)) "
    + "AND ((?5 is NULL or ?5 = '') or (place.location_id = ?5)))", nativeQuery = true)
-    List<Phone> findPhonesByAllFilters (String status, String model, String yearCreatedOne, String yearCreatedTwo, String location);
+    List<Phone> findDevicesByAllFilters (String status, String model, String yearCreatedOne, String yearCreatedTwo, String location);
     
     
   

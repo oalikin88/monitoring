@@ -94,6 +94,8 @@ let terminalServerId;
 let terminalUpsId;
 let programSoftware;
 let addPlaceBtn;
+let ipAdressInner;
+let ipAdressOuter;
 if(document.querySelector('#addPlaceBtn') != null) {
     addPlaceBtn = document.querySelector('#addPlaceBtn');
 }
@@ -1122,6 +1124,7 @@ let handleClickSendToStorageBtn = function () {
         case "phones":
             dto.phoneNumber = $("#innerCallNumber")[0].value;
             dto.numberRoom = $("#numberRoom")[0].value;
+            dto.nameFromOneC = $("#nameFromOneC")[0].value;
             requestLink = "/phonetostor";
             break;
         case "monitors":
@@ -1195,6 +1198,8 @@ let handleClickSendToStorageBtn = function () {
             dto.portAmount = $("#portAmount")[0].value;
             dto.nameFromOneC = $("#nameFromOneC")[0].value;
             dto.numberRoom = $("#numberRoom")[0].value;
+            dto.ipAdressInner = $("#ipAdressInner")[0].value;
+            dto.ipAdressOuter = $("#ipAdressOuter")[0].value;
             break;
         case "ats":
             requestLink = "/atstostor";
@@ -1294,6 +1299,7 @@ let handleClickUpdateBtn = function () {
         case "phones":
             dto.phoneNumber = $("#innerCallNumber")[0].value;
             dto.numberRoom = $("#numberRoom")[0].value;
+            dto.nameFromOneC = $("#nameFromOneC")[0].value;
             requestLink = "/updphone";
             break;
         case "fax":
@@ -1359,6 +1365,11 @@ let handleClickUpdateBtn = function () {
             dto.nameFromOneC = $("#nameFromOneC")[0].value;
             dto.numberRoom = $("#numberRoom")[0].value;
             break;
+        case "printers":
+            requestLink = "/printers";
+            dto.nameFromOneC = $("#nameFromOneC")[0].value;
+            dto.numberRoom = $("#numberRoom")[0].value;
+            break;
         case "switch":
             requestLink = "/updswitch";
             dto.portAmount = $("#portAmount")[0].value;
@@ -1380,6 +1391,8 @@ let handleClickUpdateBtn = function () {
             dto.portAmount = $("#portAmount")[0].value;
             dto.nameFromOneC = $("#nameFromOneC")[0].value;
             dto.numberRoom = $("#numberRoom")[0].value;
+            dto.ipAdressInner = $("#ipAdressInner")[0].value;
+            dto.ipAdressOuter = $("#ipAdressOuter")[0].value;
             break;
         case "ats":
             requestLink = "/updats";
@@ -1664,6 +1677,11 @@ let handleClickSavePhoneBtn = function () {
             dto.nameFromOneC = $("#nameFromOneC")[0].value;
             dto.numberRoom = $("#numberRoom")[0].value;
             break;
+        case "printers":
+            requestLink = "/printers";
+            dto.nameFromOneC = $("#nameFromOneC")[0].value;
+            dto.numberRoom = $("#numberRoom")[0].value;
+            break;
         case "switch":
             requestLink = "/switch";
             dto.portAmount = $("#portAmount")[0].value;
@@ -1686,6 +1704,8 @@ let handleClickSavePhoneBtn = function () {
             dto.portAmount = $("#portAmount")[0].value;
             dto.nameFromOneC = $("#nameFromOneC")[0].value;
             dto.numberRoom = $("#numberRoom")[0].value;
+            dto.ipAdressInner = $("#ipAdressInner")[0].value;
+            dto.ipAdressOuter = $("#ipAdressOuter")[0].value;
 
             break;
         case "ats":
@@ -3049,6 +3069,25 @@ let modalContentLoad = function (eventReason, svtObjId) {
             divRowNumberRoomPhone.appendChild(divColInputNumberRoomPhone);
             divContainerBody.appendChild(divRowNumberRoomPhone);
             
+            
+             let divRowNameFromOneCPhone = document.createElement("div");
+            divRowNameFromOneCPhone.className = "row mt-2";
+            let divColLabelNameFromOneCPhone = document.createElement("div");
+            divColLabelNameFromOneCPhone.className = "col";
+            divColLabelNameFromOneCPhone.innerText = "Наименование в ведомости ОС";
+            let divColInputNameFromOneCPhone = document.createElement("div");
+            divColInputNameFromOneCPhone.className = "col";
+            let inputNameFromOneCPhone = document.createElement("input");
+            inputNameFromOneCPhone.className = "form-control form-control-sm";
+            inputNameFromOneCPhone.type = "text";
+            inputNameFromOneCPhone.placeholder = "введите наименование";
+            inputNameFromOneCPhone.id = "nameFromOneC";
+            inputNameFromOneCPhone.setAttribute("aria-label", "nameFromOneC");
+            divColInputNameFromOneCPhone.appendChild(inputNameFromOneCPhone);
+            divRowNameFromOneCPhone.appendChild(divColLabelNameFromOneCPhone);
+            divRowNameFromOneCPhone.appendChild(divColInputNameFromOneCPhone);
+            divContainerBody.appendChild(divRowNameFromOneCPhone);
+            
             break;
         case "monitors":
             let divRowNumberRoomMonitor = document.createElement("div");
@@ -3265,6 +3304,43 @@ let modalContentLoad = function (eventReason, svtObjId) {
             divRowNameFromOneCScanner.appendChild(divColInputNameFromOneCScanner);
             divContainerBody.appendChild(divRowNameFromOneCScanner);
             break;
+        case "printers":
+            let divRowNameFromOneCPrinter = document.createElement("div");
+            divRowNameFromOneCPrinter.className = "row mt-2";
+            let divColLabelNameFromOneCPrinter = document.createElement("div");
+            divColLabelNameFromOneCPrinter.className = "col";
+            divColLabelNameFromOneCPrinter.innerText = "Наименование в ведомости ОС";
+            let divColInputNameFromOneCPrinter = document.createElement("div");
+            divColInputNameFromOneCPrinter.className = "col";
+            let inputNameFromOneCPrinter = document.createElement("textarea");
+            inputNameFromOneCPrinter.className = "form-control form-control-sm";
+            inputNameFromOneCPrinter.placeholder = "введите наименование";
+            inputNameFromOneCPrinter.id = "nameFromOneC";
+            inputNameFromOneCPrinter.setAttribute("aria-label", "nameFromOneC");
+            divColInputNameFromOneCPrinter.appendChild(inputNameFromOneCPrinter);
+            divRowNameFromOneCPrinter.appendChild(divColLabelNameFromOneCPrinter);
+            divRowNameFromOneCPrinter.appendChild(divColInputNameFromOneCPrinter);
+            divContainerBody.appendChild(divRowNameFromOneCPrinter);
+            
+         let divRowNumberRoomPrinters = document.createElement("div");
+            divRowNumberRoomPrinters.className = "row mt-2";
+            let divColLabelNumberRoomPrinters = document.createElement("div");
+            divColLabelNumberRoomPrinters.className = "col";
+            divColLabelNumberRoomPrinters.innerText = "Кабинет";
+            let divColInputNumberRoomPrinters = document.createElement("div");
+            divColInputNumberRoomPrinters.className = "col";
+
+            let inputNumberRoomPrinters = document.createElement("input");
+            inputNumberRoomPrinters.className = "form-control form-control-sm";
+            inputNumberRoomPrinters.type = "text";
+            inputNumberRoomPrinters.placeholder = "укажите расположение";
+            inputNumberRoomPrinters.id = "numberRoom";
+            inputNumberRoomPrinters.name = "numberRoom";
+            divColInputNumberRoomPrinters.appendChild(inputNumberRoomPrinters);
+            divRowNumberRoomPrinters.appendChild(divColLabelNumberRoomPrinters);
+            divRowNumberRoomPrinters.appendChild(divColInputNumberRoomPrinters);
+            divContainerBody.appendChild(divRowNumberRoomPrinters);
+                break;
         case "systemblock":
             let divRowNumberRoomSystemBlock = document.createElement("div");
             divRowNumberRoomSystemBlock.className = "row mt-2";
@@ -3973,6 +4049,45 @@ let modalContentLoad = function (eventReason, svtObjId) {
             divRowNameFromOneCRouter.appendChild(divColLabelNameFromOneCRouter);
             divRowNameFromOneCRouter.appendChild(divColInputNameFromOneCRouter);
             divContainerBody.appendChild(divRowNameFromOneCRouter);
+            
+            let divRowRouterIpAdressInner = document.createElement("div");
+            divRowRouterIpAdressInner.className = "row mt-2";
+            let divColLabelRouterIpAdressInner = document.createElement("div");
+            divColLabelRouterIpAdressInner.className = "col";
+            divColLabelRouterIpAdressInner.innerText = "Внутренний ip адрес";
+            let divColInputRouterIpAdressInner = document.createElement("div");
+            divColInputRouterIpAdressInner.className = "col";
+            let inputRouterIpAdressInner = document.createElement("input");
+            inputRouterIpAdressInner.className = "form-control form-control-sm ipAddressValidate";
+            inputRouterIpAdressInner.type = "text";
+            inputRouterIpAdressInner.name = "ipAdressInner";
+            inputRouterIpAdressInner.placeholder = "xxx.xxx.xxx.xxx";
+            inputRouterIpAdressInner.id = "ipAdressInner";
+            inputRouterIpAdressInner.pattern = "\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}";
+            divColInputRouterIpAdressInner.appendChild(inputRouterIpAdressInner);
+            divRowRouterIpAdressInner.appendChild(divColLabelRouterIpAdressInner);
+            divRowRouterIpAdressInner.appendChild(divColInputRouterIpAdressInner);
+            divContainerBody.appendChild(divRowRouterIpAdressInner);
+            
+            let divRowRouterIpAdressOuter = document.createElement("div");
+            divRowRouterIpAdressOuter.className = "row mt-2";
+            let divColLabelRouterIpAdressOuter = document.createElement("div");
+            divColLabelRouterIpAdressOuter.className = "col";
+            divColLabelRouterIpAdressOuter.innerText = "Внешний ip адрес";
+            let divColInputRouterIpAdressOuter = document.createElement("div");
+            divColInputRouterIpAdressOuter.className = "col";
+            let inputRouterIpAdressOuter = document.createElement("input");
+            inputRouterIpAdressOuter.className = "form-control form-control-sm ipAddressValidate";
+            inputRouterIpAdressOuter.type = "text";
+            inputRouterIpAdressOuter.name = "ipAdressOuter";
+            inputRouterIpAdressOuter.placeholder = "xxx.xxx.xxx.xxx";
+            inputRouterIpAdressOuter.id = "ipAdressOuter";
+            inputRouterIpAdressOuter.pattern = "\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}";
+            divColInputRouterIpAdressOuter.appendChild(inputRouterIpAdressOuter);
+            divRowRouterIpAdressOuter.appendChild(divColLabelRouterIpAdressOuter);
+            divRowRouterIpAdressOuter.appendChild(divColInputRouterIpAdressOuter);
+            divContainerBody.appendChild(divRowRouterIpAdressOuter);
+            
             break;
         case "ats":
             let divRowNumberRoomAts = document.createElement("div");
@@ -4647,6 +4762,9 @@ let modalContentLoad = function (eventReason, svtObjId) {
             case "terminalUps":
                 requestLink = "/get-terminal-ups?id=";
                 break;
+            case "printers":
+                requestLink = "/getprinter?id=";
+                break;
         }
        
         $.ajax({
@@ -4717,6 +4835,9 @@ let modalContentLoad = function (eventReason, svtObjId) {
                     portAmount = callback.portAmount;
                 } else if (attrib == "router") {
                     portAmount = callback.portAmount;
+                    ipAdressInner = callback.ipAdressInner;
+                    ipAdressOuter = callback.ipAdressOuter;
+  
                 } else if (attrib == "ats") {
                     innerConnectionAnalog = callback.innerConnectionAnalog;
                     innerConnectionIp = callback.innerConnectionIp;
@@ -4846,6 +4967,8 @@ let modalContentLoad = function (eventReason, svtObjId) {
                 $("#nameFromOneC")[0].value = nameFromOneC;
                 $("#numberRoom")[0].value = numberRoom;
                 $("#portAmount")[0].value = portAmount;
+                $("#ipAdressInner")[0].value = ipAdressInner;
+                $("#ipAdressOuter")[0].value = ipAdressOuter;
                 break;
             case "ats":
                 $("#nameFromOneC")[0].value = nameFromOneC;
@@ -4875,7 +4998,10 @@ let modalContentLoad = function (eventReason, svtObjId) {
             case "infomat":
                 $("#nameFromOneC")[0].value = nameFromOneC;
                 $("#numberRoom")[0].value = numberRoom;
-
+                break;
+            case "printers":
+                $("#nameFromOneC")[0].value = nameFromOneC;
+                $("#numberRoom")[0].value = numberRoom;
                 break;
             case "asuo":
                 $("#nameFromOneC")[0].value = nameFromOneC;
@@ -4954,6 +5080,8 @@ let modalContentLoad = function (eventReason, svtObjId) {
                     $("#nameFromOneC")[0].value = nameFromOneC;
                     $("#numberRoom")[0].value = numberRoom;
                     $("#portAmount")[0].value = portAmount;
+                    $("#ipAdressInner")[0].value = ipAdressInner;
+                    $("#ipAdressOuter")[0].value = ipAdressOuter;
                     break;
                 case "ats":
                     $("#nameFromOneC")[0].value = nameFromOneC;
@@ -5329,7 +5457,7 @@ let modalContentLoad = function (eventReason, svtObjId) {
         },
         onChange: function (value) {
             //placebyid
-            
+             if (null != svtObjId) {
              $.ajax({
                     url: '/placebyid?placeId=' + value,
                     type: 'GET',
@@ -5339,9 +5467,7 @@ let modalContentLoad = function (eventReason, svtObjId) {
                       requestToEnableStorage(callback.username, callback.locationId);
                     }
                 });
-            
-            
-                
+             }    
         }
     });
 
@@ -5429,6 +5555,9 @@ let modalContentLoad = function (eventReason, svtObjId) {
                     case "hub":
                         requestLink = "/get-models-hub-all";
                         break;
+                    case "printers":
+                        requestLink = "/modprinters";
+                        break;
                 }
                 $.ajax({
                     url: requestLink,
@@ -5448,7 +5577,12 @@ let modalContentLoad = function (eventReason, svtObjId) {
                 if (null != svtObjId) {
                     $('#modelSelect')[0].selectize.setValue($('#modelSelect')[0].selectize.search(modelId).items[0].id);
                 } else {
-                    $('#modelSelect')[0].selectize.setValue($('#modelSelect')[0].selectize.search("не указано").items[0].id);
+                    if($('#modelSelect')[0].selectize.setValue($('#modelSelect')[0].selectize.search("не указано").items) != null) {
+                        $('#modelSelect')[0].selectize.setValue($('#modelSelect')[0].selectize.search("не указано").items[0].id);
+                    } else {
+                        $('#modelSelect')[0].selectize.setValue($('#modelSelect')[0].selectize.search(0).items[0].id)
+                    }
+                    
                 }
 
             },
@@ -5727,20 +5861,6 @@ let modalContentLoad = function (eventReason, svtObjId) {
             });
             
             
-            
-            
-            
-            
-
-//            if ($('#terminalSelect')[0].selectize.getValue() == "" && $('#terminalSelect')[0].selectize.order > 0) {
-//                $('#terminalSelect')[0].selectize.setValue($('#terminalSelect')[0].selectize.search(terminalId).items[0].id);
-//                if (eventReason.indexOf("storage") >= 0) {
-//                    $('#terminalSelect')[0].selectize.disable();
-//                } else {
-//                    $('#terminalSelect')[0].selectize.enable();
-//                }
-//            }
-
 
 
 
@@ -5778,14 +5898,10 @@ let modalContentLoad = function (eventReason, svtObjId) {
                     $('#subDisplaySelect')[0].selectize.enable();
                 }
             }
-          
-
-
 
             break;
 
         case "terminal":
-        
         $("#terminalDisplaySelect").selectize({
                 placeholder: "Выберите из списка",
                 preload: true,
@@ -6993,10 +7109,14 @@ let modalContentLoad = function (eventReason, svtObjId) {
                 $("#numberRoom")[0].disabled = true;
                 $("#portAmount")[0].disabled = true;
                 $("#nameFromOneC")[0].disabled = true;
+                $("#ipAdressInner")[0].disabled = true;
+                $("#ipAdressOuter")[0].disabled = true;
             } else {
                 $("#numberRoom")[0].disabled = false;
                 $("#portAmount")[0].disabled = false;
                 $("#nameFromOneC")[0].disabled = false;
+                  $("#ipAdressInner")[0].disabled = false;
+                $("#ipAdressOuter")[0].disabled = false;
             }
             break;
         case "ats":

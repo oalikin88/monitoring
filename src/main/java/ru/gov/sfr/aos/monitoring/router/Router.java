@@ -4,7 +4,6 @@
  */
 package ru.gov.sfr.aos.monitoring.router;
 
-import ru.gov.sfr.aos.monitoring.router.RouterModel;
 import java.io.Serializable;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -12,7 +11,6 @@ import javax.persistence.FetchType;
 import javax.persistence.ManyToOne;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.validation.constraints.NotNull;
-import ru.gov.sfr.aos.monitoring.dictionaries.Status;
 import ru.gov.sfr.aos.monitoring.svtobject.ObjectBuingWithSerialAndInventary;
 
 /**
@@ -29,6 +27,8 @@ public class Router extends ObjectBuingWithSerialAndInventary implements Seriali
     private int portAmount;
     private String numberRoom;
     private int yearCreated;
+    private String ipAdressInner;
+    private String ipAdressOuter;
 
     public Router() {
     }
@@ -73,11 +73,30 @@ public class Router extends ObjectBuingWithSerialAndInventary implements Seriali
         this.yearCreated = yearCreated;
     }
 
+    public String getIpAdressInner() {
+        return ipAdressInner;
+    }
+
+    public void setIpAdressInner(String ipAdressInner) {
+        this.ipAdressInner = ipAdressInner;
+    }
+
+    public String getIpAdressOuter() {
+        return ipAdressOuter;
+    }
+
+    public void setIpAdressOuter(String ipAdressOuter) {
+        this.ipAdressOuter = ipAdressOuter;
+    }
+
+    
     
     
     @Override
     public String toString() {
-        return "Router{" + "id=" + this.id +  ", serial=" + this.serialNumber + ", inventary=" + this.inventaryNumber +  ", routerModel=" + routerModel + ", nameFromOneC=" + nameFromOneC + ", portAmount=" + portAmount + ", numberRoom=" + numberRoom + '}';
+        return "Router{" + "id=" + this.id +  ", serial=" + this.serialNumber + ", inventary=" + this.inventaryNumber + 
+                ", routerModel=" + routerModel + ", nameFromOneC=" + nameFromOneC + ", portAmount=" + 
+                portAmount + ", numberRoom=" + numberRoom + ", ipAdressInner=" + this.ipAdressInner + ", ipAdressOuter" + this.ipAdressOuter + '}';
     }
     
     

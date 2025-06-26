@@ -193,6 +193,13 @@ let handleClickUpdateBtn = function (name, id) {
             dto.manufacturerName = $("#manufacturer")[0].innerText;
             requestLink = "/mhub";
             break;
+       case "mprinters":
+            dto.manufacturerId = $("#manufacturer")[0].selectize.getValue();
+            dto.manufacturerName = $("#manufacturer")[0].innerText;
+            dto.printColorType = $("#printColorType")[0].value;
+            dto.printFormat = $("#printFormatType")[0].value;
+            dto.printSpeed = $("#printSpeedInput")[0].value;
+            break;
         case "programSoftware":
             dto.name = $("#po")[0].innerText;
             dto.version = $("#po_ver")[0].value;
@@ -392,6 +399,13 @@ let handleClickSaveBtn = function (name) {
             dto.manufacturerName = $("#manufacturer")[0].innerText;
             requestLink = "/mhub";
             break;
+        case "mprinters":
+            dto.manufacturerId = $("#manufacturer")[0].selectize.getValue();
+            dto.manufacturerName = $("#manufacturer")[0].innerText;
+            dto.printColorType = $("#printColorType")[0].value;
+            dto.printFormat = $("#printFormatType")[0].value;
+            dto.printSpeed = $("#printSpeedInput")[0].value;
+            break;
         case "programSoftware":
             dto.name = $("#po")[0].innerText;
             dto.version = $("#po_ver")[0].value;
@@ -572,6 +586,44 @@ let modalContentLoad = function (eventReason, dto) {
                     '</div>';
 
             break;
+        case "mprinters":
+            divContainerBody.innerHTML = '<div class="row mt-2" id="manufacturerRow">' +
+                    '<div class="col">Производитель</div>' +
+                    '<div class="col">' +
+                    '<select class="form-select form-select-sm"  placeholder="выберите производителя" aria-label="model" id="manufacturer">' +
+                    '</select></div></div>' +
+                    '<div class="row mt-2" id="modelRow">' +
+                    '<div class="col">Наименование</div>' +
+                    '<div class="col">' +
+                    '<select class="form-select form-select-sm" placeholder="выберите модель" aria-label="model" id="model">' +
+                    '</select></div></div>' +
+                    '<div class="row mt-2" id="printColorTypeRow">' +
+                    '<div class="col">Цветность печати</div>' +
+                    '<div class="col">' +
+                    '<select class="form-select form-select-sm" placeholder="выберите из списка" aria-label="print-color-type" id="printColorType">' +
+                    '<option value="BLACK">черно-белая</option>' +
+                    '<option value="COLOR">цветная</option>' +
+                    '</select></div></div>' +
+                    '<div class="row mt-2" id="printFormatTypeRow">' +
+                    '<div class="col">Максимальный формат</div>' +
+                    '<div class="col">' +
+                    '<select class="form-select form-select-sm" placeholder="выберите из списка" aria-label="print-format-type" id="printFormatType">' +
+                    '<option value="A4">A4</option>' +
+                    '<option value="A3">A3</option>' +
+                    '</select></div></div>' +
+                     '<div class="row mt-2 printSpeedRow">' +
+                    '<div class="col"><span>Скорость печати </span><span style="font-size:9px; font-color=696969;">(стр/мин)</span></div>' +
+                    '<div class="col">' +
+                    '<div class="input-group input-group-sm">' +
+                    '<input class="form-control form-control-sm" id="printSpeedInput" type="number" value="1" min="1" max="999" placeholder="укажите скорость печати стр/мин"/>' +
+                    '</div></div>' +
+                    '</div>' +
+                    '<div class="row mt-2" id="modelCartridgeRow">' +
+                    '<div class="col">Совместимые модели картриджей</div>' +
+                    '<div class="col">' +
+                    '<select class="form-select form-select-sm" placeholder="выберите из списка или начните вводить" aria-label="model-cartridge" id="modelCartridge">' +
+                    '</select></div></div>';
+            break;
         case "mupsbat":
             divContainerBody.innerHTML = '<div class="row mt-2" id="modelRow">' +
                     '<div class="col">Наименование</div>' +
@@ -611,6 +663,13 @@ let modalContentLoad = function (eventReason, dto) {
 
 
     switch (attribute) {
+        case "mprinters":
+            if(dto != null) {
+                $(divContainerBody).find('#printColorType')[0].value = dto.printColorType;
+                $(divContainerBody).find("#printFormatType")[0].value = dto.printFormat;
+                $(divContainerBody).find("#printSpeedInput")[0].value = dto.printSpeed;
+            }
+            break;
         case "os":
             let divLicenceRow = document.createElement("div");
             divLicenceRow.className = "row mt-2";
@@ -747,7 +806,6 @@ let modalContentLoad = function (eventReason, dto) {
     footerBtnSave.className = "btn btn-primary btn-sm";
     footerBtnSave.id = "btnSave";
     footerBtnSave.innerText = "Сохранить";
-    footerBtnSave.disabled = true;
     divModalFooter.appendChild(footerBtnSave);
     modalWindowContent.appendChild(divModalFooter);
     
@@ -795,7 +853,7 @@ let modalContentLoad = function (eventReason, dto) {
                     }
                 });
             },
-            placeholder: "выберите производителя",
+            placeholder: "выберите из списка или начните вводить",
             valueField: 'id',
             labelField: 'name',
             sortField: 'name',
@@ -815,8 +873,11 @@ let modalContentLoad = function (eventReason, dto) {
                             manufacturerChoise = $('#manufacturer')[0].selectize.search(dto.manufacturerId).items[0].id;
                             $('#manufacturer')[0].selectize.setValue($('#manufacturer')[0].selectize.search(dto.manufacturerId).items[0].id);
                         } else {
-                            manufacturerChoise = $('#manufacturer')[0].selectize.search("не указано").items[0].id;
-                            $('#manufacturer')[0].selectize.setValue($('#manufacturer')[0].selectize.search("не указано").items[0].id);
+                            if($('#manufacturer')[0].selectize.setValue($('#manufacturer')[0].selectize.search("не указано").items[0]) != null) {
+                                manufacturerChoise = $('#manufacturer')[0].selectize.search("не указано").items[0].id;
+                                $('#manufacturer')[0].selectize.setValue($('#manufacturer')[0].selectize.search("не указано").items[0].id);
+                            }
+                            
                         }
 
                     }
@@ -852,13 +913,29 @@ let modalContentLoad = function (eventReason, dto) {
     }
 
 
+    if($("#modelCartridge").length > 0) {
+        $("#modelCartridge").selectize({
+            preload: true,
+            persist: true,
+            create: false,
+            maxItems: null,
+            placeholder: "выберите из списка или начните вводить",
+            valueField: 'id',
+            labelField: 'model',
+            sortField: 'model',
+            searchField: ["id", "model"],
+        
+        
+        });
+    }
+
     if ($("#model").length > 0) {
 
         $("#model").selectize({
             preload: true,
             persist: true,
             create: true,
-            placeholder: "выберите из списка",
+            placeholder: "выберите из списка или начните вводить",
             valueField: 'id',
             labelField: 'model',
             sortField: 'model',
@@ -1053,7 +1130,5 @@ $(document).ready(function () {
         modalErrorParent.innerHTML = "";
         modalContentLoad();
     });
-
-
 
 });

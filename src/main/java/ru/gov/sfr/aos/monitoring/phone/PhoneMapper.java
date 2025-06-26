@@ -9,7 +9,6 @@ import org.mapstruct.Mapping;
 import org.springframework.beans.factory.annotation.Autowired;
 import ru.gov.sfr.aos.monitoring.svtobject.SvtMapper;
 import ru.gov.sfr.aos.monitoring.svtobject.SvtDTO;
-import ru.gov.sfr.aos.monitoring.phone.PhoneRepo;
 
 
 /**
@@ -34,6 +33,7 @@ public abstract class PhoneMapper implements SvtMapper<Phone, SvtDTO> {
     @Mapping(source = "nameFromeOneC", target = "nameFromOneC")
     @Mapping(source = "phoneModel.manufacturer.name", target = "manufacturerName")
     @Mapping(source = "phoneModel.manufacturer.id", target = "manufacturerId")
+    @Override
     public abstract SvtDTO getDto(Phone phone);
     
     @Mapping(target = "contract", expression = "java(phoneRepo.findById(dto.getId()).get().getContract())")
@@ -46,6 +46,7 @@ public abstract class PhoneMapper implements SvtMapper<Phone, SvtDTO> {
     @Mapping(target = "place.location.id", source = "locationId")
     @Mapping(target = "phoneNumber", source = "phoneNumber")
     @Mapping(target = "nameFromeOneC", source = "nameFromOneC")
+    @Override
     public abstract Phone getEntityFromDto(SvtDTO dto);
     
 

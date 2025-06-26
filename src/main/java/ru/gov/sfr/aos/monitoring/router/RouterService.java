@@ -79,6 +79,8 @@ public class RouterService extends SvtObjService<Router, RouterRepo, SvtSwitchHu
             router.setSerialNumber(dto.getSerialNumber());
             router.setPlace(place);
             router.setYearCreated(dto.getYearCreated());
+            router.setIpAdressInner(dto.getIpAdressInner());
+            router.setIpAdressOuter(dto.getIpAdressOuter());
             Contract contract = null;
             if(contractRepo.existsByContractNumberIgnoreCase("00000000")) {
                 contract = contractRepo.findByContractNumberIgnoreCase("00000000").get();
@@ -193,6 +195,8 @@ public class RouterService extends SvtObjService<Router, RouterRepo, SvtSwitchHu
              router.setPortAmount(dto.getPortAmount());
              router.setNumberRoom(dto.getNumberRoom());
              router.setNameFromOneC(dto.getNameFromOneC());
+             router.setIpAdressInner(dto.getIpAdressInner());
+             router.setIpAdressOuter(dto.getIpAdressOuter());
              routerRepo.save(router);
     }
     

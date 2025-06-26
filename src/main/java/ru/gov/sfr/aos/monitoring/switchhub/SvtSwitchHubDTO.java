@@ -15,6 +15,8 @@ public class SvtSwitchHubDTO extends SvtDTO {
     public String switchHubType;
     public int portAmount;
     public boolean ignoreCheck;
+    public String ipAdressInner;
+    public String ipAdressOuter;
 
     public SvtSwitchHubDTO() {
     }
@@ -53,6 +55,22 @@ public class SvtSwitchHubDTO extends SvtDTO {
 
     public void setIgnoreCheck(boolean ignoreCheck) {
         this.ignoreCheck = ignoreCheck;
+    }
+
+    public String getIpAdressInner() {
+        return ipAdressInner;
+    }
+
+    public void setIpAdressInner(String ipAdressInner) {
+        this.ipAdressInner = ipAdressInner;
+    }
+
+    public String getIpAdressOuter() {
+        return ipAdressOuter;
+    }
+
+    public void setIpAdressOuter(String ipAdressOuter) {
+        this.ipAdressOuter = ipAdressOuter;
     }
     
     

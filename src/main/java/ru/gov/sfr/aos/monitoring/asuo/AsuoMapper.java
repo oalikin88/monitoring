@@ -8,7 +8,6 @@ import ru.gov.sfr.aos.monitoring.switchhub.SwitchHubMapper;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.springframework.beans.factory.annotation.Autowired;
-import ru.gov.sfr.aos.monitoring.asuo.AsuoRepo;
 import ru.gov.sfr.aos.monitoring.svtobject.SvtObjectBuingMapper;
 import ru.gov.sfr.aos.monitoring.contract.ContractRepo;
 import ru.gov.sfr.aos.monitoring.asuo.hub.HubRepo;
@@ -41,14 +40,14 @@ public abstract class AsuoMapper implements SvtObjectBuingMapper<Asuo, AsuoDTO>{
     @Mapping(source = "dateExploitationBegin", target = "dateExploitationBegin")
     @Mapping(source = "yearCreated", target = "yearCreated")
     @Mapping(source = "subDisplayAmount", target = "subDisplayAmount")
-    @Mapping(expression = "java(entity.getDisplay().stream().map(e -> new  ru.gov.sfr.aos.monitoring.models.AsuoComponentDto(e.getId(), e.getAsuo().isEmpty() ? false : true)).collect(java.util.stream.Collectors.toSet()))", target = "displays")
-    @Mapping(expression = "java(entity.getTerminal().stream().map(e -> new  ru.gov.sfr.aos.monitoring.models.AsuoComponentDto(e.getId(), e.getAsuos().isEmpty() ? false : true)).collect(java.util.stream.Collectors.toSet()))", target = "terminals")
+    @Mapping(expression = "java(entity.getDisplay().stream().map(e -> new  ru.gov.sfr.aos.monitoring.asuo.AsuoComponentDto(e.getId(), e.getAsuo().isEmpty() ? false : true)).collect(java.util.stream.Collectors.toSet()))", target = "displays")
+    @Mapping(expression = "java(entity.getTerminal().stream().map(e -> new  ru.gov.sfr.aos.monitoring.asuo.AsuoComponentDto(e.getId(), e.getAsuos().isEmpty() ? false : true)).collect(java.util.stream.Collectors.toSet()))", target = "terminals")
     @Mapping(source = "subDisplayModel.id", target = "subDisplayModelId")
     @Mapping(source = "subDisplayModel.model", target = "subDisplayModel")
     @Mapping(source = "place.location.id", target = "locationId")
     @Mapping(source = "programSoftware.id", target = "programSoftware")
     @Mapping(source = "inventaryNumber", target = "inventaryNumber")
-    @Mapping(expression = "java(entity.getHubSet().stream().map(e -> new  ru.gov.sfr.aos.monitoring.models.AsuoComponentDto(e.getId(), e.getAsuo().isEmpty() ? false : true)).collect(java.util.stream.Collectors.toSet()))", target = "hubs")
+    @Mapping(expression = "java(entity.getHubSet().stream().map(e -> new  ru.gov.sfr.aos.monitoring.asuo.AsuoComponentDto(e.getId(), e.getAsuo().isEmpty() ? false : true)).collect(java.util.stream.Collectors.toSet()))", target = "hubs")
     @Override
     public abstract AsuoDTO getDto(Asuo entity);
     

@@ -12,6 +12,6 @@ import ru.gov.sfr.aos.monitoring.manufacturer.ManufacturerModelRepo;
  * @author Alikin Oleg
  */
 @Repository
-public interface ConditionerManufacturerRepo extends ManufacturerModelRepo<ConditionerManufacturer>{
+public interface ConditionerManufacturerRepo extends ManufacturerModelRepo<ConditionerManufacturer> {
     
 }

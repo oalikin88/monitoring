@@ -186,7 +186,6 @@ private LocationService locationService;
         Phone phone = phoneService.getById(dto.getId());
         phoneService.sendToStorage(phone);
         return new ResponseEntity(HttpStatus.ACCEPTED);
-        
     }
     
     

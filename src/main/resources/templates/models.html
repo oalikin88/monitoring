@@ -76,6 +76,14 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                                 <div class="col-6 text-start">Наименование</div>
                                 <div class="col-5 text-start">Версия</div>
                             </div>
+                            <div class="row fw-bold" th:case="'mprinters'">
+                                <div class="col-1">№ п/п</div>
+                                <div class="col-2 text-start">Производитель</div>
+                                <div class="col-3 text-start">Модель</div>
+                                <div class="col-2 text-start">Цветность печати</div>
+                                <div class="col-2 text-start">Максимальный формат</div>
+                                <div class="col-2 text-start"><span>Скорость печати </span><span style="font-size: 9px; font-color: 696969;">(стр/мин)</span></div>
+                            </div>
                             <div class="row fw-bold" th:case="*">
                                 <div class="col-1">№ п/п</div>
                                 <div class="col-11 text-start">Наименование модели</div>
@@ -222,6 +230,26 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                                     <span th:text="${dto.version}"></span>
                                 </div>
                             </div>
+                            
+                            <div class = "row element pb-2 mb-2 mt-2 pt-2" th:attr="id = ${dto.id}" data-bs-toggle="modal" data-bs-target="#addBtnModal" th:case="mprinters">
+                                <div class="col-1" th:text="${stat.count}"></div>
+                                <div class="col-2 text-start">
+                                    <span th:text="${dto.manufacturerName}"></span>
+                                </div>
+                                <div class="col-3 text-start">
+                                    <span th:text="${dto.model}"></span>
+                                </div>
+                                <div class="col-2 text-start">
+                                    <span th:text="${dto.printColorTypeRus}"></span>
+                                </div>
+                                <div class="col-2 text-start">
+                                    <span th:text="${dto.printFormat}"></span>
+                                </div>
+                                <div class="col-2 text-start">
+                                    <span th:text="${dto.printSpeed}"></span>
+                                </div>
+                            </div>
+                            
 
                             <div class = "row element pb-2 mb-2 mt-2 pt-2" th:attr="id = ${dto.id}" data-bs-toggle="modal" data-bs-target="#addBtnModal" th:case="*">
                                 <div class="col-1" th:text="${stat.count}"></div>

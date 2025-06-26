@@ -180,10 +180,8 @@ public class PhoneService extends SvtObjService<Phone, PhoneRepo, SvtDTO>{
     
     
     public List<Phone> getPhonesByFilter(FilterDto dto) {
-      
-      
-        
-        List<Phone> result = phoneRepo.findPhonesByAllFilters(dto.getStatus(), dto.getModel(), dto.getYearCreatedOne(), dto.getYearCreatedTwo(), dto.getLocation());
+
+        List<Phone> result = phoneRepo.findDevicesByAllFilters(dto.getStatus(), dto.getModel(), dto.getYearCreatedOne(), dto.getYearCreatedTwo(), dto.getLocation());
         return result;
     }
     

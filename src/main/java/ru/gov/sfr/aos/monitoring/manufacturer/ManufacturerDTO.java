@@ -17,8 +17,9 @@ public class ManufacturerDTO <E> {
     public String name;
     public Set<E> models = new HashSet<E>();
 
-    public ManufacturerDTO() {
+    public  ManufacturerDTO() {
     }
+    
 
     public Long getId() {
         return id;
@@ -43,6 +44,8 @@ public class ManufacturerDTO <E> {
     public void setName(String name) {
         this.name = name;
     }
+    
+
 
     @Override
     public int hashCode() {
