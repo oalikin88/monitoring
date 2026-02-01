@@ -1,22 +1,18 @@
 package ru.gov.sfr.aos.monitoring.asuo.terminal.printer;
 
-import ru.gov.sfr.aos.monitoring.asuo.terminal.printer.TerminalPrinterModel;
-import ru.gov.sfr.aos.monitoring.asuo.terminal.Terminal;
-import java.util.HashSet;
 import java.util.Objects;
-import java.util.Set;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.MapsId;
-import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.PrimaryKeyJoinColumn;
+
+import ru.gov.sfr.aos.monitoring.asuo.terminal.Terminal;
 import ru.gov.sfr.aos.monitoring.dictionaries.Status;
 import ru.gov.sfr.aos.monitoring.svtobject.ObjectBuing;
 

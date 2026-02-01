@@ -7,13 +7,15 @@ package ru.gov.sfr.aos.monitoring.svtobject;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import ru.gov.sfr.aos.monitoring.place.PlaceType;
-import ru.gov.sfr.aos.monitoring.location.Location;
-import ru.gov.sfr.aos.monitoring.place.Place;
+
 import ru.gov.sfr.aos.monitoring.exceptions.ObjectAlreadyExists;
+import ru.gov.sfr.aos.monitoring.location.Location;
 import ru.gov.sfr.aos.monitoring.models.ArchivedDto;
+import ru.gov.sfr.aos.monitoring.place.Place;
 import ru.gov.sfr.aos.monitoring.place.PlaceRepo;
+import ru.gov.sfr.aos.monitoring.place.PlaceType;
 
 /**
  *

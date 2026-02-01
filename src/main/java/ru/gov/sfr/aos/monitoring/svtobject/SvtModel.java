@@ -6,6 +6,7 @@ package ru.gov.sfr.aos.monitoring.svtobject;
 
 
 import java.util.Objects;
+
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;

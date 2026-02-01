@@ -4,8 +4,8 @@
  */
 package ru.gov.sfr.aos.monitoring.transfer;
 
-import ru.gov.sfr.aos.monitoring.svtobject.ObjectBuing;
 import java.util.Date;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -14,6 +14,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.PrimaryKeyJoinColumn;
+
+import ru.gov.sfr.aos.monitoring.svtobject.ObjectBuing;
 
 /**
  *

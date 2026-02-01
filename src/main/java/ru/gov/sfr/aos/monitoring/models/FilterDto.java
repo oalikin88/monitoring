@@ -4,8 +4,6 @@
  */
 package ru.gov.sfr.aos.monitoring.models;
 
-import ru.gov.sfr.aos.monitoring.dictionaries.Status;
-
 /**
  *
  * @author Alikin Oleg
@@ -60,7 +58,14 @@ public class FilterDto {
         this.location = location;
     }
 
-    
+    public boolean isEmpty() {
+    	
+    	return model == null &&
+    			status == null &&
+    			yearCreatedOne == null &&
+    			yearCreatedTwo == null;
+    	
+    }
     
     
 }

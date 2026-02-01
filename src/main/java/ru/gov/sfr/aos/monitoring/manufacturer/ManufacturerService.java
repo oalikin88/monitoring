@@ -5,7 +5,9 @@
 package ru.gov.sfr.aos.monitoring.manufacturer;
 
 import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
+
 import ru.gov.sfr.aos.monitoring.exceptions.ObjectAlreadyExists;
 import ru.gov.sfr.aos.monitoring.services.RegularOperation;
 

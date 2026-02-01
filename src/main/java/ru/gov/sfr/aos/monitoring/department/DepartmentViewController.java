@@ -1,6 +1,7 @@
 package ru.gov.sfr.aos.monitoring.department;
 
 import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -20,8 +21,8 @@ public class DepartmentViewController {
     @GetMapping("/dep")
     public String getDepartments(Model model) {
 
-        List<DepartmentDTO> departments = departmentService.getDepartments();
-        model.addAttribute("dtoes", departments);
+//        List<DepartmentDTO> departments = departmentService.getDepartments();
+//        model.addAttribute("dtoes", departments);
 
         return "departments";
     }

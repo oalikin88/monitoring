@@ -4,13 +4,15 @@
  */
 package ru.gov.sfr.aos.monitoring.conf;
 
+import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.springframework.beans.factory.annotation.Value;
-import java.sql.Connection;
+
 import javax.annotation.PostConstruct;
+
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 /**
  *

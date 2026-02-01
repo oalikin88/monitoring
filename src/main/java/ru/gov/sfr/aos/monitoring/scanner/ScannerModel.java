@@ -4,15 +4,16 @@
  */
 package ru.gov.sfr.aos.monitoring.scanner;
 
-import ru.gov.sfr.aos.monitoring.scanner.ScannerManufacturer;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+
 import ru.gov.sfr.aos.monitoring.svtobject.SvtModel;
 
 /**

@@ -4,7 +4,6 @@
  */
 package ru.gov.sfr.aos.monitoring.asuo;
 
-import ru.gov.sfr.aos.monitoring.asuo.subdisplay.SubDisplayModel;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -15,26 +14,29 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.gov.sfr.aos.monitoring.place.PlaceType;
-import ru.gov.sfr.aos.monitoring.contract.Contract;
-import ru.gov.sfr.aos.monitoring.asuo.tv.Display;
+
 import ru.gov.sfr.aos.monitoring.asuo.hub.Hub;
-import ru.gov.sfr.aos.monitoring.location.Location;
-import ru.gov.sfr.aos.monitoring.svtobject.ObjectBuing;
-import ru.gov.sfr.aos.monitoring.place.Place;
-import ru.gov.sfr.aos.monitoring.asuo.terminal.Terminal;
-import ru.gov.sfr.aos.monitoring.exceptions.ObjectAlreadyExists;
-import ru.gov.sfr.aos.monitoring.models.ArchivedDto;
-import ru.gov.sfr.aos.monitoring.contract.ContractRepo;
-import ru.gov.sfr.aos.monitoring.asuo.tv.DisplayRepo;
 import ru.gov.sfr.aos.monitoring.asuo.hub.HubRepo;
-import ru.gov.sfr.aos.monitoring.place.PlaceRepo;
-import ru.gov.sfr.aos.monitoring.repositories.ProgramSoftwareRepo;
+import ru.gov.sfr.aos.monitoring.asuo.subdisplay.SubDisplayModel;
 import ru.gov.sfr.aos.monitoring.asuo.subdisplay.SubDisplayModelRepo;
+import ru.gov.sfr.aos.monitoring.asuo.terminal.Terminal;
 import ru.gov.sfr.aos.monitoring.asuo.terminal.TerminalRepo;
+import ru.gov.sfr.aos.monitoring.asuo.tv.Display;
+import ru.gov.sfr.aos.monitoring.asuo.tv.DisplayRepo;
+import ru.gov.sfr.aos.monitoring.contract.Contract;
+import ru.gov.sfr.aos.monitoring.contract.ContractRepo;
+import ru.gov.sfr.aos.monitoring.exceptions.ObjectAlreadyExists;
+import ru.gov.sfr.aos.monitoring.location.Location;
+import ru.gov.sfr.aos.monitoring.models.ArchivedDto;
+import ru.gov.sfr.aos.monitoring.place.Place;
+import ru.gov.sfr.aos.monitoring.place.PlaceRepo;
+import ru.gov.sfr.aos.monitoring.place.PlaceType;
+import ru.gov.sfr.aos.monitoring.repositories.ProgramSoftwareRepo;
 import ru.gov.sfr.aos.monitoring.services.RegularOperation;
+import ru.gov.sfr.aos.monitoring.svtobject.ObjectBuing;
 import ru.gov.sfr.aos.monitoring.svtobject.SvtObjectBuingService;
 
 /**

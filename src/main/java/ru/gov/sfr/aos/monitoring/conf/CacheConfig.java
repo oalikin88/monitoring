@@ -4,10 +4,10 @@
  */
 package ru.gov.sfr.aos.monitoring.conf;
 
-import com.google.common.cache.CacheBuilder;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
+
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.CachingConfigurerSupport;
@@ -15,6 +15,8 @@ import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.cache.concurrent.ConcurrentMapCache;
 import org.springframework.cache.concurrent.ConcurrentMapCacheManager;
 import org.springframework.context.annotation.Configuration;
+
+//import com.google.common.cache.CacheBuilder;
 
 /**
  *
@@ -36,7 +38,7 @@ public class CacheConfig extends CachingConfigurerSupport {
  
     }
 
-    @Override
+/*    @Override
     public CacheManager cacheManager() {
         return new ConcurrentMapCacheManager() {
             @Override
@@ -44,8 +46,8 @@ public class CacheConfig extends CachingConfigurerSupport {
                 return new ConcurrentMapCache(name, CacheBuilder.newBuilder().expireAfterWrite(cacheTTLDuration.get(name), cacheTTLUnits.get(name))
                         .maximumSize(100).build().asMap(), true);
             }
-        };
+        };*/
     
     
-}
+//}
 }

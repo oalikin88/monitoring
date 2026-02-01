@@ -7,13 +7,15 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.gov.sfr.aos.monitoring.location.Location;
-import ru.gov.sfr.aos.monitoring.exceptions.ObjectAlreadyExists;
+
 import ru.gov.sfr.aos.monitoring.department.DepDto;
 import ru.gov.sfr.aos.monitoring.department.DepartmentByTreePlaceDto;
 import ru.gov.sfr.aos.monitoring.department.DepartmentDTO;
+import ru.gov.sfr.aos.monitoring.exceptions.ObjectAlreadyExists;
+import ru.gov.sfr.aos.monitoring.location.Location;
 import ru.gov.sfr.aos.monitoring.location.LocationByTreePlaceDto;
 import ru.gov.sfr.aos.monitoring.location.LocationDTO;
 import ru.gov.sfr.aos.monitoring.location.LocationRepo;

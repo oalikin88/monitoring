@@ -4,11 +4,11 @@
  */
 package ru.gov.sfr.aos.monitoring.systemblock;
 
-import ru.gov.sfr.aos.monitoring.systemblock.SystemBlockModel;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -20,7 +20,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.validation.constraints.NotNull;
-import ru.gov.sfr.aos.monitoring.dictionaries.Status;
+
 import ru.gov.sfr.aos.monitoring.components.CdDrive;
 import ru.gov.sfr.aos.monitoring.components.Cpu;
 import ru.gov.sfr.aos.monitoring.components.Hdd;
@@ -28,12 +28,13 @@ import ru.gov.sfr.aos.monitoring.components.Keyboard;
 import ru.gov.sfr.aos.monitoring.components.LanCard;
 import ru.gov.sfr.aos.monitoring.components.Motherboard;
 import ru.gov.sfr.aos.monitoring.components.Mouse;
-import ru.gov.sfr.aos.monitoring.svtobject.ObjectBuingWithSerialAndInventary;
 import ru.gov.sfr.aos.monitoring.components.OperationSystem;
 import ru.gov.sfr.aos.monitoring.components.Ram;
 import ru.gov.sfr.aos.monitoring.components.SoundCard;
 import ru.gov.sfr.aos.monitoring.components.Speakers;
 import ru.gov.sfr.aos.monitoring.components.VideoCard;
+import ru.gov.sfr.aos.monitoring.dictionaries.Status;
+import ru.gov.sfr.aos.monitoring.svtobject.ObjectBuingWithSerialAndInventary;
 
 /**
  *

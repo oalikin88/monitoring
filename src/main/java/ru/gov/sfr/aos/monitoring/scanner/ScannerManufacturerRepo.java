@@ -5,7 +5,7 @@
 package ru.gov.sfr.aos.monitoring.scanner;
 
 import org.springframework.stereotype.Repository;
-import ru.gov.sfr.aos.monitoring.scanner.ScannerManufacturer;
+
 import ru.gov.sfr.aos.monitoring.manufacturer.ManufacturerModelRepo;
 
 /**

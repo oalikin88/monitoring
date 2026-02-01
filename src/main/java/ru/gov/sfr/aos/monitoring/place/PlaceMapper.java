@@ -7,8 +7,10 @@ package ru.gov.sfr.aos.monitoring.place;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
 import ru.gov.sfr.aos.monitoring.location.Location;
 import ru.gov.sfr.aos.monitoring.location.LocationRepo;
 

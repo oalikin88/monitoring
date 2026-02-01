@@ -5,12 +5,14 @@
 package ru.gov.sfr.aos.monitoring.router;
 
 import java.io.Serializable;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.ManyToOne;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.validation.constraints.NotNull;
+
 import ru.gov.sfr.aos.monitoring.svtobject.ObjectBuingWithSerialAndInventary;
 
 /**

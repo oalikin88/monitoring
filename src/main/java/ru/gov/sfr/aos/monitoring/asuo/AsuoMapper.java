@@ -4,15 +4,16 @@
  */
 package ru.gov.sfr.aos.monitoring.asuo;
 
-import ru.gov.sfr.aos.monitoring.switchhub.SwitchHubMapper;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.springframework.beans.factory.annotation.Autowired;
-import ru.gov.sfr.aos.monitoring.svtobject.SvtObjectBuingMapper;
-import ru.gov.sfr.aos.monitoring.contract.ContractRepo;
+
 import ru.gov.sfr.aos.monitoring.asuo.hub.HubRepo;
+import ru.gov.sfr.aos.monitoring.contract.ContractRepo;
 import ru.gov.sfr.aos.monitoring.place.PlaceRepo;
 import ru.gov.sfr.aos.monitoring.repositories.ProgramSoftwareRepo;
+import ru.gov.sfr.aos.monitoring.svtobject.SvtObjectBuingMapper;
+import ru.gov.sfr.aos.monitoring.switchhub.SwitchHubMapper;
 
 /**
  *

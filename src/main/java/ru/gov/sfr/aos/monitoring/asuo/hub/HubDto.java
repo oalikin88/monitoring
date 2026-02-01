@@ -1,6 +1,7 @@
 package ru.gov.sfr.aos.monitoring.asuo.hub;
 
 import java.util.Date;
+
 import ru.gov.sfr.aos.monitoring.svtobject.MainSvtDto;
 
 /**

@@ -4,9 +4,6 @@
  */
 package ru.gov.sfr.aos.monitoring.auth;
 
-import org.opfr.springbootstarterauthsso.security.UserInfo;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
 /**
@@ -16,14 +13,13 @@ import org.springframework.stereotype.Component;
 @Component
 public class AuthenticationService {
     
-    public UserInfo authUser() { 
-    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-    UserInfo userDetails = (UserInfo) authentication.getPrincipal();
-    return userDetails;
-    }
-
-    public AuthenticationService() {
-    }
+	/*
+	 * public UserInfo authUser() { Authentication authentication =
+	 * SecurityContextHolder.getContext().getAuthentication(); UserInfo userDetails
+	 * = (UserInfo) authentication.getPrincipal(); return userDetails; }
+	 * 
+	 * public AuthenticationService() { }
+	 */
     
     
 }

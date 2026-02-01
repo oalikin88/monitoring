@@ -6,8 +6,8 @@ package ru.gov.sfr.aos.monitoring.exceptions;
 
 import java.util.Iterator;
 import java.util.Set;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
+
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 

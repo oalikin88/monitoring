@@ -3,6 +3,7 @@ package ru.gov.sfr.aos.monitoring.asuo.terminal;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
+
 import ru.gov.sfr.aos.monitoring.svtobject.SvtDTO;
 
 /**

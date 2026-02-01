@@ -1,8 +1,5 @@
 package ru.gov.sfr.aos.monitoring.printer;
 
-import static ru.gov.sfr.aos.monitoring.printer.PrintType.BLACK;
-import static ru.gov.sfr.aos.monitoring.printer.PrintType.COLOR;
-
 /**
  *
  * @author Alikin Oleg

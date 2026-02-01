@@ -4,15 +4,17 @@
  */
 package ru.gov.sfr.aos.monitoring.components;
 
-import ru.gov.sfr.aos.monitoring.systemblock.SystemBlock;
 import java.util.HashSet;
 import java.util.Set;
+
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.ManyToMany;
-import ru.gov.sfr.aos.monitoring.svtobject.SvtModel;
+
 import ru.gov.sfr.aos.monitoring.enums.UnitHdd;
+import ru.gov.sfr.aos.monitoring.svtobject.SvtModel;
+import ru.gov.sfr.aos.monitoring.systemblock.SystemBlock;
 
 /**
  *

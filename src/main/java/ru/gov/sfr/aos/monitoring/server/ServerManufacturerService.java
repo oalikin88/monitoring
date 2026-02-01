@@ -5,7 +5,7 @@
 package ru.gov.sfr.aos.monitoring.server;
 
 import org.springframework.stereotype.Service;
-import ru.gov.sfr.aos.monitoring.server.ServerManufacturerRepo;
+
 import ru.gov.sfr.aos.monitoring.manufacturer.ManufacturerService;
 
 /**

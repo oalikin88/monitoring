@@ -4,10 +4,11 @@
  */
 package ru.gov.sfr.aos.monitoring.department;
 
-import ru.gov.sfr.aos.monitoring.svtobject.SvtDTO;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+
+import ru.gov.sfr.aos.monitoring.svtobject.SvtDTO;
 
 /**
  *

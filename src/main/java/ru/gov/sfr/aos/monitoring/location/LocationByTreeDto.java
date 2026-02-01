@@ -6,6 +6,7 @@ package ru.gov.sfr.aos.monitoring.location;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import ru.gov.sfr.aos.monitoring.department.DepartmentTreeDto;
 
 /**

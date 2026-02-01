@@ -5,8 +5,7 @@
 package ru.gov.sfr.aos.monitoring.ats;
 
 import org.springframework.stereotype.Service;
-import ru.gov.sfr.aos.monitoring.ats.AtsManufacturer;
-import ru.gov.sfr.aos.monitoring.ats.AtsManufacturerRepo;
+
 import ru.gov.sfr.aos.monitoring.manufacturer.ManufacturerService;
 
 /**

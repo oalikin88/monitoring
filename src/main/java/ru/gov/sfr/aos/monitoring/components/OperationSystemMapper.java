@@ -6,8 +6,10 @@ package ru.gov.sfr.aos.monitoring.components;
 
 
 import java.util.List;
+
 import org.mapstruct.Mapper;
 import org.mapstruct.ReportingPolicy;
+
 import ru.gov.sfr.aos.monitoring.models.OperationSystemDto;
 
 /**

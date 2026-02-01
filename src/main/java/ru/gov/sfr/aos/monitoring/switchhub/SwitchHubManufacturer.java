@@ -5,6 +5,7 @@
 package ru.gov.sfr.aos.monitoring.switchhub;
 
 import javax.persistence.Entity;
+
 import ru.gov.sfr.aos.monitoring.manufacturer.ManufacturerModel;
 
 /**

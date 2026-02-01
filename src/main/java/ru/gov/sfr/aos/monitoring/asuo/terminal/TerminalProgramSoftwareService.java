@@ -3,8 +3,10 @@ package ru.gov.sfr.aos.monitoring.asuo.terminal;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import ru.gov.sfr.aos.monitoring.asuo.ProgramSoftware;
 import ru.gov.sfr.aos.monitoring.exceptions.ObjectAlreadyExists;
 import ru.gov.sfr.aos.monitoring.mappers.ProgramSoftwareMapper;

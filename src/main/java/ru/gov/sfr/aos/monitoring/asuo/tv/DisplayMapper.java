@@ -7,8 +7,9 @@ package ru.gov.sfr.aos.monitoring.asuo.tv;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.springframework.beans.factory.annotation.Autowired;
-import ru.gov.sfr.aos.monitoring.svtobject.SvtMapper;
+
 import ru.gov.sfr.aos.monitoring.asuo.AsuoRepo;
+import ru.gov.sfr.aos.monitoring.svtobject.SvtMapper;
 
 /**
  *

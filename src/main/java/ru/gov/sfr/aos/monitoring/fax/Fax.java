@@ -4,16 +4,16 @@
  */
 package ru.gov.sfr.aos.monitoring.fax;
 
-import ru.gov.sfr.aos.monitoring.fax.FaxModel;
 import java.io.Serializable;
 import java.util.Date;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.ManyToOne;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.validation.constraints.NotNull;
-import ru.gov.sfr.aos.monitoring.dictionaries.Status;
+
 import ru.gov.sfr.aos.monitoring.svtobject.ObjectBuingWithSerialAndInventary;
 
 /**

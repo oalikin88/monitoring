@@ -7,7 +7,7 @@ package ru.gov.sfr.aos.monitoring.systemblock;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.springframework.beans.factory.annotation.Autowired;
-import ru.gov.sfr.aos.monitoring.svtobject.SvtMapper;
+
 import ru.gov.sfr.aos.monitoring.components.CdDriveRepo;
 import ru.gov.sfr.aos.monitoring.components.CpuRepo;
 import ru.gov.sfr.aos.monitoring.components.HddRepo;
@@ -15,13 +15,12 @@ import ru.gov.sfr.aos.monitoring.components.KeyboardRepo;
 import ru.gov.sfr.aos.monitoring.components.LanCardRepo;
 import ru.gov.sfr.aos.monitoring.components.MotherboardRepo;
 import ru.gov.sfr.aos.monitoring.components.MouseRepo;
-import ru.gov.sfr.aos.monitoring.repositories.OperationSystemRepo;
 import ru.gov.sfr.aos.monitoring.components.RamRepo;
 import ru.gov.sfr.aos.monitoring.components.SoundCardRepo;
 import ru.gov.sfr.aos.monitoring.components.SpeakersRepo;
-import ru.gov.sfr.aos.monitoring.systemblock.SystemBlockModelRepo;
-import ru.gov.sfr.aos.monitoring.systemblock.SystemBlockRepo;
 import ru.gov.sfr.aos.monitoring.components.VideoCardRepo;
+import ru.gov.sfr.aos.monitoring.repositories.OperationSystemRepo;
+import ru.gov.sfr.aos.monitoring.svtobject.SvtMapper;
 
 /**
  *

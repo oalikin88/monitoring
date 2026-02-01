@@ -56,12 +56,7 @@
             <version>2.0.1.Final</version>
             <type>jar</type>
         </dependency>
-        <dependency>
-            <groupId>org.opfr</groupId>
-            <artifactId>spring-boot-starter-dictionary</artifactId>
-            <version>0.7.1</version>
-            <type>jar</type>
-        </dependency>
+
 <!--        <dependency>
             <groupId>org.opfr.starter</groupId>
             <artifactId>org-spring-boot-report-starter</artifactId>
@@ -83,11 +78,7 @@
             <artifactId>h2</artifactId>
             <scope>test</scope>
         </dependency>
-        <dependency>
-            <groupId>org.opfr</groupId>
-            <artifactId>spring-boot-starter-auth-sso</artifactId>
-            <version>0.1.0</version>
-        </dependency>
+
         <dependency>
             <groupId>org.thymeleaf.extras</groupId>
             <artifactId>thymeleaf-extras-springsecurity5</artifactId>

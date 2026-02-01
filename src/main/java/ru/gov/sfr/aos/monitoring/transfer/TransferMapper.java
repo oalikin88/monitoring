@@ -5,7 +5,6 @@
 package ru.gov.sfr.aos.monitoring.transfer;
 
 import org.springframework.stereotype.Component;
-import ru.gov.sfr.aos.monitoring.transfer.TransferDto;
 
 /**
  *

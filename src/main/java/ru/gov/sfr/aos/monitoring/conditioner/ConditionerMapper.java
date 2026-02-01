@@ -7,9 +7,7 @@ package ru.gov.sfr.aos.monitoring.conditioner;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.springframework.beans.factory.annotation.Autowired;
-import ru.gov.sfr.aos.monitoring.conditioner.SvtConditionerDTO;
-import ru.gov.sfr.aos.monitoring.conditioner.ConditionerModelRepo;
-import ru.gov.sfr.aos.monitoring.conditioner.ConditionerRepo;
+
 import ru.gov.sfr.aos.monitoring.svtobject.SvtMapper;
 
 /**

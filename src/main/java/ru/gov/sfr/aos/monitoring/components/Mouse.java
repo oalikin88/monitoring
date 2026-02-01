@@ -5,7 +5,9 @@
 package ru.gov.sfr.aos.monitoring.components;
 
 import java.io.Serializable;
+
 import javax.persistence.Entity;
+
 import ru.gov.sfr.aos.monitoring.svtobject.SvtModel;
 
 

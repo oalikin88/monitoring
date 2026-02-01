@@ -7,6 +7,7 @@ package ru.gov.sfr.aos.monitoring.infomat;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.springframework.beans.factory.annotation.Autowired;
+
 import ru.gov.sfr.aos.monitoring.svtobject.SvtDTO;
 import ru.gov.sfr.aos.monitoring.svtobject.SvtMapper;
 

@@ -5,12 +5,11 @@
 package ru.gov.sfr.aos.monitoring.ups;
 
 import java.util.List;
+
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingConstants;
 import org.mapstruct.NullValuePropertyMappingStrategy;
 import org.mapstruct.ReportingPolicy;
-import ru.gov.sfr.aos.monitoring.ups.BatteryType;
-import ru.gov.sfr.aos.monitoring.ups.BatteryTypeDto;
 
 /**
  *

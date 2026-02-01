@@ -5,7 +5,7 @@
 package ru.gov.sfr.aos.monitoring.asuo.subdisplay;
 
 import org.springframework.stereotype.Service;
-import ru.gov.sfr.aos.monitoring.asuo.subdisplay.SubDisplayModel;
+
 import ru.gov.sfr.aos.monitoring.svtobject.SvtModelService;
 
 /**

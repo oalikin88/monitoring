@@ -4,9 +4,9 @@
  */
 package ru.gov.sfr.aos.monitoring.components;
 
-import ru.gov.sfr.aos.monitoring.svtobject.SvtModelsRepo;
 import org.springframework.stereotype.Repository;
-import ru.gov.sfr.aos.monitoring.components.SoundCard;
+
+import ru.gov.sfr.aos.monitoring.svtobject.SvtModelsRepo;
 
 /**
  *

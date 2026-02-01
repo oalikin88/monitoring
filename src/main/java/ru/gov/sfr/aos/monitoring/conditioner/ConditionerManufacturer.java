@@ -5,6 +5,7 @@
 package ru.gov.sfr.aos.monitoring.conditioner;
 
 import javax.persistence.Entity;
+
 import ru.gov.sfr.aos.monitoring.manufacturer.ManufacturerModel;
 
 /**

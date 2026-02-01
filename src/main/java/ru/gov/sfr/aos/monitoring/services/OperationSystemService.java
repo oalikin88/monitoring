@@ -7,8 +7,10 @@ package ru.gov.sfr.aos.monitoring.services;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import ru.gov.sfr.aos.monitoring.components.OperationSystem;
 import ru.gov.sfr.aos.monitoring.exceptions.ObjectAlreadyExists;
 import ru.gov.sfr.aos.monitoring.repositories.OperationSystemRepo;

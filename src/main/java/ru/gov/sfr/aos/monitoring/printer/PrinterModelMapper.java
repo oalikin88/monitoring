@@ -2,7 +2,9 @@ package ru.gov.sfr.aos.monitoring.printer;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import org.springframework.stereotype.Component;
+
 import ru.gov.sfr.aos.monitoring.models.ModelMapper;
 
 /**

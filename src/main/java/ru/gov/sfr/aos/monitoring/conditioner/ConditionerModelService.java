@@ -5,7 +5,7 @@
 package ru.gov.sfr.aos.monitoring.conditioner;
 
 import org.springframework.stereotype.Service;
-import ru.gov.sfr.aos.monitoring.conditioner.ConditionerModelRepo;
+
 import ru.gov.sfr.aos.monitoring.svtobject.SvtModelService;
 
 /**

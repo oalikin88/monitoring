@@ -5,6 +5,7 @@
 package ru.gov.sfr.aos.monitoring.systemblock;
 
 import javax.persistence.Entity;
+
 import ru.gov.sfr.aos.monitoring.manufacturer.ManufacturerModel;
 
 /**

@@ -1,6 +1,3 @@
-
-
- 
 const modalError = document.getElementById('modalError');
 const modalErrorParent = document.getElementById('modalErrorContent');
 const pathSvg = document.createElementNS('http://www.w3.org/2000/svg', 'path');
@@ -5016,7 +5013,7 @@ let modalContentLoad = function (eventReason, svtObjId) {
                 break;
         }
         if (eventReason.indexOf("storage") >= 0) {
-            stor = true;
+            var stor = true;
             $('#statusSelect')[0].disabled = true;
             if($("#inventaryNumber").length > 0) {
                 $("#inventaryNumber")[0].disabled = true;

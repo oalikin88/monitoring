@@ -1,10 +1,12 @@
 package ru.gov.sfr.aos.monitoring.printer;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +19,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
+
 import ru.gov.sfr.aos.monitoring.controllers.SvtViewController;
 import ru.gov.sfr.aos.monitoring.exceptions.DublicateInventoryNumberException;
 import ru.gov.sfr.aos.monitoring.exceptions.ObjectAlreadyExists;
@@ -34,115 +37,42 @@ import ru.gov.sfr.aos.monitoring.place.PlaceType;
 @Controller
 public class PrinterViewController {
 
-    @Autowired
-    private PrinterModelMapper printerModelMapper;
-    @Autowired
-    private PrinterService printerService;
-    @Autowired
-    private PrinterMapper printerMapper;
-    @Autowired
-    private PrinterModelService printerModelService;
-    @Autowired
-    private PrinterOutDtoTreeService printerOutDtoTreeService;
-    @Autowired
-    private LocationService locationService;
+    private final PrinterModelMapper printerModelMapper;
+    private final PrinterService printerService;
+    private final PrinterMapper printerMapper;
+    private final PrinterModelService printerModelService;
+    private final PrinterOutDtoTreeService printerOutDtoTreeService;
+    private final LocationService locationService;
 
-    //   @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
+    
+    
+    public PrinterViewController(PrinterModelMapper printerModelMapper, PrinterService printerService,
+			PrinterMapper printerMapper, PrinterModelService printerModelService,
+			PrinterOutDtoTreeService printerOutDtoTreeService, LocationService locationService) {
+		super();
+		this.printerModelMapper = printerModelMapper;
+		this.printerService = printerService;
+		this.printerMapper = printerMapper;
+		this.printerModelService = printerModelService;
+		this.printerOutDtoTreeService = printerOutDtoTreeService;
+		this.locationService = locationService;
+	}
+
+	//   @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
     @GetMapping("/printers")
     public String getPrinters(Model model, @RequestParam(value = "username", required = false) String username,
             @RequestParam(value = "inventaryNumber", required = false) String inventaryNumber,
             @RequestParam(value = "serialNumber", required = false) String serialNumber,
             @ModelAttribute FilterDto dto) {
 
-        List<PrinterDto> filter = null;
-        Map<Location, List<Printer>> svtObjectsByEmployee = null;
-        List<LocationByTreeDto> treeSvtDtoByEmployee = null;
-        Map<Location, List<Printer>> svtObjectsByStorage = null;
-        List<LocationByTreeDto> treeSvtDtoByStorage = null;
-        if (dto.model == null && dto.status == null && dto.yearCreatedOne == null && dto.yearCreatedTwo == null) {
-            if (null != username) {
-                svtObjectsByEmployee = printerService.getSvtObjectsByName(username, PlaceType.EMPLOYEE);
-            } else if (null != inventaryNumber) {
-                svtObjectsByEmployee = printerService.getSvtObjectsByInventaryNumberAndPlace(inventaryNumber, PlaceType.EMPLOYEE);
-            } else if (null != serialNumber) {
-                svtObjectsByEmployee = printerService.getSvtObjectsBySerialNumberAndPlace(serialNumber, PlaceType.EMPLOYEE);
-            } else {
-                svtObjectsByEmployee = printerService.getSvtObjectsByPlaceType(PlaceType.EMPLOYEE);
-            }
-
-            treeSvtDtoByEmployee = printerOutDtoTreeService.getTreeSvtDtoByPlaceType(svtObjectsByEmployee)
-                    .stream()
-                    .sorted((o1, o2) -> o1.getLocationName().compareTo(o2.getLocationName()))
-                    .collect(Collectors.toList());
-
-            if (null != username) {
-                svtObjectsByStorage = printerService.getSvtObjectsByName(username, PlaceType.STORAGE);
-            } else if (null != inventaryNumber) {
-                svtObjectsByStorage = printerService.getSvtObjectsByInventaryNumberAndPlace(inventaryNumber, PlaceType.STORAGE);
-            } else if (null != serialNumber) {
-                svtObjectsByStorage = printerService.getSvtObjectsBySerialNumberAndPlace(serialNumber, PlaceType.STORAGE);
-            } else {
-                svtObjectsByStorage = printerService.getSvtObjectsByPlaceType(PlaceType.STORAGE);
-            }
-
-            treeSvtDtoByStorage = printerOutDtoTreeService.getTreeSvtDtoByPlaceType(svtObjectsByStorage)
-                    .stream()
-                    .sorted((o1, o2) -> o1.getLocationName().compareTo(o2.getLocationName()))
-                    .collect(Collectors.toList());
-
-        } else {
-            List<Printer> filteredList = printerService.getDevicesByFilter(dto);
-            filter = new ArrayList<>();
-            for (Printer p : filteredList) {
-                PrinterDto phoneDto = printerMapper.getDto(p);
-                filter.add(phoneDto);
-            }
-
-            svtObjectsByEmployee = printerService.getDevicesByPlaceTypeAndFilter(PlaceType.EMPLOYEE, filteredList);
-            treeSvtDtoByEmployee = printerOutDtoTreeService.getTreeSvtDtoByPlaceType(svtObjectsByEmployee)
-                    .stream()
-                    .sorted((o1, o2) -> o1.getLocationName().compareTo(o2.getLocationName()))
-                    .collect(Collectors.toList());
-
-            svtObjectsByStorage = printerService.getDevicesByPlaceTypeAndFilter(PlaceType.STORAGE, filteredList);
-            treeSvtDtoByStorage = printerOutDtoTreeService.getTreeSvtDtoByPlaceType(svtObjectsByStorage)
-                    .stream()
-                    .sorted((o1, o2) -> o1.getLocationName().compareTo(o2.getLocationName()))
-                    .collect(Collectors.toList());
-        }
-
-        int amount = SvtViewController.getAmountDevices(treeSvtDtoByEmployee, treeSvtDtoByStorage);
-        String filterLocation = null;
-        if (null != dto.getLocation() && !dto.getLocation().isEmpty() && !dto.getLocation().isBlank()) {
-            filterLocation = locationService.getLocationById(Long.parseLong(dto.getLocation())).getName();
-        }
-
-        String filterModel = null;
-        if (null != dto.getModel() && !dto.getModel().isBlank() && !dto.getModel().isEmpty()) {
-            Optional<PrinterModel> optModel = printerModelService.getById(Long.parseLong(dto.getModel()));
-            if (optModel.isPresent()) {
-                filterModel = optModel.get().getModel();
-            }
-
-        }
-        model.addAttribute("searchFIO", username);
-        model.addAttribute("searchInventary", inventaryNumber);
-        model.addAttribute("searchSerial", serialNumber);
-        model.addAttribute("filterDateBegin", dto.getYearCreatedOne());
-        model.addAttribute("filterDateEnd", dto.getYearCreatedTwo());
-        model.addAttribute("filterStatus", dto.getStatus());
-        model.addAttribute("filterModel", filterModel);
-        model.addAttribute("filterLocation", filterLocation);
-        model.addAttribute("dtoes", treeSvtDtoByEmployee);
-        model.addAttribute("dtoesStorage", treeSvtDtoByStorage);
-        model.addAttribute("attribute", "printers");
-        model.addAttribute("placeAttribute", "employee");
-        model.addAttribute("namePage", "Принтеры");
-        model.addAttribute("amountDevice", amount);
-        model.addAttribute("haveFilter", true);
-        model.addAttribute("haveDownload", true);
-
-        return "svtobj";
+       List<LocationByTreeDto> employeePrinters = 
+    		   loadPrintersByPlace(PlaceType.EMPLOYEE, username, inventaryNumber, serialNumber, dto);
+    	List<LocationByTreeDto> storagePrinters = 
+    			loadPrintersByPlace(PlaceType.STORAGE, username, inventaryNumber, serialNumber, dto);
+       int amount = SvtViewController.getAmountDevices(employeePrinters, storagePrinters);
+    	fillModel(model, employeePrinters, storagePrinters, dto, amount, username, inventaryNumber, serialNumber);
+    	
+    	return "svtobj";
     }
 
     //  @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
@@ -226,6 +156,70 @@ public class PrinterViewController {
         printerModelService.sendModelToArchive(dto.getId());
         return new ResponseEntity(HttpStatus.ACCEPTED);
 
+    }
+    
+    public Map<Location, List<Printer>> findWhithOutFilter(
+    		PlaceType placeType,
+    		String username,
+    		String inventary,
+    		String serial
+    		) {
+    	if (username != null) {
+    		return printerService.getSvtObjectsByName(username, placeType);
+    	}
+    	if (inventary != null) {
+    		return printerService.getSvtObjectsByInventaryNumberAndPlace(inventary, placeType);
+    	}
+    	if (serial != null) {
+    		return printerService.getSvtObjectsBySerialNumberAndPlace(serial, placeType);
+    	}
+    	return printerService.getSvtObjectsByPlaceType(placeType);
+    }
+    
+    List<LocationByTreeDto> loadPrintersByPlace(PlaceType placeType,
+    		String username,
+    		String inventary,
+    		String serial,
+    		FilterDto filter) {
+    	Map<Location, List<Printer>> printers;
+    	
+    	if(filter.isEmpty()) {
+    		printers = findWhithOutFilter(placeType, username, inventary, serial);
+    	} else {
+    		List<Printer> filtered = printerService.getDevicesByFilter(filter);
+    		printers = printerService.getDevicesByPlaceTypeAndFilter(placeType, filtered);
+    		}
+    	return printerOutDtoTreeService.getTreeSvtDtoByPlaceType(printers)
+    			.stream()
+    			.sorted(Comparator.comparing(LocationByTreeDto::getLocationName))
+    			.collect(Collectors.toList());
+    }
+    
+    private void fillModel(Model model,
+    		List<LocationByTreeDto> employee,
+    		List<LocationByTreeDto> storage,
+    		FilterDto filter,
+    		int amount,
+    		String username,
+    		String inventary,
+    		String serial) {
+    	
+    	model.addAttribute("dtoes", employee);
+        model.addAttribute("dtoesStorage", storage);
+        model.addAttribute("searchFIO", username);
+        model.addAttribute("searchInventary", inventary);
+        model.addAttribute("searchSerial", serial);
+        model.addAttribute("filterDateBegin", filter.getYearCreatedOne());
+        model.addAttribute("filterDateEnd", filter.getYearCreatedTwo());
+        model.addAttribute("filterStatus", filter.getStatus());
+        model.addAttribute("filterModel", filter.getModel());
+        model.addAttribute("filterLocation", filter.getLocation());
+        model.addAttribute("namePage", "Принтеры");
+        model.addAttribute("attribute", "printers");
+        model.addAttribute("placeAttribute", "employee");
+        model.addAttribute("amountDevice", amount);
+        model.addAttribute("haveFilter", true);
+        model.addAttribute("haveDownload", true);
     }
 
 }

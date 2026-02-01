@@ -1,6 +1,7 @@
 package ru.gov.sfr.aos.monitoring.asuo.terminal.printer;
 
 import java.util.List;
+
 import ru.gov.sfr.aos.monitoring.place.PlaceType;
 import ru.gov.sfr.aos.monitoring.svtobject.ObjectBuingRepo;
 

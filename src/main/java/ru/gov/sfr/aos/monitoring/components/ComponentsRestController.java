@@ -1,9 +1,11 @@
 package ru.gov.sfr.aos.monitoring.components;
 
 import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
+
 import ru.gov.sfr.aos.monitoring.models.OperationSystemDto;
 import ru.gov.sfr.aos.monitoring.services.OperationSystemService;
 import ru.gov.sfr.aos.monitoring.svtobject.SvtModelDto;

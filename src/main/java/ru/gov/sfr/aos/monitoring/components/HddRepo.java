@@ -4,10 +4,11 @@
  */
 package ru.gov.sfr.aos.monitoring.components;
 
-import ru.gov.sfr.aos.monitoring.svtobject.SvtModelsRepo;
 import java.util.List;
+
 import org.springframework.stereotype.Repository;
-import ru.gov.sfr.aos.monitoring.components.Hdd;
+
+import ru.gov.sfr.aos.monitoring.svtobject.SvtModelsRepo;
 
 /**
  *
