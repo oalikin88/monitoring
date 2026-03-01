@@ -2,7 +2,6 @@ package ru.gov.sfr.aos.monitoring.place;
 
 import java.util.List;
 import java.util.stream.Collectors;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,11 +13,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
-
 import ru.gov.sfr.aos.monitoring.controllers.SvtViewController;
 import ru.gov.sfr.aos.monitoring.exceptions.ObjectAlreadyExists;
-import ru.gov.sfr.aos.monitoring.location.LocationByTreePlaceDto;
 import ru.gov.sfr.aos.monitoring.models.ArchivedDto;
+import ru.gov.sfr.aos.monitoring.location.LocationByTreePlaceDto;
 
 /**
  *

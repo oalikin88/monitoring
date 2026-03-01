@@ -6,19 +6,14 @@ package ru.gov.sfr.aos.monitoring.controllers;
 
 import java.util.ArrayList;
 import java.util.List;
-
-//import org.opfr.springBootStarterDictionary.models.DictionaryEmployee;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
 import ru.gov.sfr.aos.monitoring.location.LocationDTO;
 import ru.gov.sfr.aos.monitoring.location.LocationService;
 import ru.gov.sfr.aos.monitoring.models.DeviceDto;
-import ru.gov.sfr.aos.monitoring.models.EmployeeDTO;
-import ru.gov.sfr.aos.monitoring.services.DictionaryEmployeeHolder;
 import ru.gov.sfr.aos.monitoring.svtobject.ObjectBuingServiceImpl;
 
 /**
@@ -31,18 +26,9 @@ public class GetInfoController {
     @Autowired
     private LocationService locationService;
     @Autowired
-    private DictionaryEmployeeHolder dictionaryEmployeeHolder;
-    @Autowired
     private ObjectBuingServiceImpl objectBuingServiceImpl;
 
-	/*
-	 * @GetMapping("/getinfooo") public List<EmployeeDTO> getEmpl() {
-	 * List<DictionaryEmployee> employees = dictionaryEmployeeHolder.getEmployees();
-	 * List<EmployeeDTO> list = new ArrayList<>(); for (DictionaryEmployee dEmployee
-	 * : employees) { EmployeeDTO dto = new EmployeeDTO(dEmployee.getCode(),
-	 * dEmployee.getSurname() + " " + dEmployee.getName() + " " +
-	 * dEmployee.getMiddlename()); list.add(dto); } return list; }
-	 */
+
 
  
 

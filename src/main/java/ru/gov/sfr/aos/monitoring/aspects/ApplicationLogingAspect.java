@@ -1,13 +1,7 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package ru.gov.sfr.aos.monitoring.aspects;
 
 import java.util.logging.Logger;
-
 import javax.servlet.http.HttpServletRequest;
-
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
@@ -15,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
-
 import ru.gov.sfr.aos.monitoring.entities.ApplicationLog;
 import ru.gov.sfr.aos.monitoring.services.ApplicationLogService;
 
@@ -33,32 +26,45 @@ public class ApplicationLogingAspect {
     
 
     @Before("execution(* ru.gov.sfr.aos.monitoring.controllers.*.*(..))")
-    public void logMethodAccessBefore(JoinPoint joinPoint) {
-        if (RequestContextHolder.getRequestAttributes() == null) {
-            return;
-        }
-
-        
-          ApplicationLog log = new ApplicationLog();
-        HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
-        StringBuilder sb = new StringBuilder();
-        switch (request.getMethod()) {
-            case "POST":
-                logger.info("Создана запись:" + joinPoint.getArgs()[0].toString() + ". User: " + request.getUserPrincipal().getName());
-                break;
-            case "PUT":
-                logger.info("Отредактирована запись:" + joinPoint.getArgs()[0].toString() + ". User: " + request.getUserPrincipal().getName());
-                break;
-            case "DELETE":
-                logger.info("Удалена запись:" + joinPoint.getArgs()[0].toString() + ". User: " + request.getUserPrincipal().getName());
-                break;
-            case "GET":
-                logger.info(request.getUserPrincipal().getName() + " запросил " + joinPoint.getSignature());
-                break;
-        }
-        
-
+public void logMethodAccessBefore(JoinPoint joinPoint) {
+    if (RequestContextHolder.getRequestAttributes() == null) {
+        return;
     }
+
+    HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
+    
+    // 1. Безопасно получаем имя пользователя
+    String username = "Anonymous";
+    if (request.getUserPrincipal() != null) {
+        username = request.getUserPrincipal().getName();
+    }
+
+    // 2. Безопасно получаем первый аргумент метода (если он есть)
+    String firstArg = (joinPoint.getArgs().length > 0 && joinPoint.getArgs()[0] != null) 
+                      ? joinPoint.getArgs()[0].toString() 
+                      : "no args";
+
+    String method = request.getMethod();
+    
+    // Используем switch для логирования
+    switch (method) {
+        case "POST":
+            logger.info("Создана запись: " + firstArg + ". User: " + username);
+            break;
+        case "PUT":
+            logger.info("Отредактирована запись: " + firstArg + ". User: " + username);
+            break;
+        case "DELETE":
+            logger.info("Удалена запись: " + firstArg + ". User: " + username);
+            break;
+        case "GET":
+            logger.info(username + " запросил " + joinPoint.getSignature().toShortString());
+            break;
+        default:
+            logger.info(username + " выполнил " + method + " для " + joinPoint.getSignature().getName());
+            break;
+    }
+}
     
     
     

@@ -5,7 +5,7 @@
 package ru.gov.sfr.aos.monitoring.infomat;
 
 import org.springframework.stereotype.Service;
-
+import ru.gov.sfr.aos.monitoring.infomat.InfomatManufacturerRepo;
 import ru.gov.sfr.aos.monitoring.manufacturer.ManufacturerService;
 
 /**

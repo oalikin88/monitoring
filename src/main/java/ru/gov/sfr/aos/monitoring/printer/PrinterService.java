@@ -8,10 +8,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import ru.gov.sfr.aos.monitoring.contract.Contract;
 import ru.gov.sfr.aos.monitoring.contract.ContractRepo;
 import ru.gov.sfr.aos.monitoring.exceptions.DublicateInventoryNumberException;
@@ -121,7 +119,7 @@ public class PrinterService extends SvtObjService<Printer, PrinterRepo, PrinterD
     }
 
     public List<Printer> getDevicesByFilter(FilterDto dto) {
-        List<Printer> result = printerRepo.findDevicesByAllFilters(dto.getStatus(), dto.getModel(), dto.getYearCreatedOne(), dto.getYearCreatedTwo(), dto.getLocation());
+        List<Printer> result = printerRepo.findDevicesByAllFilters(dto.getStatus(), dto.getModel(), dto.getYearCreatedOne(), dto.getYearCreatedTwo(), dto.getLocation(), dto.getNumberRoom());
         return result;
     }
 

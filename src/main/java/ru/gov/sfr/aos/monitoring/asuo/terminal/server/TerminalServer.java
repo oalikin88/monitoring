@@ -1,7 +1,7 @@
 package ru.gov.sfr.aos.monitoring.asuo.terminal.server;
 
+import ru.gov.sfr.aos.monitoring.asuo.terminal.Terminal;
 import java.util.Objects;
-
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -11,8 +11,6 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.PrimaryKeyJoinColumn;
-
-import ru.gov.sfr.aos.monitoring.asuo.terminal.Terminal;
 import ru.gov.sfr.aos.monitoring.dictionaries.Status;
 import ru.gov.sfr.aos.monitoring.svtobject.ObjectBuing;
 

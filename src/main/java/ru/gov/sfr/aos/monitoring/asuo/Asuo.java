@@ -4,6 +4,7 @@
  */
 package ru.gov.sfr.aos.monitoring.asuo;
 
+import ru.gov.sfr.aos.monitoring.asuo.subdisplay.SubDisplayModel;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
@@ -11,7 +12,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
-
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -22,13 +22,11 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.PrimaryKeyJoinColumn;
-
+import ru.gov.sfr.aos.monitoring.dictionaries.Status;
 import ru.gov.sfr.aos.monitoring.asuo.hub.Hub;
-import ru.gov.sfr.aos.monitoring.asuo.subdisplay.SubDisplayModel;
+import ru.gov.sfr.aos.monitoring.svtobject.ObjectBuing;
 import ru.gov.sfr.aos.monitoring.asuo.terminal.Terminal;
 import ru.gov.sfr.aos.monitoring.asuo.tv.Display;
-import ru.gov.sfr.aos.monitoring.dictionaries.Status;
-import ru.gov.sfr.aos.monitoring.svtobject.ObjectBuing;
 
 
 /**

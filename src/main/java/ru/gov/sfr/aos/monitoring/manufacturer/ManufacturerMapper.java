@@ -8,8 +8,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
-
 import ru.gov.sfr.aos.monitoring.svtobject.SvtModel;
+import ru.gov.sfr.aos.monitoring.manufacturer.ManufacturerDTO;
 import ru.gov.sfr.aos.monitoring.svtobject.SvtModelDto;
 
 /**

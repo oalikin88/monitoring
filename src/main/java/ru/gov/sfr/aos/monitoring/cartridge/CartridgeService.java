@@ -1,10 +1,8 @@
 package ru.gov.sfr.aos.monitoring.cartridge;
 
 import java.util.NoSuchElementException;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import ru.gov.sfr.aos.monitoring.exceptions.ObjectAlreadyExists;
 import ru.gov.sfr.aos.monitoring.place.Place;
 import ru.gov.sfr.aos.monitoring.place.PlaceRepo;

@@ -35,10 +35,16 @@ nbactions.tmp.bak
 build/
 *.gz
 *.log
-
+*.xlsx
+reports/
+log/
 !**/src/main/**/build/
 !**/src/test/**/build/
 
 ### VS Code ###
 .vscode/
-/nbproject/
+nbproject/
+node_modules/
+
+### OpenIDE ###
+amplicode.xml

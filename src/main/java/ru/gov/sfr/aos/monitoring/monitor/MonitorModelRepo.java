@@ -5,7 +5,6 @@
 package ru.gov.sfr.aos.monitoring.monitor;
 
 import org.springframework.stereotype.Repository;
-
 import ru.gov.sfr.aos.monitoring.svtobject.SvtModelsRepo;
 
 /**

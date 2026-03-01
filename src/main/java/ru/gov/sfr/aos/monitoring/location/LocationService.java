@@ -7,11 +7,9 @@ package ru.gov.sfr.aos.monitoring.location;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-
 import ru.gov.sfr.aos.monitoring.exceptions.ObjectAlreadyExists;
 
 /**

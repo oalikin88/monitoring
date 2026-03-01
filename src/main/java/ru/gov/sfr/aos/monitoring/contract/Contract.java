@@ -4,10 +4,10 @@
  */
 package ru.gov.sfr.aos.monitoring.contract;
 
+import ru.gov.sfr.aos.monitoring.svtobject.ObjectBuing;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
-
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -18,8 +18,6 @@ import javax.persistence.OneToMany;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Past;
-
-import ru.gov.sfr.aos.monitoring.svtobject.ObjectBuing;
 
 /**
  *

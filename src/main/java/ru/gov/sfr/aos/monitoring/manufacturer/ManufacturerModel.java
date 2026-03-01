@@ -8,7 +8,6 @@ package ru.gov.sfr.aos.monitoring.manufacturer;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
-
 import javax.persistence.CascadeType;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;

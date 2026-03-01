@@ -3,8 +3,12 @@ package ru.gov.sfr.aos.monitoring.asuo.hub;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.springframework.beans.factory.annotation.Autowired;
-
+import ru.gov.sfr.aos.monitoring.asuo.hub.Hub;
+import ru.gov.sfr.aos.monitoring.asuo.hub.HubDto;
+import ru.gov.sfr.aos.monitoring.models.SvtHubDto;
 import ru.gov.sfr.aos.monitoring.asuo.AsuoRepo;
+import ru.gov.sfr.aos.monitoring.asuo.hub.HubModelRepo;
+import ru.gov.sfr.aos.monitoring.asuo.hub.HubRepo;
 import ru.gov.sfr.aos.monitoring.svtobject.SvtMapper;
 
 /**

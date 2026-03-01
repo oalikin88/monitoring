@@ -11,29 +11,27 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import ru.gov.sfr.aos.monitoring.asuo.terminal.display.TerminalDisplay;
-import ru.gov.sfr.aos.monitoring.asuo.terminal.display.TerminalDisplayRepo;
-import ru.gov.sfr.aos.monitoring.asuo.terminal.printer.TerminalPrinter;
-import ru.gov.sfr.aos.monitoring.asuo.terminal.printer.TerminalPrinterRepo;
-import ru.gov.sfr.aos.monitoring.asuo.terminal.sensor.TerminalSensor;
-import ru.gov.sfr.aos.monitoring.asuo.terminal.sensor.TerminalSensorRepo;
-import ru.gov.sfr.aos.monitoring.asuo.terminal.server.TerminalServer;
-import ru.gov.sfr.aos.monitoring.asuo.terminal.server.TerminalServerRepo;
-import ru.gov.sfr.aos.monitoring.asuo.terminal.ups.TerminalUps;
-import ru.gov.sfr.aos.monitoring.asuo.terminal.ups.TerminalUpsRepo;
-import ru.gov.sfr.aos.monitoring.contract.Contract;
-import ru.gov.sfr.aos.monitoring.contract.ContractRepo;
 import ru.gov.sfr.aos.monitoring.dictionaries.Status;
+import ru.gov.sfr.aos.monitoring.contract.Contract;
+import ru.gov.sfr.aos.monitoring.svtobject.ObjectBuing;
+import ru.gov.sfr.aos.monitoring.place.Place;
+import ru.gov.sfr.aos.monitoring.asuo.terminal.printer.TerminalPrinter;
+import ru.gov.sfr.aos.monitoring.asuo.terminal.sensor.TerminalSensor;
+import ru.gov.sfr.aos.monitoring.asuo.terminal.server.TerminalServer;
+import ru.gov.sfr.aos.monitoring.asuo.terminal.ups.TerminalUps;
 import ru.gov.sfr.aos.monitoring.exceptions.ObjectAlreadyExists;
 import ru.gov.sfr.aos.monitoring.models.ArchivedDto;
-import ru.gov.sfr.aos.monitoring.place.Place;
+import ru.gov.sfr.aos.monitoring.contract.ContractRepo;
 import ru.gov.sfr.aos.monitoring.place.PlaceRepo;
+import ru.gov.sfr.aos.monitoring.asuo.terminal.display.TerminalDisplayRepo;
+import ru.gov.sfr.aos.monitoring.asuo.terminal.printer.TerminalPrinterRepo;
+import ru.gov.sfr.aos.monitoring.asuo.terminal.sensor.TerminalSensorRepo;
+import ru.gov.sfr.aos.monitoring.asuo.terminal.server.TerminalServerRepo;
+import ru.gov.sfr.aos.monitoring.asuo.terminal.ups.TerminalUpsRepo;
 import ru.gov.sfr.aos.monitoring.services.RegularOperation;
-import ru.gov.sfr.aos.monitoring.svtobject.ObjectBuing;
 import ru.gov.sfr.aos.monitoring.svtobject.SvtObjService;
 
 /**

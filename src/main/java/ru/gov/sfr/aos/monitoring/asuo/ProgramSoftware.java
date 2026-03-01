@@ -1,10 +1,10 @@
 package ru.gov.sfr.aos.monitoring.asuo;
 
+import ru.gov.sfr.aos.monitoring.asuo.Asuo;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
-
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;

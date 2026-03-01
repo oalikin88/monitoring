@@ -3,15 +3,13 @@ package ru.gov.sfr.aos.monitoring.fax;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
+import ru.gov.sfr.aos.monitoring.svtobject.SvtModelMapper;
 import ru.gov.sfr.aos.monitoring.manufacturer.ManufacturerDTO;
 import ru.gov.sfr.aos.monitoring.svtobject.SvtModelDto;
-import ru.gov.sfr.aos.monitoring.svtobject.SvtModelMapper;
 
 /**
  *

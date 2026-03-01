@@ -3,10 +3,11 @@ package ru.gov.sfr.aos.monitoring.asuo.terminal.sensor;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.springframework.beans.factory.annotation.Autowired;
-
+import ru.gov.sfr.aos.monitoring.svtobject.ObjectBuingMapper;
 import ru.gov.sfr.aos.monitoring.asuo.terminal.TerminalComponentDto;
 import ru.gov.sfr.aos.monitoring.asuo.terminal.TerminalRepo;
-import ru.gov.sfr.aos.monitoring.svtobject.ObjectBuingMapper;
+import ru.gov.sfr.aos.monitoring.asuo.terminal.sensor.TerminalSensorModelRepo;
+import ru.gov.sfr.aos.monitoring.asuo.terminal.sensor.TerminalSensorRepo;
 
 /**
  *

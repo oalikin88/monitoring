@@ -1,7 +1,6 @@
 package ru.gov.sfr.aos.monitoring.printer;
 
 import java.util.Date;
-
 import ru.gov.sfr.aos.monitoring.svtobject.MainSvtDto;
 
 /**
@@ -29,6 +28,10 @@ public class PrinterDto extends MainSvtDto {
     public String manufacturerName;
     public boolean ignoreCheck;
     public Long cartridgeId;
+    public String printColorType;
+    public String printFormat;
+    public int printSpeed;
+    public String printColorTypeRus;
 
     public PrinterDto() {
     }
@@ -183,6 +186,38 @@ public class PrinterDto extends MainSvtDto {
 
     public void setCartridgeId(Long cartridgeId) {
         this.cartridgeId = cartridgeId;
+    }
+
+    public String getPrintColorType() {
+        return printColorType;
+    }
+
+    public void setPrintColorType(String printColorType) {
+        this.printColorType = printColorType;
+    }
+
+    public String getPrintFormat() {
+        return printFormat;
+    }
+
+    public void setPrintFormat(String printFormat) {
+        this.printFormat = printFormat;
+    }
+
+    public int getPrintSpeed() {
+        return printSpeed;
+    }
+
+    public void setPrintSpeed(int printSpeed) {
+        this.printSpeed = printSpeed;
+    }
+
+    public String getPrintColorTypeRus() {
+        return printColorTypeRus;
+    }
+
+    public void setPrintColorTypeRus(String printColorTypeRus) {
+        this.printColorTypeRus = printColorTypeRus;
     }
     
     

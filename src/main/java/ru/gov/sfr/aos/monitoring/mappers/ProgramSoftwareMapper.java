@@ -3,10 +3,9 @@ package ru.gov.sfr.aos.monitoring.mappers;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import ru.gov.sfr.aos.monitoring.asuo.AsuoRepo;
 import ru.gov.sfr.aos.monitoring.asuo.ProgramSoftware;
 import ru.gov.sfr.aos.monitoring.models.ProgramSoftwareDto;
+import ru.gov.sfr.aos.monitoring.asuo.AsuoRepo;
 
 /**
  *

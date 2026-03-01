@@ -5,7 +5,6 @@
 package ru.gov.sfr.aos.monitoring.conditioner;
 
 import java.util.Date;
-
 import ru.gov.sfr.aos.monitoring.svtobject.SvtDTO;
 
 /**

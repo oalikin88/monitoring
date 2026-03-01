@@ -5,9 +5,7 @@
 package ru.gov.sfr.aos.monitoring.phone;
 
 import java.util.List;
-
 import org.springframework.stereotype.Repository;
-
 import ru.gov.sfr.aos.monitoring.svtobject.SvtModelsRepo;
 
 /**

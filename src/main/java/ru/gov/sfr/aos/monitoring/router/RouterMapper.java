@@ -7,9 +7,10 @@ package ru.gov.sfr.aos.monitoring.router;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.springframework.beans.factory.annotation.Autowired;
-
 import ru.gov.sfr.aos.monitoring.svtobject.SvtMapper;
 import ru.gov.sfr.aos.monitoring.switchhub.SvtSwitchHubDTO;
+import ru.gov.sfr.aos.monitoring.router.RouterModelRepo;
+import ru.gov.sfr.aos.monitoring.router.RouterRepo;
 
 /**
  *

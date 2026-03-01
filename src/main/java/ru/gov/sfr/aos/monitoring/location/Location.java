@@ -4,10 +4,10 @@
  */
 package ru.gov.sfr.aos.monitoring.location;
 
+import ru.gov.sfr.aos.monitoring.place.Place;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
-
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -17,8 +17,6 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.validation.constraints.NotEmpty;
-
-import ru.gov.sfr.aos.monitoring.place.Place;
 
 /**
  *

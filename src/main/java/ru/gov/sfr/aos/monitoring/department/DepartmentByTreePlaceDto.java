@@ -1,9 +1,8 @@
 package ru.gov.sfr.aos.monitoring.department;
 
+import ru.gov.sfr.aos.monitoring.place.PlaceDTO;
 import java.util.ArrayList;
 import java.util.List;
-
-import ru.gov.sfr.aos.monitoring.place.PlaceDTO;
 
 /**
  *

@@ -2,15 +2,13 @@ package ru.gov.sfr.aos.monitoring.place;
 
 import java.util.List;
 import java.util.Set;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
-
 import ru.gov.sfr.aos.monitoring.department.DepDto;
 import ru.gov.sfr.aos.monitoring.department.DepartmentDTO;
-import ru.gov.sfr.aos.monitoring.department.DepartmentService;
 import ru.gov.sfr.aos.monitoring.location.LocationDTO;
+
 
 /**
  *
@@ -21,8 +19,7 @@ public class PlaceRestController {
 
     @Autowired
     private PlaceService placeService;
-    @Autowired
-    private DepartmentService departmentService;
+
 
     @GetMapping("/locplacetype")
     public List<LocationDTO> getLocByPlaceType(String placeType) {
@@ -147,12 +144,6 @@ public class PlaceRestController {
         return placesByStatus;
     }
 
-//    @GetMapping("/depbyplaces")
-//    public Set<DepartmentDTO> getDepsByPlaces() {
-//
-//        Set<DepartmentDTO> departmentsByPlaces = departmentService.getDepartmentsByPlaces();
-//        return departmentsByPlaces;
-//    }
 
     @GetMapping("/getstor")
     public PlaceDTO getStorageByPlace(Long locationId) {

@@ -6,7 +6,6 @@ package ru.gov.sfr.aos.monitoring.entities;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;

@@ -11,7 +11,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
-
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
@@ -26,13 +25,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
 import ru.gov.sfr.aos.monitoring.controllers.DocReportController;
-import ru.gov.sfr.aos.monitoring.department.DepartmentTreeDto;
-import ru.gov.sfr.aos.monitoring.location.Location;
-import ru.gov.sfr.aos.monitoring.location.LocationByTreeDto;
-import ru.gov.sfr.aos.monitoring.models.FilterDto;
 import ru.gov.sfr.aos.monitoring.place.PlaceType;
+import ru.gov.sfr.aos.monitoring.location.Location;
+import ru.gov.sfr.aos.monitoring.department.DepartmentTreeDto;
+import ru.gov.sfr.aos.monitoring.models.FilterDto;
+import ru.gov.sfr.aos.monitoring.location.LocationByTreeDto;
 import ru.gov.sfr.aos.monitoring.svtobject.SvtDTO;
 import ru.gov.sfr.aos.monitoring.switchhub.SvtSwitchHubDTO;
 

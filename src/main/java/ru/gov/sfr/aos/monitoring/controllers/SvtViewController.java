@@ -6,15 +6,13 @@ package ru.gov.sfr.aos.monitoring.controllers;
 
 
 import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-
+import ru.gov.sfr.aos.monitoring.svtobject.SvtModelMapper;
 import ru.gov.sfr.aos.monitoring.location.LocationByTreeDto;
 import ru.gov.sfr.aos.monitoring.location.LocationByTreePlaceDto;
-import ru.gov.sfr.aos.monitoring.svtobject.SvtModelMapper;
 
 /**
  *

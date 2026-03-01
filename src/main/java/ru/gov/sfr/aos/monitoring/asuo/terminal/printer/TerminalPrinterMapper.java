@@ -3,10 +3,11 @@ package ru.gov.sfr.aos.monitoring.asuo.terminal.printer;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import ru.gov.sfr.aos.monitoring.asuo.terminal.TerminalComponentDto;
-import ru.gov.sfr.aos.monitoring.asuo.terminal.TerminalRepo;
 import ru.gov.sfr.aos.monitoring.svtobject.ObjectBuingMapper;
+import ru.gov.sfr.aos.monitoring.asuo.terminal.TerminalComponentDto;
+import ru.gov.sfr.aos.monitoring.asuo.terminal.printer.TerminalPrinterModelRepo;
+import ru.gov.sfr.aos.monitoring.asuo.terminal.printer.TerminalPrinterRepo;
+import ru.gov.sfr.aos.monitoring.asuo.terminal.TerminalRepo;
 
 /**
  *

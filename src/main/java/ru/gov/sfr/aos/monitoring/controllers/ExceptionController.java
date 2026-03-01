@@ -5,15 +5,12 @@
 package ru.gov.sfr.aos.monitoring.controllers;
 
 import java.util.stream.Collectors;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.ConstraintViolationException;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.web.servlet.error.ErrorController;
 import org.springframework.dao.DataIntegrityViolationException;
-//import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindException;
@@ -21,7 +18,6 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.DispatcherServlet;
-
 import ru.gov.sfr.aos.monitoring.exceptions.MyConstraintViolationException;
 import ru.gov.sfr.aos.monitoring.models.Response;
 
@@ -36,7 +32,7 @@ public class ExceptionController implements ErrorController {
     private final static String PRINTERSERIAL = "printer.UK_do900kbf3erfvk8qu9ub2n8iq";
     private final static String PRINTERINVENTARY = "printer.UK_hpgoobl2df6n3wh6mag0bcmgw";
 
-//    @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
+   // @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
     @RequestMapping("/error")
     public String handleError(HttpServletRequest request, Model map) {
         Integer statusCode = (Integer) request.getAttribute("javax.servlet.error.status_code");

@@ -1,7 +1,6 @@
 package ru.gov.sfr.aos.monitoring.asuo.terminal.server;
 
 import javax.persistence.Entity;
-
 import ru.gov.sfr.aos.monitoring.manufacturer.ManufacturerModel;
 
 /**

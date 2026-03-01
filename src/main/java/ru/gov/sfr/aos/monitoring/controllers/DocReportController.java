@@ -11,7 +11,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.List;
-
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -25,13 +24,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import ru.gov.sfr.aos.monitoring.location.LocationService;
 import ru.gov.sfr.aos.monitoring.models.DeviceDto;
 import ru.gov.sfr.aos.monitoring.place.PlaceDTO;
+import ru.gov.sfr.aos.monitoring.location.LocationService;
+import ru.gov.sfr.aos.monitoring.svtobject.ObjectBuingServiceImpl;
 import ru.gov.sfr.aos.monitoring.place.PlaceService;
 import ru.gov.sfr.aos.monitoring.services.RegularOperation;
-import ru.gov.sfr.aos.monitoring.svtobject.ObjectBuingServiceImpl;
 
 /**
  *

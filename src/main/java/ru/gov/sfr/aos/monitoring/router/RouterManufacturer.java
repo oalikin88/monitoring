@@ -5,7 +5,6 @@
 package ru.gov.sfr.aos.monitoring.router;
 
 import javax.persistence.Entity;
-
 import ru.gov.sfr.aos.monitoring.manufacturer.ManufacturerModel;
 
 /**

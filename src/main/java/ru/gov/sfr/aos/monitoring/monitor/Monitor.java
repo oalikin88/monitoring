@@ -4,10 +4,10 @@
  */
 package ru.gov.sfr.aos.monitoring.monitor;
 
+import ru.gov.sfr.aos.monitoring.monitor.MonitorModel;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.Objects;
-
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -19,12 +19,11 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.validation.constraints.NotNull;
-
-import ru.gov.sfr.aos.monitoring.contract.Contract;
 import ru.gov.sfr.aos.monitoring.dictionaries.Status;
-import ru.gov.sfr.aos.monitoring.enums.BaseType;
-import ru.gov.sfr.aos.monitoring.place.Place;
+import ru.gov.sfr.aos.monitoring.contract.Contract;
 import ru.gov.sfr.aos.monitoring.svtobject.ObjectBuingWithSerialAndInventary;
+import ru.gov.sfr.aos.monitoring.place.Place;
+import ru.gov.sfr.aos.monitoring.enums.BaseType;
 
 /**
  *

@@ -1,10 +1,8 @@
 package ru.gov.sfr.aos.monitoring.asuo.hub;
 
 import java.util.List;
-
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
-
 import ru.gov.sfr.aos.monitoring.svtobject.ObjectBuingWithSerialAndInventaryRepo;
 
 /**

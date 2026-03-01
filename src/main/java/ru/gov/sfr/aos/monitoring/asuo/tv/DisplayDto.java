@@ -1,7 +1,6 @@
 package ru.gov.sfr.aos.monitoring.asuo.tv;
 
 import java.util.Objects;
-
 import ru.gov.sfr.aos.monitoring.svtobject.MainSvtDto;
 
 /**

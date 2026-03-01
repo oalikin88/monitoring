@@ -11,22 +11,20 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
+import ru.gov.sfr.aos.monitoring.place.PlaceType;
 import ru.gov.sfr.aos.monitoring.contract.Contract;
-import ru.gov.sfr.aos.monitoring.contract.ContractRepo;
-import ru.gov.sfr.aos.monitoring.dictionaries.Status;
+import ru.gov.sfr.aos.monitoring.location.Location;
+import ru.gov.sfr.aos.monitoring.svtobject.ObjectBuing;
+import ru.gov.sfr.aos.monitoring.place.Place;
 import ru.gov.sfr.aos.monitoring.exceptions.DublicateInventoryNumberException;
 import ru.gov.sfr.aos.monitoring.exceptions.ObjectAlreadyExists;
-import ru.gov.sfr.aos.monitoring.location.Location;
 import ru.gov.sfr.aos.monitoring.models.FilterDto;
-import ru.gov.sfr.aos.monitoring.place.Place;
-import ru.gov.sfr.aos.monitoring.place.PlaceRepo;
-import ru.gov.sfr.aos.monitoring.place.PlaceType;
-import ru.gov.sfr.aos.monitoring.svtobject.ObjectBuing;
 import ru.gov.sfr.aos.monitoring.svtobject.SvtDTO;
+import ru.gov.sfr.aos.monitoring.contract.ContractRepo;
+import ru.gov.sfr.aos.monitoring.place.PlaceRepo;
+import ru.gov.sfr.aos.monitoring.services.RegularOperation;
 import ru.gov.sfr.aos.monitoring.svtobject.SvtObjService;
 
 /**
@@ -71,24 +69,8 @@ public class PhoneService extends SvtObjService<Phone, PhoneRepo, SvtDTO>{
                 phoneModel = phoneModelRepo.findById(dto.getModelId()).get();
             }
             
-            switch (dto.getStatus()) {
-            case "REPAIR":
-                phone.setStatus(Status.REPAIR);
-                break;
-            case "MONITORING":
-                phone.setStatus(Status.MONITORING);
-                break;
-            case "UTILIZATION":
-                phone.setStatus(Status.UTILIZATION);
-                break;
-            case "OK":
-                phone.setStatus(Status.OK);
-                break;
-            case "DEFECTIVE":
-                phone.setStatus(Status.DEFECTIVE);
-                break;
-        }
-        
+         
+        phone.setStatus(RegularOperation.getStatus(dto.getStatus()));
         phone.setInventaryNumber(dto.getInventaryNumber());
         phone.setSerialNumber(dto.getSerialNumber());
         phone.setYearCreated(dto.getYearCreated());
@@ -158,23 +140,7 @@ public class PhoneService extends SvtObjService<Phone, PhoneRepo, SvtDTO>{
         phoneFromDB.setPlace(placeFromDto);
         phoneFromDB.setNameFromeOneC(dto.getNameFromOneC());
         phoneFromDB.setNumberRoom(dto.getNumberRoom());
-        switch (dto.getStatus()) {
-            case "REPAIR":
-                phoneFromDB.setStatus(Status.REPAIR);
-                break;
-            case "MONITORING":
-                phoneFromDB.setStatus(Status.MONITORING);
-                break;
-            case "UTILIZATION":
-                phoneFromDB.setStatus(Status.UTILIZATION);
-                break;
-            case "OK":
-                phoneFromDB.setStatus(Status.OK);
-                break;
-            case "DEFECTIVE":
-                phoneFromDB.setStatus(Status.DEFECTIVE);
-                break;
-        }
+        phoneFromDB.setStatus(RegularOperation.getStatus(dto.getStatus()));
         phoneFromDB.setYearCreated(dto.getYearCreated());
         phoneFromDB.setPhoneModel(phoneModel);
         phoneRepo.save(phoneFromDB);

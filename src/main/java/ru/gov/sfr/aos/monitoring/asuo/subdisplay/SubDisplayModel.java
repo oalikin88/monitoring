@@ -4,11 +4,11 @@
  */
 package ru.gov.sfr.aos.monitoring.asuo.subdisplay;
 
+import ru.gov.sfr.aos.monitoring.asuo.Asuo;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
-
 import ru.gov.sfr.aos.monitoring.asuo.Asuo;
 import ru.gov.sfr.aos.monitoring.svtobject.SvtModel;
 

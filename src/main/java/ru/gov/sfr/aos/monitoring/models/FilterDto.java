@@ -4,6 +4,8 @@
  */
 package ru.gov.sfr.aos.monitoring.models;
 
+import ru.gov.sfr.aos.monitoring.dictionaries.Status;
+
 /**
  *
  * @author Alikin Oleg
@@ -14,6 +16,7 @@ public class FilterDto {
     public String yearCreatedTwo;
     public String model;
     public String status;
+    public String numberRoom;
 
     public FilterDto() {
     }
@@ -58,14 +61,17 @@ public class FilterDto {
         this.location = location;
     }
 
-    public boolean isEmpty() {
-    	
-    	return model == null &&
-    			status == null &&
-    			yearCreatedOne == null &&
-    			yearCreatedTwo == null;
-    	
+    public String getNumberRoom() {
+        return numberRoom;
     }
+
+    public void setNumberRoom(String numberRoom) {
+        this.numberRoom = numberRoom;
+    }
+    
+    
+
+    
     
     
 }

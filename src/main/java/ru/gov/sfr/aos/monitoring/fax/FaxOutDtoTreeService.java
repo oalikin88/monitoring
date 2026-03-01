@@ -5,7 +5,7 @@
 package ru.gov.sfr.aos.monitoring.fax;
 
 import org.springframework.stereotype.Service;
-
+import ru.gov.sfr.aos.monitoring.fax.FaxMapper;
 import ru.gov.sfr.aos.monitoring.svtobject.SvtOutDtoTreeService;
 /**
  *

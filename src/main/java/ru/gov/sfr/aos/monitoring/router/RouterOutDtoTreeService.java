@@ -5,7 +5,6 @@
 package ru.gov.sfr.aos.monitoring.router;
 
 import org.springframework.stereotype.Service;
-
 import ru.gov.sfr.aos.monitoring.svtobject.SvtOutDtoTreeService;
 import ru.gov.sfr.aos.monitoring.switchhub.SvtSwitchHubDTO;
 

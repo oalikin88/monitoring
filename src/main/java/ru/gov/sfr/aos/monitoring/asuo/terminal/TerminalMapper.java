@@ -7,14 +7,17 @@ package ru.gov.sfr.aos.monitoring.asuo.terminal;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.springframework.beans.factory.annotation.Autowired;
-
+import ru.gov.sfr.aos.monitoring.svtobject.SvtDTO;
+import ru.gov.sfr.aos.monitoring.asuo.terminal.TerminalDto;
 import ru.gov.sfr.aos.monitoring.asuo.AsuoRepo;
 import ru.gov.sfr.aos.monitoring.asuo.terminal.display.TerminalDisplayRepo;
+import ru.gov.sfr.aos.monitoring.asuo.terminal.TerminalModelRepo;
 import ru.gov.sfr.aos.monitoring.asuo.terminal.printer.TerminalPrinterRepo;
+import ru.gov.sfr.aos.monitoring.asuo.terminal.TerminalRepo;
+import ru.gov.sfr.aos.monitoring.svtobject.SvtMapper;
 import ru.gov.sfr.aos.monitoring.asuo.terminal.sensor.TerminalSensorRepo;
 import ru.gov.sfr.aos.monitoring.asuo.terminal.server.TerminalServerRepo;
 import ru.gov.sfr.aos.monitoring.asuo.terminal.ups.TerminalUpsRepo;
-import ru.gov.sfr.aos.monitoring.svtobject.SvtMapper;
 
 /**
  *
