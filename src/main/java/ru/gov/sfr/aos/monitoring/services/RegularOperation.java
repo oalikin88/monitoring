@@ -21,6 +21,7 @@ public class RegularOperation {
 
     public static Status getStatus(String status) {
         Status result = null;
+        status = status.toUpperCase();
         switch (status) {
             case "REPAIR":
                 result = Status.REPAIR;

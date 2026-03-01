@@ -11,6 +11,23 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
     </title> 
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <!--объявление переменных из данных приходящих с бэка-->
+        <script th:inline="javascript">                
+                        let storageDtoes = [[${dtoesStorage}]];
+                        let attrib = [[${attribute}]];
+                        let placeAttrib = [[${placeAttribute}]];
+                        let dtoes = [[${dtoes}]];
+                        let amountDevice = [[${amountDevice}]];
+                        let filterLocation = [[${filterLocation}]];
+                        let filterModel = [[${filterModel}]];
+                        let filterStatus = [[${filterStatus}]];
+                        let filterDateBegin = [[${filterDateBegin}]];
+                        let filterDateEnd = [[${filterDateEnd}]];
+                        let searchFIO = [[${searchFIO}]];
+                        let searchInventary = [[${searchInventary}]];
+                        let searchSerial = [[${searchSerial}]];
+                        let namePage = [[${namePage}]];
+        </script>
         <script src="/js/jquery-3.6.4.min.js"></script>
         <script src="/js/selectize.js"></script>
         <link href="/css/bootstrap.min.css" rel="stylesheet">
@@ -29,8 +46,8 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
  
                 <div class="row mb-2" id="top-panel">
                     
-                <div class="col-2 d-flex align-items-center justify-content-center">
-                        <h1 class="ms-2 ps-2" th:text="${namePage}">
+                    <div class="col-2 d-flex align-items-center justify-content-start" style="height: 56px;">
+                        <h1 class="ms-2 ps-2" style="font-weight: bolder;" th:text="${namePage}">
                         </h1>
                 </div>
                     <th:block th:switch="${attribute}">
@@ -209,6 +226,17 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                                           <option value="UTILIZATION">Утилизирован</option>
                                       </select>
                                   </div>
+                                  
+                                  <th:block th:switch="${attribute}">
+                                      <div class="row text-center fw-bold mb-3" th:case="printers">
+                                              <div class="col col-6">Кабинет</div>
+                                          
+                                          <div class="col col-6">
+                                          <input type="text" class="form-control form-control-sm" id="number-room" placeholder="укажите помещение">
+                                      </div>
+                                      </div>
+                                      <div th:case="*"> </div>
+                                  </th:block>
                                   
                                   <div class="row text-center mb-3">
                                       <button type="button" class="btn btn-primary" id="filter-btn">
@@ -740,24 +768,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                 
      
              
-                <!--объявление переменных из данных приходящих с бэка-->
-                
-                <script th:inline="javascript">                
-                                let storageDtoes = [[${dtoesStorage}]];
-                                let attrib = [[${attribute}]];
-                                let placeAttrib = [[${placeAttribute}]];
-                                let dtoes = [[${dtoes}]];
-                                let amountDevice = [[${amountDevice}]];
-                                let filterLocation = [[${filterLocation}]];
-                                let filterModel = [[${filterModel}]];
-                                let filterStatus = [[${filterStatus}]];
-                                let filterDateBegin = [[${filterDateBegin}]];
-                                let filterDateEnd = [[${filterDateEnd}]];
-                                let searchFIO = [[${searchFIO}]];
-                                let searchInventary = [[${searchInventary}]];
-                                let searchSerial = [[${searchSerial}]];
-                                let namePage = [[${namePage}]];
-                </script>
+   
         
         
         

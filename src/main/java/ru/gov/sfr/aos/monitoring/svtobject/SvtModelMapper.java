@@ -6,41 +6,39 @@ package ru.gov.sfr.aos.monitoring.svtobject;
 
 import java.util.List;
 import java.util.Set;
-
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingConstants;
 import org.mapstruct.NullValuePropertyMappingStrategy;
 import org.mapstruct.ReportingPolicy;
-
-import ru.gov.sfr.aos.monitoring.asuo.subdisplay.SubDisplayModel;
-import ru.gov.sfr.aos.monitoring.asuo.terminal.TerminalModel;
-import ru.gov.sfr.aos.monitoring.asuo.tv.DisplayModel;
 import ru.gov.sfr.aos.monitoring.ats.AtsModel;
 import ru.gov.sfr.aos.monitoring.components.CdDrive;
+import ru.gov.sfr.aos.monitoring.conditioner.ConditionerModel;
 import ru.gov.sfr.aos.monitoring.components.Cpu;
-import ru.gov.sfr.aos.monitoring.components.CpuModelDto;
+import ru.gov.sfr.aos.monitoring.asuo.tv.DisplayModel;
+import ru.gov.sfr.aos.monitoring.fax.FaxModel;
 import ru.gov.sfr.aos.monitoring.components.Hdd;
-import ru.gov.sfr.aos.monitoring.components.HddDto;
+import ru.gov.sfr.aos.monitoring.infomat.InfomatModel;
 import ru.gov.sfr.aos.monitoring.components.Keyboard;
 import ru.gov.sfr.aos.monitoring.components.LanCard;
+import ru.gov.sfr.aos.monitoring.monitor.MonitorModel;
 import ru.gov.sfr.aos.monitoring.components.Motherboard;
 import ru.gov.sfr.aos.monitoring.components.Mouse;
-import ru.gov.sfr.aos.monitoring.components.Ram;
-import ru.gov.sfr.aos.monitoring.components.RamDto;
-import ru.gov.sfr.aos.monitoring.components.SoundCard;
-import ru.gov.sfr.aos.monitoring.components.Speakers;
-import ru.gov.sfr.aos.monitoring.components.VideoCard;
-import ru.gov.sfr.aos.monitoring.conditioner.ConditionerModel;
-import ru.gov.sfr.aos.monitoring.fax.FaxModel;
-import ru.gov.sfr.aos.monitoring.infomat.InfomatModel;
-import ru.gov.sfr.aos.monitoring.monitor.MonitorModel;
 import ru.gov.sfr.aos.monitoring.phone.PhoneModel;
+import ru.gov.sfr.aos.monitoring.components.Ram;
 import ru.gov.sfr.aos.monitoring.router.RouterModel;
 import ru.gov.sfr.aos.monitoring.scanner.ScannerModel;
 import ru.gov.sfr.aos.monitoring.server.ServerModel;
+import ru.gov.sfr.aos.monitoring.components.SoundCard;
+import ru.gov.sfr.aos.monitoring.components.Speakers;
+import ru.gov.sfr.aos.monitoring.asuo.subdisplay.SubDisplayModel;
 import ru.gov.sfr.aos.monitoring.switchhub.SwitchHubModel;
 import ru.gov.sfr.aos.monitoring.systemblock.SystemBlockModel;
+import ru.gov.sfr.aos.monitoring.asuo.terminal.TerminalModel;
 import ru.gov.sfr.aos.monitoring.ups.UpsModel;
+import ru.gov.sfr.aos.monitoring.components.VideoCard;
+import ru.gov.sfr.aos.monitoring.components.CpuModelDto;
+import ru.gov.sfr.aos.monitoring.components.HddDto;
+import ru.gov.sfr.aos.monitoring.components.RamDto;
 
 /**
  *

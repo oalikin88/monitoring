@@ -7,10 +7,8 @@ package ru.gov.sfr.aos.monitoring.services;
 import java.io.IOException;
 import java.sql.Date;
 import java.sql.SQLException;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
 import ru.gov.sfr.aos.monitoring.conf.DBConnection;
 import ru.gov.sfr.aos.monitoring.exceptions.DaoException;
 import ru.gov.sfr.aos.monitoring.repair.RepairDto;

@@ -1,0 +1,10 @@
+{
+  "name": "svt2",
+  "version": "1.0.0",
+  "type": "module",
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "eslint": "^10.0.2",
+    "globals": "^17.3.0"
+  }
+}

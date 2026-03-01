@@ -5,7 +5,6 @@
 package ru.gov.sfr.aos.monitoring.switchhub;
 
 import org.springframework.stereotype.Service;
-
 import ru.gov.sfr.aos.monitoring.manufacturer.ManufacturerService;
 
 /**

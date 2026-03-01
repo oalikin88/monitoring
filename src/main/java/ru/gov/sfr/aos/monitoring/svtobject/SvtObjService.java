@@ -7,16 +7,15 @@ package ru.gov.sfr.aos.monitoring.svtobject;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-
 import org.springframework.beans.factory.annotation.Autowired;
-
+import ru.gov.sfr.aos.monitoring.enums.UpsType;
+import ru.gov.sfr.aos.monitoring.place.PlaceType;
+import ru.gov.sfr.aos.monitoring.location.Location;
+import ru.gov.sfr.aos.monitoring.place.Place;
 import ru.gov.sfr.aos.monitoring.exceptions.DublicateInventoryNumberException;
 import ru.gov.sfr.aos.monitoring.exceptions.ObjectAlreadyExists;
-import ru.gov.sfr.aos.monitoring.location.Location;
 import ru.gov.sfr.aos.monitoring.models.ArchivedDto;
-import ru.gov.sfr.aos.monitoring.place.Place;
 import ru.gov.sfr.aos.monitoring.place.PlaceRepo;
-import ru.gov.sfr.aos.monitoring.place.PlaceType;
 
 /**
  *
@@ -61,9 +60,12 @@ public abstract class SvtObjService <E extends ObjectBuingWithSerialAndInventary
         public void sendToStorage(E objectBuing) {
        
         List<Place> places = placeRepo.findByLocationIdAndPlaceTypeAndArchivedFalse(objectBuing.getPlace().getLocation().getId(), PlaceType.STORAGE);
-        Place place = places.get(0);
-        objectBuing.setPlace(place);
-        repository.save(objectBuing);
+        if(!places.isEmpty()) {
+           Place place = places.stream().filter(el -> el.getUsername().equalsIgnoreCase(objectBuing.getPlace().getUsername())).findFirst().orElseThrow();
+           objectBuing.setPlace(place);
+           repository.save(objectBuing); 
+        }
+        
         
     }
         
@@ -85,7 +87,7 @@ public abstract class SvtObjService <E extends ObjectBuingWithSerialAndInventary
         
         return collect;
     }
-        
+
         public void svtObjToArchive(ArchivedDto dto) {
             E e = (E)repository.findById(dto.getId()).get();
             e.setArchived(true);

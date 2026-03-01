@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,17 +17,17 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
-
 import ru.gov.sfr.aos.monitoring.controllers.SvtViewController;
+import ru.gov.sfr.aos.monitoring.enums.UpsType;
+import ru.gov.sfr.aos.monitoring.place.PlaceType;
+import ru.gov.sfr.aos.monitoring.location.Location;
 import ru.gov.sfr.aos.monitoring.exceptions.DublicateInventoryNumberException;
 import ru.gov.sfr.aos.monitoring.exceptions.ObjectAlreadyExists;
-import ru.gov.sfr.aos.monitoring.location.Location;
-import ru.gov.sfr.aos.monitoring.location.LocationByTreeDto;
-import ru.gov.sfr.aos.monitoring.location.LocationService;
 import ru.gov.sfr.aos.monitoring.models.ArchivedDto;
 import ru.gov.sfr.aos.monitoring.models.FilterDto;
-import ru.gov.sfr.aos.monitoring.place.PlaceType;
+import ru.gov.sfr.aos.monitoring.location.LocationByTreeDto;
 import ru.gov.sfr.aos.monitoring.svtobject.SvtDTO;
+import ru.gov.sfr.aos.monitoring.location.LocationService;
 
 /**
  *
@@ -162,13 +161,13 @@ public class UpsViewController {
         List<SvtDTO> filter = null;
         if (dto.model == null && dto.status == null && dto.yearCreatedOne == null && dto.yearCreatedTwo == null) {
             if (null != username) {
-                svtObjectsByEmployee = upsService.getSvtObjectsByName(username, PlaceType.EMPLOYEE);
+                svtObjectsByEmployee = upsService.getUpsByNameAndPlaceTypeAndType(username, PlaceType.EMPLOYEE, UpsType.PERSONAL);
             } else if (null != inventaryNumber) {
-                svtObjectsByEmployee = upsService.getSvtObjectsByInventaryNumberAndPlace(inventaryNumber, PlaceType.EMPLOYEE);
+                svtObjectsByEmployee = upsService.getSvtObjectsByInventaryNumberAndTypeAndPlace(inventaryNumber, PlaceType.EMPLOYEE, UpsType.PERSONAL);
             } else if (null != serialNumber) {
-                svtObjectsByEmployee = upsService.getSvtObjectsBySerialNumberAndPlace(serialNumber, PlaceType.EMPLOYEE);
+                svtObjectsByEmployee = upsService.getSvtObjectsBySerialNumberAndPlaceAndType(serialNumber, PlaceType.EMPLOYEE, UpsType.PERSONAL);
             } else {
-                svtObjectsByEmployee = upsService.getSvtObjectsByPlaceType(PlaceType.EMPLOYEE);
+                svtObjectsByEmployee = upsService.getSvtObjectsByPlaceTypeAndType(PlaceType.EMPLOYEE, UpsType.PERSONAL);
             }
             treeSvtDtoByEmployee = upsOutDtoTreeService.getTreeSvtDtoByPlaceType(svtObjectsByEmployee)
                     .stream()
@@ -176,14 +175,15 @@ public class UpsViewController {
                     .collect(Collectors.toList());
 
             if (null != username) {
-                svtObjectsByStorage = upsService.getSvtObjectsByName(username, PlaceType.STORAGE);
+                svtObjectsByStorage = upsService.getUpsByNameAndPlaceTypeAndType(username, PlaceType.STORAGE, UpsType.PERSONAL);
             } else if (null != inventaryNumber) {
-                svtObjectsByStorage = upsService.getSvtObjectsByInventaryNumberAndPlace(inventaryNumber, PlaceType.STORAGE);
+                svtObjectsByStorage = upsService.getSvtObjectsByInventaryNumberAndTypeAndPlace(inventaryNumber, PlaceType.STORAGE, UpsType.PERSONAL);
             } else if (null != serialNumber) {
-                svtObjectsByStorage = upsService.getSvtObjectsBySerialNumberAndPlace(serialNumber, PlaceType.STORAGE);
+                svtObjectsByStorage = upsService.getSvtObjectsBySerialNumberAndPlaceAndType(serialNumber, PlaceType.STORAGE, UpsType.PERSONAL);
             } else {
-                svtObjectsByStorage = upsService.getSvtObjectsByPlaceType(PlaceType.STORAGE);
+                svtObjectsByStorage = upsService.getSvtObjectsByPlaceTypeAndType(PlaceType.STORAGE, UpsType.PERSONAL);
             }
+
             treeSvtDtoByStorage = upsOutDtoTreeService.getTreeSvtDtoByPlaceType(svtObjectsByStorage)
                     .stream()
                     .sorted((o1, o2) -> o1.getLocationName().compareTo(o2.getLocationName()))
@@ -247,6 +247,7 @@ public class UpsViewController {
     // @Log
     @PostMapping("/ups")
     public ResponseEntity<String> saveUps(@RequestBody SvtDTO dto) throws ObjectAlreadyExists, DublicateInventoryNumberException {
+        dto.setType("PERSONAL");
         upsService.createSvtObj(dto);
         return new ResponseEntity(HttpStatus.ACCEPTED);
 
@@ -272,13 +273,13 @@ public class UpsViewController {
         List<SvtDTO> filter = null;
         if (dto.model == null && dto.status == null && dto.yearCreatedOne == null && dto.yearCreatedTwo == null) {
             if (null != username) {
-                svtObjectsByEmployee = upsService.getSvtObjectsByName(username, PlaceType.SERVERROOM);
+                svtObjectsByEmployee = upsService.getUpsByNameAndPlaceTypeAndType(username, PlaceType.SERVERROOM, UpsType.SERVER);
             } else if (null != inventaryNumber) {
-                svtObjectsByEmployee = upsService.getSvtObjectsByInventaryNumberAndPlace(inventaryNumber, PlaceType.SERVERROOM);
+                svtObjectsByEmployee = upsService.getSvtObjectsByInventaryNumberAndTypeAndPlace(inventaryNumber, PlaceType.SERVERROOM, UpsType.SERVER);
             } else if (null != serialNumber) {
-                svtObjectsByEmployee = upsService.getSvtObjectsBySerialNumberAndPlace(serialNumber, PlaceType.SERVERROOM);
+                svtObjectsByEmployee = upsService.getSvtObjectsBySerialNumberAndPlaceAndType(serialNumber, PlaceType.SERVERROOM, UpsType.SERVER);
             } else {
-                svtObjectsByEmployee = upsService.getSvtObjectsByPlaceType(PlaceType.SERVERROOM);
+                svtObjectsByEmployee = upsService.getSvtObjectsByPlaceTypeAndType(PlaceType.SERVERROOM, UpsType.SERVER);
             }
             treeSvtDtoByEmployee = upsOutDtoTreeService.getTreeSvtDtoByPlaceType(svtObjectsByEmployee)
                     .stream()
@@ -286,21 +287,21 @@ public class UpsViewController {
                     .collect(Collectors.toList());
 
             if (null != username) {
-                svtObjectsByStorage = upsService.getSvtObjectsByName(username, PlaceType.STORAGE);
+                svtObjectsByStorage = upsService.getUpsByNameAndPlaceTypeAndType(username, PlaceType.STORAGE, UpsType.SERVER);
             } else if (null != inventaryNumber) {
-                svtObjectsByStorage = upsService.getSvtObjectsByInventaryNumberAndPlace(inventaryNumber, PlaceType.STORAGE);
+                svtObjectsByStorage = upsService.getSvtObjectsByInventaryNumberAndTypeAndPlace(inventaryNumber, PlaceType.STORAGE, UpsType.SERVER);
             } else if (null != serialNumber) {
-                svtObjectsByStorage = upsService.getSvtObjectsBySerialNumberAndPlace(serialNumber, PlaceType.STORAGE);
+                svtObjectsByStorage = upsService.getSvtObjectsBySerialNumberAndPlaceAndType(serialNumber, PlaceType.STORAGE, UpsType.SERVER);
             } else {
-                svtObjectsByStorage = upsService.getSvtObjectsByPlaceType(PlaceType.STORAGE);
+                svtObjectsByStorage = upsService.getSvtObjectsByPlaceTypeAndType(PlaceType.STORAGE, UpsType.SERVER);
             }
 
             treeSvtDtoByStorage = upsOutDtoTreeService.getTreeSvtDtoByPlaceType(svtObjectsByStorage)
                     .stream()
                     .sorted((o1, o2) -> o1.getLocationName().compareTo(o2.getLocationName()))
                     .collect(Collectors.toList());
-        } else {
 
+        } else {
             List<Ups> upsByFilter = upsService.getUpsByFilter(dto);
             filter = new ArrayList<>();
             for (Ups p : upsByFilter) {
@@ -308,7 +309,7 @@ public class UpsViewController {
                 filter.add(upsDto);
             }
 
-            svtObjectsByEmployee = upsService.getUpsByPlaceTypeAndFilter(PlaceType.SERVERROOM, upsByFilter);
+            svtObjectsByEmployee = upsService.getUpsByPlaceTypeAndFilter(PlaceType.EMPLOYEE, upsByFilter);
             treeSvtDtoByEmployee = upsOutDtoTreeService.getTreeSvtDtoByPlaceType(svtObjectsByEmployee)
                     .stream()
                     .sorted((o1, o2) -> o1.getLocationName().compareTo(o2.getLocationName()))
@@ -319,7 +320,6 @@ public class UpsViewController {
                     .stream()
                     .sorted((o1, o2) -> o1.getLocationName().compareTo(o2.getLocationName()))
                     .collect(Collectors.toList());
-
         }
 
         int amount = SvtViewController.getAmountDevices(treeSvtDtoByEmployee, treeSvtDtoByStorage);
@@ -359,6 +359,7 @@ public class UpsViewController {
     //  @Log
     @PostMapping("/upsforserver")
     public ResponseEntity<String> saveServerUps(@RequestBody SvtDTO dto) throws ObjectAlreadyExists, DublicateInventoryNumberException {
+        dto.setType("SERVER");
         upsService.createSvtObj(dto);
         return new ResponseEntity(HttpStatus.ACCEPTED);
 

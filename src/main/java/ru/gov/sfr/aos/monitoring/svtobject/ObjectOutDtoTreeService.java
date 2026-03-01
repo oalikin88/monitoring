@@ -6,12 +6,10 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import ru.gov.sfr.aos.monitoring.department.DepartmentTreeDto;
 import ru.gov.sfr.aos.monitoring.location.Location;
+import ru.gov.sfr.aos.monitoring.department.DepartmentTreeDto;
 import ru.gov.sfr.aos.monitoring.location.LocationByTreeDto;
 
 /**

@@ -19,17 +19,32 @@ let searchModel = function () {
     let query = $("#searchModelInput")[0].value;
     models.innerHTML = "";
     count = 1;
-    elements.forEach(item => {
-        if (item.childNodes[3].innerText.toLowerCase().includes(query)) {
+    if(elements[0].childNodes[5] === undefined) {
+         elements.forEach(item => {
+                if (item.childNodes[3].innerText.toLowerCase().includes(query)) {
 
-            let el = document.createElement("div");
-            el.className = "row element pb-2 mb-2 mt-2 pt-2";
-            item.childNodes[1].innerHTML = count;
-            el = item;
-            models.appendChild(el);
-            count++;
-        }
-    });
+                    let el = document.createElement("div");
+                    el.className = "row element pb-2 mb-2 mt-2 pt-2";
+                    item.childNodes[1].innerHTML = count;
+                    el = item;
+                    models.appendChild(el);
+                    count++;
+                }
+            });
+    } else {
+        elements.forEach(item => {
+                if (item.childNodes[3].innerText.toLowerCase().includes(query) || item.childNodes[5].innerText.toLowerCase().includes(query)) {
+
+                    let el = document.createElement("div");
+                    el.className = "row element pb-2 mb-2 mt-2 pt-2";
+                    item.childNodes[1].innerHTML = count;
+                    el = item;
+                    models.appendChild(el);
+                    count++;
+                }
+            });
+    }
+
 
 };
 

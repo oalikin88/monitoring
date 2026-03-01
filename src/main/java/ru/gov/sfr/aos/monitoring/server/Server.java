@@ -8,7 +8,6 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
-
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -18,12 +17,11 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.validation.constraints.NotNull;
-
 import ru.gov.sfr.aos.monitoring.components.Cpu;
 import ru.gov.sfr.aos.monitoring.components.Hdd;
+import ru.gov.sfr.aos.monitoring.svtobject.ObjectBuingWithSerialAndInventary;
 import ru.gov.sfr.aos.monitoring.components.OperationSystem;
 import ru.gov.sfr.aos.monitoring.components.Ram;
-import ru.gov.sfr.aos.monitoring.svtobject.ObjectBuingWithSerialAndInventary;
 
 /**
  *

@@ -321,13 +321,13 @@ let modalContentLoad = function (idPlace, placeName) {
      $('#departmentSelect').selectize({
         preload: true,
         persist: false,
-        valueField: 'code',
+        valueField: 'id',
         labelField: 'name',
         sortField: 'name',
-        searchField: ["code", "name"],
+        searchField: "name",
         onInitialize: function () {
           $.ajax({
-                url: '/departments',
+                url: '/api/departments',
                 type: 'GET',
                 async: false,
                 dataType: 'json',
@@ -344,14 +344,37 @@ let modalContentLoad = function (idPlace, placeName) {
                         $('#departmentSelect')[0].selectize.addItem(model);
                     });
                         if(null != idPlace) {
-                            $('#departmentSelect')[0].selectize.setValue($('#departmentSelect')[0].selectize.search(dto.departmentCode).items[0].id);
+                            $('#departmentSelect')[0].selectize.setValue($('#departmentSelect')[0].selectize.search(dto.code).items[0].id);
                         } else {
                         $('#departmentSelect')[0].selectize.setValue($('#departmentSelect')[0].selectize.search(0).items[0].id);
                     }          
                 }
+                
             });
             
-        }
+
+
+        },
+        onChange: function() {
+                      $.ajax({
+                    url: '/api/req-emp-for-place' +  "?departmentId=" + $('#departmentSelect')[0].value,
+                    type: 'GET',
+                    async: false,
+                    dataType: 'json',
+                    success: function (res) {
+                        let keys = Object.keys($('#employeeSelect')[0].selectize.options);
+                        for (let i = 0; i < keys.length; i++) {
+                            $('#employeeSelect')[0].selectize.removeOption(keys[i]);
+                        }
+                        res.forEach(emp => {
+                             $('#employeeSelect')[0].selectize.addOption({id: emp.id, name: emp.name, departmentId: emp.departmentId});
+                            $('#employeeSelect')[0].selectize.addItem(emp.id);
+                        });
+
+                        $('#employeeSelect')[0].selectize.setValue($('#employeeSelect')[0].selectize.search(0).items[0].id);
+                    }
+                });
+                }
 
     });
     
@@ -362,10 +385,10 @@ let modalContentLoad = function (idPlace, placeName) {
         valueField: 'name',
         labelField: 'name',
         sortField: 'name',
-        searchField: ["code", "name"],
+        searchField: "name",
         onInitialize: function () {
              $.ajax({
-                url: '/getinfooo',
+                url: '/api/req-emp-for-place' +  "?departmentId=" + $('#departmentSelect')[0].value,
                 type: 'GET',
                 async: false,
                 dataType: 'json',
@@ -382,11 +405,12 @@ let modalContentLoad = function (idPlace, placeName) {
                         $('#employeeSelect')[0].selectize.addItem(model);
                     });
                     if(null != idPlace) {
-                        $('#employeeSelect')[0].selectize.setValue($('#employeeSelect')[0].selectize.search(dto.username).items[0].id);
+                        $('#employeeSelect')[0].selectize.setValue($('#employeeSelect')[0].selectize.search(dto.name).items[0].id);
                     } else {
                         $('#employeeSelect')[0].selectize.setValue($('#employeeSelect')[0].selectize.search(0).items[0].id);
                     }
-                }
+                },
+                
             });
             
             

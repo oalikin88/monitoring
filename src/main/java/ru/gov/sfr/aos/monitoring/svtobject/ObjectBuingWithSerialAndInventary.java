@@ -4,10 +4,11 @@
  */
 package ru.gov.sfr.aos.monitoring.svtobject;
 
+import ru.gov.sfr.aos.monitoring.svtobject.ObjectBuing;
+import java.util.Objects;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.MappedSuperclass;
-
 import ru.gov.sfr.aos.monitoring.dictionaries.Status;
 
 /**

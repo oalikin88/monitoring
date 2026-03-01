@@ -5,10 +5,10 @@
 package ru.gov.sfr.aos.monitoring.ups;
 
 import java.util.List;
-
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
-
+import ru.gov.sfr.aos.monitoring.enums.UpsType;
+import ru.gov.sfr.aos.monitoring.place.PlaceType;
 import ru.gov.sfr.aos.monitoring.svtobject.ObjectBuingWithSerialAndInventaryRepo;
 
 /**
@@ -33,4 +33,13 @@ public interface UpsRepo extends ObjectBuingWithSerialAndInventaryRepo<Ups> {
    + "AND ((?4 is NULL or ?4 = '') or (ups.year_created <= ?4)) "
    + "AND ((?5 is NULL or ?5 = '') or (place.location_id = ?5))) ", nativeQuery = true)
     List<Ups> findUpsByAllFilters (String status, String model, String yearCreatedOne, String yearCreatedTwo, String location);
+
+    List<Ups> findByPlaceUsernameContainingAndPlacePlaceTypeLikeAndUpsTypeAndArchivedFalse(String nameEmployee, PlaceType placeType, UpsType upsType);
+    List<Ups> findByInventaryNumberContainingAndPlacePlaceTypeLikeAndUpsTypeAndArchivedFalse(String inventaryNumber, PlaceType placeType, UpsType upsType);
+    List<Ups> findBySerialNumberContainingAndPlacePlaceTypeLikeAndUpsTypeAndArchivedFalse(String serialNumber, PlaceType placeType, UpsType upsType);
+    List<Ups> findByPlacePlaceTypeLikeAndUpsTypeAndArchivedFalse(PlaceType placeType, UpsType upsType);
+    List<Ups> findByUpsTypeAndArchivedFalse(UpsType upsType);
+
+
+
 }

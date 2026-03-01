@@ -4,9 +4,10 @@
  */
 package ru.gov.sfr.aos.monitoring.ups;
 
+import ru.gov.sfr.aos.monitoring.enums.UpsType;
+import ru.gov.sfr.aos.monitoring.ups.UpsModel;
 import java.io.Serializable;
 import java.util.Date;
-
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -15,7 +16,6 @@ import javax.persistence.FetchType;
 import javax.persistence.ManyToOne;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.validation.constraints.NotNull;
-
 import ru.gov.sfr.aos.monitoring.dictionaries.Status;
 import ru.gov.sfr.aos.monitoring.svtobject.ObjectBuingWithSerialAndInventary;
 
@@ -35,7 +35,7 @@ public class Ups extends ObjectBuingWithSerialAndInventary implements Serializab
     private String serialNumber;
     private int yearCreated;
     private int yearReplacement;
-    
+    private UpsType upsType;
     private Date dateExploitationBegin;
     private String numberRoom;
     private String nameFromOneC;
@@ -43,6 +43,14 @@ public class Ups extends ObjectBuingWithSerialAndInventary implements Serializab
     public Ups() {
     }
 
+
+    public UpsType getUpsType() {
+        return upsType;
+    }
+
+    public void setUpsType(UpsType upsType) {
+        this.upsType = upsType;
+    }
 
     public String getNameFromOneC() {
         return nameFromOneC;
@@ -52,7 +60,7 @@ public class Ups extends ObjectBuingWithSerialAndInventary implements Serializab
         this.nameFromOneC = nameFromOneC;
     }
 
-    
+
     public UpsModel getUpsModel() {
         return upsModel;
     }

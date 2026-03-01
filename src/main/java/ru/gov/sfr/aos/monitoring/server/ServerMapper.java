@@ -7,12 +7,11 @@ package ru.gov.sfr.aos.monitoring.server;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.springframework.beans.factory.annotation.Autowired;
-
+import ru.gov.sfr.aos.monitoring.svtobject.SvtMapper;
 import ru.gov.sfr.aos.monitoring.components.CpuRepo;
 import ru.gov.sfr.aos.monitoring.components.HddRepo;
-import ru.gov.sfr.aos.monitoring.components.RamRepo;
 import ru.gov.sfr.aos.monitoring.repositories.OperationSystemRepo;
-import ru.gov.sfr.aos.monitoring.svtobject.SvtMapper;
+import ru.gov.sfr.aos.monitoring.components.RamRepo;
 
 /**
  *

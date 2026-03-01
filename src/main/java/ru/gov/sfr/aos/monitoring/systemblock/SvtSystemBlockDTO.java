@@ -6,7 +6,6 @@ package ru.gov.sfr.aos.monitoring.systemblock;
 
 import java.util.Date;
 import java.util.List;
-
 import ru.gov.sfr.aos.monitoring.svtobject.SvtDTO;
 
 /**

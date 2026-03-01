@@ -4,9 +4,10 @@
  */
 package ru.gov.sfr.aos.monitoring.svtobject;
 
+import ru.gov.sfr.aos.monitoring.place.Place;
 import java.util.ArrayList;
 import java.util.List;
-
+import java.util.Objects;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -20,9 +21,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.NotNull;
-
 import ru.gov.sfr.aos.monitoring.contract.Contract;
-import ru.gov.sfr.aos.monitoring.place.Place;
 import ru.gov.sfr.aos.monitoring.repair.Repair;
 import ru.gov.sfr.aos.monitoring.transfer.Transfer;
 

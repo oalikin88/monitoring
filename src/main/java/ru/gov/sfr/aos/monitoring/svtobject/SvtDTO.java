@@ -38,7 +38,7 @@ public class SvtDTO extends MainSvtDto {
     protected Long manufacturerId;
     protected String manufacturerName;
     protected boolean ignoreCheck;
-    
+    protected String type;
 
     public SvtDTO() {
     }
@@ -258,6 +258,15 @@ public class SvtDTO extends MainSvtDto {
             result = result + batteryType;
         }
         return result;
+    }
+
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 
     public void setBatteryType(String batteryType) {

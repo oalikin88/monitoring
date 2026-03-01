@@ -6,11 +6,13 @@ package ru.gov.sfr.aos.monitoring.ups;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
+import ru.gov.sfr.aos.monitoring.ups.UpsManufacturer;
+import ru.gov.sfr.aos.monitoring.ups.UpsModel;
 import ru.gov.sfr.aos.monitoring.svtobject.SvtModelDto;
+import ru.gov.sfr.aos.monitoring.ups.UpsManufacturerRepo;
+import ru.gov.sfr.aos.monitoring.ups.UpsModelRepo;
 
 
 /**

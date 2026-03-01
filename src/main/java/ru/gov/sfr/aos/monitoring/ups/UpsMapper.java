@@ -7,9 +7,10 @@ package ru.gov.sfr.aos.monitoring.ups;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import ru.gov.sfr.aos.monitoring.svtobject.SvtDTO;
 import ru.gov.sfr.aos.monitoring.svtobject.SvtMapper;
+import ru.gov.sfr.aos.monitoring.ups.Ups;
+import ru.gov.sfr.aos.monitoring.svtobject.SvtDTO;
+import ru.gov.sfr.aos.monitoring.ups.UpsRepo;
 
 /**
  *

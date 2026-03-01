@@ -1,39 +1,37 @@
 package ru.gov.sfr.aos.monitoring.svtobject;
 
+import ru.gov.sfr.aos.monitoring.asuo.AsuoService;
+import ru.gov.sfr.aos.monitoring.infomat.InfomatService;
+import ru.gov.sfr.aos.monitoring.router.RouterService;
+import ru.gov.sfr.aos.monitoring.conditioner.ConditionerService;
+import ru.gov.sfr.aos.monitoring.ats.AtsService;
+import ru.gov.sfr.aos.monitoring.switchhub.SwitchHubService;
+import ru.gov.sfr.aos.monitoring.server.ServerService;
+import ru.gov.sfr.aos.monitoring.systemblock.SystemBlockService;
+import ru.gov.sfr.aos.monitoring.ups.UpsService;
+import ru.gov.sfr.aos.monitoring.scanner.ScannerService;
+import ru.gov.sfr.aos.monitoring.fax.FaxService;
+import ru.gov.sfr.aos.monitoring.monitor.MonitorService;
+import ru.gov.sfr.aos.monitoring.phone.PhoneService;
 import java.util.ArrayList;
 import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import ru.gov.sfr.aos.monitoring.asuo.Asuo;
-import ru.gov.sfr.aos.monitoring.asuo.AsuoService;
 import ru.gov.sfr.aos.monitoring.ats.Ats;
-import ru.gov.sfr.aos.monitoring.ats.AtsService;
 import ru.gov.sfr.aos.monitoring.conditioner.Conditioner;
-import ru.gov.sfr.aos.monitoring.conditioner.ConditionerService;
-import ru.gov.sfr.aos.monitoring.enums.ObjectBuingType;
 import ru.gov.sfr.aos.monitoring.fax.Fax;
-import ru.gov.sfr.aos.monitoring.fax.FaxService;
 import ru.gov.sfr.aos.monitoring.infomat.Infomat;
-import ru.gov.sfr.aos.monitoring.infomat.InfomatService;
-import ru.gov.sfr.aos.monitoring.models.DeviceDto;
 import ru.gov.sfr.aos.monitoring.monitor.Monitor;
-import ru.gov.sfr.aos.monitoring.monitor.MonitorService;
 import ru.gov.sfr.aos.monitoring.phone.Phone;
-import ru.gov.sfr.aos.monitoring.phone.PhoneService;
 import ru.gov.sfr.aos.monitoring.router.Router;
-import ru.gov.sfr.aos.monitoring.router.RouterService;
 import ru.gov.sfr.aos.monitoring.scanner.Scanner;
-import ru.gov.sfr.aos.monitoring.scanner.ScannerService;
 import ru.gov.sfr.aos.monitoring.server.Server;
-import ru.gov.sfr.aos.monitoring.server.ServerService;
 import ru.gov.sfr.aos.monitoring.switchhub.SwitchHub;
-import ru.gov.sfr.aos.monitoring.switchhub.SwitchHubService;
 import ru.gov.sfr.aos.monitoring.systemblock.SystemBlock;
-import ru.gov.sfr.aos.monitoring.systemblock.SystemBlockService;
 import ru.gov.sfr.aos.monitoring.ups.Ups;
-import ru.gov.sfr.aos.monitoring.ups.UpsService;
+import ru.gov.sfr.aos.monitoring.enums.ObjectBuingType;
+import ru.gov.sfr.aos.monitoring.models.DeviceDto;
 
 /**
  *

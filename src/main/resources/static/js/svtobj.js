@@ -1,3 +1,6 @@
+
+
+ 
 const modalError = document.getElementById('modalError');
 const modalErrorParent = document.getElementById('modalErrorContent');
 const pathSvg = document.createElementNS('http://www.w3.org/2000/svg', 'path');
@@ -423,9 +426,8 @@ let reloadModalTransfer = function (svtObjId) {
 
         $("#containerTransferContent")[0].appendChild(transferLabelRow);
 
-        for (i = 0; i < transfersResult.length; i++) {
-//            let getDate = this.parentNode.parentNode.childNodes[1].innerHTML.split(".");
-//                    datepick.value = getDate[2] + "-" + getDate[1] + "-" + getDate[0];
+        for (let i = 0; i < transfersResult.length; i++) {
+
             let parseDate = Date.parse(transfersResult[i].dateTransfer);
             let dateTransferParsed = new Date(parseDate);
             let dateTransferFormat = dateTransferParsed.toLocaleDateString('ru');
@@ -747,9 +749,6 @@ let reloadModalRepair = function (svtObjId) {
 
 let handleAddTransferBtn = function (svtObjId) {
 
-    console.log("click");
-
-    //$('[data-bs-toggle="tooltip"]').tooltip('hide');
 
     if ($(".transferRow").length == 0) {
         $("#containerTransferContent")[0].innerHTML = "";
@@ -834,10 +833,6 @@ let handleAddTransferBtn = function (svtObjId) {
 
 
 let handleAddBtn = function (svtObjId) {
-
-    console.log("click");
-
-    //$('[data-bs-toggle="tooltip"]').tooltip('hide');
 
     if ($(".repairRow").length == 0) {
         $("#containerRepairContent")[0].innerHTML = "";
@@ -1132,15 +1127,9 @@ let handleClickSendToStorageBtn = function () {
             break;
         case "ups":
             requestLink = "/upstostor";
-            dto.batteryTypeId = $("#batteryTypeSelect")[0].selectize.getValue();
-            dto.batteryAmount = document.querySelector("#batteryAmount").value;
-            dto.yearReplacement = document.querySelector("#dateReplaceSelect").value;
             break;
         case "upsforserver":
             requestLink = "/upstostor";
-            dto.batteryTypeId = $("#batteryTypeSelect")[0].selectize.getValue();
-            dto.batteryAmount = document.querySelector("#batteryAmount").value;
-            dto.yearReplacement = document.querySelector("#dateReplaceSelect").value;
             break;
         case "systemblock":
             requestLink = "/sysblockstostor";
@@ -1231,6 +1220,11 @@ let handleClickSendToStorageBtn = function () {
         case "display":
             requestLink = "/displaytostor";
             break;
+        case "printers":
+            requestLink = "/printertostor";
+            dto.numberRoom = $("#numberRoom")[0].value;
+            dto.nameFromOneC = $("#nameFromOneC")[0].value;
+        break;
         case "asuo":
             requestLink = "/asuotostor";
             displays = new Array();
@@ -1548,6 +1542,9 @@ let handleClickSearchSvtObject = function (field, input) {
         case "terminalUps":
             request = "/terminal-ups?" + field + "=";
             break;
+        case "printers":
+            request = "/printers?" + field + "=";
+            break;
     }
     window.location.href = request + input;
 };
@@ -1578,6 +1575,7 @@ let handleClickSavePhoneBtn = function () {
         case "phones":
             dto.phoneNumber = $("#innerCallNumber")[0].value;
             dto.numberRoom = $("#numberRoom")[0].value;
+            dto.nameFromOneC = $("#nameFromOneC")[0].value;
             requestLink = "/phones";
             break;
         case "fax":
@@ -1902,6 +1900,10 @@ window.onload = function () {
                         lin = fff.replace("/terminal-ups", "/get-doc/terminal-ups");
                         fileName = "docReportTerminalUps.xlsx";
                         break;
+                    case "printers":
+                        lin = fff.replace("/printers", "/get-doc/printers");
+                        fileName = "docReportPrinters.xlsx";
+                        break;
                 }
 
                 $.ajax({
@@ -1911,7 +1913,7 @@ window.onload = function () {
                         var xhr = new XMLHttpRequest();
 
                         xhr.onreadystatechange = function () {
-                            if (xhr.readyState == 2) {
+                            if (xhr.readyState == 4) {
                                 if (xhr.status == 200) {
                                     xhr.responseType = "blob";
                                 } else {
@@ -1978,7 +1980,8 @@ window.onload = function () {
 
             window.location.href = window.location.pathname + "?model=" + document.querySelector('#filter-model').value +
                     "&status=" + document.querySelector('#filter-status').value + "&yearCreatedOne=" + document.querySelector('#dateBegin').value +
-                    "&yearCreatedTwo=" + document.querySelector('#dateEnd').value + "&location=" + document.querySelector('#filter-location').value;
+                    "&yearCreatedTwo=" + document.querySelector('#dateEnd').value + "&location=" + document.querySelector('#filter-location').value + 
+                    "&numberRoom=" + document.querySelector('#number-room').value;
 
 
         });
@@ -2080,6 +2083,9 @@ window.onload = function () {
                     break;
                 case "display":
                     requestLink = "/moddisplay";
+                    break;
+                case "printers":
+                    requestLink = "/modprinters";
                     break;
 
             }
@@ -2890,21 +2896,13 @@ let modalContentLoad = function (eventReason, svtObjId) {
 
     switch (attrib) {
         case "switch":
-
             break;
         case "router":
-
-            break;
             break;
         case "terminal":
-
             break;
-
         case "display":
-
             break;
-
-
         case "ats":
             let divRowYearExplAts = document.createElement("div");
             divRowYearExplAts.className = "row mt-2";
@@ -2989,7 +2987,6 @@ let modalContentLoad = function (eventReason, svtObjId) {
             divRowNameFromOneCInfomat.appendChild(divColInputNameFromOneCInfomat);
             divContainerBody.appendChild(divRowNameFromOneCInfomat);
             break;
-
         default:
             divRowYearCreated = document.createElement("div");
             divRowYearCreated.className = "row mt-2";
@@ -3007,7 +3004,6 @@ let modalContentLoad = function (eventReason, svtObjId) {
             divRowYearCreated.appendChild(divColLabelYearCreated);
             divRowYearCreated.appendChild(divColSelectYearCreated);
             divContainerBody.appendChild(divRowYearCreated);
-
             divRowDateStartExp = document.createElement("div");
             divRowDateStartExp.className = "row mt-2";
             divRowDateStartExp.id = "date-start-exp-row";
@@ -3047,7 +3043,6 @@ let modalContentLoad = function (eventReason, svtObjId) {
             divRowPhones.appendChild(divColLabelPhones);
             divRowPhones.appendChild(divColInputPhones);
             divContainerBody.appendChild(divRowPhones);
-            
             let divRowNumberRoomPhone = document.createElement("div");
             divRowNumberRoomPhone.className = "row mt-2";
             let divColLabelNumberRoomPhone = document.createElement("div");
@@ -3065,9 +3060,8 @@ let modalContentLoad = function (eventReason, svtObjId) {
             divRowNumberRoomPhone.appendChild(divColLabelNumberRoomPhone);
             divRowNumberRoomPhone.appendChild(divColInputNumberRoomPhone);
             divContainerBody.appendChild(divRowNumberRoomPhone);
-            
-            
-             let divRowNameFromOneCPhone = document.createElement("div");
+
+            let divRowNameFromOneCPhone = document.createElement("div");
             divRowNameFromOneCPhone.className = "row mt-2";
             let divColLabelNameFromOneCPhone = document.createElement("div");
             divColLabelNameFromOneCPhone.className = "col";
@@ -3084,7 +3078,6 @@ let modalContentLoad = function (eventReason, svtObjId) {
             divRowNameFromOneCPhone.appendChild(divColLabelNameFromOneCPhone);
             divRowNameFromOneCPhone.appendChild(divColInputNameFromOneCPhone);
             divContainerBody.appendChild(divRowNameFromOneCPhone);
-            
             break;
         case "monitors":
             let divRowNumberRoomMonitor = document.createElement("div");
@@ -3195,7 +3188,6 @@ let modalContentLoad = function (eventReason, svtObjId) {
             divRowDateReplaceBattery.appendChild(divColLabelDateReplaceBattery);
             divRowDateReplaceBattery.appendChild(divColDateReplaceBatterySelect);
             divContainerBody.appendChild(divRowDateReplaceBattery);
-
             break;
         case "upsforserver":
             let divRowNumberRoomUpsForServer = document.createElement("div");
@@ -3246,7 +3238,6 @@ let modalContentLoad = function (eventReason, svtObjId) {
             divRowDateReplaceBatteryUpsForServer.appendChild(divColLabelDateReplaceBatteryUpsForServer);
             divRowDateReplaceBatteryUpsForServer.appendChild(divColDateReplaceBatterySelectUpsForServer);
             divContainerBody.appendChild(divRowDateReplaceBatteryUpsForServer);
-
             break;
         case "scanner":
             let divRowIpAdress = document.createElement("div");
@@ -3489,8 +3480,6 @@ let modalContentLoad = function (eventReason, svtObjId) {
             divRowHddSelect.appendChild(divColLabelHddSelect);
             divRowHddSelect.appendChild(divColHddSelect);
             divContainerBody.appendChild(divRowHddSelect);
-
-
             let accordionFlushSysBlock = document.createElement("div");
             accordionFlushSysBlock.className = "accordion accordion-flush mt-3";
             accordionFlushSysBlock.id = "accordionFlushExample";
@@ -3522,8 +3511,6 @@ let modalContentLoad = function (eventReason, svtObjId) {
             accordionItemSysBlock.appendChild(accordionFlushCollapseSysBlock);
             accordionFlushCollapseSysBlock.appendChild(accordionBodySysBlock);
             divContainerBody.appendChild(accordionFlushSysBlock);
-
-
             let divRowVideoCardSelect = document.createElement("div");
             divRowVideoCardSelect.className = "row mt-2";
             let divColLabelVideoCardSelect = document.createElement("div");
@@ -3935,7 +3922,6 @@ let modalContentLoad = function (eventReason, svtObjId) {
             divContainerBody.appendChild(divRowNameFromOneCSwitch);
             break;
         case "hub":
- 
             let portAmountHubRow = document.createElement("div");
             portAmountHubRow.className = "row mt-2";
             let divColLabelHubPortAmount = document.createElement("div");
@@ -3954,7 +3940,6 @@ let modalContentLoad = function (eventReason, svtObjId) {
             portAmountHubRow.appendChild(divColLabelHubPortAmount);
             portAmountHubRow.appendChild(divColInputHubPortAmount);
             divContainerBody.appendChild(portAmountHubRow);
-
             let divRowNameFromOneCHub = document.createElement("div");
             divRowNameFromOneCHub.className = "row mt-2";
             let divColLabelNameFromOneCHub = document.createElement("div");
@@ -3991,7 +3976,6 @@ let modalContentLoad = function (eventReason, svtObjId) {
             divRowNumberRoomRouter.appendChild(divColLabelNumberRoomRouter);
             divRowNumberRoomRouter.appendChild(divColInputNumberRoomRouter);
             divContainerBody.appendChild(divRowNumberRoomRouter);
-
             let portAmountRouterRow = document.createElement("div");
             portAmountRouterRow.className = "row mt-2";
             let divColLabelRouterPortAmount = document.createElement("div");
@@ -4010,7 +3994,6 @@ let modalContentLoad = function (eventReason, svtObjId) {
             portAmountRouterRow.appendChild(divColLabelRouterPortAmount);
             portAmountRouterRow.appendChild(divColInputRouterPortAmount);
             divContainerBody.appendChild(portAmountRouterRow);
-
             let yearCreatedRouterRow = document.createElement("div");
             yearCreatedRouterRow.className = "row mt-2";
             let divColLabelRouterYearCreated = document.createElement("div");
@@ -4029,7 +4012,6 @@ let modalContentLoad = function (eventReason, svtObjId) {
             yearCreatedRouterRow.appendChild(divColInputRouterYearCreated);
             divContainerBody.appendChild(yearCreatedRouterRow);
 
-
             let divRowNameFromOneCRouter = document.createElement("div");
             divRowNameFromOneCRouter.className = "row mt-2";
             let divColLabelNameFromOneCRouter = document.createElement("div");
@@ -4046,7 +4028,6 @@ let modalContentLoad = function (eventReason, svtObjId) {
             divRowNameFromOneCRouter.appendChild(divColLabelNameFromOneCRouter);
             divRowNameFromOneCRouter.appendChild(divColInputNameFromOneCRouter);
             divContainerBody.appendChild(divRowNameFromOneCRouter);
-            
             let divRowRouterIpAdressInner = document.createElement("div");
             divRowRouterIpAdressInner.className = "row mt-2";
             let divColLabelRouterIpAdressInner = document.createElement("div");
@@ -4065,7 +4046,6 @@ let modalContentLoad = function (eventReason, svtObjId) {
             divRowRouterIpAdressInner.appendChild(divColLabelRouterIpAdressInner);
             divRowRouterIpAdressInner.appendChild(divColInputRouterIpAdressInner);
             divContainerBody.appendChild(divRowRouterIpAdressInner);
-            
             let divRowRouterIpAdressOuter = document.createElement("div");
             divRowRouterIpAdressOuter.className = "row mt-2";
             let divColLabelRouterIpAdressOuter = document.createElement("div");
@@ -4084,7 +4064,6 @@ let modalContentLoad = function (eventReason, svtObjId) {
             divRowRouterIpAdressOuter.appendChild(divColLabelRouterIpAdressOuter);
             divRowRouterIpAdressOuter.appendChild(divColInputRouterIpAdressOuter);
             divContainerBody.appendChild(divRowRouterIpAdressOuter);
-            
             break;
         case "ats":
             let divRowNumberRoomAts = document.createElement("div");
@@ -4094,7 +4073,6 @@ let modalContentLoad = function (eventReason, svtObjId) {
             divColLabelNumberRoomAts.innerText = "Кабинет";
             let divColInputNumberRoomAts = document.createElement("div");
             divColInputNumberRoomAts.className = "col";
-
             let inputNumberRoomAts = document.createElement("input");
             inputNumberRoomAts.className = "form-control form-control-sm";
             inputNumberRoomAts.type = "text";
@@ -4105,7 +4083,6 @@ let modalContentLoad = function (eventReason, svtObjId) {
             divRowNumberRoomAts.appendChild(divColLabelNumberRoomAts);
             divRowNumberRoomAts.appendChild(divColInputNumberRoomAts);
             divContainerBody.appendChild(divRowNumberRoomAts);
-
             let divRowNameFromOneCAts = document.createElement("div");
             divRowNameFromOneCAts.className = "row mt-2";
             let divColLabelNameFromOneCAts = document.createElement("div");
@@ -4134,23 +4111,18 @@ let modalContentLoad = function (eventReason, svtObjId) {
             selectAtsOuterTypeConnections.className = "form-select form-select-sm";
             selectAtsOuterTypeConnections.id = "outerConnectionType";
             selectAtsOuterTypeConnections.setAttribute("aria-label", "outerConnectionType");
-
             let optionSipOuterTypeConnection = document.createElement("option");
             optionSipOuterTypeConnection.value = "SIP";
             optionSipOuterTypeConnection.innerText = "SIP";
-
             let optionE1OuterTypeConnection = document.createElement("option");
             optionE1OuterTypeConnection.value = "E1";
             optionE1OuterTypeConnection.innerText = "E1";
-
             selectAtsOuterTypeConnections.appendChild(optionSipOuterTypeConnection);
             selectAtsOuterTypeConnections.appendChild(optionE1OuterTypeConnection);
-
             divColAtsOuterTypeConnectionsSelect.appendChild(selectAtsOuterTypeConnections);
             divRowAtsOuterTypeConnectionsSelect.appendChild(divColLabelAtsOuterTypeConnectionsSelect);
             divRowAtsOuterTypeConnectionsSelect.appendChild(divColAtsOuterTypeConnectionsSelect);
             divContainerBody.appendChild(divRowAtsOuterTypeConnectionsSelect);
-
             let cityNumbersAmountAtsRow = document.createElement("div");
             cityNumbersAmountAtsRow.className = "row mt-2";
             let divColLabelCityNumbersAmountAts = document.createElement("div");
@@ -4169,29 +4141,20 @@ let modalContentLoad = function (eventReason, svtObjId) {
             cityNumbersAmountAtsRow.appendChild(divColLabelCityNumbersAmountAts);
             cityNumbersAmountAtsRow.appendChild(divColInputCityNumbersAmountAts);
             divContainerBody.appendChild(cityNumbersAmountAtsRow);
-
             let innerConnectionsAmountRow = document.createElement("div");
             innerConnectionsAmountRow.className = "row mt-2";
-
             let divColLabelConnectionsAmount = document.createElement("div")
             divColLabelConnectionsAmount.className = "col-3";
             divColLabelConnectionsAmount.innerText = "Внутренние подключения";
-
-
             let divColConteinerForRowsInputs = document.createElement("div");
             divColConteinerForRowsInputs.className = "col-9";
-
-
             let innerConnectionsIpAmountRow = document.createElement("div");
             innerConnectionsIpAmountRow.className = "row";
-
             let divColLabelInnerConnectionsIpAmount = document.createElement("div");
             divColLabelInnerConnectionsIpAmount.className = "col-4";
             divColLabelInnerConnectionsIpAmount.innerText = "ip";
-
             let divColInputInnerConnectionsIpAmount = document.createElement("div");
             divColInputInnerConnectionsIpAmount.className = "col-8";
-
             let inputInnerConnectionsIpAmount = document.createElement("input");
             inputInnerConnectionsIpAmount.className = "form-control form-control-sm";
             inputInnerConnectionsIpAmount.type = "number";
@@ -4199,10 +4162,8 @@ let modalContentLoad = function (eventReason, svtObjId) {
             inputInnerConnectionsIpAmount.max = 999;
             inputInnerConnectionsIpAmount.value = 1;
             inputInnerConnectionsIpAmount.id = "innerConnectionIp";
-
             let innerConnectionsAnalogAmountRow = document.createElement("div");
             innerConnectionsAnalogAmountRow.className = "row mt-2";
-
             let divColLabelInnerConnectionsAnalogAmount = document.createElement("div");
             divColLabelInnerConnectionsAnalogAmount.className = "col-4";
             divColLabelInnerConnectionsAnalogAmount.innerText = "аналоговые";
@@ -4265,12 +4226,10 @@ let modalContentLoad = function (eventReason, svtObjId) {
             divColInputNameFromOneCAsuo.appendChild(inputNameFromOneCAsuo);
             divRowNameFromOneCAsuo.appendChild(divColLabelNameFromOneCAsuo);
             divRowNameFromOneCAsuo.appendChild(divColInputNameFromOneCAsuo);
-            divContainerBody.appendChild(divRowNameFromOneCAsuo);
-            
+            divContainerBody.appendChild(divRowNameFromOneCAsuo);        
             let divDisplaysContainer = document.createElement("div");
             divDisplaysContainer.id = "display-container";
-            divContainerBody.appendChild(divDisplaysContainer);
-            
+            divContainerBody.appendChild(divDisplaysContainer);         
             let divRowDisplaySelect = document.createElement("div");
             divRowDisplaySelect.className = "row mt-2 display-row";
             let divColLabelDisplaySelect = document.createElement("div");
@@ -4286,13 +4245,10 @@ let modalContentLoad = function (eventReason, svtObjId) {
             divColDisplaySelect.appendChild(selectDisplay);
             divRowDisplaySelect.appendChild(divColLabelDisplaySelect);
             divRowDisplaySelect.appendChild(divColDisplaySelect);
-            divDisplaysContainer.appendChild(divRowDisplaySelect);
-           
-           
+            divDisplaysContainer.appendChild(divRowDisplaySelect);    
             let divTerminalContainer = document.createElement("div");
             divTerminalContainer.id = "terminal-container";
-            divContainerBody.appendChild(divTerminalContainer);
-           
+            divContainerBody.appendChild(divTerminalContainer);      
             let divRowTerminalSelect = document.createElement("div");
             divRowTerminalSelect.className = "row mt-2 terminal-row";
             let divColLabelTerminalSelect = document.createElement("div");
@@ -4307,8 +4263,6 @@ let modalContentLoad = function (eventReason, svtObjId) {
             divRowTerminalSelect.appendChild(divColLabelTerminalSelect);
             divRowTerminalSelect.appendChild(divColTerminalSelect);
             divTerminalContainer.appendChild(divRowTerminalSelect);
-
-
             let divHubContainer = document.createElement("div");
             divHubContainer.id = "hub-container";
             divContainerBody.appendChild(divHubContainer);
@@ -4326,11 +4280,8 @@ let modalContentLoad = function (eventReason, svtObjId) {
             selectHub.setAttribute("aria-label", "hubSelect");
             divColHubSelect.appendChild(selectHub);
             divRowHubSelect.appendChild(divColLabelHubSelect);
-            divRowHubSelect.appendChild(divColHubSelect);
-            
+            divRowHubSelect.appendChild(divColHubSelect);     
             divHubContainer.appendChild(divRowHubSelect);
-
-
             let divRowSubDisplaySelect = document.createElement("div");
             divRowSubDisplaySelect.className = "row mt-2";
             let divColLabelSubDisplaySelect = document.createElement("div");
@@ -4357,9 +4308,7 @@ let modalContentLoad = function (eventReason, svtObjId) {
             divRowSubDisplaySelect.appendChild(divColLabelSubDisplaySelect);
             divRowSubDisplaySelect.appendChild(divColSubDisplaySelect);
             divRowSubDisplaySelect.appendChild(divColSubDisplayAmount);
-            divContainerBody.appendChild(divRowSubDisplaySelect);
-            
-            
+            divContainerBody.appendChild(divRowSubDisplaySelect);    
             let divRowPOSelect = document.createElement("div");
             divRowPOSelect.className = "row mt-2";
             let divColLabelPOSelect = document.createElement("div");
@@ -4456,18 +4405,17 @@ let modalContentLoad = function (eventReason, svtObjId) {
             divRowTerminalUpsSelect.appendChild(divColLabelTerminalUpsSelect);
             divRowTerminalUpsSelect.appendChild(divColTerminalUpsSelect);
             divContainerBody.appendChild(divRowTerminalUpsSelect);
-            
             break;
-        case "terminalUps":
-        case "terminalSensor":
-        case "terminalServer":
-        case "terminalPrinter":
+            case "terminalUps":
+            case "terminalSensor":
+            case "terminalServer":
+            case "terminalPrinter":
             divContainerBody.removeChild(divRowYearCreated);
             divContainerBody.removeChild(divRowDateStartExp);
             $($(divContainerBody).find('#department_row')).remove();
             $($(divContainerBody).find('#inventaryNumberRow')).remove();
-        break;
-        case "terminalDisplay":
+            break;
+            case "terminalDisplay":
             divContainerBody.removeChild(divRowYearCreated);
             divContainerBody.removeChild(divRowDateStartExp);
             $($(divContainerBody).find('#department_row')).remove();
@@ -4490,7 +4438,7 @@ let modalContentLoad = function (eventReason, svtObjId) {
             divRowScreenSizeRow.appendChild(divColInputScreenSize);
             divContainerBody.appendChild(divRowScreenSizeRow);
             break;
-        case "conditioner":
+            case "conditioner":
             let divRowNameFromOneCConditioner = document.createElement("div");
             divRowNameFromOneCConditioner.className = "row mt-2";
             let divColLabelNameFromOneCConditioner = document.createElement("div");
@@ -4896,6 +4844,7 @@ let modalContentLoad = function (eventReason, svtObjId) {
                 requestLink = "/getphone?phoneId=";
                 $("#innerCallNumber")[0].value = innerCallNumber;
                 $("#numberRoom")[0].value = numberRoom;
+                $("#nameFromOneC")[0].value = nameFromOneC;
                 break;
             case "fax":
                 requestLink = "/getfax?faxId=";
@@ -5013,7 +4962,7 @@ let modalContentLoad = function (eventReason, svtObjId) {
                 break;
         }
         if (eventReason.indexOf("storage") >= 0) {
-            var stor = true;
+            stor = true;
             $('#statusSelect')[0].disabled = true;
             if($("#inventaryNumber").length > 0) {
                 $("#inventaryNumber")[0].disabled = true;
@@ -5028,6 +4977,7 @@ let modalContentLoad = function (eventReason, svtObjId) {
                 case "phones":
                     $("#innerCallNumber")[0].disabled = true;
                     $("#numberRoom")[0].disabled = true;
+                    $("#nameFromOneC")[0].disabled = true;
                     break;
                 case "monitors":
                     $("#nameFromOneC")[0].disabled = true;
@@ -5041,11 +4991,9 @@ let modalContentLoad = function (eventReason, svtObjId) {
                     break;
                 case "ups":
                     $("#dateReplaceSelect")[0].disabled = true;
-                    $("#batteryAmount")[0].disabled = true;
                     break;
                 case "upsforserver":
                     $("#dateReplaceSelect")[0].disabled = true;
-                    $("#batteryAmount")[0].disabled = true;
                     break;
                 case "systemblock":
                     $("#ipAdress")[0].disabled = true;
@@ -5121,21 +5069,17 @@ let modalContentLoad = function (eventReason, svtObjId) {
         placeholder: 'выберите район',
         onInitialize: function () {
             let placeType;
-
             switch (placeAttrib) {
                 case "serverroom":
                     placeType = "SERVERROOM";
                     break;
-
                 case "officeequipment":
                     placeType = "OFFICEEQUIPMENT";
-
-
                     break;
                 default:
                     placeType = "EMPLOYEE";
                     break;
-            }
+                }
 
             $.ajax({
                 url: '/locplacetype?placeType=' + placeType,
@@ -5174,9 +5118,7 @@ let modalContentLoad = function (eventReason, svtObjId) {
             if (value !== '' && value != curLoc) {
                 let placeType = "EMPLOYEE";
                 if(attribArray.includes(attrib)) {
-                        placeType = "OFFICEEQUIPMENT";
-                        
-                        
+                        placeType = "OFFICEEQUIPMENT";         
                          $.ajax({
                             url: '/place-by-loc-and-placetype?locationId=' + $("#locationSelect")[0].selectize.getValue() + '&placeType=' + placeType,
                             type: 'GET',
@@ -5267,8 +5209,6 @@ let modalContentLoad = function (eventReason, svtObjId) {
         searchField: ["code", "name"],
         placeholder: 'выберите отдел',
         onInitialize: function () {
-
-
             let placeType = "EMPLOYEE";
 
             switch (placeAttrib) {
@@ -5366,14 +5306,10 @@ let modalContentLoad = function (eventReason, svtObjId) {
         sortField: 'username',
         placeholder: 'выберите рабочее место',
         onInitialize: function () {
-
             let urlReq = "placebydepandloc";
             let placetype = "EMPLOYEE";
-
             if(attribArray.includes(attrib)) {
-                
                placeType = "OFFICEEQUIPMENT";
-                    
                     $.ajax({
                     url: '/place-by-loc-and-placetype?locationId=' + $("#locationSelect")[0].selectize.getValue() + '&placeType=' + placeType,
                     type: 'GET',
@@ -5394,22 +5330,20 @@ let modalContentLoad = function (eventReason, svtObjId) {
                 });
                 
             } else {
-
-
-            switch (placeAttrib) {
-                case 'serverroom':
-                    urlReq = "placeserverbydepandloc";
-                    placetype = "SERVERROOM";
-                    break;
-                case 'officeequipment':
-                    urlReq = "placeserverbydepandloc";
-                    placetype = "OFFICEEQUIPMENT";
-                    break;
-                default:
-                    urlReq = "placebydepandloc";
-                    placetype = "EMPLOYEE";
-                    break;
-            }
+                switch (placeAttrib) {
+                    case 'serverroom':
+                        urlReq = "placeserverbydepandloc";
+                        placetype = "SERVERROOM";
+                        break;
+                    case 'officeequipment':
+                        urlReq = "placeserverbydepandloc";
+                        placetype = "OFFICEEQUIPMENT";
+                        break;
+                    default:
+                        urlReq = "placebydepandloc";
+                        placetype = "EMPLOYEE";
+                        break;
+                }
 
             $.ajax({
                 url: '/' + urlReq + '?locationId=' + $('#locationSelect')[0].selectize.getValue() + '&departmentCode=' + $('#departmentSelect')[0].selectize.getValue() + '&placetype=' + placetype,
@@ -5615,8 +5549,6 @@ let modalContentLoad = function (eventReason, svtObjId) {
                 displayLink = "/getdisplays";
                 terminalLink = "/getterminals";
                 hubLink = "/get-hubs";
-                
-
                 switchListId = new Array();
                 switchListId.forEach(item => {
                     switchListId.push(item.id);
@@ -5649,7 +5581,6 @@ let modalContentLoad = function (eventReason, svtObjId) {
             
             });
             
-
             $("#displaySelect-1").selectize({
                 plugins: ["remove_button"],
                 delimiter: ",",
@@ -5668,7 +5599,6 @@ let modalContentLoad = function (eventReason, svtObjId) {
                         dataType: 'json',
                         error: callback,
                         success: function(res) {
-                            
                            res.forEach(model => {
                                if(svtObjId == model.asuoId || model.hasInstalled == false) {
                                     $('#displaySelect-1')[0].selectize.addOption(model);
@@ -5833,8 +5763,6 @@ let modalContentLoad = function (eventReason, svtObjId) {
                     var curentHubLabel = this.$wrapper.closest('.row')
                             .children('.hub-label')[0];
                     
-                   
-
                 },
                 render: {
                     option: function (item, escape) {
@@ -5857,9 +5785,6 @@ let modalContentLoad = function (eventReason, svtObjId) {
                 }
             });
             
-            
-
-
 
             $("#subDisplaySelect").selectize({
                 placeholder: "Выберите из списка",
@@ -6165,8 +6090,6 @@ let modalContentLoad = function (eventReason, svtObjId) {
                 }
 
             });
-            
-            
             break;
 
         case "ups":
@@ -6540,9 +6463,6 @@ let modalContentLoad = function (eventReason, svtObjId) {
             } else {
                 $('#hddSelect')[0].selectize.enable();
             }
-
-
-
 
             $("#videoCardSelect").selectize({
                 preload: true,
@@ -7413,7 +7333,7 @@ let modalContentLoad = function (eventReason, svtObjId) {
                 var xhr = new XMLHttpRequest();
 
                 xhr.onreadystatechange = function () {
-                    if (xhr.readyState == 2) {
+                    if (xhr.readyState == 4) {
                         if (xhr.status == 200) {
                             xhr.responseType = "blob";
                         } else {
@@ -7469,11 +7389,9 @@ document.addEventListener("DOMContentLoaded", function () {
                 switch (attrib) {
                     case "phones":
                         dynamicLabel = "Внутренний номер";
-
                         break;
                     case "monitors":
                         dynamicLabel = "По ведомости ОС";
-
                         break;
                     case "ups":
                         dynamicLabel = "Год замены";
@@ -7745,6 +7663,17 @@ document.addEventListener("DOMContentLoaded", function () {
                                   '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].status + '</div>' +
                                   '</div>';
                                 break;
+                                 case "printers":
+                             elDepartment.innerHTML = '<div class="row mb-2 d-flex align-items-center text-start">' +
+                                    '<div class="col">' + count + '. ' + storageDtoes[j].departments[d].dtoes[t].model + '</div>' +
+                                    '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].placeName + '</div>' +
+                                    '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].serialNumber + '</div>' +
+                                    '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].inventaryNumber + '</div>' +
+                                    '<div class="col">' + formatedDate + '</div>' +
+                                    '<div class="col">' + getStatus(storageDtoes[j].departments[d].dtoes[t].status) + '</div>' +
+                                    '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].yearCreated + '</div>' +
+                                    '</div>';
+                            break;
                             default:
                                 if (dynamicLabel != null) {
                                     elDepartment.innerHTML = '<div class="row mb-2 d-flex align-items-center text-start">' +
@@ -8068,6 +7997,17 @@ document.addEventListener("DOMContentLoaded", function () {
                                     '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].yearCreated + '</div>' +
                                     '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].dateExploitationBegin + '</div>' +
                                     '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].status + '</div>' +
+                                    '</div>';
+                            break;
+                        case "printers":
+                             elDepartment.innerHTML = '<div class="row mb-2 d-flex align-items-center text-start">' +
+                                    '<div class="col">' + count + '. ' + storageDtoes[j].departments[d].dtoes[t].model + '</div>' +
+                                    '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].placeName + '</div>' +
+                                    '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].serialNumber + '</div>' +
+                                    '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].inventaryNumber + '</div>' +
+                                    '<div class="col">' + formatedDate + '</div>' +
+                                    '<div class="col">' + getStatus(storageDtoes[j].departments[d].dtoes[t].status) + '</div>' +
+                                    '<div class="col">' + storageDtoes[j].departments[d].dtoes[t].yearCreated + '</div>' +
                                     '</div>';
                             break;
                         default:
