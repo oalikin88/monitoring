@@ -1,0 +1,133 @@
+databaseChangeLog:
+  - changeSet:
+      id: 20260301-16
+      author: Oleg Alikin
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+          tableExists:
+            tableName: system_block
+      changes:
+        - createTable:
+            tableName: system_block
+            columns:
+              - column:
+                  name: system_block_id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: system_block_pkey
+                    nullable: false
+              - column:
+                  name: inventary_number
+                  type: VARCHAR(70)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: serial_number
+                  type: VARCHAR(70)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: status
+                  type: VARCHAR(25)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: date_exploitation_begin
+                  type: DATETIME
+              - column:
+                  name: date_upgrade
+                  type: DATETIME
+              - column:
+                  name: ip_adress
+                  type: VARCHAR(50)
+              - column:
+                  name: name_from_onec
+                  type: VARCHAR(255)
+              - column:
+                  name: number_room
+                  type: VARCHAR(150)
+              - column:
+                  name: year_created
+                  type: INT
+              - column:
+                  name: system_block_model_id
+                  type: BIGINT
+                  constraints:
+                      nullable: false
+                      foreignKeyName: system_block_model_fk
+                      referencedTableName: system_block_model
+                      referencedColumnNames: id
+              - column:
+                  name: cd_drive_id
+                  type: BIGINT
+                  constraints:
+                      foreignKeyName: system_block_cd_drive_fk
+                      referencedTableName: cd_drive_id
+                      referencedColumnNames: id
+              - column:
+                  name: cpu_id
+                  type: BIGINT
+                  constraints:
+                      foreignKeyName: system_block_cpu_fk
+                      referencedTableName: cpu
+                      referencedColumnNames: id
+              - column: 
+                  name: keyboard_id
+                  type: BIGINT
+                  constraints: 
+                      foreignKeyName: system_block_keyboard_fk
+                      referencedTableName: keyboard
+                      referencedColumnNames: id
+              - column: 
+                  name: lan_card_id
+                  type: BIGINT
+                  constraints:
+                      foreignKeyName: system_block_lan_card_fk
+                      referencedTableName: lan_card
+                      referencedColumnNames: id
+              - column:
+                  name: mother_board_id
+                  type: BIGINT
+                  constraints:
+                      foreignKeyName: system_block_motherboard_fk
+                      referencedTableName: motherboard
+                      referencedColumnNames: id
+              - column:
+                  name: mouse_id
+                  type: BIGINT
+                  constraints:
+                      foreignKeyName: system_block_mouse_fk
+                      referencedTableName: mouse
+                      referencedColumnNames: id
+              - column:
+                  name: ram_id
+                  type: BIGINT
+                  constraints:
+                      foreignKeyName: system_block_ram_fk
+                      referencedTableName: ram
+                      referencedColumnNames: id
+              - column:
+                  name: sound_card_id
+                  type: BIGINT
+                  constraints:
+                      foreignKeyName: system_block_soundcard_fk
+                      referencedTableName: sound_card
+                      referencedColumnNames: id
+              - column:
+                  name: speakers_id
+                  type: BIGINT
+                  constraints: 
+                      foreignKeyName: system_block_speakers_fk
+                      referencedTableName: speakers
+                      referencedColumnNames: id
+              - column:
+                  name: video_card_id
+                  type: BIGINT
+                  constraints:
+                      foreignKeyName: system_block_videocard_fk
+                      referencedTableName: video_card
+                      referencedColumnNames: id
+

@@ -1,0 +1,40 @@
+databaseChangeLog:
+  - changeSet:
+      id: 20260311-2
+      author: Oleg Alikin
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+          tableExists:
+            tableName: hub_model
+      changes:
+        - createTable:
+            tableName: hub_model
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: hub_model_pkey
+                    nullable: false
+              - column:
+                  name: archived
+                  type: BOOLEAN
+                  defaultValueBoolean: false
+                  constraints:
+                    nullable: false
+              - column:
+                  name: model
+                  type: VARCHAR(130)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: manufacturer_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                    foreignKeyName: hub_model_manufacturer_fk
+                    referencedTableName: hub_manufacturer
+                    referencedColumnNames: id

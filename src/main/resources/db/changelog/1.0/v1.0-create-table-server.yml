@@ -1,0 +1,80 @@
+databaseChangeLog:
+  - changeSet:
+      id: 20260301-28
+      author: Oleg Alikin
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+          tableExists:
+            tableName: server
+      changes:
+        - createTable:
+            tableName: server
+            columns:
+              - column:
+                  name: server_id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: server_pkey
+                    nullable: false
+              - column:
+                  name: inventary_number
+                  type: VARCHAR(70)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: serial_number
+                  type: VARCHAR(70)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: status
+                  type: VARCHAR(25)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: cpu_amount
+                  type: INT
+              - column:
+                  name: date_exploitation_begin
+                  type: DATETIME
+              - column:
+                  name: date_upgrade
+                  type: DATETIME
+              - column:
+                  name: ip_adress
+                  type: VARCHAR(50)
+              - column:
+                  name: name_from_onec
+                  type: VARCHAR(255)
+              - column:
+                  name: number_room
+                  type: VARCHAR(150)
+              - column:
+                  name: year_created
+                  type: INT
+              - column:
+                  name: server_model_id
+                  type: BIGINT
+                  constraints:
+                      nullable: false
+                      foreignKeyName: server_model_fk
+                      referencedTableName: system_block_model
+                      referencedColumnNames: id
+              - column:
+                  name: cpu_id
+                  type: BIGINT
+                  constraints:
+                      foreignKeyName: server_cpu_fk
+                      referencedTableName: cpu
+                      referencedColumnNames: id
+              - column:
+                  name: ram_id
+                  type: BIGINT
+                  constraints:
+                      foreignKeyName: server_ram_fk
+                      referencedTableName: ram
+                      referencedColumnNames: id
+

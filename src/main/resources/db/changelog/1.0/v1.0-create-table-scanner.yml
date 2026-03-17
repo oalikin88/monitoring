@@ -1,0 +1,59 @@
+databaseChangeLog:
+  - changeSet:
+      id: 20260301-7
+      author: Oleg Alikin
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+          tableExists:
+            tableName: scanner
+      changes:
+        - createTable:
+            tableName: scanner
+            columns:
+              - column:
+                  name: scanner_id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: scanner_pkey
+                    nullable: false
+              - column:
+                  name: inventary_number
+                  type: VARCHAR(70)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: serial_number
+                  type: VARCHAR(70)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: status
+                  type: VARCHAR(25)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: date_exploitation_begin
+                  type: DATETIME
+              - column:
+                  name: ip_adress
+                  type: VARCHAR(50)
+              - column:
+                  name: name_from_onec
+                  type: VARCHAR(255)
+              - column:
+                  name: number_room
+                  type: VARCHAR(150)
+              - column:
+                  name: year_created
+                  type: INT
+              - column:
+                  name: scanner_model_id
+                  type: BIGINT
+                  constraints:
+                      nullable: false
+                      foreignKeyName: scanner_model_fk
+                      referencedTableName: scanner_model
+                      referencedColumnNames: id

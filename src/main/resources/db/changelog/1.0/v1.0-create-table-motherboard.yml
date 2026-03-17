@@ -1,0 +1,33 @@
+databaseChangeLog:
+  - changeSet:
+      id: 20260311-10
+      author: Oleg Alikin
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+          tableExists:
+            tableName: motherboard
+      changes:
+        - createTable:
+            tableName: motherboard
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: motherboard_pkey
+                    nullable: false
+              - column:
+                  name: archived
+                  type: BOOLEAN
+                  defaultValueBoolean: false
+                  constraints:
+                    nullable: false
+              - column:
+                  name: model
+                  type: VARCHAR(130)
+                  constraints:
+                    nullable: false
+

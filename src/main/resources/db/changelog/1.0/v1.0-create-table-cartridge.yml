@@ -1,0 +1,64 @@
+databaseChangeLog:
+  - changeSet:
+      id: 20260307-10
+      author: Oleg Alikin
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+          tableExists:
+            tableName: cartridge
+      changes:
+        - createTable:
+            tableName: cartridge
+            columns:
+              - column:
+                  name: cartridge_id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: cartridge_pkey
+                    nullable: false
+              - column:
+                  name: count
+                  type: BIGINT
+              - column:
+                  name: date_end_exploitation
+                  type: DATETIME
+              - column:
+                  name: date_start_exploitation
+                  type: DATETIME
+              - column:
+                  name: item_code
+                  type: VARCHAR(30)
+              - column:
+                  name: name_material
+                  type: VARCHAR(255)
+              - column:
+                  name: use_in_printer
+                  type: BOOLEAN
+                  defaultValueBoolean: false
+                  constraints:
+                    nullable: false
+              - column:
+                  name: util
+                  type: BOOLEAN
+                  defaultValueBoolean: false
+                  constraints:
+                    nullable: false
+              - column:
+                  name: model_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                    foreignKeyName: cartridge_cartridge_model_fk
+                    referencedTableName: cartridge_model
+                    referencedColumnNames: id
+              - column:
+                  name: printer_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                    foreignKeyName: cartridge_printer_fk
+                    referencedTableName: printer
+                    referencedColumnNames: printer_id

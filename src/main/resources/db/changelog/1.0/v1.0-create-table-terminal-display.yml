@@ -1,0 +1,44 @@
+databaseChangeLog:
+  - changeSet:
+      id: 20260311-26
+      author: Oleg Alikin
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+          tableExists:
+            tableName: terminal_display
+      changes:
+        - createTable:
+            tableName: terminal_display
+            columns:
+              - column:
+                  name: terminal_display_id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: terminal_display_pkey
+                    nullable: false
+              - column:
+                  name: screen_diagonal
+                  type: DOUBLE
+                  constraints:
+                    nullable: false
+              - column:
+                  name: serial_number
+                  type: VARCHAR(25)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: status
+                  type: VARCHAR(25)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: terminal_display_model_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                    foreignKeyName: terminal_display_terminal_display_model_fk
+                    referencedTableName: terminal_display_model
+                    referencedColumnNames: id

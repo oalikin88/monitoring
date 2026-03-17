@@ -1,0 +1,68 @@
+databaseChangeLog:
+  - changeSet:
+      id: 20260307-6
+      author: Oleg Alikin
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+          tableExists:
+            tableName: ats
+      changes:
+        - createTable:
+            tableName: ats
+            columns:
+              - column:
+                  name: ats_id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: ats_pkey
+                    nullable: false
+              - column:
+                  name: inventary_number
+                  type: VARCHAR(70)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: serial_number
+                  type: VARCHAR(70)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: status
+                  type: VARCHAR(25)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: city_number_amount
+                  type: INT
+              - column:
+                  name: inner_connection_analog
+                  type: INT
+              - column:
+                  name: inner_connection_ip
+                  type: INT
+              - column:
+                  name: ip_adress
+                  type: VARCHAR(50)
+              - column:
+                  name: name_from_onec
+                  type: VARCHAR(255)
+              - column:
+                  name: number_room
+                  type: VARCHAR(150)
+              - column:
+                  name: outer_connection_type
+                  type: INT
+              - column:
+                  name: year_created
+                  type: INT
+              - column:
+                  name: ats_model_id
+                  type: BIGINT
+                  constraints:
+                      nullable: false
+                      foreignKeyName: ats_model_fk
+                      referencedTableName: ats_model
+                      referencedColumnNames: id

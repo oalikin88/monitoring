@@ -1,0 +1,36 @@
+databaseChangeLog:
+  - changeSet:
+      id: 20260307-3
+      author: Oleg Alikin
+      changes:
+        - createTable:
+            tableName: asuo_display
+            columns:
+              - column:
+                  name: asuo_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: display_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+        - addPrimaryKey:
+            tableName: asuo_display
+            columnNames: asuo_id, display_id
+            constraintName: pk_asuo_display
+        - addForeignKeyConstraint:
+            baseTableName: asuo_display
+            baseColumnNames: display_id
+            constraintName: fk_asuo_display_display
+            referencedTableName: display
+            referencedColumnNames: display_id
+            onDelete: CASCADE
+        - addForeignKeyConstraint:
+            baseTableName: asuo_display
+            baseColumnNames: asuo_id
+            constraintName: fk_asuo_display_asuo
+            referencedTableName: asuo
+            referencedColumnNames: asuo_id
+            onDelete: CASCADE

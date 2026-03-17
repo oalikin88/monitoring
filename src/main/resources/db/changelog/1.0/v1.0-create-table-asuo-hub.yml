@@ -1,0 +1,36 @@
+databaseChangeLog:
+  - changeSet:
+      id: 20260307-4
+      author: Oleg Alikin
+      changes:
+        - createTable:
+            tableName: asuo_hub
+            columns:
+              - column:
+                  name: asuo_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: hub_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+        - addPrimaryKey:
+            tableName: asuo_hub
+            columnNames: asuo_id, hub_id
+            constraintName: pk_asuo_hub
+        - addForeignKeyConstraint:
+            baseTableName: asuo_hub
+            baseColumnNames: hub_id
+            constraintName: fk_asuo_hub_hub
+            referencedTableName: hub
+            referencedColumnNames: hub_id
+            onDelete: CASCADE
+        - addForeignKeyConstraint:
+            baseTableName: asuo_hub
+            baseColumnNames: asuo_id
+            constraintName: fk_asuo_hub_asuo
+            referencedTableName: asuo
+            referencedColumnNames: asuo_id
+            onDelete: CASCADE

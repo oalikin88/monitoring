@@ -1,0 +1,43 @@
+databaseChangeLog:
+  - changeSet:
+      id: 20260311-11
+      author: Oleg Alikin
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+          tableExists:
+            tableName: object_buing
+      changes:
+        - createTable:
+            tableName: object_buing
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: object_buing_pkey
+                    nullable: false
+              - column:
+                  name: archived
+                  type: BOOLEAN
+                  defaultValueBoolean: false
+                  constraints:
+                    nullable: false
+              - column:
+                  name: contract_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                    foreignKeyName: object_buing_contract_fk
+                    referencedTableName: contract
+                    referencedColumnNames: id
+              - column:
+                  name: place_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                    foreignKeyName: object_buing_place_fk
+                    referencedTableName: place
+                    referencedColumnNames: id

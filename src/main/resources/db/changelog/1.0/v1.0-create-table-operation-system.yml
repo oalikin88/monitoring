@@ -1,0 +1,38 @@
+databaseChangeLog:
+  - changeSet:
+      id: 20260311-12
+      author: Oleg Alikin
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+          tableExists:
+            tableName: operation_system
+      changes:
+        - createTable:
+            tableName: operation_system
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: operation_system_pkey
+                    nullable: false
+              - column:
+                  name: archived
+                  type: BOOLEAN
+                  defaultValueBoolean: false
+                  constraints:
+                    nullable: false
+              - column:
+                  name: license
+                  type: BOOLEAN
+                  constraints:
+                    nullable: false
+              - column:
+                  name: model
+                  type: VARCHAR(100)
+                  constraints:
+                    nullable: false
+

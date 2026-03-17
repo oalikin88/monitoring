@@ -1,0 +1,40 @@
+databaseChangeLog:
+  - changeSet:
+      id: 20260301-22
+      author: Oleg Alikin
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+          tableExists:
+            tableName: display_model
+      changes:
+        - createTable:
+            tableName: display_model
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: display_model_pkey
+                    nullable: false
+              - column:
+                  name: archived
+                  type: BOOLEAN
+                  defaultValueBoolean: false
+                  constraints:
+                    nullable: false
+              - column:
+                  name: model
+                  type: VARCHAR(130)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: manufacturer_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                    foreignKeyName: display_model_manufacturer_fk
+                    referencedTableName: display_manufacturer
+                    referencedColumnNames: id

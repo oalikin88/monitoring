@@ -1,0 +1,41 @@
+databaseChangeLog:
+  - changeSet:
+      id: 20260311-23
+      author: Oleg Alikin
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+          tableExists:
+            tableName: systeblock_hdd
+      changes:
+        - createTable:
+            tableName: systeblock_hdd
+            columns:
+              - column:
+                  name: systeblock_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: hdd_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+        - addPrimaryKey:
+            tableName: systeblock_hdd
+            columnNames: systeblock_id, hdd_id
+            constraintName: pk_systeblock_hdd_systemblock
+        - addForeignKeyConstraint:
+            baseTableName: systeblock_hdd
+            baseColumnNames: systeblock_id
+            constraintName: fk_systeblock_hdd_systeblock
+            referencedTableName: systeblock
+            referencedColumnNames: systeblock_id
+            onDelete: CASCADE
+        - addForeignKeyConstraint:
+            baseTableName: systeblock_hdd
+            baseColumnNames: hdd_id
+            constraintName: fk_systeblock_hdd_hdd
+            referencedTableName: hdd
+            referencedColumnNames: id
+            onDelete: CASCADE
