@@ -1,0 +1,36 @@
+databaseChangeLog:
+  - changeSet:
+      id: 20260309-2
+      author: Oleg Alikin
+#      preConditions:
+#        - onFail: MARK_RAN
+#        - not:
+#          tableExists:
+#            tableName: contract
+      changes:
+        - createTable:
+            tableName: contract
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: contract_pkey
+                    nullable: false
+              - column:
+                  name: contract_number
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: date_end_contract
+                  type: DATETIME
+                  constraints:
+                    nullable: false
+              - column:
+                  name: date_start_contract
+                  type: DATETIME
+                  constraints:
+                    nullable: false

@@ -1,0 +1,40 @@
+databaseChangeLog:
+  - changeSet:
+      id: 20260301-5
+      author: Oleg Alikin
+#      preConditions:
+#        - onFail: MARK_RAN
+#        - not:
+#          tableExists:
+#            tableName: phone_model
+      changes:
+        - createTable:
+            tableName: phone_model
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: phone_model_pkey
+                    nullable: false
+              - column:
+                  name: archived
+                  type: BOOLEAN
+                  defaultValueBoolean: false
+                  constraints:
+                    nullable: false
+              - column:
+                  name: model
+                  type: VARCHAR(130)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: manufacturer_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                    foreignKeyName: phone_model_manufacturer_fk
+                    referencedTableName: phone_manufacturer
+                    referencedColumnNames: id

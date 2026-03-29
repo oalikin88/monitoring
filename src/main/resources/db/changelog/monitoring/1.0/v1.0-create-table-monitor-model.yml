@@ -1,0 +1,40 @@
+databaseChangeLog:
+  - changeSet:
+      id: 20260301-2
+      author: Oleg Alikin
+#      preConditions:
+#        - onFail: MARK_RAN
+#        - not:
+#          tableExists:
+#            tableName: monitor_model
+      changes:
+        - createTable:
+            tableName: monitor_model
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: monitor_model_pkey
+                    nullable: false
+              - column:
+                  name: archived
+                  type: BOOLEAN
+                  defaultValueBoolean: false
+                  constraints:
+                    nullable: false
+              - column:
+                  name: model
+                  type: VARCHAR(130)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: manufacturer_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                    foreignKeyName: monitor_model_manufacturer_fk
+                    referencedTableName: monitor_manufacturer
+                    referencedColumnNames: id

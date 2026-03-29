@@ -1,0 +1,32 @@
+databaseChangeLog:
+  - changeSet:
+      id: 20260309-1
+      author: Oleg Alikin
+#      preConditions:
+#        - onFail: MARK_RAN
+#        - not:
+#          tableExists:
+#            tableName: cd_drive
+      changes:
+        - createTable:
+            tableName: cd_drive
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: cd_drive_pkey
+                    nullable: false
+              - column:
+                  name: archived
+                  type: BOOLEAN
+                  defaultValueBoolean: false
+                  constraints:
+                    nullable: false
+              - column:
+                  name: model
+                  type: VARCHAR(70)
+                  constraints:
+                    nullable: false

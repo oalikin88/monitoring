@@ -1,0 +1,1816 @@
+databaseChangeLog:
+  - changeSet:
+      id: 20260324-1
+      author: Oleg Alikin
+      changes:
+        - loadData:
+            onDuplicateKeyUpdate: true
+            file: ../data/location-data.csv
+            tableName: location
+            separator: ','
+            encoding: UTF-8
+            relativeToChangelogFile: true
+            columns:
+              - column:
+                  name: name
+                  header: NAME
+  - changeSet:
+      id: 20260324-2
+      author: Oleg Alikin
+      changes:
+        - loadData:
+            onDuplicateKeyUpdate: true
+            file: ../data/contract-data.csv
+            tableName: contract
+            separator: ','
+            encoding: UTF-8
+            relativeToChangelogFile: true
+            columns:
+              - column:
+                  name: contract_number
+                  header: CONTRACT_NUMBER
+              - column:
+                  name: date_end_contract
+                  header: DATE_END_CONTRACT
+              - column:
+                  name: date_start_contract
+                  header: DATE_START_CONTRACT
+  - changeSet:
+      id: 20260324-3
+      author: Oleg Alikin
+      changes:
+        - loadData:
+            onDuplicateKeyUpdate: true
+            file: ../data/place-data.csv
+            tableName: place
+            separator: ','
+            encoding: UTF-8
+            relativeToChangelogFile: true
+            columns:
+              - column:
+                  name: archived
+                  header: ARCHIVED
+              - column:
+                  name: department
+                  header: DEPARTMENT
+              - column:
+                  name: department_code
+                  header: DEPARTMENT_CODE
+              - column:
+                  name: place_type
+                  header: PLACE_TYPE
+              - column:
+                  name: username
+                  header: USERNAME
+              - column:
+                  name: location_id
+                  header: LOCATION_ID
+  - changeSet:
+      id: 20260324-4
+      author: Oleg Alikin
+      changes:
+        - loadData:
+            onDuplicateKeyUpdate: true
+            file: ../data/object-buing-data.csv
+            tableName: object_buing
+            separator: ','
+            encoding: UTF-8
+            relativeToChangelogFile: true
+            columns:
+              - column:
+                  name: archived
+                  header: ARCHIVED
+              - column:
+                  name: contract_id
+                  header: CONTRACT_ID
+              - column:
+                  name: place_id
+                  header: PLACE_ID
+  - changeSet:
+      id: 20260324-5
+      author: Oleg Alikin
+      changes:
+        - loadData:
+            onDuplicateKeyUpdate: true
+            file: ../data/battery-type-data.csv
+            tableName: battery_type
+            separator: ','
+            encoding: UTF-8
+            relativeToChangelogFile: true
+            columns:
+              - column:
+                  name: type
+                  header: TYPE
+              - column:
+                  name: archived
+                  header: ARCHIVED
+  - changeSet:
+      id: 20260324-6
+      author: Oleg Alikin
+      changes:
+        - loadData:
+            onDuplicateKeyUpdate: true
+            file: ../data/ups-manufacturer-data.csv
+            tableName: ups_manufacturer
+            separator: ','
+            encoding: UTF-8
+            relativeToChangelogFile: true
+            columns:
+              - column:
+                  name: archived
+                  header: ARCHIVED
+              - column:
+                  name: name
+                  header: NAME
+  - changeSet:
+      id: 20260324-7
+      author: Oleg Alikin
+      changes:
+        - loadData:
+            onDuplicateKeyUpdate: true
+            file: ../data/ats-manufacturer-data.csv
+            tableName: ats_manufacturer
+            separator: ','
+            encoding: UTF-8
+            relativeToChangelogFile: true
+            columns:
+              - column:
+                  name: archived
+                  header: ARCHIVED
+              - column:
+                  name: name
+                  header: NAME
+  - changeSet:
+      id: 20260324-8
+      author: Oleg Alikin
+      changes:
+        - loadData:
+            onDuplicateKeyUpdate: true
+            file: ../data/cartridge-manufacturer-data.csv
+            tableName: cartridge_manufacturer
+            separator: ','
+            encoding: UTF-8
+            relativeToChangelogFile: true
+            columns:
+              - column:
+                  name: archived
+                  header: ARCHIVED
+              - column:
+                  name: name
+                  header: NAME
+  - changeSet:
+      id: 20260324-9
+      author: Oleg Alikin
+      changes:
+        - loadData:
+            onDuplicateKeyUpdate: true
+            file: ../data/conditioner-manufacturer-data.csv
+            tableName: conditioner_manufacturer
+            separator: ','
+            encoding: UTF-8
+            relativeToChangelogFile: true
+            columns:
+              - column:
+                  name: archived
+                  header: ARCHIVED
+              - column:
+                  name: name
+                  header: NAME
+  - changeSet:
+      id: 20260324-10
+      author: Oleg Alikin
+      changes:
+        - loadData:
+            onDuplicateKeyUpdate: true
+            file: ../data/display-manufacturer-data.csv
+            tableName: display_manufacturer
+            separator: ','
+            encoding: UTF-8
+            relativeToChangelogFile: true
+            columns:
+              - column:
+                  name: archived
+                  header: ARCHIVED
+              - column:
+                  name: name
+                  header: NAME
+  - changeSet:
+      id: 20260324-11
+      author: Oleg Alikin
+      changes:
+        - loadData:
+            onDuplicateKeyUpdate: true
+            file: ../data/fax-manufacturer-data.csv
+            tableName: fax_manufacturer
+            separator: ','
+            encoding: UTF-8
+            relativeToChangelogFile: true
+            columns:
+              - column:
+                  name: archived
+                  header: ARCHIVED
+              - column:
+                  name: name
+                  header: NAME
+  - changeSet:
+      id: 20260324-12
+      author: Oleg Alikin
+      changes:
+        - loadData:
+            onDuplicateKeyUpdate: true
+            file: ../data/hub-manufacturer-data.csv
+            tableName: hub_manufacturer
+            separator: ','
+            encoding: UTF-8
+            relativeToChangelogFile: true
+            columns:
+              - column:
+                  name: archived
+                  header: ARCHIVED
+              - column:
+                  name: name
+                  header: NAME
+  - changeSet:
+      id: 20260324-13
+      author: Oleg Alikin
+      changes:
+        - loadData:
+            onDuplicateKeyUpdate: true
+            file: ../data/infomat-manufacturer-data.csv
+            tableName: infomat_manufacturer
+            separator: ','
+            encoding: UTF-8
+            relativeToChangelogFile: true
+            columns:
+              - column:
+                  name: archived
+                  header: ARCHIVED
+              - column:
+                  name: name
+                  header: NAME
+  - changeSet:
+      id: 20260324-14
+      author: Oleg Alikin
+      changes:
+        - loadData:
+            onDuplicateKeyUpdate: true
+            file: ../data/monitor-manufacturer-data.csv
+            tableName: monitor_manufacturer
+            separator: ','
+            encoding: UTF-8
+            relativeToChangelogFile: true
+            columns:
+              - column:
+                  name: archived
+                  header: ARCHIVED
+              - column:
+                  name: name
+                  header: NAME
+  - changeSet:
+      id: 20260324-15
+      author: Oleg Alikin
+      changes:
+        - loadData:
+            onDuplicateKeyUpdate: true
+            file: ../data/phone-manufacturer-data.csv
+            tableName: phone_manufacturer
+            separator: ','
+            encoding: UTF-8
+            relativeToChangelogFile: true
+            columns:
+              - column:
+                  name: archived
+                  header: ARCHIVED
+              - column:
+                  name: name
+                  header: NAME
+  - changeSet:
+      id: 20260324-16
+      author: Oleg Alikin
+      changes:
+        - loadData:
+            onDuplicateKeyUpdate: true
+            file: ../data/printer-manufacturer-data.csv
+            tableName: printer_manufacturer
+            separator: ','
+            encoding: UTF-8
+            relativeToChangelogFile: true
+            columns:
+              - column:
+                  name: archived
+                  header: ARCHIVED
+              - column:
+                  name: name
+                  header: NAME
+  - changeSet:
+      id: 20260324-17
+      author: Oleg Alikin
+      changes:
+        - loadData:
+            onDuplicateKeyUpdate: true
+            file: ../data/terminal-sensor-manufacturer-data.csv
+            tableName: terminal_sensor_manufacturer
+            separator: ','
+            encoding: UTF-8
+            relativeToChangelogFile: true
+            columns:
+              - column:
+                  name: archived
+                  header: ARCHIVED
+              - column:
+                  name: name
+                  header: NAME
+  - changeSet:
+      id: 20260324-18
+      author: Oleg Alikin
+      changes:
+        - loadData:
+            onDuplicateKeyUpdate: true
+            file: ../data/server-manufacturer-data.csv
+            tableName: server_manufacturer
+            separator: ','
+            encoding: UTF-8
+            relativeToChangelogFile: true
+            columns:
+              - column:
+                  name: archived
+                  header: ARCHIVED
+              - column:
+                  name: name
+                  header: NAME
+  - changeSet:
+      id: 20260324-19
+      author: Oleg Alikin
+      changes:
+        - loadData:
+            onDuplicateKeyUpdate: true
+            file: ../data/terminal-ups-manufacturer-data.csv
+            tableName: ups_manufacturer
+            separator: ','
+            encoding: UTF-8
+            relativeToChangelogFile: true
+            columns:
+              - column:
+                  name: archived
+                  header: ARCHIVED
+              - column:
+                  name: name
+                  header: NAME
+  - changeSet:
+      id: 20260324-20
+      author: Oleg Alikin
+      changes:
+        - loadData:
+            onDuplicateKeyUpdate: true
+            file: ../data/router-manufacturer-data.csv
+            tableName: router_manufacturer
+            separator: ','
+            encoding: UTF-8
+            relativeToChangelogFile: true
+            columns:
+              - column:
+                  name: archived
+                  header: ARCHIVED
+              - column:
+                  name: name
+                  header: NAME
+  - changeSet:
+      id: 20260324-21
+      author: Oleg Alikin
+      changes:
+        - loadData:
+            onDuplicateKeyUpdate: true
+            file: ../data/scanner-manufacturer-data.csv
+            tableName: scanner_manufacturer
+            separator: ','
+            encoding: UTF-8
+            relativeToChangelogFile: true
+            columns:
+              - column:
+                  name: archived
+                  header: ARCHIVED
+              - column:
+                  name: name
+                  header: NAME
+  - changeSet:
+      id: 20260324-22
+      author: Oleg Alikin
+      changes:
+        - loadData:
+            onDuplicateKeyUpdate: true
+            file: ../data/switch-hub-manufacturer-data.csv
+            tableName: switch_hub_manufacturer
+            separator: ','
+            encoding: UTF-8
+            relativeToChangelogFile: true
+            columns:
+              - column:
+                  name: archived
+                  header: ARCHIVED
+              - column:
+                  name: name
+                  header: NAME
+  - changeSet:
+      id: 20260324-23
+      author: Oleg Alikin
+      changes:
+        - loadData:
+            onDuplicateKeyUpdate: true
+            file: ../data/systemblock-manufacturer-data.csv
+            tableName: system_block_manufacturer
+            separator: ','
+            encoding: UTF-8
+            relativeToChangelogFile: true
+            columns:
+              - column:
+                  name: archived
+                  header: ARCHIVED
+              - column:
+                  name: name
+                  header: NAME
+  - changeSet:
+      id: 20260324-24
+      author: Oleg Alikin
+      changes:
+        - loadData:
+            onDuplicateKeyUpdate: true
+            file: ../data/terminal-display-manufacturer-data.csv
+            tableName: terminal_display_manufacturer
+            separator: ','
+            encoding: UTF-8
+            relativeToChangelogFile: true
+            columns:
+              - column:
+                  name: archived
+                  header: ARCHIVED
+              - column:
+                  name: name
+                  header: NAME
+  - changeSet:
+      id: 20260324-25
+      author: Oleg Alikin
+      changes:
+        - loadData:
+            onDuplicateKeyUpdate: true
+            file: ../data/terminal-printer-manufacturer-data.csv
+            tableName: terminal_printer_manufacturer
+            separator: ','
+            encoding: UTF-8
+            relativeToChangelogFile: true
+            columns:
+              - column:
+                  name: archived
+                  header: ARCHIVED
+              - column:
+                  name: name
+                  header: NAME
+  - changeSet:
+      id: 20260324-27
+      author: Oleg Alikin
+      changes:
+        - loadData:
+            onDuplicateKeyUpdate: true
+            file: ../data/terminal-server-manufacturer-data.csv
+            tableName: terminal_server_manufacturer
+            separator: ','
+            encoding: UTF-8
+            relativeToChangelogFile: true
+            columns:
+              - column:
+                  name: archived
+                  header: ARCHIVED
+              - column:
+                  name: name
+                  header: NAME
+  - changeSet:
+      id: 20260326-1
+      author: Oleg Alikin
+      changes:
+        - loadData:
+            onDuplicateKeyUpdate: true
+            file: ../data/ups-model-data.csv
+            tableName: ups_model
+            separator: ','
+            encoding: UTF-8
+            relativeToChangelogFile: true
+            columns:
+              - column:
+                  name: archived
+                  header: ARCHIVED
+              - column:
+                  name: model
+                  header: MODEL
+              - column:
+                  name: battery_amount
+                  header: BATTERY_AMOUNT
+              - column:
+                  name: battery_type_id
+                  header: BATTERY_TYPE_ID
+              - column:
+                  name: manufacturer_id
+                  header: MANUFACTURER_ID
+  - changeSet:
+      id: 20260326-2
+      author: Oleg Alikin
+      changes:
+        - loadData:
+            onDuplicateKeyUpdate: true
+            file: ../data/terminal-ups-model-data.csv
+            tableName: ups_model
+            separator: ','
+            encoding: UTF-8
+            relativeToChangelogFile: true
+            columns:
+              - column:
+                  name: archived
+                  header: ARCHIVED
+              - column:
+                  name: model
+                  header: MODEL
+              - column:
+                  name: manufacturer_id
+                  header: MANUFACTURER_ID
+  - changeSet:
+      id: 20260326-3
+      author: Oleg Alikin
+      changes:
+        - loadData:
+            onDuplicateKeyUpdate: true
+            file: ../data/terminal-server-model-data.csv
+            tableName: terminal_server_model
+            separator: ','
+            encoding: UTF-8
+            relativeToChangelogFile: true
+            columns:
+              - column:
+                  name: archived
+                  header: ARCHIVED
+              - column:
+                  name: model
+                  header: MODEL
+              - column:
+                  name: manufacturer_id
+                  header: MANUFACTURER_ID
+  - changeSet:
+      id: 20260326-4
+      author: Oleg Alikin
+      changes:
+        - loadData:
+            onDuplicateKeyUpdate: true
+            file: ../data/terminal-sensor-model-data.csv
+            tableName: terminal_sensor_model
+            separator: ','
+            encoding: UTF-8
+            relativeToChangelogFile: true
+            columns:
+              - column:
+                  name: archived
+                  header: ARCHIVED
+              - column:
+                  name: model
+                  header: MODEL
+              - column:
+                  name: manufacturer_id
+                  header: MANUFACTURER_ID
+  - changeSet:
+      id: 20260326-5
+      author: Oleg Alikin
+      changes:
+        - loadData:
+            onDuplicateKeyUpdate: true
+            file: ../data/terminal-printer-model-data.csv
+            tableName: terminal_printer_model
+            separator: ','
+            encoding: UTF-8
+            relativeToChangelogFile: true
+            columns:
+              - column:
+                  name: archived
+                  header: ARCHIVED
+              - column:
+                  name: model
+                  header: MODEL
+              - column:
+                  name: manufacturer_id
+                  header: MANUFACTURER_ID
+  - changeSet:
+      id: 20260326-6
+      author: Oleg Alikin
+      changes:
+        - loadData:
+            onDuplicateKeyUpdate: true
+            file: ../data/terminal-model-data.csv
+            tableName: terminal_model
+            separator: ','
+            encoding: UTF-8
+            relativeToChangelogFile: true
+            columns:
+              - column:
+                  name: archived
+                  header: ARCHIVED
+              - column:
+                  name: model
+                  header: MODEL
+              - column:
+                  name: manufacturer_id
+                  header: MANUFACTURER_ID
+  - changeSet:
+      id: 20260326-7
+      author: Oleg Alikin
+      changes:
+        - loadData:
+            onDuplicateKeyUpdate: true
+            file: ../data/terminal-display-model-data.csv
+            tableName: terminal_display_model
+            separator: ','
+            encoding: UTF-8
+            relativeToChangelogFile: true
+            columns:
+              - column:
+                  name: archived
+                  header: ARCHIVED
+              - column:
+                  name: model
+                  header: MODEL
+              - column:
+                  name: manufacturer_id
+                  header: MANUFACTURER_ID
+  - changeSet:
+      id: 20260326-8
+      author: Oleg Alikin
+      changes:
+        - loadData:
+            onDuplicateKeyUpdate: true
+            file: ../data/systemblock-model-data.csv
+            tableName: system_block_model
+            separator: ','
+            encoding: UTF-8
+            relativeToChangelogFile: true
+            columns:
+              - column:
+                  name: archived
+                  header: ARCHIVED
+              - column:
+                  name: model
+                  header: MODEL
+              - column:
+                  name: manufacturer_id
+                  header: MANUFACTURER_ID
+  - changeSet:
+      id: 20260326-9
+      author: Oleg Alikin
+      changes:
+        - loadData:
+            onDuplicateKeyUpdate: true
+            file: ../data/switch-hub-model-data.csv
+            tableName: switch_hub_model
+            separator: ','
+            encoding: UTF-8
+            relativeToChangelogFile: true
+            columns:
+              - column:
+                  name: archived
+                  header: ARCHIVED
+              - column:
+                  name: model
+                  header: MODEL
+              - column:
+                  name: manufacturer_id
+                  header: MANUFACTURER_ID
+  - changeSet:
+      id: 20260326-10
+      author: Oleg Alikin
+      changes:
+        - loadData:
+            onDuplicateKeyUpdate: true
+            file: ../data/sub-display-model-data.csv
+            tableName: sub-display_model
+            separator: ','
+            encoding: UTF-8
+            relativeToChangelogFile: true
+            columns:
+              - column:
+                  name: archived
+                  header: ARCHIVED
+              - column:
+                  name: model
+                  header: MODEL
+  - changeSet:
+      id: 20260326-11
+      author: Oleg Alikin
+      changes:
+        - loadData:
+            onDuplicateKeyUpdate: true
+            file: ../data/server-model-data.csv
+            tableName: server_model
+            separator: ','
+            encoding: UTF-8
+            relativeToChangelogFile: true
+            columns:
+              - column:
+                  name: archived
+                  header: ARCHIVED
+              - column:
+                  name: model
+                  header: MODEL
+              - column:
+                  name: manufacturer_id
+                  header: MANUFACTURER_ID
+  - changeSet:
+      id: 20260326-12
+      author: Oleg Alikin
+      changes:
+        - loadData:
+            onDuplicateKeyUpdate: true
+            file: ../data/scanner-model-data.csv
+            tableName: scanner_model
+            separator: ','
+            encoding: UTF-8
+            relativeToChangelogFile: true
+            columns:
+              - column:
+                  name: archived
+                  header: ARCHIVED
+              - column:
+                  name: model
+                  header: MODEL
+              - column:
+                  name: manufacturer_id
+                  header: MANUFACTURER_ID
+  - changeSet:
+      id: 20260326-13
+      author: Oleg Alikin
+      changes:
+        - loadData:
+            onDuplicateKeyUpdate: true
+            file: ../data/router-model-data.csv
+            tableName: router_model
+            separator: ','
+            encoding: UTF-8
+            relativeToChangelogFile: true
+            columns:
+              - column:
+                  name: archived
+                  header: ARCHIVED
+              - column:
+                  name: model
+                  header: MODEL
+              - column:
+                  name: manufacturer_id
+                  header: MANUFACTURER_ID
+  - changeSet:
+      id: 20260326-14
+      author: Oleg Alikin
+      changes:
+        - loadData:
+            onDuplicateKeyUpdate: true
+            file: ../data/printer-model-data.csv
+            tableName: printer_model
+            separator: ','
+            encoding: UTF-8
+            relativeToChangelogFile: true
+            columns:
+              - column:
+                  name: archived
+                  header: ARCHIVED
+              - column:
+                  name: model
+                  header: MODEL
+              - column:
+                  name: print_color_type
+                  header: PRINT_COLOR_TYPE
+              - column:
+                  name: print_format
+                  header: PRINT_FORMAT
+              - column:
+                  name: print_speed
+                  header: PRINT_SPEED
+              - column:
+                  name: manufacturer_id
+                  header: MANUFACTURER_ID
+  - changeSet:
+      id: 20260326-15
+      author: Oleg Alikin
+      changes:
+        - loadData:
+            onDuplicateKeyUpdate: true
+            file: ../data/phone-model-data.csv
+            tableName: phone_model
+            separator: ','
+            encoding: UTF-8
+            relativeToChangelogFile: true
+            columns:
+              - column:
+                  name: archived
+                  header: ARCHIVED
+              - column:
+                  name: model
+                  header: MODEL
+              - column:
+                  name: manufacturer_id
+                  header: MANUFACTURER_ID
+  - changeSet:
+      id: 20260326-16
+      author: Oleg Alikin
+      changes:
+        - loadData:
+            onDuplicateKeyUpdate: true
+            file: ../data/monitor-model-data.csv
+            tableName: monitor_model
+            separator: ','
+            encoding: UTF-8
+            relativeToChangelogFile: true
+            columns:
+              - column:
+                  name: archived
+                  header: ARCHIVED
+              - column:
+                  name: model
+                  header: MODEL
+              - column:
+                  name: manufacturer_id
+                  header: MANUFACTURER_ID
+  - changeSet:
+      id: 20260326-17
+      author: Oleg Alikin
+      changes:
+        - loadData:
+            onDuplicateKeyUpdate: true
+            file: ../data/infomat-model-data.csv
+            tableName: infomat_model
+            separator: ','
+            encoding: UTF-8
+            relativeToChangelogFile: true
+            columns:
+              - column:
+                  name: archived
+                  header: ARCHIVED
+              - column:
+                  name: model
+                  header: MODEL
+              - column:
+                  name: manufacturer_id
+                  header: MANUFACTURER_ID
+  - changeSet:
+      id: 20260326-18
+      author: Oleg Alikin
+      changes:
+        - loadData:
+            onDuplicateKeyUpdate: true
+            file: ../data/hub-model-data.csv
+            tableName: hub_model
+            separator: ','
+            encoding: UTF-8
+            relativeToChangelogFile: true
+            columns:
+              - column:
+                  name: archived
+                  header: ARCHIVED
+              - column:
+                  name: model
+                  header: MODEL
+              - column:
+                  name: manufacturer_id
+                  header: MANUFACTURER_ID
+  - changeSet:
+      id: 20260326-19
+      author: Oleg Alikin
+      changes:
+        - loadData:
+            onDuplicateKeyUpdate: true
+            file: ../data/fax-model-data.csv
+            tableName: fax_model
+            separator: ','
+            encoding: UTF-8
+            relativeToChangelogFile: true
+            columns:
+              - column:
+                  name: archived
+                  header: ARCHIVED
+              - column:
+                  name: model
+                  header: MODEL
+              - column:
+                  name: manufacturer_id
+                  header: MANUFACTURER_ID
+  - changeSet:
+      id: 20260326-20
+      author: Oleg Alikin
+      changes:
+        - loadData:
+            onDuplicateKeyUpdate: true
+            file: ../data/display-model-data.csv
+            tableName: display_model
+            separator: ','
+            encoding: UTF-8
+            relativeToChangelogFile: true
+            columns:
+              - column:
+                  name: archived
+                  header: ARCHIVED
+              - column:
+                  name: model
+                  header: MODEL
+              - column:
+                  name: manufacturer_id
+                  header: MANUFACTURER_ID
+  - changeSet:
+      id: 20260326-21
+      author: Oleg Alikin
+      changes:
+        - loadData:
+            onDuplicateKeyUpdate: true
+            file: ../data/conditioner-model-data.csv
+            tableName: conditioner_model
+            separator: ','
+            encoding: UTF-8
+            relativeToChangelogFile: true
+            columns:
+              - column:
+                  name: archived
+                  header: ARCHIVED
+              - column:
+                  name: model
+                  header: MODEL
+              - column:
+                  name: manufacturer_id
+                  header: MANUFACTURER_ID
+  - changeSet:
+      id: 20260326-22
+      author: Oleg Alikin
+      changes:
+        - loadData:
+            onDuplicateKeyUpdate: true
+            file: ../data/cartridge-model-data.csv
+            tableName: cartridge_model
+            separator: ','
+            encoding: UTF-8
+            relativeToChangelogFile: true
+            columns:
+              - column:
+                  name: archived
+                  header: ARCHIVED
+              - column:
+                  name: model
+                  header: MODEL
+              - column:
+                  name: default_number_print_page
+                  header: DEFAULT_NUMBER_PRINT_PAGE
+              - column:
+                  name: type
+                  header: TYPE
+              - column:
+                  name: manufacturer_id
+                  header: MANUFACTURER_ID
+  - changeSet:
+      id: 20260326-23
+      author: Oleg Alikin
+      changes:
+        - loadData:
+            onDuplicateKeyUpdate: true
+            file: ../data/ats-model-data.csv
+            tableName: ats_model
+            separator: ','
+            encoding: UTF-8
+            relativeToChangelogFile: true
+            columns:
+              - column:
+                  name: archived
+                  header: ARCHIVED
+              - column:
+                  name: model
+                  header: MODEL
+              - column:
+                  name: manufacturer_id
+                  header: MANUFACTURER_ID
+  - changeSet:
+      id: 20260326-24
+      author: Oleg Alikin
+      changes:
+        - loadData:
+            onDuplicateKeyUpdate: true
+            file: ../data/program-software-data.csv
+            tableName: program_software
+            separator: ','
+            encoding: UTF-8
+            relativeToChangelogFile: true
+            columns:
+              - column:
+                  name: archived
+                  header: ARCHIVED
+              - column:
+                  name: name
+                  header: NAME
+              - column:
+                  name: version
+                  header: VERSION
+  - changeSet:
+      id: 20260326-25
+      author: Oleg Alikin
+      changes:
+        - loadData:
+            onDuplicateKeyUpdate: true
+            file: ../data/asuo-data.csv
+            tableName: asuo
+            separator: ','
+            encoding: UTF-8
+            relativeToChangelogFile: true
+            columns:
+              - column:
+                  name: inventary_number
+                  header: INVENTARY_NUMBER
+              - column:
+                  name: status
+                  header: STATUS
+              - column:
+                  name: date_exploitation_begin
+                  header: DATE_EXPLOITATION_BEGIN
+              - column:
+                  name: name_from_onec
+                  header: NAME_FROM_ONEC
+              - column:
+                  name: sub_display_amount
+                  header: SUB_DISPLAY_AMOUNT
+              - column:
+                  name: year_created
+                  header: YEAR_CREATED
+              - column:
+                  name: program_software_id
+                  header: PROGRAM_SOFTWARE_ID
+              - column:
+                  name: sub_display_model_id
+                  header: SUB_DISPLAY_MODEL_ID
+  - changeSet:
+      id: 20260326-26
+      author: Oleg Alikin
+      changes:
+        - loadData:
+            onDuplicateKeyUpdate: true
+            file: ../data/asuo-hub-data.csv
+            tableName: asuo_hub
+            separator: ','
+            encoding: UTF-8
+            relativeToChangelogFile: true
+            columns:
+              - column:
+                  name: asuo_id
+                  header: ASUO_ID
+              - column:
+                  name: hub_id
+                  header: HUB_ID
+  - changeSet:
+      id: 20260326-27
+      author: Oleg Alikin
+      changes:
+        - loadData:
+            onDuplicateKeyUpdate: true
+            file: ../data/asuo-terminal-data.csv
+            tableName: asuo_terminal
+            separator: ','
+            encoding: UTF-8
+            relativeToChangelogFile: true
+            columns:
+              - column:
+                  name: asuo_id
+                  header: ASUO_ID
+              - column:
+                  name: terminal_id
+                  header: TERMINAL_ID
+  - changeSet:
+      id: 20260326-28
+      author: Oleg Alikin
+      changes:
+        - loadData:
+            onDuplicateKeyUpdate: true
+            file: ../data/ats-data.csv
+            tableName: ats
+            separator: ','
+            encoding: UTF-8
+            relativeToChangelogFile: true
+            columns:
+              - column:
+                  name: inventary_number
+                  header: INVENTARY_NUMBER
+              - column:
+                  name: serial_number
+                  header: SERIAL_NUMBER
+              - column:
+                  name: status
+                  header: STATUS
+              - column:
+                  name: city_number_amount
+                  header: CITY_NUMBER_AMOUNT
+              - column:
+                  name: inner_connection_analog
+                  header: INNER_CONNECTION_ANALOG
+              - column:
+                  name: inner_connection_ip
+                  header: INNER_CONNECTION_IP
+              - column:
+                  name: ip_adress
+                  header: IP_ADRESS
+              - column:
+                  name: name_from_onec
+                  header: NAME_FROM_ONEC
+              - column:
+                  name: number_room
+                  header: NUMBER_ROOM
+              - column:
+                  name: outer_connection_type
+                  header: OUTER_CONNECTION_TYPE
+              - column:
+                  name: year_created
+                  header: YEAR_CREATED
+              - column:
+                  name: ats_model_id
+                  header: ATS_MODEL_ID
+  - changeSet:
+      id: 20260326-29
+      author: Oleg Alikin
+      changes:
+        - loadData:
+            onDuplicateKeyUpdate: true
+            file: ../data/printer-data.csv
+            tableName: printer
+            separator: ','
+            encoding: UTF-8
+            relativeToChangelogFile: true
+            columns:
+              - column:
+                  name: inventary_number
+                  header: INVENTARY_NUMBER
+              - column:
+                  name: serial_number
+                  header: SERIAL_NUMBER
+              - column:
+                  name: status
+                  header: STATUS
+              - column:
+                  name: date_exploitation_begin
+                  header: DATE_EXPLOITATION_BEGIN
+              - column:
+                  name: name_frome_onec
+                  header: NAME_FROME_ONEC
+              - column:
+                  name: number_room
+                  header: NUMBER_ROOM
+              - column:
+                  name: year_created
+                  header: YEAR_CREATED
+              - column:
+                  name: printer_model_id
+                  header: PRINTER_MODEL_ID
+  - changeSet:
+      id: 20260326-30
+      author: Oleg Alikin
+      changes:
+        - loadData:
+            onDuplicateKeyUpdate: true
+            file: ../data/cartridge-data.csv
+            tableName: cartridge
+            separator: ','
+            encoding: UTF-8
+            relativeToChangelogFile: true
+            columns:
+              - column:
+                  name: count
+                  header: COUNT
+              - column:
+                  name: date_end_exploitation
+                  header: DATE_END_EXPLOITATION
+              - column:
+                  name: date_start_exploitation
+                  header: DATE_START_EXPLOITATION
+              - column:
+                  name: item_code
+                  header: ITEM_CODE
+              - column:
+                  name: name_material
+                  header: NAME_MATERIAL
+              - column:
+                  name: use_in_printer
+                  header: USE_IN_PRINTER
+              - column:
+                  name: util
+                  header: UTIL
+              - column:
+                  name: model_id
+                  header: MODEL_ID
+              - column:
+                  name: printer_id
+                  header: PRINTER_ID
+  - changeSet:
+      id: 20260326-31
+      author: Oleg Alikin
+      changes:
+        - loadData:
+            onDuplicateKeyUpdate: true
+            file: ../data/ram-data.csv
+            tableName: ram
+            separator: ','
+            encoding: UTF-8
+            relativeToChangelogFile: true
+            columns:
+              - column:
+                  name: archived
+                  header: ARCHIVED
+              - column:
+                  name: model
+                  header: MODEL
+              - column:
+                  name: capacity
+                  header: CAPACITY
+  - changeSet:
+      id: 20260326-32
+      author: Oleg Alikin
+      changes:
+        - loadData:
+            onDuplicateKeyUpdate: true
+            file: ../data/cpu-data.csv
+            tableName: cpu
+            separator: ','
+            encoding: UTF-8
+            relativeToChangelogFile: true
+            columns:
+              - column:
+                  name: archived
+                  header: ARCHIVED
+              - column:
+                  name: model
+                  header: MODEL
+  - changeSet:
+      id: 20260326-33
+      author: Oleg Alikin
+      changes:
+        - loadData:
+            onDuplicateKeyUpdate: true
+            file: ../data/router-data.csv
+            tableName: router
+            separator: ','
+            encoding: UTF-8
+            relativeToChangelogFile: true
+            columns:
+              - column:
+                  name: inventary_number
+                  header: INVENTARY_NUMBER
+              - column:
+                  name: serial_number
+                  header: SERIAL_NUMBER
+              - column:
+                  name: status
+                  header: STATUS
+              - column:
+                  name: ip_adress_inner
+                  header: IP_ADRESS_INNER
+              - column:
+                  name: ip_adress_outer
+                  header: IP_ADRESS_OUTER
+              - column:
+                  name: port_amount
+                  header: PORT_AMOUNT
+              - column:
+                  name: name_from_onec
+                  header: NAME_FROM_ONEC
+              - column:
+                  name: number_room
+                  header: NUMBER_ROOM
+              - column:
+                  name: year_created
+                  header: YEAR_CREATED
+              - column:
+                  name: router_model_id
+                  header: ROUTER_MODEL_ID
+  - changeSet:
+      id: 20260326-34
+      author: Oleg Alikin
+      changes:
+        - loadData:
+            onDuplicateKeyUpdate: true
+            file: ../data/scanner-data.csv
+            tableName: scanner
+            separator: ','
+            encoding: UTF-8
+            relativeToChangelogFile: true
+            columns:
+              - column:
+                  name: inventary_number
+                  header: INVENTARY_NUMBER
+              - column:
+                  name: serial_number
+                  header: SERIAL_NUMBER
+              - column:
+                  name: status
+                  header: STATUS
+              - column:
+                  name: date_exploitation_begin
+                  header: DATE_EXPLOITATION_BEGIN
+              - column:
+                  name: ip_adress
+                  header: IP_ADRESS
+              - column:
+                  name: name_from_onec
+                  header: NAME_FROM_ONEC
+              - column:
+                  name: number_room
+                  header: NUMBER_ROOM
+              - column:
+                  name: year_created
+                  header: YEAR_CREATED
+              - column:
+                  name: scanner_model_id
+                  header: SCANNER_MODEL_ID
+  - changeSet:
+      id: 20260326-35
+      author: Oleg Alikin
+      changes:
+        - loadData:
+            onDuplicateKeyUpdate: true
+            file: ../data/server-data.csv
+            tableName: server
+            separator: ','
+            encoding: UTF-8
+            relativeToChangelogFile: true
+            columns:
+              - column:
+                  name: inventary_number
+                  header: INVENTARY_NUMBER
+              - column:
+                  name: serial_number
+                  header: SERIAL_NUMBER
+              - column:
+                  name: status
+                  header: STATUS
+              - column:
+                  name: cpu_amount
+                  header: CPU_AMOUNT
+              - column:
+                  name: date_exploitation_begin
+                  header: DATE_EXPLOITATION_BEGIN
+              - column:
+                  name: date_upgrade
+                  header: DATE_UPGRADE
+              - column:
+                  name: ip_adress
+                  header: IP_ADRESS
+              - column:
+                  name: name_from_onec
+                  header: NAME_FROM_ONEC
+              - column:
+                  name: number_room
+                  header: NUMBER_ROOM
+              - column:
+                  name: year_created
+                  header: YEAR_CREATED
+              - column:
+                  name: server_model_id
+                  header: SERVER_MODEL_ID
+              - column:
+                  name: cpu_id
+                  header: CPU_ID
+              - column:
+                  name: ram_id
+                  header: RAM_ID
+  - changeSet:
+      id: 20260326-36
+      author: Oleg Alikin
+      changes:
+        - loadData:
+            onDuplicateKeyUpdate: true
+            file: ../data/sound-card-data.csv
+            tableName: sound_card
+            separator: ','
+            encoding: UTF-8
+            relativeToChangelogFile: true
+            columns:
+              - column:
+                  name: archived
+                  header: ARCHIVED
+              - column:
+                  name: model
+                  header: MODEL
+  - changeSet:
+      id: 20260326-37
+      author: Oleg Alikin
+      changes:
+        - loadData:
+            onDuplicateKeyUpdate: true
+            file: ../data/speakers-data.csv
+            tableName: speakers
+            separator: ','
+            encoding: UTF-8
+            relativeToChangelogFile: true
+            columns:
+              - column:
+                  name: archived
+                  header: ARCHIVED
+              - column:
+                  name: model
+                  header: MODEL
+  - changeSet:
+      id: 20260326-38
+      author: Oleg Alikin
+      changes:
+        - loadData:
+            onDuplicateKeyUpdate: true
+            file: ../data/switch-hub-data.csv
+            tableName: switch_hub
+            separator: ','
+            encoding: UTF-8
+            relativeToChangelogFile: true
+            columns:
+              - column:
+                  name: inventary_number
+                  header: INVENTARY_NUMBER
+              - column:
+                  name: serial_number
+                  header: SERIAL_NUMBER
+              - column:
+                  name: status
+                  header: STATUS
+              - column:
+                  name: date_exploitation_begin
+                  header: DATE_EXPLOITATION_BEGIN
+              - column:
+                  name: name_from_onec
+                  header: NAME_FROM_ONEC
+              - column:
+                  name: port_amount
+                  header: PORT_AMOUNT
+              - column:
+                  name: switch_hub_type
+                  header: SWITCH_HUB_TYPE
+              - column:
+                  name: year_created
+                  header: YEAR_CREATED
+              - column:
+                  name: switch_hub_model_id
+                  header: SWITCH_HUB_MODEL_ID
+  - changeSet:
+      id: 20260326-39
+      author: Oleg Alikin
+      changes:
+        - loadData:
+            onDuplicateKeyUpdate: true
+            file: ../data/cd-drive-data.csv
+            tableName: cd_drive
+            separator: ','
+            encoding: UTF-8
+            relativeToChangelogFile: true
+            columns:
+              - column:
+                  name: archived
+                  header: ARCHIVED
+              - column:
+                  name: model
+                  header: MODEL
+  - changeSet:
+      id: 20260326-40
+      author: Oleg Alikin
+      changes:
+        - loadData:
+            onDuplicateKeyUpdate: true
+            file: ../data/keyboard-data.csv
+            tableName: keyboard
+            separator: ','
+            encoding: UTF-8
+            relativeToChangelogFile: true
+            columns:
+              - column:
+                  name: archived
+                  header: ARCHIVED
+              - column:
+                  name: model
+                  header: MODEL
+  - changeSet:
+      id: 20260326-41
+      author: Oleg Alikin
+      changes:
+        - loadData:
+            onDuplicateKeyUpdate: true
+            file: ../data/lan-card-data.csv
+            tableName: lan_card
+            separator: ','
+            encoding: UTF-8
+            relativeToChangelogFile: true
+            columns:
+              - column:
+                  name: archived
+                  header: ARCHIVED
+              - column:
+                  name: model
+                  header: MODEL
+  - changeSet:
+      id: 20260326-42
+      author: Oleg Alikin
+      changes:
+        - loadData:
+            onDuplicateKeyUpdate: true
+            file: ../data/motherboard-data.csv
+            tableName: motherboard
+            separator: ','
+            encoding: UTF-8
+            relativeToChangelogFile: true
+            columns:
+              - column:
+                  name: archived
+                  header: ARCHIVED
+              - column:
+                  name: model
+                  header: MODEL
+  - changeSet:
+      id: 20260326-43
+      author: Oleg Alikin
+      changes:
+        - loadData:
+            onDuplicateKeyUpdate: true
+            file: ../data/mouse-data.csv
+            tableName: mouse
+            separator: ','
+            encoding: UTF-8
+            relativeToChangelogFile: true
+            columns:
+              - column:
+                  name: archived
+                  header: ARCHIVED
+              - column:
+                  name: model
+                  header: MODEL
+  - changeSet:
+      id: 20260326-44
+      author: Oleg Alikin
+      changes:
+        - loadData:
+            onDuplicateKeyUpdate: true
+            file: ../data/videocard-data.csv
+            tableName: videocard
+            separator: ','
+            encoding: UTF-8
+            relativeToChangelogFile: true
+            columns:
+              - column:
+                  name: archived
+                  header: ARCHIVED
+              - column:
+                  name: model
+                  header: MODEL
+  - changeSet:
+      id: 20260326-45
+      author: Oleg Alikin
+      changes:
+        - loadData:
+            onDuplicateKeyUpdate: true
+            file: ../data/systemblock-data.csv
+            tableName: system_block
+            separator: ','
+            encoding: UTF-8
+            relativeToChangelogFile: true
+            columns:
+              - column:
+                  name: inventary_number
+                  header: INVENTARY_NUMBER
+              - column:
+                  name: serial_number
+                  header: SERIAL_NUMBER
+              - column:
+                  name: status
+                  header: STATUS
+              - column:
+                  name: date_exploitation_begin
+                  header: DATE_EXPLOITATION_BEGIN
+              - column:
+                  name: date_upgrade
+                  header: DATE_UPGRADE
+              - column:
+                  name: ip_adress
+                  header: IP_ADRESS
+              - column:
+                  name: name_from_onec
+                  header: NAME_FROM_ONEC
+              - column:
+                  name: number_room
+                  header: NUMBER_ROOM
+              - column:
+                  name: year_created
+                  header: YEAR_CREATED
+              - column:
+                  name: system_block_model_id
+                  header: SYSTEM_BLOCK_MODEL_ID
+              - column:
+                  name: cd_drive_id
+                  header: CD_DRIVE_ID
+              - column:
+                  name: cpu_id
+                  header: CPU_ID
+              - column:
+                  name: keyboard_id
+                  header: KEYBOARD_ID
+              - column:
+                  name: lan_card_id
+                  header: LAN_CARD_ID
+              - column:
+                  name: mother_board_id
+                  header: MOTHER_BOARD_ID
+              - column:
+                  name: mouse_id
+                  header: MOUSE_ID
+              - column:
+                  name: ram_id
+                  header: RAM_ID
+              - column:
+                  name: sound_card_id
+                  header: SOUND_CARD_ID
+              - column:
+                  name: speakers_id
+                  header: SPEAKERS_ID
+              - column:
+                  name: video_card_id
+                  header: VIDEO_CARD_ID
+  - changeSet:
+      id: 20260326-46
+      author: Oleg Alikin
+      changes:
+        - loadData:
+            onDuplicateKeyUpdate: true
+            file: ../data/terminal-display-data.csv
+            tableName: terminal_display
+            separator: ','
+            encoding: UTF-8
+            relativeToChangelogFile: true
+            columns:
+              - column:
+                  name: screen_diagonal
+                  header: SCREEN_DIAGONAL
+              - column:
+                  name: serial_number
+                  header: SERIAL_NUMBER
+              - column:
+                  name: status
+                  header: STATUS
+              - column:
+                  name: terminal_display_model_id
+                  header: TERMINAL_DISPLAY_MODEL_ID
+  - changeSet:
+      id: 20260326-47
+      author: Oleg Alikin
+      changes:
+        - loadData:
+            onDuplicateKeyUpdate: true
+            file: ../data/terminal-printer-data.csv
+            tableName: terminal_printer
+            separator: ','
+            encoding: UTF-8
+            relativeToChangelogFile: true
+            columns:
+              - column:
+                  name: serial_number
+                  header: SERIAL_NUMBER
+              - column:
+                  name: status
+                  header: STATUS
+              - column:
+                  name: terminal_printer_model_id
+                  header: TERMINAL_PRINTER_MODEL_ID
+  - changeSet:
+      id: 20260326-48
+      author: Oleg Alikin
+      changes:
+        - loadData:
+            onDuplicateKeyUpdate: true
+            file: ../data/terminal-sensor-data.csv
+            tableName: terminal_sensor
+            separator: ','
+            encoding: UTF-8
+            relativeToChangelogFile: true
+            columns:
+              - column:
+                  name: serial_number
+                  header: SERIAL_NUMBER
+              - column:
+                  name: status
+                  header: STATUS
+              - column:
+                  name: terminal_sensor_model_id
+                  header: TERMINAL_SENSOR_MODEL_ID
+  - changeSet:
+      id: 20260326-49
+      author: Oleg Alikin
+      changes:
+        - loadData:
+            onDuplicateKeyUpdate: true
+            file: ../data/terminal-server-data.csv
+            tableName: terminal_server
+            separator: ','
+            encoding: UTF-8
+            relativeToChangelogFile: true
+            columns:
+              - column:
+                  name: serial_number
+                  header: SERIAL_NUMBER
+              - column:
+                  name: status
+                  header: STATUS
+              - column:
+                  name: terminal_server_model_id
+                  header: TERMINAL_SERVER_MODEL_ID
+  - changeSet:
+      id: 20260326-50
+      author: Oleg Alikin
+      changes:
+        - loadData:
+            onDuplicateKeyUpdate: true
+            file: ../data/terminal-ups-data.csv
+            tableName: terminal_ups
+            separator: ','
+            encoding: UTF-8
+            relativeToChangelogFile: true
+            columns:
+              - column:
+                  name: serial_number
+                  header: SERIAL_NUMBER
+              - column:
+                  name: status
+                  header: STATUS
+              - column:
+                  name: terminal_ups_model_id
+                  header: TERMINAL_UPS_MODEL_ID
+  - changeSet:
+      id: 20260326-51
+      author: Oleg Alikin
+      changes:
+        - loadData:
+            onDuplicateKeyUpdate: true
+            file: ../data/terminal-data.csv
+            tableName: terminal
+            separator: ','
+            encoding: UTF-8
+            relativeToChangelogFile: true
+            columns:
+              - column:
+                  name: inventary_number
+                  header: INVENTARY_NUMBER
+              - column:
+                  name: serial_number
+                  header: SERIAL_NUMBER
+              - column:
+                  name: status
+                  header: STATUS
+              - column:
+                  name: terminal_display_id
+                  header: TERMINAL_DISPLAY_ID
+              - column:
+                  name: terminal_model_id
+                  header: TERMINAL_MODEL_ID
+              - column:
+                  name: terminal_printer_id
+                  header: TERMINAL_PRINTER_ID
+              - column:
+                  name: terminal_sensor_id
+                  header: TERMINAL_SENSOR_ID
+              - column:
+                  name: terminal_server_id
+                  header: TERMINAL_SERVER_ID
+              - column:
+                  name: terminal_ups_id
+                  header: TERMINAL_UPS_ID
+  - changeSet:
+      id: 20260326-52
+      author: Oleg Alikin
+      changes:
+        - loadData:
+            onDuplicateKeyUpdate: true
+            file: ../data/ups-data.csv
+            tableName: ups
+            separator: ','
+            encoding: UTF-8
+            relativeToChangelogFile: true
+            columns:
+              - column:
+                  name: inventary_number
+                  header: INVENTARY_NUMBER
+              - column:
+                  name: serial_number
+                  header: SERIAL_NUMBER
+              - column:
+                  name: status
+                  header: STATUS
+              - column:
+                  name: exploitation_begin
+                  header: EXPLOITATION_BEGIN
+              - column:
+                  name: name_frome_onec
+                  header: NAME_FROME_ONEC
+              - column:
+                  name: number_room
+                  header: NUMBER_ROOM
+              - column:
+                  name: year_created
+                  header: YEAR_CREATED
+              - column:
+                  name: year_replacement
+                  header: YEAR_REPLACEMENT
+              - column:
+                  name: ups_type
+                  header: UPS_TYPE
+              - column:
+                  name: ups_model_id
+                  header: UPS_MODEL_ID

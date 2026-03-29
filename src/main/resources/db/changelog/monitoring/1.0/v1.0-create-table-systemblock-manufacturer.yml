@@ -1,0 +1,32 @@
+databaseChangeLog:
+  - changeSet:
+      id: 20260301-18
+      author: Oleg Alikin
+#      preConditions:
+#        - onFail: MARK_RAN
+#        - not:
+#          tableExists:
+#            tableName: system_block_manufacturer
+      changes:
+        - createTable:
+            tableName: system_block_manufacturer
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: system_block_manufacturer_pkey
+                    nullable: false
+              - column:
+                  name: archived
+                  type: BOOLEAN
+                  defaultValueBoolean: false
+                  constraints:
+                    nullable: false
+              - column:
+                  name: name
+                  type: VARCHAR(30)
+                  constraints:
+                    nullable: false

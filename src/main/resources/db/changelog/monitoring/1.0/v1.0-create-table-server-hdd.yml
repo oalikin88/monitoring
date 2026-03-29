@@ -1,0 +1,41 @@
+databaseChangeLog:
+  - changeSet:
+      id: 20260311-15
+      author: Oleg Alikin
+#      preConditions:
+#        - onFail: MARK_RAN
+#        - not:
+#          tableExists:
+#            tableName: server_hdd
+      changes:
+        - createTable:
+            tableName: server_hdd
+            columns:
+              - column:
+                  name: server_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: hdd_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+        - addPrimaryKey:
+            tableName: server_hdd
+            columnNames: server_id, hdd_id
+            constraintName: pk_server_hdd_server
+        - addForeignKeyConstraint:
+            baseTableName: server_hdd
+            baseColumnNames: server_id
+            constraintName: fk_server_hdd_server
+            referencedTableName: server
+            referencedColumnNames: server_id
+            onDelete: CASCADE
+        - addForeignKeyConstraint:
+            baseTableName: server_hdd
+            baseColumnNames: hdd_id
+            constraintName: fk_server_hdd_hdd
+            referencedTableName: hdd
+            referencedColumnNames: id
+            onDelete: CASCADE

@@ -1,0 +1,41 @@
+databaseChangeLog:
+  - changeSet:
+      id: 20260311-24
+      author: Oleg Alikin
+#      preConditions:
+#        - onFail: MARK_RAN
+#        - not:
+#          tableExists:
+#            tableName: systemblock_operation_system
+      changes:
+        - createTable:
+            tableName: systemblock_operation_system
+            columns:
+              - column:
+                  name: system_block_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: operation_system_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+        - addPrimaryKey:
+            tableName: systemblock_operation_system
+            columnNames: system_block_id, operation_system_id
+            constraintName: pk_system_block_operation_system_systemblock
+        - addForeignKeyConstraint:
+            baseTableName: systemblock_operation_system
+            baseColumnNames: system_block_id
+            constraintName: fk_systemblock_operation_system_systemblock
+            referencedTableName: system_block
+            referencedColumnNames: system_block_id
+            onDelete: CASCADE
+        - addForeignKeyConstraint:
+            baseTableName: systemblock_operation_system
+            baseColumnNames: operation_system_id
+            constraintName: fk_system_block_operation_system_operation_system
+            referencedTableName: operation_system
+            referencedColumnNames: id
+            onDelete: CASCADE
