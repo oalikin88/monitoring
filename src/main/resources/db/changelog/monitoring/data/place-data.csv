@@ -101,3 +101,4 @@ id,archived,department,department_code,place_type,username,location_id
 100,0,"Отдел кадров","100-434",EMPLOYEE,"Тихонова Изольда Павловна",1
 101,0,"Отдел ИТ","200-400",SERVERROOM,"Коротков Демьян Егорович",3
 102,0,"Отдел ИТ","200-400",OFFICEEQUIPMENT,"Блинова Ульяна Романовна",1
+103,0,"Отдел ИТ","200-400",SERVERROOM,"Степанова Аида Юрьевна",5

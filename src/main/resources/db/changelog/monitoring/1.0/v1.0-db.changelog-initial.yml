@@ -159,7 +159,7 @@ databaseChangeLog:
             type: VARCHAR(255)
         - column:
             name: outer_connection_type
-            type: INT
+            type: VARCHAR(15)
         - column:
             constraints:
               nullable: false
@@ -195,6 +195,7 @@ databaseChangeLog:
               nullable: false
             name: archived
             type: BIT(1)
+            defaultValueNumeric: 0
         - column:
             name: name
             type: VARCHAR(255)
@@ -217,6 +218,7 @@ databaseChangeLog:
               nullable: false
             name: archived
             type: BIT(1)
+            defaultValueNumeric: 0
         - column:
             name: model
             type: VARCHAR(255)
@@ -242,6 +244,7 @@ databaseChangeLog:
               nullable: false
             name: archived
             type: BIT(1)
+            defaultValueNumeric: 0
         - column:
             name: type
             type: VARCHAR(255)
@@ -272,11 +275,13 @@ databaseChangeLog:
               nullable: false
             name: use_in_printer
             type: BIT(1)
+            defaultValueNumeric: 0
         - column:
             constraints:
               nullable: false
             name: util
             type: BIT(1)
+            defaultValueNumeric: 0
         - column:
             constraints:
               nullable: false
@@ -310,6 +315,7 @@ databaseChangeLog:
               nullable: false
             name: archived
             type: BIT(1)
+            defaultValueNumeric: 0
         - column:
             name: name
             type: VARCHAR(255)
@@ -332,6 +338,7 @@ databaseChangeLog:
               nullable: false
             name: archived
             type: BIT(1)
+            defaultValueNumeric: 0
         - column:
             name: model
             type: VARCHAR(255)
@@ -386,6 +393,7 @@ databaseChangeLog:
               nullable: false
             name: archived
             type: BIT(1)
+            defaultValueNumeric: 0
         - column:
             name: model
             type: VARCHAR(255)
@@ -416,6 +424,7 @@ databaseChangeLog:
               nullable: false
             name: have_pomp
             type: BIT(1)
+            defaultValueNumeric: 0
         - column:
             name: name_from_onec
             type: VARCHAR(255)
@@ -432,11 +441,13 @@ databaseChangeLog:
               nullable: false
             name: split_system
             type: BIT(1)
+            defaultValueNumeric: 0
         - column:
             constraints:
               nullable: false
             name: winter_kit
             type: BIT(1)
+            defaultValueNumeric: 0
         - column:
             constraints:
               nullable: false
@@ -472,6 +483,7 @@ databaseChangeLog:
               nullable: false
             name: archived
             type: BIT(1)
+            defaultValueNumeric: 0
         - column:
             name: name
             type: VARCHAR(255)
@@ -494,6 +506,7 @@ databaseChangeLog:
               nullable: false
             name: archived
             type: BIT(1)
+            defaultValueNumeric: 0
         - column:
             name: model
             type: VARCHAR(255)
@@ -546,6 +559,7 @@ databaseChangeLog:
               nullable: false
             name: archived
             type: BIT(1)
+            defaultValueNumeric: 0
         - column:
             name: model
             type: VARCHAR(255)
@@ -554,11 +568,13 @@ databaseChangeLog:
               nullable: false
             name: core
             type: INT
+            defaultValueNumeric: 0
         - column:
             constraints:
               nullable: false
             name: freq
             type: INT
+            defaultValueNumeric: 0
         tableName: cpu
 - changeSet:
     id: 1774982987884-20
@@ -605,6 +621,7 @@ databaseChangeLog:
               nullable: false
             name: archived
             type: BIT(1)
+            defaultValueNumeric: 0
         - column:
             name: name
             type: VARCHAR(255)
@@ -627,6 +644,7 @@ databaseChangeLog:
               nullable: false
             name: archived
             type: BIT(1)
+            defaultValueNumeric: 0
         - column:
             name: model
             type: VARCHAR(255)
@@ -696,6 +714,7 @@ databaseChangeLog:
               nullable: false
             name: archived
             type: BIT(1)
+            defaultValueNumeric: 0
         - column:
             name: name
             type: VARCHAR(255)
@@ -718,6 +737,7 @@ databaseChangeLog:
               nullable: false
             name: archived
             type: BIT(1)
+            defaultValueNumeric: 0
         - column:
             name: model
             type: VARCHAR(255)
@@ -743,6 +763,7 @@ databaseChangeLog:
               nullable: false
             name: archived
             type: BIT(1)
+            defaultValueNumeric: 0
         - column:
             name: model
             type: VARCHAR(255)
@@ -822,6 +843,7 @@ databaseChangeLog:
               nullable: false
             name: archived
             type: BIT(1)
+            defaultValueNumeric: 0
         - column:
             name: name
             type: VARCHAR(255)
@@ -844,6 +866,7 @@ databaseChangeLog:
               nullable: false
             name: archived
             type: BIT(1)
+            defaultValueNumeric: 0
         - column:
             name: model
             type: VARCHAR(255)
@@ -907,6 +930,7 @@ databaseChangeLog:
               nullable: false
             name: archived
             type: BIT(1)
+            defaultValueNumeric: 0
         - column:
             name: name
             type: VARCHAR(255)
@@ -929,6 +953,7 @@ databaseChangeLog:
               nullable: false
             name: archived
             type: BIT(1)
+            defaultValueNumeric: 0
         - column:
             name: model
             type: VARCHAR(255)
@@ -954,6 +979,7 @@ databaseChangeLog:
               nullable: false
             name: archived
             type: BIT(1)
+            defaultValueNumeric: 0
         - column:
             name: model
             type: VARCHAR(255)
@@ -976,6 +1002,7 @@ databaseChangeLog:
               nullable: false
             name: archived
             type: BIT(1)
+            defaultValueNumeric: 0
         - column:
             name: model
             type: VARCHAR(255)
@@ -1059,6 +1086,7 @@ databaseChangeLog:
               nullable: false
             name: archived
             type: BIT(1)
+            defaultValueNumeric: 0
         - column:
             name: name
             type: VARCHAR(255)
@@ -1081,6 +1109,7 @@ databaseChangeLog:
               nullable: false
             name: archived
             type: BIT(1)
+            defaultValueNumeric: 0
         - column:
             name: model
             type: VARCHAR(255)
@@ -1106,6 +1135,7 @@ databaseChangeLog:
               nullable: false
             name: archived
             type: BIT(1)
+            defaultValueNumeric: 0
         - column:
             name: model
             type: VARCHAR(255)
@@ -1128,6 +1158,7 @@ databaseChangeLog:
               nullable: false
             name: archived
             type: BIT(1)
+            defaultValueNumeric: 0
         - column:
             name: model
             type: VARCHAR(255)
@@ -1150,6 +1181,7 @@ databaseChangeLog:
               nullable: false
             name: archived
             type: BIT(1)
+            defaultValueNumeric: 0
         - column:
             constraints:
               nullable: false
@@ -1177,11 +1209,13 @@ databaseChangeLog:
               nullable: false
             name: archived
             type: BIT(1)
+            defaultValueNumeric: 0
         - column:
             constraints:
               nullable: false
             name: license
             type: BIT(1)
+            defaultValueNumeric: 0
         - column:
             name: model
             type: VARCHAR(255)
@@ -1248,6 +1282,7 @@ databaseChangeLog:
               nullable: false
             name: archived
             type: BIT(1)
+            defaultValueNumeric: 0
         - column:
             name: name
             type: VARCHAR(255)
@@ -1270,6 +1305,7 @@ databaseChangeLog:
               nullable: false
             name: archived
             type: BIT(1)
+            defaultValueNumeric: 0
         - column:
             name: model
             type: VARCHAR(255)
@@ -1295,6 +1331,7 @@ databaseChangeLog:
               nullable: false
             name: archived
             type: BIT(1)
+            defaultValueNumeric: 0
         - column:
             name: department
             type: VARCHAR(255)
@@ -1372,6 +1409,7 @@ databaseChangeLog:
               nullable: false
             name: archived
             type: BIT(1)
+            defaultValueNumeric: 0
         - column:
             name: name
             type: VARCHAR(255)
@@ -1394,6 +1432,7 @@ databaseChangeLog:
               nullable: false
             name: archived
             type: BIT(1)
+            defaultValueNumeric: 0
         - column:
             name: model
             type: VARCHAR(255)
@@ -1408,6 +1447,7 @@ databaseChangeLog:
               nullable: false
             name: print_speed
             type: INT
+            defaultValueNumeric: 0
         - column:
             name: manufacturer_id
             type: BIGINT
@@ -1430,6 +1470,7 @@ databaseChangeLog:
               nullable: false
             name: archived
             type: BIT(1)
+            defaultValueNumeric: 0
         - column:
             name: name
             type: VARCHAR(255)
@@ -1457,6 +1498,7 @@ databaseChangeLog:
               nullable: false
             name: archived
             type: BIT(1)
+            defaultValueNumeric: 0
         - column:
             name: model
             type: VARCHAR(255)
@@ -1559,6 +1601,7 @@ databaseChangeLog:
               nullable: false
             name: archived
             type: BIT(1)
+            defaultValueNumeric: 0
         - column:
             name: name
             type: VARCHAR(255)
@@ -1581,6 +1624,7 @@ databaseChangeLog:
               nullable: false
             name: archived
             type: BIT(1)
+            defaultValueNumeric: 0
         - column:
             name: model
             type: VARCHAR(255)
@@ -1650,6 +1694,7 @@ databaseChangeLog:
               nullable: false
             name: archived
             type: BIT(1)
+            defaultValueNumeric: 0
         - column:
             name: name
             type: VARCHAR(255)
@@ -1672,6 +1717,7 @@ databaseChangeLog:
               nullable: false
             name: archived
             type: BIT(1)
+            defaultValueNumeric: 0
         - column:
             name: model
             type: VARCHAR(255)
@@ -1774,6 +1820,7 @@ databaseChangeLog:
               nullable: false
             name: archived
             type: BIT(1)
+            defaultValueNumeric: 0
         - column:
             name: name
             type: VARCHAR(255)
@@ -1796,6 +1843,7 @@ databaseChangeLog:
               nullable: false
             name: archived
             type: BIT(1)
+            defaultValueNumeric: 0
         - column:
             name: model
             type: VARCHAR(255)
@@ -1840,6 +1888,7 @@ databaseChangeLog:
               nullable: false
             name: archived
             type: BIT(1)
+            defaultValueNumeric: 0
         - column:
             name: model
             type: VARCHAR(255)
@@ -1862,6 +1911,7 @@ databaseChangeLog:
               nullable: false
             name: archived
             type: BIT(1)
+            defaultValueNumeric: 0
         - column:
             name: model
             type: VARCHAR(255)
@@ -1884,6 +1934,7 @@ databaseChangeLog:
               nullable: false
             name: archived
             type: BIT(1)
+            defaultValueNumeric: 0
         - column:
             name: model
             type: VARCHAR(255)
@@ -1916,7 +1967,7 @@ databaseChangeLog:
             type: INT
         - column:
             name: switch_hub_type
-            type: INT
+            type: VARCHAR(30)
         - column:
             constraints:
               nullable: false
@@ -1952,6 +2003,7 @@ databaseChangeLog:
               nullable: false
             name: archived
             type: BIT(1)
+            defaultValueNumeric: 0
         - column:
             name: name
             type: VARCHAR(255)
@@ -1974,6 +2026,7 @@ databaseChangeLog:
               nullable: false
             name: archived
             type: BIT(1)
+            defaultValueNumeric: 0
         - column:
             name: model
             type: VARCHAR(255)
@@ -2076,6 +2129,7 @@ databaseChangeLog:
               nullable: false
             name: archived
             type: BIT(1)
+            defaultValueNumeric: 0
         - column:
             name: name
             type: VARCHAR(255)
@@ -2098,6 +2152,7 @@ databaseChangeLog:
               nullable: false
             name: archived
             type: BIT(1)
+            defaultValueNumeric: 0
         - column:
             name: model
             type: VARCHAR(255)
@@ -2201,7 +2256,7 @@ databaseChangeLog:
             type: VARCHAR(255)
         - column:
             name: status
-            type: INT
+            type: VARCHAR(255)
         - column:
             constraints:
               nullable: false
@@ -2232,6 +2287,7 @@ databaseChangeLog:
               nullable: false
             name: archived
             type: BIT(1)
+            defaultValueNumeric: 0
         - column:
             name: name
             type: VARCHAR(255)
@@ -2254,6 +2310,7 @@ databaseChangeLog:
               nullable: false
             name: archived
             type: BIT(1)
+            defaultValueNumeric: 0
         - column:
             name: model
             type: VARCHAR(255)
@@ -2279,6 +2336,7 @@ databaseChangeLog:
               nullable: false
             name: archived
             type: BIT(1)
+            defaultValueNumeric: 0
         - column:
             name: name
             type: VARCHAR(255)
@@ -2301,6 +2359,7 @@ databaseChangeLog:
               nullable: false
             name: archived
             type: BIT(1)
+            defaultValueNumeric: 0
         - column:
             name: model
             type: VARCHAR(255)
@@ -2319,7 +2378,7 @@ databaseChangeLog:
             type: VARCHAR(255)
         - column:
             name: status
-            type: INT
+            type: VARCHAR(255)
         - column:
             constraints:
               nullable: false
@@ -2348,6 +2407,7 @@ databaseChangeLog:
               nullable: false
             name: archived
             type: BIT(1)
+            defaultValueNumeric: 0
         - column:
             name: name
             type: VARCHAR(255)
@@ -2370,6 +2430,7 @@ databaseChangeLog:
               nullable: false
             name: archived
             type: BIT(1)
+            defaultValueNumeric: 0
         - column:
             name: model
             type: VARCHAR(255)
@@ -2388,7 +2449,7 @@ databaseChangeLog:
             type: VARCHAR(255)
         - column:
             name: status
-            type: INT
+            type: VARCHAR(255)
         - column:
             constraints:
               nullable: false
@@ -2417,6 +2478,7 @@ databaseChangeLog:
               nullable: false
             name: archived
             type: BIT(1)
+            defaultValueNumeric: 0
         - column:
             name: name
             type: VARCHAR(255)
@@ -2439,6 +2501,7 @@ databaseChangeLog:
               nullable: false
             name: archived
             type: BIT(1)
+            defaultValueNumeric: 0
         - column:
             name: model
             type: VARCHAR(255)
@@ -2457,7 +2520,7 @@ databaseChangeLog:
             type: VARCHAR(255)
         - column:
             name: status
-            type: INT
+            type: VARCHAR(255)
         - column:
             constraints:
               nullable: false
@@ -2486,6 +2549,7 @@ databaseChangeLog:
               nullable: false
             name: archived
             type: BIT(1)
+            defaultValueNumeric: 0
         - column:
             name: name
             type: VARCHAR(255)
@@ -2508,6 +2572,7 @@ databaseChangeLog:
               nullable: false
             name: archived
             type: BIT(1)
+            defaultValueNumeric: 0
         - column:
             name: model
             type: VARCHAR(255)
@@ -2526,7 +2591,7 @@ databaseChangeLog:
             type: VARCHAR(255)
         - column:
             name: status
-            type: INT
+            type: VARCHAR(50)
         - column:
             constraints:
               nullable: false
@@ -2557,6 +2622,7 @@ databaseChangeLog:
               nullable: false
             name: archived
             type: BIT(1)
+            defaultValueNumeric: 0
         - column:
             name: name
             type: VARCHAR(255)
@@ -2579,6 +2645,7 @@ databaseChangeLog:
               nullable: false
             name: archived
             type: BIT(1)
+            defaultValueNumeric: 0
         - column:
             name: model
             type: VARCHAR(255)
@@ -2647,7 +2714,7 @@ databaseChangeLog:
             type: VARCHAR(255)
         - column:
             name: ups_type
-            type: INT
+            type: VARCHAR(50)
         - column:
             constraints:
               nullable: false
@@ -2688,6 +2755,7 @@ databaseChangeLog:
               nullable: false
             name: archived
             type: BIT(1)
+            defaultValueNumeric: 0
         - column:
             name: name
             type: VARCHAR(255)
@@ -2710,6 +2778,7 @@ databaseChangeLog:
               nullable: false
             name: archived
             type: BIT(1)
+            defaultValueNumeric: 0
         - column:
             name: model
             type: VARCHAR(255)
@@ -2745,6 +2814,7 @@ databaseChangeLog:
               nullable: false
             name: archived
             type: BIT(1)
+            defaultValueNumeric: 0
         - column:
             name: model
             type: VARCHAR(255)

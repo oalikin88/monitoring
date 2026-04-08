@@ -1,3 +1,3 @@
 ats_id,inventary_number,serial_number,status,city_number_amount,inner_connection_analog,inner_connection_ip,ip_adress,name_from_onec,number_room,outer_connection_type,year_created,ats_model_id
-1,110FV333PQ,BK20LG50032L,OK,250,150,200,"192.168.1.122","АТС","Серверная",1
-1,110FV223PQ,BK20LG51132L,OK,250,150,200,"192.168.1.123","АТС","Серверная",2
+507,110FV333PQ,BK20LG50032L,OK,250,150,200,"192.168.1.122","АТС","Серверная","SIP",2022,1
+508,110FV223PQ,BK20LG51132L,OK,250,150,200,"192.168.1.123","АТС","Серверная","SIP",2022,2

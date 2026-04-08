@@ -7,12 +7,13 @@ package ru.gov.sfr.aos.monitoring.ats;
 import java.io.Serializable;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.ManyToOne;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.validation.constraints.NotNull;
 import ru.gov.sfr.aos.monitoring.dictionaries.OuterConnectionType;
-import ru.gov.sfr.aos.monitoring.dictionaries.Status;
 import ru.gov.sfr.aos.monitoring.svtobject.ObjectBuingWithSerialAndInventary;
 
 /**
@@ -28,6 +29,7 @@ public class Ats extends ObjectBuingWithSerialAndInventary implements Serializab
     private String nameFromOneC;
     private String numberRoom;
     private int cityNumberAmount;
+     @Enumerated(EnumType.STRING)
     private OuterConnectionType outerConnectionType;
     private int innerConnectionIp;
     private int innerConnectionAnalog; 

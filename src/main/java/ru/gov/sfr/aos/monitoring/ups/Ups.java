@@ -35,6 +35,7 @@ public class Ups extends ObjectBuingWithSerialAndInventary implements Serializab
     private String serialNumber;
     private int yearCreated;
     private int yearReplacement;
+    @Enumerated(EnumType.STRING)
     private UpsType upsType;
     private Date dateExploitationBegin;
     private String numberRoom;
