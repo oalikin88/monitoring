@@ -1,0 +1,7 @@
+id,department_id,name,surname,patronymic,username,phone,email
+1,1,Мария,Иванова,Александровна,mariaIv,7556,masha@gov.ru
+2,1,Елизавета,Петрова,Сергеевна,lisaP,7555,petrova@gov.ru
+3,2,Аркадий,Аркадьев,Аркадьевич,arkad,1224,arkad@gov.ru
+4,3,Елена,Журавлёва,Анатольевна,lenaG,2233,lenaG@.gov.ru
+5,4,Кристина,Потапова,Владимировна,krisP,2832,krisP@.gov.ru
+6,5,Олег,Аликин,Сергеевич,oalikin,3933,oalikin@gov.ru

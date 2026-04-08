@@ -1,0 +1,47 @@
+version: '3.8'
+
+services:
+  # База данных для 1-го сервиса
+  db-monitoring:
+    image: mysql:8.0
+    environment:
+      MYSQL_DATABASE: monitoring
+      MYSQL_ROOT_PASSWORD: root
+    ports:
+      - "3306:3306"
+
+  # База данных для 2-го сервиса
+  db-second:
+    image: postgres:15 # или mysql
+    environment:
+      POSTGRES_DB: second_db
+      POSTGRES_PASSWORD: root
+    ports:
+      - "5433:5432"
+
+  # Первый сервис (Monitoring)
+  monitoring-service:
+    build: ./monitoring-project # путь к папке проекта
+    depends_on:
+      - db-monitoring
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://db-monitoring:3306/monitoring
+      - SPRING_LIQUIBASE_ENABLED=true
+    ports:
+      - "8081:8081"
+
+  # Второй сервис
+  second-service:
+    build: ./second-project
+    depends_on:
+      - db-second
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db-second:5432/second_db
+    ports:
+      - "8082:8082"
+
+  # Третий сервис (без БД)
+  third-service:
+    build: ./third-project
+    ports:
+      - "8083:8083"
