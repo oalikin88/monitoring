@@ -77,7 +77,9 @@ Controller → Service → Repository → Database
 Для запуска проекта одной командой:
 
 ```bash
+clone https://github.com/oalikin88/monitoring.git
+cd ./monitoring
 docker compose up --build
 Приложение будет доступно по адресу:
-http://localhost:8080
+http://localhost:8081/phones
 
