@@ -185,7 +185,7 @@
                     <driver>com.mysql.cj.jdbc.Driver</driver>
                     <url>jdbc:mysql://localhost:3306/monitoring</url>
                     <username>root</username>
-                    <password>qwerty1234</password>
+                    <password>1Hodosok321</password>
                     <referenceUrl>hibernate:spring:com.example.model?dialect=org.hibernate.dialect.MySQLDialect</referenceUrl>
                 </configuration>
                 <dependencies>
