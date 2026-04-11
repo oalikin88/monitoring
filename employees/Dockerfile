@@ -1,8 +1,9 @@
 FROM maven:3.8.4-openjdk-17 AS build
 WORKDIR /app
-COPY pom.xml .
+COPY employees/pom.xml .
 RUN mvn dependency:go-offline -B
-COPY src ./src
+COPY employees/pom.xml .
+COPY employees/src ./src
 RUN mvn clean package -DskipTests
 
 
