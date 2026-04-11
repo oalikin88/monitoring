@@ -1,0 +1,2294 @@
+databaseChangeLog:
+- changeSet:
+    id: load-data-location
+    author: auto-generated
+    changes:
+    - loadData:
+        tableName: location
+        file: ../data/location-data.csv
+        relativeToChangelogFile: true
+        columns:
+        - column:
+            header: id
+            name: id
+        - column:
+            header: name
+            name: name
+        quotchar: '"'
+- changeSet:
+    id: load-data-contract
+    author: auto-generated
+    changes:
+    - loadData:
+        tableName: contract
+        file: ../data/contract-data.csv
+        relativeToChangelogFile: true
+        columns:
+        - column:
+            header: id
+            name: id
+        - column:
+            header: contract_number
+            name: contract_number
+        - column:
+            header: date_end_contract
+            name: date_end_contract
+            type: STRING
+        - column:
+            header: date_start_contract
+            name: date_start_contract
+            type: STRING
+        quotchar: '"'
+- changeSet:
+    id: load-data-place
+    author: auto-generated
+    changes:
+    - loadData:
+        tableName: place
+        file: ../data/place-data.csv
+        relativeToChangelogFile: true
+        columns:
+        - column:
+            header: id
+            name: id
+        - column:
+            header: archived
+            name: archived
+        - column:
+            header: department
+            name: department
+        - column:
+            header: department_code
+            name: department_code
+        - column:
+            header: place_type
+            name: place_type
+        - column:
+            header: username
+            name: username
+        - column:
+            header: location_id
+            name: location_id
+        quotchar: '"'
+- changeSet:
+    id: load-data-object_buing
+    author: auto-generated
+    changes:
+    - loadData:
+        tableName: object_buing
+        file: ../data/object-buing-data.csv
+        relativeToChangelogFile: true
+        columns:
+        - column:
+            header: id
+            name: id
+        - column:
+            header: archived
+            name: archived
+        - column:
+            header: contract_id
+            name: contract_id
+        - column:
+            header: place_id
+            name: place_id
+        quotchar: '"'
+- changeSet:
+    id: load-data-terminal_ups_manufacturer
+    author: auto-generated
+    changes:
+    - loadData:
+        tableName: terminal_ups_manufacturer
+        file: ../data/terminal-ups-manufacturer-data.csv
+        relativeToChangelogFile: true
+        columns:
+        - column:
+            header: id
+            name: id
+        - column:
+            header: archived
+            name: archived
+        - column:
+            header: name
+            name: name
+        quotchar: '"'
+- changeSet:
+    id: load-data-terminal_ups_model
+    author: auto-generated
+    changes:
+    - loadData:
+        tableName: terminal_ups_model
+        file: ../data/terminal-ups-model-data.csv
+        relativeToChangelogFile: true
+        columns:
+        - column:
+            header: id
+            name: id
+        - column:
+            header: archived
+            name: archived
+        - column:
+            header: model
+            name: model
+        - column:
+            header: manufacturer_id
+            name: manufacturer_id
+        quotchar: '"'
+- changeSet:
+    id: load-data-terminal_ups
+    author: auto-generated
+    changes:
+    - loadData:
+        tableName: terminal_ups
+        file: ../data/terminal-ups-data.csv
+        relativeToChangelogFile: true
+        columns:
+        - column:
+            header: terminal_ups_id
+            name: terminal_ups_id
+        - column:
+            header: serial_number
+            name: serial_number
+        - column:
+            header: status
+            name: status
+            type: STRING
+        - column:
+            header: terminal_ups_model_id
+            name: terminal_ups_model_id
+        quotchar: '"'
+- changeSet:
+    id: load-data-sub_display_model
+    author: auto-generated
+    changes:
+    - loadData:
+        tableName: sub_display_model
+        file: ../data/sub-display-model-data.csv
+        relativeToChangelogFile: true
+        columns:
+        - column:
+            header: id
+            name: id
+        - column:
+            header: archived
+            name: archived
+        - column:
+            header: model
+            name: model
+        quotchar: '"'
+- changeSet:
+    id: load-data-terminal_sensor_manufacturer
+    author: auto-generated
+    changes:
+    - loadData:
+        tableName: terminal_sensor_manufacturer
+        file: ../data/terminal-sensor-manufacturer-data.csv
+        relativeToChangelogFile: true
+        columns:
+        - column:
+            header: id
+            name: id
+        - column:
+            header: archived
+            name: archived
+        - column:
+            header: name
+            name: name
+        quotchar: '"'
+- changeSet:
+    id: load-data-terminal_sensor_model
+    author: auto-generated
+    changes:
+    - loadData:
+        tableName: terminal_sensor_model
+        file: ../data/terminal-sensor-model-data.csv
+        relativeToChangelogFile: true
+        columns:
+        - column:
+            header: id
+            name: id
+        - column:
+            header: archived
+            name: archived
+        - column:
+            header: model
+            name: model
+        - column:
+            header: manufacturer_id
+            name: manufacturer_id
+        quotchar: '"'
+- changeSet:
+    id: load-data-terminal_sensor
+    author: auto-generated
+    changes:
+    - loadData:
+        tableName: terminal_sensor
+        file: ../data/terminal-sensor-data.csv
+        relativeToChangelogFile: true
+        columns:
+        - column:
+            header: terminal_sensor_id
+            name: terminal_sensor_id
+        - column:
+            header: serial_number
+            name: serial_number
+        - column:
+            header: status
+            name: status
+        - column:
+            header: terminal_sensor_model_id
+            name: terminal_sensor_model_id
+        quotchar: '"'
+- changeSet:
+    id: load-data-terminal_server_manufacturer
+    author: auto-generated
+    changes:
+    - loadData:
+        tableName: terminal_server_manufacturer
+        file: ../data/terminal-server-manufacturer-data.csv
+        relativeToChangelogFile: true
+        columns:
+        - column:
+            header: id
+            name: id
+        - column:
+            header: archived
+            name: archived
+        - column:
+            header: name
+            name: name
+        quotchar: '"'
+- changeSet:
+    id: load-data-terminal_server_model
+    author: auto-generated
+    changes:
+    - loadData:
+        tableName: terminal_server_model
+        file: ../data/terminal-server-model-data.csv
+        relativeToChangelogFile: true
+        columns:
+        - column:
+            header: id
+            name: id
+        - column:
+            header: archived
+            name: archived
+        - column:
+            header: model
+            name: model
+        - column:
+            header: manufacturer_id
+            name: manufacturer_id
+        quotchar: '"'
+- changeSet:
+    id: load-data-terminal_server
+    author: auto-generated
+    changes:
+    - loadData:
+        tableName: terminal_server
+        file: ../data/terminal-server-data.csv
+        relativeToChangelogFile: true
+        columns:
+        - column:
+            header: terminal_server_id
+            name: terminal_server_id
+        - column:
+            header: serial_number
+            name: serial_number
+        - column:
+            header: status
+            name: status
+        - column:
+            header: terminal_server_model_id
+            name: terminal_server_model_id
+        quotchar: '"'
+- changeSet:
+    id: load-data-terminal_printer_manufacturer
+    author: auto-generated
+    changes:
+    - loadData:
+        tableName: terminal_printer_manufacturer
+        file: ../data/terminal-printer-manufacturer-data.csv
+        relativeToChangelogFile: true
+        columns:
+        - column:
+            header: id
+            name: id
+        - column:
+            header: archived
+            name: archived
+        - column:
+            header: name
+            name: name
+        quotchar: '"'
+- changeSet:
+    id: load-data-terminal_printer_model
+    author: auto-generated
+    changes:
+    - loadData:
+        tableName: terminal_printer_model
+        file: ../data/terminal-printer-model-data.csv
+        relativeToChangelogFile: true
+        columns:
+        - column:
+            header: id
+            name: id
+        - column:
+            header: archived
+            name: archived
+        - column:
+            header: model
+            name: model
+        - column:
+            header: manufacturer_id
+            name: manufacturer_id
+        quotchar: '"'
+- changeSet:
+    id: load-data-terminal_printer
+    author: auto-generated
+    changes:
+    - loadData:
+        tableName: terminal_printer
+        file: ../data/terminal-printer-data.csv
+        relativeToChangelogFile: true
+        columns:
+        - column:
+            header: terminal_printer_id
+            name: terminal_printer_id
+        - column:
+            header: serial_number
+            name: serial_number
+        - column:
+            header: status
+            name: status
+        - column:
+            header: terminal_printer_model_id
+            name: terminal_printer_model_id
+        quotchar: '"'
+- changeSet:
+    id: load-data-terminal_display_manufacturer
+    author: auto-generated
+    changes:
+    - loadData:
+        tableName: terminal_display_manufacturer
+        file: ../data/terminal-display-manufacturer-data.csv
+        relativeToChangelogFile: true
+        columns:
+        - column:
+            header: id
+            name: id
+        - column:
+            header: archived
+            name: archived
+        - column:
+            header: name
+            name: name
+        quotchar: '"'
+- changeSet:
+    id: load-data-terminal_display_model
+    author: auto-generated
+    changes:
+    - loadData:
+        tableName: terminal_display_model
+        file: ../data/terminal-display-model-data.csv
+        relativeToChangelogFile: true
+        columns:
+        - column:
+            header: id
+            name: id
+        - column:
+            header: archived
+            name: archived
+        - column:
+            header: model
+            name: model
+        - column:
+            header: manufacturer_id
+            name: manufacturer_id
+        quotchar: '"'
+- changeSet:
+    id: load-data-terminal_display
+    author: auto-generated
+    changes:
+    - loadData:
+        tableName: terminal_display
+        file: ../data/terminal-display-data.csv
+        relativeToChangelogFile: true
+        columns:
+        - column:
+            header: terminal_display_id
+            name: terminal_display_id
+        - column:
+            header: screen_diagonal
+            name: screen_diagonal
+        - column:
+            header: serial_number
+            name: serial_number
+        - column:
+            header: status
+            name: status
+        - column:
+            header: terminal_display_model_id
+            name: terminal_display_model_id
+        quotchar: '"'
+- changeSet:
+    id: load-data-terminal_manufacturer
+    author: auto-generated
+    changes:
+    - loadData:
+        tableName: terminal_manufacturer
+        file: ../data/terminal-manufacturer-data.csv
+        relativeToChangelogFile: true
+        columns:
+        - column:
+            header: id
+            name: id
+        - column:
+            header: archived
+            name: archived
+        - column:
+            header: name
+            name: name
+        quotchar: '"'
+- changeSet:
+    id: load-data-terminal_model
+    author: auto-generated
+    changes:
+    - loadData:
+        tableName: terminal_model
+        file: ../data/terminal-model-data.csv
+        relativeToChangelogFile: true
+        columns:
+        - column:
+            header: id
+            name: id
+        - column:
+            header: archived
+            name: archived
+        - column:
+            header: model
+            name: model
+        - column:
+            header: manufacturer_id
+            name: manufacturer_id
+        quotchar: '"'
+- changeSet:
+    id: load-data-terminal
+    author: auto-generated
+    changes:
+    - loadData:
+        tableName: terminal
+        file: ../data/terminal-data.csv
+        relativeToChangelogFile: true
+        columns:
+        - column:
+            header: terminal_id
+            name: terminal_id
+        - column:
+            header: inventary_number
+            name: inventary_number
+        - column:
+            header: serial_number
+            name: serial_number
+        - column:
+            header: status
+            name: status
+        - column:
+            header: terminal_display_id
+            name: terminal_display_id
+        - column:
+            header: terminal_model_id
+            name: terminal_model_id
+        - column:
+            header: terminal_printer_id
+            name: terminal_printer_id
+        - column:
+            header: terminal_sensor_id
+            name: terminal_sensor_id
+        - column:
+            header: terminal_server_id
+            name: terminal_server_id
+        - column:
+            header: terminal_ups_id
+            name: terminal_ups_id
+        quotchar: '"'
+- changeSet:
+    id: load-data-display_manufacturer
+    author: auto-generated
+    changes:
+    - loadData:
+        tableName: display_manufacturer
+        file: ../data/display-manufacturer-data.csv
+        relativeToChangelogFile: true
+        columns:
+        - column:
+            header: id
+            name: id
+        - column:
+            header: archived
+            name: archived
+        - column:
+            header: name
+            name: name
+        quotchar: '"'
+- changeSet:
+    id: load-data-display_model
+    author: auto-generated
+    changes:
+    - loadData:
+        tableName: display_model
+        file: ../data/display-model-data.csv
+        relativeToChangelogFile: true
+        columns:
+        - column:
+            header: id
+            name: id
+        - column:
+            header: archived
+            name: archived
+        - column:
+            header: model
+            name: model
+        - column:
+            header: manufacturer_id
+            name: manufacturer_id
+        quotchar: '"'
+- changeSet:
+    id: load-data-display
+    author: auto-generated
+    changes:
+    - loadData:
+        tableName: display
+        file: ../data/display-data.csv
+        relativeToChangelogFile: true
+        columns:
+        - column:
+            header: display_id
+            name: display_id
+        - column:
+            header: inventary_number
+            name: inventary_number
+        - column:
+            header: serial_number
+            name: serial_number
+        - column:
+            header: status
+            name: status
+        - column:
+            header: display_model_id
+            name: display_model_id
+        quotchar: '"'
+- changeSet:
+    id: load-data-program_software
+    author: auto-generated
+    changes:
+    - loadData:
+        tableName: program_software
+        file: ../data/program-software-data.csv
+        relativeToChangelogFile: true
+        columns:
+        - column:
+            header: id
+            name: id
+        - column:
+            header: archived
+            name: archived
+        - column:
+            header: name
+            name: name
+        - column:
+            header: version
+            name: version
+        quotchar: '"'
+- changeSet:
+    id: load-data-hub_manufacturer
+    author: auto-generated
+    changes:
+    - loadData:
+        tableName: hub_manufacturer
+        file: ../data/hub-manufacturer-data.csv
+        relativeToChangelogFile: true
+        columns:
+        - column:
+            header: id
+            name: id
+        - column:
+            header: archived
+            name: archived
+        - column:
+            header: name
+            name: name
+        quotchar: '"'
+- changeSet:
+    id: load-data-hub_model
+    author: auto-generated
+    changes:
+    - loadData:
+        tableName: hub_model
+        file: ../data/hub-model-data.csv
+        relativeToChangelogFile: true
+        columns:
+        - column:
+            header: id
+            name: id
+        - column:
+            header: archived
+            name: archived
+        - column:
+            header: model
+            name: model
+        - column:
+            header: manufacturer_id
+            name: manufacturer_id
+        quotchar: '"'
+- changeSet:
+    id: load-data-hub
+    author: auto-generated
+    changes:
+    - loadData:
+        tableName: hub
+        file: ../data/hub-data.csv
+        relativeToChangelogFile: true
+        columns:
+        - column:
+            header: hub_id
+            name: hub_id
+        - column:
+            header: inventary_number
+            name: inventary_number
+        - column:
+            header: serial_number
+            name: serial_number
+        - column:
+            header: status
+            name: status
+        - column:
+            header: date_exploitation_begin
+            name: date_exploitation_begin
+            type: STRING
+        - column:
+            header: name_from_onec
+            name: name_from_onec
+        - column:
+            header: port_amount
+            name: port_amount
+        - column:
+            header: year_created
+            name: year_created
+        - column:
+            header: hub_model_id
+            name: hub_model_id
+        quotchar: '"'
+- changeSet:
+    id: load-data-asuo
+    author: auto-generated
+    changes:
+    - loadData:
+        tableName: asuo
+        file: ../data/asuo-data.csv
+        relativeToChangelogFile: true
+        columns:
+        - column:
+            header: asuo_id
+            name: asuo_id
+        - column:
+            header: inventary_number
+            name: inventary_number
+        - column:
+            header: status
+            name: status
+        - column:
+            header: date_exploitation_begin
+            name: date_exploitation_begin
+            type: STRING
+        - column:
+            header: name_from_onec
+            name: name_from_onec
+        - column:
+            header: sub_display_amount
+            name: sub_display_amount
+        - column:
+            header: year_created
+            name: year_created
+        - column:
+            header: program_software_id
+            name: program_software_id
+        - column:
+            header: sub_display_model_id
+            name: sub_display_model_id
+        quotchar: '"'
+- changeSet:
+    id: load-data-asuo_hub
+    author: auto-generated
+    changes:
+    - loadData:
+        tableName: asuo_hub
+        file: ../data/asuo-hub-data.csv
+        relativeToChangelogFile: true
+        columns:
+        - column:
+            header: asuo_id
+            name: asuo_id
+        - column:
+            header: hub_id
+            name: hub_id
+        quotchar: '"'
+- changeSet:
+    id: load-data-asuo_terminal
+    author: auto-generated
+    changes:
+    - loadData:
+        tableName: asuo_terminal
+        file: ../data/asuo-terminal-data.csv
+        relativeToChangelogFile: true
+        columns:
+        - column:
+            header: asuo_id
+            name: asuo_id
+        - column:
+            header: terminal_id
+            name: terminal_id
+        quotchar: '"'
+- changeSet:
+    id: load-data-asuo_display
+    author: auto-generated
+    changes:
+    - loadData:
+        tableName: asuo_display
+        file: ../data/asuo-display-data.csv
+        relativeToChangelogFile: true
+        columns:
+        - column:
+            header: asuo_id
+            name: asuo_id
+        - column:
+            header: display_id
+            name: display_id
+        quotchar: '"'
+- changeSet:
+    id: load-data-ats_manufacturer
+    author: auto-generated
+    changes:
+    - loadData:
+        tableName: ats_manufacturer
+        file: ../data/ats-manufacturer-data.csv
+        relativeToChangelogFile: true
+        columns:
+        - column:
+            header: id
+            name: id
+        - column:
+            header: archived
+            name: archived
+        - column:
+            header: name
+            name: name
+        quotchar: '"'
+- changeSet:
+    id: load-data-ats_model
+    author: auto-generated
+    changes:
+    - loadData:
+        tableName: ats_model
+        file: ../data/ats-model-data.csv
+        relativeToChangelogFile: true
+        columns:
+        - column:
+            header: id
+            name: id
+        - column:
+            header: archived
+            name: archived
+        - column:
+            header: model
+            name: model
+        - column:
+            header: manufacturer_id
+            name: manufacturer_id
+        quotchar: '"'
+- changeSet:
+    id: load-data-ats
+    author: auto-generated
+    changes:
+    - loadData:
+        tableName: ats
+        file: ../data/ats-data.csv
+        relativeToChangelogFile: true
+        columns:
+        - column:
+            header: ats_id
+            name: ats_id
+        - column:
+            header: inventary_number
+            name: inventary_number
+        - column:
+            header: serial_number
+            name: serial_number
+        - column:
+            header: status
+            name: status
+        - column:
+            header: city_number_amount
+            name: city_number_amount
+        - column:
+            header: inner_connection_analog
+            name: inner_connection_analog
+        - column:
+            header: inner_connection_ip
+            name: inner_connection_ip
+        - column:
+            header: ip_adress
+            name: ip_adress
+        - column:
+            header: name_from_onec
+            name: name_from_onec
+        - column:
+            header: number_room
+            name: number_room
+        - column:
+            header: outer_connection_type
+            name: outer_connection_type
+            type: STRING
+        - column:
+            header: year_created
+            name: year_created
+        - column:
+            header: ats_model_id
+            name: ats_model_id
+        quotchar: '"'
+- changeSet:
+    id: load-data-battery_type
+    author: auto-generated
+    changes:
+    - loadData:
+        tableName: battery_type
+        file: ../data/battery-type-data.csv
+        relativeToChangelogFile: true
+        columns:
+        - column:
+            header: id
+            name: id
+        - column:
+            header: type
+            name: type
+        - column:
+            header: archived
+            name: archived
+        quotchar: '"'
+- changeSet:
+    id: load-data-cartridge_manufacturer
+    author: auto-generated
+    changes:
+    - loadData:
+        tableName: cartridge_manufacturer
+        file: ../data/cartridge-manufacturer-data.csv
+        relativeToChangelogFile: true
+        columns:
+        - column:
+            header: id
+            name: id
+        - column:
+            header: archived
+            name: archived
+        - column:
+            header: name
+            name: name
+        quotchar: '"'
+- changeSet:
+    id: load-data-cartridge_model
+    author: auto-generated
+    changes:
+    - loadData:
+        tableName: cartridge_model
+        file: ../data/cartridge-model-data.csv
+        relativeToChangelogFile: true
+        columns:
+        - column:
+            header: id
+            name: id
+        - column:
+            header: archived
+            name: archived
+        - column:
+            header: model
+            name: model
+        - column:
+            header: default_number_print_page
+            name: default_number_print_page
+        - column:
+            header: type
+            name: type
+        - column:
+            header: manufacturer_id
+            name: manufacturer_id
+        quotchar: '"'
+- changeSet:
+    id: load-data-cartridge
+    author: auto-generated
+    changes:
+    - loadData:
+        tableName: cartridge
+        file: ../data/cartridge-data.csv
+        relativeToChangelogFile: true
+        columns:
+        - column:
+            header: cartridge_id
+            name: cartridge_id
+        - column:
+            header: count
+            name: count
+        - column:
+            header: date_end_exploitation
+            name: date_end_exploitation
+            type: STRING
+        - column:
+            header: date_start_exploitation
+            name: date_start_exploitation
+            type: STRING
+        - column:
+            header: item_code
+            name: item_code
+        - column:
+            header: name_material
+            name: name_material
+        - column:
+            header: use_in_printer
+            name: use_in_printer
+        - column:
+            header: util
+            name: util
+        - column:
+            header: model_id
+            name: model_id
+        - column:
+            header: printer_id
+            name: printer_id
+        quotchar: '"'
+- changeSet:
+    id: load-data-printer_manufacturer
+    author: auto-generated
+    changes:
+    - loadData:
+        tableName: printer_manufacturer
+        file: ../data/printer-manufacturer-data.csv
+        relativeToChangelogFile: true
+        columns:
+        - column:
+            header: id
+            name: id
+        - column:
+            header: archived
+            name: archived
+        - column:
+            header: name
+            name: name
+        quotchar: '"'
+- changeSet:
+    id: load-data-printer_model
+    author: auto-generated
+    changes:
+    - loadData:
+        tableName: printer_model
+        file: ../data/printer-model-data.csv
+        relativeToChangelogFile: true
+        columns:
+        - column:
+            header: id
+            name: id
+        - column:
+            header: archived
+            name: archived
+        - column:
+            header: model
+            name: model
+        - column:
+            header: manufacturer_id
+            name: manufacturer_id
+        quotchar: '"'
+- changeSet:
+    id: load-data-printer
+    author: auto-generated
+    changes:
+    - loadData:
+        tableName: printer
+        file: ../data/printer-data.csv
+        relativeToChangelogFile: true
+        columns:
+        - column:
+            header: printer_id
+            name: printer_id
+        - column:
+            header: inventary_number
+            name: inventary_number
+        - column:
+            header: serial_number
+            name: serial_number
+        - column:
+            header: status
+            name: status
+        - column:
+            header: date_exploitation_begin
+            name: date_exploitation_begin
+            type: STRING
+        - column:
+            header: name_frome_onec
+            name: name_frome_onec
+        - column:
+            header: number_room
+            name: number_room
+        - column:
+            header: year_created
+            name: year_created
+        - column:
+            header: printer_model_id
+            name: printer_model_id
+        quotchar: '"'
+- changeSet:
+    id: load-data-cartridge_model_models_printers
+    author: auto-generated
+    changes:
+    - loadData:
+        tableName: cartridge_model_models_printers
+        file: ../data/cartridge-model-models-printers-data.csv
+        relativeToChangelogFile: true
+        columns:
+        - column:
+            header: model_cartridges_id
+            name: model_cartridges_id
+        - column:
+            header: models_printers_id
+            name: models_printers_id
+        quotchar: '"'
+- changeSet:
+    id: load-data-cd_drive
+    author: auto-generated
+    changes:
+    - loadData:
+        tableName: cd_drive
+        file: ../data/cd-drive-data.csv
+        relativeToChangelogFile: true
+        columns:
+        - column:
+            header: id
+            name: id
+        - column:
+            header: archived
+            name: archived
+        - column:
+            header: model
+            name: model
+        quotchar: '"'
+- changeSet:
+    id: load-data-conditioner_manufacturer
+    author: auto-generated
+    changes:
+    - loadData:
+        tableName: conditioner_manufacturer
+        file: ../data/conditioner-manufacturer-data.csv
+        relativeToChangelogFile: true
+        columns:
+        - column:
+            header: id
+            name: id
+        - column:
+            header: archived
+            name: archived
+        - column:
+            header: name
+            name: name
+        quotchar: '"'
+- changeSet:
+    id: load-data-conditioner_model
+    author: auto-generated
+    changes:
+    - loadData:
+        tableName: conditioner_model
+        file: ../data/conditioner-model-data.csv
+        relativeToChangelogFile: true
+        columns:
+        - column:
+            header: id
+            name: id
+        - column:
+            header: archived
+            name: archived
+        - column:
+            header: model
+            name: model
+        - column:
+            header: manufacturer_id
+            name: manufacturer_id
+        quotchar: '"'
+- changeSet:
+    id: load-data-conditioner
+    author: auto-generated
+    changes:
+    - loadData:
+        tableName: conditioner
+        file: ../data/conditioner-data.csv
+        relativeToChangelogFile: true
+        columns:
+        - column:
+            header: conditioner_id
+            name: conditioner_id
+        - column:
+            header: inventary_number
+            name: inventary_number
+        - column:
+            header: serial_number
+            name: serial_number
+        - column:
+            header: status
+            name: status
+        - column:
+            header: conditioner_type
+            name: conditioner_type
+        - column:
+            header: description
+            name: description
+        - column:
+            header: have_pomp
+            name: have_pomp
+        - column:
+            header: name_from_onec
+            name: name_from_onec
+        - column:
+            header: number_room
+            name: number_room
+        - column:
+            header: price
+            name: price
+        - column:
+            header: split_system
+            name: split_system
+        - column:
+            header: year_created
+            name: year_created
+        - column:
+            header: conditioner_model_id
+            name: conditioner_model_id
+        quotchar: '"'
+- changeSet:
+    id: load-data-cpu
+    author: auto-generated
+    changes:
+    - loadData:
+        tableName: cpu
+        file: ../data/cpu-data.csv
+        relativeToChangelogFile: true
+        columns:
+        - column:
+            header: id
+            name: id
+        - column:
+            header: archived
+            name: archived
+        - column:
+            header: model
+            name: model
+        quotchar: '"'
+- changeSet:
+    id: load-data-fax_manufacturer
+    author: auto-generated
+    changes:
+    - loadData:
+        tableName: fax_manufacturer
+        file: ../data/fax-manufacturer-data.csv
+        relativeToChangelogFile: true
+        columns:
+        - column:
+            header: id
+            name: id
+        - column:
+            header: archived
+            name: archived
+        - column:
+            header: name
+            name: name
+        quotchar: '"'
+- changeSet:
+    id: load-data-fax_model
+    author: auto-generated
+    changes:
+    - loadData:
+        tableName: fax_model
+        file: ../data/fax-model-data.csv
+        relativeToChangelogFile: true
+        columns:
+        - column:
+            header: id
+            name: id
+        - column:
+            header: archived
+            name: archived
+        - column:
+            header: model
+            name: model
+        - column:
+            header: manufacturer_id
+            name: manufacturer_id
+        quotchar: '"'
+- changeSet:
+    id: load-data-fax
+    author: auto-generated
+    changes:
+    - loadData:
+        tableName: fax
+        file: ../data/fax-data.csv
+        relativeToChangelogFile: true
+        columns:
+        - column:
+            header: fax_id
+            name: fax_id
+        - column:
+            header: inventary_number
+            name: inventary_number
+        - column:
+            header: serial_number
+            name: serial_number
+        - column:
+            header: status
+            name: status
+        - column:
+            header: date_exploitation_begin
+            name: date_exploitation_begin
+            type: STRING
+        - column:
+            header: ip_adress
+            name: ip_adress
+        - column:
+            header: name_frome_onec
+            name: name_frome_onec
+        - column:
+            header: number_room
+            name: number_room
+        - column:
+            header: year_created
+            name: year_created
+        - column:
+            header: model_id
+            name: model_id
+        quotchar: '"'
+- changeSet:
+    id: load-data-hdd
+    author: auto-generated
+    changes:
+    - loadData:
+        tableName: hdd
+        file: ../data/hdd-data.csv
+        relativeToChangelogFile: true
+        columns:
+        - column:
+            header: id
+            name: id
+        - column:
+            header: archived
+            name: archived
+        - column:
+            header: model
+            name: model
+        - column:
+            header: capacity
+            name: capacity
+        - column:
+            header: inventary_number
+            name: inventary_number
+        - column:
+            header: serial_number
+            name: serial_number
+        - column:
+            header: unit
+            name: unit
+        quotchar: '"'
+- changeSet:
+    id: load-data-infomat_manufacturer
+    author: auto-generated
+    changes:
+    - loadData:
+        tableName: infomat_manufacturer
+        file: ../data/infomat-manufacturer-data.csv
+        relativeToChangelogFile: true
+        columns:
+        - column:
+            header: id
+            name: id
+        - column:
+            header: archived
+            name: archived
+        - column:
+            header: name
+            name: name
+        quotchar: '"'
+- changeSet:
+    id: load-data-infomat_model
+    author: auto-generated
+    changes:
+    - loadData:
+        tableName: infomat_model
+        file: ../data/infomat-model-data.csv
+        relativeToChangelogFile: true
+        columns:
+        - column:
+            header: id
+            name: id
+        - column:
+            header: archived
+            name: archived
+        - column:
+            header: model
+            name: model
+        - column:
+            header: manufacturer_id
+            name: manufacturer_id
+        quotchar: '"'
+- changeSet:
+    id: load-data-infomat
+    author: auto-generated
+    changes:
+    - loadData:
+        tableName: infomat
+        file: ../data/infomat-data.csv
+        relativeToChangelogFile: true
+        columns:
+        - column:
+            header: infomat_id
+            name: infomat_id
+        - column:
+            header: inventary_number
+            name: inventary_number
+        - column:
+            header: serial_number
+            name: serial_number
+        - column:
+            header: status
+            name: status
+        - column:
+            header: name_from_onec
+            name: name_from_onec
+        - column:
+            header: number_room
+            name: number_room
+        - column:
+            header: year_created
+            name: year_created
+        - column:
+            header: infomat_model_id
+            name: infomat_model_id
+        quotchar: '"'
+- changeSet:
+    id: load-data-keyboard
+    author: auto-generated
+    changes:
+    - loadData:
+        tableName: keyboard
+        file: ../data/keyboard-data.csv
+        relativeToChangelogFile: true
+        columns:
+        - column:
+            header: id
+            name: id
+        - column:
+            header: archived
+            name: archived
+        - column:
+            header: model
+            name: model
+        quotchar: '"'
+- changeSet:
+    id: load-data-lan_card
+    author: auto-generated
+    changes:
+    - loadData:
+        tableName: lan_card
+        file: ../data/lan-card-data.csv
+        relativeToChangelogFile: true
+        columns:
+        - column:
+            header: id.archived
+            name: id.archived
+        - column:
+            header: model
+            name: model
+        quotchar: '"'
+- changeSet:
+    id: load-data-monitor_manufacturer
+    author: auto-generated
+    changes:
+    - loadData:
+        tableName: monitor_manufacturer
+        file: ../data/monitor-manufacturer-data.csv
+        relativeToChangelogFile: true
+        columns:
+        - column:
+            header: id
+            name: id
+        - column:
+            header: archived
+            name: archived
+        - column:
+            header: name
+            name: name
+        quotchar: '"'
+- changeSet:
+    id: load-data-monitor_model
+    author: auto-generated
+    changes:
+    - loadData:
+        tableName: monitor_model
+        file: ../data/monitor-model-data.csv
+        relativeToChangelogFile: true
+        columns:
+        - column:
+            header: id
+            name: id
+        - column:
+            header: archived
+            name: archived
+        - column:
+            header: model
+            name: model
+        - column:
+            header: manufacturer_id
+            name: manufacturer_id
+        quotchar: '"'
+- changeSet:
+    id: load-data-monitor
+    author: auto-generated
+    changes:
+    - loadData:
+        tableName: monitor
+        file: ../data/monitor-data.csv
+        relativeToChangelogFile: true
+        columns:
+        - column:
+            header: monitor_id
+            name: monitor_id
+        - column:
+            header: inventary_number
+            name: inventary_number
+        - column:
+            header: serial_number
+            name: serial_number
+        - column:
+            header: status
+            name: status
+        - column:
+            header: base_type
+            name: base_type
+        - column:
+            header: date_exploitation_begin
+            name: date_exploitation_begin
+            type: STRING
+        - column:
+            header: name_frome_onec
+            name: name_frome_onec
+        - column:
+            header: number_room
+            name: number_room
+        - column:
+            header: year_created
+            name: year_created
+        - column:
+            header: monitor_model_id
+            name: monitor_model_id
+        quotchar: '"'
+- changeSet:
+    id: load-data-motherboard
+    author: auto-generated
+    changes:
+    - loadData:
+        tableName: motherboard
+        file: ../data/motherboard-data.csv
+        relativeToChangelogFile: true
+        columns:
+        - column:
+            header: id
+            name: id
+        - column:
+            header: archived
+            name: archived
+        - column:
+            header: model
+            name: model
+        quotchar: '"'
+- changeSet:
+    id: load-data-mouse
+    author: auto-generated
+    changes:
+    - loadData:
+        tableName: mouse
+        file: ../data/mouse-data.csv
+        relativeToChangelogFile: true
+        columns:
+        - column:
+            header: id
+            name: id
+        - column:
+            header: archived
+            name: archived
+        - column:
+            header: model
+            name: model
+        quotchar: '"'
+- changeSet:
+    id: load-data-operation_system
+    author: auto-generated
+    changes:
+    - loadData:
+        tableName: operation_system
+        file: ../data/operation-system-data.csv
+        relativeToChangelogFile: true
+        columns:
+        - column:
+            header: id
+            name: id
+        - column:
+            header: archived
+            name: archived
+        - column:
+            header: license
+            name: license
+        - column:
+            header: model
+            name: model
+        quotchar: '"'
+- changeSet:
+    id: load-data-phone_manufacturer
+    author: auto-generated
+    changes:
+    - loadData:
+        tableName: phone_manufacturer
+        file: ../data/phone-manufacturer-data.csv
+        relativeToChangelogFile: true
+        columns:
+        - column:
+            header: id
+            name: id
+        - column:
+            header: archived
+            name: archived
+        - column:
+            header: name
+            name: name
+        quotchar: '"'
+- changeSet:
+    id: load-data-phone_model
+    author: auto-generated
+    changes:
+    - loadData:
+        tableName: phone_model
+        file: ../data/phone-model-data.csv
+        relativeToChangelogFile: true
+        columns:
+        - column:
+            header: id
+            name: id
+        - column:
+            header: archived
+            name: archived
+        - column:
+            header: model
+            name: model
+        - column:
+            header: manufacturer_id
+            name: manufacturer_id
+        quotchar: '"'
+- changeSet:
+    id: load-data-phone
+    author: auto-generated
+    changes:
+    - loadData:
+        tableName: phone
+        file: ../data/phone-data.csv
+        relativeToChangelogFile: true
+        columns:
+        - column:
+            header: phone_id
+            name: phone_id
+        - column:
+            header: inventary_number
+            name: inventary_number
+        - column:
+            header: serial_number
+            name: serial_number
+        - column:
+            header: status
+            name: status
+        - column:
+            header: phone_number
+            name: phone_number
+        - column:
+            header: date_exploitation_begin
+            name: date_exploitation_begin
+            type: STRING
+        - column:
+            header: name_frome_onec
+            name: name_frome_onec
+        - column:
+            header: number_room
+            name: number_room
+        - column:
+            header: year_created
+            name: year_created
+        - column:
+            header: phone_model_id
+            name: phone_model_id
+        quotchar: '"'
+- changeSet:
+    id: load-data-ram
+    author: auto-generated
+    changes:
+    - loadData:
+        tableName: ram
+        file: ../data/ram-data.csv
+        relativeToChangelogFile: true
+        columns:
+        - column:
+            header: id
+            name: id
+        - column:
+            header: archived
+            name: archived
+        - column:
+            header: model
+            name: model
+        - column:
+            header: capacity
+            name: capacity
+        quotchar: '"'
+- changeSet:
+    id: load-data-router_manufacturer
+    author: auto-generated
+    changes:
+    - loadData:
+        tableName: router_manufacturer
+        file: ../data/router-manufacturer-data.csv
+        relativeToChangelogFile: true
+        columns:
+        - column:
+            header: id
+            name: id
+        - column:
+            header: archived
+            name: archived
+        - column:
+            header: name
+            name: name
+        quotchar: '"'
+- changeSet:
+    id: load-data-router_model
+    author: auto-generated
+    changes:
+    - loadData:
+        tableName: router_model
+        file: ../data/router-model-data.csv
+        relativeToChangelogFile: true
+        columns:
+        - column:
+            header: id
+            name: id
+        - column:
+            header: archived
+            name: archived
+        - column:
+            header: model
+            name: model
+        - column:
+            header: manufacturer_id
+            name: manufacturer_id
+        quotchar: '"'
+- changeSet:
+    id: load-data-router
+    author: auto-generated
+    changes:
+    - loadData:
+        tableName: router
+        file: ../data/router-data.csv
+        relativeToChangelogFile: true
+        columns:
+        - column:
+            header: router_id
+            name: router_id
+        - column:
+            header: inventary_number
+            name: inventary_number
+        - column:
+            header: serial_number
+            name: serial_number
+        - column:
+            header: status
+            name: status
+        - column:
+            header: ip_adress_inner
+            name: ip_adress_inner
+        - column:
+            header: ip_adress_outer
+            name: ip_adress_outer
+        - column:
+            header: port_amount
+            name: port_amount
+        - column:
+            header: name_from_onec
+            name: name_from_onec
+        - column:
+            header: number_room
+            name: number_room
+        - column:
+            header: year_created
+            name: year_created
+        - column:
+            header: router_model_id
+            name: router_model_id
+        quotchar: '"'
+- changeSet:
+    id: load-data-scanner_manufacturer
+    author: auto-generated
+    changes:
+    - loadData:
+        tableName: scanner_manufacturer
+        file: ../data/scanner-manufacturer-data.csv
+        relativeToChangelogFile: true
+        columns:
+        - column:
+            header: id
+            name: id
+        - column:
+            header: archived
+            name: archived
+        - column:
+            header: name
+            name: name
+        quotchar: '"'
+- changeSet:
+    id: load-data-scanner_model
+    author: auto-generated
+    changes:
+    - loadData:
+        tableName: scanner_model
+        file: ../data/scanner-model-data.csv
+        relativeToChangelogFile: true
+        columns:
+        - column:
+            header: id
+            name: id
+        - column:
+            header: archived
+            name: archived
+        - column:
+            header: model
+            name: model
+        - column:
+            header: manufacturer_id
+            name: manufacturer_id
+        quotchar: '"'
+- changeSet:
+    id: load-data-scanner
+    author: auto-generated
+    changes:
+    - loadData:
+        tableName: scanner
+        file: ../data/scanner-data.csv
+        relativeToChangelogFile: true
+        columns:
+        - column:
+            header: scanner_id
+            name: scanner_id
+        - column:
+            header: inventary_number
+            name: inventary_number
+        - column:
+            header: serial_number
+            name: serial_number
+        - column:
+            header: status
+            name: status
+        - column:
+            header: date_exploitation_begin
+            name: date_exploitation_begin
+            type: STRING
+        - column:
+            header: ip_adress
+            name: ip_adress
+        - column:
+            header: name_from_onec
+            name: name_from_onec
+        - column:
+            header: number_room
+            name: number_room
+        - column:
+            header: year_created
+            name: year_created
+        - column:
+            header: scanner_model_id
+            name: scanner_model_id
+        quotchar: '"'
+- changeSet:
+    id: load-data-server_manufacturer
+    author: auto-generated
+    changes:
+    - loadData:
+        tableName: server_manufacturer
+        file: ../data/server-manufacturer-data.csv
+        relativeToChangelogFile: true
+        columns:
+        - column:
+            header: id
+            name: id
+        - column:
+            header: archived
+            name: archived
+        - column:
+            header: name
+            name: name
+        quotchar: '"'
+- changeSet:
+    id: load-data-server_model
+    author: auto-generated
+    changes:
+    - loadData:
+        tableName: server_model
+        file: ../data/server-model-data.csv
+        relativeToChangelogFile: true
+        columns:
+        - column:
+            header: id
+            name: id
+        - column:
+            header: archived
+            name: archived
+        - column:
+            header: model
+            name: model
+        - column:
+            header: manufacturer_id
+            name: manufacturer_id
+        quotchar: '"'
+- changeSet:
+    id: load-data-server
+    author: auto-generated
+    changes:
+    - loadData:
+        tableName: server
+        file: ../data/server-data.csv
+        relativeToChangelogFile: true
+        columns:
+        - column:
+            header: server_id
+            name: server_id
+        - column:
+            header: inventary_number
+            name: inventary_number
+        - column:
+            header: serial_number
+            name: serial_number
+        - column:
+            header: status
+            name: status
+        - column:
+            header: cpu_amount
+            name: cpu_amount
+        - column:
+            header: date_exploitation_begin
+            name: date_exploitation_begin
+            type: STRING
+        - column:
+            header: date_upgrade
+            name: date_upgrade
+            type: STRING
+        - column:
+            header: ip_adress
+            name: ip_adress
+        - column:
+            header: name_from_onec
+            name: name_from_onec
+        - column:
+            header: number_room
+            name: number_room
+        - column:
+            header: year_created
+            name: year_created
+        - column:
+            header: server_model_id
+            name: server_model_id
+        - column:
+            header: cpu_id
+            name: cpu_id
+        - column:
+            header: ram_id
+            name: ram_id
+        quotchar: '"'
+- changeSet:
+    id: load-data-sound_card
+    author: auto-generated
+    changes:
+    - loadData:
+        tableName: sound_card
+        file: ../data/sound-card-data.csv
+        relativeToChangelogFile: true
+        columns:
+        - column:
+            header: id
+            name: id
+        - column:
+            header: archived
+            name: archived
+        - column:
+            header: model
+            name: model
+        quotchar: '"'
+- changeSet:
+    id: load-data-speakers
+    author: auto-generated
+    changes:
+    - loadData:
+        tableName: speakers
+        file: ../data/speakers-data.csv
+        relativeToChangelogFile: true
+        columns:
+        - column:
+            header: id
+            name: id
+        - column:
+            header: archived
+            name: archived
+        - column:
+            header: model
+            name: model
+        quotchar: '"'
+- changeSet:
+    id: load-data-switch_hub_manufacturer
+    author: auto-generated
+    changes:
+    - loadData:
+        tableName: switch_hub_manufacturer
+        file: ../data/switch-hub-manufacturer-data.csv
+        relativeToChangelogFile: true
+        columns:
+        - column:
+            header: id
+            name: id
+        - column:
+            header: archived
+            name: archived
+        - column:
+            header: name
+            name: name
+        quotchar: '"'
+- changeSet:
+    id: load-data-switch_hub_model
+    author: auto-generated
+    changes:
+    - loadData:
+        tableName: switch_hub_model
+        file: ../data/switch-hub-model-data.csv
+        relativeToChangelogFile: true
+        columns:
+        - column:
+            header: id
+            name: id
+        - column:
+            header: archived
+            name: archived
+        - column:
+            header: model
+            name: model
+        - column:
+            header: manufacturer_id
+            name: manufacturer_id
+        quotchar: '"'
+- changeSet:
+    id: load-data-switch_hub
+    author: auto-generated
+    changes:
+    - loadData:
+        tableName: switch_hub
+        file: ../data/switch-hub-data.csv
+        relativeToChangelogFile: true
+        columns:
+        - column:
+            header: switch_hub_id
+            name: switch_hub_id
+        - column:
+            header: inventary_number
+            name: inventary_number
+        - column:
+            header: serial_number
+            name: serial_number
+        - column:
+            header: status
+            name: status
+        - column:
+            header: name_from_onec
+            name: name_from_onec
+        - column:
+            header: port_amount
+            name: port_amount
+        - column:
+            header: switch_hub_type
+            name: switch_hub_type
+            type: STRING
+        - column:
+            header: year_created
+            name: year_created
+        - column:
+            header: switch_hub_model_id
+            name: switch_hub_model_id
+        quotchar: '"'
+- changeSet:
+    id: load-data-videocard
+    author: auto-generated
+    changes:
+    - loadData:
+        tableName: video_card
+        file: ../data/videocard-data.csv
+        relativeToChangelogFile: true
+        columns:
+        - column:
+            header: id
+            name: id
+        - column:
+            header: archived
+            name: archived
+        - column:
+            header: model
+            name: model
+        quotchar: '"'
+- changeSet:
+    id: load-data-systemblock_manufacturer
+    author: auto-generated
+    changes:
+    - loadData:
+        tableName: system_block_manufacturer
+        file: ../data/systemblock-manufacturer-data.csv
+        relativeToChangelogFile: true
+        columns:
+        - column:
+            header: id
+            name: id
+        - column:
+            header: archived
+            name: archived
+        - column:
+            header: name
+            name: name
+        quotchar: '"'
+- changeSet:
+    id: load-data-systemblock_model
+    author: auto-generated
+    changes:
+    - loadData:
+        tableName: system_block_model
+        file: ../data/systemblock-model-data.csv
+        relativeToChangelogFile: true
+        columns:
+        - column:
+            header: id
+            name: id
+        - column:
+            header: archived
+            name: archived
+        - column:
+            header: model
+            name: model
+        - column:
+            header: manufacturer_id
+            name: manufacturer_id
+        quotchar: '"'
+- changeSet:
+    id: load-data-systemblock
+    author: auto-generated
+    changes:
+    - loadData:
+        tableName: system_block
+        file: ../data/systemblock-data.csv
+        relativeToChangelogFile: true
+        columns:
+        - column:
+            header: system_block_id
+            name: system_block_id
+        - column:
+            header: inventary_number
+            name: inventary_number
+        - column:
+            header: serial_number
+            name: serial_number
+        - column:
+            header: status
+            name: status
+        - column:
+            header: date_exploitation_begin
+            name: date_exploitation_begin
+            type: STRING
+        - column:
+            header: date_upgrade
+            name: date_upgrade
+            type: STRING
+        - column:
+            header: ip_adress
+            name: ip_adress
+        - column:
+            header: name_from_onec
+            name: name_from_onec
+        - column:
+            header: number_room
+            name: number_room
+        - column:
+            header: year_created
+            name: year_created
+        - column:
+            header: system_block_model_id
+            name: system_block_model_id
+        - column:
+            header: cd_drive_id
+            name: cd_drive_id
+        - column:
+            header: cpu_id
+            name: cpu_id
+        - column:
+            header: keyboard_id
+            name: keyboard_id
+        - column:
+            header: lan_card_id
+            name: lan_card_id
+        - column:
+            header: mother_board_id
+            name: mother_board_id
+        - column:
+            header: mouse_id
+            name: mouse_id
+        - column:
+            header: ram_id
+            name: ram_id
+        - column:
+            header: sound_card_id
+            name: sound_card_id
+        - column:
+            header: speakers_id
+            name: speakers_id
+        - column:
+            header: video_card_id
+            name: video_card_id
+        quotchar: '"'
+- changeSet:
+    id: load-data-systemblock_hdd
+    author: auto-generated
+    changes:
+    - loadData:
+        tableName: systemblock_hdd
+        file: ../data/systemblock-hdd-data.csv
+        relativeToChangelogFile: true
+        columns:
+        - column:
+            header: systeblock_id
+            name: systeblock_id
+        - column:
+            header: hdd_id
+            name: hdd_id
+        quotchar: '"'
+- changeSet:
+    id: load-data-systemblock_operation_system
+    author: auto-generated
+    changes:
+    - loadData:
+        tableName: systemblock_operation_system
+        file: ../data/systemblock-operation-system-data.csv
+        relativeToChangelogFile: true
+        columns:
+        - column:
+            header: systemblock_id
+            name: systemblock_id
+        - column:
+            header: operation_system_id
+            name: operation_system_id
+        quotchar: '"'
+- changeSet:
+    id: load-data-ups_manufacturer
+    author: auto-generated
+    changes:
+    - loadData:
+        tableName: ups_manufacturer
+        file: ../data/ups-manufacturer-data.csv
+        relativeToChangelogFile: true
+        columns:
+        - column:
+            header: id
+            name: id
+        - column:
+            header: archived
+            name: archived
+        - column:
+            header: name
+            name: name
+        quotchar: '"'
+- changeSet:
+    id: load-data-ups_model
+    author: auto-generated
+    changes:
+    - loadData:
+        tableName: ups_model
+        file: ../data/ups-model-data.csv
+        relativeToChangelogFile: true
+        columns:
+        - column:
+            header: id
+            name: id
+        - column:
+            header: archived
+            name: archived
+        - column:
+            header: model
+            name: model
+        - column:
+            header: battery_amount
+            name: battery_amount
+        - column:
+            header: battery_type_id
+            name: battery_type_id
+        - column:
+            header: manufacturer_id
+            name: manufacturer_id
+        quotchar: '"'
+- changeSet:
+    id: load-data-ups
+    author: auto-generated
+    changes:
+    - loadData:
+        tableName: ups
+        file: ../data/ups-data.csv
+        relativeToChangelogFile: true
+        columns:
+        - column:
+            header: ups_id
+            name: ups_id
+        - column:
+            header: inventary_number
+            name: inventary_number
+        - column:
+            header: serial_number
+            name: serial_number
+        - column:
+            header: status
+            name: status
+        - column:
+            header: date_exploitation_begin
+            name: date_exploitation_begin
+            type: STRING
+        - column:
+            header: name_from_onec
+            name: name_from_onec
+        - column:
+            header: number_room
+            name: number_room
+        - column:
+            header: year_created
+            name: year_created
+        - column:
+            header: year_replacement
+            name: year_replacement
+        - column:
+            header: ups_type
+            name: ups_type
+            type: STRING
+        - column:
+            header: ups_model_id
+            name: ups_model_id
+        quotchar: '"'

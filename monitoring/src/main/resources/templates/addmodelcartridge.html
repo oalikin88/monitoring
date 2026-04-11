@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<!--
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this template
+-->
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+    <html>
+        <head>
+            <title>Добавить модель картриджа</title>
+            <script src="/js/jquery-3.6.4.min.js"></script>
+            <script src="/js/selectize.js"></script>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1">
+            <link href="/css/bootstrap.min.css" rel="stylesheet">
+            <link href="/css/selectize.bootstrap5.css" rel="stylesheet">
+            <link href="/css/style.css" rel="stylesheet">
+        </head>
+        <body>
+            <nav th:insert="nav :: navbar"></nav>
+            <div class="container content">
+
+                <header><h3 class="fw-bold">Добавление модели картриджа</h3></header>
+                <form th:action="@{/addmodelcart}" th:object="${modelCartridge}" method="post" id="sendForm" name="sendForm">
+                    <div class="row text-center rowAddModelCartridge">
+                        <div  class="col-md">
+                            <label for="type" class="form-label">Тип:</label>
+                            <br>
+                                <select id="type" name="type" class="form-select cartridgeTypeSelect" aria-label="Выберите из списка"></select>
+                        </div>
+
+                        <div class="col-md">
+                            <label for='model' class="form-label">Модель: </label>
+                            <br>
+                            <select id="model" name="model" class="form-select cartridgeModelSelect" aria-label="Выберите из списка" disabled></select>
+                        </div>
+                        <div class="col-md">
+                            <label for='printer' class="form-label">Принтер: </label>
+                            <br>
+                            <select id="printer" name="printer" class="form-select printerSelect" aria-label="Выберите из списка"></select>
+                        </div>
+                        <div class="col-md">
+                            <label for='resource' class="form-label">Ном. ресурс: </label>
+                            <br>
+                                <input id="resource" name="resource" type="text" class="form-control">
+                        </div>
+                    </div>
+
+
+                    <button id="submit" name="submit" class="btn btn-submit">Добавить</button>
+             </form>
+
+            </div>
+            <footer th:insert="footer :: footer"></footer>
+            <script src="/js/bootstrap.bundle.min.js"></script>
+            <script src="/js/addmodel.js"></script>
+        </body>
+    </html>

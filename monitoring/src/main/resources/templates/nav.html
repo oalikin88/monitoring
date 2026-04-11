@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<!--
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this template
+-->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <body>   
+        <nav class="navbar  bg-light  navbar-expand-lg bg-body-tertiary " th:fragment="navbar" id="navbar">
+            <div class="container-fluid">
+                <div class="col col-sm-6 col-md-5 px-0 site-header-logo-wrapper ">
+                    <div class="d-inline-block float-left">
+                        <div class="logo d-flex align-items-center pl-sm-3 pl-md-4">
+                            <a class="navbar-brand" href="/main">
+                                <img id="logo" src="/img/logo.svg" alt="логотип СФР">
+                                <span id="mainLabel">
+                                    Социальный фонд России
+                                </span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                        <li class="nav-item">
+                            <a class="nav-link" href="/main">Добавить контракт</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/inventories">Таблица учёта принтеров и картриджей</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/contracts">Все контракты</a>
+                        </li>
+                        
+                        <li th:if="${#strings.contains(#httpServletRequest.requestURI,'inventories') and #strings.contains(#httpServletRequest.requestURI,'printer')}">
+                            <a class="nav-link" href="#" id="downloadDocByLocation" >Скачать список</a>
+                        </li>
+                        <li th:if="${#strings.contains(#httpServletRequest.requestURI,'inventories') and #strings.contains(#httpServletRequest.requestURI,'cartridge')}">
+                            <a class="nav-link" href="#" id="downloadActs" data-bs-toggle="modal" data-bs-target="#modalActsParameters">Скачать акт</a>
+                        </li>
+                        <li th:if="${#strings.contains(#httpServletRequest.requestURI,'printersbylocation')}">
+                            <a class="nav-link" href="#" id="downloadDocByModel" >Скачать список</a>
+                        </li>
+                         <li th:if="${#httpServletRequest.requestURI} eq '/inventories'" class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Правка
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li id="addLocationMenu" data-bs-toggle='modal' data-bs-target='#modalLocations'><a class="dropdown-item" href="#">Локация</a></li>
+                                <li id="addModelPrinterMenu" data-bs-toggle='modal' data-bs-target='#modalModelsPrinter'><a class="dropdown-item" href="#">Модель принтера</a></li>
+                                <li id="addModelCartridgeMenu" data-bs-toggle='modal' data-bs-target='#modalModelsCartridge'><a class="dropdown-item" href="#">Модель картриджа</a></li>
+                                <li id="getPlaningServiceMenu" data-bs-toggle='modal' data-bs-target='#modalPlaning'><a class="dropdown-item" href="#">Планирование закупок</a></li>
+                            </ul>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/help">Помощь</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/sysblocks">Вычислительная техника</a>
+                        </li>
+                       
+                        
+                       
+                    </ul>
+                    
+                    
+
+                        <div >
+                            <a href="#" id="acountIconLink" data-bs-toggle="modal" data-bs-target="#accountModal">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="currentColor" class="bi bi-person-circle" viewBox="0 0 16 16">
+                                <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0"/>
+                                <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1"/>
+                                </svg>
+                            </a>
+
+                        </div>
+                    
+<!--                    <form class="d-flex" role="search">
+                        <input class="form-control me-2" type="search" placeholder="Поиск" aria-label="Поиск" id="search">
+                        <button class="btn btn-outline-success" type="submit">Поиск</button>
+                    </form>-->
+
+                </div>
+            </div>
+            <div class="modal fade" id="accountModal" tabindex="-1" aria-labelledby="accountModalLabel" aria-hidden="true">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Информация об аккаунте</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body" id="bodyAccount">
+                      <div class="contentAccount">
+                      <div class="row">
+                          <div class="col-6">Пользователь: </div>
+                          <div class="col-6" th:text="${#authentication.getPrincipal().getFio()}"></div>
+                      </div>
+                      <div class="row">
+                          <div class="col-6">Доступ: </div>
+                          <div class="col-6" th:each="currentRole : ${#authentication.getPrincipal().getRoleList()}">
+                              <div th:switch="${currentRole.getAuthority()}">
+                                  <p th:if="'ROLE_ADMIN'">админ</p>
+                                  <p th:unless="'ROLE_ADMIN'">ограничен</p>
+                              </div>
+                    </div>
+                          </div>
+                          </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+
+                  </div>
+                </div>
+              </div>
+            </div>
+            </body>
+        </nav>
+
+
+
+
+
+</html>

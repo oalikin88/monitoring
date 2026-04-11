@@ -1,0 +1,5337 @@
+databaseChangeLog:
+- changeSet:
+    id: 1774982987884-1
+    author: oalikin88 (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            autoIncrement: true
+            constraints:
+              nullable: false
+              primaryKey: true
+            name: id
+            type: BIGINT
+        - column:
+            name: operation
+            type: VARCHAR(3000)
+        - column:
+            name: request_time
+            type: datetime
+        - column:
+            name: username
+            type: VARCHAR(255)
+        tableName: application_log
+- changeSet:
+    id: 1774982987884-2
+    author: oalikin88 (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            name: date_exploitation_begin
+            type: datetime
+        - column:
+            name: inventary_number
+            type: VARCHAR(255)
+        - column:
+            name: name_from_onec
+            type: VARCHAR(255)
+        - column:
+            name: status
+            type: VARCHAR(255)
+        - column:
+            constraints:
+              nullable: false
+            name: sub_display_amount
+            type: INT
+        - column:
+            constraints:
+              nullable: false
+            name: year_created
+            type: INT
+        - column:
+            constraints:
+              nullable: false
+              primaryKey: true
+            name: asuo_id
+            type: BIGINT
+        - column:
+            name: program_software_id
+            type: BIGINT
+        - column:
+            name: sub_display_model_id
+            type: BIGINT
+        tableName: asuo
+- changeSet:
+    id: 1774982987884-3
+    author: oalikin88 (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            constraints:
+              nullable: false
+              primaryKey: true
+            name: asuo_id
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+              primaryKey: true
+            name: display_id
+            type: BIGINT
+        tableName: asuo_display
+- changeSet:
+    id: 1774982987884-4
+    author: oalikin88 (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            constraints:
+              nullable: false
+              primaryKey: true
+            name: asuo_id
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+              primaryKey: true
+            name: hub_id
+            type: BIGINT
+        tableName: asuo_hub
+- changeSet:
+    id: 1774982987884-5
+    author: oalikin88 (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            constraints:
+              nullable: false
+            name: asuo_id
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: terminal_id
+            type: BIGINT
+        tableName: asuo_terminal
+- changeSet:
+    id: 1774982987884-6
+    author: oalikin88 (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            name: inventary_number
+            type: VARCHAR(255)
+        - column:
+            name: serial_number
+            type: VARCHAR(255)
+        - column:
+            name: status
+            type: VARCHAR(255)
+        - column:
+            constraints:
+              nullable: false
+            name: city_number_amount
+            type: INT
+        - column:
+            constraints:
+              nullable: false
+            name: inner_connection_analog
+            type: INT
+        - column:
+            constraints:
+              nullable: false
+            name: inner_connection_ip
+            type: INT
+        - column:
+            name: ip_adress
+            type: VARCHAR(255)
+        - column:
+            name: name_from_onec
+            type: VARCHAR(255)
+        - column:
+            name: number_room
+            type: VARCHAR(255)
+        - column:
+            name: outer_connection_type
+            type: VARCHAR(15)
+        - column:
+            constraints:
+              nullable: false
+            name: year_created
+            type: INT
+        - column:
+            constraints:
+              nullable: false
+              primaryKey: true
+            name: ats_id
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: ats_model_id
+            type: BIGINT
+        tableName: ats
+- changeSet:
+    id: 1774982987884-7
+    author: oalikin88 (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            autoIncrement: true
+            constraints:
+              nullable: false
+              primaryKey: true
+            name: id
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: archived
+            type: BIT(1)
+            defaultValueNumeric: 0
+        - column:
+            name: name
+            type: VARCHAR(255)
+        tableName: ats_manufacturer
+- changeSet:
+    id: 1774982987884-8
+    author: oalikin88 (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            autoIncrement: true
+            constraints:
+              nullable: false
+              primaryKey: true
+            name: id
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: archived
+            type: BIT(1)
+            defaultValueNumeric: 0
+        - column:
+            name: model
+            type: VARCHAR(255)
+        - column:
+            name: manufacturer_id
+            type: BIGINT
+        tableName: ats_model
+- changeSet:
+    id: 1774982987884-9
+    author: oalikin88 (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            autoIncrement: true
+            constraints:
+              nullable: false
+              primaryKey: true
+            name: id
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: archived
+            type: BIT(1)
+            defaultValueNumeric: 0
+        - column:
+            name: type
+            type: VARCHAR(255)
+        tableName: battery_type
+- changeSet:
+    id: 1774982987884-10
+    author: oalikin88 (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            name: count
+            type: BIGINT
+        - column:
+            name: date_end_exploitation
+            type: datetime
+        - column:
+            name: date_start_exploitation
+            type: datetime
+        - column:
+            name: item_code
+            type: VARCHAR(255)
+        - column:
+            name: name_material
+            type: VARCHAR(255)
+        - column:
+            constraints:
+              nullable: false
+            name: use_in_printer
+            type: BIT(1)
+            defaultValueNumeric: 0
+        - column:
+            constraints:
+              nullable: false
+            name: util
+            type: BIT(1)
+            defaultValueNumeric: 0
+        - column:
+            constraints:
+              nullable: false
+              primaryKey: true
+            name: cartridge_id
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: model_id
+            type: BIGINT
+        - column:
+            name: printer_id
+            type: BIGINT
+        tableName: cartridge
+- changeSet:
+    id: 1774982987884-11
+    author: oalikin88 (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            autoIncrement: true
+            constraints:
+              nullable: false
+              primaryKey: true
+            name: id
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: archived
+            type: BIT(1)
+            defaultValueNumeric: 0
+        - column:
+            name: name
+            type: VARCHAR(255)
+        tableName: cartridge_manufacturer
+- changeSet:
+    id: 1774982987884-12
+    author: oalikin88 (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            autoIncrement: true
+            constraints:
+              nullable: false
+              primaryKey: true
+            name: id
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: archived
+            type: BIT(1)
+            defaultValueNumeric: 0
+        - column:
+            name: model
+            type: VARCHAR(255)
+        - column:
+            constraints:
+              nullable: false
+            name: default_number_print_page
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: type
+            type: VARCHAR(255)
+        - column:
+            constraints:
+              nullable: false
+            name: manufacturer_id
+            type: BIGINT
+        tableName: cartridge_model
+- changeSet:
+    id: 1774982987884-13
+    author: oalikin88 (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            constraints:
+              nullable: false
+            name: model_cartridges_id
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: models_printers_id
+            type: BIGINT
+        tableName: cartridge_model_models_printers
+- changeSet:
+    id: 1774982987884-14
+    author: oalikin88 (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            autoIncrement: true
+            constraints:
+              nullable: false
+              primaryKey: true
+            name: id
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: archived
+            type: BIT(1)
+            defaultValueNumeric: 0
+        - column:
+            name: model
+            type: VARCHAR(255)
+        tableName: cd_drive
+- changeSet:
+    id: 1774982987884-15
+    author: oalikin88 (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            name: inventary_number
+            type: VARCHAR(255)
+        - column:
+            name: serial_number
+            type: VARCHAR(255)
+        - column:
+            name: status
+            type: VARCHAR(255)
+        - column:
+            name: conditioner_type
+            type: INT
+        - column:
+            name: description
+            type: VARCHAR(255)
+        - column:
+            constraints:
+              nullable: false
+            name: have_pomp
+            type: BIT(1)
+            defaultValueNumeric: 0
+        - column:
+            name: name_from_onec
+            type: VARCHAR(255)
+        - column:
+            name: number_room
+            type: VARCHAR(255)
+        - column:
+            constraints:
+              nullable: false
+            name: price
+            type: DOUBLE
+        - column:
+            constraints:
+              nullable: false
+            name: split_system
+            type: BIT(1)
+            defaultValueNumeric: 0
+        - column:
+            constraints:
+              nullable: false
+            name: winter_kit
+            type: BIT(1)
+            defaultValueNumeric: 0
+        - column:
+            constraints:
+              nullable: false
+            name: year_created
+            type: INT
+        - column:
+            constraints:
+              nullable: false
+              primaryKey: true
+            name: conditioner_id
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: conditioner_model_id
+            type: BIGINT
+        tableName: conditioner
+- changeSet:
+    id: 1774982987884-16
+    author: oalikin88 (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            autoIncrement: true
+            constraints:
+              nullable: false
+              primaryKey: true
+            name: id
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: archived
+            type: BIT(1)
+            defaultValueNumeric: 0
+        - column:
+            name: name
+            type: VARCHAR(255)
+        tableName: conditioner_manufacturer
+- changeSet:
+    id: 1774982987884-17
+    author: oalikin88 (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            autoIncrement: true
+            constraints:
+              nullable: false
+              primaryKey: true
+            name: id
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: archived
+            type: BIT(1)
+            defaultValueNumeric: 0
+        - column:
+            name: model
+            type: VARCHAR(255)
+        - column:
+            name: manufacturer_id
+            type: BIGINT
+        tableName: conditioner_model
+- changeSet:
+    id: 1774982987884-18
+    author: oalikin88 (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            autoIncrement: true
+            constraints:
+              nullable: false
+              primaryKey: true
+            name: id
+            type: BIGINT
+        - column:
+            name: contract_number
+            type: VARCHAR(255)
+        - column:
+            constraints:
+              nullable: false
+            name: date_end_contract
+            type: datetime
+        - column:
+            constraints:
+              nullable: false
+            name: date_start_contract
+            type: datetime
+        tableName: contract
+- changeSet:
+    id: 1774982987884-19
+    author: oalikin88 (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            autoIncrement: true
+            constraints:
+              nullable: false
+              primaryKey: true
+            name: id
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: archived
+            type: BIT(1)
+            defaultValueNumeric: 0
+        - column:
+            name: model
+            type: VARCHAR(255)
+        - column:
+            constraints:
+              nullable: false
+            name: core
+            type: INT
+            defaultValueNumeric: 0
+        - column:
+            constraints:
+              nullable: false
+            name: freq
+            type: INT
+            defaultValueNumeric: 0
+        tableName: cpu
+- changeSet:
+    id: 1774982987884-20
+    author: oalikin88 (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            name: inventary_number
+            type: VARCHAR(255)
+        - column:
+            name: serial_number
+            type: VARCHAR(255)
+        - column:
+            name: status
+            type: VARCHAR(255)
+        - column:
+            constraints:
+              nullable: false
+              primaryKey: true
+            name: display_id
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: display_model_id
+            type: BIGINT
+        tableName: display
+- changeSet:
+    id: 1774982987884-21
+    author: oalikin88 (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            autoIncrement: true
+            constraints:
+              nullable: false
+              primaryKey: true
+            name: id
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: archived
+            type: BIT(1)
+            defaultValueNumeric: 0
+        - column:
+            name: name
+            type: VARCHAR(255)
+        tableName: display_manufacturer
+- changeSet:
+    id: 1774982987884-22
+    author: oalikin88 (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            autoIncrement: true
+            constraints:
+              nullable: false
+              primaryKey: true
+            name: id
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: archived
+            type: BIT(1)
+            defaultValueNumeric: 0
+        - column:
+            name: model
+            type: VARCHAR(255)
+        - column:
+            name: manufacturer_id
+            type: BIGINT
+        tableName: display_model
+- changeSet:
+    id: 1774982987884-23
+    author: oalikin88 (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            name: inventary_number
+            type: VARCHAR(255)
+        - column:
+            name: serial_number
+            type: VARCHAR(255)
+        - column:
+            name: status
+            type: VARCHAR(255)
+        - column:
+            name: date_exploitation_begin
+            type: datetime
+        - column:
+            name: ip_adress
+            type: VARCHAR(255)
+        - column:
+            name: name_frome_onec
+            type: VARCHAR(255)
+        - column:
+            name: number_room
+            type: VARCHAR(255)
+        - column:
+            constraints:
+              nullable: false
+            name: year_created
+            type: INT
+        - column:
+            constraints:
+              nullable: false
+              primaryKey: true
+            name: fax_id
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: model_id
+            type: BIGINT
+        tableName: fax
+- changeSet:
+    id: 1774982987884-24
+    author: oalikin88 (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            autoIncrement: true
+            constraints:
+              nullable: false
+              primaryKey: true
+            name: id
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: archived
+            type: BIT(1)
+            defaultValueNumeric: 0
+        - column:
+            name: name
+            type: VARCHAR(255)
+        tableName: fax_manufacturer
+- changeSet:
+    id: 1774982987884-25
+    author: oalikin88 (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            autoIncrement: true
+            constraints:
+              nullable: false
+              primaryKey: true
+            name: id
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: archived
+            type: BIT(1)
+            defaultValueNumeric: 0
+        - column:
+            name: model
+            type: VARCHAR(255)
+        - column:
+            name: manufacturer_id
+            type: BIGINT
+        tableName: fax_model
+- changeSet:
+    id: 1774982987884-26
+    author: oalikin88 (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            autoIncrement: true
+            constraints:
+              nullable: false
+              primaryKey: true
+            name: id
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: archived
+            type: BIT(1)
+            defaultValueNumeric: 0
+        - column:
+            name: model
+            type: VARCHAR(255)
+        - column:
+            constraints:
+              nullable: false
+            name: capacity
+            type: INT
+        - column:
+            name: inventary_number
+            type: VARCHAR(255)
+        - column:
+            name: serial_number
+            type: VARCHAR(255)
+        - column:
+            name: unit
+            type: VARCHAR(255)
+        tableName: hdd
+- changeSet:
+    id: 1774982987884-27
+    author: oalikin88 (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            name: inventary_number
+            type: VARCHAR(255)
+        - column:
+            name: serial_number
+            type: VARCHAR(255)
+        - column:
+            name: status
+            type: VARCHAR(255)
+        - column:
+            name: date_exploitation_begin
+            type: datetime
+        - column:
+            name: name_from_onec
+            type: VARCHAR(255)
+        - column:
+            constraints:
+              nullable: false
+            name: port_amount
+            type: INT
+        - column:
+            constraints:
+              nullable: false
+            name: year_created
+            type: INT
+        - column:
+            constraints:
+              nullable: false
+              primaryKey: true
+            name: hub_id
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: hub_model_id
+            type: BIGINT
+        tableName: hub
+- changeSet:
+    id: 1774982987884-28
+    author: oalikin88 (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            autoIncrement: true
+            constraints:
+              nullable: false
+              primaryKey: true
+            name: id
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: archived
+            type: BIT(1)
+            defaultValueNumeric: 0
+        - column:
+            name: name
+            type: VARCHAR(255)
+        tableName: hub_manufacturer
+- changeSet:
+    id: 1774982987884-29
+    author: oalikin88 (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            autoIncrement: true
+            constraints:
+              nullable: false
+              primaryKey: true
+            name: id
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: archived
+            type: BIT(1)
+            defaultValueNumeric: 0
+        - column:
+            name: model
+            type: VARCHAR(255)
+        - column:
+            name: manufacturer_id
+            type: BIGINT
+        tableName: hub_model
+- changeSet:
+    id: 1774982987884-30
+    author: oalikin88 (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            name: inventary_number
+            type: VARCHAR(255)
+        - column:
+            name: serial_number
+            type: VARCHAR(255)
+        - column:
+            name: status
+            type: VARCHAR(255)
+        - column:
+            name: name_from_onec
+            type: VARCHAR(255)
+        - column:
+            name: number_room
+            type: VARCHAR(255)
+        - column:
+            constraints:
+              nullable: false
+            name: year_created
+            type: INT
+        - column:
+            constraints:
+              nullable: false
+              primaryKey: true
+            name: infomat_id
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: infomat_model_id
+            type: BIGINT
+        tableName: infomat
+- changeSet:
+    id: 1774982987884-31
+    author: oalikin88 (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            autoIncrement: true
+            constraints:
+              nullable: false
+              primaryKey: true
+            name: id
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: archived
+            type: BIT(1)
+            defaultValueNumeric: 0
+        - column:
+            name: name
+            type: VARCHAR(255)
+        tableName: infomat_manufacturer
+- changeSet:
+    id: 1774982987884-32
+    author: oalikin88 (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            autoIncrement: true
+            constraints:
+              nullable: false
+              primaryKey: true
+            name: id
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: archived
+            type: BIT(1)
+            defaultValueNumeric: 0
+        - column:
+            name: model
+            type: VARCHAR(255)
+        - column:
+            name: manufacturer_id
+            type: BIGINT
+        tableName: infomat_model
+- changeSet:
+    id: 1774982987884-33
+    author: oalikin88 (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            autoIncrement: true
+            constraints:
+              nullable: false
+              primaryKey: true
+            name: id
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: archived
+            type: BIT(1)
+            defaultValueNumeric: 0
+        - column:
+            name: model
+            type: VARCHAR(255)
+        tableName: keyboard
+- changeSet:
+    id: 1774982987884-34
+    author: oalikin88 (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            autoIncrement: true
+            constraints:
+              nullable: false
+              primaryKey: true
+            name: id
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: archived
+            type: BIT(1)
+            defaultValueNumeric: 0
+        - column:
+            name: model
+            type: VARCHAR(255)
+        tableName: lan_card
+- changeSet:
+    id: 1774982987884-35
+    author: oalikin88 (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            autoIncrement: true
+            constraints:
+              nullable: false
+              primaryKey: true
+            name: id
+            type: BIGINT
+        - column:
+            name: name
+            type: VARCHAR(255)
+        tableName: location
+- changeSet:
+    id: 1774982987884-36
+    author: oalikin88 (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            name: inventary_number
+            type: VARCHAR(255)
+        - column:
+            name: serial_number
+            type: VARCHAR(255)
+        - column:
+            name: status
+            type: VARCHAR(255)
+        - column:
+            name: base_type
+            type: VARCHAR(255)
+        - column:
+            name: date_exploitation_begin
+            type: datetime
+        - column:
+            name: name_frome_onec
+            type: VARCHAR(255)
+        - column:
+            name: number_room
+            type: VARCHAR(255)
+        - column:
+            constraints:
+              nullable: false
+            name: year_created
+            type: INT
+        - column:
+            constraints:
+              nullable: false
+              primaryKey: true
+            name: monitor_id
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: monitor_model_id
+            type: BIGINT
+        tableName: monitor
+- changeSet:
+    id: 1774982987884-37
+    author: oalikin88 (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            autoIncrement: true
+            constraints:
+              nullable: false
+              primaryKey: true
+            name: id
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: archived
+            type: BIT(1)
+            defaultValueNumeric: 0
+        - column:
+            name: name
+            type: VARCHAR(255)
+        tableName: monitor_manufacturer
+- changeSet:
+    id: 1774982987884-38
+    author: oalikin88 (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            autoIncrement: true
+            constraints:
+              nullable: false
+              primaryKey: true
+            name: id
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: archived
+            type: BIT(1)
+            defaultValueNumeric: 0
+        - column:
+            name: model
+            type: VARCHAR(255)
+        - column:
+            name: manufacturer_id
+            type: BIGINT
+        tableName: monitor_model
+- changeSet:
+    id: 1774982987884-39
+    author: oalikin88 (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            autoIncrement: true
+            constraints:
+              nullable: false
+              primaryKey: true
+            name: id
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: archived
+            type: BIT(1)
+            defaultValueNumeric: 0
+        - column:
+            name: model
+            type: VARCHAR(255)
+        tableName: motherboard
+- changeSet:
+    id: 1774982987884-40
+    author: oalikin88 (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            autoIncrement: true
+            constraints:
+              nullable: false
+              primaryKey: true
+            name: id
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: archived
+            type: BIT(1)
+            defaultValueNumeric: 0
+        - column:
+            name: model
+            type: VARCHAR(255)
+        tableName: mouse
+- changeSet:
+    id: 1774982987884-41
+    author: oalikin88 (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            autoIncrement: true
+            constraints:
+              nullable: false
+              primaryKey: true
+            name: id
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: archived
+            type: BIT(1)
+            defaultValueNumeric: 0
+        - column:
+            constraints:
+              nullable: false
+            name: contract_id
+            type: BIGINT
+        - column:
+            name: place_id
+            type: BIGINT
+        tableName: object_buing
+- changeSet:
+    id: 1774982987884-42
+    author: oalikin88 (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            autoIncrement: true
+            constraints:
+              nullable: false
+              primaryKey: true
+            name: id
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: archived
+            type: BIT(1)
+            defaultValueNumeric: 0
+        - column:
+            constraints:
+              nullable: false
+            name: license
+            type: BIT(1)
+            defaultValueNumeric: 0
+        - column:
+            name: model
+            type: VARCHAR(255)
+        tableName: operation_system
+- changeSet:
+    id: 1774982987884-43
+    author: oalikin88 (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            name: inventary_number
+            type: VARCHAR(255)
+        - column:
+            name: serial_number
+            type: VARCHAR(255)
+        - column:
+            name: status
+            type: VARCHAR(255)
+        - column:
+            name: date_exploitation_begin
+            type: datetime
+        - column:
+            name: name_frome_onec
+            type: VARCHAR(255)
+        - column:
+            name: number_room
+            type: VARCHAR(255)
+        - column:
+            name: phone_number
+            type: VARCHAR(255)
+        - column:
+            constraints:
+              nullable: false
+            name: year_created
+            type: INT
+        - column:
+            constraints:
+              nullable: false
+              primaryKey: true
+            name: phone_id
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: phone_model_id
+            type: BIGINT
+        tableName: phone
+- changeSet:
+    id: 1774982987884-44
+    author: oalikin88 (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            autoIncrement: true
+            constraints:
+              nullable: false
+              primaryKey: true
+            name: id
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: archived
+            type: BIT(1)
+            defaultValueNumeric: 0
+        - column:
+            name: name
+            type: VARCHAR(255)
+        tableName: phone_manufacturer
+- changeSet:
+    id: 1774982987884-45
+    author: oalikin88 (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            autoIncrement: true
+            constraints:
+              nullable: false
+              primaryKey: true
+            name: id
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: archived
+            type: BIT(1)
+            defaultValueNumeric: 0
+        - column:
+            name: model
+            type: VARCHAR(255)
+        - column:
+            name: manufacturer_id
+            type: BIGINT
+        tableName: phone_model
+- changeSet:
+    id: 1774982987884-46
+    author: oalikin88 (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            autoIncrement: true
+            constraints:
+              nullable: false
+              primaryKey: true
+            name: id
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: archived
+            type: BIT(1)
+            defaultValueNumeric: 0
+        - column:
+            name: department
+            type: VARCHAR(255)
+        - column:
+            name: department_code
+            type: VARCHAR(255)
+        - column:
+            name: place_type
+            type: VARCHAR(255)
+        - column:
+            name: username
+            type: VARCHAR(255)
+        - column:
+            constraints:
+              nullable: false
+            name: location_id
+            type: BIGINT
+        tableName: place
+- changeSet:
+    id: 1774982987884-47
+    author: oalikin88 (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            name: inventary_number
+            type: VARCHAR(255)
+        - column:
+            name: serial_number
+            type: VARCHAR(255)
+        - column:
+            name: status
+            type: VARCHAR(255)
+        - column:
+            name: date_exploitation_begin
+            type: datetime
+        - column:
+            name: name_frome_onec
+            type: VARCHAR(255)
+        - column:
+            name: number_room
+            type: VARCHAR(255)
+        - column:
+            constraints:
+              nullable: false
+            name: year_created
+            type: INT
+        - column:
+            constraints:
+              nullable: false
+              primaryKey: true
+            name: printer_id
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: printer_model_id
+            type: BIGINT
+        tableName: printer
+- changeSet:
+    id: 1774982987884-48
+    author: oalikin88 (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            autoIncrement: true
+            constraints:
+              nullable: false
+              primaryKey: true
+            name: id
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: archived
+            type: BIT(1)
+            defaultValueNumeric: 0
+        - column:
+            name: name
+            type: VARCHAR(255)
+        tableName: printer_manufacturer
+- changeSet:
+    id: 1774982987884-49
+    author: oalikin88 (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            autoIncrement: true
+            constraints:
+              nullable: false
+              primaryKey: true
+            name: id
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: archived
+            type: BIT(1)
+            defaultValueNumeric: 0
+        - column:
+            name: model
+            type: VARCHAR(255)
+        - column:
+            name: print_color_type
+            type: INT
+        - column:
+            name: print_format
+            type: INT
+        - column:
+            constraints:
+              nullable: false
+            name: print_speed
+            type: INT
+            defaultValueNumeric: 0
+        - column:
+            name: manufacturer_id
+            type: BIGINT
+        tableName: printer_model
+- changeSet:
+    id: 1774982987884-50
+    author: oalikin88 (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            autoIncrement: true
+            constraints:
+              nullable: false
+              primaryKey: true
+            name: id
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: archived
+            type: BIT(1)
+            defaultValueNumeric: 0
+        - column:
+            name: name
+            type: VARCHAR(255)
+        - column:
+            constraints:
+              nullable: false
+            name: version
+            type: DOUBLE
+        tableName: program_software
+- changeSet:
+    id: 1774982987884-51
+    author: oalikin88 (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            autoIncrement: true
+            constraints:
+              nullable: false
+              primaryKey: true
+            name: id
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: archived
+            type: BIT(1)
+            defaultValueNumeric: 0
+        - column:
+            name: model
+            type: VARCHAR(255)
+        - column:
+            constraints:
+              nullable: false
+            name: capacity
+            type: INT
+        tableName: ram
+- changeSet:
+    id: 1774982987884-52
+    author: oalikin88 (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            autoIncrement: true
+            constraints:
+              nullable: false
+              primaryKey: true
+            name: id
+            type: BIGINT
+        - column:
+            name: date_repair
+            type: datetime
+        - column:
+            name: definition
+            type: VARCHAR(255)
+        - column:
+            name: document_number
+            type: VARCHAR(255)
+        - column:
+            name: object_buing_id
+            type: BIGINT
+        tableName: repair
+- changeSet:
+    id: 1774982987884-53
+    author: oalikin88 (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            name: inventary_number
+            type: VARCHAR(255)
+        - column:
+            name: serial_number
+            type: VARCHAR(255)
+        - column:
+            name: status
+            type: VARCHAR(255)
+        - column:
+            name: ip_adress_inner
+            type: VARCHAR(255)
+        - column:
+            name: ip_adress_outer
+            type: VARCHAR(255)
+        - column:
+            name: name_from_onec
+            type: VARCHAR(255)
+        - column:
+            name: number_room
+            type: VARCHAR(255)
+        - column:
+            constraints:
+              nullable: false
+            name: port_amount
+            type: INT
+        - column:
+            constraints:
+              nullable: false
+            name: year_created
+            type: INT
+        - column:
+            constraints:
+              nullable: false
+              primaryKey: true
+            name: router_id
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: router_model_id
+            type: BIGINT
+        tableName: router
+- changeSet:
+    id: 1774982987884-54
+    author: oalikin88 (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            autoIncrement: true
+            constraints:
+              nullable: false
+              primaryKey: true
+            name: id
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: archived
+            type: BIT(1)
+            defaultValueNumeric: 0
+        - column:
+            name: name
+            type: VARCHAR(255)
+        tableName: router_manufacturer
+- changeSet:
+    id: 1774982987884-55
+    author: oalikin88 (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            autoIncrement: true
+            constraints:
+              nullable: false
+              primaryKey: true
+            name: id
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: archived
+            type: BIT(1)
+            defaultValueNumeric: 0
+        - column:
+            name: model
+            type: VARCHAR(255)
+        - column:
+            name: manufacturer_id
+            type: BIGINT
+        tableName: router_model
+- changeSet:
+    id: 1774982987884-56
+    author: oalikin88 (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            name: inventary_number
+            type: VARCHAR(255)
+        - column:
+            name: serial_number
+            type: VARCHAR(255)
+        - column:
+            name: status
+            type: VARCHAR(255)
+        - column:
+            name: date_exploitation_begin
+            type: datetime
+        - column:
+            name: ip_adress
+            type: VARCHAR(255)
+        - column:
+            name: name_from_onec
+            type: VARCHAR(255)
+        - column:
+            name: number_room
+            type: VARCHAR(255)
+        - column:
+            constraints:
+              nullable: false
+            name: year_created
+            type: INT
+        - column:
+            constraints:
+              nullable: false
+              primaryKey: true
+            name: scanner_id
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: scanner_model_id
+            type: BIGINT
+        tableName: scanner
+- changeSet:
+    id: 1774982987884-57
+    author: oalikin88 (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            autoIncrement: true
+            constraints:
+              nullable: false
+              primaryKey: true
+            name: id
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: archived
+            type: BIT(1)
+            defaultValueNumeric: 0
+        - column:
+            name: name
+            type: VARCHAR(255)
+        tableName: scanner_manufacturer
+- changeSet:
+    id: 1774982987884-58
+    author: oalikin88 (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            autoIncrement: true
+            constraints:
+              nullable: false
+              primaryKey: true
+            name: id
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: archived
+            type: BIT(1)
+            defaultValueNumeric: 0
+        - column:
+            name: model
+            type: VARCHAR(255)
+        - column:
+            name: manufacturer_id
+            type: BIGINT
+        tableName: scanner_model
+- changeSet:
+    id: 1774982987884-59
+    author: oalikin88 (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            name: inventary_number
+            type: VARCHAR(255)
+        - column:
+            name: serial_number
+            type: VARCHAR(255)
+        - column:
+            name: status
+            type: VARCHAR(255)
+        - column:
+            constraints:
+              nullable: false
+            name: cpu_amount
+            type: INT
+        - column:
+            name: date_exploitation_begin
+            type: datetime
+        - column:
+            name: date_upgrade
+            type: datetime
+        - column:
+            name: ip_adress
+            type: VARCHAR(255)
+        - column:
+            name: name_from_onec
+            type: VARCHAR(255)
+        - column:
+            name: number_room
+            type: VARCHAR(255)
+        - column:
+            constraints:
+              nullable: false
+            name: year_created
+            type: INT
+        - column:
+            constraints:
+              nullable: false
+              primaryKey: true
+            name: server_id
+            type: BIGINT
+        - column:
+            name: cpu_id
+            type: BIGINT
+        - column:
+            name: ram_id
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: server_model_id
+            type: BIGINT
+        tableName: server
+- changeSet:
+    id: 1774982987884-60
+    author: oalikin88 (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            constraints:
+              nullable: false
+              primaryKey: true
+            name: server_id
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+              primaryKey: true
+            name: hdd_id
+            type: BIGINT
+        tableName: server_hdd
+- changeSet:
+    id: 1774982987884-61
+    author: oalikin88 (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            autoIncrement: true
+            constraints:
+              nullable: false
+              primaryKey: true
+            name: id
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: archived
+            type: BIT(1)
+            defaultValueNumeric: 0
+        - column:
+            name: name
+            type: VARCHAR(255)
+        tableName: server_manufacturer
+- changeSet:
+    id: 1774982987884-62
+    author: oalikin88 (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            autoIncrement: true
+            constraints:
+              nullable: false
+              primaryKey: true
+            name: id
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: archived
+            type: BIT(1)
+            defaultValueNumeric: 0
+        - column:
+            name: model
+            type: VARCHAR(255)
+        - column:
+            name: manufacturer_id
+            type: BIGINT
+        tableName: server_model
+- changeSet:
+    id: 1774982987884-63
+    author: oalikin88 (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            constraints:
+              nullable: false
+              primaryKey: true
+            name: server_id
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+              primaryKey: true
+            name: operation_system_id
+            type: BIGINT
+        tableName: server_operation_system
+- changeSet:
+    id: 1774982987884-64
+    author: oalikin88 (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            autoIncrement: true
+            constraints:
+              nullable: false
+              primaryKey: true
+            name: id
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: archived
+            type: BIT(1)
+            defaultValueNumeric: 0
+        - column:
+            name: model
+            type: VARCHAR(255)
+        tableName: sound_card
+- changeSet:
+    id: 1774982987884-65
+    author: oalikin88 (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            autoIncrement: true
+            constraints:
+              nullable: false
+              primaryKey: true
+            name: id
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: archived
+            type: BIT(1)
+            defaultValueNumeric: 0
+        - column:
+            name: model
+            type: VARCHAR(255)
+        tableName: speakers
+- changeSet:
+    id: 1774982987884-66
+    author: oalikin88 (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            autoIncrement: true
+            constraints:
+              nullable: false
+              primaryKey: true
+            name: id
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: archived
+            type: BIT(1)
+            defaultValueNumeric: 0
+        - column:
+            name: model
+            type: VARCHAR(255)
+        tableName: sub_display_model
+- changeSet:
+    id: 1774982987884-67
+    author: oalikin88 (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            name: inventary_number
+            type: VARCHAR(255)
+        - column:
+            name: serial_number
+            type: VARCHAR(255)
+        - column:
+            name: status
+            type: VARCHAR(255)
+        - column:
+            name: name_from_onec
+            type: VARCHAR(255)
+        - column:
+            name: number_room
+            type: VARCHAR(255)
+        - column:
+            constraints:
+              nullable: false
+            name: port_amount
+            type: INT
+        - column:
+            name: switch_hub_type
+            type: VARCHAR(30)
+        - column:
+            constraints:
+              nullable: false
+            name: year_created
+            type: INT
+        - column:
+            constraints:
+              nullable: false
+              primaryKey: true
+            name: switch_hub_id
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: switch_hub_model_id
+            type: BIGINT
+        tableName: switch_hub
+- changeSet:
+    id: 1774982987884-68
+    author: oalikin88 (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            autoIncrement: true
+            constraints:
+              nullable: false
+              primaryKey: true
+            name: id
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: archived
+            type: BIT(1)
+            defaultValueNumeric: 0
+        - column:
+            name: name
+            type: VARCHAR(255)
+        tableName: switch_hub_manufacturer
+- changeSet:
+    id: 1774982987884-69
+    author: oalikin88 (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            autoIncrement: true
+            constraints:
+              nullable: false
+              primaryKey: true
+            name: id
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: archived
+            type: BIT(1)
+            defaultValueNumeric: 0
+        - column:
+            name: model
+            type: VARCHAR(255)
+        - column:
+            name: manufacturer_id
+            type: BIGINT
+        tableName: switch_hub_model
+- changeSet:
+    id: 1774982987884-70
+    author: oalikin88 (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            name: inventary_number
+            type: VARCHAR(255)
+        - column:
+            name: serial_number
+            type: VARCHAR(255)
+        - column:
+            name: status
+            type: VARCHAR(255)
+        - column:
+            name: date_exploitation_begin
+            type: datetime
+        - column:
+            name: date_upgrade
+            type: datetime
+        - column:
+            name: ip_adress
+            type: VARCHAR(255)
+        - column:
+            name: name_from_onec
+            type: VARCHAR(255)
+        - column:
+            name: number_room
+            type: VARCHAR(255)
+        - column:
+            constraints:
+              nullable: false
+            name: year_created
+            type: INT
+        - column:
+            constraints:
+              nullable: false
+              primaryKey: true
+            name: system_block_id
+            type: BIGINT
+        - column:
+            name: cd_drive_id
+            type: BIGINT
+        - column:
+            name: cpu_id
+            type: BIGINT
+        - column:
+            name: keyboard_id
+            type: BIGINT
+        - column:
+            name: lan_card_id
+            type: BIGINT
+        - column:
+            name: mother_board_id
+            type: BIGINT
+        - column:
+            name: mouse_id
+            type: BIGINT
+        - column:
+            name: ram_id
+            type: BIGINT
+        - column:
+            name: sound_card_id
+            type: BIGINT
+        - column:
+            name: speakers_id
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: system_block_model_id
+            type: BIGINT
+        - column:
+            name: video_card_id
+            type: BIGINT
+        tableName: system_block
+- changeSet:
+    id: 1774982987884-71
+    author: oalikin88 (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            autoIncrement: true
+            constraints:
+              nullable: false
+              primaryKey: true
+            name: id
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: archived
+            type: BIT(1)
+            defaultValueNumeric: 0
+        - column:
+            name: name
+            type: VARCHAR(255)
+        tableName: system_block_manufacturer
+- changeSet:
+    id: 1774982987884-72
+    author: oalikin88 (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            autoIncrement: true
+            constraints:
+              nullable: false
+              primaryKey: true
+            name: id
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: archived
+            type: BIT(1)
+            defaultValueNumeric: 0
+        - column:
+            name: model
+            type: VARCHAR(255)
+        - column:
+            name: manufacturer_id
+            type: BIGINT
+        tableName: system_block_model
+- changeSet:
+    id: 1774982987884-73
+    author: oalikin88 (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            constraints:
+              nullable: false
+              primaryKey: true
+            name: system_block_id
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+              primaryKey: true
+            name: hdd_id
+            type: BIGINT
+        tableName: systemblock_hdd
+- changeSet:
+    id: 1774982987884-74
+    author: oalikin88 (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            constraints:
+              nullable: false
+              primaryKey: true
+            name: system_block_id
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+              primaryKey: true
+            name: operation_system_id
+            type: BIGINT
+        tableName: systemblock_operation_system
+- changeSet:
+    id: 1774982987884-75
+    author: oalikin88 (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            name: inventary_number
+            type: VARCHAR(255)
+        - column:
+            name: serial_number
+            type: VARCHAR(255)
+        - column:
+            name: status
+            type: VARCHAR(255)
+        - column:
+            constraints:
+              nullable: false
+              primaryKey: true
+            name: terminal_id
+            type: BIGINT
+        - column:
+            name: terminal_display_id
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: terminal_model_id
+            type: BIGINT
+        - column:
+            name: terminal_printer_id
+            type: BIGINT
+        - column:
+            name: terminal_sensor_id
+            type: BIGINT
+        - column:
+            name: terminal_server_id
+            type: BIGINT
+        - column:
+            name: terminal_ups_id
+            type: BIGINT
+        tableName: terminal
+- changeSet:
+    id: 1774982987884-76
+    author: oalikin88 (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            constraints:
+              nullable: false
+            name: screen_diagonal
+            type: DOUBLE
+        - column:
+            name: serial_number
+            type: VARCHAR(255)
+        - column:
+            name: status
+            type: VARCHAR(255)
+        - column:
+            constraints:
+              nullable: false
+              primaryKey: true
+            name: terminal_display_id
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: terminal_display_model_id
+            type: BIGINT
+        tableName: terminal_display
+- changeSet:
+    id: 1774982987884-77
+    author: oalikin88 (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            autoIncrement: true
+            constraints:
+              nullable: false
+              primaryKey: true
+            name: id
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: archived
+            type: BIT(1)
+            defaultValueNumeric: 0
+        - column:
+            name: name
+            type: VARCHAR(255)
+        tableName: terminal_display_manufacturer
+- changeSet:
+    id: 1774982987884-78
+    author: oalikin88 (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            autoIncrement: true
+            constraints:
+              nullable: false
+              primaryKey: true
+            name: id
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: archived
+            type: BIT(1)
+            defaultValueNumeric: 0
+        - column:
+            name: model
+            type: VARCHAR(255)
+        - column:
+            name: manufacturer_id
+            type: BIGINT
+        tableName: terminal_display_model
+- changeSet:
+    id: 1774982987884-79
+    author: oalikin88 (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            autoIncrement: true
+            constraints:
+              nullable: false
+              primaryKey: true
+            name: id
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: archived
+            type: BIT(1)
+            defaultValueNumeric: 0
+        - column:
+            name: name
+            type: VARCHAR(255)
+        tableName: terminal_manufacturer
+- changeSet:
+    id: 1774982987884-80
+    author: oalikin88 (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            autoIncrement: true
+            constraints:
+              nullable: false
+              primaryKey: true
+            name: id
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: archived
+            type: BIT(1)
+            defaultValueNumeric: 0
+        - column:
+            name: model
+            type: VARCHAR(255)
+        - column:
+            name: manufacturer_id
+            type: BIGINT
+        tableName: terminal_model
+- changeSet:
+    id: 1774982987884-81
+    author: oalikin88 (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            name: serial_number
+            type: VARCHAR(255)
+        - column:
+            name: status
+            type: VARCHAR(255)
+        - column:
+            constraints:
+              nullable: false
+              primaryKey: true
+            name: terminal_printer_id
+            type: BIGINT
+        - column:
+            name: terminal_printer_model_id
+            type: BIGINT
+        tableName: terminal_printer
+- changeSet:
+    id: 1774982987884-82
+    author: oalikin88 (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            autoIncrement: true
+            constraints:
+              nullable: false
+              primaryKey: true
+            name: id
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: archived
+            type: BIT(1)
+            defaultValueNumeric: 0
+        - column:
+            name: name
+            type: VARCHAR(255)
+        tableName: terminal_printer_manufacturer
+- changeSet:
+    id: 1774982987884-83
+    author: oalikin88 (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            autoIncrement: true
+            constraints:
+              nullable: false
+              primaryKey: true
+            name: id
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: archived
+            type: BIT(1)
+            defaultValueNumeric: 0
+        - column:
+            name: model
+            type: VARCHAR(255)
+        - column:
+            name: manufacturer_id
+            type: BIGINT
+        tableName: terminal_printer_model
+- changeSet:
+    id: 1774982987884-84
+    author: oalikin88 (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            name: serial_number
+            type: VARCHAR(255)
+        - column:
+            name: status
+            type: VARCHAR(255)
+        - column:
+            constraints:
+              nullable: false
+              primaryKey: true
+            name: terminal_sensor_id
+            type: BIGINT
+        - column:
+            name: terminal_sensor_model_id
+            type: BIGINT
+        tableName: terminal_sensor
+- changeSet:
+    id: 1774982987884-85
+    author: oalikin88 (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            autoIncrement: true
+            constraints:
+              nullable: false
+              primaryKey: true
+            name: id
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: archived
+            type: BIT(1)
+            defaultValueNumeric: 0
+        - column:
+            name: name
+            type: VARCHAR(255)
+        tableName: terminal_sensor_manufacturer
+- changeSet:
+    id: 1774982987884-86
+    author: oalikin88 (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            autoIncrement: true
+            constraints:
+              nullable: false
+              primaryKey: true
+            name: id
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: archived
+            type: BIT(1)
+            defaultValueNumeric: 0
+        - column:
+            name: model
+            type: VARCHAR(255)
+        - column:
+            name: manufacturer_id
+            type: BIGINT
+        tableName: terminal_sensor_model
+- changeSet:
+    id: 1774982987884-87
+    author: oalikin88 (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            name: serial_number
+            type: VARCHAR(255)
+        - column:
+            name: status
+            type: VARCHAR(255)
+        - column:
+            constraints:
+              nullable: false
+              primaryKey: true
+            name: terminal_server_id
+            type: BIGINT
+        - column:
+            name: terminal_server_model_id
+            type: BIGINT
+        tableName: terminal_server
+- changeSet:
+    id: 1774982987884-88
+    author: oalikin88 (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            autoIncrement: true
+            constraints:
+              nullable: false
+              primaryKey: true
+            name: id
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: archived
+            type: BIT(1)
+            defaultValueNumeric: 0
+        - column:
+            name: name
+            type: VARCHAR(255)
+        tableName: terminal_server_manufacturer
+- changeSet:
+    id: 1774982987884-89
+    author: oalikin88 (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            autoIncrement: true
+            constraints:
+              nullable: false
+              primaryKey: true
+            name: id
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: archived
+            type: BIT(1)
+            defaultValueNumeric: 0
+        - column:
+            name: model
+            type: VARCHAR(255)
+        - column:
+            name: manufacturer_id
+            type: BIGINT
+        tableName: terminal_server_model
+- changeSet:
+    id: 1774982987884-90
+    author: oalikin88 (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            name: serial_number
+            type: VARCHAR(255)
+        - column:
+            name: status
+            type: VARCHAR(50)
+        - column:
+            constraints:
+              nullable: false
+              primaryKey: true
+            name: terminal_ups_id
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: terminal_ups_model_id
+            type: BIGINT
+        tableName: terminal_ups
+- changeSet:
+    id: 1774982987884-91
+    author: oalikin88 (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            autoIncrement: true
+            constraints:
+              nullable: false
+              primaryKey: true
+            name: id
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: archived
+            type: BIT(1)
+            defaultValueNumeric: 0
+        - column:
+            name: name
+            type: VARCHAR(255)
+        tableName: terminal_ups_manufacturer
+- changeSet:
+    id: 1774982987884-92
+    author: oalikin88 (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            autoIncrement: true
+            constraints:
+              nullable: false
+              primaryKey: true
+            name: id
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: archived
+            type: BIT(1)
+            defaultValueNumeric: 0
+        - column:
+            name: model
+            type: VARCHAR(255)
+        - column:
+            name: manufacturer_id
+            type: BIGINT
+        tableName: terminal_ups_model
+- changeSet:
+    id: 1774982987884-93
+    author: oalikin88 (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            autoIncrement: true
+            constraints:
+              nullable: false
+              primaryKey: true
+            name: id
+            type: BIGINT
+        - column:
+            name: date_transfer
+            type: datetime
+        - column:
+            name: document_number
+            type: VARCHAR(255)
+        - column:
+            name: inventary_number_new
+            type: VARCHAR(255)
+        - column:
+            name: inventary_number_old
+            type: VARCHAR(255)
+        - column:
+            name: transfer_from
+            type: VARCHAR(255)
+        - column:
+            name: transfer_to
+            type: VARCHAR(255)
+        - column:
+            name: object_buing_id
+            type: BIGINT
+        tableName: transfer
+- changeSet:
+    id: 1774982987884-94
+    author: oalikin88 (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            name: inventary_number
+            type: VARCHAR(255)
+        - column:
+            name: serial_number
+            type: VARCHAR(255)
+        - column:
+            name: status
+            type: VARCHAR(255)
+        - column:
+            name: date_exploitation_begin
+            type: datetime
+        - column:
+            name: name_from_onec
+            type: VARCHAR(255)
+        - column:
+            name: number_room
+            type: VARCHAR(255)
+        - column:
+            name: ups_type
+            type: VARCHAR(50)
+        - column:
+            constraints:
+              nullable: false
+            name: year_created
+            type: INT
+        - column:
+            constraints:
+              nullable: false
+            name: year_replacement
+            type: INT
+        - column:
+            constraints:
+              nullable: false
+              primaryKey: true
+            name: ups_id
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: ups_model_id
+            type: BIGINT
+        tableName: ups
+- changeSet:
+    id: 1774982987884-95
+    author: oalikin88 (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            autoIncrement: true
+            constraints:
+              nullable: false
+              primaryKey: true
+            name: id
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: archived
+            type: BIT(1)
+            defaultValueNumeric: 0
+        - column:
+            name: name
+            type: VARCHAR(255)
+        tableName: ups_manufacturer
+- changeSet:
+    id: 1774982987884-96
+    author: oalikin88 (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            autoIncrement: true
+            constraints:
+              nullable: false
+              primaryKey: true
+            name: id
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: archived
+            type: BIT(1)
+            defaultValueNumeric: 0
+        - column:
+            name: model
+            type: VARCHAR(255)
+        - column:
+            constraints:
+              nullable: false
+            name: battery_amount
+            type: INT
+        - column:
+            constraints:
+              nullable: false
+            name: battery_type_id
+            type: BIGINT
+        - column:
+            name: manufacturer_id
+            type: BIGINT
+        tableName: ups_model
+- changeSet:
+    id: 1774982987884-97
+    author: oalikin88 (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            autoIncrement: true
+            constraints:
+              nullable: false
+              primaryKey: true
+            name: id
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: archived
+            type: BIT(1)
+            defaultValueNumeric: 0
+        - column:
+            name: model
+            type: VARCHAR(255)
+        tableName: video_card
+- changeSet:
+    id: 1774982987884-98
+    author: oalikin88 (generated)
+    changes:
+    - createIndex:
+        associatedWith: ''
+        columns:
+        - column:
+            name: contract_id
+        indexName: CONTRACT_ID_FK
+        tableName: object_buing
+- changeSet:
+    id: 1774982987884-99
+    author: oalikin88 (generated)
+    changes:
+    - createIndex:
+        associatedWith: ''
+        columns:
+        - column:
+            name: hdd_id
+        indexName: FK15ijgnb05f24wjahlq7fxlrxu
+        tableName: server_hdd
+- changeSet:
+    id: 1774982987884-100
+    author: oalikin88 (generated)
+    changes:
+    - createIndex:
+        associatedWith: ''
+        columns:
+        - column:
+            name: lan_card_id
+        indexName: FK1al446xggp3516xmc8hbpsgru
+        tableName: system_block
+- changeSet:
+    id: 1774982987884-101
+    author: oalikin88 (generated)
+    changes:
+    - createIndex:
+        associatedWith: ''
+        columns:
+        - column:
+            name: models_printers_id
+        indexName: FK1gam71pc11uktd1nfna2sykc
+        tableName: cartridge_model_models_printers
+- changeSet:
+    id: 1774982987884-102
+    author: oalikin88 (generated)
+    changes:
+    - createIndex:
+        associatedWith: ''
+        columns:
+        - column:
+            name: infomat_model_id
+        indexName: FK34nr9qbmi3l3ankaessuxwl06
+        tableName: infomat
+- changeSet:
+    id: 1774982987884-103
+    author: oalikin88 (generated)
+    changes:
+    - createIndex:
+        associatedWith: ''
+        columns:
+        - column:
+            name: object_buing_id
+        indexName: FK3p1r6p5nl88gpx2r1yv18xpaf
+        tableName: repair
+- changeSet:
+    id: 1774982987884-104
+    author: oalikin88 (generated)
+    changes:
+    - createIndex:
+        associatedWith: ''
+        columns:
+        - column:
+            name: video_card_id
+        indexName: FK4fso40m709rdu05h5n338l47g
+        tableName: system_block
+- changeSet:
+    id: 1774982987884-105
+    author: oalikin88 (generated)
+    changes:
+    - createIndex:
+        associatedWith: ''
+        columns:
+        - column:
+            name: operation_system_id
+        indexName: FK4gnioh3n3r1exo360hixkb0tp
+        tableName: systemblock_operation_system
+- changeSet:
+    id: 1774982987884-106
+    author: oalikin88 (generated)
+    changes:
+    - createIndex:
+        associatedWith: ''
+        columns:
+        - column:
+            name: sound_card_id
+        indexName: FK4okgr3rfs68alxykm6m5so1nb
+        tableName: system_block
+- changeSet:
+    id: 1774982987884-107
+    author: oalikin88 (generated)
+    changes:
+    - createIndex:
+        associatedWith: ''
+        columns:
+        - column:
+            name: keyboard_id
+        indexName: FK4patjw2rj6snt4axtmjxxyngq
+        tableName: system_block
+- changeSet:
+    id: 1774982987884-108
+    author: oalikin88 (generated)
+    changes:
+    - createIndex:
+        associatedWith: ''
+        columns:
+        - column:
+            name: terminal_server_id
+        indexName: FK53wv7xq4w36ajyjf2wrin6t5r
+        tableName: terminal
+- changeSet:
+    id: 1774982987884-109
+    author: oalikin88 (generated)
+    changes:
+    - createIndex:
+        associatedWith: ''
+        columns:
+        - column:
+            name: terminal_sensor_model_id
+        indexName: FK5j70p2473w89rpgbs7g88eo9v
+        tableName: terminal_sensor
+- changeSet:
+    id: 1774982987884-110
+    author: oalikin88 (generated)
+    changes:
+    - createIndex:
+        associatedWith: ''
+        columns:
+        - column:
+            name: cpu_id
+        indexName: FK5sbnb5abi6nw4scmhae6y6sg4
+        tableName: server
+- changeSet:
+    id: 1774982987884-111
+    author: oalikin88 (generated)
+    changes:
+    - createIndex:
+        associatedWith: ''
+        columns:
+        - column:
+            name: terminal_server_model_id
+        indexName: FK6qk5hjut8kvhfqoprj3a9gum5
+        tableName: terminal_server
+- changeSet:
+    id: 1774982987884-112
+    author: oalikin88 (generated)
+    changes:
+    - createIndex:
+        associatedWith: ''
+        columns:
+        - column:
+            name: scanner_model_id
+        indexName: FK6yfffoqrqt88hf1lq63v3pcb0
+        tableName: scanner
+- changeSet:
+    id: 1774982987884-113
+    author: oalikin88 (generated)
+    changes:
+    - createIndex:
+        associatedWith: ''
+        columns:
+        - column:
+            name: terminal_sensor_id
+        indexName: FK75mij3yvm0semxxuvehlr4mhg
+        tableName: terminal
+- changeSet:
+    id: 1774982987884-114
+    author: oalikin88 (generated)
+    changes:
+    - createIndex:
+        associatedWith: ''
+        columns:
+        - column:
+            name: model_id
+        indexName: FK7fe4jng21tq6yv4j06evy11pl
+        tableName: fax
+- changeSet:
+    id: 1774982987884-115
+    author: oalikin88 (generated)
+    changes:
+    - createIndex:
+        associatedWith: ''
+        columns:
+        - column:
+            name: mouse_id
+        indexName: FK7kfe09ero6e5ohhx3skv16utl
+        tableName: system_block
+- changeSet:
+    id: 1774982987884-116
+    author: oalikin88 (generated)
+    changes:
+    - createIndex:
+        associatedWith: ''
+        columns:
+        - column:
+            name: place_id
+        indexName: FK7o9orsmov1akvn0wqwoobjl0s
+        tableName: object_buing
+- changeSet:
+    id: 1774982987884-117
+    author: oalikin88 (generated)
+    changes:
+    - createIndex:
+        associatedWith: ''
+        columns:
+        - column:
+            name: display_id
+        indexName: FK8pvsbey6jjhn9lg2ub1gwb3jw
+        tableName: asuo_display
+- changeSet:
+    id: 1774982987884-118
+    author: oalikin88 (generated)
+    changes:
+    - createIndex:
+        associatedWith: ''
+        columns:
+        - column:
+            name: terminal_ups_model_id
+        indexName: FK9ib1ubc45gsaalyog379yo9mv
+        tableName: terminal_ups
+- changeSet:
+    id: 1774982987884-119
+    author: oalikin88 (generated)
+    changes:
+    - createIndex:
+        associatedWith: ''
+        columns:
+        - column:
+            name: ram_id
+        indexName: FK9nveywvh3irhmiwa44fblg81
+        tableName: system_block
+- changeSet:
+    id: 1774982987884-120
+    author: oalikin88 (generated)
+    changes:
+    - createIndex:
+        associatedWith: ''
+        columns:
+        - column:
+            name: manufacturer_id
+        indexName: FK9o02734pfhtjrwd7sirvel2op
+        tableName: terminal_display_model
+- changeSet:
+    id: 1774982987884-121
+    author: oalikin88 (generated)
+    changes:
+    - createIndex:
+        associatedWith: ''
+        columns:
+        - column:
+            name: location_id
+        indexName: FKaxtbydhvr0oeed7oruruf0hn
+        tableName: place
+- changeSet:
+    id: 1774982987884-122
+    author: oalikin88 (generated)
+    changes:
+    - createIndex:
+        associatedWith: ''
+        columns:
+        - column:
+            name: manufacturer_id
+        indexName: FKay859vwpl3tmenkqj3ftskunq
+        tableName: cartridge_model
+- changeSet:
+    id: 1774982987884-123
+    author: oalikin88 (generated)
+    changes:
+    - createIndex:
+        associatedWith: ''
+        columns:
+        - column:
+            name: manufacturer_id
+        indexName: FKb46yfngd0cv9bbblgxmtfmfet
+        tableName: scanner_model
+- changeSet:
+    id: 1774982987884-124
+    author: oalikin88 (generated)
+    changes:
+    - createIndex:
+        associatedWith: ''
+        columns:
+        - column:
+            name: switch_hub_model_id
+        indexName: FKb4x65rojlfoxhv7la5rqytiox
+        tableName: switch_hub
+- changeSet:
+    id: 1774982987884-125
+    author: oalikin88 (generated)
+    changes:
+    - createIndex:
+        associatedWith: ''
+        columns:
+        - column:
+            name: terminal_printer_id
+        indexName: FKbegjna5c4g6bhm14sx3nxdjqh
+        tableName: terminal
+- changeSet:
+    id: 1774982987884-126
+    author: oalikin88 (generated)
+    changes:
+    - createIndex:
+        associatedWith: ''
+        columns:
+        - column:
+            name: manufacturer_id
+        indexName: FKbnpri51vpgliy58ch0tw0711r
+        tableName: fax_model
+- changeSet:
+    id: 1774982987884-127
+    author: oalikin88 (generated)
+    changes:
+    - createIndex:
+        associatedWith: ''
+        columns:
+        - column:
+            name: manufacturer_id
+        indexName: FKbo94ghbb8rfg6i08nhymy7lv8
+        tableName: display_model
+- changeSet:
+    id: 1774982987884-128
+    author: oalikin88 (generated)
+    changes:
+    - createIndex:
+        associatedWith: ''
+        columns:
+        - column:
+            name: phone_model_id
+        indexName: FKbucelmcw9hd57gmsuc1s7t1dr
+        tableName: phone
+- changeSet:
+    id: 1774982987884-129
+    author: oalikin88 (generated)
+    changes:
+    - createIndex:
+        associatedWith: ''
+        columns:
+        - column:
+            name: cpu_id
+        indexName: FKc9d48jpmlx9fd373rjke1twdj
+        tableName: system_block
+- changeSet:
+    id: 1774982987884-130
+    author: oalikin88 (generated)
+    changes:
+    - createIndex:
+        associatedWith: ''
+        columns:
+        - column:
+            name: manufacturer_id
+        indexName: FKcdp39wljcjfiim5ur5gibm1q5
+        tableName: terminal_printer_model
+- changeSet:
+    id: 1774982987884-131
+    author: oalikin88 (generated)
+    changes:
+    - createIndex:
+        associatedWith: ''
+        columns:
+        - column:
+            name: terminal_printer_model_id
+        indexName: FKcv5hkgemvjx7dgemnnwlrqniv
+        tableName: terminal_printer
+- changeSet:
+    id: 1774982987884-132
+    author: oalikin88 (generated)
+    changes:
+    - createIndex:
+        associatedWith: ''
+        columns:
+        - column:
+            name: manufacturer_id
+        indexName: FKdjpd0hsis4gixj8pkdjs50l2y
+        tableName: terminal_sensor_model
+- changeSet:
+    id: 1774982987884-133
+    author: oalikin88 (generated)
+    changes:
+    - createIndex:
+        associatedWith: ''
+        columns:
+        - column:
+            name: terminal_ups_id
+        indexName: FKdkmb7rx8b0k3404trga7k3kkw
+        tableName: terminal
+- changeSet:
+    id: 1774982987884-134
+    author: oalikin88 (generated)
+    changes:
+    - createIndex:
+        associatedWith: ''
+        columns:
+        - column:
+            name: hub_id
+        indexName: FKe1k9if1jgwfg7j2fmaajybc9u
+        tableName: asuo_hub
+- changeSet:
+    id: 1774982987884-135
+    author: oalikin88 (generated)
+    changes:
+    - createIndex:
+        associatedWith: ''
+        columns:
+        - column:
+            name: sub_display_model_id
+        indexName: FKefi2t8t5ig5mcli3s63ovqu6m
+        tableName: asuo
+- changeSet:
+    id: 1774982987884-136
+    author: oalikin88 (generated)
+    changes:
+    - createIndex:
+        associatedWith: ''
+        columns:
+        - column:
+            name: manufacturer_id
+        indexName: FKf0pcnsqt1o4dc92sx7lbif9ay
+        tableName: server_model
+- changeSet:
+    id: 1774982987884-137
+    author: oalikin88 (generated)
+    changes:
+    - createIndex:
+        associatedWith: ''
+        columns:
+        - column:
+            name: ram_id
+        indexName: FKf64cqk8wa22pf1mgkpkygd06r
+        tableName: server
+- changeSet:
+    id: 1774982987884-138
+    author: oalikin88 (generated)
+    changes:
+    - createIndex:
+        associatedWith: ''
+        columns:
+        - column:
+            name: manufacturer_id
+        indexName: FKf9iyb407otby9ss5jf8qvo2i3
+        tableName: switch_hub_model
+- changeSet:
+    id: 1774982987884-139
+    author: oalikin88 (generated)
+    changes:
+    - createIndex:
+        associatedWith: ''
+        columns:
+        - column:
+            name: printer_model_id
+        indexName: FKg2q4em6dim0kyllii90jmvvik
+        tableName: printer
+- changeSet:
+    id: 1774982987884-140
+    author: oalikin88 (generated)
+    changes:
+    - createIndex:
+        associatedWith: ''
+        columns:
+        - column:
+            name: conditioner_model_id
+        indexName: FKg8o250fegxet60lisn3sqaqe3
+        tableName: conditioner
+- changeSet:
+    id: 1774982987884-141
+    author: oalikin88 (generated)
+    changes:
+    - createIndex:
+        associatedWith: ''
+        columns:
+        - column:
+            name: manufacturer_id
+        indexName: FKgxc9khypfi6niguh581po81cm
+        tableName: infomat_model
+- changeSet:
+    id: 1774982987884-142
+    author: oalikin88 (generated)
+    changes:
+    - createIndex:
+        associatedWith: ''
+        columns:
+        - column:
+            name: manufacturer_id
+        indexName: FKhji1xt4ay28pecwx2l9uqr8vu
+        tableName: terminal_ups_model
+- changeSet:
+    id: 1774982987884-143
+    author: oalikin88 (generated)
+    changes:
+    - createIndex:
+        associatedWith: ''
+        columns:
+        - column:
+            name: manufacturer_id
+        indexName: FKhr9noypfsljp28tfyrd8gqnfl
+        tableName: ups_model
+- changeSet:
+    id: 1774982987884-144
+    author: oalikin88 (generated)
+    changes:
+    - createIndex:
+        associatedWith: ''
+        columns:
+        - column:
+            name: asuo_id
+        indexName: FKi1xb2p5jl4mtdlixlegin21lf
+        tableName: asuo_terminal
+- changeSet:
+    id: 1774982987884-145
+    author: oalikin88 (generated)
+    changes:
+    - createIndex:
+        associatedWith: ''
+        columns:
+        - column:
+            name: terminal_display_model_id
+        indexName: FKjaoyx8dig1ac208plo632c9ff
+        tableName: terminal_display
+- changeSet:
+    id: 1774982987884-146
+    author: oalikin88 (generated)
+    changes:
+    - createIndex:
+        associatedWith: ''
+        columns:
+        - column:
+            name: mother_board_id
+        indexName: FKjrwq0xvm5df9e1udtx4uy9shg
+        tableName: system_block
+- changeSet:
+    id: 1774982987884-147
+    author: oalikin88 (generated)
+    changes:
+    - createIndex:
+        associatedWith: ''
+        columns:
+        - column:
+            name: program_software_id
+        indexName: FKkcrnalhqkpxoggq42ajl0h5l3
+        tableName: asuo
+- changeSet:
+    id: 1774982987884-148
+    author: oalikin88 (generated)
+    changes:
+    - createIndex:
+        associatedWith: ''
+        columns:
+        - column:
+            name: ups_model_id
+        indexName: FKkdnmimf006mfray5jv8n3n22j
+        tableName: ups
+- changeSet:
+    id: 1774982987884-149
+    author: oalikin88 (generated)
+    changes:
+    - createIndex:
+        associatedWith: ''
+        columns:
+        - column:
+            name: router_model_id
+        indexName: FKl4et8opu9cdiftchsiqs243ll
+        tableName: router
+- changeSet:
+    id: 1774982987884-150
+    author: oalikin88 (generated)
+    changes:
+    - createIndex:
+        associatedWith: ''
+        columns:
+        - column:
+            name: server_model_id
+        indexName: FKl7v92k8bmg9k2v2flp56m0r6h
+        tableName: server
+- changeSet:
+    id: 1774982987884-151
+    author: oalikin88 (generated)
+    changes:
+    - createIndex:
+        associatedWith: ''
+        columns:
+        - column:
+            name: battery_type_id
+        indexName: FKlklyhb9484o1dyglk7smemfhh
+        tableName: ups_model
+- changeSet:
+    id: 1774982987884-152
+    author: oalikin88 (generated)
+    changes:
+    - createIndex:
+        associatedWith: ''
+        columns:
+        - column:
+            name: manufacturer_id
+        indexName: FKm0o78kktvmbiulooq8h9xmjqp
+        tableName: router_model
+- changeSet:
+    id: 1774982987884-153
+    author: oalikin88 (generated)
+    changes:
+    - createIndex:
+        associatedWith: ''
+        columns:
+        - column:
+            name: hdd_id
+        indexName: FKmbx95hypiy3v929hh5b5vuei
+        tableName: systemblock_hdd
+- changeSet:
+    id: 1774982987884-154
+    author: oalikin88 (generated)
+    changes:
+    - createIndex:
+        associatedWith: ''
+        columns:
+        - column:
+            name: manufacturer_id
+        indexName: FKmfu8xj9uhmqqiu9gefshib79j
+        tableName: conditioner_model
+- changeSet:
+    id: 1774982987884-155
+    author: oalikin88 (generated)
+    changes:
+    - createIndex:
+        associatedWith: ''
+        columns:
+        - column:
+            name: manufacturer_id
+        indexName: FKnicoabvbly0yn6pwe0b3f193x
+        tableName: terminal_model
+- changeSet:
+    id: 1774982987884-156
+    author: oalikin88 (generated)
+    changes:
+    - createIndex:
+        associatedWith: ''
+        columns:
+        - column:
+            name: model_id
+        indexName: FKnoywxpgupwmgbjcavhh9ustox
+        tableName: cartridge
+- changeSet:
+    id: 1774982987884-157
+    author: oalikin88 (generated)
+    changes:
+    - createIndex:
+        associatedWith: ''
+        columns:
+        - column:
+            name: object_buing_id
+        indexName: FKp9lpo6c79lk935uei70fg5dai
+        tableName: transfer
+- changeSet:
+    id: 1774982987884-158
+    author: oalikin88 (generated)
+    changes:
+    - createIndex:
+        associatedWith: ''
+        columns:
+        - column:
+            name: model_cartridges_id
+        indexName: FKpksvlhnmxa19pnm7415149y29
+        tableName: cartridge_model_models_printers
+- changeSet:
+    id: 1774982987884-159
+    author: oalikin88 (generated)
+    changes:
+    - createIndex:
+        associatedWith: ''
+        columns:
+        - column:
+            name: manufacturer_id
+        indexName: FKptt68slluxk5vhkge5nqedetw
+        tableName: monitor_model
+- changeSet:
+    id: 1774982987884-160
+    author: oalikin88 (generated)
+    changes:
+    - createIndex:
+        associatedWith: ''
+        columns:
+        - column:
+            name: manufacturer_id
+        indexName: FKq4v3nc9wef9tlh5urbut170qf
+        tableName: phone_model
+- changeSet:
+    id: 1774982987884-161
+    author: oalikin88 (generated)
+    changes:
+    - createIndex:
+        associatedWith: ''
+        columns:
+        - column:
+            name: terminal_id
+        indexName: FKqaiogcs9huuvun8iyai0bfys4
+        tableName: asuo_terminal
+- changeSet:
+    id: 1774982987884-162
+    author: oalikin88 (generated)
+    changes:
+    - createIndex:
+        associatedWith: ''
+        columns:
+        - column:
+            name: speakers_id
+        indexName: FKqjohwxy3b67ep2w9slm56ehuc
+        tableName: system_block
+- changeSet:
+    id: 1774982987884-163
+    author: oalikin88 (generated)
+    changes:
+    - createIndex:
+        associatedWith: ''
+        columns:
+        - column:
+            name: operation_system_id
+        indexName: FKrmf6aren5iay3p4670i2x0pix
+        tableName: server_operation_system
+- changeSet:
+    id: 1774982987884-164
+    author: oalikin88 (generated)
+    changes:
+    - createIndex:
+        associatedWith: ''
+        columns:
+        - column:
+            name: monitor_model_id
+        indexName: FKrps99k2u5assm0cvj999iciiy
+        tableName: monitor
+- changeSet:
+    id: 1774982987884-165
+    author: oalikin88 (generated)
+    changes:
+    - createIndex:
+        associatedWith: ''
+        columns:
+        - column:
+            name: system_block_model_id
+        indexName: FKrqweou5t5gppa2c08dhtxhk54
+        tableName: system_block
+- changeSet:
+    id: 1774982987884-166
+    author: oalikin88 (generated)
+    changes:
+    - createIndex:
+        associatedWith: ''
+        columns:
+        - column:
+            name: manufacturer_id
+        indexName: FKryn3ihvqjeanhnag4xrk4jy2s
+        tableName: hub_model
+- changeSet:
+    id: 1774982987884-167
+    author: oalikin88 (generated)
+    changes:
+    - createIndex:
+        associatedWith: ''
+        columns:
+        - column:
+            name: hub_model_id
+        indexName: FKs2heht3b9xoxgb0msq5ha2wnu
+        tableName: hub
+- changeSet:
+    id: 1774982987884-168
+    author: oalikin88 (generated)
+    changes:
+    - createIndex:
+        associatedWith: ''
+        columns:
+        - column:
+            name: cd_drive_id
+        indexName: FKslgj9t5nfg34c3bo1n6rnfnxv
+        tableName: system_block
+- changeSet:
+    id: 1774982987884-169
+    author: oalikin88 (generated)
+    changes:
+    - createIndex:
+        associatedWith: ''
+        columns:
+        - column:
+            name: terminal_display_id
+        indexName: FKss2op1avcs99hfvtg09at7k3x
+        tableName: terminal
+- changeSet:
+    id: 1774982987884-170
+    author: oalikin88 (generated)
+    changes:
+    - createIndex:
+        associatedWith: ''
+        columns:
+        - column:
+            name: manufacturer_id
+        indexName: FKsujnqe1mr8tk17dd5nq8fxk16
+        tableName: system_block_model
+- changeSet:
+    id: 1774982987884-171
+    author: oalikin88 (generated)
+    changes:
+    - createIndex:
+        associatedWith: ''
+        columns:
+        - column:
+            name: manufacturer_id
+        indexName: FKswdudi8h5t24uq79rrrw7myd3
+        tableName: ats_model
+- changeSet:
+    id: 1774982987884-172
+    author: oalikin88 (generated)
+    changes:
+    - createIndex:
+        associatedWith: ''
+        columns:
+        - column:
+            name: display_model_id
+        indexName: FKt0dem3nksbd52ithb8ng7q4gm
+        tableName: display
+- changeSet:
+    id: 1774982987884-173
+    author: oalikin88 (generated)
+    changes:
+    - createIndex:
+        associatedWith: ''
+        columns:
+        - column:
+            name: manufacturer_id
+        indexName: FKt37d0ga3lyig9432licv4l8xf
+        tableName: terminal_server_model
+- changeSet:
+    id: 1774982987884-174
+    author: oalikin88 (generated)
+    changes:
+    - createIndex:
+        associatedWith: ''
+        columns:
+        - column:
+            name: ats_model_id
+        indexName: FKt8va5u3dsoh8ndi71do7ev2r4
+        tableName: ats
+- changeSet:
+    id: 1774982987884-175
+    author: oalikin88 (generated)
+    changes:
+    - createIndex:
+        associatedWith: ''
+        columns:
+        - column:
+            name: terminal_model_id
+        indexName: FKtacn9970iumw65xtn7a2dohn2
+        tableName: terminal
+- changeSet:
+    id: 1774982987884-176
+    author: oalikin88 (generated)
+    changes:
+    - createIndex:
+        associatedWith: ''
+        columns:
+        - column:
+            name: manufacturer_id
+        indexName: FKtd1vwjjyjup8894lkeklnuaq4
+        tableName: printer_model
+- changeSet:
+    id: 1774982987884-177
+    author: oalikin88 (generated)
+    changes:
+    - createIndex:
+        associatedWith: ''
+        columns:
+        - column:
+            name: printer_id
+        indexName: PRINTER_ID_FK
+        tableName: cartridge
+- changeSet:
+    id: 1774982987884-178
+    author: oalikin88 (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: contract_id
+        baseTableName: object_buing
+        constraintName: CONTRACT_ID_FK
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: RESTRICT
+        onUpdate: RESTRICT
+        referencedColumnNames: id
+        referencedTableName: contract
+        validate: true
+- changeSet:
+    id: 1774982987884-179
+    author: oalikin88 (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: hdd_id
+        baseTableName: server_hdd
+        constraintName: FK15ijgnb05f24wjahlq7fxlrxu
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: RESTRICT
+        onUpdate: RESTRICT
+        referencedColumnNames: id
+        referencedTableName: hdd
+        validate: true
+- changeSet:
+    id: 1774982987884-180
+    author: oalikin88 (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: phone_id
+        baseTableName: phone
+        constraintName: FK163mhd4g2bt3qh14ewe6qryxi
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: RESTRICT
+        onUpdate: RESTRICT
+        referencedColumnNames: id
+        referencedTableName: object_buing
+        validate: true
+- changeSet:
+    id: 1774982987884-181
+    author: oalikin88 (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: lan_card_id
+        baseTableName: system_block
+        constraintName: FK1al446xggp3516xmc8hbpsgru
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: RESTRICT
+        onUpdate: RESTRICT
+        referencedColumnNames: id
+        referencedTableName: lan_card
+        validate: true
+- changeSet:
+    id: 1774982987884-182
+    author: oalikin88 (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: models_printers_id
+        baseTableName: cartridge_model_models_printers
+        constraintName: FK1gam71pc11uktd1nfna2sykc
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: RESTRICT
+        onUpdate: RESTRICT
+        referencedColumnNames: id
+        referencedTableName: printer_model
+        validate: true
+- changeSet:
+    id: 1774982987884-183
+    author: oalikin88 (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: router_id
+        baseTableName: router
+        constraintName: FK2lah1xue472p41h1k6aohp8gx
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: RESTRICT
+        onUpdate: RESTRICT
+        referencedColumnNames: id
+        referencedTableName: object_buing
+        validate: true
+- changeSet:
+    id: 1774982987884-184
+    author: oalikin88 (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: terminal_ups_id
+        baseTableName: terminal_ups
+        constraintName: FK2w5aey4hlw60wit6y3psneby9
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: RESTRICT
+        onUpdate: RESTRICT
+        referencedColumnNames: id
+        referencedTableName: object_buing
+        validate: true
+- changeSet:
+    id: 1774982987884-185
+    author: oalikin88 (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: cartridge_id
+        baseTableName: cartridge
+        constraintName: FK33whyhbkqufm7yf6mcmgfuoh1
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: RESTRICT
+        onUpdate: RESTRICT
+        referencedColumnNames: id
+        referencedTableName: object_buing
+        validate: true
+- changeSet:
+    id: 1774982987884-186
+    author: oalikin88 (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: infomat_model_id
+        baseTableName: infomat
+        constraintName: FK34nr9qbmi3l3ankaessuxwl06
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: RESTRICT
+        onUpdate: RESTRICT
+        referencedColumnNames: id
+        referencedTableName: infomat_model
+        validate: true
+- changeSet:
+    id: 1774982987884-187
+    author: oalikin88 (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: object_buing_id
+        baseTableName: repair
+        constraintName: FK3p1r6p5nl88gpx2r1yv18xpaf
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: RESTRICT
+        onUpdate: RESTRICT
+        referencedColumnNames: id
+        referencedTableName: object_buing
+        validate: true
+- changeSet:
+    id: 1774982987884-188
+    author: oalikin88 (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: video_card_id
+        baseTableName: system_block
+        constraintName: FK4fso40m709rdu05h5n338l47g
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: RESTRICT
+        onUpdate: RESTRICT
+        referencedColumnNames: id
+        referencedTableName: video_card
+        validate: true
+- changeSet:
+    id: 1774982987884-189
+    author: oalikin88 (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: operation_system_id
+        baseTableName: systemblock_operation_system
+        constraintName: FK4gnioh3n3r1exo360hixkb0tp
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: RESTRICT
+        onUpdate: RESTRICT
+        referencedColumnNames: id
+        referencedTableName: operation_system
+        validate: true
+- changeSet:
+    id: 1774982987884-190
+    author: oalikin88 (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: sound_card_id
+        baseTableName: system_block
+        constraintName: FK4okgr3rfs68alxykm6m5so1nb
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: RESTRICT
+        onUpdate: RESTRICT
+        referencedColumnNames: id
+        referencedTableName: sound_card
+        validate: true
+- changeSet:
+    id: 1774982987884-191
+    author: oalikin88 (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: keyboard_id
+        baseTableName: system_block
+        constraintName: FK4patjw2rj6snt4axtmjxxyngq
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: RESTRICT
+        onUpdate: RESTRICT
+        referencedColumnNames: id
+        referencedTableName: keyboard
+        validate: true
+- changeSet:
+    id: 1774982987884-192
+    author: oalikin88 (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: terminal_server_id
+        baseTableName: terminal
+        constraintName: FK53wv7xq4w36ajyjf2wrin6t5r
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: RESTRICT
+        onUpdate: RESTRICT
+        referencedColumnNames: terminal_server_id
+        referencedTableName: terminal_server
+        validate: true
+- changeSet:
+    id: 1774982987884-193
+    author: oalikin88 (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: terminal_sensor_model_id
+        baseTableName: terminal_sensor
+        constraintName: FK5j70p2473w89rpgbs7g88eo9v
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: RESTRICT
+        onUpdate: RESTRICT
+        referencedColumnNames: id
+        referencedTableName: terminal_sensor_model
+        validate: true
+- changeSet:
+    id: 1774982987884-194
+    author: oalikin88 (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: cpu_id
+        baseTableName: server
+        constraintName: FK5sbnb5abi6nw4scmhae6y6sg4
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: RESTRICT
+        onUpdate: RESTRICT
+        referencedColumnNames: id
+        referencedTableName: cpu
+        validate: true
+- changeSet:
+    id: 1774982987884-195
+    author: oalikin88 (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: hub_id
+        baseTableName: hub
+        constraintName: FK5vwj6dy5u6ip9vlgxgoomih4n
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: RESTRICT
+        onUpdate: RESTRICT
+        referencedColumnNames: id
+        referencedTableName: object_buing
+        validate: true
+- changeSet:
+    id: 1774982987884-196
+    author: oalikin88 (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: terminal_id
+        baseTableName: terminal
+        constraintName: FK6ffo391k5p5qn408090ueqog0
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: RESTRICT
+        onUpdate: RESTRICT
+        referencedColumnNames: id
+        referencedTableName: object_buing
+        validate: true
+- changeSet:
+    id: 1774982987884-197
+    author: oalikin88 (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: switch_hub_id
+        baseTableName: switch_hub
+        constraintName: FK6lb8wybce8nbcvkstoqjo9hay
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: RESTRICT
+        onUpdate: RESTRICT
+        referencedColumnNames: id
+        referencedTableName: object_buing
+        validate: true
+- changeSet:
+    id: 1774982987884-198
+    author: oalikin88 (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: terminal_server_model_id
+        baseTableName: terminal_server
+        constraintName: FK6qk5hjut8kvhfqoprj3a9gum5
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: RESTRICT
+        onUpdate: RESTRICT
+        referencedColumnNames: id
+        referencedTableName: terminal_server_model
+        validate: true
+- changeSet:
+    id: 1774982987884-199
+    author: oalikin88 (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: system_block_id
+        baseTableName: systemblock_hdd
+        constraintName: FK6qt8q4m3i6u6w1nrb8dv5gk7k
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: RESTRICT
+        onUpdate: RESTRICT
+        referencedColumnNames: system_block_id
+        referencedTableName: system_block
+        validate: true
+- changeSet:
+    id: 1774982987884-200
+    author: oalikin88 (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: scanner_model_id
+        baseTableName: scanner
+        constraintName: FK6yfffoqrqt88hf1lq63v3pcb0
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: RESTRICT
+        onUpdate: RESTRICT
+        referencedColumnNames: id
+        referencedTableName: scanner_model
+        validate: true
+- changeSet:
+    id: 1774982987884-201
+    author: oalikin88 (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: terminal_sensor_id
+        baseTableName: terminal
+        constraintName: FK75mij3yvm0semxxuvehlr4mhg
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: RESTRICT
+        onUpdate: RESTRICT
+        referencedColumnNames: terminal_sensor_id
+        referencedTableName: terminal_sensor
+        validate: true
+- changeSet:
+    id: 1774982987884-202
+    author: oalikin88 (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: model_id
+        baseTableName: fax
+        constraintName: FK7fe4jng21tq6yv4j06evy11pl
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: RESTRICT
+        onUpdate: RESTRICT
+        referencedColumnNames: id
+        referencedTableName: fax_model
+        validate: true
+- changeSet:
+    id: 1774982987884-203
+    author: oalikin88 (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: mouse_id
+        baseTableName: system_block
+        constraintName: FK7kfe09ero6e5ohhx3skv16utl
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: RESTRICT
+        onUpdate: RESTRICT
+        referencedColumnNames: id
+        referencedTableName: mouse
+        validate: true
+- changeSet:
+    id: 1774982987884-204
+    author: oalikin88 (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: place_id
+        baseTableName: object_buing
+        constraintName: FK7o9orsmov1akvn0wqwoobjl0s
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: RESTRICT
+        onUpdate: RESTRICT
+        referencedColumnNames: id
+        referencedTableName: place
+        validate: true
+- changeSet:
+    id: 1774982987884-205
+    author: oalikin88 (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: display_id
+        baseTableName: asuo_display
+        constraintName: FK8pvsbey6jjhn9lg2ub1gwb3jw
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: RESTRICT
+        onUpdate: RESTRICT
+        referencedColumnNames: display_id
+        referencedTableName: display
+        validate: true
+- changeSet:
+    id: 1774982987884-206
+    author: oalikin88 (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: fax_id
+        baseTableName: fax
+        constraintName: FK8v6x40flm7dn0s7nowh8uv6qp
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: RESTRICT
+        onUpdate: RESTRICT
+        referencedColumnNames: id
+        referencedTableName: object_buing
+        validate: true
+- changeSet:
+    id: 1774982987884-207
+    author: oalikin88 (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: monitor_id
+        baseTableName: monitor
+        constraintName: FK95iioqyp1hi52fx2ei2d9838i
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: RESTRICT
+        onUpdate: RESTRICT
+        referencedColumnNames: id
+        referencedTableName: object_buing
+        validate: true
+- changeSet:
+    id: 1774982987884-208
+    author: oalikin88 (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: terminal_ups_model_id
+        baseTableName: terminal_ups
+        constraintName: FK9ib1ubc45gsaalyog379yo9mv
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: RESTRICT
+        onUpdate: RESTRICT
+        referencedColumnNames: id
+        referencedTableName: terminal_ups_model
+        validate: true
+- changeSet:
+    id: 1774982987884-209
+    author: oalikin88 (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: system_block_id
+        baseTableName: systemblock_operation_system
+        constraintName: FK9jtuflmqq2p9mu06po8fnnkcv
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: RESTRICT
+        onUpdate: RESTRICT
+        referencedColumnNames: system_block_id
+        referencedTableName: system_block
+        validate: true
+- changeSet:
+    id: 1774982987884-210
+    author: oalikin88 (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: ram_id
+        baseTableName: system_block
+        constraintName: FK9nveywvh3irhmiwa44fblg81
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: RESTRICT
+        onUpdate: RESTRICT
+        referencedColumnNames: id
+        referencedTableName: ram
+        validate: true
+- changeSet:
+    id: 1774982987884-211
+    author: oalikin88 (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: manufacturer_id
+        baseTableName: terminal_display_model
+        constraintName: FK9o02734pfhtjrwd7sirvel2op
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: RESTRICT
+        onUpdate: RESTRICT
+        referencedColumnNames: id
+        referencedTableName: terminal_display_manufacturer
+        validate: true
+- changeSet:
+    id: 1774982987884-212
+    author: oalikin88 (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: asuo_id
+        baseTableName: asuo_display
+        constraintName: FK9plmjkuv6fqwkyebi7c0cwdfh
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: RESTRICT
+        onUpdate: RESTRICT
+        referencedColumnNames: asuo_id
+        referencedTableName: asuo
+        validate: true
+- changeSet:
+    id: 1774982987884-213
+    author: oalikin88 (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: location_id
+        baseTableName: place
+        constraintName: FKaxtbydhvr0oeed7oruruf0hn
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: RESTRICT
+        onUpdate: RESTRICT
+        referencedColumnNames: id
+        referencedTableName: location
+        validate: true
+- changeSet:
+    id: 1774982987884-214
+    author: oalikin88 (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: manufacturer_id
+        baseTableName: cartridge_model
+        constraintName: FKay859vwpl3tmenkqj3ftskunq
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: RESTRICT
+        onUpdate: RESTRICT
+        referencedColumnNames: id
+        referencedTableName: cartridge_manufacturer
+        validate: true
+- changeSet:
+    id: 1774982987884-215
+    author: oalikin88 (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: manufacturer_id
+        baseTableName: scanner_model
+        constraintName: FKb46yfngd0cv9bbblgxmtfmfet
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: RESTRICT
+        onUpdate: RESTRICT
+        referencedColumnNames: id
+        referencedTableName: scanner_manufacturer
+        validate: true
+- changeSet:
+    id: 1774982987884-216
+    author: oalikin88 (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: switch_hub_model_id
+        baseTableName: switch_hub
+        constraintName: FKb4x65rojlfoxhv7la5rqytiox
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: RESTRICT
+        onUpdate: RESTRICT
+        referencedColumnNames: id
+        referencedTableName: switch_hub_model
+        validate: true
+- changeSet:
+    id: 1774982987884-217
+    author: oalikin88 (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: terminal_printer_id
+        baseTableName: terminal
+        constraintName: FKbegjna5c4g6bhm14sx3nxdjqh
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: RESTRICT
+        onUpdate: RESTRICT
+        referencedColumnNames: terminal_printer_id
+        referencedTableName: terminal_printer
+        validate: true
+- changeSet:
+    id: 1774982987884-218
+    author: oalikin88 (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: printer_id
+        baseTableName: printer
+        constraintName: FKbhvu5gjr4pn1qj7ql0kjs2a83
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: RESTRICT
+        onUpdate: RESTRICT
+        referencedColumnNames: id
+        referencedTableName: object_buing
+        validate: true
+- changeSet:
+    id: 1774982987884-219
+    author: oalikin88 (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: manufacturer_id
+        baseTableName: fax_model
+        constraintName: FKbnpri51vpgliy58ch0tw0711r
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: RESTRICT
+        onUpdate: RESTRICT
+        referencedColumnNames: id
+        referencedTableName: fax_manufacturer
+        validate: true
+- changeSet:
+    id: 1774982987884-220
+    author: oalikin88 (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: manufacturer_id
+        baseTableName: display_model
+        constraintName: FKbo94ghbb8rfg6i08nhymy7lv8
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: RESTRICT
+        onUpdate: RESTRICT
+        referencedColumnNames: id
+        referencedTableName: display_manufacturer
+        validate: true
+- changeSet:
+    id: 1774982987884-221
+    author: oalikin88 (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: phone_model_id
+        baseTableName: phone
+        constraintName: FKbucelmcw9hd57gmsuc1s7t1dr
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: RESTRICT
+        onUpdate: RESTRICT
+        referencedColumnNames: id
+        referencedTableName: phone_model
+        validate: true
+- changeSet:
+    id: 1774982987884-222
+    author: oalikin88 (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: cpu_id
+        baseTableName: system_block
+        constraintName: FKc9d48jpmlx9fd373rjke1twdj
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: RESTRICT
+        onUpdate: RESTRICT
+        referencedColumnNames: id
+        referencedTableName: cpu
+        validate: true
+- changeSet:
+    id: 1774982987884-223
+    author: oalikin88 (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: manufacturer_id
+        baseTableName: terminal_printer_model
+        constraintName: FKcdp39wljcjfiim5ur5gibm1q5
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: RESTRICT
+        onUpdate: RESTRICT
+        referencedColumnNames: id
+        referencedTableName: terminal_printer_manufacturer
+        validate: true
+- changeSet:
+    id: 1774982987884-224
+    author: oalikin88 (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: ats_id
+        baseTableName: ats
+        constraintName: FKcjj0hcnkfhi39pe3pslvcb6jm
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: RESTRICT
+        onUpdate: RESTRICT
+        referencedColumnNames: id
+        referencedTableName: object_buing
+        validate: true
+- changeSet:
+    id: 1774982987884-225
+    author: oalikin88 (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: terminal_printer_model_id
+        baseTableName: terminal_printer
+        constraintName: FKcv5hkgemvjx7dgemnnwlrqniv
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: RESTRICT
+        onUpdate: RESTRICT
+        referencedColumnNames: id
+        referencedTableName: terminal_printer_model
+        validate: true
+- changeSet:
+    id: 1774982987884-226
+    author: oalikin88 (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: display_id
+        baseTableName: display
+        constraintName: FKcxpqr0uehwq5mxesvmg4gljs2
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: RESTRICT
+        onUpdate: RESTRICT
+        referencedColumnNames: id
+        referencedTableName: object_buing
+        validate: true
+- changeSet:
+    id: 1774982987884-227
+    author: oalikin88 (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: manufacturer_id
+        baseTableName: terminal_sensor_model
+        constraintName: FKdjpd0hsis4gixj8pkdjs50l2y
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: RESTRICT
+        onUpdate: RESTRICT
+        referencedColumnNames: id
+        referencedTableName: terminal_sensor_manufacturer
+        validate: true
+- changeSet:
+    id: 1774982987884-228
+    author: oalikin88 (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: terminal_ups_id
+        baseTableName: terminal
+        constraintName: FKdkmb7rx8b0k3404trga7k3kkw
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: RESTRICT
+        onUpdate: RESTRICT
+        referencedColumnNames: terminal_ups_id
+        referencedTableName: terminal_ups
+        validate: true
+- changeSet:
+    id: 1774982987884-229
+    author: oalikin88 (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: hub_id
+        baseTableName: asuo_hub
+        constraintName: FKe1k9if1jgwfg7j2fmaajybc9u
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: RESTRICT
+        onUpdate: RESTRICT
+        referencedColumnNames: hub_id
+        referencedTableName: hub
+        validate: true
+- changeSet:
+    id: 1774982987884-230
+    author: oalikin88 (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: sub_display_model_id
+        baseTableName: asuo
+        constraintName: FKefi2t8t5ig5mcli3s63ovqu6m
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: RESTRICT
+        onUpdate: RESTRICT
+        referencedColumnNames: id
+        referencedTableName: sub_display_model
+        validate: true
+- changeSet:
+    id: 1774982987884-231
+    author: oalikin88 (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: manufacturer_id
+        baseTableName: server_model
+        constraintName: FKf0pcnsqt1o4dc92sx7lbif9ay
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: RESTRICT
+        onUpdate: RESTRICT
+        referencedColumnNames: id
+        referencedTableName: server_manufacturer
+        validate: true
+- changeSet:
+    id: 1774982987884-232
+    author: oalikin88 (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: ram_id
+        baseTableName: server
+        constraintName: FKf64cqk8wa22pf1mgkpkygd06r
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: RESTRICT
+        onUpdate: RESTRICT
+        referencedColumnNames: id
+        referencedTableName: ram
+        validate: true
+- changeSet:
+    id: 1774982987884-233
+    author: oalikin88 (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: manufacturer_id
+        baseTableName: switch_hub_model
+        constraintName: FKf9iyb407otby9ss5jf8qvo2i3
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: RESTRICT
+        onUpdate: RESTRICT
+        referencedColumnNames: id
+        referencedTableName: switch_hub_manufacturer
+        validate: true
+- changeSet:
+    id: 1774982987884-234
+    author: oalikin88 (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: terminal_sensor_id
+        baseTableName: terminal_sensor
+        constraintName: FKg0dgraptcxvhmxfaatnpf8wxd
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: RESTRICT
+        onUpdate: RESTRICT
+        referencedColumnNames: id
+        referencedTableName: object_buing
+        validate: true
+- changeSet:
+    id: 1774982987884-235
+    author: oalikin88 (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: printer_model_id
+        baseTableName: printer
+        constraintName: FKg2q4em6dim0kyllii90jmvvik
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: RESTRICT
+        onUpdate: RESTRICT
+        referencedColumnNames: id
+        referencedTableName: printer_model
+        validate: true
+- changeSet:
+    id: 1774982987884-236
+    author: oalikin88 (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: conditioner_model_id
+        baseTableName: conditioner
+        constraintName: FKg8o250fegxet60lisn3sqaqe3
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: RESTRICT
+        onUpdate: RESTRICT
+        referencedColumnNames: id
+        referencedTableName: conditioner_model
+        validate: true
+- changeSet:
+    id: 1774982987884-237
+    author: oalikin88 (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: terminal_server_id
+        baseTableName: terminal_server
+        constraintName: FKgn7xnuv2pipoc1v92adovguml
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: RESTRICT
+        onUpdate: RESTRICT
+        referencedColumnNames: id
+        referencedTableName: object_buing
+        validate: true
+- changeSet:
+    id: 1774982987884-238
+    author: oalikin88 (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: manufacturer_id
+        baseTableName: infomat_model
+        constraintName: FKgxc9khypfi6niguh581po81cm
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: RESTRICT
+        onUpdate: RESTRICT
+        referencedColumnNames: id
+        referencedTableName: infomat_manufacturer
+        validate: true
+- changeSet:
+    id: 1774982987884-239
+    author: oalikin88 (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: manufacturer_id
+        baseTableName: terminal_ups_model
+        constraintName: FKhji1xt4ay28pecwx2l9uqr8vu
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: RESTRICT
+        onUpdate: RESTRICT
+        referencedColumnNames: id
+        referencedTableName: terminal_ups_manufacturer
+        validate: true
+- changeSet:
+    id: 1774982987884-240
+    author: oalikin88 (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: manufacturer_id
+        baseTableName: ups_model
+        constraintName: FKhr9noypfsljp28tfyrd8gqnfl
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: RESTRICT
+        onUpdate: RESTRICT
+        referencedColumnNames: id
+        referencedTableName: ups_manufacturer
+        validate: true
+- changeSet:
+    id: 1774982987884-241
+    author: oalikin88 (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: asuo_id
+        baseTableName: asuo_terminal
+        constraintName: FKi1xb2p5jl4mtdlixlegin21lf
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: RESTRICT
+        onUpdate: RESTRICT
+        referencedColumnNames: asuo_id
+        referencedTableName: asuo
+        validate: true
+- changeSet:
+    id: 1774982987884-242
+    author: oalikin88 (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: asuo_id
+        baseTableName: asuo
+        constraintName: FKi7nbhpvbn7fu37xasy2b1hym8
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: RESTRICT
+        onUpdate: RESTRICT
+        referencedColumnNames: id
+        referencedTableName: object_buing
+        validate: true
+- changeSet:
+    id: 1774982987884-243
+    author: oalikin88 (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: server_id
+        baseTableName: server
+        constraintName: FKiqo1fsyxovhioum6mr3ptk107
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: RESTRICT
+        onUpdate: RESTRICT
+        referencedColumnNames: id
+        referencedTableName: object_buing
+        validate: true
+- changeSet:
+    id: 1774982987884-244
+    author: oalikin88 (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: terminal_display_model_id
+        baseTableName: terminal_display
+        constraintName: FKjaoyx8dig1ac208plo632c9ff
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: RESTRICT
+        onUpdate: RESTRICT
+        referencedColumnNames: id
+        referencedTableName: terminal_display_model
+        validate: true
+- changeSet:
+    id: 1774982987884-245
+    author: oalikin88 (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: mother_board_id
+        baseTableName: system_block
+        constraintName: FKjrwq0xvm5df9e1udtx4uy9shg
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: RESTRICT
+        onUpdate: RESTRICT
+        referencedColumnNames: id
+        referencedTableName: motherboard
+        validate: true
+- changeSet:
+    id: 1774982987884-246
+    author: oalikin88 (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: program_software_id
+        baseTableName: asuo
+        constraintName: FKkcrnalhqkpxoggq42ajl0h5l3
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: RESTRICT
+        onUpdate: RESTRICT
+        referencedColumnNames: id
+        referencedTableName: program_software
+        validate: true
+- changeSet:
+    id: 1774982987884-247
+    author: oalikin88 (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: ups_model_id
+        baseTableName: ups
+        constraintName: FKkdnmimf006mfray5jv8n3n22j
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: RESTRICT
+        onUpdate: RESTRICT
+        referencedColumnNames: id
+        referencedTableName: ups_model
+        validate: true
+- changeSet:
+    id: 1774982987884-248
+    author: oalikin88 (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: router_model_id
+        baseTableName: router
+        constraintName: FKl4et8opu9cdiftchsiqs243ll
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: RESTRICT
+        onUpdate: RESTRICT
+        referencedColumnNames: id
+        referencedTableName: router_model
+        validate: true
+- changeSet:
+    id: 1774982987884-249
+    author: oalikin88 (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: server_model_id
+        baseTableName: server
+        constraintName: FKl7v92k8bmg9k2v2flp56m0r6h
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: RESTRICT
+        onUpdate: RESTRICT
+        referencedColumnNames: id
+        referencedTableName: server_model
+        validate: true
+- changeSet:
+    id: 1774982987884-250
+    author: oalikin88 (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: battery_type_id
+        baseTableName: ups_model
+        constraintName: FKlklyhb9484o1dyglk7smemfhh
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: RESTRICT
+        onUpdate: RESTRICT
+        referencedColumnNames: id
+        referencedTableName: battery_type
+        validate: true
+- changeSet:
+    id: 1774982987884-251
+    author: oalikin88 (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: manufacturer_id
+        baseTableName: router_model
+        constraintName: FKm0o78kktvmbiulooq8h9xmjqp
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: RESTRICT
+        onUpdate: RESTRICT
+        referencedColumnNames: id
+        referencedTableName: router_manufacturer
+        validate: true
+- changeSet:
+    id: 1774982987884-252
+    author: oalikin88 (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: hdd_id
+        baseTableName: systemblock_hdd
+        constraintName: FKmbx95hypiy3v929hh5b5vuei
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: RESTRICT
+        onUpdate: RESTRICT
+        referencedColumnNames: id
+        referencedTableName: hdd
+        validate: true
+- changeSet:
+    id: 1774982987884-253
+    author: oalikin88 (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: conditioner_id
+        baseTableName: conditioner
+        constraintName: FKmfgsdysqkvd0iocm8tntxth5l
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: RESTRICT
+        onUpdate: RESTRICT
+        referencedColumnNames: id
+        referencedTableName: object_buing
+        validate: true
+- changeSet:
+    id: 1774982987884-254
+    author: oalikin88 (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: manufacturer_id
+        baseTableName: conditioner_model
+        constraintName: FKmfu8xj9uhmqqiu9gefshib79j
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: RESTRICT
+        onUpdate: RESTRICT
+        referencedColumnNames: id
+        referencedTableName: conditioner_manufacturer
+        validate: true
+- changeSet:
+    id: 1774982987884-255
+    author: oalikin88 (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: ups_id
+        baseTableName: ups
+        constraintName: FKn0pkxw27y1yesesrrri79vbl3
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: RESTRICT
+        onUpdate: RESTRICT
+        referencedColumnNames: id
+        referencedTableName: object_buing
+        validate: true
+- changeSet:
+    id: 1774982987884-256
+    author: oalikin88 (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: terminal_printer_id
+        baseTableName: terminal_printer
+        constraintName: FKn9uth7qdn5bivwwnaf7dl7sra
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: RESTRICT
+        onUpdate: RESTRICT
+        referencedColumnNames: id
+        referencedTableName: object_buing
+        validate: true
+- changeSet:
+    id: 1774982987884-257
+    author: oalikin88 (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: manufacturer_id
+        baseTableName: terminal_model
+        constraintName: FKnicoabvbly0yn6pwe0b3f193x
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: RESTRICT
+        onUpdate: RESTRICT
+        referencedColumnNames: id
+        referencedTableName: terminal_manufacturer
+        validate: true
+- changeSet:
+    id: 1774982987884-258
+    author: oalikin88 (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: asuo_id
+        baseTableName: asuo_hub
+        constraintName: FKnot9aibx9rkneng6jytlaia7y
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: RESTRICT
+        onUpdate: RESTRICT
+        referencedColumnNames: asuo_id
+        referencedTableName: asuo
+        validate: true
+- changeSet:
+    id: 1774982987884-259
+    author: oalikin88 (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: model_id
+        baseTableName: cartridge
+        constraintName: FKnoywxpgupwmgbjcavhh9ustox
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: RESTRICT
+        onUpdate: RESTRICT
+        referencedColumnNames: id
+        referencedTableName: cartridge_model
+        validate: true
+- changeSet:
+    id: 1774982987884-260
+    author: oalikin88 (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: server_id
+        baseTableName: server_operation_system
+        constraintName: FKo8p3xdu71g0vpk06si619o6e9
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: RESTRICT
+        onUpdate: RESTRICT
+        referencedColumnNames: server_id
+        referencedTableName: server
+        validate: true
+- changeSet:
+    id: 1774982987884-261
+    author: oalikin88 (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: scanner_id
+        baseTableName: scanner
+        constraintName: FKo8uowskf2rcp353wwxw8jlfxy
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: RESTRICT
+        onUpdate: RESTRICT
+        referencedColumnNames: id
+        referencedTableName: object_buing
+        validate: true
+- changeSet:
+    id: 1774982987884-262
+    author: oalikin88 (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: system_block_id
+        baseTableName: system_block
+        constraintName: FKorn1plnwc0v2k92bage3mc2ru
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: RESTRICT
+        onUpdate: RESTRICT
+        referencedColumnNames: id
+        referencedTableName: object_buing
+        validate: true
+- changeSet:
+    id: 1774982987884-263
+    author: oalikin88 (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: object_buing_id
+        baseTableName: transfer
+        constraintName: FKp9lpo6c79lk935uei70fg5dai
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: RESTRICT
+        onUpdate: RESTRICT
+        referencedColumnNames: id
+        referencedTableName: object_buing
+        validate: true
+- changeSet:
+    id: 1774982987884-264
+    author: oalikin88 (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: model_cartridges_id
+        baseTableName: cartridge_model_models_printers
+        constraintName: FKpksvlhnmxa19pnm7415149y29
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: RESTRICT
+        onUpdate: RESTRICT
+        referencedColumnNames: id
+        referencedTableName: cartridge_model
+        validate: true
+- changeSet:
+    id: 1774982987884-265
+    author: oalikin88 (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: manufacturer_id
+        baseTableName: monitor_model
+        constraintName: FKptt68slluxk5vhkge5nqedetw
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: RESTRICT
+        onUpdate: RESTRICT
+        referencedColumnNames: id
+        referencedTableName: monitor_manufacturer
+        validate: true
+- changeSet:
+    id: 1774982987884-266
+    author: oalikin88 (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: manufacturer_id
+        baseTableName: phone_model
+        constraintName: FKq4v3nc9wef9tlh5urbut170qf
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: RESTRICT
+        onUpdate: RESTRICT
+        referencedColumnNames: id
+        referencedTableName: phone_manufacturer
+        validate: true
+- changeSet:
+    id: 1774982987884-267
+    author: oalikin88 (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: terminal_display_id
+        baseTableName: terminal_display
+        constraintName: FKq5cy76wdan5yv4x4h404rcl22
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: RESTRICT
+        onUpdate: RESTRICT
+        referencedColumnNames: id
+        referencedTableName: object_buing
+        validate: true
+- changeSet:
+    id: 1774982987884-268
+    author: oalikin88 (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: terminal_id
+        baseTableName: asuo_terminal
+        constraintName: FKqaiogcs9huuvun8iyai0bfys4
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: RESTRICT
+        onUpdate: RESTRICT
+        referencedColumnNames: terminal_id
+        referencedTableName: terminal
+        validate: true
+- changeSet:
+    id: 1774982987884-269
+    author: oalikin88 (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: speakers_id
+        baseTableName: system_block
+        constraintName: FKqjohwxy3b67ep2w9slm56ehuc
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: RESTRICT
+        onUpdate: RESTRICT
+        referencedColumnNames: id
+        referencedTableName: speakers
+        validate: true
+- changeSet:
+    id: 1774982987884-270
+    author: oalikin88 (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: operation_system_id
+        baseTableName: server_operation_system
+        constraintName: FKrmf6aren5iay3p4670i2x0pix
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: RESTRICT
+        onUpdate: RESTRICT
+        referencedColumnNames: id
+        referencedTableName: operation_system
+        validate: true
+- changeSet:
+    id: 1774982987884-271
+    author: oalikin88 (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: monitor_model_id
+        baseTableName: monitor
+        constraintName: FKrps99k2u5assm0cvj999iciiy
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: RESTRICT
+        onUpdate: RESTRICT
+        referencedColumnNames: id
+        referencedTableName: monitor_model
+        validate: true
+- changeSet:
+    id: 1774982987884-272
+    author: oalikin88 (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: system_block_model_id
+        baseTableName: system_block
+        constraintName: FKrqweou5t5gppa2c08dhtxhk54
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: RESTRICT
+        onUpdate: RESTRICT
+        referencedColumnNames: id
+        referencedTableName: system_block_model
+        validate: true
+- changeSet:
+    id: 1774982987884-273
+    author: oalikin88 (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: manufacturer_id
+        baseTableName: hub_model
+        constraintName: FKryn3ihvqjeanhnag4xrk4jy2s
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: RESTRICT
+        onUpdate: RESTRICT
+        referencedColumnNames: id
+        referencedTableName: hub_manufacturer
+        validate: true
+- changeSet:
+    id: 1774982987884-274
+    author: oalikin88 (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: hub_model_id
+        baseTableName: hub
+        constraintName: FKs2heht3b9xoxgb0msq5ha2wnu
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: RESTRICT
+        onUpdate: RESTRICT
+        referencedColumnNames: id
+        referencedTableName: hub_model
+        validate: true
+- changeSet:
+    id: 1774982987884-275
+    author: oalikin88 (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: server_id
+        baseTableName: server_hdd
+        constraintName: FKs7eglvkm2vbb8cq3cl2rrn6u3
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: RESTRICT
+        onUpdate: RESTRICT
+        referencedColumnNames: server_id
+        referencedTableName: server
+        validate: true
+- changeSet:
+    id: 1774982987884-276
+    author: oalikin88 (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: cd_drive_id
+        baseTableName: system_block
+        constraintName: FKslgj9t5nfg34c3bo1n6rnfnxv
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: RESTRICT
+        onUpdate: RESTRICT
+        referencedColumnNames: id
+        referencedTableName: cd_drive
+        validate: true
+- changeSet:
+    id: 1774982987884-277
+    author: oalikin88 (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: infomat_id
+        baseTableName: infomat
+        constraintName: FKspoc4uhtcr7lof7ytn1p6l4uj
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: RESTRICT
+        onUpdate: RESTRICT
+        referencedColumnNames: id
+        referencedTableName: object_buing
+        validate: true
+- changeSet:
+    id: 1774982987884-278
+    author: oalikin88 (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: terminal_display_id
+        baseTableName: terminal
+        constraintName: FKss2op1avcs99hfvtg09at7k3x
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: RESTRICT
+        onUpdate: RESTRICT
+        referencedColumnNames: terminal_display_id
+        referencedTableName: terminal_display
+        validate: true
+- changeSet:
+    id: 1774982987884-279
+    author: oalikin88 (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: manufacturer_id
+        baseTableName: system_block_model
+        constraintName: FKsujnqe1mr8tk17dd5nq8fxk16
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: RESTRICT
+        onUpdate: RESTRICT
+        referencedColumnNames: id
+        referencedTableName: system_block_manufacturer
+        validate: true
+- changeSet:
+    id: 1774982987884-280
+    author: oalikin88 (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: manufacturer_id
+        baseTableName: ats_model
+        constraintName: FKswdudi8h5t24uq79rrrw7myd3
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: RESTRICT
+        onUpdate: RESTRICT
+        referencedColumnNames: id
+        referencedTableName: ats_manufacturer
+        validate: true
+- changeSet:
+    id: 1774982987884-281
+    author: oalikin88 (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: display_model_id
+        baseTableName: display
+        constraintName: FKt0dem3nksbd52ithb8ng7q4gm
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: RESTRICT
+        onUpdate: RESTRICT
+        referencedColumnNames: id
+        referencedTableName: display_model
+        validate: true
+- changeSet:
+    id: 1774982987884-282
+    author: oalikin88 (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: manufacturer_id
+        baseTableName: terminal_server_model
+        constraintName: FKt37d0ga3lyig9432licv4l8xf
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: RESTRICT
+        onUpdate: RESTRICT
+        referencedColumnNames: id
+        referencedTableName: terminal_server_manufacturer
+        validate: true
+- changeSet:
+    id: 1774982987884-283
+    author: oalikin88 (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: ats_model_id
+        baseTableName: ats
+        constraintName: FKt8va5u3dsoh8ndi71do7ev2r4
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: RESTRICT
+        onUpdate: RESTRICT
+        referencedColumnNames: id
+        referencedTableName: ats_model
+        validate: true
+- changeSet:
+    id: 1774982987884-284
+    author: oalikin88 (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: terminal_model_id
+        baseTableName: terminal
+        constraintName: FKtacn9970iumw65xtn7a2dohn2
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: RESTRICT
+        onUpdate: RESTRICT
+        referencedColumnNames: id
+        referencedTableName: terminal_model
+        validate: true
+- changeSet:
+    id: 1774982987884-285
+    author: oalikin88 (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: manufacturer_id
+        baseTableName: printer_model
+        constraintName: FKtd1vwjjyjup8894lkeklnuaq4
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: RESTRICT
+        onUpdate: RESTRICT
+        referencedColumnNames: id
+        referencedTableName: printer_manufacturer
+        validate: true
+- changeSet:
+    id: 1774982987884-286
+    author: oalikin88 (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: printer_id
+        baseTableName: cartridge
+        constraintName: PRINTER_ID_FK
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: RESTRICT
+        onUpdate: RESTRICT
+        referencedColumnNames: printer_id
+        referencedTableName: printer
+        validate: true
+

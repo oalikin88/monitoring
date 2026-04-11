@@ -1,0 +1,782 @@
+<!DOCTYPE html>
+<!--
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this template
+-->
+<html>
+    <head>
+   
+    <title th:text="${namePage}">
+     
+    </title> 
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <!--объявление переменных из данных приходящих с бэка-->
+        <script th:inline="javascript">                
+                        let storageDtoes = [[${dtoesStorage}]];
+                        let attrib = [[${attribute}]];
+                        let placeAttrib = [[${placeAttribute}]];
+                        let dtoes = [[${dtoes}]];
+                        let amountDevice = [[${amountDevice}]];
+                        let filterLocation = [[${filterLocation}]];
+                        let filterModel = [[${filterModel}]];
+                        let filterStatus = [[${filterStatus}]];
+                        let filterDateBegin = [[${filterDateBegin}]];
+                        let filterDateEnd = [[${filterDateEnd}]];
+                        let searchFIO = [[${searchFIO}]];
+                        let searchInventary = [[${searchInventary}]];
+                        let searchSerial = [[${searchSerial}]];
+                        let namePage = [[${namePage}]];
+        </script>
+        <script src="/js/jquery-3.6.4.min.js"></script>
+        <script src="/js/selectize.js"></script>
+        <link href="/css/bootstrap.min.css" rel="stylesheet">
+        <link href="/css/selectize.bootstrap5.css" rel="stylesheet">
+        <link href="/css/style_svt.css" rel="stylesheet">
+        <link href="/css/content_style.css" rel="stylesheet">
+        <link href="/css/lineicons.css" rel="stylesheet">
+        <link href="/css/icons.css" rel="stylesheet">
+          
+    </head>
+    <body>
+        <div class="wrapper">
+            <aside th:insert="svt :: sidebar"></aside>
+            <div class="main">
+                
+ 
+                <div class="row mb-2" id="top-panel">
+                    
+                    <div class="col-2 d-flex align-items-center justify-content-start" style="height: 56px;">
+                        <h1 class="ms-2 ps-2" style="font-weight: bolder;" th:text="${namePage}">
+                        </h1>
+                </div>
+                    <th:block th:switch="${attribute}">
+                        <div class="col-1 text-end" th:case="places"></div>   
+                        
+                    <div class="col-1 text-end" th:case="*">
+                        <!-- Button trigger modal add place-->
+                        <button type="button" class="btn btn-primary btn-sm addPlaceBtn" id="addPlaceBtn" data-bs-toggle="modal" data-bs-target="#addPlaceModal">Добавить</button>
+                    </div>
+                    </th:block>
+                    <th:block th:switch="${attribute}">
+                      <div class="col-7"  th:case="places" >
+                        <div class="input-group" id="searchSvtObjDiv">
+                             <select class="form-select form-select-sm customSelect" id="searchChoise">
+                                  <option value="username">ФИО</option>
+                                </select>
+                            <input type="text" class="form-control form-control-sm" placeholder="поиск по ФИО" aria-label="searchModel" aria-describedby="basic-addon1" id="searchSvtObjInput">
+                            <span class="input-group-text" id="searchSvtObjBtn">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16"><path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"></path>
+                                </svg>
+                            </span>
+                        </div>
+                    </div>  
+                         <div class="col-7"  th:case="asuo" >
+                        <div class="input-group" id="searchSvtObjDiv">
+                             <select class="form-select form-select-sm customSelect" id="searchChoise">
+                                  <option value="username">ФИО</option>
+                                  <option value="inventaryNumber">инвентарный номер</option>
+                                </select>
+                            <input type="text" class="form-control form-control-sm" placeholder="поиск по ФИО" aria-label="searchModel" aria-describedby="basic-addon1" id="searchSvtObjInput">
+                            <span class="input-group-text" id="searchSvtObjBtn">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16"><path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"></path>
+                                </svg>
+                            </span>
+                        </div>
+                    </div>  
+                         <div class="col-7"  th:case="terminalDisplay" >
+                        <div class="input-group" id="searchSvtObjDiv">
+                             <select class="form-select form-select-sm customSelect" id="searchChoise">
+                                  <option value="username">ФИО</option>
+                                  <option value="serialNumber">серийный номер</option>
+                                </select>
+                            <input type="text" class="form-control form-control-sm" placeholder="поиск по ФИО" aria-label="searchModel" aria-describedby="basic-addon1" id="searchSvtObjInput">
+                            <span class="input-group-text" id="searchSvtObjBtn">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16"><path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"></path>
+                                </svg>
+                            </span>
+                        </div>
+                    </div>  
+                         <div class="col-7"  th:case="terminalServer" >
+                        <div class="input-group" id="searchSvtObjDiv">
+                             <select class="form-select form-select-sm customSelect" id="searchChoise">
+                                  <option value="username">ФИО</option>
+                                  <option value="serialNumber">серийный номер</option>
+                                </select>
+                            <input type="text" class="form-control form-control-sm" placeholder="поиск по ФИО" aria-label="searchModel" aria-describedby="basic-addon1" id="searchSvtObjInput">
+                            <span class="input-group-text" id="searchSvtObjBtn">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16"><path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"></path>
+                                </svg>
+                            </span>
+                        </div>
+                    </div>  
+                         <div class="col-7"  th:case="terminalSensor" >
+                        <div class="input-group" id="searchSvtObjDiv">
+                             <select class="form-select form-select-sm customSelect" id="searchChoise">
+                                  <option value="username">ФИО</option>
+                                  <option value="serialNumber">серийный номер</option>
+                                </select>
+                            <input type="text" class="form-control form-control-sm" placeholder="поиск по ФИО" aria-label="searchModel" aria-describedby="basic-addon1" id="searchSvtObjInput">
+                            <span class="input-group-text" id="searchSvtObjBtn">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16"><path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"></path>
+                                </svg>
+                            </span>
+                        </div>
+                    </div>  
+                         <div class="col-7"  th:case="terminalPrinter" >
+                        <div class="input-group" id="searchSvtObjDiv">
+                             <select class="form-select form-select-sm customSelect" id="searchChoise">
+                                  <option value="username">ФИО</option>
+                                  <option value="serialNumber">серийный номер</option>
+                                </select>
+                            <input type="text" class="form-control form-control-sm" placeholder="поиск по ФИО" aria-label="searchModel" aria-describedby="basic-addon1" id="searchSvtObjInput">
+                            <span class="input-group-text" id="searchSvtObjBtn">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16"><path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"></path>
+                                </svg>
+                            </span>
+                        </div>
+                    </div>  
+                         <div class="col-7"  th:case="terminalUps" >
+                        <div class="input-group" id="searchSvtObjDiv">
+                             <select class="form-select form-select-sm customSelect" id="searchChoise">
+                                  <option value="username">ФИО</option>
+                                  <option value="serialNumber">серийный номер</option>
+                                </select>
+                            <input type="text" class="form-control form-control-sm" placeholder="поиск по ФИО" aria-label="searchModel" aria-describedby="basic-addon1" id="searchSvtObjInput">
+                            <span class="input-group-text" id="searchSvtObjBtn">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16"><path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"></path>
+                                </svg>
+                            </span>
+                        </div>
+                    </div>  
+                    <div class="col-7"  th:case="*" >
+                        <div class="input-group" id="searchSvtObjDiv">
+                             <select class="form-select form-select-sm customSelect" id="searchChoise">
+                                  <option value="username">ФИО</option>
+                                  <option value="inventaryNumber">инвентарный номер</option>
+                                  <option value="serialNumber">серийный номер</option>
+                                </select>
+                            <input type="text" class="form-control form-control-sm" placeholder="поиск по ФИО" aria-label="searchModel" aria-describedby="basic-addon1" id="searchSvtObjInput">
+                            <span class="input-group-text" id="searchSvtObjBtn">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16"><path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"></path>
+                                </svg>
+                            </span>
+                        </div>
+                    </div>
+                        </th:block>
+                    
+                    
+                     <th:block th:switch="${haveFilter}">
+
+                            <div class="col-1" th:case="true">
+                        <div class="dropdown">
+                          <button type="button" class="btn btn-primary btn-sm dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="outside">
+                           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-filter-square" viewBox="0 0 16 16">
+                              <path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2z"/>
+                              <path d="M6 11.5a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 0 1h-3a.5.5 0 0 1-.5-.5m-2-3a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5m-2-3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5"/>
+                            </svg>
+                            <span style="margin-left: 10px;">Фильтр</span>
+                          </button>
+                          <div class="dropdown-menu mt-1 p-4" style="width: 420px;" id="dropdown-container">
+                              <div class="container">            
+                                   <div class="row text-center fw-bold mb-3">
+                                      <div>Район</div>
+                                  </div>
+                                  
+                                  <div class="row mb-3">
+                                      <select class="form-select form-select-sm" name="filterLocation" id="filter-location" aria-label="Default select example">
+                                      <option selected value="">Выбрать район</option>
+                                  
+                                    </select>
+                                  </div>
+                                  <div class="row text-center fw-bold mb-3">
+                                      <div>Год выпуска</div>
+                                  </div>
+                                  <div class="row mb-3">
+                                      <div class="col col-1"><span style="vertical-align: middle;">От</span></div>
+                                      <div class="col col-5">
+                                          <input type="text" class="form-control form-control-sm" id="dateBegin" placeholder="укажите год">
+                                      </div>
+                                      <div class="col col-1"><span style="vertical-align: middle;" >До</span></div>
+                                      <div class="col col-5">
+                                          <input type="text" class="form-control form-control-sm" id="dateEnd" placeholder="укажите год">
+                                      </div>
+                                  </div>
+                                  <div class="row text-center fw-bold mb-3">
+                                      <div>Модель</div>
+                                  </div>
+                                  <div class="row mb-3">
+                                      <select class="form-select form-select-sm" name="filterModel" id="filter-model" aria-label="Default select example">
+                                      <option selected value="">Выбрать модель</option>
+                                  
+                                    </select>
+                                  </div>
+                                  
+                                  <div class="row text-center fw-bold mb-3">
+                                      <div>Статус</div>
+                                  </div>
+                         
+                                  <div class="row mb-3">
+                                      <select class="form-select form-select-sm" aria-label="Default select example" name="filterStatus" id="filter-status">
+                                          <option selected value="">Выбрать статус</option>
+                                          <option value="OK">Исправен</option>
+                                          <option value="DEFECTIVE">Неисправен</option>
+                                          <option value="REPAIR">Ремонт</option>
+                                          <option value="MONITORING">Списание</option>
+                                          <option value="UTILIZATION">Утилизирован</option>
+                                      </select>
+                                  </div>
+                                  
+                                  <th:block th:switch="${attribute}">
+                                      <div class="row text-center fw-bold mb-3" th:case="printers">
+                                              <div class="col col-6">Кабинет</div>
+                                          
+                                          <div class="col col-6">
+                                          <input type="text" class="form-control form-control-sm" id="number-room" placeholder="укажите помещение">
+                                      </div>
+                                      </div>
+                                      <div th:case="*"> </div>
+                                  </th:block>
+                                  
+                                  <div class="row text-center mb-3">
+                                      <button type="button" class="btn btn-primary" id="filter-btn">
+                                          Применить
+                                      </button>
+                                  </div>
+                          </div>
+                        </div>
+                        </div>
+                       
+                    </div>
+
+                     </th:block>
+                    
+                    
+                    <th:block th:switch="${haveDownload}">
+                        <div class="col-1" th:case="true">
+                            <button type="button" class="btn btn-sm btn-light" id="getReport">Скачать</button>
+                        </div>
+                        
+                    </th:block>
+                    
+                           
+                        
+                    <div class="col-1">
+                        <th:block th:switch="${attribute}">
+                        <div class="col-2" th:case="asuo"></div>
+                        <div class="col-2" th:case="display"></div>
+                        <div class="col-2" th:case="terminal"></div>
+                        <div class="col-2" th:case="thermoprinter"></div>
+                        <div class="col-2" th:case="swunit"></div>
+                        <div class="col-2" th:case="places"></div>
+                        <div class="col-2" th:case="terminalUps"></div>
+                        <div class="col-2" th:case="terminalServer"></div>
+                        <div class="col-2" th:case="terminalSensor"></div>
+                        <div class="col-2" th:case="terminalPrinter"></div>
+                        <div class="col-2" th:case="terminalDisplay"></div>
+                        
+                   
+                         </th:block>
+                    </div>
+                </div>
+                
+                
+                <div class="content" id="content"> 
+                    <div class="mes" id="mesage"></div>
+                <ul class="tree" >
+                    <li class="location" th:each="dto : ${dtoes}" >
+                        <details>
+                            <summary th:text="${dto.locationName}"></summary>
+
+                            <ul class="departments" th:each="innerDto : ${dto.departments}">
+                                <li class="department">
+                                    <details>
+                                        <summary th:text="${innerDto.department}"></summary>
+                                        
+                                        <th:block th:switch="${attribute}">
+                                         
+                                            <div class="row fw-bold mt-3 mb-3" th:case="switch">
+                                                    <div class="col">Модель</div>
+                                                    <div class="col">ФИО</div>
+                                                    <div class="col">Серийный номер</div>
+                                                    <div class="col">Инвентарный номер</div>
+                                                    <div class="col">Тип</div>
+                                                    <div class="col">Кол-во портов</div>
+                                                    <div class="col">Год выпуска</div>
+                                                    <div class="col">Состояние</div>
+                                                </div>
+                                            <div class="row fw-bold mt-3 mb-3" th:case="router">
+                                                    <div class="col">Модель</div>
+                                                    <div class="col">ФИО</div>
+                                                    <div class="col">Серийный номер</div>
+                                                    <div class="col">Инвентарный номер</div>
+                                                    <div class="col">Расположение</div>
+                                                    <div class="col">Кол-во портов</div>
+                                                    <div class="col">Год выпуска</div>
+                                                    <div class="col">Состояние</div>
+                                                </div>
+                                            <div class="row fw-bold mt-3 mb-3" th:case="ats">
+                                                    <div class="col">Модель</div>
+                                                    <div class="col">ФИО</div>
+                                                    <div class="col">Серийный номер</div>
+                                                    <div class="col">Инвентарный номер</div>
+                                                    <div class="col">Год выпуска</div>
+                                                    <div class="col">Кол-во город. номеров</div>
+                                                    <div class="col">Состояние</div>
+                                                </div>
+                                            <div class="row fw-bold mt-3 mb-3" th:case="conditioner">
+                                                    <div class="col">Модель</div>
+                                                    <div class="col">ФИО</div>
+                                                    <div class="col">Серийный номер</div>
+                                                    <div class="col">Инвентарный номер</div>
+                                                    <div class="col">Год выпуска</div>
+                                                    <div class="col">Тип</div>
+                                                    <div class="col">Состояние</div>
+                                                </div>
+                                            <div class="row fw-bold mt-3 mb-3" th:case="infomat">
+                                                    <div class="col">Модель</div>
+                                                    <div class="col">ФИО</div>
+                                                    <div class="col">Серийный номер</div>
+                                                    <div class="col">Инвентарный номер</div>
+                                                    <div class="col">Кабинет</div>
+                                                    <div class="col">Год выпуска</div>
+                                                    <div class="col">Состояние</div>
+                                                </div>
+                                            <div class="row fw-bold mt-3 mb-3" th:case="terminal">
+                                                    <div class="col">Модель</div>
+                                                    <div class="col">ФИО</div>
+                                                    <div class="col">Серийный номер</div>
+                                                    <div class="col">Инвентарный номер</div>
+                                                    <div class="col">Состояние</div>
+                                                </div>
+                                            <div class="row fw-bold mt-3 mb-3" th:case="thermoprinter">
+                                                    <div class="col">Модель</div>
+                                                    <div class="col">ФИО</div>
+                                                    <div class="col">Серийный номер</div>
+                                                    <div class="col">Инвентарный номер</div>
+                                                    <div class="col">Состояние</div>
+                                                </div>
+                                            <div class="row fw-bold mt-3 mb-3" th:case="display">
+                                                    <div class="col">Модель</div>
+                                                    <div class="col">ФИО</div>
+                                                    <div class="col">Серийный номер</div>
+                                                    <div class="col">Инвентарный номер</div>
+                                                    <div class="col">Состояние</div>
+                                                </div>
+                                            <div class="row fw-bold mt-3 mb-3" th:case="swunit">
+                                                    <div class="col">Модель</div>
+                                                    <div class="col">ФИО</div>
+                                                    <div class="col">Серийный номер</div>
+                                                    <div class="col">Инвентарный номер</div>
+                                                    <div class="col">Состояние</div>
+                                                </div>
+                                            <div class="row fw-bold mt-3 mb-3" th:case="asuo">
+                                                    <div class="col">Наименование в ведомости ОС</div>
+                                                    <div class="col">ФИО</div>
+                                                    <div class="col">Инвентарный номер</div>
+                                                    <div class="col">Год выпуска</div>
+                                                    <div class="col">Дата ввода в эксплуатацию</div>
+                                                    <div class="col">Статус</div>
+                                                </div>
+                                            <div class="row fw-bold mt-3 mb-3" th:case="terminalDisplay">
+                                                    <div class="col">Модель</div>
+                                                    <div class="col">ФИО</div>
+                                                    <div class="col">Серийный номер</div>
+                                                    <div class="col">Диагональ экрана</div>
+                                                    <div class="col">Состояние</div>
+                                                </div>
+                                            <div class="row fw-bold mt-3 mb-3" th:case="terminalSensor">
+                                                    <div class="col">Модель</div>
+                                                    <div class="col">ФИО</div>
+                                                    <div class="col">Серийный номер</div>
+                                                    <div class="col">Состояние</div>
+                                                </div>
+                                            <div class="row fw-bold mt-3 mb-3" th:case="terminalServer">
+                                                    <div class="col">Модель</div>
+                                                    <div class="col">ФИО</div>
+                                                    <div class="col">Серийный номер</div>
+                                                    <div class="col">Состояние</div>
+                                                </div>
+                                            <div class="row fw-bold mt-3 mb-3" th:case="terminalPrinter">
+                                                    <div class="col">Модель</div>
+                                                    <div class="col">ФИО</div>
+                                                    <div class="col">Серийный номер</div>
+                                                    <div class="col">Состояние</div>
+                                                </div>
+                                            <div class="row fw-bold mt-3 mb-3" th:case="terminalUps">
+                                                    <div class="col">Модель</div>
+                                                    <div class="col">ФИО</div>
+                                                    <div class="col">Серийный номер</div>
+                                                    <div class="col">Состояние</div>
+                                                </div>
+                                            <div class="row fw-bold mt-3 mb-3" th:case="places">
+                                                    <div class="col">ФИО</div>
+                                                    <div class="col">Тип рабочего места</div>
+                                                </div>
+                                            <div class="row fw-bold mt-3 mb-3" th:case="*">
+                                                    <div class="col">Модель</div>
+                                                    <div class="col">ФИО</div>
+                                                    <div class="col">Серийный номер</div>
+                                                    <div class="col">Инвентарный номер</div>
+                                                    <div class="col">Дата ввода в экспл</div>
+                                                    <div class="col">Состояние</div>
+                                                    <div class="col">Год выпуска</div>
+                                                     <th:block th:switch="${attribute}">
+                                                        <div class="col" th:case="'phones'">
+                                                            Внутренний номер
+                                                        </div>
+                                                        <div class="col" th:case="'monitors'">
+                                                            По ведомости ОС
+                                                        </div>
+                                                        <div class="col" th:case="'ups'">
+                                                            Год замены
+                                                        </div>
+                                                    </th:block>
+                                                </div>
+                                            </th:block>
+                                        
+                                        <ul th:each="inInnerDto, stat : ${innerDto.dtoes}">
+                                           
+                                            <li  class="element" th:attr="id=${inInnerDto.id}" data-bs-toggle="modal" data-bs-target="#addPlaceModal">
+                                                 <th:block th:switch="${attribute}">
+                                                           <div class="row mb-2 d-flex align-items-center text-start phone" th:case="switch">
+                                                <div class="col" th:text="${stat.count} + '. '  + ${inInnerDto.manufacturerName} + ' ' + ${inInnerDto.model}"></div>
+                                                <div class="col" th:text="${inInnerDto.placeName}"></div>
+                                                <div class="col" th:text="${inInnerDto.serialNumber}"></div>
+                                                <div class="col" th:text="${inInnerDto.inventaryNumber}"></div>
+                                                <th:block th:switch="${inInnerDto.switchHubType}">
+                                                <div class="col" th:case="SWITCH" th:text="Коммутатор"></div>
+                                                <div class="col" th:case="HUB" th:text="Концентратор"></div>
+                                                </th:block>
+                                                <div class="col" th:text="${inInnerDto.portAmount}"></div>
+                                                <div class="col" th:text="${inInnerDto.yearCreated}"></div>
+                                                <th:block th:switch="${inInnerDto.status}">
+                                                <div class="col" th:case="OK" th:text="Исправен"></div>
+                                                <div class="col" th:case="REPAIR" th:text="Ремонт"></div>
+                                                <div class="col" th:case="MONITORING" th:text="Списание"></div>
+                                                <div class="col" th:case="DEFECTIVE" th:text="Неисправен"></div>
+                                                <div class="col" th:case="UTILIZATION" th:text="Утилизирован"></div>
+                                                </th:block>
+                                             </div>
+                                                <div class="row mb-2 d-flex align-items-center text-start phone" th:case="router">
+                                                <div class="col" th:text="${stat.count} + '. ' + ${inInnerDto.manufacturerName} + ' ' + ${inInnerDto.model}"></div>
+                                                <div class="col" th:text="${inInnerDto.placeName}"></div>
+                                                <div class="col" th:text="${inInnerDto.serialNumber}"></div>
+                                                <div class="col" th:text="${inInnerDto.inventaryNumber}"></div>
+                                                <div class="col" th:text="${inInnerDto.numberRoom}"></div>
+                                                <div class="col" th:text="${inInnerDto.portAmount}"></div>
+                                                <div class="col" th:text="${inInnerDto.yearCreated}"></div>
+                                                <th:block th:switch="${inInnerDto.status}">
+                                                <div class="col" th:case="OK" th:text="Исправен"></div>
+                                                <div class="col" th:case="REPAIR" th:text="Ремонт"></div>
+                                                <div class="col" th:case="MONITORING" th:text="Списание"></div>
+                                                <div class="col" th:case="DEFECTIVE" th:text="Неисправен"></div>
+                                                <div class="col" th:case="UTILIZATION" th:text="Утилизирован"></div>
+                                                </th:block>
+                                             </div>
+                                                <div class="row mb-2 d-flex align-items-center text-start phone" th:case="ats">
+                                                <div class="col" th:text="${stat.count} + '. '  + ${inInnerDto.manufacturerName} + ' ' + ${inInnerDto.model}"></div>
+                                                <div class="col" th:text="${inInnerDto.placeName}"></div>
+                                                <div class="col" th:text="${inInnerDto.serialNumber}"></div>
+                                                <div class="col" th:text="${inInnerDto.inventaryNumber}"></div>
+                                                <div class="col" th:text="${inInnerDto.yearCreated}"></div>
+                                                <div class="col" th:text="${inInnerDto.cityNumberAmount}"></div>
+                                                <th:block th:switch="${inInnerDto.status}">
+                                                <div class="col" th:case="OK" th:text="Исправен"></div>
+                                                <div class="col" th:case="REPAIR" th:text="Ремонт"></div>
+                                                <div class="col" th:case="MONITORING" th:text="Списание"></div>
+                                                <div class="col" th:case="DEFECTIVE" th:text="Неисправен"></div>
+                                                <div class="col" th:case="UTILIZATION" th:text="Утилизирован"></div>
+                                                </th:block>
+                                             </div>
+                                                <div class="row mb-2 d-flex align-items-center text-start phone" th:case="infomat">
+                                                <div class="col" th:text="${stat.count} + '. ' + ${inInnerDto.model}"></div>
+                                                <div class="col" th:text="${inInnerDto.placeName}"></div>
+                                                <div class="col" th:text="${inInnerDto.serialNumber}"></div>
+                                                <div class="col" th:text="${inInnerDto.inventaryNumber}"></div>
+                                                <div class="col" th:text="${inInnerDto.numberRoom}"></div>
+                                                <div class="col" th:text="${inInnerDto.yearCreated}"></div>
+                                                <th:block th:switch="${inInnerDto.status}">
+                                                <div class="col" th:case="OK" th:text="Исправен"></div>
+                                                <div class="col" th:case="REPAIR" th:text="Ремонт"></div>
+                                                <div class="col" th:case="MONITORING" th:text="Списание"></div>
+                                                <div class="col" th:case="DEFECTIVE" th:text="Неисправен"></div>
+                                                <div class="col" th:case="UTILIZATION" th:text="Утилизирован"></div>
+                                                </th:block>
+                                             </div>
+                                                <div class="row mb-2 d-flex align-items-center text-start phone" th:case="conditioner">
+                                                <div class="col" th:text="${stat.count} + '. '  + ${inInnerDto.manufacturerName} + ' ' + ${inInnerDto.model}"></div>
+                                                <div class="col" th:text="${inInnerDto.placeName}"></div>
+                                                <div class="col" th:text="${inInnerDto.serialNumber}"></div>
+                                                <div class="col" th:text="${inInnerDto.inventaryNumber}"></div>
+                                                <div class="col" th:text="${inInnerDto.yearCreated}"></div>
+                                                <th:block th:switch="${inInnerDto.conditionerType}">
+                                                <div class="col" th:case="WINDOW" th:text="Оконный"></div>
+                                                <div class="col" th:case="WALL" th:text="Настенный"></div>
+                                                <div class="col" th:case="CEILING" th:text="Потолочный"></div>
+                                                <div class="col" th:case="FLOOR" th:text="Напольный"></div>
+                                                </th:block>
+                                                <th:block th:switch="${inInnerDto.status}">
+                                                <div class="col" th:case="OK" th:text="Исправен"></div>
+                                                <div class="col" th:case="REPAIR" th:text="Ремонт"></div>
+                                                <div class="col" th:case="MONITORING" th:text="Списание"></div>
+                                                <div class="col" th:case="DEFECTIVE" th:text="Неисправен"></div>
+                                                <div class="col" th:case="UTILIZATION" th:text="Утилизирован"></div>
+                                                </th:block>
+                                             </div>
+                                                 <div class="row mb-2 d-flex align-items-center text-start phone" th:case="terminal">
+                                                <div class="col" th:text="${stat.count} + '. '  + ${inInnerDto.manufacturerName} + ' ' + ${inInnerDto.model}"></div>
+                                                <div class="col" th:text="${inInnerDto.placeName}"></div>
+                                                <div class="col" th:text="${inInnerDto.serialNumber}"></div>
+                                                <div class="col" th:text="${inInnerDto.inventaryNumber}"></div>
+                                                <th:block th:switch="${inInnerDto.status}">
+                                                <div class="col" th:case="OK" th:text="Исправен"></div>
+                                                <div class="col" th:case="REPAIR" th:text="Ремонт"></div>
+                                                <div class="col" th:case="MONITORING" th:text="Списание"></div>
+                                                <div class="col" th:case="DEFECTIVE" th:text="Неисправен"></div>
+                                                <div class="col" th:case="UTILIZATION" th:text="Утилизирован"></div>
+                                                </th:block>
+                                             </div>
+                                                <div class="row mb-2 d-flex align-items-center text-start phone" th:case="thermoprinter">
+                                                <div class="col" th:text="${stat.count} + '. ' + ${inInnerDto.model}"></div>
+                                                <div class="col" th:text="${inInnerDto.placeName}"></div>
+                                                <div class="col" th:text="${inInnerDto.serialNumber}"></div>
+                                                <div class="col" th:text="${inInnerDto.inventaryNumber}"></div>
+                                                <th:block th:switch="${inInnerDto.status}">
+                                                <div class="col" th:case="OK" th:text="Исправен"></div>
+                                                <div class="col" th:case="REPAIR" th:text="Ремонт"></div>
+                                                <div class="col" th:case="MONITORING" th:text="Списание"></div>
+                                                <div class="col" th:case="DEFECTIVE" th:text="Неисправен"></div>
+                                                <div class="col" th:case="UTILIZATION" th:text="Утилизирован"></div>
+                                                </th:block>
+                                             </div>
+                                                <div class="row mb-2 d-flex align-items-center text-start phone" th:case="display">
+                                                <div class="col" th:text="${stat.count} + '. '+ ${inInnerDto.manufacturer} + ' ' + ${inInnerDto.model}"></div>
+                                                <div class="col" th:text="${inInnerDto.placeName}"></div>
+                                                <div class="col" th:text="${inInnerDto.serialNumber}"></div>
+                                                <div class="col" th:text="${inInnerDto.inventaryNumber}"></div>
+                                                <th:block th:switch="${inInnerDto.status}">
+                                                <div class="col" th:case="OK" th:text="Исправен"></div>
+                                                <div class="col" th:case="REPAIR" th:text="Ремонт"></div>
+                                                <div class="col" th:case="MONITORING" th:text="Списание"></div>
+                                                <div class="col" th:case="DEFECTIVE" th:text="Неисправен"></div>
+                                                <div class="col" th:case="UTILIZATION" th:text="Утилизирован"></div>
+                                                </th:block>
+                                             </div>
+                                                 <div class="row mb-2 d-flex align-items-center text-start phone" th:case="swunit">
+                                                <div class="col" th:text="${stat.count} + '. ' + ${inInnerDto.model}"></div>
+                                                <div class="col" th:text="${inInnerDto.placeName}"></div>
+                                                <div class="col" th:text="${inInnerDto.serialNumber}"></div>
+                                                <div class="col" th:text="${inInnerDto.inventaryNumber}"></div>
+                                                <th:block th:switch="${inInnerDto.status}">
+                                                <div class="col" th:case="OK" th:text="Исправен"></div>
+                                                <div class="col" th:case="REPAIR" th:text="Ремонт"></div>
+                                                <div class="col" th:case="MONITORING" th:text="Списание"></div>
+                                                <div class="col" th:case="DEFECTIVE" th:text="Неисправен"></div>
+                                                <div class="col" th:case="UTILIZATION" th:text="Утилизирован"></div>
+                                                </th:block>
+                                             </div>
+                                                 <div class="row mb-2 d-flex align-items-center text-start phone" th:case="asuo">
+                                                <div class="col" th:text="${stat.count} + '. ' + ${inInnerDto.nameFromOneC}"></div>
+                                                <div class="col" th:text="${inInnerDto.placeName}"></div>
+                                                <div class="col" th:text="${inInnerDto.inventaryNumber}"></div>
+                                                <div class="col" th:text="${inInnerDto.yearCreated}"></div>
+                                                <div class="col" th:text="${inInnerDto.dateExploitationBegin}"></div>
+                                                <div class="col" th:text="${inInnerDto.status}"></div>
+                                             </div>
+                                                 
+                                                <div class="row mb-2 d-flex align-items-center text-start phone" th:case="terminalDisplay">
+                                                <div class="col" th:text="${stat.count} + '. ' + ${inInnerDto.model}"></div>
+                                                <div class="col" th:text="${inInnerDto.placeName}"></div>
+                                                <div class="col" th:text="${inInnerDto.serialNumber}"></div>
+                                                <div class="col" th:text="${inInnerDto.screenDiagonal}"></div>
+                                                <div class="col" th:text="${inInnerDto.status}"></div>
+
+                                             </div>
+                                                <div class="row mb-2 d-flex align-items-center text-start phone" th:case="terminalSensor">
+                                                <div class="col" th:text="${stat.count} + '. ' + ${inInnerDto.manufacturer} + ' ' + ${inInnerDto.model}"></div>
+                                                <div class="col" th:text="${inInnerDto.placeName}"></div>
+                                                <div class="col" th:text="${inInnerDto.serialNumber}"></div>
+                                                <div class="col" th:text="${inInnerDto.status}"></div>
+
+                                             </div>
+                                                     
+                                                      <div class="row mb-2 d-flex align-items-center text-start phone" th:case="terminalServer">
+                                                <div class="col" th:text="${stat.count} + '. ' + ${inInnerDto.manufacturer} + ' ' + ${inInnerDto.model}"></div>
+                                                <div class="col" th:text="${inInnerDto.placeName}"></div>
+                                                <div class="col" th:text="${inInnerDto.serialNumber}"></div>
+                                                <div class="col" th:text="${inInnerDto.status}"></div>
+
+                                             </div>
+                                                      <div class="row mb-2 d-flex align-items-center text-start phone" th:case="terminalPrinter">
+                                                <div class="col" th:text="${stat.count} + '. ' + ${inInnerDto.manufacturer} + ' ' + ${inInnerDto.model}"></div>
+                                                <div class="col" th:text="${inInnerDto.placeName}"></div>
+                                                <div class="col" th:text="${inInnerDto.serialNumber}"></div>
+                                                <div class="col" th:text="${inInnerDto.status}"></div>
+
+                                             </div>
+                                                      <div class="row mb-2 d-flex align-items-center text-start phone" th:case="terminalUps">
+                                                <div class="col" th:text="${stat.count} + '. ' + ${inInnerDto.manufacturer} + ' ' + ${inInnerDto.model}"></div>
+                                                <div class="col" th:text="${inInnerDto.placeName}"></div>
+                                                <div class="col" th:text="${inInnerDto.serialNumber}"></div>
+                                                <div class="col" th:text="${inInnerDto.status}"></div>
+
+                                             </div>
+                                                     
+                                                      <div class="row mb-2 d-flex align-items-center text-start phone" th:case="places">
+                                                <div class="col" th:text="${stat.count} + '. ' + ${inInnerDto.username}"></div>
+                                                <div class="col" th:text="${inInnerDto.placeType}"></div>
+
+
+                                             </div>
+                                                  
+                                                     
+                                                <div class="row mb-2 d-flex align-items-center text-start phone" th:case="*">
+                                                <div class="col" th:text="${stat.count} + '. ' + ${inInnerDto.manufacturerName} + ' ' + ${inInnerDto.model}"></div>
+                                                <div class="col" th:text="${inInnerDto.placeName}"></div>
+                                                <div class="col" th:text="${inInnerDto.serialNumber}"></div>
+                                                <div class="col" th:text="${inInnerDto.inventaryNumber}"></div>
+                                                <div class="col" th:text="${#dates.format(inInnerDto.dateExploitationBegin, 'dd.MM.yyyy')}"></div>
+                                                <th:block th:switch="${inInnerDto.status}">
+                                                <div class="col" th:case="OK" th:text="Исправен"></div>
+                                                <div class="col" th:case="REPAIR" th:text="Ремонт"></div>
+                                                <div class="col" th:case="MONITORING" th:text="Списание"></div>
+                                                <div class="col" th:case="DEFECTIVE" th:text="Неисправен"></div>
+                                                <div class="col" th:case="UTILIZATION" th:text="Утилизирован"></div>
+                                                </th:block>
+                                                <div class="col" th:text="${inInnerDto.yearCreated}"></div>
+                                                <th:block th:switch="${attribute}">
+                                                        <div class="col" th:text="${inInnerDto.phoneNumber}" th:case="'phones'">
+                                                        </div>
+                                                        <div class="col" th:case="'monitors'">
+                                                            <th:block th:switch="${inInnerDto.baseType}">
+                                                                <span th:case="'ARM'">
+                                                                    в составе ПК, АРМ
+                                                                </span>
+                                                                <span th:case="'SINGLE'">
+                                                                    отдельно
+                                                                </span>
+                                                        </th:block>
+                                                        </div>
+                                                        <div class="col" th:case="'ups'">
+                                                            <span th:if="${inInnerDto.yearReplacement == 0}">Нет</span>
+                                                            <span th:unless="${inInnerDto.yearReplacement == 0}" th:text="${inInnerDto.yearReplacement}"></span>
+                                                        </div>
+                                                    </th:block> 
+                                             </div>
+                                               </th:block>         
+                                            </li>
+                                           
+                                        </ul>
+                                    </details>
+                                </li>
+                            </ul>
+
+                        </details>
+                    </li>
+                </ul>
+                    <div th:if="${dtoes.size} == 0 AND ${dtoesStorage.size} == 0">
+                    <h3 class="mt-5 pt-5 text-center">В базе данных отсутствуют [[${namePage.substring(0, 1).toLowerCase() + namePage.substring(1)}]]</h3>
+                </div>
+                    </div>
+            </div>
+        </div>
+
+
+        <!-- Модальное окно добавления/редактирования-->
+        
+        <div class="modal fade" id="addPlaceModal" data-bs-backdrop="static" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg modal-dialog-centered">
+                <div class="modal-content" id="modalContent">
+
+
+                </div>
+
+            </div>
+        </div>
+        
+        
+         <!-- Модальное окно ремонт-->
+        
+        <div class="modal fade" id="repairModal" data-bs-backdrop="static"  tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-xl modal-dialog-centered">
+                <div class="modal-content" id="modalRepairContent">
+
+
+                </div>
+
+            </div>
+        </div>
+         
+         
+           <!-- Модальное окно перемещения-->
+        
+        <div class="modal fade" id="transferModal" data-bs-backdrop="static"  tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-fullscreen">
+                <div class="modal-content" id="modalTransferContent">
+
+
+                </div>
+
+            </div>
+        </div>
+        
+        
+        <!-- Модальное окно error-->
+        <div class="modal fade" id="modalError" data-bs-backdrop="static" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-error">
+                <div class="modal-content" id="modalErrorContent">
+
+
+                </div>
+
+            </div>
+        </div>
+        
+        <!--Модальное окно подтвеждения действия возврата/отправки на склад-->
+        
+                        <div class="modal fade" id="confirmationModal" data-bs-backdrop="static" aria-hidden="true" aria-labelledby="exampleModalToggleLabel2" tabindex="-1">
+                  <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h3 class="modal-title fs-5" id="titleConfirmationModal">Предупреждение</h3>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                      </div>
+                      <div class="modal-body">
+                          <div class="container">
+                              <div class="row">
+                                  <div class="col">
+                                      <p class="fw-bold"> Вы уверены, что хотите вернуть устройство со склада? </p>
+                                  </div>
+                              </div>
+                              <div class="row">
+                                  <div class="col">
+                                      <br>
+                                      <br>
+                                      <p class="fst-italic"> На следующем шаге выберите рабочее место сотрудника, где данное устройство установлено.</p>
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+                      <div class="modal-footer confirmationModalFooter">
+                        <button type="button" class="btn btn-secondary btn-sm"  data-bs-dismiss="modal">Нет</button>
+                        <button class="btn btn-primary btn-sm" data-bs-target="#addPlaceModal" data-bs-toggle="modal" data-bs-dismiss="modal" id="backFromStorageConfirmBtn" >Да</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+     
+             
+   
+        
+        
+        
+        <script src="/js/popper.min.js"></script>
+        <script src="/js/bootstrap.bundle.min.js"></script>
+        <script src="/js/jquery.mask.min.js"></script>
+        <script src="/js/main_svt.js"></script>
+        <script src="/js/svtobj.js"></script>
+        <script src="/js/highlight-sidebar.js"></script>
+    </body>
+</html>

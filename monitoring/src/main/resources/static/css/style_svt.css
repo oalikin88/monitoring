@@ -1,0 +1,408 @@
+/*
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/Other/CascadeStyleSheet.css to edit this template
+*/
+/* 
+    Created on : 8 мая 2024 г., 8:36:41
+    Author     : 041AlikinOS
+*/
+
+::after,
+::before {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+a {
+    text-decoration: none;
+}
+
+li {
+    list-style: none;
+}
+
+#sidebar.expand .sidebar-nav > li   {
+    padding-left:0px;
+}
+
+#sidebar.expand ul > li {
+    padding-left:15px;
+}
+
+
+
+h1 {
+    font-weight: 600;
+    font-size: 1.5rem;
+}
+
+.wrapper {
+
+    display: flex;
+}
+
+.main {
+    min-height: 100vh;
+    width: 100%;
+/*    overflow: hidden;*/
+    -webkit-transition: all 0.35s ease-in-out;
+    -moz-transition: all 0.35s ease-in-out;
+    -ms-transition: all 0.35s ease-in-out;
+    -o-transition: all 0.35s ease-in-out;
+    transition: all 0.35s ease-in-out;
+    background-color: #fafbfe;
+}
+
+#searchChoise {
+    max-width: 210px;
+}
+
+
+
+    
+/*#add-icon {
+  width: 42px;
+  height: 42px;
+}*/
+
+.add-icon:hover {
+  fill: rgb(21, 179, 146);
+}
+.delete-icon:hover {
+    fill: #E8162E;
+}
+
+.edit-icon:hover {
+    fill: rgb(235, 131, 23);
+}
+
+.saveEdit-icon:hover {
+    fill: rgb(21, 179, 146);
+}
+
+#buttonAccordionTitleSysBlock {
+    
+    font-size: 15px;
+    font-weight: 700;
+}
+
+[data-tooltip] {
+  --arrow-size: 5px;
+  position: relative;
+  z-index: 10;
+}
+/* Positioning and visibility settings of the tooltip */
+[data-tooltip]:before,
+[data-tooltip]:after {
+  position: absolute;
+  visibility: hidden;
+  opacity: 0;
+  left: 50%;
+  bottom: calc(100% + var(--arrow-size));
+  pointer-events: none;
+  transition: 0.2s;
+  will-change: transform;
+}
+
+/* The actual tooltip with a dynamic width */
+[data-tooltip]:before {
+  content: attr(data-tooltip);
+  padding: 10px 18px;
+  min-width: 50px;
+  max-width: 300px;
+  width: max-content;
+  width: -moz-max-content;
+  border-radius: 6px;
+  font-size: 14px;
+  background-color: rgba(59, 72, 80, 0.9);
+  background-image: linear-gradient(30deg,
+    rgba(59, 72, 80, 0.44),
+    rgba(59, 68, 75, 0.44),
+    rgba(60, 82, 88, 0.44));
+  box-shadow: 0px 0px 24px rgba(0, 0, 0, 0.2);
+  color: #fff;
+  text-align: center;
+  white-space: pre-wrap;
+  transform: translate(-50%,  calc(0px - var(--arrow-size))) scale(0.5);
+}
+
+/* Tooltip arrow */
+[data-tooltip]:after {
+  content: '';
+  border-style: solid;
+  border-width: var(--arrow-size) var(--arrow-size) 0px var(--arrow-size); /* CSS triangle */
+  border-color: rgba(55, 64, 70, 0.9) transparent transparent transparent;
+  transition-duration: 0s; /* If the mouse leaves the element, 
+                              the transition effects for the 
+                              tooltip arrow are "turned off" */
+  transform-origin: top;   /* Orientation setting for the
+                              slide-down effect */
+  transform: translateX(-50%) scaleY(0);
+}
+
+/* Tooltip becomes visible at hover */
+[data-tooltip]:hover:before,
+[data-tooltip]:hover:after {
+  visibility: visible;
+  opacity: 1;
+}
+/* Scales from 0.5 to 1 -> grow effect */
+[data-tooltip]:hover:before {
+  transition-delay: 0.3s;
+  transform: translate(-50%, calc(0px - var(--arrow-size))) scale(1);
+}
+/* 
+  Arrow slide down effect only on mouseenter (NOT on mouseleave)
+*/
+[data-tooltip]:hover:after {
+  transition-delay: 0.5s; /* Starting after the grow effect */
+  transition-duration: 0.2s;
+  transform: translateX(-50%) scaleY(1);
+}
+
+aside {
+    background-color: #0e223e;
+  
+}
+
+
+#sidebar.expand > #wrap {
+    position:sticky;
+    top:0;
+    overflow-y: scroll;
+    max-height: 100vh;
+}::-webkit-scrollbar { width: 0 !important }
+
+#wrap {
+    position:sticky;
+    top:0;
+}
+
+#sidebar {
+    width: 70px;
+    min-width: 70px;
+    z-index: 1000;
+    transition: all .25s ease-in-out;
+    display: flex;
+    flex-direction: column;
+    background-color: #0e223e;
+    height: 100%;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+}
+
+#tableDevices {
+    -webkit-user-select: text;
+    -moz-user-select: text;
+    
+    
+}
+#title {
+    font-size: 18px;
+    font-weight: 800;
+}
+
+#sidebar.expand {
+    width: 260px;
+    min-width: 260px;
+}
+
+#toggle-btn {
+    background-color: transparent;
+    cursor: pointer;
+    border: 0;
+    padding: 1rem 1.5rem;
+}
+
+#toggle-btn i {
+    font-size: 1.5rem;
+    color: #fff;
+}
+
+.sidebar-logo {
+    margin: auto 0;
+    
+}
+
+.sidebar-logo a {
+    color: #FFF;
+    font-size: 1.15rem;
+    font-weight: 600;
+}
+
+#sidebar:not(.expand) .sidebar-logo,
+#sidebar:not(.expand) a.sidebar-link span {
+    display: none;
+}
+
+
+
+
+.sidebar-nav {
+    padding: 2rem 0;
+    flex: 1 1 auto;
+    
+}
+
+a.sidebar-link {
+    padding: .625rem 1.625rem .625rem 5px;
+    color: #FFF;
+    display: block;
+    font-size: 0.9rem;
+    white-space: nowrap;
+    border-left: 3px solid transparent;
+}
+
+.sidebar-link i {
+    font-size: 1.1rem;
+    margin-right: .75rem
+}
+
+a.sidebar-link:hover {
+    background-color: rgba(255, 255, 255, .075);
+    border-left: 3px solid #3b7ddd;
+}
+
+#sidebar:not(.expand) li.active {
+   border-left: 3px solid #F85541!important;
+    background-color: #3b7ddd!important;
+}
+
+#sidebar.expand li > .active {
+   border-left: 3px solid #F85541!important;
+    background-color: #3b7ddd!important;
+}
+
+
+
+.sidebar-item {
+    position: relative;
+    background-color: #0e223e;
+
+}
+
+#sidebar:not(.expand) .second-level-menu  {
+    position: absolute;
+    top: 0;
+    left: 70px;
+    background-color: #0e2238;
+    padding: 0;
+    min-width: 15rem;
+    display: none;
+}
+
+#sidebar:not(.expand) a.sidebar-link {
+    padding: .625rem 1.625rem;
+    color: #FFF;
+    display: block;
+    font-size: 0.9rem;
+    white-space: nowrap;
+    border-left: 3px solid transparent;
+}
+
+
+
+#sidebar:not(.expand)  .third-level-menu  {
+    position: absolute;
+    top: 0;
+    left: 240px;
+    background-color: #0e2238;
+    padding: 0;
+    min-width: 15rem;
+    display: none;
+}
+
+
+
+
+#sidebar:not(.expand) .top-level-menu > li:hover .second-level-menu {
+    display: block;
+    max-height: 15em;
+    width: 100%;
+    opacity: 1;
+}
+
+#sidebar:not(.expand) .second-level-menu > li:hover > .third-level-menu {
+    display: block;
+    max-height: 15em;
+    width: 100%;
+    opacity: 1;
+}
+
+/*#sidebar:not(.expand) .second-level-menu > li:hover > .third-level-menu > li {
+    display: block;
+    max-height: 15em;
+    width: 100%;
+    opacity: 1;
+}*/
+
+
+
+
+
+
+#sidebar.expand .sidebar-link[data-bs-toggle="collapse"]::after {
+    border: solid;
+    border-width: 0 .075rem .075rem 0;
+    content: "";
+    display: inline-block;
+    padding: 2px;
+    position: absolute;
+    right: 1.5rem;
+    top: 1.4rem;
+    transform: rotate(-135deg);
+    transition: all .2s ease-out;
+}
+
+#sidebar.expand .sidebar-link[data-bs-toggle="collapse"].collapsed::after {
+    transform: rotate(45deg);
+    transition: all .2s ease-out;
+}
+
+#top-panel {
+    box-shadow: 0px 5px 10px -5px #111; 
+    margin-left: 5px;
+    margin-right: 5px;
+    min-height: 56px;
+    align-items: center;
+    border-radius: 5px;
+    position: sticky;
+    top: 0;
+    background: #fff;
+    z-index: 1000;
+   
+}
+
+#content {
+    font-family: "Segoe UI";
+    font-size: 14px;
+    font-weight: 600;
+    margin-top: 15px;
+    padding-top: 25px;
+    padding-left: 15px;
+}
+.models {
+    padding-left: 30px;
+}
+
+.selectize-dropdown [data-selectable].option:hover {
+    border-radius: 5px;
+}
+.selectize-dropdown .selected {
+    border-radius: 5px;
+}
+.checkRadio {
+    margin-left: auto;
+    margin-right: auto;
+    width: 100px;
+}
+.modal-title {
+    font-size: 17px;
+}
+
+.modal-body {
+    font-size: 15px;
+    
+}
+

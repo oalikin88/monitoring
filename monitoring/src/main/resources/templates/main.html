@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<!--
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this template
+-->
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <title>Добавить контракт</title>
+        <link rel="icon" type="image/x-icon" href="/img/favicon.ico">
+        <script src="/js/jquery-3.6.4.min.js"></script>
+        <script src="/js/selectize.js"></script>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link href="/css/bootstrap.min.css" rel="stylesheet">
+        <link href="/css/selectize.bootstrap5.css" rel="stylesheet">
+        <link href="/css/style.css" rel="stylesheet">
+   
+    </head>
+    <body>
+        <nav th:insert="nav :: navbar"></nav>
+
+        <div class="container-fluid" id="content">
+         
+
+            <div class="tab-status">
+                <span class="tab active">1</span>
+                <span class="tab">2</span>
+                <span class="tab">3</span>
+                <span class="tab">4</span>
+            </div>
+
+            <header><h3 class="fw-bold text-center">Добавление контракта</h3></header>
+            <form th:action="@{/main}"  method="post" id="sendForm">
+
+                <div role="tab-list">
+
+                    <div role="tabpanel" id="mainParameters" class="tabpanel">
+
+                        <div class="title"><h4 class="text-left fw-bold">Основные параметры</h4>
+                        
+                                                                      
+                        
+                        </div>
+                        <div class="row text-center">
+                            <div  class="col-md-4">
+                                <label for="inputContractNumber" class="form-label">Номер контракта:</label>
+                                
+                            </div>
+
+                            <div class="col-md-4">
+                                <label for='dateStartContract' class="form-label">Дата начала контракта: </label>
+                                
+                            </div>
+                            <div class="col-md-4">
+                                <label for='dateEndContract' class="form-label">Дата окончания контракта: </label>
+                            </div>
+                        </div>
+
+                        <div class="row mb-2 contract">
+                            <div class="col-md-4 mb-2">
+                                <input type="text"  class="form-control contractDetails" id="inputContractNumber" />
+                            </div>
+                            <div class="col-md-4 mb-2">
+                                <input type="date" class="form-control contractDetails"  name="startContr" placeholder="date" id='dateStartContract'  />
+                            </div>
+                            <div class="col-md-4 mb-2">
+                                <input type="date" class="form-control contractDetails"  name="endContr" placeholder="date" id='dateEndContract'  />
+                            </div>
+                        </div>
+
+                        <div class="row mb-2 mt-4">
+                            <div class="col-md-12">
+                                <h4 class="fw-bold">Объект закупки</h4>
+                            </div>
+                        </div>
+
+
+                        <div class="row objectBuingRow mt-4">
+                            <div class="col-md-4">
+                                <div class="form-check">
+                                <label for='checkboxPrinter' class="form-label">Принтеры</label>
+                                        <input class="form-check-input contractDetails" type="checkbox" value="" 
+                                               aria-label="Checkbox for following text input" id="checkboxPrinter" name="checkboxPrinter">
+                                    </div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <div class="form-check">
+                                <label for='checkboxCartridge' class="form-label">Картриджи</label>
+                                        <input class="form-check-input contractDetails" type="checkbox" value=""
+                                               aria-label="Checkbox for following text input" id="checkboxCartridge" name="checkboxCartridge">
+                                    </div>
+                                    
+                         
+                            </div>
+
+                        </div>
+                    </div>
+                    <div role="tabpanel" id="printersInfo" class="tabpanel hidden">
+                        <div class="row">
+                            <div class="col">
+                                <div class="title"><h4 class="text-left fw-bold">Добавление принтеров в контракт</h4></div>
+                            </div>
+                            
+                        </div>
+                        <div class="cont" id="cont">
+                            
+                        </div>
+
+                    </div>
+                    <div role="tabpanel" id="cartridgesInfo" class="tabpanel hidden">
+                        <div class="row">
+                            <div class="col">
+                                <div class="title"><h4 class="text-left fw-bold">Добавление картриджей в контракт</h4></div>
+                            </div>
+                            <div class="col text-end">
+                                <button type="button" class="btn btn-secondary addBtn"  id="addBtn">Добавить</button>
+                            </div>
+                        </div>
+                        
+                        
+
+                                          
+                    </div>
+                    
+                    
+                
+                    <div role="tabpanel" id="resultInfo" class="tabpanel hidden">
+                        <div class="title"><h4 class="text-left fw-bold">Данные о контракте</h4></div>
+ 
+                    </div>
+                    
+                    
+                    
+                </div>  
+                <div class="row">
+                    <div class="pagination">
+                        
+                        <div  class="col-md-12 text-end" id="buttons">
+                           
+                            <a class="btn hidden" id="prev">Назад</a>
+                            <span class="d-inline-block" tabindex="0" id="tooltipNext" data-bs-toggle="tooltip" >
+                            <a class="btn" id="next" disabled>Далее</a>
+                            </span>
+
+                            
+                         
+                            <button class="btn btn-submit hidden" id="submit" >Добавить</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+            </div>
+     
+       
+     <footer th:insert="footer :: footer"></footer>
+        <script src="/js/bootstrap.bundle.min.js" ></script>
+        <script src="/js/session_ping.js"></script>
+        <script src="/js/my.script.js"></script>
+    </body>
+</html>
+
+                            
+                            
+                            
+         

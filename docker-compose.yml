@@ -1,6 +1,7 @@
 version: '3.8'
 
 services:
+<<<<<<< HEAD
   db:
     image: mysql:8.0
     container_name: monitoring-db
@@ -30,3 +31,72 @@ services:
 
 volumes:
   db_data:
+=======
+
+  db-monitoring:
+    image: mysql:9.0
+    environment:
+      MYSQL_DATABASE: monitoring
+      MYSQL_ROOT_PASSWORD: qwerty1234
+    ports:
+      - "3306:3306"
+
+  db-employees:
+    image: mysql:9.0
+    environment:
+      MYSQL_DATABASE: employees
+      MYSQL_ROOT_PASSWORD: qwerty1234
+    ports:
+      - "3307:3306"
+
+  eureka-server:
+    build: ./eureka-server
+    ports:
+      - "8761:8761"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8761/actuator/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+
+  employee-service:
+    build: ./employees
+    depends_on:
+      db-employees:
+        condition: service_started
+      eureka-server:
+        condition: service_healthy
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://db-employees:3306/employees
+      - SPRING_LIQUIBASE_ENABLED=true
+    ports:
+      - "8082:8082"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8082/actuator/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+
+  monitoring-service:
+    build: ./monitoring
+    depends_on:
+      db-monitoring:
+        condition: service_started
+      eureka-server:
+        condition: service_healthy
+      employee-service:
+        condition: service_healthy
+    environment:
+      - SPRING_PROFILES_ACTIVE=demo
+      - SPRING_DATASOURCE_URL=jdbc:mysql://db-monitoring:3306/monitoring
+      - SPRING_LIQUIBASE_ENABLED=true
+    volumes:
+      - ./logs/monitoring:/app/log
+    ports:
+      - "8081:8081"
+
+
+
+>>>>>>> demo

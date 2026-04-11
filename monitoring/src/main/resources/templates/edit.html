@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<!--
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this template
+-->
+<html>
+    <head>
+        <title>Работа с принтером [[${dto.manufacturer + ' ' + dto.model}]]</title>
+        <link rel="icon" type="image/x-icon" href="/img/favicon.ico">
+        <script src="/js/jquery-3.6.4.min.js"></script>
+         <script src="/js/selectize.js"></script>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link href="/css/bootstrap.min.css" rel="stylesheet">
+         <link href="/css/selectize.bootstrap5.css" rel="stylesheet">
+        <link href="/css/style.css" rel="stylesheet">
+    </head>
+    <body>
+        <nav th:insert="nav :: navbar"></nav>
+        
+        
+        <div class="container content" id="content"  >
+           
+            <div class="wrapper">
+                
+                <h3 class="text-center titleLocation fw-bold">[[${dto.manufacturer + ' ' + dto.model}]]</h3>
+                
+                <div class="row  mb-3">
+                    <div class="col col-md-6">
+                        Наименование ОС
+                    </div>
+                    <div class="col col-md-6">
+                         <div class='row'>
+                            <div class='col' id="nameFromOneC">[[${dto.nameFromOneC}]]</div>                 
+                             <div class='col'>
+                                <button type="button" class="btn" data-bs-toggle="modal" id='nameFromOneCBtn' data-bs-target="#nameFromOneCModal">Изменить</button>
+                            </div>
+                    </div>
+                </div>
+                </div>
+                
+                
+                  <div class="row  mb-3">
+                    <div class="col col-md-6">
+                        Тип оборудования
+                    </div>
+                    <div class="col col-md-6">
+                         <div class='row'>
+                            <div class='col' id="deviceType">[[${dto.deviceType}]]</div>                 
+                             
+                    </div>
+                </div>
+                </div>
+                
+                
+                <div class="row  mb-3">
+                    <div class="col col-md-6">
+                        Статус
+                    </div>
+                    <div class="col col-md-6">
+                         <div class='row'>
+                            <div class='col' id="printerStatus">[[${dto.printerStatus}]]</div>                 
+                             <div class='col'>
+                                <button type="button" class="btn" data-bs-toggle="modal" id='printerStatusBtn' data-bs-target="#printerStatusModal">Изменить</button>
+                            </div>
+                    </div>
+                </div>
+                </div>
+                
+                <div class="row  mb-3">
+                    <div class="col col-md-6">
+                        Инвентарный номер
+                    </div>
+                    <div class="col col-md-6">
+                        <div class='row'>
+                            <div class='col' id="inventaryRefresh">[[${dto.inventaryNumber}]]</div>
+                            <div class='col'>
+                                <button type="button" class="btn" data-bs-toggle="modal" id='inventaryBtn' data-bs-target="#inventarynumberModal">Изменить</button>
+                            </div>
+                        </div>
+                        
+                    </div>
+                </div>
+                
+                        <div class="row  mb-3">
+                    <div class="col col-md-6">
+                        Серийный номер
+                    </div>
+                    <div class="col col-md-6">
+                        
+                        <div class='row'>
+                            <div class='col' id="serialRefresh"> [[${dto.serialNumber}]]</div>
+                            <div class='col'>
+                                <button type="button" class="btn" data-bs-toggle="modal" id='serialBtn' data-bs-target="#serialnumberModal">Изменить</button>
+                            </div>
+                        </div>
+                       
+                    </div>
+                </div>
+                
+                <div class="row  mb-3">
+                    <div class="col col-md-6">
+                        Номер контракта
+                    </div>
+                    <div class="col col-md-6" id="numberContract">
+                       
+                    </div>
+                </div>
+                
+                <div class="row  mb-3">
+                    <div class="col col-md-6">
+                        Дата начала контракта
+                    </div>
+                    <div class="col col-md-6 startDateContract">
+                    </div>
+                </div>
+                
+                <div class="row  mb-3">
+                    <div class="col col-md-6">
+                        Дата окончания контракта
+                    </div>
+                    <div class="col col-md-6 endDateContract">
+                    </div>
+                </div>
+                
+                <div class="row  mb-3">
+                    <div class="col col-md-6">
+                        Расположение
+                    </div>
+                    <div class="col col-md-6">
+                        <div class='row'>
+                              <div class='col col-md-6' id="locationRefresh">[[${dto.location}]]</div>
+                        <div class='col col-md-6'>
+                            <button type="button" class="btn" data-bs-toggle="modal" id='locationbtn' data-bs-target="#staticBackdrop">Переместить</button>
+                        </div>
+                        </div>
+                    </div>
+                </div>
+                
+                 <div class="row  mb-3">
+                    <div class="col col-md-6">
+                        Установленный картридж
+                    </div>
+                    <div class="col col-md-6">
+                        <div class='row cartridgeUseRow'>
+                              <div class='col col-md-6 cartridgeUseDiv' id="cartridgeUseRefresh"></div>
+                        <div class='col col-md-6'>
+                            <button type="button" class="btn" data-bs-toggle="modal" id='catridgeUsesbtn' data-bs-target="#modalCartridgeUses">Управление</button>
+                        </div>
+                        </div>
+                    </div>
+                </div>
+                
+             
+                
+                  <!-- Modal статус принтера -->
+
+                    <div class="modal fade" id="printerStatusModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="printerStatusModalLabel">
+                      <div class="modal-dialog modal-dialog-centered">
+                           
+                        <div class="modal-content">
+                           
+                          <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="staticBackdropLabel">Выберите статус</h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                          </div>
+                           
+                          <div class="modal-body">
+                              
+                              
+                            <select class="form-select printerStatusSelect" name="printerStatusSelect" id='printerStatusSelect'>
+                                <option value ="OK" id="optionOk">Исправен</option>
+                                <option value="DEFECTIVE" id="optionDefective">Неисправен</option>
+                                <option value="REPAIR" id="optionRepear">Ремонт</option>
+                                <option value="MONITORING" id="optionMonitoring">Списание</option>
+                                <option value="UTILIZATION" id="optionUtilization">Утилизация</option>
+                                <option value="DELETE" id="optionDelete">Снят с учёта</option>
+                            </select>
+                          </div>
+                          <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+                            <button type="submit" id="printerStatusSubmit" class="btn btn-primary">Применить</button>
+                           
+                          </div>
+                         
+                        </div>
+                            
+                      </div>
+                    </div>
+                
+                
+                
+
+                    <!-- Modal Локация -->
+
+                    <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel">
+                      <div class="modal-dialog modal-dialog-centered">
+                           
+                        <div class="modal-content">
+                           
+                          <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="staticBackdropLabel">Выберите расположение</h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                          </div>
+                           
+                          <div class="modal-body">
+                              
+                              
+                            <select class="form-select locationSelect" name="locationSelect" id='locationSelect'>
+                            </select>
+                          </div>
+                          <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+                            <button type="submit" id="locationSubmit" class="btn btn-primary">Применить</button>
+                           
+                          </div>
+                         
+                        </div>
+                            
+                      </div>
+                    </div>
+                    
+                    
+                    <!-- Modal  Наименование ОС -->
+                    
+                      <div class="modal fade" id="nameFromOneCModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel">
+                      <div class="modal-dialog modal-dialog-centered">
+                           
+                        <div class="modal-content">
+                           
+                          <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="staticBackdropLabel">Изменение наименования ОС</h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                          </div>
+                           
+                          <div class="modal-body">
+                            
+                              <div class="input-group mb-3">
+                                <span class="input-group-text">Наименование ОС</span>
+                                <input type="text" class="form-control" id="nameFromOneCInput">
+                              </div>
+
+                            
+                          </div>
+                          <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+                            <button type="submit" id="nameFromeOneCSubmit" class="btn btn-primary">Применить</button>
+                           
+                          </div>
+                         
+                        </div>
+                            
+                      </div>
+                    </div>
+                    
+                    
+                       <!-- Modal  Серийный номер -->
+                    
+                      <div class="modal fade" id="serialnumberModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel">
+                      <div class="modal-dialog modal-dialog-centered">
+                           
+                        <div class="modal-content">
+                           
+                          <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="staticBackdropLabel">Введите серийный номер</h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                          </div>
+                           
+                          <div class="modal-body">
+                            
+                              <div class="input-group mb-3">
+                                <span class="input-group-text">Серийный номер</span>
+                                <input type="text" class="form-control" id="serialNumberInput">
+                              </div>
+
+                            
+                          </div>
+                          <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+                            <button type="submit" id="serialSubmit" class="btn btn-primary">Применить</button>
+                           
+                          </div>
+                         
+                        </div>
+                            
+                      </div>
+                    </div>
+                       
+                       
+                       <!-- Modal  Инвентарный номер -->
+                    
+                      <div class="modal fade" id="inventarynumberModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel">
+                      <div class="modal-dialog modal-dialog-centered">
+                           
+                        <div class="modal-content">
+                           
+                          <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="staticBackdropLabel">Введите инвентарный номер</h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                          </div>
+                           
+                          <div class="modal-body">
+                            
+                              <div class="input-group mb-3">
+                                <span class="input-group-text">Инвентарный номер</span>
+                                <input type="text" class="form-control" id="inventaryNumberInput">
+                              </div>
+
+                            
+                          </div>
+                          <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+                            <button type="submit" id="inventarySubmit" class="btn btn-primary">Применить</button>
+                           
+                          </div>
+                         
+                        </div>
+                            
+                      </div>
+                    </div>
+                       
+                       
+                       <!-- Modal Установленные картриджи -->
+
+                    <div class="modal fade" id="modalCartridgeUses" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1">
+                      <div class="modal-dialog modal-fullscreen">
+                           
+                        <div class="modal-content">
+                           
+                          <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="modalCartridgeUsesLabel">Установить картридж</h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                          </div>
+                           
+                          <div class="modal-body">
+                              <div class="row contentInnerRow1">
+                                  
+                                  <div class="col contentInnerDiv1">
+                                  
+                                  
+                                    <select class="form-select cartridgeSelect" name="cartridgeSelect" id='cartridgeSelect'>
+                            </select>
+                              </div>
+                              </div>
+                              <div class="row contentInnerRow2">
+                                  <div class="col contentInnerTable">
+                                      
+                                  </div>
+                              </div>
+                              
+                          
+                          </div>
+                          <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+                            <button type="submit" id="printerInnerCartridgeSubmit" class="btn btn-primary">Применить</button>
+                           
+                          </div>
+                         
+                        </div>
+                            
+                      </div>
+                    </div>
+                       
+
+
+                
+                
+            </div>
+            <div class="row rowButtons">
+                <div class="col">
+                    <input type="button" class="btn" value="Назад" id="backBtn"/>
+                </div>
+            </div>
+            
+            
+            
+            <script th:inline="javascript">
+                        
+                        let input = [[${dto}]];
+                      
+ 
+                    </script>
+        
+        </div>
+         <footer th:insert="footer :: footer"></footer>
+        <script src="/js/bootstrap.bundle.min.js"></script>
+        <script src="/js/edit.js"></script>
+        <script src="/js/fileDownloadManager.js"></script>
+        <script src="/js/session_ping.js"></script>
+    </body>
+</html>

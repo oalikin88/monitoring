@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<!--
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this template
+-->
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <title>Выбор категории</title>
+        <link rel="icon" type="image/x-icon" href="/img/favicon.ico">
+        <script src="/js/jquery-3.6.4.min.js"></script>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link href="/css/bootstrap.min.css" rel="stylesheet">
+        <link href="/css/style.css" rel="stylesheet">
+   
+    </head>
+    <body>
+        <nav th:insert="nav :: navbar"></nav>
+
+        <div class="container" id="content">
+            
+            <h3 class="text-center titleLocation fw-bold" th:text='${locationInfo.name}'></h3>
+            <h5 class="mb-4">Выберите категорию</h5>
+            
+            <div class="row contentRow pb-2 mb-2 mt-2 pt-2 text-left">
+                <div class="col">
+                    <a href="#" id="printerLink">Принтер</a>
+                </div>
+            </div>
+            
+            <div class="row contentRow pb-2 mb-2 mt-2 pt-2 text-left">
+                <div class="col">
+                    <a href="#" id="cartridgeLink" >Картридж</a>
+                </div>
+            </div>
+            
+                
+            </div>
+            </div>
+     
+        
+     <footer th:insert="footer :: footer"></footer>
+        <script src="/js/bootstrap.bundle.min.js" ></script>
+        <script src="/js/category_choice.js"></script>
+        
+    </body>
+</html>
+
+                            
+                            
+                            
+         

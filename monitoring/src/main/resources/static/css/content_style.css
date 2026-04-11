@@ -1,0 +1,85 @@
+/*
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/Other/CascadeStyleSheet.css to edit this template
+*/
+/* 
+    Created on : 27 мая 2024 г., 8:45:46
+    Author     : 041AlikinOS
+*/
+
+
+.element:hover {
+    background-color: rgba(14, 34, 62, 0.3);
+    padding-left: 10px;
+    padding-right: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.element {
+    padding-left: 10px;
+    padding-right: 10px;
+    min-height: 42px;
+    align-items:center;
+    justify-content: center;
+
+}
+
+.phone {
+    min-height: 42px;
+     align-items:center;
+    justify-content: center;
+}
+
+.modalHeaderContent {
+    background-color: #0e223e;
+    padding: 5px 15px 5px 15px;
+    user-select: none;
+}
+.modalHeaderError {
+    background-color: rgb(200,1,0);
+    padding: 5px 15px 5px 15px;
+    user-select: none;
+    
+}
+
+.modal-dialog-error {
+    max-width: calc(var(--bs-modal-width) - 10%);
+}
+
+.modal-title {
+    color: #FFF;
+}
+
+.modal-body > .container > div {
+    user-select: none;
+}
+
+.confirmationModalFooter > button {
+    min-width: 80px;
+}
+
+ul {
+    user-select: none;
+}
+
+.headTitle {
+    user-select: none;
+}
+
+#searchSvtObjBtn:hover {
+    cursor: pointer;
+}
+
+.content {
+    user-select: none;
+}
+
+#top-panel {
+    user-select: none;
+}
+
+#exceptionMessage {
+    padding-bottom: 30px;
+    padding-top: 30px;
+}

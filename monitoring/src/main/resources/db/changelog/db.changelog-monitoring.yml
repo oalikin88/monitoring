@@ -1,0 +1,5 @@
+databaseChangeLog:
+  - include:
+      file: db/changelog/monitoring/1.0/v1.0-db.changelog-initial.yml
+  - include:
+      file: db/changelog/monitoring/1.0/v1.0-load-data.yml
