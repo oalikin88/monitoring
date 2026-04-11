@@ -51,10 +51,8 @@ services:
       dockerfile: employees/Dockerfile
     container_name: employee-service
     depends_on:
-      db-employees:
-        condition: service_healthy
-      eureka-server:
-        condition: service_healthy
+      - db-employees
+      - eureka-server
     environment:
       - SPRING_DATASOURCE_URL=jdbc:mysql://db-employees:3306/employees
       - SPRING_DATASOURCE_USERNAME=root
@@ -74,12 +72,9 @@ services:
       dockerfile: monitoring/Dockerfile
     container_name: monitoring-service
     depends_on:
-      db-monitoring:
-        condition: service_healthy
-      eureka-server:
-        condition: service_healthy
-      employee-service:
-        condition: service_healthy
+      - db-monitoring
+      - eureka-server
+      - employee-service
     environment:
       - SPRING_PROFILES_ACTIVE=demo
       - SPRING_DATASOURCE_URL=jdbc:mysql://db-monitoring:3306/monitoring
