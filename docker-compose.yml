@@ -50,6 +50,7 @@ services:
       context: .
       dockerfile: employees/Dockerfile
     container_name: employee-service
+    restart: always
     depends_on:
       - db-employees
       - eureka-server
@@ -71,6 +72,7 @@ services:
       context: .
       dockerfile: monitoring/Dockerfile
     container_name: monitoring-service
+    restart: always
     depends_on:
       - db-monitoring
       - eureka-server
