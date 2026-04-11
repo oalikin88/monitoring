@@ -86,11 +86,11 @@ Database & Infrastructure:
 
 Для запуска проекта одной командой:
 
-\`\`\`bash
+```bash
 git clone https://github.com/oalikin88/monitoring.git
 cd ./monitoring
 docker compose up --build
-\`\`\`
+```
 
 Приложение будет доступно по адресу:
 [http://localhost:8081/phones](http://localhost:8081/phones)
