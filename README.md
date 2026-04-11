@@ -32,19 +32,27 @@ Backend:
 Frontend:
 - Thymeleaf
 - JavaScript
+- Bootstrap v.5
 
-Database:
+Database & Infrastructure:
 - MySQL
+- Docker / Docker Compose (контейнеризация и оркестрация)
 
 Сборка:
 - Maven
 
 
-## Архитектура
+## Архитектура и Инфраструктура
 
-Приложение построено по многослойной архитектуре:
+Проект реализован на базе микросервисной архитектуры:
+- **Eureka Server**: Discovery-сервис для регистрации микросервисов.
+- **Monitoring Service**: Основной модуль учета техники.
+- **Employee Service**: Сервис управления данными сотрудников.
 
-Controller → Service → Repository → Database
+**Инфраструктурные особенности:**
+- **Liquibase**: Автоматическое управление миграциями БД.
+- **Docker Compose**: Полная оркестрация всей инфраструктуры (БД + Сервисы) одной командой.
+- **Spring Data JPA**: Абстракция над данными для быстрой и надежной работы с MySQL.
 
 ### Основные принципы:
 - Разделение ответственности (SRP)
@@ -79,7 +87,7 @@ Controller → Service → Repository → Database
 Для запуска проекта одной командой:
 
 ```bash
-clone https://github.com/oalikin88/monitoring.git
+git clone https://github.com/oalikin88/monitoring.git
 cd ./monitoring
 docker compose up --build
 Приложение будет доступно по адресу:
