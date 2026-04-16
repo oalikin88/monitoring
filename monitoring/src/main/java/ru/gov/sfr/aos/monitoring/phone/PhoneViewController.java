@@ -12,22 +12,20 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
 import ru.gov.sfr.aos.monitoring.controllers.SvtViewController;
 import ru.gov.sfr.aos.monitoring.place.PlaceType;
 import ru.gov.sfr.aos.monitoring.location.Location;
 import ru.gov.sfr.aos.monitoring.exceptions.DublicateInventoryNumberException;
 import ru.gov.sfr.aos.monitoring.exceptions.ObjectAlreadyExists;
 import ru.gov.sfr.aos.monitoring.models.ArchivedDto;
-import ru.gov.sfr.aos.monitoring.models.FilterDto;
 import ru.gov.sfr.aos.monitoring.location.LocationByTreeDto;
 import ru.gov.sfr.aos.monitoring.svtobject.SvtDTO;
 import ru.gov.sfr.aos.monitoring.svtobject.SvtModelDto;
 import ru.gov.sfr.aos.monitoring.location.LocationService;
+import ru.gov.sfr.aos.monitoring.models.FilterRequest;
 
 /**
  *
@@ -52,23 +50,22 @@ private LocationService locationService;
     
      //   @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
     @GetMapping("/phones")
-    public String getPhones(Model model, @RequestParam(value="username", required=false) String username, 
-            @RequestParam(value="inventaryNumber", required = false) String inventaryNumber, 
-            @RequestParam(value="serialNumber", required = false) String serialNumber, 
-            @ModelAttribute FilterDto dto) {
+    public String getPhones(Model model, FilterRequest filterRequest) {
         
         List<SvtDTO> filter = null;
         Map<Location, List<Phone>> svtObjectsByEmployee = null;
         List<LocationByTreeDto> treeSvtDtoByEmployee = null;
         Map<Location, List<Phone>> svtObjectsByStorage = null;
         List<LocationByTreeDto> treeSvtDtoByStorage = null;
-        if(dto.model == null && dto.status == null && dto.yearCreatedOne == null && dto.yearCreatedTwo == null) {
-        if(null != username) {
-            svtObjectsByEmployee = phoneService.getSvtObjectsByName(username, PlaceType.EMPLOYEE);
-        } else if(null != inventaryNumber) {
-            svtObjectsByEmployee = phoneService.getSvtObjectsByInventaryNumberAndPlace(inventaryNumber, PlaceType.EMPLOYEE);
-        }else if(null != serialNumber) {
-            svtObjectsByEmployee = phoneService.getSvtObjectsBySerialNumberAndPlace(serialNumber, PlaceType.EMPLOYEE);
+        if(filterRequest.getModel() == null && filterRequest.getStatus() == null &&
+                filterRequest.getYearCreatedFrom() == null && filterRequest.getYearCreatedTo() == null) {
+        if(null != filterRequest.getUsername()) {
+            svtObjectsByEmployee = phoneService.getSvtObjectsByName(filterRequest.getUsername(), PlaceType.EMPLOYEE);
+        } else if(null != filterRequest.getInventaryNumber()) {
+            svtObjectsByEmployee = phoneService.getSvtObjectsByInventaryNumberAndPlace(filterRequest.getInventaryNumber(),
+                    PlaceType.EMPLOYEE);
+        }else if(null != filterRequest.getSerialNumber()) {
+            svtObjectsByEmployee = phoneService.getSvtObjectsBySerialNumberAndPlace(filterRequest.getSerialNumber(), PlaceType.EMPLOYEE);
         }else {
             svtObjectsByEmployee = phoneService.getSvtObjectsByPlaceType(PlaceType.EMPLOYEE);
         }
@@ -79,12 +76,12 @@ private LocationService locationService;
                 .collect(Collectors.toList());
         
         
-        if(null != username) {
-            svtObjectsByStorage = phoneService.getSvtObjectsByName(username, PlaceType.STORAGE);
-        }else if(null != inventaryNumber) {
-            svtObjectsByStorage = phoneService.getSvtObjectsByInventaryNumberAndPlace(inventaryNumber, PlaceType.STORAGE);
-        }else if(null != serialNumber) {
-            svtObjectsByStorage = phoneService.getSvtObjectsBySerialNumberAndPlace(serialNumber, PlaceType.STORAGE);
+        if(null != filterRequest.getUsername()) {
+            svtObjectsByStorage = phoneService.getSvtObjectsByName(filterRequest.getUsername(), PlaceType.STORAGE);
+        }else if(null != filterRequest.getInventaryNumber()) {
+            svtObjectsByStorage = phoneService.getSvtObjectsByInventaryNumberAndPlace(filterRequest.getInventaryNumber(), PlaceType.STORAGE);
+        }else if(null != filterRequest.getSerialNumber()) {
+            svtObjectsByStorage = phoneService.getSvtObjectsBySerialNumberAndPlace(filterRequest.getSerialNumber(), PlaceType.STORAGE);
         }else {
             svtObjectsByStorage = phoneService.getSvtObjectsByPlaceType(PlaceType.STORAGE);
         }
@@ -95,7 +92,7 @@ private LocationService locationService;
                 .collect(Collectors.toList());
         
         } else {
-            List<Phone> phonesByFilter = phoneService.getPhonesByFilter(dto);
+            List<Phone> phonesByFilter = phoneService.getPhonesByFilter(filterRequest);
              filter = new ArrayList<>();
             for(Phone p : phonesByFilter) {
                 SvtDTO phoneDto = phoneMapper.getDto(p);
@@ -117,24 +114,24 @@ private LocationService locationService;
         
         int amount = SvtViewController.getAmountDevices(treeSvtDtoByEmployee, treeSvtDtoByStorage);
         String filterLocation = null;
-        if(null != dto.getLocation() && !dto.getLocation().isEmpty() && !dto.getLocation().isBlank()) {
-            filterLocation = locationService.getLocationById(Long.parseLong(dto.getLocation())).getName();
+        if(null != filterRequest.getLocation() && !filterRequest.getLocation().isEmpty() && !filterRequest.getLocation().isBlank()) {
+            filterLocation = locationService.getLocationById(Long.parseLong(filterRequest.getLocation())).getName();
         }
         
         String filterModel = null;
-        if(null != dto.getModel() && !dto.getModel().isBlank() && !dto.getModel().isEmpty()) {
-            Optional<PhoneModel> optModel = phoneModelService.getById(Long.parseLong(dto.getModel()));
+        if(null != filterRequest.getModel() && !filterRequest.getModel().isBlank() && !filterRequest.getModel().isEmpty()) {
+            Optional<PhoneModel> optModel = phoneModelService.getById(Long.parseLong(filterRequest.getModel()));
             if(optModel.isPresent()) {
                 filterModel = optModel.get().getModel();
             }
             
         }
-        model.addAttribute("searchFIO", username);
-        model.addAttribute("searchInventary", inventaryNumber);
-        model.addAttribute("searchSerial", serialNumber);
-        model.addAttribute("filterDateBegin", dto.getYearCreatedOne());
-        model.addAttribute("filterDateEnd", dto.getYearCreatedTwo());
-        model.addAttribute("filterStatus", dto.getStatus());
+        model.addAttribute("searchFIO", filterRequest.getUsername());
+        model.addAttribute("searchInventary", filterRequest.getInventaryNumber());
+        model.addAttribute("searchSerial", filterRequest.getSerialNumber());
+        model.addAttribute("filterDateBegin", filterRequest.getYearCreatedFrom());
+        model.addAttribute("filterDateEnd", filterRequest.getYearCreatedTo());
+        model.addAttribute("filterStatus", filterRequest.getStatus());
         model.addAttribute("filterModel", filterModel);
         model.addAttribute("filterLocation", filterLocation);
         model.addAttribute("dtoes", treeSvtDtoByEmployee);

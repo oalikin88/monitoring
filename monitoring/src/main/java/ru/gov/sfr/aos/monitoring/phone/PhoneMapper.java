@@ -29,6 +29,7 @@ public abstract class PhoneMapper implements SvtMapper<Phone, SvtDTO> {
     @Mapping(source = "place.placeType", target = "placeType")
     @Mapping(source = "place.departmentCode", target = "departmentCode")
     @Mapping(source = "place.location.id", target = "locationId")
+    @Mapping(source = "place.location.name", target = "location")
     @Mapping(source = "phoneNumber", target = "phoneNumber")
     @Mapping(source = "nameFromeOneC", target = "nameFromOneC")
     @Mapping(source = "phoneModel.manufacturer.name", target = "manufacturerName")
@@ -44,6 +45,7 @@ public abstract class PhoneMapper implements SvtMapper<Phone, SvtDTO> {
     @Mapping(target = "place.placeType", source = "placeType")
     @Mapping(target = "place.departmentCode", source = "departmentCode")
     @Mapping(target = "place.location.id", source = "locationId")
+    @Mapping(target = "place.location.name", source = "location")
     @Mapping(target = "phoneNumber", source = "phoneNumber")
     @Mapping(target = "nameFromeOneC", source = "nameFromOneC")
     @Override

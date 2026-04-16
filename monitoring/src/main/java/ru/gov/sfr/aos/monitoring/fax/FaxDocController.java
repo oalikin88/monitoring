@@ -109,12 +109,9 @@ public class FaxDocController {
         }
 
         XSSFWorkbook workbook = new XSSFWorkbook();
-
         XSSFSheet spreadsheet = workbook.createSheet("выборка факсов");
         XSSFRow row;
-
         Map<String, Object[]> rowData = new TreeMap<String, Object[]>();
-
         rowData.put("1", new Object[]{"Модель", "ФИО", "Тип рабочего места", "Наменование в ведомости ОС",
             "Серийный номер", "Инвентарный номер", "Год выпуска",
             "Состояние", "ip адрес", "Кабинет", "Район"});

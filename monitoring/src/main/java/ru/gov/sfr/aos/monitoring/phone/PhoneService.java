@@ -23,6 +23,7 @@ import ru.gov.sfr.aos.monitoring.exceptions.ObjectAlreadyExists;
 import ru.gov.sfr.aos.monitoring.models.FilterDto;
 import ru.gov.sfr.aos.monitoring.svtobject.SvtDTO;
 import ru.gov.sfr.aos.monitoring.contract.ContractRepo;
+import ru.gov.sfr.aos.monitoring.models.FilterRequest;
 import ru.gov.sfr.aos.monitoring.place.PlaceRepo;
 import ru.gov.sfr.aos.monitoring.services.RegularOperation;
 import ru.gov.sfr.aos.monitoring.svtobject.SvtObjService;
@@ -147,9 +148,9 @@ public class PhoneService extends SvtObjService<Phone, PhoneRepo, SvtDTO>{
     }
     
     
-    public List<Phone> getPhonesByFilter(FilterDto dto) {
+    public List<Phone> getPhonesByFilter(FilterRequest request) {
 
-        List<Phone> result = phoneRepo.findDevicesByAllFilters(dto.getStatus(), dto.getModel(), dto.getYearCreatedOne(), dto.getYearCreatedTwo(), dto.getLocation());
+        List<Phone> result = phoneRepo.findDevicesByAllFilters(request.getStatus(), request.getModel(), request.getYearCreatedFrom(), request.getYearCreatedTo(), request.getLocation());
         return result;
     }
     

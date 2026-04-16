@@ -26,6 +26,7 @@ public class SvtDTO extends MainSvtDto {
     protected String placeType;
     protected String departmentCode;
     protected Long locationId;
+    protected String location;
     protected String phoneNumber;
     protected String nameFromOneC;
     protected String typeDto;
@@ -332,7 +333,14 @@ public class SvtDTO extends MainSvtDto {
     public void setIgnoreCheck(boolean ignoreCheck) {
         this.ignoreCheck = ignoreCheck;
     }
-    
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+    }
     
     
     
