@@ -1908,37 +1908,38 @@ window.onload = function () {
 
                 $.ajax({
                     url: lin,
+                    method: 'GET',
                     cache: false,
                     xhr: function () {
                         var xhr = new XMLHttpRequest();
-
-                        xhr.onreadystatechange = function () {
-                            if (xhr.readyState == 4) {
-                                if (xhr.status == 200) {
-                                    xhr.responseType = "blob";
-                                } else {
-                                    xhr.responseType = "text";
-                                }
-                            }
-                        };
+                        xhr.responseType = "blob";
                         return xhr;
                     },
-                    success: function (data) {
-                        var blob = new Blob([data], {type: "application/octetstream"});
+                    success: function (data, status, xhr) {
+                        var blob = data instanceof Blob ? data : new Blob([data], {type: "application/octet-stream"});
 
-                        var isIE = false || !!document.documentMode;
-                        if (isIE) {
-                            window.navigator.msSaveBlob(blob, fileName);
+                        if (window.navigator && window.navigator.msSaveOrOpenBlob) {
+                            window.navigator.msSaveOrOpenBlob(blob, fileName);
                         } else {
                             var url = window.URL || window.webkitURL;
-                            link = url.createObjectURL(blob);
-                            var a = $("<a />");
-                            a.attr("download", fileName);
-                            a.attr("href", link);
-                            $("body").append(a);
-                            a[0].click();
-                            $("body").remove(a);
+                            var downloadUrl = url.createObjectURL(blob);
+
+                            var a = document.createElement("a");
+                            a.style.display = "none";
+                            a.href = downloadUrl;
+                            a.download = fileName;
+
+                            document.body.appendChild(a);
+                            a.click();
+
+                            setTimeout(function () {
+                                document.body.removeChild(a);
+                                url.revokeObjectURL(downloadUrl);
+                            }, 100);
                         }
+                    },
+                    error: function (xhr, status, error) {
+                        console.error("Ошибка при скачивании файла:", error);
                     }
                 });
 
