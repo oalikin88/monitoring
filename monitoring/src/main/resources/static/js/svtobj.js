@@ -1,6 +1,3 @@
-
-
- 
 const modalError = document.getElementById('modalError');
 const modalErrorParent = document.getElementById('modalErrorContent');
 const pathSvg = document.createElementNS('http://www.w3.org/2000/svg', 'path');
@@ -1978,11 +1975,20 @@ window.onload = function () {
         $('#filter-btn')[0].addEventListener('click', function () {
 
 
-
-            window.location.href = window.location.pathname + "?model=" + document.querySelector('#filter-model').value +
-                    "&status=" + document.querySelector('#filter-status').value + "&yearCreatedOne=" + document.querySelector('#dateBegin').value +
-                    "&yearCreatedTwo=" + document.querySelector('#dateEnd').value + "&location=" + document.querySelector('#filter-location').value + 
+if(attrib == 'printers') {
+    
+    window.location.href = window.location.pathname + "?model=" + document.querySelector('#filter-model').value +
+                    "&status=" + document.querySelector('#filter-status').value + "&yearCreatedFrom=" + document.querySelector('#dateBegin').value +
+                    "&yearCreatedTo=" + document.querySelector('#dateEnd').value + "&location=" + document.querySelector('#filter-location').value + 
                     "&numberRoom=" + document.querySelector('#number-room').value;
+} else {
+    
+    window.location.href = window.location.pathname + "?model=" + document.querySelector('#filter-model').value +
+                    "&status=" + document.querySelector('#filter-status').value + "&yearCreatedFrom=" + document.querySelector('#dateBegin').value +
+                    "&yearCreatedTo=" + document.querySelector('#dateEnd').value + "&location=" + document.querySelector('#filter-location').value;
+    
+}
+            
 
 
         });

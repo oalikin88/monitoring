@@ -1,10 +1,6 @@
 package ru.gov.sfr.aos.monitoring.phone;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,14 +13,12 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import ru.gov.sfr.aos.monitoring.controllers.SvtViewController;
 import ru.gov.sfr.aos.monitoring.place.PlaceType;
-import ru.gov.sfr.aos.monitoring.location.Location;
 import ru.gov.sfr.aos.monitoring.exceptions.DublicateInventoryNumberException;
 import ru.gov.sfr.aos.monitoring.exceptions.ObjectAlreadyExists;
 import ru.gov.sfr.aos.monitoring.models.ArchivedDto;
 import ru.gov.sfr.aos.monitoring.location.LocationByTreeDto;
 import ru.gov.sfr.aos.monitoring.svtobject.SvtDTO;
 import ru.gov.sfr.aos.monitoring.svtobject.SvtModelDto;
-import ru.gov.sfr.aos.monitoring.location.LocationService;
 import ru.gov.sfr.aos.monitoring.models.FilterRequest;
 
 /**
@@ -36,104 +30,32 @@ import ru.gov.sfr.aos.monitoring.models.FilterRequest;
 public class PhoneViewController {
     
 @Autowired
-private PhoneModelMapper phoneModelMapper;
-@Autowired
-private PhoneOutDtoTreeService phoneOutDtoTreeService;   
+private PhoneModelMapper phoneModelMapper; 
 @Autowired
 private PhoneService phoneService;   
 @Autowired
-private PhoneMapper phoneMapper;
-@Autowired
 private PhoneModelService phoneModelService;
 @Autowired
-private LocationService locationService;
+private PhoneTreeService phoneTreeService;
     
      //   @PreAuthorize("hasAuthority('ROLE_READ') || hasAuthority('ROLE_ADMIN')")
     @GetMapping("/phones")
     public String getPhones(Model model, FilterRequest filterRequest) {
         
-        List<SvtDTO> filter = null;
-        Map<Location, List<Phone>> svtObjectsByEmployee = null;
-        List<LocationByTreeDto> treeSvtDtoByEmployee = null;
-        Map<Location, List<Phone>> svtObjectsByStorage = null;
-        List<LocationByTreeDto> treeSvtDtoByStorage = null;
-        if(filterRequest.getModel() == null && filterRequest.getStatus() == null &&
-                filterRequest.getYearCreatedFrom() == null && filterRequest.getYearCreatedTo() == null) {
-        if(null != filterRequest.getUsername()) {
-            svtObjectsByEmployee = phoneService.getSvtObjectsByName(filterRequest.getUsername(), PlaceType.EMPLOYEE);
-        } else if(null != filterRequest.getInventaryNumber()) {
-            svtObjectsByEmployee = phoneService.getSvtObjectsByInventaryNumberAndPlace(filterRequest.getInventaryNumber(),
-                    PlaceType.EMPLOYEE);
-        }else if(null != filterRequest.getSerialNumber()) {
-            svtObjectsByEmployee = phoneService.getSvtObjectsBySerialNumberAndPlace(filterRequest.getSerialNumber(), PlaceType.EMPLOYEE);
-        }else {
-            svtObjectsByEmployee = phoneService.getSvtObjectsByPlaceType(PlaceType.EMPLOYEE);
-        }
-        
-        treeSvtDtoByEmployee = phoneOutDtoTreeService.getTreeSvtDtoByPlaceType(svtObjectsByEmployee)
-                .stream()
-                .sorted((o1, o2) -> o1.getLocationName().compareTo(o2.getLocationName()))
-                .collect(Collectors.toList());
-        
-        
-        if(null != filterRequest.getUsername()) {
-            svtObjectsByStorage = phoneService.getSvtObjectsByName(filterRequest.getUsername(), PlaceType.STORAGE);
-        }else if(null != filterRequest.getInventaryNumber()) {
-            svtObjectsByStorage = phoneService.getSvtObjectsByInventaryNumberAndPlace(filterRequest.getInventaryNumber(), PlaceType.STORAGE);
-        }else if(null != filterRequest.getSerialNumber()) {
-            svtObjectsByStorage = phoneService.getSvtObjectsBySerialNumberAndPlace(filterRequest.getSerialNumber(), PlaceType.STORAGE);
-        }else {
-            svtObjectsByStorage = phoneService.getSvtObjectsByPlaceType(PlaceType.STORAGE);
-        }
-        
-          treeSvtDtoByStorage = phoneOutDtoTreeService.getTreeSvtDtoByPlaceType(svtObjectsByStorage)
-                .stream()
-                .sorted((o1, o2) -> o1.getLocationName().compareTo(o2.getLocationName()))
-                .collect(Collectors.toList());
-        
-        } else {
-            List<Phone> phonesByFilter = phoneService.getPhonesByFilter(filterRequest);
-             filter = new ArrayList<>();
-            for(Phone p : phonesByFilter) {
-                SvtDTO phoneDto = phoneMapper.getDto(p);
-                filter.add(phoneDto);
-            }
-            
-            svtObjectsByEmployee = phoneService.getPhonesByPlaceTypeAndFilter(PlaceType.EMPLOYEE, phonesByFilter);
-            treeSvtDtoByEmployee = phoneOutDtoTreeService.getTreeSvtDtoByPlaceType(svtObjectsByEmployee)
-                .stream()
-                .sorted((o1, o2) -> o1.getLocationName().compareTo(o2.getLocationName()))
-                .collect(Collectors.toList());
-            
-            svtObjectsByStorage = phoneService.getPhonesByPlaceTypeAndFilter(PlaceType.STORAGE, phonesByFilter);
-               treeSvtDtoByStorage = phoneOutDtoTreeService.getTreeSvtDtoByPlaceType(svtObjectsByStorage)
-                .stream()
-                .sorted((o1, o2) -> o1.getLocationName().compareTo(o2.getLocationName()))
-                .collect(Collectors.toList());
-        }
+
+        List<LocationByTreeDto> treeSvtDtoByEmployee = phoneTreeService.getTree(filterRequest, PlaceType.EMPLOYEE);
+        List<LocationByTreeDto> treeSvtDtoByStorage = phoneTreeService.getTree(filterRequest, PlaceType.STORAGE);
         
         int amount = SvtViewController.getAmountDevices(treeSvtDtoByEmployee, treeSvtDtoByStorage);
-        String filterLocation = null;
-        if(null != filterRequest.getLocation() && !filterRequest.getLocation().isEmpty() && !filterRequest.getLocation().isBlank()) {
-            filterLocation = locationService.getLocationById(Long.parseLong(filterRequest.getLocation())).getName();
-        }
-        
-        String filterModel = null;
-        if(null != filterRequest.getModel() && !filterRequest.getModel().isBlank() && !filterRequest.getModel().isEmpty()) {
-            Optional<PhoneModel> optModel = phoneModelService.getById(Long.parseLong(filterRequest.getModel()));
-            if(optModel.isPresent()) {
-                filterModel = optModel.get().getModel();
-            }
-            
-        }
+
         model.addAttribute("searchFIO", filterRequest.getUsername());
         model.addAttribute("searchInventary", filterRequest.getInventaryNumber());
         model.addAttribute("searchSerial", filterRequest.getSerialNumber());
         model.addAttribute("filterDateBegin", filterRequest.getYearCreatedFrom());
         model.addAttribute("filterDateEnd", filterRequest.getYearCreatedTo());
         model.addAttribute("filterStatus", filterRequest.getStatus());
-        model.addAttribute("filterModel", filterModel);
-        model.addAttribute("filterLocation", filterLocation);
+        model.addAttribute("filterModel", filterRequest.getModel());
+        model.addAttribute("filterLocation", filterRequest.getLocation());
         model.addAttribute("dtoes", treeSvtDtoByEmployee);
         model.addAttribute("dtoesStorage", treeSvtDtoByStorage);
         model.addAttribute("attribute", "phones");
